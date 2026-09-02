@@ -6,7 +6,7 @@ The Local Runner is a persistent multi-agent execution environment. GitHub Actio
 
 ## Remote branch model
 
-GitHub contains exactly two branches: `main` and `integration`. Agent branches such as `agent/<agent>/<task>` are local-only and must never be pushed. Normal agent completion integrates into `integration`; promotion from `integration` to `main` is a separate deliberate release operation.
+GitHub contains exactly two branches: `main` and `integration`. Agent branches such as `agent/<agent>/<task>` are local-only and must never be pushed. Normal agent completion integrates into `integration`; promotion from `integration` to `main` is a separate deliberate release operation. Local-agent runtime tests and normal agent submissions must not write `main`.
 
 ## Local layout
 
@@ -17,6 +17,7 @@ GitHub contains exactly two branches: `main` and `integration`. Agent branches s
 - Runtime database: `runtime.sqlite3` using SQLite WAL
 - Command output: `commands/`
 - Local client: `/home/hesham/.local/bin/gova-agent`
+- Local monitor: `/home/hesham/.local/bin/gova-agent-monitor`
 
 ## Gateway
 
@@ -28,15 +29,29 @@ The service uses HTTP/JSON because it has very low startup/runtime overhead, wor
 
 1. Register an agent.
 2. Create or resume a task.
-3. Create a task worktree.
+3. Create a task worktree from the current `origin/integration` baseline.
 4. Acquire narrow path/module locks only when needed.
 5. Execute commands directly through the gateway.
 6. Checkpoint meaningful state.
 7. Commit on the local agent branch.
 8. Submit the commit to local integration.
-9. The integration path cherry-picks, verifies, and pushes only `integration`.
+9. The integration path cherry-picks, verifies, and publishes only `integration`.
 
 Agents are peers. Handoff state is stored in SQLite, not model memory.
+
+## Live agent monitor
+
+`gova-agent-monitor` is a read-only view of the persistent SQLite runtime. It shows each known agent, whether it is local or cloud/remote, current status, task, worktree, branch, checkpoint, recent commands, messages, and handoffs. It does not register agents, refresh heartbeats, acquire locks, or dispatch jobs.
+
+Run one snapshot with:
+
+```bash
+gova-agent-monitor --once
+```
+
+The installer replaces the legacy `local-agent:watch` desktop launcher with the persistent monitor. In an interactive monitor terminal, select an agent with its number and open the detailed view in a separate terminal window. The monitor never relies on GitHub Actions for local state.
+
+Self-test agents use tagged IDs such as `sim-alpha-<tag>`. A successful self-test removes the runtime rows created by that tag after its worktrees and locks have been cleaned, so repeated validation does not fill the monitor with stale simulation agents.
 
 ## CLI examples
 
@@ -57,9 +72,17 @@ Locks are scoped by kind and name/path and carry leases. Expired locks are recov
 
 Task/worktree/command/message/handoff state survives gateway restarts. Commands are launched independently of the client request. After gateway restart, command state is reconciled from PID and exit-marker files. After machine reboot, durable task state remains and dead commands are marked interrupted when inspected.
 
+The integration lock serializes only the final integration transaction. If a cherry-pick conflicts, the gateway aborts the cherry-pick, resets the integration worktree to `origin/integration`, records the conflict on the task, and releases the lock. A failed submission therefore does not leave the shared integration worktree dirty.
+
 ## Dependency reuse
 
-Worktree creation does not run `npm ci`. When the canonical checkout already has `node_modules` and the worktree is based on the same `main` dependency graph, the worktree gets a fast symlink to that dependency tree. If a task changes dependency manifests/lockfiles, materialize its own dependencies before running package-manager mutations; do not mutate the shared symlink.
+Worktree creation does not run `npm ci`. When the canonical checkout already has `node_modules`, a new worktree may get a fast symlink to that dependency tree. If a task changes dependency manifests/lockfiles, materialize its own dependencies before running package-manager mutations; do not mutate the shared symlink.
+
+## Real Codex validation
+
+`tools/local-agent/codex_test.py` validates an authenticated local Codex worker as a real gateway agent. The test creates an isolated agent worktree, runs Codex concurrently with a reviewer peer, requires the live monitor to show both a local agent and a cloud probe, records a checkpoint/handoff, validates the exact changed paths, creates a trusted local branch commit, and submits that commit only to `integration`.
+
+On this Ubuntu host, Codex's normal Linux `workspace-write` sandbox cannot execute because Bubblewrap cannot create the required user namespace (`RTM_NEWADDR: Operation not permitted`). The validation harness therefore runs Codex with its internal sandbox disabled for that process, while removing GitHub token environment variables and overriding Git's credential helper and push URL. The model is restricted by task scope to its isolated worktree, and the trusted harness rejects any change outside the exact allowed path before committing or integrating it. This fallback is for the local Codex worker test; it does not grant normal gateway clients a new GitHub publication path.
 
 ## systemd
 
@@ -73,13 +96,13 @@ If passwordless system service installation is unavailable, the installer falls 
 
 ## Bootstrap
 
-`tools/local-agent/install.sh` installs the committed runtime without dependency installation. The legacy GitHub request/workflow transport is not part of normal operation after migration.
+`tools/local-agent/install.sh` installs the committed runtime without dependency installation. The legacy GitHub request/workflow transport is not part of normal operation after migration. The committed bootstrap workflow is manual-only (`workflow_dispatch`) and exists only to install or refresh the persistent runtime; it is not the per-command transport.
 
 ## Failure recovery
 
 - Agent/client disconnect: command continues and logs remain queryable.
 - Gateway crash: systemd restarts it; SQLite/task state remains.
 - Stale lock: lease recovery removes it.
-- Integration conflict: integration worktree is left in conflict state and the task records the conflict instead of overwriting work.
+- Integration conflict: cherry-pick is aborted and the integration worktree is reset cleanly to `origin/integration`; the task records the conflict.
 - Uncommitted agent worktree: removal refuses unless explicitly forced.
 - Handoff: task ownership and notes are persisted and another agent can continue from the same worktree/branch.
