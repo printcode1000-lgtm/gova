@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import argparse, json, os, sys, urllib.error, urllib.parse, urllib.request
+import argparse, json, os, subprocess, sys, urllib.error, urllib.parse, urllib.request
 from pathlib import Path
 BASE=os.environ.get('GOVA_AGENT_URL','http://127.0.0.1:8765').rstrip('/')
 AUTH=Path(os.environ.get('GOVA_AGENT_AUTH_FILE','/home/hesham/.config/gova-agent/auth'))
@@ -36,11 +36,24 @@ def main():
     a=sp.add_parser('exec-cancel'); a.add_argument('command_id')
     a=sp.add_parser('lock-acquire'); a.add_argument('agent_id'); a.add_argument('scope'); a.add_argument('--task-id'); a.add_argument('--kind',default='path'); a.add_argument('--lease',type=int)
     a=sp.add_parser('lock-release'); a.add_argument('agent_id'); a.add_argument('scope'); a.add_argument('--kind',default='path')
-    a=sp.add_parser('lock-recover')
+    sp.add_parser('lock-recover')
     a=sp.add_parser('message-send'); a.add_argument('sender'); a.add_argument('recipient'); a.add_argument('body'); a.add_argument('--kind',default='note')
     a=sp.add_parser('messages'); a.add_argument('--recipient')
     a=sp.add_parser('integration-submit'); a.add_argument('agent_id'); a.add_argument('task_id'); a.add_argument('commit_sha'); a.add_argument('--verify',action='append',default=[])
+    recovery=sp.add_parser('recovery'); rsp=recovery.add_subparsers(dest='recovery_cmd',required=True)
+    a=rsp.add_parser('create'); a.add_argument('archive'); a.add_argument('--include-logs',action='store_true')
+    a=rsp.add_parser('verify'); a.add_argument('archive')
+    a=rsp.add_parser('restore'); a.add_argument('archive'); a.add_argument('target_root')
     x=p.parse_args()
+    if x.cmd=='recovery':
+        script=Path(__file__).with_name('recovery.py')
+        argv=[sys.executable,str(script),x.recovery_cmd]
+        if x.recovery_cmd=='create':
+            argv.append(x.archive)
+            if x.include_logs: argv.append('--include-logs')
+        elif x.recovery_cmd=='verify': argv.append(x.archive)
+        else: argv.extend([x.archive,x.target_root])
+        raise SystemExit(subprocess.call(argv))
     if x.cmd=='health': return call('GET','/health')
     if x.cmd=='agents': return call('GET','/v1/agents')
     if x.cmd=='tasks': return call('GET','/v1/tasks')
