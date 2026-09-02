@@ -26,3 +26,4 @@ A log of project problems and their solutions for recurrence and environment set
 | 21 | Blank splash screen: Capacitor `WebView` duplicate registration | [capacitor-webview-duplicate-registration.md](./capacitor-webview-duplicate-registration.md) |
 | 22 | Every SQLite-backed product reads back empty (`PRAGMA` executed with `run()`) | [sqlite-pragma-run-empty-product.md](./sqlite-pragma-run-empty-product.md) |
 | 23 | A route's owner does not ship it: `307` then `404` (sign-in down while every gate was green) | [owned-route-not-shipped.md](./owned-route-not-shipped.md) |
+| 24 | A push to `main` produces no Vercel deployment (contention from an unauthorised third branch) | [main-push-without-vercel-deployment.md](./main-push-without-vercel-deployment.md) |

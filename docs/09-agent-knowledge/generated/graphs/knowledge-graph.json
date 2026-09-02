@@ -14470,6 +14470,41 @@
       ]
     },
     {
+      "id": "document:docs/08-troubleshooting/problems/main-push-without-vercel-deployment.md",
+      "kind": "document",
+      "name": "A push to `main` produces no Vercel deployment",
+      "path": "docs/08-troubleshooting/problems/main-push-without-vercel-deployment.md",
+      "summary": "`deploy:push` deploys control and all six workloads, publishes exact-SHA readiness, then fails:",
+      "tags": [
+        "`deploy:push` deploys control and all six workloads, publishes exact-sha readiness, then fails:",
+        "a push to `main` produces no vercel deployment",
+        "all",
+        "and",
+        "control",
+        "deploy",
+        "deployment",
+        "deploys",
+        "docs/07-mobile-and-release/release-commands",
+        "docs/07-mobile-and-release/release-commands.md",
+        "docs/08-troubleshooting/problems/main-push-without-vercel-deployment",
+        "docs/08-troubleshooting/problems/main-push-without-vercel-deployment.md",
+        "exact-sha",
+        "fails",
+        "main",
+        "md",
+        "no",
+        "produces",
+        "publishes",
+        "push",
+        "readiness",
+        "six",
+        "then",
+        "to",
+        "vercel",
+        "workloads"
+      ]
+    },
+    {
       "id": "document:docs/08-troubleshooting/problems/notification-preference-incomplete-identity.md",
       "kind": "document",
       "name": "Notification Preference Forbidden from Incomplete Identity",
@@ -74949,6 +74984,17 @@
       "detail": "packages/native-core/scripts/android-build-preflight.ts"
     },
     {
+      "from": "document:docs/08-troubleshooting/problems/main-push-without-vercel-deployment.md",
+      "to": "domain:troubleshooting",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/main-push-without-vercel-deployment.md",
+      "to": "document:docs/07-mobile-and-release/release-commands.md",
+      "kind": "references",
+      "detail": "docs/07-mobile-and-release/release-commands.md"
+    },
+    {
       "from": "document:docs/08-troubleshooting/problems/notification-preference-incomplete-identity.md",
       "to": "domain:troubleshooting",
       "kind": "belongs-to"
@@ -75221,6 +75267,12 @@
       "to": "document:docs/08-troubleshooting/problems/invalid-java-home-windows.md",
       "kind": "references",
       "detail": "./invalid-java-home-windows.md"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/README.md",
+      "to": "document:docs/08-troubleshooting/problems/main-push-without-vercel-deployment.md",
+      "kind": "references",
+      "detail": "./main-push-without-vercel-deployment.md"
     },
     {
       "from": "document:docs/08-troubleshooting/problems/README.md",
