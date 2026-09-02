@@ -9,7 +9,7 @@ The only exact application paths listed here belong to composition/service-mirro
 
 - `packages/architecture-core/src/registry/composition-feature-seams-registry.ts`
 
-Current inventory: **30** exact composition seam path(s).
+Current inventory: **32** exact composition seam path(s).
 
 | Composition package | Exact application module |
 | --- | --- |
@@ -30,6 +30,8 @@ Current inventory: **30** exact composition seam path(s).
 | `profiles-composition` | `@/features/data/ports/data-core-runtime-config-ports` |
 | `profiles-composition` | `@/features/data/ports/data-core-specialty-catalog-port` |
 | `submain-composition` | `@/features/cart/server/services/cart-catalogue-pricing.server` |
+| `submain-composition` | `@/features/auth/server/services/auth-service.bootstrap.server` |
+| `submain-composition` | `@/features/password-recovery/server/services/password-recovery-service.server` |
 | `submain-composition` | `@/features/product-search/server/services/product-search-service.server` |
 | `submain-composition` | `@/features/product-search/server/services/product-search-fields.server` |
 | `submain-composition` | `@/features/auth/domain/super-admin` |

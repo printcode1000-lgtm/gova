@@ -396,6 +396,7 @@
         "google-auth-library": "11.0.2",
         "libphonenumber-js": "1.13.12",
         "next": "16.3.2",
+        "nodemailer": "9.0.5",
         "react": "19.2.8",
         "react-dom": "19.2.8",
         "server-only": "^0.0.1",
@@ -406,12 +407,13 @@
       "devDependencies": {
         "@types/better-sqlite3": "9.6.0",
         "@types/node": "24.13.3",
+        "@types/nodemailer": "8.0.1",
         "@types/react": "19.2.18",
         "@types/react-dom": "19.2.5",
         "@types/web-push": "3.6.4",
         "typescript": "5.9.3"
       },
-      "lockDigest": "863f2367186978b1b0cc0fe148dc53dfd8aaa2f301fdecb7d01a7f4f4f16e9d2"
+      "lockDigest": "bb3e47146d97aaedd48d2984459a9e98f7069455fa868843b021f8609aacfa03"
     }
   },
   "tools": {

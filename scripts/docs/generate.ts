@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { dirname, join } from 'path';
 
+import { renderAccountRoutingCatalog } from './account-routing-catalog';
 import { renderApiContractCatalog, renderWriteSurfaceMap } from './api-and-write-catalogs';
 import { renderDocCoverageScore } from './coverage-score';
 import { collectDeadDocsFindings, renderDeadDocsReport } from './dead-docs';
@@ -29,6 +30,7 @@ export const GENERATED_KNOWLEDGE_FILES = [
   'docs/09-agent-knowledge/generated/catalogs/document-catalog.md',
   'docs/09-agent-knowledge/generated/catalogs/route-catalog.md',
   'docs/09-agent-knowledge/generated/catalogs/api-contract-catalog.md',
+  'docs/09-agent-knowledge/generated/catalogs/account-routing-catalog.md',
   'docs/09-agent-knowledge/generated/catalogs/command-catalog.md',
   'docs/09-agent-knowledge/generated/catalogs/environment-catalog.md',
   'docs/09-agent-knowledge/generated/catalogs/native-capability-map.md',
@@ -70,20 +72,21 @@ export function renderGeneratedKnowledgeFiles(): Map<GeneratedKnowledgeFile, str
     [GENERATED_KNOWLEDGE_FILES[1], renderDocumentCatalog(graph)],
     [GENERATED_KNOWLEDGE_FILES[2], renderRouteCatalog(graph)],
     [GENERATED_KNOWLEDGE_FILES[3], renderApiContractCatalog(graph)],
-    [GENERATED_KNOWLEDGE_FILES[4], renderCommandCatalog(graph)],
-    [GENERATED_KNOWLEDGE_FILES[5], renderEnvironmentCatalog(graph)],
-    [GENERATED_KNOWLEDGE_FILES[6], renderNativeCapabilityMap(graph)],
-    [GENERATED_KNOWLEDGE_FILES[7], renderRuntimeCatalog(graph)],
-    [GENERATED_KNOWLEDGE_FILES[8], renderOperationalCatalog()],
-    [GENERATED_KNOWLEDGE_FILES[9], renderChangeImpactIndex(graph)],
-    [GENERATED_KNOWLEDGE_FILES[10], renderDocCoverageScore(graph)],
-    [GENERATED_KNOWLEDGE_FILES[11], renderWriteSurfaceMap(graph)],
-    [GENERATED_KNOWLEDGE_FILES[12], renderEnvSafetyMatrix(graph)],
-    [GENERATED_KNOWLEDGE_FILES[13], renderDeadDocsReport(deadFindings)],
-    [GENERATED_KNOWLEDGE_FILES[14], renderRuntimeCompatibilityMatrix(graph)],
-    [GENERATED_KNOWLEDGE_FILES[15], renderGraphHealth(graph)],
-    [GENERATED_KNOWLEDGE_FILES[16], renderKnowledgeGraphJson(graph)],
-    [GENERATED_KNOWLEDGE_FILES[17], renderSearchIndexJson(graph)],
+    [GENERATED_KNOWLEDGE_FILES[4], renderAccountRoutingCatalog()],
+    [GENERATED_KNOWLEDGE_FILES[5], renderCommandCatalog(graph)],
+    [GENERATED_KNOWLEDGE_FILES[6], renderEnvironmentCatalog(graph)],
+    [GENERATED_KNOWLEDGE_FILES[7], renderNativeCapabilityMap(graph)],
+    [GENERATED_KNOWLEDGE_FILES[8], renderRuntimeCatalog(graph)],
+    [GENERATED_KNOWLEDGE_FILES[9], renderOperationalCatalog()],
+    [GENERATED_KNOWLEDGE_FILES[10], renderChangeImpactIndex(graph)],
+    [GENERATED_KNOWLEDGE_FILES[11], renderDocCoverageScore(graph)],
+    [GENERATED_KNOWLEDGE_FILES[12], renderWriteSurfaceMap(graph)],
+    [GENERATED_KNOWLEDGE_FILES[13], renderEnvSafetyMatrix(graph)],
+    [GENERATED_KNOWLEDGE_FILES[14], renderDeadDocsReport(deadFindings)],
+    [GENERATED_KNOWLEDGE_FILES[15], renderRuntimeCompatibilityMatrix(graph)],
+    [GENERATED_KNOWLEDGE_FILES[16], renderGraphHealth(graph)],
+    [GENERATED_KNOWLEDGE_FILES[17], renderKnowledgeGraphJson(graph)],
+    [GENERATED_KNOWLEDGE_FILES[18], renderSearchIndexJson(graph)],
   ]);
 }
 

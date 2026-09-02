@@ -1,4 +1,5 @@
 import { createServiceHttp, type ErrorStatusRule } from '@asol/service-runtime-core';
+import { businessApiErrorStatus } from '@/core/api/business-api-error-status';
 
 /**
  * The submain deployment's HTTP policy: search reads plus order creation. Error codes match the
@@ -37,4 +38,22 @@ export const searchErrorResponse = http.errorResponse;
 
 export function orderErrorResponse(request: Request, error: unknown): Response {
   return http.errorResponse(request, error, ORDER_ERROR_RULES);
+}
+
+/**
+ * The shared application status mapping, for the routes that moved here whole.
+ *
+ * Auth, account, advertisements, follow, feature flags, contact and specialty
+ * chat answer many more error codes than a hand-written rule list can track,
+ * and a client cannot be moved to an origin that answers the same failure with
+ * a different status. `businessApiErrorStatus` is the same pure function the
+ * application and the control runtime use, so the three cannot drift.
+ */
+export function businessErrorResponse(request: Request, error: unknown): Response {
+  const message = error instanceof Error ? error.message : 'internalServerError';
+  const mapped = businessApiErrorStatus(message);
+  return Response.json(
+    { error: mapped.code },
+    { status: mapped.status, headers: corsHeaders(request) },
+  );
 }

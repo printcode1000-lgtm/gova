@@ -8,6 +8,7 @@
 import * as React from "react";
 import { Cloud } from "lucide-react";
 
+import { CloudAccountRoutesSection } from "./CloudAccountRoutesSection";
 import {
   cloudAccountsGlance,
   tursoDatabaseCount,
@@ -175,6 +176,15 @@ export function SuperAdminCloudAccountsContent() {
           ))}
         </tbody>
       </TableWrap>
+
+      <SubTitle id="super-admin.super-admin-cloud-accounts-content.sub-title.routes">مسارات كل حساب</SubTitle>
+      <Note id="super-admin.super-admin-cloud-accounts-content.note.routes">
+        أي حساب يجيب أي طلب. المصدر هو سجل الملكية نفسه الذي يستخدمه موجّه
+        العميل وحدّ التوافق في gova، فلا يمكن للصفحة أن تعرض وجهة تخالف الوجهة
+        الفعلية. الجرد الكامل لكل طريقة، وأي معالج تشحنه كل خدمة اليوم، في
+        <code dir="ltr"> docs/09-agent-knowledge/generated/catalogs/account-routing-catalog.md</code>.
+      </Note>
+      <CloudAccountRoutesSection id="super-admin.super-admin-cloud-accounts-content.routes-section" />
 
       <SubTitle id="super-admin.super-admin-cloud-accounts-content.sub-title">القاعدة التي تجعل هذا يعمل</SubTitle>
       <Note id="super-admin.super-admin-cloud-accounts-content.note.3">

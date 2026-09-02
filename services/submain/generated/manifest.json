@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-31T03:18:44.685Z",
+  "generatedAt": "2026-09-02T01:51:46.719Z",
   "entryPoints": [
     "features/product-search/server/services/product-search-service.server.ts",
     "features/product-search/server/services/product-search-products.server.ts",
@@ -10,7 +10,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 412,
+  "fileCount": 420,
   "files": [
     "packages/account-declarations/src/accounts/gova-runtime-env-keys.ts",
     "packages/account-declarations/src/accounts/submain-runtime-env-keys.ts",
@@ -131,6 +131,9 @@
     "packages/data-core/src/domains/notifications/operations/queries/list-notification-tokens.query.ts",
     "packages/data-core/src/domains/notifications/repositories/broadcast-recipient-repository.ts",
     "packages/data-core/src/domains/notifications/repositories/user-notification-token-repository.ts",
+    "packages/data-core/src/domains/password-recovery/index.server.ts",
+    "packages/data-core/src/domains/password-recovery/operations/password-recovery.operations.ts",
+    "packages/data-core/src/domains/password-recovery/repositories/password-recovery-repository.ts",
     "packages/data-core/src/domains/product-search/entities/index.ts",
     "packages/data-core/src/domains/product-search/entities/product-search.types.ts",
     "packages/data-core/src/domains/product-search/index.server.ts",
@@ -393,6 +396,11 @@
     "src/features/orders/server/services/order-party-helpers.server.ts",
     "src/features/orders/server/services/order-progression.server.ts",
     "src/features/orders/server/services/order-shipping-bootstrap.server.ts",
+    "src/features/password-recovery/application/password-recovery-policy.ts",
+    "src/features/password-recovery/application/types.ts",
+    "src/features/password-recovery/index.ts",
+    "src/features/password-recovery/server/services/password-recovery-email-service.server.ts",
+    "src/features/password-recovery/server/services/password-recovery-service.server.ts",
     "src/features/product-search/application/config/product-search-fields.ts",
     "src/features/product-search/domain/product-search.request.ts",
     "src/features/product-search/domain/product-search.types.ts",

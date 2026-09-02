@@ -3671,6 +3671,20 @@
       ]
     },
     {
+      "id": "command:test:route-ownership",
+      "kind": "command",
+      "name": "npm run test:route-ownership",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run test:route-ownership",
+        "route-ownership",
+        "run",
+        "test",
+        "test:route-ownership"
+      ]
+    },
+    {
       "id": "command:test:runtime-compatibility",
       "kind": "command",
       "name": "npm run test:runtime-compatibility",
@@ -14567,6 +14581,46 @@
         "tsx",
         "vs",
         "windows"
+      ]
+    },
+    {
+      "id": "document:docs/08-troubleshooting/problems/owned-route-not-shipped.md",
+      "kind": "document",
+      "name": "A route's owner does not ship it: `307` then `404`",
+      "path": "docs/08-troubleshooting/problems/owned-route-not-shipped.md",
+      "summary": "A browser request to a Business API returns `404`. Following it shows two hops:",
+      "tags": [
+        "307",
+        "404",
+        "@asol/submain-composition",
+        "a browser request to a business api returns `404`. following it shows two hops:",
+        "a route's owner does not ship it: `307` then `404`",
+        "api",
+        "browser",
+        "business",
+        "docs/08-troubleshooting/problems/owned-route-not-shipped",
+        "docs/08-troubleshooting/problems/owned-route-not-shipped.md",
+        "does",
+        "following",
+        "hops",
+        "it",
+        "md",
+        "not",
+        "owner",
+        "request",
+        "returns",
+        "route",
+        "scripts/route-ownership-coverage",
+        "scripts/route-ownership-coverage.ts",
+        "scripts/tests/route-ownership-coverage",
+        "scripts/tests/route-ownership-coverage.test.ts",
+        "ship",
+        "shows",
+        "test",
+        "then",
+        "to",
+        "ts",
+        "two"
       ]
     },
     {
@@ -26629,6 +26683,17 @@
       ]
     },
     {
+      "id": "script:scripts/docs/account-routing-catalog.ts",
+      "kind": "script",
+      "name": "account-routing-catalog.ts",
+      "path": "scripts/docs/account-routing-catalog.ts",
+      "tags": [
+        "scripts/docs/account-routing-catalog",
+        "scripts/docs/account-routing-catalog.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/docs/api-and-write-catalogs.ts",
       "kind": "script",
       "name": "api-and-write-catalogs.ts",
@@ -27450,6 +27515,17 @@
       "tags": [
         "scripts/retrain-project-intelligence",
         "scripts/retrain-project-intelligence.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/route-ownership-coverage.ts",
+      "kind": "script",
+      "name": "route-ownership-coverage.ts",
+      "path": "scripts/route-ownership-coverage.ts",
+      "tags": [
+        "scripts/route-ownership-coverage",
+        "scripts/route-ownership-coverage.ts",
         "ts"
       ]
     },
@@ -39562,6 +39638,94 @@
       ]
     },
     {
+      "id": "source:services/submain/src/app/api/auth/check-phone/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/auth/check-phone/route.ts",
+      "tags": [
+        "services/submain/src/app/api/auth/check-phone/route",
+        "services/submain/src/app/api/auth/check-phone/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/auth/login/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/auth/login/route.ts",
+      "tags": [
+        "services/submain/src/app/api/auth/login/route",
+        "services/submain/src/app/api/auth/login/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/auth/logout/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/auth/logout/route.ts",
+      "tags": [
+        "services/submain/src/app/api/auth/logout/route",
+        "services/submain/src/app/api/auth/logout/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/auth/password-recovery/request/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/auth/password-recovery/request/route.ts",
+      "tags": [
+        "services/submain/src/app/api/auth/password-recovery/request/route",
+        "services/submain/src/app/api/auth/password-recovery/request/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/auth/password-recovery/reset/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/auth/password-recovery/reset/route.ts",
+      "tags": [
+        "services/submain/src/app/api/auth/password-recovery/reset/route",
+        "services/submain/src/app/api/auth/password-recovery/reset/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/auth/password-recovery/verify/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/auth/password-recovery/verify/route.ts",
+      "tags": [
+        "services/submain/src/app/api/auth/password-recovery/verify/route",
+        "services/submain/src/app/api/auth/password-recovery/verify/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/auth/profile/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/auth/profile/route.ts",
+      "tags": [
+        "services/submain/src/app/api/auth/profile/route",
+        "services/submain/src/app/api/auth/profile/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/auth/register/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/auth/register/route.ts",
+      "tags": [
+        "services/submain/src/app/api/auth/register/route",
+        "services/submain/src/app/api/auth/register/route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:services/submain/src/app/api/health/route.ts",
       "kind": "source",
       "name": "route.ts",
@@ -51113,6 +51277,17 @@
       ]
     },
     {
+      "id": "source:src/features/super-admin/presentation/cloud-account-routes.ts",
+      "kind": "source",
+      "name": "cloud-account-routes.ts",
+      "path": "src/features/super-admin/presentation/cloud-account-routes.ts",
+      "tags": [
+        "src/features/super-admin/presentation/cloud-account-routes",
+        "src/features/super-admin/presentation/cloud-account-routes.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/super-admin/presentation/cloud-accounts-reference.ts",
       "kind": "source",
       "name": "cloud-accounts-reference.ts",
@@ -51121,6 +51296,17 @@
         "src/features/super-admin/presentation/cloud-accounts-reference",
         "src/features/super-admin/presentation/cloud-accounts-reference.ts",
         "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/presentation/CloudAccountRoutesSection.tsx",
+      "kind": "source",
+      "name": "CloudAccountRoutesSection.tsx",
+      "path": "src/features/super-admin/presentation/CloudAccountRoutesSection.tsx",
+      "tags": [
+        "src/features/super-admin/presentation/cloudaccountroutessection",
+        "src/features/super-admin/presentation/cloudaccountroutessection.tsx",
+        "tsx"
       ]
     },
     {
@@ -54374,6 +54560,18 @@
       "tags": [
         "scripts/tests/release-secret-wiring",
         "scripts/tests/release-secret-wiring.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:scripts/tests/route-ownership-coverage.test.ts",
+      "kind": "test",
+      "name": "route-ownership-coverage.test.ts",
+      "path": "scripts/tests/route-ownership-coverage.test.ts",
+      "tags": [
+        "scripts/tests/route-ownership-coverage",
+        "scripts/tests/route-ownership-coverage.test.ts",
         "test",
         "ts"
       ]

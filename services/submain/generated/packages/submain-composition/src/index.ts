@@ -4,6 +4,8 @@ import { resolveCartPrices } from '@/features/cart/server/services/cart-catalogu
 import { productSearchService } from '@/features/product-search/server/services/product-search-service.server';
 import { getEnabledProductSearchFields } from '@/features/product-search/server/services/product-search-fields.server';
 import { categoryService } from '@/features/categories';
+import { authService } from '@/features/auth/server/services/auth-service.bootstrap.server';
+import { passwordRecoveryService } from '@/features/password-recovery/server/services/password-recovery-service.server';
 import { configureOrdersCore } from '@asol/orders-core';
 import { isSuperAdminIdentity } from '@/features/auth/domain/super-admin';
 import { registerDataCoreRuntimeConfigPorts } from '@/features/data/ports/data-core-runtime-config-ports';
@@ -23,6 +25,33 @@ export interface SubmainSearchTask {
   products: typeof productSearchService.searchProducts;
   sellers: typeof productSearchService.searchSellers;
   fields: typeof getEnabledProductSearchFields;
+}
+
+/**
+ * Authentication, account identity, and password recovery.
+ *
+ * These moved here with their routes. The account already held
+ * `ASOL_SESSION_SIGNING_SECRET` and the users database — what it lacked was a
+ * door, so the ownership registry redirected `POST /api/auth/login` to a
+ * deployment that answered `404`. See
+ * `docs/08-troubleshooting/problems/owned-route-not-shipped.md`.
+ *
+ * Session signing stays with the runtimes whose imports prove the need: this
+ * account issues and verifies sessions because it serves login, registration,
+ * and profile updates. No other workload gains it.
+ */
+export interface SubmainAuthTask {
+  login: typeof authService.login;
+  register: typeof authService.register;
+  logout: typeof authService.logout;
+  checkPhone: typeof authService.checkPhone;
+  updateProfile: typeof authService.updateProfile;
+}
+
+export interface SubmainPasswordRecoveryTask {
+  requestCode: typeof passwordRecoveryService.requestCode;
+  verifyCode: typeof passwordRecoveryService.verifyCode;
+  resetPassword: typeof passwordRecoveryService.resetPassword;
 }
 
 export interface SubmainCartTask {
@@ -47,6 +76,8 @@ export interface SubmainConfigTask {
 export interface SubmainRuntime {
   accountName: string;
   search: SubmainSearchTask;
+  auth: SubmainAuthTask;
+  passwordRecovery: SubmainPasswordRecoveryTask;
   cart: SubmainCartTask;
   catalog: SubmainCatalogTask;
   config: SubmainConfigTask;
@@ -90,6 +121,18 @@ export function createSubmainRuntime(_config?: SubmainRuntimeConfig): SubmainRun
       products: (request) => productSearchService.searchProducts(request),
       sellers: (request) => productSearchService.searchSellers(request),
       fields: getEnabledProductSearchFields,
+    },
+    auth: {
+      login: (formData) => authService.login(formData),
+      register: (formData) => authService.register(formData),
+      logout: () => authService.logout(),
+      checkPhone: (phone) => authService.checkPhone(phone),
+      updateProfile: (input) => authService.updateProfile(input),
+    },
+    passwordRecovery: {
+      requestCode: (input, ip) => passwordRecoveryService.requestCode(input, ip),
+      verifyCode: (input) => passwordRecoveryService.verifyCode(input),
+      resetPassword: (input) => passwordRecoveryService.resetPassword(input),
     },
     cart: { resolveCartPrices },
     catalog: { categories: categoryService },

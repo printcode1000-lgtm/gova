@@ -3671,6 +3671,20 @@
       ]
     },
     {
+      "id": "command:test:route-ownership",
+      "kind": "command",
+      "name": "npm run test:route-ownership",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run test:route-ownership",
+        "route-ownership",
+        "run",
+        "test",
+        "test:route-ownership"
+      ]
+    },
+    {
       "id": "command:test:runtime-compatibility",
       "kind": "command",
       "name": "npm run test:runtime-compatibility",
@@ -14567,6 +14581,46 @@
         "tsx",
         "vs",
         "windows"
+      ]
+    },
+    {
+      "id": "document:docs/08-troubleshooting/problems/owned-route-not-shipped.md",
+      "kind": "document",
+      "name": "A route's owner does not ship it: `307` then `404`",
+      "path": "docs/08-troubleshooting/problems/owned-route-not-shipped.md",
+      "summary": "A browser request to a Business API returns `404`. Following it shows two hops:",
+      "tags": [
+        "307",
+        "404",
+        "@asol/submain-composition",
+        "a browser request to a business api returns `404`. following it shows two hops:",
+        "a route's owner does not ship it: `307` then `404`",
+        "api",
+        "browser",
+        "business",
+        "docs/08-troubleshooting/problems/owned-route-not-shipped",
+        "docs/08-troubleshooting/problems/owned-route-not-shipped.md",
+        "does",
+        "following",
+        "hops",
+        "it",
+        "md",
+        "not",
+        "owner",
+        "request",
+        "returns",
+        "route",
+        "scripts/route-ownership-coverage",
+        "scripts/route-ownership-coverage.ts",
+        "scripts/tests/route-ownership-coverage",
+        "scripts/tests/route-ownership-coverage.test.ts",
+        "ship",
+        "shows",
+        "test",
+        "then",
+        "to",
+        "ts",
+        "two"
       ]
     },
     {
@@ -26629,6 +26683,17 @@
       ]
     },
     {
+      "id": "script:scripts/docs/account-routing-catalog.ts",
+      "kind": "script",
+      "name": "account-routing-catalog.ts",
+      "path": "scripts/docs/account-routing-catalog.ts",
+      "tags": [
+        "scripts/docs/account-routing-catalog",
+        "scripts/docs/account-routing-catalog.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/docs/api-and-write-catalogs.ts",
       "kind": "script",
       "name": "api-and-write-catalogs.ts",
@@ -27450,6 +27515,17 @@
       "tags": [
         "scripts/retrain-project-intelligence",
         "scripts/retrain-project-intelligence.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/route-ownership-coverage.ts",
+      "kind": "script",
+      "name": "route-ownership-coverage.ts",
+      "path": "scripts/route-ownership-coverage.ts",
+      "tags": [
+        "scripts/route-ownership-coverage",
+        "scripts/route-ownership-coverage.ts",
         "ts"
       ]
     },
@@ -39562,6 +39638,94 @@
       ]
     },
     {
+      "id": "source:services/submain/src/app/api/auth/check-phone/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/auth/check-phone/route.ts",
+      "tags": [
+        "services/submain/src/app/api/auth/check-phone/route",
+        "services/submain/src/app/api/auth/check-phone/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/auth/login/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/auth/login/route.ts",
+      "tags": [
+        "services/submain/src/app/api/auth/login/route",
+        "services/submain/src/app/api/auth/login/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/auth/logout/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/auth/logout/route.ts",
+      "tags": [
+        "services/submain/src/app/api/auth/logout/route",
+        "services/submain/src/app/api/auth/logout/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/auth/password-recovery/request/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/auth/password-recovery/request/route.ts",
+      "tags": [
+        "services/submain/src/app/api/auth/password-recovery/request/route",
+        "services/submain/src/app/api/auth/password-recovery/request/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/auth/password-recovery/reset/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/auth/password-recovery/reset/route.ts",
+      "tags": [
+        "services/submain/src/app/api/auth/password-recovery/reset/route",
+        "services/submain/src/app/api/auth/password-recovery/reset/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/auth/password-recovery/verify/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/auth/password-recovery/verify/route.ts",
+      "tags": [
+        "services/submain/src/app/api/auth/password-recovery/verify/route",
+        "services/submain/src/app/api/auth/password-recovery/verify/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/auth/profile/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/auth/profile/route.ts",
+      "tags": [
+        "services/submain/src/app/api/auth/profile/route",
+        "services/submain/src/app/api/auth/profile/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/auth/register/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/auth/register/route.ts",
+      "tags": [
+        "services/submain/src/app/api/auth/register/route",
+        "services/submain/src/app/api/auth/register/route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:services/submain/src/app/api/health/route.ts",
       "kind": "source",
       "name": "route.ts",
@@ -51113,6 +51277,17 @@
       ]
     },
     {
+      "id": "source:src/features/super-admin/presentation/cloud-account-routes.ts",
+      "kind": "source",
+      "name": "cloud-account-routes.ts",
+      "path": "src/features/super-admin/presentation/cloud-account-routes.ts",
+      "tags": [
+        "src/features/super-admin/presentation/cloud-account-routes",
+        "src/features/super-admin/presentation/cloud-account-routes.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/super-admin/presentation/cloud-accounts-reference.ts",
       "kind": "source",
       "name": "cloud-accounts-reference.ts",
@@ -51121,6 +51296,17 @@
         "src/features/super-admin/presentation/cloud-accounts-reference",
         "src/features/super-admin/presentation/cloud-accounts-reference.ts",
         "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/presentation/CloudAccountRoutesSection.tsx",
+      "kind": "source",
+      "name": "CloudAccountRoutesSection.tsx",
+      "path": "src/features/super-admin/presentation/CloudAccountRoutesSection.tsx",
+      "tags": [
+        "src/features/super-admin/presentation/cloudaccountroutessection",
+        "src/features/super-admin/presentation/cloudaccountroutessection.tsx",
+        "tsx"
       ]
     },
     {
@@ -54374,6 +54560,18 @@
       "tags": [
         "scripts/tests/release-secret-wiring",
         "scripts/tests/release-secret-wiring.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:scripts/tests/route-ownership-coverage.test.ts",
+      "kind": "test",
+      "name": "route-ownership-coverage.test.ts",
+      "path": "scripts/tests/route-ownership-coverage.test.ts",
+      "tags": [
+        "scripts/tests/route-ownership-coverage",
+        "scripts/tests/route-ownership-coverage.test.ts",
         "test",
         "ts"
       ]
@@ -58268,6 +58466,11 @@
     },
     {
       "from": "command:test:deployment-tools",
+      "to": "test:scripts/tests/route-ownership-coverage.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:deployment-tools",
       "to": "test:scripts/tests/run-deployment-npm-script.test.ts",
       "kind": "invokes"
     },
@@ -59048,6 +59251,16 @@
     },
     {
       "from": "command:test:release-core",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:test:route-ownership",
+      "to": "test:scripts/tests/route-ownership-coverage.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:route-ownership",
       "to": "runtime:tooling",
       "kind": "targets-runtime"
     },
@@ -74331,6 +74544,29 @@
       "detail": "src/features/product/presentation/ProductPageContent.tsx"
     },
     {
+      "from": "document:docs/08-troubleshooting/problems/owned-route-not-shipped.md",
+      "to": "domain:troubleshooting",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/owned-route-not-shipped.md",
+      "to": "package:@asol/submain-composition",
+      "kind": "references",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/owned-route-not-shipped.md",
+      "to": "script:scripts/route-ownership-coverage.ts",
+      "kind": "references",
+      "detail": "scripts/route-ownership-coverage.ts"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/owned-route-not-shipped.md",
+      "to": "test:scripts/tests/route-ownership-coverage.test.ts",
+      "kind": "references",
+      "detail": "scripts/tests/route-ownership-coverage.test.ts"
+    },
+    {
       "from": "document:docs/08-troubleshooting/problems/page-save-read-marker-crlf-windows.md",
       "to": "domain:troubleshooting",
       "kind": "belongs-to"
@@ -74475,6 +74711,12 @@
       "to": "document:docs/08-troubleshooting/problems/ota-publish-static-export-failures.md",
       "kind": "references",
       "detail": "./ota-publish-static-export-failures.md"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/README.md",
+      "to": "document:docs/08-troubleshooting/problems/owned-route-not-shipped.md",
+      "kind": "references",
+      "detail": "./owned-route-not-shipped.md"
     },
     {
       "from": "document:docs/08-troubleshooting/problems/README.md",
@@ -76128,6 +76370,12 @@
       "to": "script:scripts/architecture/generate-architecture-docs.ts",
       "kind": "documents",
       "detail": "scripts/architecture/generate-architecture-docs.ts"
+    },
+    {
+      "from": "domain:agent-knowledge",
+      "to": "script:scripts/docs/account-routing-catalog.ts",
+      "kind": "documents",
+      "detail": "scripts/docs/"
     },
     {
       "from": "domain:agent-knowledge",
@@ -85239,6 +85487,12 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "script:scripts/docs/account-routing-catalog.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "script:scripts/docs/api-and-write-catalogs.ts",
       "kind": "documents",
       "detail": "scripts/"
@@ -85684,6 +85938,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "script:scripts/retrain-project-intelligence.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/route-ownership-coverage.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -88341,6 +88601,54 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/auth/check-phone/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/auth/login/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/auth/logout/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/auth/password-recovery/request/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/auth/password-recovery/reset/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/auth/password-recovery/verify/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/auth/profile/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/auth/register/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "source:services/submain/src/app/api/health/route.ts",
       "kind": "documents",
       "detail": "services/"
@@ -88732,6 +89040,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "test:scripts/tests/release-secret-wiring.test.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "test:scripts/tests/route-ownership-coverage.test.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -95289,7 +95603,19 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "source:src/features/super-admin/presentation/cloud-account-routes.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "source:src/features/super-admin/presentation/cloud-accounts-reference.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
+      "to": "source:src/features/super-admin/presentation/CloudAccountRoutesSection.tsx",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -97545,7 +97871,19 @@
     },
     {
       "from": "domain:super-admin-and-operations",
+      "to": "source:src/features/super-admin/presentation/cloud-account-routes.ts",
+      "kind": "documents",
+      "detail": "src/features/super-admin/"
+    },
+    {
+      "from": "domain:super-admin-and-operations",
       "to": "source:src/features/super-admin/presentation/cloud-accounts-reference.ts",
+      "kind": "documents",
+      "detail": "src/features/super-admin/"
+    },
+    {
+      "from": "domain:super-admin-and-operations",
+      "to": "source:src/features/super-admin/presentation/CloudAccountRoutesSection.tsx",
       "kind": "documents",
       "detail": "src/features/super-admin/"
     },
@@ -105195,7 +105533,19 @@
     },
     {
       "from": "domain:ui-components",
+      "to": "source:src/features/super-admin/presentation/cloud-account-routes.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
       "to": "source:src/features/super-admin/presentation/cloud-accounts-reference.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "source:src/features/super-admin/presentation/CloudAccountRoutesSection.tsx",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -107911,6 +108261,11 @@
     },
     {
       "from": "feature:super-admin",
+      "to": "package:@asol/account-bridge",
+      "kind": "imports"
+    },
+    {
+      "from": "feature:super-admin",
       "to": "package:@asol/account-declarations",
       "kind": "imports"
     },
@@ -108962,6 +109317,11 @@
     {
       "from": "package:@asol/submain-composition",
       "to": "feature:data",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/submain-composition",
+      "to": "feature:password-recovery",
       "kind": "imports"
     },
     {
@@ -134512,6 +134872,17 @@
       "detail": "@asol/account-declarations"
     },
     {
+      "from": "script:scripts/docs/account-routing-catalog.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/docs/account-routing-catalog.ts",
+      "to": "script:scripts/route-ownership-coverage.ts",
+      "kind": "imports",
+      "detail": "../route-ownership-coverage"
+    },
+    {
       "from": "script:scripts/docs/api-and-write-catalogs.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
@@ -134808,6 +135179,12 @@
       "from": "script:scripts/docs/generate.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/docs/generate.ts",
+      "to": "script:scripts/docs/account-routing-catalog.ts",
+      "kind": "imports",
+      "detail": "./account-routing-catalog"
     },
     {
       "from": "script:scripts/docs/generate.ts",
@@ -136059,6 +136436,11 @@
       "detail": "./child-process-env"
     },
     {
+      "from": "script:scripts/route-ownership-coverage.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
       "from": "script:scripts/run-drizzle-kit.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
@@ -136882,7 +137264,22 @@
     },
     {
       "from": "service:submain",
+      "to": "feature:auth",
+      "kind": "imports"
+    },
+    {
+      "from": "service:submain",
+      "to": "feature:password-recovery",
+      "kind": "imports"
+    },
+    {
+      "from": "service:submain",
       "to": "feature:product-search",
+      "kind": "imports"
+    },
+    {
+      "from": "service:submain",
+      "to": "package:@asol/auth-core",
       "kind": "imports"
     },
     {
@@ -174866,6 +175263,12 @@
     },
     {
       "from": "source:packages/submain-composition/src/index.ts",
+      "to": "source:src/features/auth/server/services/auth-service.bootstrap.server.ts",
+      "kind": "imports",
+      "detail": "@/features/auth/server/services/auth-service.bootstrap.server"
+    },
+    {
+      "from": "source:packages/submain-composition/src/index.ts",
       "to": "source:src/features/cart/server/services/cart-catalogue-pricing.server.ts",
       "kind": "imports",
       "detail": "@/features/cart/server/services/cart-catalogue-pricing.server"
@@ -174887,6 +175290,12 @@
       "to": "source:src/features/data/ports/data-core-specialty-catalog-port.ts",
       "kind": "imports",
       "detail": "@/features/data/ports/data-core-specialty-catalog-port"
+    },
+    {
+      "from": "source:packages/submain-composition/src/index.ts",
+      "to": "source:src/features/password-recovery/server/services/password-recovery-service.server.ts",
+      "kind": "imports",
+      "detail": "@/features/password-recovery/server/services/password-recovery-service.server"
     },
     {
       "from": "source:packages/submain-composition/src/index.ts",
@@ -178246,6 +178655,230 @@
       "detail": "next"
     },
     {
+      "from": "source:services/submain/src/app/api/auth/check-phone/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/check-phone/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/check-phone/route.ts",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core/server"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/check-phone/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/check-phone/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../lib/http"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/login/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/login/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/login/route.ts",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/login/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/login/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../lib/http"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/logout/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/logout/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/logout/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/logout/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../lib/http"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/password-recovery/request/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/password-recovery/request/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/password-recovery/request/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/password-recovery/request/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../../lib/http"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/password-recovery/request/route.ts",
+      "to": "source:src/features/password-recovery/index.ts",
+      "kind": "imports",
+      "detail": "@/features/password-recovery"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/password-recovery/reset/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/password-recovery/reset/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/password-recovery/reset/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/password-recovery/reset/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../../lib/http"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/password-recovery/reset/route.ts",
+      "to": "source:src/features/password-recovery/index.ts",
+      "kind": "imports",
+      "detail": "@/features/password-recovery"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/password-recovery/verify/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/password-recovery/verify/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/password-recovery/verify/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/password-recovery/verify/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../../lib/http"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/password-recovery/verify/route.ts",
+      "to": "source:src/features/password-recovery/index.ts",
+      "kind": "imports",
+      "detail": "@/features/password-recovery"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/profile/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/profile/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/profile/route.ts",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core/server"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/profile/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/profile/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../lib/http"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/profile/route.ts",
+      "to": "source:src/features/auth/index.ts",
+      "kind": "imports",
+      "detail": "@/features/auth"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/register/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/register/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/register/route.ts",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/register/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/auth/register/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../lib/http"
+    },
+    {
       "from": "source:services/submain/src/app/api/health/route.ts",
       "to": "runtime:services",
       "kind": "affects-runtime"
@@ -178424,6 +179057,12 @@
       "to": "package:@asol/service-runtime-core",
       "kind": "imports",
       "detail": "@asol/service-runtime-core"
+    },
+    {
+      "from": "source:services/submain/src/app/lib/http.ts",
+      "to": "source:src/core/api/business-api-error-status.ts",
+      "kind": "imports",
+      "detail": "@/core/api/business-api-error-status"
     },
     {
       "from": "source:services/submain/src/instrumentation.ts",
@@ -229339,6 +229978,48 @@
       "detail": "./presentation/SuperAdminCloudAccountsPage"
     },
     {
+      "from": "source:src/features/super-admin/presentation/cloud-account-routes.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/cloud-account-routes.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/cloud-account-routes.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/cloud-account-routes.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/cloud-account-routes.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/cloud-account-routes.ts",
+      "to": "feature:super-admin",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/cloud-account-routes.ts",
+      "to": "package:@asol/account-bridge",
+      "kind": "imports",
+      "detail": "@asol/account-bridge/routes"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/cloud-account-routes.ts",
+      "to": "package:@asol/account-declarations",
+      "kind": "imports",
+      "detail": "@asol/account-declarations"
+    },
+    {
       "from": "source:src/features/super-admin/presentation/cloud-accounts-reference.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -229379,6 +230060,60 @@
       "to": "package:@asol/storage-core",
       "kind": "imports",
       "detail": "@asol/storage-core"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/CloudAccountRoutesSection.tsx",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/CloudAccountRoutesSection.tsx",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/CloudAccountRoutesSection.tsx",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/CloudAccountRoutesSection.tsx",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/CloudAccountRoutesSection.tsx",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/CloudAccountRoutesSection.tsx",
+      "to": "feature:super-admin",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/CloudAccountRoutesSection.tsx",
+      "to": "external-dependency:lucide-react",
+      "kind": "imports",
+      "detail": "lucide-react"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/CloudAccountRoutesSection.tsx",
+      "to": "external-dependency:react",
+      "kind": "imports",
+      "detail": "react"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/CloudAccountRoutesSection.tsx",
+      "to": "source:src/features/super-admin/presentation/cloud-account-routes.ts",
+      "kind": "imports",
+      "detail": "./cloud-account-routes"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/CloudAccountRoutesSection.tsx",
+      "to": "source:src/shared/utils.ts",
+      "kind": "imports",
+      "detail": "@/shared/utils"
     },
     {
       "from": "source:src/features/super-admin/presentation/featured-marquee/SuperAdminFeaturedMarqueePage.product-display.tsx",
@@ -229811,6 +230546,12 @@
       "to": "source:src/features/super-admin/presentation/cloud-accounts-reference.ts",
       "kind": "imports",
       "detail": "./cloud-accounts-reference"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
+      "to": "source:src/features/super-admin/presentation/CloudAccountRoutesSection.tsx",
+      "kind": "imports",
+      "detail": "./CloudAccountRoutesSection"
     },
     {
       "from": "source:src/features/super-admin/presentation/SuperAdminCloudAccountsPage.tsx",
@@ -243411,6 +244152,22 @@
       "from": "test:scripts/tests/release-secret-wiring.test.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
+    },
+    {
+      "from": "test:scripts/tests/route-ownership-coverage.test.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:scripts/tests/route-ownership-coverage.test.ts",
+      "to": "script:scripts/route-ownership-coverage.ts",
+      "kind": "imports",
+      "detail": "../route-ownership-coverage"
+    },
+    {
+      "from": "test:scripts/tests/route-ownership-coverage.test.ts",
+      "to": "script:scripts/route-ownership-coverage.ts",
+      "kind": "tests"
     },
     {
       "from": "test:scripts/tests/run-deployment-npm-script.test.ts",

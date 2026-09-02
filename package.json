@@ -111,7 +111,7 @@
     "test:favorites": "npx tsx src/features/favorites/tests/favorites.test.ts && npx tsx src/features/favorites/tests/favorites-local-storage-contract.test.ts",
     "test:follow": "cross-env NODE_OPTIONS=--conditions=react-server ASOL_SESSION_SIGNING_SECRET=follow-session-test-secret-0123456789abcdef ASOL_NOTIFICATION_GRANT_SECRET=follow-grant-test-secret-0123456789abcdef npx tsx src/features/follow/tests/follower-notification.test.ts",
     "test:deploy-all-resume": "npx tsx scripts/tests/deploy-all-resume.test.ts",
-    "test:deployment-tools": "npx tsx scripts/tests/vercel-deployment-monitor.test.ts && npx tsx scripts/tests/run-deployment-npm-script.test.ts && npx tsx scripts/tests/deploy-all.test.ts && npx tsx scripts/tests/deploy-state-revision.test.ts && npm run test:deploy-all-resume && npx tsx scripts/tests/deploy-push.test.ts && npx tsx scripts/tests/vercelignore-contract.test.ts && npx tsx scripts/tests/pipeline-coverage.test.ts && npx tsx scripts/tests/github-ci-policy.test.ts && npx tsx scripts/tests/vercel-deployment-guards.test.ts && npx tsx scripts/tests/secret-presence-status.test.ts && npx tsx scripts/tests/fastlane-secret-policy.test.ts && npx tsx scripts/tests/release-secret-wiring.test.ts && npx tsx scripts/tests/expected-deployed-release-marker.test.ts && npm run github:ci-policy",
+    "test:deployment-tools": "npx tsx scripts/tests/vercel-deployment-monitor.test.ts && npx tsx scripts/tests/run-deployment-npm-script.test.ts && npx tsx scripts/tests/deploy-all.test.ts && npx tsx scripts/tests/deploy-state-revision.test.ts && npm run test:deploy-all-resume && npx tsx scripts/tests/deploy-push.test.ts && npx tsx scripts/tests/route-ownership-coverage.test.ts && npx tsx scripts/tests/vercelignore-contract.test.ts && npx tsx scripts/tests/pipeline-coverage.test.ts && npx tsx scripts/tests/github-ci-policy.test.ts && npx tsx scripts/tests/vercel-deployment-guards.test.ts && npx tsx scripts/tests/secret-presence-status.test.ts && npx tsx scripts/tests/fastlane-secret-policy.test.ts && npx tsx scripts/tests/release-secret-wiring.test.ts && npx tsx scripts/tests/expected-deployed-release-marker.test.ts && npm run github:ci-policy",
     "test:password-recovery": "npx tsx src/features/password-recovery/tests/password-recovery-policy.test.ts",
     "test:image-upload-queue": "npx tsx src/features/storage/tests/image-upload-queue.test.ts",
     "test:data-health": "npx tsx scripts/test-data-health-environment.ts && cross-env NODE_OPTIONS=--conditions=react-server npx tsx src/features/data-health/tests/development-guard.test.ts && npx tsx packages/data-core/src/domains/data-health/tests/data-health-policy.test.ts && cross-env NODE_OPTIONS=--conditions=react-server npx tsx packages/data-core/src/domains/data-health/tests/order-purge.test.ts",
@@ -292,7 +292,8 @@
     "test:settings-notifications": "npx tsx src/features/settings/tests/notifications-settings-login-guard.test.ts && npx tsx src/features/settings/tests/notifications-settings-surface.test.ts",
     "test:account-deletion-schema": "cross-env NODE_OPTIONS=--conditions=react-server npx tsx packages/data-core/src/domains/account-deletion/tests/account-deletion-query-schema.contract.test.ts",
     "test:branding-core": "npm run branding:generate && npx tsx packages/branding-core/src/tests/index.test.ts",
-    "architecture:docs": "npx tsx scripts/architecture/generate-architecture-docs.ts"
+    "architecture:docs": "npx tsx scripts/architecture/generate-architecture-docs.ts",
+    "test:route-ownership": "npx tsx scripts/tests/route-ownership-coverage.test.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1075.0",

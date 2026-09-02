@@ -12,7 +12,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `account-bridge` | feature | 1 | 0 | 2 | 0 | 0 | 2 |
 | `advertisements` | feature | 2 | 2 | 17 | 0 | 3 | 14 |
 | `app-reset` | feature | 1 | 0 | 5 | 0 | 2 | 2 |
-| `auth` | feature | 3 | 4 | 117 | 0 | 21 | 16 |
+| `auth` | feature | 3 | 4 | 117 | 0 | 22 | 16 |
 | `cart` | feature | 1 | 4 | 7 | 0 | 5 | 11 |
 | `catalog-studio` | feature | 2 | 1 | 3 | 0 | 0 | 7 |
 | `categories` | feature | 4 | 0 | 44 | 0 | 13 | 6 |
@@ -35,7 +35,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `ota` | feature | 8 | 0 | 5 | 0 | 0 | 7 |
 | `page-save` | feature | 3 | 2 | 25 | 0 | 12 | 7 |
 | `page-snapshot` | feature | 1 | 0 | 5 | 0 | 2 | 5 |
-| `password-recovery` | feature | 2 | 1 | 4 | 0 | 0 | 9 |
+| `password-recovery` | feature | 2 | 1 | 4 | 0 | 2 | 9 |
 | `pharmacy-profile-catalog` | feature | 3 | 0 | 3 | 0 | 4 | 13 |
 | `product` | feature | 1 | 2 | 27 | 0 | 13 | 23 |
 | `product-card` | feature | 1 | 0 | 3 | 0 | 5 | 6 |
@@ -52,14 +52,14 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `specialty-chat` | feature | 3 | 1 | 13 | 0 | 3 | 14 |
 | `splash` | feature | 1 | 0 | 1 | 0 | 0 | 6 |
 | `storage` | feature | 1 | 1 | 35 | 0 | 9 | 6 |
-| `super-admin` | feature | 3 | 6 | 61 | 0 | 2 | 21 |
+| `super-admin` | feature | 3 | 6 | 61 | 0 | 2 | 22 |
 | `system-logs` | feature | 1 | 2 | 136 | 0 | 11 | 11 |
 | `vehicle-catalog` | feature | 2 | 0 | 2 | 0 | 1 | 1 |
 | `voice-input` | feature | 1 | 0 | 0 | 0 | 0 | 2 |
-| `@asol/account-bridge` | package | 16 | 8 | 26 | 0 | 23 | 4 |
-| `@asol/account-declarations` | package | 13 | 8 | 13 | 0 | 35 | 0 |
+| `@asol/account-bridge` | package | 16 | 8 | 26 | 0 | 25 | 4 |
+| `@asol/account-declarations` | package | 13 | 8 | 13 | 0 | 36 | 0 |
 | `@asol/architecture-core` | package | 19 | 4 | 0 | 0 | 6 | 7 |
-| `@asol/auth-core` | package | 11 | 6 | 142 | 0 | 96 | 3 |
+| `@asol/auth-core` | package | 11 | 6 | 142 | 0 | 101 | 3 |
 | `@asol/backup-core` | package | 7 | 2 | 137 | 0 | 11 | 3 |
 | `@asol/branding-core` | package | 12 | 1 | 50 | 0 | 8 | 1 |
 | `@asol/catalog-core` | package | 8 | 1 | 13 | 0 | 17 | 1 |
@@ -96,7 +96,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/storage-core` | package | 34 | 22 | 141 | 0 | 97 | 5 |
 | `@asol/storage-image-manager-core` | package | 9 | 2 | 0 | 0 | 12 | 8 |
 | `@asol/sub2main-composition` | package | 7 | 1 | 0 | 0 | 2 | 7 |
-| `@asol/submain-composition` | package | 7 | 1 | 0 | 0 | 5 | 7 |
+| `@asol/submain-composition` | package | 8 | 1 | 0 | 0 | 13 | 8 |
 | `@asol/system-logs-core` | package | 9 | 4 | 139 | 0 | 58 | 0 |
 | `@asol/trending-ribbon-core` | package | 6 | 1 | 136 | 0 | 11 | 1 |
 | `@asol/vercel-deploy-core` | package | 9 | 6 | 26 | 0 | 48 | 3 |
@@ -106,4 +106,4 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `products` | service | 4 | 0 | 0 | 0 | 0 | 3 |
 | `profiles` | service | 4 | 0 | 0 | 0 | 0 | 4 |
 | `sub2main` | service | 2 | 0 | 0 | 0 | 0 | 3 |
-| `submain` | service | 2 | 0 | 0 | 0 | 0 | 4 |
+| `submain` | service | 2 | 0 | 0 | 0 | 0 | 7 |

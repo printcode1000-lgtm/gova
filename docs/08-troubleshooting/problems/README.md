@@ -25,3 +25,4 @@ A log of project problems and their solutions for recurrence and environment set
 | 20 | Follow notification test imports server composition from the public notifications door | [follow-notification-test-wrong-notifications-door.md](./follow-notification-test-wrong-notifications-door.md) |
 | 21 | Blank splash screen: Capacitor `WebView` duplicate registration | [capacitor-webview-duplicate-registration.md](./capacitor-webview-duplicate-registration.md) |
 | 22 | Every SQLite-backed product reads back empty (`PRAGMA` executed with `run()`) | [sqlite-pragma-run-empty-product.md](./sqlite-pragma-run-empty-product.md) |
+| 23 | A route's owner does not ship it: `307` then `404` (sign-in down while every gate was green) | [owned-route-not-shipped.md](./owned-route-not-shipped.md) |

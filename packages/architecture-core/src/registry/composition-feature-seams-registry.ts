@@ -38,6 +38,11 @@ export const COMPOSITION_FEATURE_SEAMS = {
   ],
   'submain-composition': [
     '@/features/cart/server/services/cart-catalogue-pricing.server',
+    // Auth and password recovery moved here with their routes: this account
+    // owns login, registration, logout, phone lookup, profile updates and
+    // recovery, and holds the session signing secret and users database.
+    '@/features/auth/server/services/auth-service.bootstrap.server',
+    '@/features/password-recovery/server/services/password-recovery-service.server',
     '@/features/product-search/server/services/product-search-service.server',
     '@/features/product-search/server/services/product-search-fields.server',
     '@/features/auth/domain/super-admin',
