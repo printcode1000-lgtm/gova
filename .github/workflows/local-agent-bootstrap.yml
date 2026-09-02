@@ -13,18 +13,17 @@ jobs:
     runs-on: [self-hosted, Linux, X64, gova]
     timeout-minutes: 10
     steps:
-      - name: Deep-locate Codex installation
+      - name: Inspect installed Codex CLI
         shell: bash
         run: |
           set -euo pipefail
-          echo '=== IDE extensions ==='
-          command -v code || true
-          code --list-extensions --show-versions 2>/dev/null | grep -Ei 'openai|codex|chatgpt' || true
-          find /home/hesham/.vscode /home/hesham/.antigravity /home/hesham/.cursor /home/hesham/.config /home/hesham/.cache /snap/code /usr/local/lib/node_modules /usr/lib/node_modules /opt -maxdepth 9 -type f \( -iname 'codex' -o -iname 'codex-*' -o -iname '*codex*.js' \) -print 2>/dev/null | head -n 300 || true
-          echo '=== executable names containing codex ==='
-          find /home/hesham /opt /usr/local /snap/code -maxdepth 9 -type f -perm -u+x -iname '*codex*' -print 2>/dev/null | head -n 300 || true
-          echo '=== npm global ==='
-          npm root -g 2>/dev/null || true
-          npm list -g --depth=0 2>/dev/null | grep -Ei 'openai|codex' || true
-          echo '=== package caches ==='
-          find /home/hesham/.npm -maxdepth 8 -type f -iname '*codex*' -print 2>/dev/null | head -n 200 || true
+          CODEX=/home/hesham/.codex/plugins/.plugin-appserver/codex
+          test -x "$CODEX"
+          "$CODEX" --version || true
+          echo '=== top help ==='
+          "$CODEX" --help 2>&1 | head -n 180
+          echo '=== exec help ==='
+          "$CODEX" exec --help 2>&1 | head -n 220 || true
+          echo '=== login help/status ==='
+          "$CODEX" login --help 2>&1 | head -n 120 || true
+          "$CODEX" login status 2>&1 | head -n 60 || true
