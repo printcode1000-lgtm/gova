@@ -46,7 +46,7 @@ jobs:
           grep -F 'Exec=/home/hesham/.local/bin/gova-agent-monitor' /home/hesham/.local/share/applications/gova-agent-monitor.desktop
           test -x "$CODEX"
           "$CODEX" login status
-          MAIN_BEFORE=$(git ls-remote origin refs/heads/main | awk '{print $1}')
+          MAIN_BEFORE=$(git -C "$REPO" ls-remote origin refs/heads/main | awk '{print $1}')
           echo "main-before=$MAIN_BEFORE"
 
           echo 'PHASE 2: deterministic adversarial multi-agent simulation'
