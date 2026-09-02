@@ -1,1 +1,1 @@
-discover codex and current local agents monitor
+locate actual codex binary and inspect old monitor launcher
