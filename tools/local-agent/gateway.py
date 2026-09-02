@@ -92,12 +92,12 @@ def create_worktree(agent_id, task_id):
     a=safe(agent_id); t=safe(task_id)
     path=WORKTREE_ROOT/a/t
     branch=f"agent/{a}/{t}"
-    run(['git','fetch','--prune','origin','main'], REPO)
+    run(['git','fetch','--prune','origin','main','integration'], REPO)
     if path.exists() and (path/'.git').exists(): return str(path), branch
     path.parent.mkdir(parents=True, exist_ok=True)
     existing=run(['git','show-ref','--verify','--quiet',f'refs/heads/{branch}'],REPO,check=False).returncode==0
     if existing: run(['git','worktree','add',str(path),branch],REPO)
-    else: run(['git','worktree','add','-b',branch,str(path),'origin/main'],REPO)
+    else: run(['git','worktree','add','-b',branch,str(path),'origin/integration'],REPO)
     # Fast dependency reuse only while manifests match canonical main.
     canonical_nm=REPO/'node_modules'; target_nm=path/'node_modules'
     if canonical_nm.is_dir() and not target_nm.exists():
@@ -263,13 +263,16 @@ def integration_submit(agent_id, task_id, commit_sha, verification=None):
         run(['git','checkout','integration'],iw); run(['git','reset','--hard','origin/integration'],iw)
         cp=run(['git','cherry-pick','--allow-empty',commit_sha],iw,check=False)
         if cp.returncode:
-            checkpoint(task_id,status='conflict',next_action='resolve integration cherry-pick conflict')
+            run(['git','cherry-pick','--abort'],iw,check=False)
+            run(['git','reset','--hard','origin/integration'],iw,check=False)
+            checkpoint(task_id,status='conflict',next_action='rebase or recreate task commit from latest integration')
             event('integration-conflict',agent_id,task_id,{'stderr':cp.stderr[-2000:]})
             raise RuntimeError(cp.stderr or cp.stdout)
         for cmd in (verification or []):
             cp2=subprocess.run(['/bin/bash','-lc',cmd],cwd=str(iw),text=True,capture_output=True)
             if cp2.returncode:
-                run(['git','cherry-pick','--abort'],iw,check=False)
+                run(['git','reset','--hard','origin/integration'],iw,check=False)
+                checkpoint(task_id,status='verification-failed',next_action='fix verification failure and resubmit from latest integration')
                 raise RuntimeError(f'verification failed: {cmd}\n{cp2.stderr or cp2.stdout}')
         sha=publish_worktree_branch_api(iw,'integration')
         checkpoint(task_id,status='integrated',commits=[commit_sha,sha],next_action='')
