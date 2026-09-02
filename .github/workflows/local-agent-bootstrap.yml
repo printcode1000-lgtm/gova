@@ -1,10 +1,6 @@
 name: local-agent-bootstrap
 on:
   workflow_dispatch:
-  push:
-    branches: [integration]
-    paths:
-      - ".agent-repair/complete.signal"
 permissions:
   contents: read
 jobs:
@@ -12,7 +8,7 @@ jobs:
     runs-on: [self-hosted, Linux, X64, gova]
     timeout-minutes: 15
     steps:
-      - name: Complete persistent runtime migration
+      - name: Install persistent local-agent gateway
         shell: bash
         run: |
           set -euo pipefail
@@ -23,4 +19,4 @@ jobs:
           fi
           git -C /home/hesham/gova-agents/integration checkout integration
           git -C /home/hesham/gova-agents/integration reset --hard origin/integration
-          PYTHONDONTWRITEBYTECODE=1 python3 /home/hesham/gova-agents/integration/.agent-repair/complete.py
+          bash /home/hesham/gova-agents/integration/tools/local-agent/install.sh
