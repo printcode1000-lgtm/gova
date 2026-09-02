@@ -404,7 +404,11 @@ export function localAgentBootstrapWorkflowViolations(source: string): string[] 
   if (!body.includes("permissions:") || !body.includes("contents: read") || body.includes("contents: write")) errors.push("Local agent bootstrap must be repository read-only.");
   if (!body.includes(SELF_HOSTED_RUNNER) || body.includes(GITHUB_HOSTED_RUNNER)) errors.push("Local agent bootstrap must run only on the gova self-hosted runner.");
   if (body.includes("${{ secrets.")) errors.push("Local agent bootstrap must not consume GitHub secrets.");
-  if (body.includes("actions/checkout@") || body.includes("actions/setup-node@") || /npm ci/.test(body)) errors.push("Local agent bootstrap must reuse the host checkout/toolchain and must not reinstall dependencies.");
+  // The message names what it found: this workflow's whole point is that it
+  // reuses the host toolchain, and "must not reinstall dependencies" alone left
+  // the operator to guess which step tripped it.
+  const reinstallSteps = ["actions/checkout@", "actions/setup-node@", "npm ci"].filter((step) => body.includes(step));
+  if (reinstallSteps.length > 0) errors.push(`Local agent bootstrap must reuse the host checkout/toolchain and must not reinstall dependencies. Forbidden step(s): ${reinstallSteps.join(", ")}.`);
   if (!body.includes("/home/hesham/gova-agents/integration") || !body.includes("tools/local-agent/install.sh")) errors.push("Local agent bootstrap must install from the integration worktree.");
   const jobIds = docsWorkflowJobIds(body);
   if (jobIds.length !== 1 || jobIds[0] !== "bootstrap") errors.push(`Local agent bootstrap must contain exactly one bootstrap job. Found: ${jobIds.join(", ") || "(none)"}.`);

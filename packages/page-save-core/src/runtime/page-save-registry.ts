@@ -526,6 +526,24 @@ export async function hydratePageSaveRecoveryFromStorage(): Promise<void> {
   emit();
 }
 
+/**
+ * Drops the recovered rows that a fresh attempt has just replaced.
+ *
+ * Unlike `acknowledgePageSaveInterruption` this deletes nothing from storage:
+ * `openPageSaveJournalEntry` already rewrote each of these operations to
+ * `running`, and deleting by id here would remove the live attempt's own entry.
+ */
+function supersedeInterrupted(entries: readonly PageSaveJournalEntry[]): void {
+  if (interrupted.length === 0) return;
+  const superseded = new Set(entries.map((entry) => entry.operationId));
+  const next = interrupted.filter(
+    (operation) => !superseded.has(operation.entry.operationId),
+  );
+  if (next.length === interrupted.length) return;
+  interrupted = next;
+  emit();
+}
+
 export function acknowledgePageSaveInterruption(operationId: string): void {
   const next = interrupted.filter(
     (operation) => operation.entry.operationId !== operationId,
@@ -663,6 +681,12 @@ export async function executePageSave(): Promise<boolean> {
   // The journal opens before the first request leaves the device, so an
   // interruption anywhere below is recoverable instead of silent.
   const journalled = await openJournalForSelection(active, selectedIds);
+  // A new attempt overwrites the journal entry it reuses, so any recovered row
+  // for the same operation describes a record that no longer exists. Left in
+  // place it pinned the header icon and reopened the dialog on an
+  // acknowledgement the user could no longer answer — the outcome of *this*
+  // attempt is the answer.
+  supersedeInterrupted(journalled);
   const settle = (status: "succeeded" | "failed", error?: unknown) =>
     Promise.all(
       journalled.map((entry) => settlePageSaveJournalEntry(entry, status, error)),

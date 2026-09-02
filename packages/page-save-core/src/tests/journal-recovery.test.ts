@@ -184,6 +184,54 @@ async function testInterruptedRequestNeedsConfirmationAndIsNeverReplayed() {
   assert.equal(storage.journal.has("product-edit::product-images"), false);
 }
 
+/**
+ * A re-run answers the question the recovered row was asking.
+ *
+ * Before this, the row survived its own replacement: the header icon stayed lit
+ * and the dialog reopened after a save the user had just completed, on an
+ * acknowledgement that no longer described anything in storage.
+ */
+async function testRerunClearsTheRowItReplaces() {
+  reset();
+  const storage = createStorage();
+  const operationId = buildPageSaveOperationId("product-edit", "product-details");
+  storage.journal.set(operationId, {
+    schemaVersion: PAGE_SAVE_JOURNAL_SCHEMA_VERSION,
+    operationId,
+    idempotencyKey: "key-3",
+    scopeId: "product-edit",
+    itemId: "product-details",
+    kind: "save",
+    label: "Product details",
+    returnPath: "/product?mode=edit",
+    status: "running",
+    attempts: 1,
+    startedAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  });
+  configurePageSaveCore({ storage });
+
+  await hydratePageSaveRecoveryFromStorage();
+  assert.equal(getPageSaveSnapshot().interrupted.length, 1);
+
+  scope(async () => true);
+  openPageSaveDialog();
+  assert.equal(await executePageSave(), true);
+
+  const after = getPageSaveSnapshot();
+  assert.deepEqual(
+    after.interrupted,
+    [],
+    "the re-run replaced the entry, so nothing is left to acknowledge",
+  );
+  assert.equal(after.dialogOpen, false);
+  assert.equal(storage.journal.has(operationId), false);
+
+  // Nothing keeps the header on screen: no dirty work, no pending record, no row.
+  assert.equal(after.isDirty, false);
+  assert.equal(after.hasPersistedPending, false);
+}
+
 async function testNeverStartedWorkIsDiscardedNotResurrected() {
   reset();
   const storage = createStorage();
@@ -217,6 +265,7 @@ async function main() {
   await testFailureIsRecordedAndRetryable();
   await testThrownErrorIsRecordedNotSwallowed();
   await testInterruptedRequestNeedsConfirmationAndIsNeverReplayed();
+  await testRerunClearsTheRowItReplaces();
   await testNeverStartedWorkIsDiscardedNotResurrected();
   console.log("page-save journal recovery tests passed.");
 }

@@ -14547,6 +14547,8 @@
         "scripts/route-ownership-coverage.ts",
         "scripts/tests/route-ownership-coverage",
         "scripts/tests/route-ownership-coverage.test.ts",
+        "services/submain/src/app/api/notifications/preferences/route",
+        "services/submain/src/app/api/notifications/preferences/route.ts",
         "ship",
         "shows",
         "test",
@@ -39293,6 +39295,17 @@
       "tags": [
         "services/submain/src/app/api/notifications/devices/route",
         "services/submain/src/app/api/notifications/devices/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/notifications/preferences/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/notifications/preferences/route.ts",
+      "tags": [
+        "services/submain/src/app/api/notifications/preferences/route",
+        "services/submain/src/app/api/notifications/preferences/route.ts",
         "ts"
       ]
     },
@@ -74022,6 +74035,12 @@
     },
     {
       "from": "document:docs/08-troubleshooting/problems/owned-route-not-shipped.md",
+      "to": "source:services/submain/src/app/api/notifications/preferences/route.ts",
+      "kind": "references",
+      "detail": "services/submain/src/app/api/notifications/preferences/route.ts"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/owned-route-not-shipped.md",
       "to": "test:scripts/tests/route-ownership-coverage.test.ts",
       "kind": "references",
       "detail": "scripts/tests/route-ownership-coverage.test.ts"
@@ -88126,6 +88145,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "source:services/submain/src/app/api/notifications/devices/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/notifications/preferences/route.ts",
       "kind": "documents",
       "detail": "services/"
     },
@@ -178037,6 +178062,28 @@
     },
     {
       "from": "source:services/submain/src/app/api/notifications/devices/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../lib/http"
+    },
+    {
+      "from": "source:services/submain/src/app/api/notifications/preferences/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/notifications/preferences/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/notifications/preferences/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/notifications/preferences/route.ts",
       "to": "source:services/submain/src/app/lib/http.ts",
       "kind": "imports",
       "detail": "../../../lib/http"

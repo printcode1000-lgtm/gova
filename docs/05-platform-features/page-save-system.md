@@ -154,6 +154,15 @@ whose items are all clean is deleted on hydration and never counts as pending,
 and `openPageSaveDialog()` refuses to open when no dirty row would be listed and
 nothing is interrupted or saving. An empty "choose what to save" dialog is a bug.
 
+A recovered interruption is cleared by the attempt that replaces it. Executing a
+save rewrites the journal entry for every selected operation, so a recovered row
+carrying the same `operationId` no longer describes anything in storage and is
+dropped from `snapshot.interrupted` the moment the new attempt opens — the
+outcome of that attempt answers it. Keeping the row is what left the header icon
+lit and reopened the dialog after a save the user had just completed. Rows for
+operations the new attempt did **not** cover still wait for
+`acknowledgePageSaveInterruption()`.
+
 When the user confirms save while the target page is not mounted, the registry navigates to `returnPath`, reopens the dialog on that page, and completes save there.
 
 ## Image uploads

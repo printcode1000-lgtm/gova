@@ -14547,6 +14547,8 @@
         "scripts/route-ownership-coverage.ts",
         "scripts/tests/route-ownership-coverage",
         "scripts/tests/route-ownership-coverage.test.ts",
+        "services/submain/src/app/api/notifications/preferences/route",
+        "services/submain/src/app/api/notifications/preferences/route.ts",
         "ship",
         "shows",
         "test",
@@ -39293,6 +39295,17 @@
       "tags": [
         "services/submain/src/app/api/notifications/devices/route",
         "services/submain/src/app/api/notifications/devices/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/notifications/preferences/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/notifications/preferences/route.ts",
+      "tags": [
+        "services/submain/src/app/api/notifications/preferences/route",
+        "services/submain/src/app/api/notifications/preferences/route.ts",
         "ts"
       ]
     },

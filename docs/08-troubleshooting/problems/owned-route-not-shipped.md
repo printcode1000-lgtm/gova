@@ -65,6 +65,30 @@ directions:
 backlog. **Every line in it is a live production 404.** Never add one: a new
 unshipped route is a new outage, and the gate exists to refuse it.
 
+## Working the backlog down: `/api/notifications/preferences`
+
+The push mute switch presented exactly the symptom above from `/settings/notifications`:
+
+```
+[AsolApiClient] GET /api/notifications/preferences?uid=…&phone=… failed: requestFailed
+```
+
+The catch-all `{ owner: 'notifications', pattern: '/api/notifications/**' }`
+owned it, and `asol-notifications` ships only `/api/notifications/send`.
+
+It could not be fixed by writing the handler on that account. Both operations
+resolve the caller against the **users repository** before reading or writing the
+preference, and `asol-notifications` must never hold the users database — the same
+constraint that moved `device-token`. So ownership moved to `submain`, which holds
+the users and the notifications databases, `@asol/submain-composition` gained
+`devices.getPushPreference` / `devices.setPushPreference` over the application's
+own service, and `services/submain/src/app/api/notifications/preferences/route.ts`
+ships `GET`, `POST` and `OPTIONS`. The uid/phone identity contract and the error
+codes are unchanged, so no client moves with the origin.
+
+Both lines left `KNOWN_UNSHIPPED` in the same change — which is the only way a
+line may leave it.
+
 ## A second failure the same gap hid: pinned data source, unpinned runtime
 
 Shipping the handler is not enough if the account cannot reach its database.

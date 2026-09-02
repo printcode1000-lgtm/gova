@@ -45,15 +45,20 @@ export interface OwnedRoute {
  * What remains, and why. Both are package-level separations, not missing
  * handlers, and each is its own change:
  *
- * **The eight notification surfaces.** `notifications-service-module-contract`
+ * **The remaining notification surfaces.** `notifications-service-module-contract`
  * forbids `@asol/notifications-composition` from reaching
  * `@/features/notifications` at all: the delivery core is a sealed package, and
  * its import surface is the deployment's file surface. The handlers those routes
- * need — token registration, push preferences, broadcast, the mobile-push
- * unlock — still live in the application feature. Serving them from this account
- * means moving those services into the sealed package, not widening the
- * composition. Reimplementing them against `@asol/data-core/notifications`
- * instead would fork the contract into two copies that drift.
+ * need — broadcast, the recipient tokens read, the mobile-push unlock — still
+ * live in the application feature. Serving them from this account means moving
+ * those services into the sealed package, not widening the composition.
+ * Reimplementing them against `@asol/data-core/notifications` instead would fork
+ * the contract into two copies that drift.
+ *
+ * `device-token` and `preferences` left this list the other way: both resolve
+ * the caller against the users repository, which `asol-notifications` must never
+ * hold, so they moved to `submain` — the account that already holds the users
+ * database and the notifications database.
  *
  * **`POST /api/ota/access`.** The access check needs `configureOtaCore` and
  * `otaReleaseService`, and every door that reaches them also reaches
@@ -74,8 +79,6 @@ export const KNOWN_UNSHIPPED: readonly string[] = [
   "GET /api/notifications/broadcast/recipients",
   "POST /api/notifications/broadcast/send",
   "POST /api/notifications/mobile-push/unlock",
-  "GET /api/notifications/preferences",
-  "POST /api/notifications/preferences",
   "POST /api/notifications/recipient-tokens",
   "POST /api/ota/access",
 ];

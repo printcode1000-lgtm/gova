@@ -115,6 +115,13 @@ export interface SubmainDeviceTask {
   registerDeviceToken: typeof notificationTokenService.register;
   listAccountDevices: typeof notificationTokenService.listForAccount;
   removeDeviceToken: typeof notificationTokenService.remove;
+  /**
+   * The account-wide push mute switch. It resolves the caller against the users
+   * repository before touching the preference, which is the same capability
+   * that keeps `device-token` on this account.
+   */
+  getPushPreference: typeof notificationTokenService.getPushPreference;
+  setPushPreference: typeof notificationTokenService.setPushPreference;
   sendSelfTest: typeof notificationSelfTestService.send;
   /** The Super Admin broadcast test: a verified session decides who may send it. */
   sendBroadcastTest: typeof notificationBroadcastService.sendTest;
@@ -234,6 +241,9 @@ export function createSubmainRuntime(_config?: SubmainRuntimeConfig): SubmainRun
       registerDeviceToken: (input) => notificationTokenService.register(input),
       listAccountDevices: (identity) => notificationTokenService.listForAccount(identity),
       removeDeviceToken: (input) => notificationTokenService.remove(input),
+      getPushPreference: (uid, phone) => notificationTokenService.getPushPreference(uid, phone),
+      setPushPreference: (uid, phone, pushEnabled) =>
+        notificationTokenService.setPushPreference(uid, phone, pushEnabled),
       sendSelfTest: (input) => notificationSelfTestService.send(input),
       sendBroadcastTest: (input) => notificationBroadcastService.sendTest(input),
       assertSuperAdmin: assertSuperAdminRequest,

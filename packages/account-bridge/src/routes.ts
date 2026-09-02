@@ -35,6 +35,11 @@ export const ROUTE_OWNERSHIP: readonly RouteOwnership[] = [
   // hold. The account that holds the users database and the notifications
   // database owns it instead.
   { owner: 'submain', pattern: '/api/notifications/device-token', methods: ALL },
+  // The account-wide push mute switch resolves the caller against the users
+  // repository before it reads or writes the preference, so it belongs with
+  // `device-token` for the same reason: `asol-notifications` must never hold
+  // the users database.
+  { owner: 'submain', pattern: '/api/notifications/preferences', methods: ALL },
   { owner: 'notifications', pattern: '/api/notifications/**', methods: ALL },
   { owner: 'submain', pattern: '/api/ota/access', methods: ['POST'] },
   { owner: 'submain', pattern: '/api/account/**', methods: ALL },
