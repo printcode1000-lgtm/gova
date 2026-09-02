@@ -4,6 +4,13 @@ p=Path('/home/hesham/gova-agents/integration/.agent-bootstrap/finalize-runtime.p
 s=p.read_text(encoding='utf8')
 old='''    insert_anchor = '        - ".github/workflows/deploy-main.yml"\\n'\n    additions = '        - ".github/workflows/local-agent-bootstrap.yml"\\n        - "tools/local-agent/**"\\n'\n    if '.github/workflows/local-agent-bootstrap.yml' not in docs:\n        if insert_anchor not in docs: raise RuntimeError('docs workflow insertion anchor missing')\n        docs = docs.replace(insert_anchor, insert_anchor + additions, 1)\n    elif 'tools/local-agent/**' not in docs:\n        docs = docs.replace('        - ".github/workflows/local-agent-bootstrap.yml"\\n',\n                            '        - ".github/workflows/local-agent-bootstrap.yml"\\n        - "tools/local-agent/**"\\n', 1)\n'''
 new='''    insert_anchor = '      - ".github/workflows/docs.yml"\\n'\n    additions = '      - ".github/workflows/local-agent-bootstrap.yml"\\n      - "tools/local-agent/**"\\n'\n    if '.github/workflows/local-agent-bootstrap.yml' not in docs:\n        if insert_anchor not in docs: raise RuntimeError('docs workflow insertion anchor missing')\n        docs = docs.replace(insert_anchor, insert_anchor + additions)\n    elif 'tools/local-agent/**' not in docs:\n        docs = docs.replace('      - ".github/workflows/local-agent-bootstrap.yml"\\n',\n                            '      - ".github/workflows/local-agent-bootstrap.yml"\\n      - "tools/local-agent/**"\\n')\n'''
-if old not in s: raise SystemExit('expected finalizer fragment not found')
-p.write_text(s.replace(old,new,1),encoding='utf8')
-print('finalizer docs anchor repaired')
+if old not in s: raise SystemExit('expected finalizer docs fragment not found')
+s=s.replace(old,new,1)
+old1="policy, n = re.subn(r'function localWorkspaceViolations[\\s\\S]*?export function collectGithubCiPolicyErrors', bootstrap_validator, policy, count=1)"
+new1="policy, n = re.subn(r'function localWorkspaceViolations[\\s\\S]*?export function collectGithubCiPolicyErrors', lambda _m: bootstrap_validator, policy, count=1)"
+old2="policy, n = re.subn(r'  const localAgentInspectPath[\\s\\S]*?  const protectPath', collect_new, policy, count=1)"
+new2="policy, n = re.subn(r'  const localAgentInspectPath[\\s\\S]*?  const protectPath', lambda _m: collect_new, policy, count=1)"
+if old1 not in s or old2 not in s: raise SystemExit('expected finalizer regex replacement fragment not found')
+s=s.replace(old1,new1,1).replace(old2,new2,1)
+p.write_text(s,encoding='utf8')
+print('finalizer docs anchor and literal regex replacements repaired')
