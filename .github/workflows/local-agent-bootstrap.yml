@@ -5,7 +5,7 @@ on:
     branches:
       - integration
     paths:
-      - ".agent-repair/multi-agent-sim.py"
+      - ".agent-repair/run-multi-agent-sim.trigger"
 permissions:
   contents: read
 jobs:
