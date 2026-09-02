@@ -58,3 +58,23 @@ else
   systemctl --user enable gova-agent-gateway.service
   systemctl --user restart gova-agent-gateway.service
 fi
+# systemctl restart can return before the HTTP socket accepts connections. Make
+# install completion mean the persistent gateway is actually ready for clients.
+for _ in $(seq 1 60); do
+  if python3 - <<'HEALTH' >/dev/null 2>&1
+import urllib.request
+with urllib.request.urlopen('http://127.0.0.1:8765/health', timeout=0.5) as r:
+    raise SystemExit(0 if r.status == 200 else 1)
+HEALTH
+  then
+    exit 0
+  fi
+  sleep 0.1
+done
+echo 'gova-agent gateway did not become ready after restart' >&2
+if sudo -n true 2>/dev/null; then
+  sudo systemctl status gova-agent-gateway.service --no-pager || true
+else
+  systemctl --user status gova-agent-gateway.service --no-pager || true
+fi
+exit 1
