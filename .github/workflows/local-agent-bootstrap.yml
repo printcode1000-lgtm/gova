@@ -26,6 +26,7 @@ jobs:
           BASIC=$(printf 'x-access-token:%s' "$GITHUB_TOKEN" | base64 -w0)
           git -C "$REPO" -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $BASIC" fetch --quiet origin main integration
           MAIN_BEFORE=$(git -C "$REPO" rev-parse origin/main)
+          git -C "$IW" merge --abort 2>/dev/null || true
           git -C "$IW" checkout integration
           git -C "$IW" reset --hard origin/integration
           git -C "$IW" config user.name gova-local-agent
@@ -98,6 +99,7 @@ jobs:
 
           cd "$IW"
           npm run docs:generate
+          npm run architecture:docs
           npm run github:ci-policy
           npm run architecture:check
           DOCS_CONTRACT_CHANGE=1 npm run docs:ci
