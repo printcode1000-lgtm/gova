@@ -3,7 +3,9 @@
 
 The helper never stores a credential. On `get` it resolves the same local GitHub
 runtime token used by gateway.py from process environment or ignored repo env
-files and writes it only to Git's credential-helper stdout protocol.
+files and writes it only to Git's credential-helper stdout protocol. GitHub
+Actions may also supply its ephemeral GITHUB_TOKEN through process environment;
+that value is used only for the current helper invocation and is never persisted.
 """
 from __future__ import annotations
 
@@ -12,11 +14,12 @@ import sys
 from pathlib import Path
 
 REPO = Path(os.environ.get("GOVA_AGENT_REPO", "/home/hesham/gova")).resolve()
-TOKEN_NAMES = ("GOVA_LOCAL_DISPATCH_TOKEN", "GITHUB_ADMIN_TOKEN", "GOVA_RUNNER_STATUS_TOKEN")
+PERSISTENT_TOKEN_NAMES = ("GOVA_LOCAL_DISPATCH_TOKEN", "GITHUB_ADMIN_TOKEN", "GOVA_RUNNER_STATUS_TOKEN")
+ENV_TOKEN_NAMES = (*PERSISTENT_TOKEN_NAMES, "GITHUB_TOKEN")
 
 
 def token() -> str:
-    for name in TOKEN_NAMES:
+    for name in ENV_TOKEN_NAMES:
         value = os.environ.get(name, "").strip()
         if value:
             return value
@@ -30,7 +33,7 @@ def token() -> str:
             if not line or line.startswith("#") or "=" not in line:
                 continue
             key, value = line.split("=", 1)
-            if key.strip() not in TOKEN_NAMES:
+            if key.strip() not in PERSISTENT_TOKEN_NAMES:
                 continue
             value = value.strip()
             if len(value) >= 2 and value[0] == value[-1] and value[0] in ("'", '"'):
