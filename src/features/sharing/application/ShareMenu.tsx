@@ -134,7 +134,7 @@ export function ShareMenu({ id, content, locale, trigger }: ShareMenuProps & { i
         dir={ar ? "rtl" : "ltr"}
         className="fixed inset-x-0 bottom-0 top-auto w-full max-w-none translate-x-0 translate-y-0 rounded-b-none rounded-t-[2rem] border-outline-variant/70 bg-surface/98 px-4 pb-[max(1.25rem,var(--asol-safe-area-bottom))] pt-5 shadow-2xl backdrop-blur-xl sm:inset-auto sm:left-1/2 sm:top-1/2 sm:max-w-md sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-3xl sm:p-6"
       >
-        <div className="mx-auto mb-1 h-1.5 w-12 rounded-full bg-outline-variant sm:hidden" />
+        <div id="features-sharing-application-sharemenu-div-2-10r1wv" className="mx-auto mb-1 h-1.5 w-12 rounded-full bg-outline-variant sm:hidden" />
         <DialogHeader className="text-start sm:text-start">
           <DialogTitle>{ar ? "مشاركة عبر" : "Share via"}</DialogTitle>
           <DialogDescription>
@@ -144,9 +144,9 @@ export function ShareMenu({ id, content, locale, trigger }: ShareMenuProps & { i
           </DialogDescription>
         </DialogHeader>
 
-        <div className="mt-4 flex items-center gap-3 rounded-2xl border border-outline-variant/60 bg-surface-container-low p-3">
+        <div id="features-sharing-application-sharemenu-div-3-qc9qku" className="mt-4 flex items-center gap-3 rounded-2xl border border-outline-variant/60 bg-surface-container-low p-3">
           {content.imageUrl ? (
-            <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-surface-container-high">
+            <div id="features-sharing-application-sharemenu-div-4-bdcugp" className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-surface-container-high">
               <Image
                 src={content.imageUrl}
                 alt=""
@@ -156,21 +156,21 @@ export function ShareMenu({ id, content, locale, trigger }: ShareMenuProps & { i
               />
             </div>
           ) : (
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <div id="features-sharing-application-sharemenu-div-5-tr4xt4" className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
               <Share2 className="h-6 w-6" />
             </div>
           )}
-          <div className="min-w-0">
-            <p className="line-clamp-1 text-sm font-bold text-on-surface">
+          <div id="features-sharing-application-sharemenu-div-6-3as2p0" className="min-w-0">
+            <p id="features-sharing-application-sharemenu-text-7-1odzlk" className="line-clamp-1 text-sm font-bold text-on-surface">
               {content.title}
             </p>
-            <p className="mt-1 line-clamp-1 text-xs text-on-surface-variant">
+            <p id="features-sharing-application-sharemenu-text-8-lmahik" className="mt-1 line-clamp-1 text-xs text-on-surface-variant">
               {content.text}
             </p>
           </div>
         </div>
 
-        <div className="mt-5 grid grid-cols-4 gap-2 sm:gap-3">
+        <div id="features-sharing-application-sharemenu-div-9-gxljjt" className="mt-5 grid grid-cols-4 gap-2 sm:gap-3">
           <DestinationButton
             label="WhatsApp"
             destination="whatsapp"
@@ -201,7 +201,7 @@ export function ShareMenu({ id, content, locale, trigger }: ShareMenuProps & { i
           </DestinationButton>
         </div>
 
-        <button
+        <button id="features-sharing-application-sharemenu-button-10-kg7jud"
           type="button"
           onClick={() => void saveQrCode()}
           disabled={savingQrCode}
@@ -217,7 +217,7 @@ export function ShareMenu({ id, content, locale, trigger }: ShareMenuProps & { i
               : "Create and save QR code"}
         </button>
 
-        <p
+        <p id="features-sharing-application-sharemenu-text-11-bfauuq"
           role="status"
           aria-live="polite"
           className={cn(
@@ -250,7 +250,7 @@ function DestinationButton({ id,
       className="group flex min-w-0 flex-col items-center gap-2 rounded-2xl p-1 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       aria-label={label}
     >
-      <span
+      <span id="features-sharing-application-sharemenu-text-13-vjbhoh"
         className={cn(
           "flex h-14 w-14 items-center justify-center rounded-2xl text-2xl shadow-sm transition group-active:scale-95 [&>svg]:h-6 [&>svg]:w-6",
           destinationStyles[destination],
@@ -258,7 +258,7 @@ function DestinationButton({ id,
       >
         {children}
       </span>
-      <span className="w-full truncate text-[11px] font-semibold text-on-surface-variant sm:text-xs">
+      <span id="features-sharing-application-sharemenu-text-14-uxafxv" className="w-full truncate text-[11px] font-semibold text-on-surface-variant sm:text-xs">
         {label}
       </span>
     </button>

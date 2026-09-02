@@ -32,7 +32,7 @@ export default async function ProductSharePage({
     : null;
   return (
     <Suspense fallback={null}>
-      <ProductPageContent id="s.product.page.product-page-content" initialProduct={initialProduct} />
+      <ProductPageContent id='app-s-product-page-productpagecontent-1-c1mjhp' initialProduct={initialProduct} />
     </Suspense>
   );
 }

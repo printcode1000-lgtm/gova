@@ -58,34 +58,34 @@ export function AndroidReleasePaths({
 
   return (
     <section
-      id="google-play-console.android-release-paths.section"
+      id='google-play-console-presentation-components-androidreleasepaths-section-1-jtnndg'
       className="rounded-lg border bg-surface-container-low p-2"
     >
       <h2
-        id="google-play-console.android-release-paths.h2"
+        id='google-play-console-presentation-components-androidreleasepaths-heading-2-k5t7vh'
         className="font-semibold">{t("releaseConsole.androidPaths.groupTitle")}</h2
       >
-      <p id="google-play-console.android-release-paths.p" className="mt-1 text-xs leading-5 text-on-surface-variant">
+      <p id='google-play-console-presentation-components-androidreleasepaths-text-3-rvwple' className="mt-1 text-xs leading-5 text-on-surface-variant">
         {t("releaseConsole.androidPaths.groupHelp")}
       </p>
-      <div id="google-play-console.android-release-paths.div" className="mt-3 space-y-3">
+      <div id='google-play-console-presentation-components-androidreleasepaths-div-4-mgdaw0' className="mt-3 space-y-3">
         <section
-          id="google-play-console.android-release-paths.section.2"
+          id='google-play-console-presentation-components-androidreleasepaths-section-5-cd6h3u'
           className="rounded-lg border bg-surface-container p-2"
         >
           <h3
-            id="google-play-console.android-release-paths.h3"
+            id='google-play-console-presentation-components-androidreleasepaths-heading-6-bbtv0w'
             className="text-sm font-semibold">{t("releaseConsole.androidPaths.phaseTitle")}</h3
           >
           <p
-            id="google-play-console.android-release-paths.p.2"
+            id='google-play-console-presentation-components-androidreleasepaths-text-7-gqal3b'
             className="mt-1 text-xs leading-5 text-on-surface-variant"
           >
             {t("releaseConsole.androidPaths.phaseHelp")}
           </p>
           <Tabs className="mt-2" value={activePath} onValueChange={setActivePath}>
             <TabsList
-              id="google-play-console.android-release-paths.tabs-list"
+              id='google-play-console-presentation-components-androidreleasepaths-tabslist-8-fuijaf'
               className="flex h-auto w-full flex-wrap justify-start gap-1"
             >
               {ANDROID_RELEASE_PATHS.map((path) => (
@@ -111,7 +111,7 @@ export function AndroidReleasePaths({
               </TabsContent>
             ))}
           </Tabs>
-          <p id="google-play-console.android-release-paths.p.3" className="mt-2 text-xs text-on-surface-variant">
+          <p id='google-play-console-presentation-components-androidreleasepaths-text-9-ryju3j' className="mt-2 text-xs text-on-surface-variant">
             {t("releaseConsole.androidPaths.tabSelectionSummary", {
               selected: String(selectedInTab),
               total: String(activeBranchIds.length),

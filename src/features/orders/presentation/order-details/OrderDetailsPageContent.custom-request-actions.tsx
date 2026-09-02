@@ -35,7 +35,7 @@ export function CustomRequestActions({
   };
 
   return (
-    <div id="orders.order-details.order-details-page-content.custom-request-actions.div" className="mt-3 flex flex-wrap gap-2">
+    <div id='orders-presentation-order-details-orderdetailspagecontent-custom-request-actions-div-1-adduyg' className="mt-3 flex flex-wrap gap-2">
       {isSeller && isPendingSellerResponse(item.status) ? (
         <>
           <OrderActionButton

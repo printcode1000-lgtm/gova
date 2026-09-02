@@ -17,7 +17,7 @@ export function StoreTextTab() {
   useStoreTextPageSave(store, true, acknowledged);
   if (!store.snapshot)
     return (
-      <div id="google-play-console.tabs.store-text-tab.div" className="p-4 text-sm">
+      <div id='google-play-console-presentation-tabs-storetexttab-div-1-5lb6vk' className="p-4 text-sm">
         {t("releaseConsole.loading")}
       </div>
     );
@@ -25,32 +25,32 @@ export function StoreTextTab() {
     store.setListings(store.listings.map((item, itemIndex) => (itemIndex === index ? { ...item, ...next } : item)));
   };
   return (
-    <section id="google-play-console.tabs.store-text-tab.section" className="grid gap-4 xl:grid-cols-[1fr_22rem]">
-      <div id="google-play-console.tabs.store-text-tab.div.2" className="space-y-4">
+    <section id='google-play-console-presentation-tabs-storetexttab-section-2-8yegtf' className="grid gap-4 xl:grid-cols-[1fr_22rem]">
+      <div id='google-play-console-presentation-tabs-storetexttab-div-3-urq5uo' className="space-y-4">
         <div
-          id="google-play-console.tabs.store-text-tab.div.3"
+          id='google-play-console-presentation-tabs-storetexttab-div-4-gjzeax'
           className="grid gap-3 rounded-md border bg-surface p-4 md:grid-cols-2"
         >
           <Field
-            id="google-play-console.tabs.store-text-tab.field"
+            id='google-play-console-presentation-tabs-storetexttab-field-5-oy1fgi'
             label={t("releaseConsole.text.website")}
             value={store.details.contactWebsite ?? ""}
             onChange={(value) => store.setDetails({ ...store.details, contactWebsite: value })}
           />
           <Field
-            id="google-play-console.tabs.store-text-tab.field.2"
+            id='google-play-console-presentation-tabs-storetexttab-field-6-rhz3xt'
             label={t("releaseConsole.text.email")}
             value={store.details.contactEmail ?? ""}
             onChange={(value) => store.setDetails({ ...store.details, contactEmail: value })}
           />
           <Field
-            id="google-play-console.tabs.store-text-tab.field.3"
+            id='google-play-console-presentation-tabs-storetexttab-field-7-htkp2a'
             label={t("releaseConsole.text.phone")}
             value={store.details.contactPhone ?? ""}
             onChange={(value) => store.setDetails({ ...store.details, contactPhone: value })}
           />
           <Field
-            id="google-play-console.tabs.store-text-tab.field.4"
+            id='google-play-console-presentation-tabs-storetexttab-field-8-q5chh6'
             label={t("releaseConsole.text.defaultLanguage")}
             value={store.details.defaultLanguage ?? ""}
             onChange={(value) => store.setDetails({ ...store.details, defaultLanguage: value })}
@@ -103,27 +103,27 @@ export function StoreTextTab() {
             </section>
           );
         })}
-        <div id="google-play-console.tabs.store-text-tab.div.4" className="flex gap-2">
+        <div id='google-play-console-presentation-tabs-storetexttab-div-9-fk0fty' className="flex gap-2">
           <Button
-            id="google-play-console.tabs.store-text-tab.button"
+            id='google-play-console-presentation-tabs-storetexttab-button-10-exek3p'
             variant="outline"
             onClick={() => store.setListings([...store.listings, { language: "en-US" }])}
           >
-            <Plus id="google-play-console.tabs.store-text-tab.plus" className="h-4 w-4" />
+            <Plus id='google-play-console-presentation-tabs-storetexttab-plus-11-itpwbc' className="h-4 w-4" />
             {t("releaseConsole.text.addLanguage")}
           </Button>
         </div>
       </div>
-      <aside id="google-play-console.tabs.store-text-tab.aside" className="rounded-md border bg-surface p-4">
-        <h2 id="google-play-console.tabs.store-text-tab.h2" className="text-sm font-semibold">
+      <aside id='google-play-console-presentation-tabs-storetexttab-aside-12-xmtdro' className="rounded-md border bg-surface p-4">
+        <h2 id='google-play-console-presentation-tabs-storetexttab-heading-13-czwa1w' className="text-sm font-semibold">
           {t("releaseConsole.text.pendingDiff")}
         </h2>
-        <pre className="mt-2 max-h-96 overflow-auto rounded-md bg-muted p-3 text-xs" dir="ltr">
+        <pre id="google-play-console-presentation-tabs-storetexttab-pre-14-lmjiot" className="mt-2 max-h-96 overflow-auto rounded-md bg-muted p-3 text-xs" dir="ltr">
           {JSON.stringify({ before: store.snapshot.listings, after: store.listings }, null, 2)}
         </pre>
-        <label id="google-play-console.tabs.store-text-tab.label" className="mt-3 flex items-center gap-2 text-sm">
+        <label id='google-play-console-presentation-tabs-storetexttab-label-15-xomrry' className="mt-3 flex items-center gap-2 text-sm">
           <input
-            id="google-play-console.tabs.store-text-tab.input"
+            id='google-play-console-presentation-tabs-storetexttab-input-16-uhqgmk'
             type="checkbox"
             checked={acknowledged}
             onChange={(event) => setAcknowledged(event.target.checked)}
@@ -131,7 +131,7 @@ export function StoreTextTab() {
           {t("releaseConsole.text.acknowledgeDiff")}
         </label>
         {!acknowledged && store.isTextDirty ? (
-          <p id="google-play-console.tabs.store-text-tab.p" className="mt-2 text-xs text-on-surface-variant">
+          <p id='google-play-console-presentation-tabs-storetexttab-text-17-yijkj1' className="mt-2 text-xs text-on-surface-variant">
             {t("releaseConsole.text.acknowledgeDiff")}
           </p>
         ) : null}

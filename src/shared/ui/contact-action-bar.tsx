@@ -56,13 +56,13 @@ export function ContactActionBar({
         className,
       )}
     >
-      <div className="flex items-center gap-3">
+      <div id="shared-ui-contact-action-bar-div-2-hkjuxc" className="flex items-center gap-3">
         {!compact ? (
-          <span className="shrink-0 text-xs font-semibold text-on-surface-variant">
+          <span id="shared-ui-contact-action-bar-text-3-anlug5" className="shrink-0 text-xs font-semibold text-on-surface-variant">
             {label}
           </span>
         ) : null}
-        <div
+        <div id="shared-ui-contact-action-bar-div-4-nyy3qm"
           data-snapshot-scroll
           data-snapshot-id="profile-preview-contact-actions"
           className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
@@ -98,7 +98,7 @@ function ContactActionGroup({ id, group }: { group: ContactGroup } & { id?: stri
         }}
         aria-label={group.label}
       >
-        <a
+        <a id="shared-ui-contact-action-bar-link-6-xksark"
           href={option.href}
           target={isExternalHref(option.href) ? "_blank" : undefined}
           rel={isExternalHref(option.href) ? "noreferrer" : undefined}
@@ -129,7 +129,7 @@ function ContactActionGroup({ id, group }: { group: ContactGroup } & { id?: stri
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center" className="min-w-64">
-        <div dir="rtl">
+        <div id="shared-ui-contact-action-bar-div-8-7dwdw6" dir="rtl">
           <DropdownMenuLabel className="flex items-center gap-2" style={{ color }}>
             <FontAwesomeIcon icon={icon} className="h-4 w-4" />
             {group.label}

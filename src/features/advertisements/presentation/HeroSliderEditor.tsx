@@ -82,14 +82,14 @@ export const HeroSliderEditor = React.forwardRef<
   };
 
   return (
-    <section id="advertisements.hero-slider-editor.section"
+    <section id='features-advertisements-presentation-heroslidereditor-section-1-kuugxx'
       className="mt-4 rounded-xl border bg-card p-4 text-card-foreground shadow-sm"
       aria-label="تعديل العرض الرئيسي"
     >
-      <div id="advertisements.hero-slider-editor.div" className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <div id="advertisements.hero-slider-editor.div.2">
-          <h2 id="advertisements.hero-slider-editor.h2" className="font-semibold">إعدادات العرض الرئيسي</h2>
-          <p id="advertisements.hero-slider-editor.p" className="text-sm text-muted-foreground">
+      <div id='features-advertisements-presentation-heroslidereditor-div-2-ke5jjd' className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <div id='features-advertisements-presentation-heroslidereditor-div-3-1gs2xn'>
+          <h2 id='features-advertisements-presentation-heroslidereditor-heading-4-kenpad' className="font-semibold">إعدادات العرض الرئيسي</h2>
+          <p id='features-advertisements-presentation-heroslidereditor-text-5-w7xrhg' className="text-sm text-muted-foreground">
             تظهر التغييرات والصور المختارة مباشرة في المعاينة أعلاه حتى قبل
             الرفع، بينما تبقى الصفحة الرئيسية كما هي. التشغيل التلقائي ومدة كل
             شريحة والتكرار تعمل كما في Home. لكل شريحة انتقال
@@ -97,25 +97,25 @@ export const HeroSliderEditor = React.forwardRef<
             النقر على الشريحة معطّل أثناء التحرير.
           </p>
         </div>
-        <div id="advertisements.hero-slider-editor.div.3" className="flex gap-2">
+        <div id='features-advertisements-presentation-heroslidereditor-div-6-fttmnb' className="flex gap-2">
           {onCancel && (
-            <Button id="advertisements.hero-slider-editor.button"
+            <Button id='features-advertisements-presentation-heroslidereditor-button-7-daguva'
               type="button"
               variant="outline"
               size="sm"
               onClick={onCancel}
             >
-              <RotateCcw id="advertisements.hero-slider-editor.rotate-ccw" className="me-2 h-4 w-4" /> تراجع
+              <RotateCcw id='features-advertisements-presentation-heroslidereditor-rotateccw-8-scrtzu' className="me-2 h-4 w-4" /> تراجع
             </Button>
           )}
         </div>
       </div>
 
-      <div id="advertisements.hero-slider-editor.div.4" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div id="advertisements.hero-slider-editor.div.5" className="space-y-2">
-          <Label id="advertisements.hero-slider-editor.label" htmlFor="hero-template-transition">انتقال الشرائح الجديدة</Label>
+      <div id='features-advertisements-presentation-heroslidereditor-div-9-urdbap' className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div id='features-advertisements-presentation-heroslidereditor-div-10-7ljcfq' className="space-y-2">
+          <Label id='features-advertisements-presentation-heroslidereditor-label-11-ohey2u' htmlFor='features-advertisements-presentation-heroslidereditor-select-12-ogwt08'>انتقال الشرائح الجديدة</Label>
           <select
-            id="hero-template-transition"
+            id='features-advertisements-presentation-heroslidereditor-select-12-ogwt08'
             className="asol-control asol-field-surface w-full border border-input px-3 text-sm"
             value={templateTransition}
             onChange={(event) =>
@@ -129,12 +129,12 @@ export const HeroSliderEditor = React.forwardRef<
             ))}
           </select>
         </div>
-        <div id="advertisements.hero-slider-editor.div.6" className="space-y-2">
-          <Label id="advertisements.hero-slider-editor.label.2" htmlFor="hero-template-transition-duration">
+        <div id='features-advertisements-presentation-heroslidereditor-div-13-fku6o8' className="space-y-2">
+          <Label id='features-advertisements-presentation-heroslidereditor-label-14-cetsy2' htmlFor='features-advertisements-presentation-heroslidereditor-input-15-ztyutx'>
             مدة الانتقال الافتراضية (مللي ثانية)
           </Label>
           <Input
-            id="hero-template-transition-duration"
+            id='features-advertisements-presentation-heroslidereditor-input-15-ztyutx'
             type="number"
             min={0}
             max={3000}
@@ -143,8 +143,8 @@ export const HeroSliderEditor = React.forwardRef<
             onChange={(event) => setTemplateDuration(Number(event.target.value))}
           />
         </div>
-        <div id="advertisements.hero-slider-editor.div.7" className="flex items-end sm:col-span-2">
-          <Button id="advertisements.hero-slider-editor.button.2"
+        <div id='features-advertisements-presentation-heroslidereditor-div-16-qvxuoc' className="flex items-end sm:col-span-2">
+          <Button id='features-advertisements-presentation-heroslidereditor-button-17-gejvmv'
             type="button"
             variant="secondary"
             size="sm"
@@ -155,25 +155,25 @@ export const HeroSliderEditor = React.forwardRef<
             تطبيق الانتقال على كل الشرائح
           </Button>
         </div>
-        <div id="advertisements.hero-slider-editor.div.8" className="flex items-end gap-3 pb-2">
+        <div id='features-advertisements-presentation-heroslidereditor-div-18-asqpve' className="flex items-end gap-3 pb-2">
           <Switch
-            id="hero-autoplay"
+            id='features-advertisements-presentation-heroslidereditor-switch-19-op8m2c'
             checked={value.autoPlay}
             onCheckedChange={(autoPlay) => onChange({ ...value, autoPlay })}
           />
-          <Label id="advertisements.hero-slider-editor.label.3" htmlFor="hero-autoplay">تشغيل تلقائي</Label>
+          <Label id='features-advertisements-presentation-heroslidereditor-label-20-yxmhk4' htmlFor='features-advertisements-presentation-heroslidereditor-switch-19-op8m2c'>تشغيل تلقائي</Label>
         </div>
-        <div id="advertisements.hero-slider-editor.div.9" className="flex items-end gap-3 pb-2">
+        <div id='features-advertisements-presentation-heroslidereditor-div-21-tth3d0' className="flex items-end gap-3 pb-2">
           <Switch
-            id="hero-loop"
+            id='features-advertisements-presentation-heroslidereditor-switch-22-5tq5ps'
             checked={value.loop}
             onCheckedChange={(loop) => onChange({ ...value, loop })}
           />
-          <Label id="advertisements.hero-slider-editor.label.4" htmlFor="hero-loop">تكرار الشرائح</Label>
+          <Label id='features-advertisements-presentation-heroslidereditor-label-23-tyrbuf' htmlFor='features-advertisements-presentation-heroslidereditor-switch-22-5tq5ps'>تكرار الشرائح</Label>
         </div>
       </div>
 
-      <div id="advertisements.hero-slider-editor.div.10" className="mt-6 space-y-4">
+      <div id='features-advertisements-presentation-heroslidereditor-div-24-iovbv6' className="mt-6 space-y-4">
         {value.slides.map((slide, index) => {
           const slideId = slide.id?.trim();
           if (!slideId) throw new Error("homeHeroSlideIdentityMissing");
@@ -242,13 +242,13 @@ export const HeroSliderEditor = React.forwardRef<
           </fieldset>
           );
         })}
-        <Button id="advertisements.hero-slider-editor.button.3"
+        <Button id='features-advertisements-presentation-heroslidereditor-button-25-ty9dij'
           type="button"
           variant="outline"
           className="w-full"
           onClick={() => onChange({ ...value, slides: [...value.slides, createHeroSliderSlide((value.slides.length + 1) * 100, { transition: templateTransition, transitionDuration: templateDuration })] })}
         >
-          <Plus id="advertisements.hero-slider-editor.plus" className="me-2 h-4 w-4" /> إضافة شريحة
+          <Plus id='features-advertisements-presentation-heroslidereditor-plus-26-7bbmrz' className="me-2 h-4 w-4" /> إضافة شريحة
         </Button>
       </div>
     </section>

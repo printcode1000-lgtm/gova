@@ -247,9 +247,9 @@ export function ProductPharmacySpecs({
 
   if (mode === "view") {
     return (
-      <div id="pharmacy-profile-catalog.product-pharmacy-specs.div" className="grid gap-3 sm:grid-cols-2">
+      <div id='features-pharmacy-profile-catalog-presentation-productpharmacyspecs-div-1-trxydl' className="grid gap-3 sm:grid-cols-2">
         {config.pharmacyCategory ? (
-          <ProductField id="pharmacy-profile-catalog.product-pharmacy-specs.product-field"
+          <ProductField id='features-pharmacy-profile-catalog-presentation-productpharmacyspecs-productfield-2-ij040v'
             label="التصنيف الرئيسي"
             value={specs.pharmacyCategory}
             mode={mode}
@@ -257,7 +257,7 @@ export function ProductPharmacySpecs({
           />
         ) : null}
         {config.pharmacySubcategory ? (
-          <ProductField id="pharmacy-profile-catalog.product-pharmacy-specs.product-field.2"
+          <ProductField id='features-pharmacy-profile-catalog-presentation-productpharmacyspecs-productfield-3-ivabmb'
             label="التصنيف الفرعي"
             value={specs.pharmacySubcategory}
             mode={mode}
@@ -265,7 +265,7 @@ export function ProductPharmacySpecs({
           />
         ) : null}
         {config.nameAr ? (
-          <ProductField id="pharmacy-profile-catalog.product-pharmacy-specs.product-field.3"
+          <ProductField id='features-pharmacy-profile-catalog-presentation-productpharmacyspecs-productfield-4-9vyl74'
             label="الاسم بالعربي"
             value={specs.nameAr}
             mode={mode}
@@ -273,7 +273,7 @@ export function ProductPharmacySpecs({
           />
         ) : null}
         {config.nameEn ? (
-          <ProductField id="pharmacy-profile-catalog.product-pharmacy-specs.product-field.4"
+          <ProductField id='features-pharmacy-profile-catalog-presentation-productpharmacyspecs-productfield-5-4alrww'
             label="الاسم بالإنجليزي"
             value={specs.nameEn}
             mode={mode}
@@ -281,7 +281,7 @@ export function ProductPharmacySpecs({
           />
         ) : null}
         {config.activeIngredient ? (
-          <ProductField id="pharmacy-profile-catalog.product-pharmacy-specs.product-field.5"
+          <ProductField id='features-pharmacy-profile-catalog-presentation-productpharmacyspecs-productfield-6-h00dtq'
             label="المادة الفعالة"
             value={specs.activeIngredient}
             mode={mode}
@@ -289,7 +289,7 @@ export function ProductPharmacySpecs({
           />
         ) : null}
         {config.form ? (
-          <ProductField id="pharmacy-profile-catalog.product-pharmacy-specs.product-field.6"
+          <ProductField id='features-pharmacy-profile-catalog-presentation-productpharmacyspecs-productfield-7-ma5aqe'
             label="شكل الدواء"
             value={specs.form}
             mode={mode}
@@ -297,7 +297,7 @@ export function ProductPharmacySpecs({
           />
         ) : null}
         {config.concentration ? (
-          <ProductField id="pharmacy-profile-catalog.product-pharmacy-specs.product-field.7"
+          <ProductField id='features-pharmacy-profile-catalog-presentation-productpharmacyspecs-productfield-8-rxdkfp'
             label="التركيز"
             value={specs.concentration}
             mode={mode}
@@ -305,7 +305,7 @@ export function ProductPharmacySpecs({
           />
         ) : null}
         {config.prescriptionRequired ? (
-          <ProductField id="pharmacy-profile-catalog.product-pharmacy-specs.product-field.8"
+          <ProductField id='features-pharmacy-profile-catalog-presentation-productpharmacyspecs-productfield-9-1asm8m'
             label="يتطلب روشتة"
             value={String(specs.prescriptionRequired)}
             mode={mode}
@@ -318,9 +318,9 @@ export function ProductPharmacySpecs({
   }
 
   return (
-    <div id="pharmacy-profile-catalog.product-pharmacy-specs.div.2" className="grid gap-3 sm:grid-cols-2">
+    <div id='features-pharmacy-profile-catalog-presentation-productpharmacyspecs-div-10-8oie6a' className="grid gap-3 sm:grid-cols-2">
       {config.pharmacyCategory ? (
-        <PharmacySelect id="pharmacy-profile-catalog.product-pharmacy-specs.pharmacy-select"
+        <PharmacySelect id='features-pharmacy-profile-catalog-presentation-productpharmacyspecs-pharmacyselect-11-onibfa'
           label="التصنيف الرئيسي"
           value={selectedCategory ? String(selectedCategory.id) : ""}
           disabled={categories.length === 0}
@@ -333,7 +333,7 @@ export function ProductPharmacySpecs({
         />
       ) : null}
       {config.pharmacySubcategory ? (
-        <PharmacySelect id="pharmacy-profile-catalog.product-pharmacy-specs.pharmacy-select.2"
+        <PharmacySelect id='features-pharmacy-profile-catalog-presentation-productpharmacyspecs-pharmacyselect-12-i9v3zl'
           label="التصنيف الفرعي"
           value={selectedSubcategory ? String(selectedSubcategory.id) : ""}
           disabled={subcategories.length === 0}
@@ -346,7 +346,7 @@ export function ProductPharmacySpecs({
         />
       ) : null}
       {config.nameAr ? (
-        <ProductField id="pharmacy-profile-catalog.product-pharmacy-specs.product-field.9"
+        <ProductField id='features-pharmacy-profile-catalog-presentation-productpharmacyspecs-productfield-13-fjx5v0'
           label="الاسم بالعربي"
           value={specs.nameAr}
           mode={mode}
@@ -354,7 +354,7 @@ export function ProductPharmacySpecs({
         />
       ) : null}
       {config.nameEn ? (
-        <ProductField id="pharmacy-profile-catalog.product-pharmacy-specs.product-field.10"
+        <ProductField id='features-pharmacy-profile-catalog-presentation-productpharmacyspecs-productfield-14-6eu5vv'
           label="الاسم بالإنجليزي"
           value={specs.nameEn}
           mode={mode}
@@ -362,7 +362,7 @@ export function ProductPharmacySpecs({
         />
       ) : null}
       {config.activeIngredient ? (
-        <ProductField id="pharmacy-profile-catalog.product-pharmacy-specs.product-field.11"
+        <ProductField id='features-pharmacy-profile-catalog-presentation-productpharmacyspecs-productfield-15-zsdjnb'
           label="المادة الفعالة"
           value={specs.activeIngredient}
           mode={mode}
@@ -372,7 +372,7 @@ export function ProductPharmacySpecs({
         />
       ) : null}
       {config.form ? (
-        <PharmacySelect id="pharmacy-profile-catalog.product-pharmacy-specs.pharmacy-select.3"
+        <PharmacySelect id='features-pharmacy-profile-catalog-presentation-productpharmacyspecs-pharmacyselect-16-k9kouc'
           label="شكل الدواء"
           value={selectedForm?.id ?? ""}
           disabled={forms.length === 0}
@@ -385,7 +385,7 @@ export function ProductPharmacySpecs({
         />
       ) : null}
       {config.concentration ? (
-        <PharmacySelect id="pharmacy-profile-catalog.product-pharmacy-specs.pharmacy-select.4"
+        <PharmacySelect id='features-pharmacy-profile-catalog-presentation-productpharmacyspecs-pharmacyselect-17-3pzgld'
           label="التركيز"
           value={selectedStrength?.id ?? ""}
           disabled={strengths.length === 0}
@@ -398,7 +398,7 @@ export function ProductPharmacySpecs({
         />
       ) : null}
       {config.prescriptionRequired ? (
-        <ProductField id="pharmacy-profile-catalog.product-pharmacy-specs.product-field.12"
+        <ProductField id='features-pharmacy-profile-catalog-presentation-productpharmacyspecs-productfield-18-ye8ga0'
           label="يتطلب روشتة"
           value={String(specs.prescriptionRequired)}
           mode={mode}

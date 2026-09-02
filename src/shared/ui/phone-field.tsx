@@ -84,27 +84,27 @@ export function PhoneField({
       id={id}
       className={cn("flex items-stretch gap-2", className)}
     >
-      <button
+      <button id="shared-ui-phone-field-button-2-rkoscw"
         type="button"
         disabled={disabled}
         aria-label={labels.country}
         onClick={() => setIsPickerOpen(true)}
         className="asol-control inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-outline-variant bg-surface px-2.5 text-sm text-on-surface transition disabled:opacity-60"
       >
-        <span
+        <span id="shared-ui-phone-field-text-3-ovlaem"
           aria-hidden="true"
           className="text-base leading-none"
         >
           {selectedChoice?.flag ?? ""}
         </span>
-        <span
+        <span id="shared-ui-phone-field-text-4-bcbt9n"
           dir="ltr"
           className="text-xs font-semibold"
         >
           +{callingCode}
         </span>
       </button>
-      <input
+      <input id="shared-ui-phone-field-input-5-pighzm"
         type="tel"
         inputMode="tel"
         dir="ltr"

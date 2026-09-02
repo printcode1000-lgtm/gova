@@ -84,19 +84,19 @@ export function OpenInAsolHeaderPrompt({
   const appStore = prompt.store === "app-store";
 
   return (
-    <aside id="sharing.open-in-asol-header-prompt.aside"
+    <aside id='features-sharing-application-openinasolheaderprompt-aside-1-nfoenc'
       data-asol-install-prompt
       className="flex h-[var(--asol-header-install-height)] w-full items-center justify-center gap-2 border-t border-primary/15 bg-primary/5 px-3 text-center"
       aria-label={ar ? "تثبيت تطبيق ASOL" : "Install the ASOL app"}
     >
-      <Download id="sharing.open-in-asol-header-prompt.download" className="h-4 w-4 shrink-0 text-primary" aria-hidden />
-      <div id="sharing.open-in-asol-header-prompt.div" className="min-w-0 text-xs leading-tight sm:flex sm:items-center sm:gap-2 sm:text-sm">
-        <p id="sharing.open-in-asol-header-prompt.p" className="truncate font-bold text-on-surface">
+      <Download id='features-sharing-application-openinasolheaderprompt-download-2-v8nx0y' className="h-4 w-4 shrink-0 text-primary" aria-hidden />
+      <div id='features-sharing-application-openinasolheaderprompt-div-3-ojdhlu' className="min-w-0 text-xs leading-tight sm:flex sm:items-center sm:gap-2 sm:text-sm">
+        <p id='features-sharing-application-openinasolheaderprompt-text-4-takhpd' className="truncate font-bold text-on-surface">
           {ar
             ? "استمتع بالتجربة الكاملة على ASOL"
             : "Get the full ASOL experience"}
         </p>
-        <a id="sharing.open-in-asol-header-prompt.a"
+        <a id='features-sharing-application-openinasolheaderprompt-link-5-bevixb'
           href={prompt.installUrl}
           target="_blank"
           rel="noopener noreferrer"

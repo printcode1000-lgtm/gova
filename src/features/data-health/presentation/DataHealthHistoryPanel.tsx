@@ -21,25 +21,25 @@ export function DataHealthHistoryPanel({
   onClearCleanupAudit: () => void;
 }) {
   return (
-    <div id="data-health.data-health-history-panel.div" className="grid gap-4 xl:grid-cols-2">
-      <section id="data-health.data-health-history-panel.section" className="overflow-hidden rounded-md border bg-surface">
-        <div id="data-health.data-health-history-panel.div.2" className="flex flex-wrap items-center justify-between gap-2 border-b p-3">
-          <div id="data-health.data-health-history-panel.div.3" className="flex items-center gap-2 font-semibold">
-            <History id="data-health.data-health-history-panel.history" className="h-4 w-4" />
+    <div id='features-data-health-presentation-datahealthhistorypanel-div-1-wdndhr' className="grid gap-4 xl:grid-cols-2">
+      <section id='features-data-health-presentation-datahealthhistorypanel-section-2-sdnc9g' className="overflow-hidden rounded-md border bg-surface">
+        <div id='features-data-health-presentation-datahealthhistorypanel-div-3-2n97nz' className="flex flex-wrap items-center justify-between gap-2 border-b p-3">
+          <div id='features-data-health-presentation-datahealthhistorypanel-div-4-k94lkx' className="flex items-center gap-2 font-semibold">
+            <History id='features-data-health-presentation-datahealthhistorypanel-history-5-487gku' className="h-4 w-4" />
             سجل الفحوصات
           </div>
-          <Button id="data-health.data-health-history-panel.button"
+          <Button id='features-data-health-presentation-datahealthhistorypanel-button-6-h2ls4c'
             type="button"
             size="sm"
             variant="outline"
             disabled={history.runs.length === 0}
             onClick={onClearRunHistory}
           >
-            <ListPlus id="data-health.data-health-history-panel.list-plus" className="h-4 w-4" />
+            <ListPlus id='features-data-health-presentation-datahealthhistorypanel-listplus-7-zwoznm' className="h-4 w-4" />
             إضافة حذف السجل للحفظ
           </Button>
         </div>
-        <div id="data-health.data-health-history-panel.div.4" className="divide-y">
+        <div id='features-data-health-presentation-datahealthhistorypanel-div-8-a6dhed' className="divide-y">
           {history.runs.map((run) => (
             <div key={run.id} className="grid grid-cols-[1fr_auto] gap-2 p-3 text-sm">
               <div>
@@ -52,30 +52,30 @@ export function DataHealthHistoryPanel({
             </div>
           ))}
           {history.runs.length === 0 ? (
-            <div id="data-health.data-health-history-panel.div.5" className="p-6 text-center text-sm text-on-surface-variant">
+            <div id='features-data-health-presentation-datahealthhistorypanel-div-9-auoncw' className="p-6 text-center text-sm text-on-surface-variant">
               لا يوجد سجل بعد.
             </div>
           ) : null}
         </div>
       </section>
-      <section id="data-health.data-health-history-panel.section.2" className="overflow-hidden rounded-md border bg-surface">
-        <div id="data-health.data-health-history-panel.div.6" className="flex flex-wrap items-center justify-between gap-2 border-b p-3">
-          <div id="data-health.data-health-history-panel.div.7" className="flex items-center gap-2 font-semibold">
-            <ShieldCheck id="data-health.data-health-history-panel.shield-check" className="h-4 w-4" />
+      <section id='features-data-health-presentation-datahealthhistorypanel-section-10-gva0uy' className="overflow-hidden rounded-md border bg-surface">
+        <div id='features-data-health-presentation-datahealthhistorypanel-div-11-uornpq' className="flex flex-wrap items-center justify-between gap-2 border-b p-3">
+          <div id='features-data-health-presentation-datahealthhistorypanel-div-12-b4yj9p' className="flex items-center gap-2 font-semibold">
+            <ShieldCheck id='features-data-health-presentation-datahealthhistorypanel-shieldcheck-13-9ftwlt' className="h-4 w-4" />
             تدقيق التنظيف
           </div>
-          <Button id="data-health.data-health-history-panel.button.2"
+          <Button id='features-data-health-presentation-datahealthhistorypanel-button-14-nh5uaf'
             type="button"
             size="sm"
             variant="outline"
             disabled={history.audit.length === 0}
             onClick={onClearCleanupAudit}
           >
-            <ListPlus id="data-health.data-health-history-panel.list-plus.2" className="h-4 w-4" />
+            <ListPlus id='features-data-health-presentation-datahealthhistorypanel-listplus-15-8dpp7j' className="h-4 w-4" />
             إضافة حذف التدقيق للحفظ
           </Button>
         </div>
-        <div id="data-health.data-health-history-panel.div.8" className="divide-y">
+        <div id='features-data-health-presentation-datahealthhistorypanel-div-16-n7vzsp' className="divide-y">
           {history.audit.map((entry) => (
             <div key={entry.id} className="p-3 text-sm">
               <div className="flex items-center justify-between gap-2">
@@ -93,30 +93,30 @@ export function DataHealthHistoryPanel({
             </div>
           ))}
           {history.audit.length === 0 ? (
-            <div id="data-health.data-health-history-panel.div.9" className="p-6 text-center text-sm text-on-surface-variant">
+            <div id='features-data-health-presentation-datahealthhistorypanel-div-17-ncxavy' className="p-6 text-center text-sm text-on-surface-variant">
               لم تُنفذ عمليات تنظيف بعد.
             </div>
           ) : null}
         </div>
       </section>
-      <section id="data-health.data-health-history-panel.section.3" className="overflow-hidden rounded-md border bg-surface xl:col-span-2">
-        <div id="data-health.data-health-history-panel.div.10" className="flex flex-wrap items-center justify-between gap-2 border-b p-3">
-          <div id="data-health.data-health-history-panel.div.11" className="flex items-center gap-2 font-semibold">
-            <ShieldCheck id="data-health.data-health-history-panel.shield-check.2" className="h-4 w-4" />
+      <section id='features-data-health-presentation-datahealthhistorypanel-section-18-3tg1kr' className="overflow-hidden rounded-md border bg-surface xl:col-span-2">
+        <div id='features-data-health-presentation-datahealthhistorypanel-div-19-tjmigw' className="flex flex-wrap items-center justify-between gap-2 border-b p-3">
+          <div id='features-data-health-presentation-datahealthhistorypanel-div-20-lmffbb' className="flex items-center gap-2 font-semibold">
+            <ShieldCheck id='features-data-health-presentation-datahealthhistorypanel-shieldcheck-21-xhs7jy' className="h-4 w-4" />
             الحجر الصحي
           </div>
-          <Button id="data-health.data-health-history-panel.button.3"
+          <Button id='features-data-health-presentation-datahealthhistorypanel-button-22-75kkfo'
             type="button"
             size="sm"
             variant="outline"
             disabled={history.quarantine.length === 0}
             onClick={onClearQuarantine}
           >
-            <ListPlus id="data-health.data-health-history-panel.list-plus.3" className="h-4 w-4" />
+            <ListPlus id='features-data-health-presentation-datahealthhistorypanel-listplus-23-vtdgfx' className="h-4 w-4" />
             إضافة تنظيف الحجر للحفظ
           </Button>
         </div>
-        <div id="data-health.data-health-history-panel.div.12" className="divide-y">
+        <div id='features-data-health-presentation-datahealthhistorypanel-div-24-fcspsh' className="divide-y">
           {history.quarantine.map((entry) => (
             <div key={entry.id} className="flex flex-wrap items-center justify-between gap-3 p-3 text-sm">
               <div className="min-w-0 flex-1">
@@ -149,7 +149,7 @@ export function DataHealthHistoryPanel({
             </div>
           ))}
           {history.quarantine.length === 0 ? (
-            <div id="data-health.data-health-history-panel.div.13" className="p-6 text-center text-sm text-on-surface-variant">
+            <div id='features-data-health-presentation-datahealthhistorypanel-div-25-h6coed' className="p-6 text-center text-sm text-on-surface-variant">
               لا توجد عناصر في الحجر.
             </div>
           ) : null}

@@ -22,6 +22,8 @@ import { checkCapabilityOwnershipContract } from './checks/capability-ownership-
 import { checkPackageCycleContract } from './checks/package-cycle-contract';
 import { checkPageSaveWriteGatewayContract } from './checks/page-save-write-gateway-contract';
 import { checkRepositorySweepContract } from './checks/repository-sweep-contract';
+import { checkStaticDomIdentityContract } from './checks/static-dom-identity-contract';
+import { checkStaticDomRuntimeRegistryContract } from './checks/static-dom-runtime-registry-contract';
 import { checkPackageAppImportContract } from './checks/package-app-import-contract';
 import { checkIsolatedDeploymentBackendContract } from './checks/isolated-deployment-backend-contract';
 import { checkRuntimeTargetContract } from './checks/runtime-target-contract';
@@ -122,6 +124,8 @@ export function runArchitectureCheck(options: ArchitectureCheckOptions = {}): nu
     checkVendorOwnershipContract(file, content);
   }
   checkTouchInteractionContract();
+  checkStaticDomIdentityContract();
+  checkStaticDomRuntimeRegistryContract();
   checkMapLibreWorkerContract();
   checkGeneratedDataAccessArtifacts();
   checkSystemLogsBootstrapContract();

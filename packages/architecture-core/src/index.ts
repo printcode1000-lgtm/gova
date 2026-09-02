@@ -53,5 +53,27 @@ export { checkArchitectureDocsDriftContract } from './checks/architecture-docs-d
 export { checkPackageSealContract } from './checks/package-seal-contract';
 export { checkCapabilityOwnershipContract } from './checks/capability-ownership-contract';
 export { checkRepositorySweepContract } from './checks/repository-sweep-contract';
+export {
+  checkStaticDomIdentityContract,
+  formatStaticDomIdentityReport,
+  scanStaticDomIdentities,
+  stableStaticDomSuffix,
+  writeStaticDomIdentityManifest,
+  type StaticDomIdentityEntry,
+  type StaticDomIdentityManifest,
+  type StaticDomIdentityResult,
+  type StaticDomIdentityViolation,
+} from './checks/static-dom-identity-contract';
 export type { ArchitectureCheckOptions } from './runner';
 export { runArchitectureCheck } from './runner';
+
+export {
+  STATIC_DOM_RUNTIME_ID_REGISTRY,
+  STATIC_DOM_RUNTIME_ID_SOURCE_ALLOWLIST,
+  checkStaticDomRuntimeRegistryContract,
+  formatStaticDomRuntimeRegistryReport,
+  scanStaticDomRuntimeRegistry,
+  type StaticDomRuntimeRegistryResult,
+  type StaticDomRuntimeRegistryViolation,
+  type StaticDomRuntimeRegistryViolationType,
+} from './checks/static-dom-runtime-registry-contract';

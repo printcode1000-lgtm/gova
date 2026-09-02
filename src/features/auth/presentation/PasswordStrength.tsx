@@ -36,12 +36,12 @@ export function PasswordStrength({ password }: PasswordStrengthProps) {
     strength <= 1 ? 'bg-error' : strength === 2 ? 'bg-warning' : strength === 3 ? 'bg-primary' : 'bg-success';
 
   return (
-    <div id="auth.password-strength.div" className="space-y-2">
-      <div id="auth.password-strength.div.2" className="flex items-center justify-between">
-        <span id="auth.password-strength.span" className="text-xs text-on-surface-variant">{t('auth.password.strength')}</span>
-        <span id="auth.password-strength.span.2" className="text-xs font-medium text-on-surface">{strengthLabel}</span>
+    <div id='features-auth-presentation-passwordstrength-div-1-orccgt' className="space-y-2">
+      <div id='features-auth-presentation-passwordstrength-div-2-isyj5v' className="flex items-center justify-between">
+        <span id='features-auth-presentation-passwordstrength-text-3-6lu2be' className="text-xs text-on-surface-variant">{t('auth.password.strength')}</span>
+        <span id='features-auth-presentation-passwordstrength-text-4-ex5wlp' className="text-xs font-medium text-on-surface">{strengthLabel}</span>
       </div>
-      <div id="auth.password-strength.div.3" className="flex gap-1">
+      <div id='features-auth-presentation-passwordstrength-div-5-saesdl' className="flex gap-1">
         {Array.from({ length: 4 }).map((_, i) => (
           <div
             key={i}
@@ -49,7 +49,7 @@ export function PasswordStrength({ password }: PasswordStrengthProps) {
           />
         ))}
       </div>
-      <ul id="auth.password-strength.ul" className="space-y-1">
+      <ul id='features-auth-presentation-passwordstrength-ul-6-1kzlrr' className="space-y-1">
         {REQUIREMENT_KEYS.map((req, i) => (
           <li
             key={req.key}

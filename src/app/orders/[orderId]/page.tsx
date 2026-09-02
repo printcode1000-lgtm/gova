@@ -6,5 +6,5 @@ export default async function OrderDetailsPage({
   params: Promise<{ orderId: string }>;
 }) {
   const { orderId } = await params;
-  return <OrderDetailsPageContent id="orders.order-id.page.order-details-page-content" orderId={orderId} />;
+  return <OrderDetailsPageContent id='app-orders-page-orderdetailspagecontent-1-su1tpy' orderId={orderId} />;
 }

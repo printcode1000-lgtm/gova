@@ -10,13 +10,13 @@ function OrderDetailsFromQuery() {
 
   if (!orderId) {
     return (
-      <main id="orders.details.page.main" className="mx-auto w-full max-w-4xl px-4 py-10 text-center">
-        <h1 id="orders.details.page.h1" className="text-xl font-bold">Order not found</h1>
+      <main id='app-orders-details-page-main-1-3kxf0n' className="mx-auto w-full max-w-4xl px-4 py-10 text-center">
+        <h1 id='app-orders-details-page-heading-2-li2ryd' className="text-xl font-bold">Order not found</h1>
       </main>
     );
   }
 
-  return <OrderDetailsPageContent id="orders.details.page.order-details-page-content" orderId={orderId} />;
+  return <OrderDetailsPageContent id='app-orders-details-page-orderdetailspagecontent-3-tpf4rz' orderId={orderId} />;
 }
 
 export default function StaticOrderDetailsPage() {

@@ -7,7 +7,7 @@ export function Field({ id, label, value, onChange, }: {
 } & { id?: string }) {
   return (
     <label id={id} className="block">
-      <span className="text-xs text-on-surface-variant">{label}</span>
+      <span id="google-play-console-presentation-components-field-text-2-fmkjup" className="text-xs text-on-surface-variant">{label}</span>
       <Input className="mt-1" value={value} onChange={(event) => onChange(event.target.value)} />
     </label>
   );

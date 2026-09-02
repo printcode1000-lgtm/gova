@@ -95,15 +95,15 @@ export function WorkingHoursCard({ id,
   return (
     <section id={id} className="min-w-0 space-y-4 rounded-xl border border-outline-variant bg-surface p-4">
       {!isEdit ? (
-        <div className="flex min-w-0 flex-wrap items-start justify-between gap-3">
-          <div className="min-w-0">
-            <h3 className="flex min-w-0 items-center gap-2 break-words text-sm font-bold text-on-surface">
+        <div id="features-profile-working-hours-presentation-workinghourscard-div-2-q2vbrd" className="flex min-w-0 flex-wrap items-start justify-between gap-3">
+          <div id="features-profile-working-hours-presentation-workinghourscard-div-3-h73gyu" className="min-w-0">
+            <h3 id="features-profile-working-hours-presentation-workinghourscard-heading-4-se2q3l" className="flex min-w-0 items-center gap-2 break-words text-sm font-bold text-on-surface">
               <CalendarClock className="h-5 w-5 text-primary" />
               {text.title}
             </h3>
           </div>
           {hasAnyHours ? (
-            <span
+            <span id="features-profile-working-hours-presentation-workinghourscard-text-5-ue6npl"
               className={`max-w-full break-words rounded-full px-3 py-1 text-xs font-semibold ${
                 currentStatus === "open"
                   ? "bg-success/15 text-success"
@@ -117,7 +117,7 @@ export function WorkingHoursCard({ id,
       ) : null}
 
       {!isEdit && !hasAnyHours ? (
-        <p className="break-words text-sm text-on-surface-variant">{text.notSet}</p>
+        <p id="features-profile-working-hours-presentation-workinghourscard-text-6-rhdyy5" className="break-words text-sm text-on-surface-variant">{text.notSet}</p>
       ) : null}
 
       <CategoryTabsStrip
@@ -131,7 +131,7 @@ export function WorkingHoursCard({ id,
         onSelect={(dayId) => setSelectedDayId(dayId as WorkingDayId)}
       />
 
-      <div className="min-w-0 space-y-3">
+      <div id="features-profile-working-hours-presentation-workinghourscard-div-7-ieacus" className="min-w-0 space-y-3">
         {visibleDays.map((day) => (
           <div
             key={day.day}

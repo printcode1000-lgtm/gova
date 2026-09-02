@@ -881,7 +881,7 @@ const StorageImageSlot = React.forwardRef<
   };
 
   return (
-    <div
+    <div id="storage-image-manager-core-src-components-storageimagemanager-div-1-jusmj3"
       className={cn(
         storageImageSlotSurfaceClasses,
         isDragging && "border-primary bg-primary/5",
@@ -905,7 +905,7 @@ const StorageImageSlot = React.forwardRef<
           {/* Slot preview is a blob: or stored object URL. This sealed package
               cannot import next/image, and the optimizer cannot process blob URLs. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <img id="storage-image-manager-core-src-components-storageimagemanager-image-2-1xslrj"
             ref={imageRef}
             src={previewUrl}
             alt=""
@@ -935,14 +935,14 @@ const StorageImageSlot = React.forwardRef<
             }}
           />
           {showProgress && (
-            <div className="absolute inset-0 flex min-h-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-lg bg-background/80 px-1.5 py-1 text-center">
+            <div id="storage-image-manager-core-src-components-storageimagemanager-div-3-3rbk0i" className="absolute inset-0 flex min-h-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-lg bg-background/80 px-1.5 py-1 text-center">
               <InlineLoadingSpinner size="md" />
-              <p className={storageImageEmptyStateProgressClasses}>
+              <p id="storage-image-manager-core-src-components-storageimagemanager-text-4-k4ug4q" className={storageImageEmptyStateProgressClasses}>
                 {stageLabels[stage]}
               </p>
             </div>
           )}
-          <button
+          <button id="storage-image-manager-core-src-components-storageimagemanager-button-5-bdwphq"
             type="button"
             onClick={removeCurrent}
             disabled={busy && !isQueued}
@@ -954,8 +954,8 @@ const StorageImageSlot = React.forwardRef<
         </>
       ) : (
         <DropdownMenu.Root>
-          <div className={storageImageEmptyStateClasses}>
-            <span className={storageImageEmptyStateIconClasses}>
+          <div id="storage-image-manager-core-src-components-storageimagemanager-div-6-ipb0xp" className={storageImageEmptyStateClasses}>
+            <span id="storage-image-manager-core-src-components-storageimagemanager-text-7-tsxjvz" className={storageImageEmptyStateIconClasses}>
               {showProgress ? (
                 <InlineLoadingSpinner size="sm" />
               ) : (
@@ -963,12 +963,12 @@ const StorageImageSlot = React.forwardRef<
               )}
             </span>
             {showProgress ? (
-              <span className={storageImageEmptyStateProgressClasses}>
+              <span id="storage-image-manager-core-src-components-storageimagemanager-text-8-zmwuja" className={storageImageEmptyStateProgressClasses}>
                 {stageLabels[stage]}
               </span>
             ) : (
               <DropdownMenu.Trigger asChild>
-                <button
+                <button id="storage-image-manager-core-src-components-storageimagemanager-button-9-00ntkb"
                   type="button"
                   disabled={busy}
                   aria-label={t("storage.imageSource.open")}
@@ -1006,7 +1006,7 @@ const StorageImageSlot = React.forwardRef<
         </DropdownMenu.Root>
       )}
 
-      <input
+      <input id="storage-image-manager-core-src-components-storageimagemanager-input-10-2brb37"
         ref={inputRef}
         type="file"
         accept="image/*"
@@ -1015,7 +1015,7 @@ const StorageImageSlot = React.forwardRef<
         disabled={busy}
       />
 
-      <input
+      <input id="storage-image-manager-core-src-components-storageimagemanager-input-11-2qeodo"
         ref={cameraInputRef}
         type="file"
         accept="image/*"
@@ -1115,11 +1115,11 @@ export const StorageImageManager = React.forwardRef<
   );
 
   return (
-    <div className="space-y-2">
+    <div id="storage-image-manager-core-src-components-storageimagemanager-div-12-fiebld" className="space-y-2">
       {label ? (
-        <p className="text-sm font-medium text-on-surface">{label}</p>
+        <p id="storage-image-manager-core-src-components-storageimagemanager-text-13-1kgun5" className="text-sm font-medium text-on-surface">{label}</p>
       ) : null}
-      <div
+      <div id="storage-image-manager-core-src-components-storageimagemanager-div-14-0scsyr"
         className={cn(
           maxItems > 1
             ? "grid gap-3 sm:grid-cols-3 lg:grid-cols-1"
@@ -1169,7 +1169,7 @@ export const StorageImageManager = React.forwardRef<
           </StorageImageSlotFrame>
         ))}
       </div>
-      {hint ? <p className="text-xs text-muted-foreground">{hint}</p> : null}
+      {hint ? <p id="storage-image-manager-core-src-components-storageimagemanager-text-15-facw0k" className="text-xs text-muted-foreground">{hint}</p> : null}
     </div>
   );
 });

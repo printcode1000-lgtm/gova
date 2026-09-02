@@ -118,21 +118,21 @@ export function PharmacyNestedTabs({
   if (!catalog) return null;
 
   return (
-    <div id="pharmacy-profile-catalog.pharmacy-nested-tabs.div" className="space-y-2 rounded-lg border border-outline-variant bg-surface-container-low p-2">
-      <div id="pharmacy-profile-catalog.pharmacy-nested-tabs.div.2" className="flex flex-wrap items-center justify-between gap-2">
-        <div id="pharmacy-profile-catalog.pharmacy-nested-tabs.div.3" className="text-xs font-semibold text-on-surface">{text.sections}</div>
+    <div id='features-pharmacy-profile-catalog-presentation-pharmacynestedtabs-div-1-2r1llo' className="space-y-2 rounded-lg border border-outline-variant bg-surface-container-low p-2">
+      <div id='features-pharmacy-profile-catalog-presentation-pharmacynestedtabs-div-2-iqzwlx' className="flex flex-wrap items-center justify-between gap-2">
+        <div id='features-pharmacy-profile-catalog-presentation-pharmacynestedtabs-div-3-olf9fy' className="text-xs font-semibold text-on-surface">{text.sections}</div>
         {showManagement ? (
-          <Link id="pharmacy-profile-catalog.pharmacy-nested-tabs.link"
+          <Link id='features-pharmacy-profile-catalog-presentation-pharmacynestedtabs-link-4-trgizq'
             href={managerHref}
             className="inline-flex h-9 items-center gap-2 rounded-lg border border-outline-variant px-3 text-xs font-semibold text-on-surface transition"
           >
-            <Settings2 id="pharmacy-profile-catalog.pharmacy-nested-tabs.settings2" className="h-4 w-4" />
+            <Settings2 id='features-pharmacy-profile-catalog-presentation-pharmacynestedtabs-settings2-5-tyr5ib' className="h-4 w-4" />
             {text.manage}
           </Link>
         ) : null}
       </div>
 
-      <div id="pharmacy-profile-catalog.pharmacy-nested-tabs.div.4" className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div id='features-pharmacy-profile-catalog-presentation-pharmacynestedtabs-div-6-v32vuu' className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {categories.map((category) => (
           <PharmacyTabButton
             key={category.id}
@@ -144,7 +144,7 @@ export function PharmacyNestedTabs({
         ))}
       </div>
 
-      <div id="pharmacy-profile-catalog.pharmacy-nested-tabs.div.5" className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div id='features-pharmacy-profile-catalog-presentation-pharmacynestedtabs-div-7-biscsc' className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {subcategories.map((subcategory) => (
           <PharmacyTabButton
             key={subcategory.id}
@@ -188,7 +188,7 @@ function PharmacyTabButton({ id,
       }`}
     >
       <PharmacyCategoryIcon icon={icon} className="h-4 w-4 text-center" />
-      <span className="whitespace-nowrap">{item.nameAr}</span>
+      <span id="features-pharmacy-profile-catalog-presentation-pharmacynestedtabs-text-9-kmp4vf" className="whitespace-nowrap">{item.nameAr}</span>
     </button>
   );
 }

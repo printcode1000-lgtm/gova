@@ -57,21 +57,21 @@ export function CategoriesSection() {
   };
 
   return (
-    <div id="onboarding.sections.categories-section.div" className="space-y-6 animate-in fade-in duration-300">
-      <Card id="onboarding.sections.categories-section.card">
-        <CardHeader id="onboarding.sections.categories-section.card-header">
-          <CardTitle id="onboarding.sections.categories-section.card-title" className="flex items-center gap-2">
-            <Tag id="onboarding.sections.categories-section.tag" className="h-5 w-5" />
+    <div id='onboarding-presentation-sections-categories-section-div-1-phkztl' className="space-y-6 animate-in fade-in duration-300">
+      <Card id='onboarding-presentation-sections-categories-section-card-2-t4masp'>
+        <CardHeader id='onboarding-presentation-sections-categories-section-cardheader-3-69zysf'>
+          <CardTitle id='onboarding-presentation-sections-categories-section-cardtitle-4-4of0sf' className="flex items-center gap-2">
+            <Tag id='onboarding-presentation-sections-categories-section-tag-5-olhmam' className="h-5 w-5" />
             {t('onboarding.categories.title')}
           </CardTitle>
-          <CardDescription id="onboarding.sections.categories-section.card-description">{t('onboarding.categories.description')}</CardDescription>
+          <CardDescription id='onboarding-presentation-sections-categories-section-carddescription-6-ujhlnr'>{t('onboarding.categories.description')}</CardDescription>
         </CardHeader>
-        <CardContent id="onboarding.sections.categories-section.card-content" className="space-y-4">
+        <CardContent id='onboarding-presentation-sections-categories-section-cardcontent-7-ya3b2w' className="space-y-4">
           {errors.categories && (
-            <p id="onboarding.sections.categories-section.p" className="text-sm text-destructive">{errors.categories}</p>
+            <p id='onboarding-presentation-sections-categories-section-text-8-9nfq7k' className="text-sm text-destructive">{errors.categories}</p>
           )}
 
-          <div id="onboarding.sections.categories-section.div.2" className="space-y-2">
+          <div id='onboarding-presentation-sections-categories-section-div-9-cip34l' className="space-y-2">
             {categories.selectedCategories.map((category) => {
               const isExpanded = expandedCategories.includes(category.id);
               const categoryConfig = constants.fashionCategories.find(
@@ -135,7 +135,7 @@ export function CategoriesSection() {
         </CardContent>
       </Card>
 
-      <StepNavigation id="onboarding.sections.categories-section.step-navigation" onNext={handleNext} showSkip />
+      <StepNavigation id='onboarding-presentation-sections-categories-section-stepnavigation-10-curicr' onNext={handleNext} showSkip />
     </div>
   );
 }

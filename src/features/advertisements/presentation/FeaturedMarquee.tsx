@@ -171,15 +171,15 @@ export function FeaturedMarquee({ id, config }: FeaturedMarqueeProps & { id?: st
 
   return (
     <section id={id} className="space-y-3 overflow-hidden">
-      <div className="flex items-center mb-4">
-        <h3 className="text-lg font-semibold text-tertiary flex items-center gap-2">
+      <div id="features-advertisements-presentation-featuredmarquee-div-2-hacoir" className="flex items-center mb-4">
+        <h3 id="features-advertisements-presentation-featuredmarquee-heading-3-kxhfmz" className="text-lg font-semibold text-tertiary flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-tertiary animate-pulse-subtle" aria-hidden />
           {t(sectionTitle)}
         </h3>
-        <div className="title-line-contact"></div>
+        <div id="features-advertisements-presentation-featuredmarquee-div-4-2sshlr" className="title-line-contact"></div>
       </div>
 
-      <div
+      <div id="features-advertisements-presentation-featuredmarquee-div-5-xqrwq1"
         ref={containerRef}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
@@ -194,7 +194,7 @@ export function FeaturedMarquee({ id, config }: FeaturedMarqueeProps & { id?: st
         className="relative overflow-hidden py-4 rounded-xl asol-surface-neutral touch-pan-y cursor-grab active:cursor-grabbing pointer-events-auto"
         dir="ltr"
       >
-        <div
+        <div id="features-advertisements-presentation-featuredmarquee-div-6-mx4q2h"
           ref={trackRef}
           className="flex w-max will-change-transform gap-4 pr-4"
         >

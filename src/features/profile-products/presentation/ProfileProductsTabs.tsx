@@ -163,14 +163,14 @@ export function ProfileProductsTabs({ id,
       ) : null}
 
       {activeSubTab ? (
-        <section className="overflow-hidden rounded-xl border border-outline-variant bg-surface-container-low/30">
-          <button
+        <section id="features-profile-products-presentation-profileproductstabs-section-4-cucold" className="overflow-hidden rounded-xl border border-outline-variant bg-surface-container-low/30">
+          <button id="features-profile-products-presentation-profileproductstabs-button-5-9hq1of"
             type="button"
             aria-expanded={isSearchOpen}
             onClick={() => setIsSearchOpen((current) => !current)}
             className="flex w-full items-center justify-between gap-3 px-4 py-3 text-sm font-semibold text-on-surface"
           >
-            <span className="inline-flex items-center gap-2">
+            <span id="features-profile-products-presentation-profileproductstabs-text-6-n9fe03" className="inline-flex items-center gap-2">
               <Search className="h-4 w-4 text-primary" />
               {labels.searchTitle}
             </span>
@@ -179,7 +179,7 @@ export function ProfileProductsTabs({ id,
             />
           </button>
           {isSearchOpen ? (
-            <div className="border-t border-outline-variant p-3">
+            <div id="features-profile-products-presentation-profileproductstabs-div-7-ggokra" className="border-t border-outline-variant p-3">
               <ProductSearchPanel
                 variant="compact"
                 ownerUid={ownerUid}
@@ -192,8 +192,8 @@ export function ProfileProductsTabs({ id,
             </div>
           ) : null}
           {showManagement ? (
-            <div className="border-t border-outline-variant px-3 py-2">
-              <button
+            <div id="features-profile-products-presentation-profileproductstabs-div-8-wbfjxa" className="border-t border-outline-variant px-3 py-2">
+              <button id="features-profile-products-presentation-profileproductstabs-button-9-q06bmx"
                 type="button"
                 aria-pressed={showFeaturedOnly}
                 onClick={() => setShowFeaturedOnly((current) => !current)}
@@ -205,7 +205,7 @@ export function ProfileProductsTabs({ id,
               >
                 <Star className={`h-4 w-4 ${showFeaturedOnly ? "fill-current" : ""}`} />
                 {labels.featuredOnly}
-                <span className="rounded-full bg-black/10 px-1.5 text-[10px]">
+                <span id="features-profile-products-presentation-profileproductstabs-text-10-q5wi8f" className="rounded-full bg-black/10 px-1.5 text-[10px]">
                   {featuredProductIds.length}
                 </span>
               </button>
@@ -224,7 +224,7 @@ export function ProfileProductsTabs({ id,
         />
       ) : null}
 
-      <div className="min-h-[160px]">
+      <div id="features-profile-products-presentation-profileproductstabs-div-11-n2561e" className="min-h-[160px]">
         {productsLoading ? (
           <ProfileProductsTabsLoading size="sm" />
         ) : visibleProducts.length === 0 ? (
@@ -248,8 +248,8 @@ export function ProfileProductsTabs({ id,
       </div>
 
       {showManagement && activeSubTab && onAddProduct ? (
-        <div className="flex justify-end">
-          <button
+        <div id="features-profile-products-presentation-profileproductstabs-div-12-mijnqv" className="flex justify-end">
+          <button id="features-profile-products-presentation-profileproductstabs-button-13-rlai7m"
             type="button"
             onClick={() =>
               onAddProduct(

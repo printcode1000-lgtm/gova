@@ -94,33 +94,33 @@ export function DiscountEditor({ id,
 
   return (
     <article id={id} className="rounded-2xl border border-outline-variant bg-surface p-3 shadow-sm">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="flex min-w-0 items-center gap-3">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+      <div id="seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-div-2-lmmbzr" className="flex flex-wrap items-start justify-between gap-3">
+        <div id="seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-div-3-fkktmt" className="flex min-w-0 items-center gap-3">
+          <span id="seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-text-4-8vpzwe" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
             <Icon className="h-5 w-5" />
           </span>
-          <div>
-            <h4 className="text-sm font-bold text-on-surface">{typeLabel}</h4>
-            <p className="text-xs text-on-surface-variant">
+          <div id="seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-div-5-09ihtz">
+            <h4 id="seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-heading-6-lavugs" className="text-sm font-bold text-on-surface">{typeLabel}</h4>
+            <p id="seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-text-7-uuip2n" className="text-xs text-on-surface-variant">
               {discount.title ||
                 (ar ? "عرض جديد يحتاج عنوانًا وشروطًا" : "New offer needs a title and rules")}
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <select
+        <div id="seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-div-8-fxbikf" className="flex items-center gap-2">
+          <select id="seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-select-9-pikffr"
             value={discount.status}
             onChange={(event) =>
               set("status", event.target.value as SellerDiscountRule["status"])
             }
             className="h-9 rounded-lg border border-outline-variant bg-surface px-2 text-xs"
           >
-            <option value="draft">{ar ? "مسودة" : "Draft"}</option>
-            <option value="active">{ar ? "نشط" : "Active"}</option>
-            <option value="paused">{ar ? "متوقف" : "Paused"}</option>
-            <option value="expired">{ar ? "منتهي" : "Expired"}</option>
+            <option id="seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-option-10-bvsrxc" value="draft">{ar ? "مسودة" : "Draft"}</option>
+            <option id="seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-option-11-vz8psq" value="active">{ar ? "نشط" : "Active"}</option>
+            <option id="seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-option-12-s9izrr" value="paused">{ar ? "متوقف" : "Paused"}</option>
+            <option id="seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-option-13-3qy8yo" value="expired">{ar ? "منتهي" : "Expired"}</option>
           </select>
-          <button
+          <button id="seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-button-14-uqyhls"
             type="button"
             onClick={onRemove}
             className="flex h-9 w-9 items-center justify-center rounded-lg border border-error/30 text-error"
@@ -131,7 +131,7 @@ export function DiscountEditor({ id,
         </div>
       </div>
 
-      <div className="mt-4 grid gap-3 md:grid-cols-2">
+      <div id="seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-div-15-7daduj" className="mt-4 grid gap-3 md:grid-cols-2">
         <Field label={ar ? "عنوان العرض" : "Title"} description={ar ? "اسم واضح وقصير يراه العميل." : "A clear, short name customers will see."}>
           <Input
             value={discount.title}
@@ -148,18 +148,18 @@ export function DiscountEditor({ id,
           />
         </Field>
         <Field label={ar ? "نوع القيمة" : "Value type"} description={ar ? "حدد كيف تُحسب فائدة العرض." : "Choose how the offer benefit is calculated."}>
-          <select
+          <select id="seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-select-16-uafsia"
             value={discount.valueType}
             onChange={(event) =>
               set("valueType", event.target.value as SellerDiscountValueType)
             }
             className="h-10 w-full rounded-lg border border-outline-variant bg-surface px-3 text-sm"
           >
-            <option value="percentage">{ar ? "نسبة مئوية" : "Percentage"}</option>
-            <option value="fixed_amount">{ar ? "مبلغ ثابت" : "Fixed amount"}</option>
-            <option value="fixed_bundle_price">{ar ? "سعر باقة ثابت" : "Bundle price"}</option>
-            <option value="free_shipping">{ar ? "شحن مجاني" : "Free shipping"}</option>
-            <option value="free_gift">{ar ? "هدية مجانية" : "Free gift"}</option>
+            <option id="seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-option-17-ypblro" value="percentage">{ar ? "نسبة مئوية" : "Percentage"}</option>
+            <option id="seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-option-18-6iu1gz" value="fixed_amount">{ar ? "مبلغ ثابت" : "Fixed amount"}</option>
+            <option id="seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-option-19-kjd48s" value="fixed_bundle_price">{ar ? "سعر باقة ثابت" : "Bundle price"}</option>
+            <option id="seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-option-20-pkbr0z" value="free_shipping">{ar ? "شحن مجاني" : "Free shipping"}</option>
+            <option id="seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-option-21-if2ynr" value="free_gift">{ar ? "هدية مجانية" : "Free gift"}</option>
           </select>
         </Field>
         <Field
@@ -291,7 +291,7 @@ export function DiscountEditor({ id,
         </Field>
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-2">
+      <div id="seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-div-22-j0sfdr" className="mt-4 flex flex-wrap gap-2">
         <Toggle
           active={discount.combinable}
           label={ar ? "قابل للدمج" : "Combinable"}
@@ -318,7 +318,7 @@ export function DiscountEditor({ id,
         />
       </div>
 
-      <p className="mt-3 text-xs text-on-surface-variant">
+      <p id="seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-text-23-7kovrm" className="mt-3 text-xs text-on-surface-variant">
         {ar ? "معاينة مختصرة: " : "Preview: "}
         {discount.valueType === "percentage"
           ? `${discount.value}%`
@@ -349,8 +349,8 @@ export function Field({ id,
 } & { id?: string }) {
   return (
     <label id={id} className="space-y-1.5 text-xs font-semibold text-on-surface">
-      <span className="block">{label}</span>
-      <span className="block font-normal leading-5 text-on-surface-variant">{description}</span>
+      <span id="seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-text-25-m2nrhl" className="block">{label}</span>
+      <span id="seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-text-26-yj1gif" className="block font-normal leading-5 text-on-surface-variant">{description}</span>
       {children}
     </label>
   );

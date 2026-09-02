@@ -71,7 +71,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
+    <html id="app-layout-html-1-paikae"
       lang="ar"
       dir="rtl"
       data-theme="light"
@@ -79,11 +79,11 @@ export default function RootLayout({
       data-app-hydrated="false"
       suppressHydrationWarning
     >
-      <head>
-        <meta name="theme-color" content={THEME_COLOR_LIGHT} />
+      <head id="app-layout-head-2-8ph014">
+        <meta id="app-layout-meta-3-kl59np" name="theme-color" content={THEME_COLOR_LIGHT} />
         <AppInitScript />
       </head>
-      <body className="antialiased">
+      <body id="app-layout-body-4-6nnrel" className="antialiased">
         <PreAuthFailureMonitor />
         <InstallationBootstrap>
           <AppQueryProvider>
@@ -101,10 +101,10 @@ export default function RootLayout({
                         <OtaUpdateProvider>
                           <SafeAreaController />
                           <Suspense
-                            fallback={<ShellLayout id="layout.shell-layout">{children}</ShellLayout>}
+                            fallback={<ShellLayout id='app-layout-shelllayout-5-5zkajn'>{children}</ShellLayout>}
                           >
                             <SnapshotProvider>
-                              <ShellLayout id="layout.shell-layout.2">{children}</ShellLayout>
+                              <ShellLayout id='app-layout-shelllayout-6-q8faoz'>{children}</ShellLayout>
                             </SnapshotProvider>
                           </Suspense>
                           <NetworkStatusBanner />

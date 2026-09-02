@@ -126,16 +126,16 @@ export const HeroSliderImagesEditor = React.forwardRef<
       className="mt-4 rounded-xl border bg-card p-4 shadow-sm"
       aria-label="تعديل صور العرض"
     >
-      <div id="advertisements.hero-slider-images-editor.div" className="mb-4 flex items-center gap-2">
-        <ImageIcon id="advertisements.hero-slider-images-editor.image-icon" className="h-5 w-5 text-primary" />
-        <div id="advertisements.hero-slider-images-editor.div.2">
-          <h2 id="advertisements.hero-slider-images-editor.h2" className="font-semibold">صور واجهة المتجر</h2>
-          <p id="advertisements.hero-slider-images-editor.p" className="text-sm text-muted-foreground">
+      <div id='features-advertisements-presentation-herosliderimageseditor-div-2-zt8hbn' className="mb-4 flex items-center gap-2">
+        <ImageIcon id='features-advertisements-presentation-herosliderimageseditor-imageicon-3-pppep3' className="h-5 w-5 text-primary" />
+        <div id='features-advertisements-presentation-herosliderimageseditor-div-4-bweedm'>
+          <h2 id='features-advertisements-presentation-herosliderimageseditor-heading-5-swxqvn' className="font-semibold">صور واجهة المتجر</h2>
+          <p id='features-advertisements-presentation-herosliderimageseditor-text-6-l6zg6k' className="text-sm text-muted-foreground">
             يمكنك إضافة أو استبدال {MAX_PROFILE_SLIDES} صور بحد أقصى. بقية إعدادات العرض ثابتة.
           </p>
         </div>
       </div>
-      <div id="advertisements.hero-slider-images-editor.div.3" className="grid grid-cols-2 gap-3">
+      <div id='features-advertisements-presentation-herosliderimageseditor-div-7-zcqyre' className="grid grid-cols-2 gap-3">
         {storefrontSlots.map((slotConfig, index) => (
           <StorageImageManager
             ref={(manager) => {

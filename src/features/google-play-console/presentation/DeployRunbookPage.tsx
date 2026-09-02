@@ -49,7 +49,7 @@ export function DeployRunbookPage() {
   if (isLoading) {
     return (
       <main
-        id="google-play-console.deploy-runbook-page.main"
+        id='features-google-play-console-presentation-deployrunbookpage-main-1-waa4bw'
         className="p-4 text-sm text-on-surface-variant"
       >
         جار التحميل...
@@ -58,9 +58,9 @@ export function DeployRunbookPage() {
   }
   if (!allowed) {
     return (
-      <main id="google-play-console.deploy-runbook-page.main.2" className="mx-auto max-w-2xl p-4 sm:p-6">
+      <main id='features-google-play-console-presentation-deployrunbookpage-main-2-ech6zn' className="mx-auto max-w-2xl p-4 sm:p-6">
         <div
-          id="google-play-console.deploy-runbook-page.div"
+          id='features-google-play-console-presentation-deployrunbookpage-div-3-69zscw'
           className="rounded-md bg-error-container p-4 text-on-error-container"
         >
           هذه الصفحة متاحة للسوبر أدمن فقط.
@@ -119,25 +119,25 @@ export function DeployRunbookPage() {
     );
 
   return (
-    <main id="google-play-console.deploy-runbook-page.main.3"
+    <main id='features-google-play-console-presentation-deployrunbookpage-main-4-3terue'
       className="mx-auto w-full min-w-0 max-w-7xl space-y-3 p-3 pb-24 sm:space-y-4 sm:p-4"
       dir="rtl"
     >
-      <Header id="google-play-console.deploy-runbook-page.header" />
-      <TabButtons id="google-play-console.deploy-runbook-page.tab-buttons" tab={tab} setTab={setTab} />
+      <Header id='features-google-play-console-presentation-deployrunbookpage-header-5-z5udbl' />
+      <TabButtons id='features-google-play-console-presentation-deployrunbookpage-tabbuttons-6-qy5nk1' tab={tab} setTab={setTab} />
 
       <DeployRunbookCollapsible
-        id="google-play-console.deploy-runbook-page.deploy-runbook-collapsible"
+        id='features-google-play-console-presentation-deployrunbookpage-deployrunbookcollapsible-7-ayhjqe'
         title="ملخص الحالة"
         description={STATUS_SUMMARY_DESCRIPTION}
         badge={
           <StatusBadge
-            id="google-play-console.deploy-runbook-page.status-badge"
+            id='features-google-play-console-presentation-deployrunbookpage-statusbadge-8-enfr2b'
             status={activeJob?.status ?? "جاهز"}
           />
         }
       >
-        <Summary id="google-play-console.deploy-runbook-page.summary"
+        <Summary id='features-google-play-console-presentation-deployrunbookpage-summary-9-ax8wwy'
           selectedCount={selectedCount}
           totalCount={totalCount}
           status={activeJob?.status ?? "جاهز"}
@@ -146,7 +146,7 @@ export function DeployRunbookPage() {
       </DeployRunbookCollapsible>
 
       {tab === "deploy-all" ? (
-        <DeployAllPanel id="google-play-console.deploy-runbook-page.deploy-all-panel"
+        <DeployAllPanel id='features-google-play-console-presentation-deployrunbookpage-deployallpanel-10-9uf88a'
           selected={allSelected}
           setSelected={setAllSelected}
           scenario={allScenario}
@@ -157,7 +157,7 @@ export function DeployRunbookPage() {
           setSkipPreflight={setSkipPreflight}
         />
       ) : (
-        <RunbookPanel id="google-play-console.deploy-runbook-page.runbook-panel"
+        <RunbookPanel id='features-google-play-console-presentation-deployrunbookpage-runbookpanel-11-gllkem'
           title="Deploy Push"
           description={DEPLOY_PUSH_DESCRIPTION}
           runbook={DEPLOY_PUSH_RUNBOOK}

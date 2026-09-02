@@ -13,6 +13,7 @@ import {
   violations,
 } from '../index';
 import './application-cycle-contract.test';
+import './static-dom-identity-contract.test';
 
 const ROOT = process.cwd();
 const PACKAGE = 'packages/architecture-core';
@@ -188,3 +189,4 @@ assert.equal(typeof runArchitectureCheck, 'function');
 console.log(
   `@asol/architecture-core contract: 1 door, ${files.length} rule and check modules, no import of the application; composition imports sealed.`,
 );
+import './static-dom-runtime-registry-contract.test';

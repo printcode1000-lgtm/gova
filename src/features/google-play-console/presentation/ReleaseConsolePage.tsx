@@ -26,19 +26,19 @@ export function ReleaseConsolePage() {
   };
   if (isLoading)
     return (
-      <main id="google-play-console.release-console-page.main" className="p-4 text-sm text-on-surface-variant">
+      <main id='features-google-play-console-presentation-releaseconsolepage-main-1-rnvebi' className="p-4 text-sm text-on-surface-variant">
         {t("releaseConsole.loading")}
       </main>
     );
   if (!allowed)
     return (
       <main
-        id="google-play-console.release-console-page.main.2"
+        id='features-google-play-console-presentation-releaseconsolepage-main-2-ylfmpq'
         className="mx-auto max-w-2xl p-6"
         dir={isRTL ? "rtl" : "ltr"}
       >
         <div
-          id="google-play-console.release-console-page.div"
+          id='features-google-play-console-presentation-releaseconsolepage-div-3-mochvr'
           className="rounded-md bg-error-container p-4 text-on-error-container"
         >
           {t("releaseConsole.forbidden")}
@@ -47,21 +47,21 @@ export function ReleaseConsolePage() {
     );
   return (
     <main
-      id="google-play-console.release-console-page.main.3"
+      id='features-google-play-console-presentation-releaseconsolepage-main-4-nspow4'
       className="asol-release-console mx-auto w-full max-w-7xl space-y-4 p-4 pb-24"
       dir={isRTL ? "rtl" : "ltr"}
     >
-      <header id="google-play-console.release-console-page.header">
-        <h1 id="google-play-console.release-console-page.h1" className="text-2xl font-semibold">
+      <header id='features-google-play-console-presentation-releaseconsolepage-header-5-wyamqx'>
+        <h1 id='features-google-play-console-presentation-releaseconsolepage-heading-6-glbjld' className="text-2xl font-semibold">
           {t("releaseConsole.title")}
         </h1>
-        <p id="google-play-console.release-console-page.p" className="mt-1 text-sm text-on-surface-variant">
+        <p id='features-google-play-console-presentation-releaseconsolepage-text-7-6mr5ze' className="mt-1 text-sm text-on-surface-variant">
           {t("releaseConsole.subtitle")}
         </p>
       </header>
       <Tabs value={active} onValueChange={select}>
         <TabsList
-          id="google-play-console.release-console-page.tabs-list"
+          id='features-google-play-console-presentation-releaseconsolepage-tabslist-8-tnbn28'
           className="flex h-auto w-full flex-wrap justify-start gap-1"
         >
           {tabs.map((tab) => (

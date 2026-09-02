@@ -29,37 +29,37 @@ export function DeployRunbookMainGrid(props: {
 }) {
   return (
     <section
-      id="google-play-console.deploy-runbook-main-grid.section"
+      id='features-google-play-console-presentation-deployrunbookmaingrid-section-1-zg7vu1'
       className="grid min-w-0 grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,22rem)] lg:gap-4"
     >
-      <div id="google-play-console.deploy-runbook-main-grid.div" className="order-2 min-w-0 space-y-3 lg:order-1">
-        <DeployRunbookCollapsible id="google-play-console.deploy-runbook-main-grid.deploy-runbook-collapsible"
+      <div id='features-google-play-console-presentation-deployrunbookmaingrid-div-2-jv75vf' className="order-2 min-w-0 space-y-3 lg:order-1">
+        <DeployRunbookCollapsible id='features-google-play-console-presentation-deployrunbookmaingrid-deployrunbookcollapsible-3-jagi2x'
           title="مؤشرات التنفيذ"
           description="آخر مرحلة وقسم وفرع ظهر في سجل الطرفية."
         >
           <ExecutionIndicator
-            id="google-play-console.deploy-runbook-main-grid.execution-indicator"
+            id='features-google-play-console-presentation-deployrunbookmaingrid-executionindicator-4-xozctu'
             log={props.log}
             tab={props.tab}
             status={props.activeStatus}
           />
         </DeployRunbookCollapsible>
 
-        <DeployRunbookCollapsible id="google-play-console.deploy-runbook-main-grid.deploy-runbook-collapsible.2"
+        <DeployRunbookCollapsible id='features-google-play-console-presentation-deployrunbookmaingrid-deployrunbookcollapsible-5-dotgvz'
           title="الطرفية"
           description="سجل job النظام المحلي؛ يُحدَّث أثناء التشغيل."
           actions={
-            <TerminalActions id="google-play-console.deploy-runbook-main-grid.terminal-actions"
+            <TerminalActions id='features-google-play-console-presentation-deployrunbookmaingrid-terminalactions-6-6xp6yl'
               onCopy={() => void NativeCore.writeClipboard({ string: props.log })}
               onClear={props.clearLog}
             />
           }
         >
-          <TerminalOutput id="google-play-console.deploy-runbook-main-grid.terminal-output" text={props.log} />
+          <TerminalOutput id='features-google-play-console-presentation-deployrunbookmaingrid-terminaloutput-7-chgxon' text={props.log} />
         </DeployRunbookCollapsible>
       </div>
 
-      <div id="google-play-console.deploy-runbook-main-grid.div.2" className="order-1 min-w-0 lg:order-2">
+      <div id='features-google-play-console-presentation-deployrunbookmaingrid-div-8-kx0p8p' className="order-1 min-w-0 lg:order-2">
         <ExecutionBox
           locked={props.locked}
           activeJob={props.activeJob}

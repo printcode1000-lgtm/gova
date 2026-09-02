@@ -467,8 +467,8 @@ export const SpecialtiesCard = React.forwardRef<
 
   if (isLoading) {
     return (
-      <div id="profile.specialties-card.div" className="flex justify-center py-8">
-        <LoadingSpinner id="profile.specialties-card.loading-spinner" size="lg" />
+      <div id='features-profile-presentation-specialtiescard-div-1-nav0zk' className="flex justify-center py-8">
+        <LoadingSpinner id='features-profile-presentation-specialtiescard-loadingspinner-2-ttvcpp' size="lg" />
       </div>
     );
   }
@@ -476,13 +476,13 @@ export const SpecialtiesCard = React.forwardRef<
   if (loadFailed) {
     return (
       <div
-        id="profile.specialties-card.div.15"
+        id='features-profile-presentation-specialtiescard-div-3-tgwekh'
         className="space-y-3 rounded-xl border border-error/40 bg-error/10 p-4 text-center"
       >
-        <p id="profile.specialties-card.p.2" className="text-sm text-on-surface">
+        <p id='features-profile-presentation-specialtiescard-text-4-9lobcc' className="text-sm text-on-surface">
           {t("profile.specialties.loadFailed")}
         </p>
-        <Button id="profile.specialties-card.button.4"
+        <Button id='features-profile-presentation-specialtiescard-button-5-w8sbuv'
           type="button"
           variant="outline"
           onClick={() => void loadSpecialties()}
@@ -495,8 +495,8 @@ export const SpecialtiesCard = React.forwardRef<
 
   return (
     <>
-      <div id="profile.specialties-card.div.2" className="space-y-4">
-        <div id="profile.specialties-card.div.3" className="grid grid-cols-4 gap-2 sm:gap-3 sm:grid-cols-6">
+      <div id='features-profile-presentation-specialtiescard-div-6-ai2xg3' className="space-y-4">
+        <div id='features-profile-presentation-specialtiescard-div-7-8vy9og' className="grid grid-cols-4 gap-2 sm:gap-3 sm:grid-cols-6">
           {displayCategories.map((category) => {
             const categoryId = category.id.toString();
             const categoryName =
@@ -557,7 +557,7 @@ export const SpecialtiesCard = React.forwardRef<
           Object.values(selectedSubcategories).some(
             (arr) => arr.length > 0,
           )) && (
-          <div id="profile.specialties-card.div.4" className="grid grid-flow-col auto-cols-max grid-rows-2 gap-1.5 overflow-x-auto overscroll-x-contain pt-2">
+          <div id='features-profile-presentation-specialtiescard-div-8-gt0wxf' className="grid grid-flow-col auto-cols-max grid-rows-2 gap-1.5 overflow-x-auto overscroll-x-contain pt-2">
             {selectedSpecialties.map((categoryId) => {
               const categoryName = getCategoryName(categoryId);
               const subIds = selectedSubcategories[categoryId] || [];
@@ -611,12 +611,12 @@ export const SpecialtiesCard = React.forwardRef<
 
       {/* Subcategories Dialog */}
       {isDialogOpen && selectedCategoryForDialog && (
-        <div id="profile.specialties-card.div.5" className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div id="profile.specialties-card.div.6" className="bg-surface rounded-2xl shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col">
-            <div id="profile.specialties-card.div.7" className="flex items-center justify-between p-4 border-b border-outline-variant">
-              <div id="profile.specialties-card.div.8" className="flex items-center gap-3">
+        <div id='features-profile-presentation-specialtiescard-div-9-8cntfx' className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div id='features-profile-presentation-specialtiescard-div-10-pkmj9r' className="bg-surface rounded-2xl shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col">
+            <div id='features-profile-presentation-specialtiescard-div-11-zby0fu' className="flex items-center justify-between p-4 border-b border-outline-variant">
+              <div id='features-profile-presentation-specialtiescard-div-12-sff3gg' className="flex items-center gap-3">
                 {isDoctorAppointmentView && (
-                  <button id="profile.specialties-card.button"
+                  <button id='features-profile-presentation-specialtiescard-button-13-0gkodp'
                     type="button"
                     onClick={() => setIsDoctorAppointmentView(false)}
                     className="px-3 py-1.5 rounded-lg text-sm bg-surface-container transition-colors"
@@ -624,7 +624,7 @@ export const SpecialtiesCard = React.forwardRef<
                     {locale === "ar" ? "\u0631\u062c\u0648\u0639" : "Back"}
                   </button>
                 )}
-                <h2 id="profile.specialties-card.h2" className="text-lg font-semibold text-on-surface">
+                <h2 id='features-profile-presentation-specialtiescard-heading-14-g0wwvd' className="text-lg font-semibold text-on-surface">
                   {isDoctorAppointmentView
                     ? locale === "ar"
                       ? "\u0643\u0634\u0641 \u0637\u0628\u064a"
@@ -634,29 +634,29 @@ export const SpecialtiesCard = React.forwardRef<
                       : selectedCategoryForDialog?.nameEn}
                 </h2>
               </div>
-              <button id="profile.specialties-card.button.2"
+              <button id='features-profile-presentation-specialtiescard-button-15-mppzxh'
                 type="button"
                 onClick={() => setIsDialogOpen(false)}
                 className="p-2 rounded-full transition-colors"
                 aria-label="Close"
               >
-                <X id="profile.specialties-card.x" className="h-5 w-5 text-on-surface-variant" />
+                <X id='features-profile-presentation-specialtiescard-x-16-uacnux' className="h-5 w-5 text-on-surface-variant" />
               </button>
             </div>
-            <div id="profile.specialties-card.div.9" className="flex-1 overflow-y-auto p-4">
+            <div id='features-profile-presentation-specialtiescard-div-17-ruonbd' className="flex-1 overflow-y-auto p-4">
               {isLoadingSubcategories ? (
-                <div id="profile.specialties-card.div.10" className="flex justify-center py-8">
-                  <LoadingSpinner id="profile.specialties-card.loading-spinner.2" size="lg" />
+                <div id='features-profile-presentation-specialtiescard-div-18-79heiv' className="flex justify-center py-8">
+                  <LoadingSpinner id='features-profile-presentation-specialtiescard-loadingspinner-19-qc9fvm' size="lg" />
                 </div>
               ) : visibleSubcategories.length === 0 &&
                 doctorAppointmentSubcategories.length === 0 ? (
-                <p id="profile.specialties-card.p" className="text-center text-on-surface-variant py-8">
+                <p id='features-profile-presentation-specialtiescard-text-20-ipwntx' className="text-center text-on-surface-variant py-8">
                   {locale === "ar"
                     ? "لا توجد تخصصات فرعية"
                     : "No subcategories"}
                 </p>
               ) : (
-                <div id="profile.specialties-card.div.11" className="grid grid-cols-4 gap-2 sm:gap-3 sm:grid-cols-6">
+                <div id='features-profile-presentation-specialtiescard-div-21-ngrwmt' className="grid grid-cols-4 gap-2 sm:gap-3 sm:grid-cols-6">
                   {visibleSubcategories.map((subcategory) => {
                     const subcategoryId =
                       subcategory.originalId?.toString() ||
@@ -729,11 +729,11 @@ export const SpecialtiesCard = React.forwardRef<
                 </div>
               )}
             </div>
-            <div id="profile.specialties-card.div.12" className="p-4 border-t border-outline-variant flex flex-col gap-3">
+            <div id='features-profile-presentation-specialtiescard-div-22-8jodlv' className="p-4 border-t border-outline-variant flex flex-col gap-3">
               {selectedCategoryForDialog &&
                 selectedSubcategories[selectedCategoryForDialog.id.toString()]
                   ?.length > 0 && (
-                  <div id="profile.specialties-card.div.13" className="flex flex-wrap gap-1.5">
+                  <div id='features-profile-presentation-specialtiescard-div-23-ausrpg' className="flex flex-wrap gap-1.5">
                     {selectedSubcategories[
                       selectedCategoryForDialog.id.toString()
                     ].map((subId) => (
@@ -764,8 +764,8 @@ export const SpecialtiesCard = React.forwardRef<
                     ))}
                   </div>
                 )}
-              <div id="profile.specialties-card.div.14" className="flex justify-end">
-                <button id="profile.specialties-card.button.3"
+              <div id='features-profile-presentation-specialtiescard-div-24-gttzw7' className="flex justify-end">
+                <button id='features-profile-presentation-specialtiescard-button-25-466atz'
                   type="button"
                   onClick={() => setIsDialogOpen(false)}
                   className="px-4 py-2 bg-primary text-on-primary rounded-lg font-medium transition-colors"

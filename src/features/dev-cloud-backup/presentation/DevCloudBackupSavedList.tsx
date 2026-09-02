@@ -47,12 +47,12 @@ export function DevCloudBackupSavedList({
   onDelete: (fileName: string) => void;
 }) {
   return (
-    <section id="dev-cloud-backup.dev-cloud-backup-saved-list.section" className="overflow-hidden rounded-md border bg-surface">
-      <div id="dev-cloud-backup.dev-cloud-backup-saved-list.div" className="flex items-center gap-2 border-b p-3 font-semibold">
-        <FileArchive id="dev-cloud-backup.dev-cloud-backup-saved-list.file-archive" className="h-5 w-5" />
+    <section id='features-dev-cloud-backup-presentation-devcloudbackupsavedlist-section-1-5sdzrg' className="overflow-hidden rounded-md border bg-surface">
+      <div id='features-dev-cloud-backup-presentation-devcloudbackupsavedlist-div-2-hzuhc1' className="flex items-center gap-2 border-b p-3 font-semibold">
+        <FileArchive id='features-dev-cloud-backup-presentation-devcloudbackupsavedlist-filearchive-3-419ea0' className="h-5 w-5" />
         النسخ المحفوظة محليًا
       </div>
-      <div id="dev-cloud-backup.dev-cloud-backup-saved-list.div.2" className="divide-y">
+      <div id='features-dev-cloud-backup-presentation-devcloudbackupsavedlist-div-4-n6fkmv' className="divide-y">
         {backups.map((backup) => (
           <SavedBackupRow
             key={backup.fileName}
@@ -70,7 +70,7 @@ export function DevCloudBackupSavedList({
           />
         ))}
         {backups.length === 0 ? (
-          <div id="dev-cloud-backup.dev-cloud-backup-saved-list.div.3" className="p-6 text-center text-sm text-on-surface-variant">
+          <div id='features-dev-cloud-backup-presentation-devcloudbackupsavedlist-div-5-fsa13h' className="p-6 text-center text-sm text-on-surface-variant">
             لا توجد نسخ محفوظة بعد.
           </div>
         ) : null}
@@ -112,15 +112,15 @@ function SavedBackupRow({ id,
 
   return (
     <div id={id} className="grid gap-3 p-3 text-sm md:grid-cols-[1fr_auto]">
-      <div className="min-w-0">
-        <div className="break-all font-medium" dir="ltr">
+      <div id="features-dev-cloud-backup-presentation-devcloudbackupsavedlist-div-7-p7gct7" className="min-w-0">
+        <div id="features-dev-cloud-backup-presentation-devcloudbackupsavedlist-div-8-r81owe" className="break-all font-medium" dir="ltr">
           {backup.fileName}
         </div>
-        <div className="mt-1 text-xs text-on-surface-variant">
+        <div id="features-dev-cloud-backup-presentation-devcloudbackupsavedlist-div-9-ais8r3" className="mt-1 text-xs text-on-surface-variant">
           {dateText(backup.modifiedAt)}، {sizeText(backup.sizeBytes)}
         </div>
         {operationStatus ? (
-          <div
+          <div id="features-dev-cloud-backup-presentation-devcloudbackupsavedlist-div-10-a668ao"
             className={`mt-2 rounded-md border px-2 py-1 text-xs ${
               operationStatus.phase === "failed"
                 ? "border-red-200 bg-red-50 text-red-700"
@@ -129,7 +129,7 @@ function SavedBackupRow({ id,
                   : "border-blue-200 bg-blue-50 text-blue-800"
             }`}
           >
-            <span className="inline-flex items-center gap-1">
+            <span id="features-dev-cloud-backup-presentation-devcloudbackupsavedlist-text-11-okysfv" className="inline-flex items-center gap-1">
               {operationStatus.phase === "running" ? (
                 <RefreshCw className="h-3 w-3 animate-spin" />
               ) : null}
@@ -138,7 +138,7 @@ function SavedBackupRow({ id,
           </div>
         ) : null}
       </div>
-      <div className="flex flex-wrap gap-2 md:justify-end">
+      <div id="features-dev-cloud-backup-presentation-devcloudbackupsavedlist-div-12-dlkg8y" className="flex flex-wrap gap-2 md:justify-end">
         <Button
           type="button"
           size="sm"

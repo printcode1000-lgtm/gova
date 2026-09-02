@@ -39,7 +39,7 @@ export function NetworkStatusBanner() {
       : t('network.serverUnavailable');
 
   return (
-    <div id="network.network-status-banner.div"
+    <div id='features-network-presentation-networkstatusbanner-div-1-fagcln'
       role="status"
       aria-live="polite"
       className={cn(
@@ -51,15 +51,15 @@ export function NetworkStatusBanner() {
       style={{ bottom: BOTTOM_NAV_CLEARANCE }}
     >
       <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
-      <p id="network.network-status-banner.p" className="min-w-0 flex-1 text-sm font-medium">{message}</p>
+      <p id='features-network-presentation-networkstatusbanner-text-2-7ezvno' className="min-w-0 flex-1 text-sm font-medium">{message}</p>
       {!showRestored && (
-        <button id="network.network-status-banner.button"
+        <button id='features-network-presentation-networkstatusbanner-button-3-x2ydyj'
           type="button"
           onClick={() => void checkConnection()}
           disabled={isChecking}
           className="asol-control inline-flex shrink-0 items-center gap-1.5 rounded-xl px-3 text-xs font-semibold disabled:opacity-60"
         >
-          <RefreshCw id="network.network-status-banner.refresh-cw" className={cn('h-4 w-4', isChecking && 'animate-spin')} aria-hidden="true" />
+          <RefreshCw id='features-network-presentation-networkstatusbanner-refreshcw-4-fw0cki' className={cn('h-4 w-4', isChecking && 'animate-spin')} aria-hidden="true" />
           {isChecking ? t('network.checking') : t('network.retry')}
         </button>
       )}

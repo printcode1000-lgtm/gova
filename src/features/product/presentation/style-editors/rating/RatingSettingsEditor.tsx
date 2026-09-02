@@ -39,12 +39,12 @@ export function RatingSettingsEditor({ id,
 }: RatingSettingsEditorProps & { id?: string }) {
   return (
     <div id={id} className="space-y-4 rounded-xl border border-outline-variant p-4">
-      <h3 id="product.style-editors.rating.rating-settings-editor.h3" className="text-sm font-bold">{labels.title}</h3>
+      <h3 id='presentation-style-editors-rating-ratingsettingseditor-heading-2-5vcact' className="text-sm font-bold">{labels.title}</h3>
 
-      <div id="product.style-editors.rating.rating-settings-editor.div.2" className="flex items-center gap-3">
-        <span className="text-sm font-medium leading-none">{labels.enabled}</span>
+      <div id='presentation-style-editors-rating-ratingsettingseditor-div-3-uzbq92' className="flex items-center gap-3">
+        <span id="presentation-style-editors-rating-ratingsettingseditor-text-4-abfumy" className="text-sm font-medium leading-none">{labels.enabled}</span>
         <ToggleSwitch
-          id="rating-settings-enabled"
+          id='presentation-style-editors-rating-ratingsettingseditor-toggleswitch-5-rkpa4m'
           checked={enabled}
           onChange={(checked) => onChange({ enabled: checked, mode })}
           disabled={disabled}
@@ -52,7 +52,7 @@ export function RatingSettingsEditor({ id,
         />
       </div>
 
-      <div id="product.style-editors.rating.rating-settings-editor.div.3" className="space-y-2">
+      <div id='presentation-style-editors-rating-ratingsettingseditor-div-6-pmlxcm' className="space-y-2">
         <Label>{labels.mode}</Label>
         <Select
           value={mode}

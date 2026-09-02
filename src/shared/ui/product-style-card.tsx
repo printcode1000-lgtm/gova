@@ -36,9 +36,9 @@ export function ProductStyleCard({
 
   return (
     <section id={id} className="rounded-xl border border-outline-variant bg-background p-4 shadow-sm">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-3">
-        <label className="flex items-center gap-2 text-sm font-bold">
-          <input
+      <div id="shared-ui-product-style-card-div-2-lyhwcw" className="flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-3">
+        <label id="shared-ui-product-style-card-label-3-monuom" className="flex items-center gap-2 text-sm font-bold">
+          <input id="shared-ui-product-style-card-input-4-tbdxg2"
             type="checkbox"
             checked={visible}
             onChange={(event) => onVisibleChange(event.target.checked)}
@@ -47,9 +47,9 @@ export function ProductStyleCard({
           />
           {title}
         </label>
-        <label className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
+        <label id="shared-ui-product-style-card-label-5-q9khqu" className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
           ترتيب
-          <input
+          <input id="shared-ui-product-style-card-input-6-pfppky"
             type="number"
             min={1}
             step={1}
@@ -73,7 +73,7 @@ export function ProductStyleCard({
           />
         </label>
       </div>
-      <div className="pt-3">{children}</div>
+      <div id="shared-ui-product-style-card-div-7-v29pnk" className="pt-3">{children}</div>
     </section>
   );
 }
@@ -93,7 +93,7 @@ export function OptionCheckbox({
 }) {
   return (
     <label id={id} className="flex items-center gap-2 text-sm">
-      <input
+      <input id="shared-ui-product-style-card-input-9-6igaqe"
         type="checkbox"
         checked={checked}
         onChange={(event) => onChange(event.target.checked)}

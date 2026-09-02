@@ -94,13 +94,13 @@ export function ProductCard({ id,
           className="absolute end-2 top-2 z-10"
         />
       ) : null}
-      <button
+      <button id="features-product-card-presentation-productcard-button-2-26q1ar"
         type="button"
         onClick={(event) => onOpen?.(event, card)}
         className="block w-full min-w-0 text-start focus:outline-hidden focus-visible:ring-2 focus-visible:ring-primary"
         aria-label={card.title}
       >
-        <div
+        <div id="features-product-card-presentation-productcard-div-3-sqxkwb"
           className={`relative bg-surface-bright ${imageClass[variant]} ${isFeatured ? "mb-2 overflow-hidden" : ""}`}
         >
           {card.imageUrl ? (
@@ -116,38 +116,38 @@ export function ProductCard({ id,
             <Package className="absolute inset-0 m-auto h-9 w-9 text-on-surface-variant" />
           )}
         </div>
-        <div className={isFeatured ? "min-w-0 space-y-1" : "min-w-0 space-y-1 p-2"}>
+        <div id="features-product-card-presentation-productcard-div-4-etqpjb" className={isFeatured ? "min-w-0 space-y-1" : "min-w-0 space-y-1 p-2"}>
           {card.categoryLabel && !isFeatured ? (
-            <p className="truncate text-[10px] font-medium text-on-surface-variant">
+            <p id="features-product-card-presentation-productcard-text-5-r5f7gs" className="truncate text-[10px] font-medium text-on-surface-variant">
               {card.categoryLabel}
             </p>
           ) : null}
-          <p
+          <p id="features-product-card-presentation-productcard-text-6-x9qfek"
             className={isFeatured ? "truncate text-xs font-semibold text-on-surface" : "line-clamp-2 min-h-[32px] break-words text-xs font-semibold text-on-surface"}
           >
             {card.title}
           </p>
           {card.subtitle && !isFeatured ? (
-            <p className="truncate text-[11px] text-on-surface-variant">
+            <p id="features-product-card-presentation-productcard-text-7-3wdnrz" className="truncate text-[11px] text-on-surface-variant">
               {card.subtitle}
             </p>
           ) : null}
-          <div className="flex min-w-0 flex-wrap items-center gap-1.5">
+          <div id="features-product-card-presentation-productcard-div-8-vqimnm" className="flex min-w-0 flex-wrap items-center gap-1.5">
             {card.priceText ? (
-              <p className="min-w-0 break-words text-xs font-bold text-primary">{card.priceText}</p>
+              <p id="features-product-card-presentation-productcard-text-9-3pfxek" className="min-w-0 break-words text-xs font-bold text-primary">{card.priceText}</p>
             ) : null}
             {card.oldPriceText && !isFeatured ? (
-              <p className="min-w-0 break-words text-[10px] text-on-surface-variant line-through">{card.oldPriceText}</p>
+              <p id="features-product-card-presentation-productcard-text-10-cvmmoy" className="min-w-0 break-words text-[10px] text-on-surface-variant line-through">{card.oldPriceText}</p>
             ) : null}
             {card.ratingText && !isFeatured ? (
-              <span className="inline-flex min-w-0 items-center gap-1 break-words text-[10px] text-tertiary">
+              <span id="features-product-card-presentation-productcard-text-11-8rb2w3" className="inline-flex min-w-0 items-center gap-1 break-words text-[10px] text-tertiary">
                 <Star className="h-3 w-3 fill-current" />
                 {card.ratingText}
               </span>
             ) : null}
           </div>
           {card.badges.length > 0 && !isFeatured ? (
-            <div className="flex min-w-0 flex-wrap gap-1 pt-1">
+            <div id="features-product-card-presentation-productcard-div-12-uqrfjm" className="flex min-w-0 flex-wrap gap-1 pt-1">
               {card.badges.map((badge, badgeIndex) => (
                 <span
                   key={badge.label}
@@ -161,7 +161,7 @@ export function ProductCard({ id,
         </div>
       </button>
       {hasActions ? (
-        <div
+        <div id="features-product-card-presentation-productcard-div-13-b104bj"
           className="grid gap-1 border-t border-outline-variant/50 p-1"
           style={{ gridTemplateColumns: `repeat(${actions.length}, minmax(0, 1fr))` }}
         >

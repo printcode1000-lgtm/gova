@@ -4,6 +4,6 @@ import { withBasePath } from '@/core/config/public-env';
 export function ThemeInitScript() {
   return (
     // eslint-disable-next-line @next/next/no-sync-scripts
-    <script id="asol-theme-init" src={withBasePath('/asol-theme-init.js')} suppressHydrationWarning />
+    <script id='shared-theme-runtime-themeinitscript-script-1-vvmev6' src={withBasePath('/asol-theme-init.js')} suppressHydrationWarning />
   );
 }

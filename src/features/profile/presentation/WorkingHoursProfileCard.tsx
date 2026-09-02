@@ -59,20 +59,20 @@ export const WorkingHoursProfileCard = React.forwardRef<
 
   if (isLoading) {
     return (
-      <div id="profile.working-hours-profile-card.div" className="py-10 text-center text-sm text-on-surface-variant">
+      <div id='features-profile-presentation-workinghoursprofilecard-div-1-itgwfz' className="py-10 text-center text-sm text-on-surface-variant">
         {locale === "ar" ? "جاري التحميل..." : "Loading..."}
       </div>
     );
   }
 
   return (
-    <div id="profile.working-hours-profile-card.div.2" className="space-y-4">
+    <div id='features-profile-presentation-workinghoursprofilecard-div-2-furkme' className="space-y-4">
       {error ? (
-        <div id="profile.working-hours-profile-card.div.3" className="rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
+        <div id='features-profile-presentation-workinghoursprofilecard-div-3-cawxlo' className="rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
           {error}
         </div>
       ) : null}
-      <WorkingHoursNoteCard id="profile.working-hours-profile-card.working-hours-note-card"
+      <WorkingHoursNoteCard id='features-profile-presentation-workinghoursprofilecard-workinghoursnotecard-4-ta9f9u'
         mode="edit"
         locale={locale === "ar" ? "ar" : "en"}
         note={details.workingHours.note}
@@ -80,7 +80,7 @@ export const WorkingHoursProfileCard = React.forwardRef<
           updateField("workingHours", { ...details.workingHours, note })
         }
       />
-      <WorkingHoursCard id="profile.working-hours-profile-card.working-hours-card"
+      <WorkingHoursCard id='features-profile-presentation-workinghoursprofilecard-workinghourscard-5-dvyd3l'
         mode="edit"
         locale={locale === "ar" ? "ar" : "en"}
         value={details.workingHours}

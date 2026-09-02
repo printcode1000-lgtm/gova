@@ -123,71 +123,71 @@ export function ContactPageContent() {
   }
 
   return (
-    <main id="contact.contact-page-content.main" className="mx-auto w-full max-w-6xl space-y-8 px-4 py-8" dir={isRTL ? "rtl" : "ltr"}>
-      <section id="contact.contact-page-content.section" className="overflow-hidden rounded-3xl bg-gradient-to-br from-primary to-secondary p-7 text-white shadow-xl md:p-12">
-        <div id="contact.contact-page-content.div" className="max-w-2xl">
-          <div id="contact.contact-page-content.div.2" className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-sm"><FontAwesomeIcon id="contact.contact-page-content.font-awesome-icon" icon={faHeadset} /> ASOL · أصول</div>
-          <h1 id="contact.contact-page-content.h1" className="flex items-center gap-3 text-3xl font-bold md:text-5xl"><FontAwesomeIcon id="contact.contact-page-content.font-awesome-icon.2" icon={faMessage} className="text-3xl md:text-4xl" />{c.title}</h1>
-          <p id="contact.contact-page-content.p" className="mt-4 text-lg text-white/90">{c.intro}</p>
+    <main id='features-contact-presentation-contactpagecontent-main-1-i9hkfk' className="mx-auto w-full max-w-6xl space-y-8 px-4 py-8" dir={isRTL ? "rtl" : "ltr"}>
+      <section id='features-contact-presentation-contactpagecontent-section-2-us1loa' className="overflow-hidden rounded-3xl bg-gradient-to-br from-primary to-secondary p-7 text-white shadow-xl md:p-12">
+        <div id='features-contact-presentation-contactpagecontent-div-3-4wuxhc' className="max-w-2xl">
+          <div id='features-contact-presentation-contactpagecontent-div-4-drs26b' className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-sm"><FontAwesomeIcon id='features-contact-presentation-contactpagecontent-fontawesomeicon-5-nerzcj' icon={faHeadset} /> ASOL · أصول</div>
+          <h1 id='features-contact-presentation-contactpagecontent-heading-6-yxkq8b' className="flex items-center gap-3 text-3xl font-bold md:text-5xl"><FontAwesomeIcon id='features-contact-presentation-contactpagecontent-fontawesomeicon-7-yw4x0h' icon={faMessage} className="text-3xl md:text-4xl" />{c.title}</h1>
+          <p id='features-contact-presentation-contactpagecontent-text-8-6tr9xs' className="mt-4 text-lg text-white/90">{c.intro}</p>
         </div>
       </section>
 
-      <div id="contact.contact-page-content.div.3" className="grid gap-6 lg:grid-cols-[1.35fr_.65fr]">
-        <form onSubmit={submit} className="space-y-5 rounded-3xl border border-outline/30 bg-surface p-6 shadow-sm md:p-8">
-          <div id="contact.contact-page-content.div.4" className="grid gap-4 md:grid-cols-2">
-            <Field id="contact.contact-page-content.field" icon={faUser} label={c.name}><input id="contact.contact-page-content.input" required minLength={2} value={form.name} onChange={(event) => set("name", event.target.value)} /></Field>
-            <Field id="contact.contact-page-content.field.2" icon={faEnvelope} label={c.email}><input id="contact.contact-page-content.input.2" required type="email" value={form.email} onChange={(event) => set("email", event.target.value)} /></Field>
+      <div id='features-contact-presentation-contactpagecontent-div-9-e6cfzt' className="grid gap-6 lg:grid-cols-[1.35fr_.65fr]">
+        <form id="features-contact-presentation-contactpagecontent-form-10-onprwp" onSubmit={submit} className="space-y-5 rounded-3xl border border-outline/30 bg-surface p-6 shadow-sm md:p-8">
+          <div id='features-contact-presentation-contactpagecontent-div-11-ohc8uu' className="grid gap-4 md:grid-cols-2">
+            <Field id='features-contact-presentation-contactpagecontent-field-12-n64200' icon={faUser} label={c.name}><input id='features-contact-presentation-contactpagecontent-input-13-vcssgp' required minLength={2} value={form.name} onChange={(event) => set("name", event.target.value)} /></Field>
+            <Field id='features-contact-presentation-contactpagecontent-field-14-dzaga9' icon={faEnvelope} label={c.email}><input id='features-contact-presentation-contactpagecontent-input-15-nwimw6' required type="email" value={form.email} onChange={(event) => set("email", event.target.value)} /></Field>
           </div>
-          <div id="contact.contact-page-content.div.5" className="grid gap-4 md:grid-cols-2">
-            <Field id="contact.contact-page-content.field.3" icon={faPhone} label={c.phone}><PhoneField id="contact.contact-page-content.phone-field" labels={phoneLabels} value={form.phone ?? ""} inputClassName="rounded-xl border border-outline/40 bg-surface-container p-3" onChange={(value) => set("phone", value)} /></Field>
-            <Field id="contact.contact-page-content.field.4" icon={faBriefcase} label={c.service}><select id="contact.contact-page-content.select" value={form.service} onChange={(event) => set("service", event.target.value)}>{serviceValues.map((value, index) => <option key={value} value={value}>{c.options[index]}</option>)}</select></Field>
+          <div id='features-contact-presentation-contactpagecontent-div-16-qktisp' className="grid gap-4 md:grid-cols-2">
+            <Field id='features-contact-presentation-contactpagecontent-field-17-qpg9pn' icon={faPhone} label={c.phone}><PhoneField id='features-contact-presentation-contactpagecontent-phonefield-18-kkmshq' labels={phoneLabels} value={form.phone ?? ""} inputClassName="rounded-xl border border-outline/40 bg-surface-container p-3" onChange={(value) => set("phone", value)} /></Field>
+            <Field id='features-contact-presentation-contactpagecontent-field-19-kube0l' icon={faBriefcase} label={c.service}><select id='features-contact-presentation-contactpagecontent-select-20-koctpj' value={form.service} onChange={(event) => set("service", event.target.value)}>{serviceValues.map((value, index) => <option key={value} value={value}>{c.options[index]}</option>)}</select></Field>
           </div>
-          <Field id="contact.contact-page-content.field.5" icon={faMessage} label={c.message}><textarea id="contact.contact-page-content.textarea" required minLength={10} rows={6} value={form.message} onChange={(event) => set("message", event.target.value)} /></Field>
-          {status === "success" && <p id="contact.contact-page-content.p.2" className="rounded-xl bg-green-100 p-3 text-green-800"><FontAwesomeIcon id="contact.contact-page-content.font-awesome-icon.3" icon={faPaperPlane} className="me-2" />{c.success}</p>}
-          {status === "error" && <p id="contact.contact-page-content.p.3" className="rounded-xl bg-red-100 p-3 text-red-800"><FontAwesomeIcon id="contact.contact-page-content.font-awesome-icon.4" icon={faQuestionCircle} className="me-2" />{c.error}</p>}
-          <button id="contact.contact-page-content.button" disabled={status === "sending"} className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 font-semibold text-on-primary disabled:opacity-60"><FontAwesomeIcon id="contact.contact-page-content.font-awesome-icon.5" icon={faPaperPlane} />{status === "sending" ? c.sending : c.send}</button>
+          <Field id='features-contact-presentation-contactpagecontent-field-21-4tf9oa' icon={faMessage} label={c.message}><textarea id='features-contact-presentation-contactpagecontent-textarea-22-gsckht' required minLength={10} rows={6} value={form.message} onChange={(event) => set("message", event.target.value)} /></Field>
+          {status === "success" && <p id='features-contact-presentation-contactpagecontent-text-23-a8rher' className="rounded-xl bg-green-100 p-3 text-green-800"><FontAwesomeIcon id='features-contact-presentation-contactpagecontent-fontawesomeicon-24-8l2wwa' icon={faPaperPlane} className="me-2" />{c.success}</p>}
+          {status === "error" && <p id='features-contact-presentation-contactpagecontent-text-25-9oafbc' className="rounded-xl bg-red-100 p-3 text-red-800"><FontAwesomeIcon id='features-contact-presentation-contactpagecontent-fontawesomeicon-26-htp7um' icon={faQuestionCircle} className="me-2" />{c.error}</p>}
+          <button id='features-contact-presentation-contactpagecontent-button-27-2dwrel' disabled={status === "sending"} className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 font-semibold text-on-primary disabled:opacity-60"><FontAwesomeIcon id='features-contact-presentation-contactpagecontent-fontawesomeicon-28-4pio4x' icon={faPaperPlane} />{status === "sending" ? c.sending : c.send}</button>
         </form>
 
-        <aside id="contact.contact-page-content.aside" className="space-y-5">
-          <section id="contact.contact-page-content.section.2" className="rounded-3xl border border-outline/30 bg-surface p-6 shadow-sm">
-            <h2 id="contact.contact-page-content.h2" className="mb-5 flex items-center gap-2 text-xl font-bold"><FontAwesomeIcon id="contact.contact-page-content.font-awesome-icon.6" icon={faHeadset} className="text-primary" />{c.contact}</h2>
-            <ContactLine id="contact.contact-page-content.contact-line" icon={faPhone} text="01026546550" href="tel:01026546550" />
-            <ContactLine id="contact.contact-page-content.contact-line.2" icon={faPhone} text="01024182175" href="tel:01024182175" />
-            <ContactLine id="contact.contact-page-content.contact-line.3" icon={faEnvelope} text="suezbazaar@gmail.com" href="mailto:suezbazaar@gmail.com" />
-            <ContactLine id="contact.contact-page-content.contact-line.4" icon={faClock} text={c.hours} />
-            <ContactLine id="contact.contact-page-content.contact-line.5" icon={faLocationDot} text={c.location} />
-            <div id="contact.contact-page-content.div.6" className="mt-5 flex flex-wrap gap-3">{SOCIALS.map((social) => <a key={social.label} href={social.href} target="_blank" rel="noreferrer" aria-label={social.label} className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-xl text-primary transition-transform"><FontAwesomeIcon icon={social.icon} /></a>)}</div>
+        <aside id='features-contact-presentation-contactpagecontent-aside-29-784xcj' className="space-y-5">
+          <section id='features-contact-presentation-contactpagecontent-section-30-ixsjft' className="rounded-3xl border border-outline/30 bg-surface p-6 shadow-sm">
+            <h2 id='features-contact-presentation-contactpagecontent-heading-31-nkbzju' className="mb-5 flex items-center gap-2 text-xl font-bold"><FontAwesomeIcon id='features-contact-presentation-contactpagecontent-fontawesomeicon-32-svo67o' icon={faHeadset} className="text-primary" />{c.contact}</h2>
+            <ContactLine id='features-contact-presentation-contactpagecontent-contactline-33-hl59qk' icon={faPhone} text="01026546550" href="tel:01026546550" />
+            <ContactLine id='features-contact-presentation-contactpagecontent-contactline-34-zoq0vv' icon={faPhone} text="01024182175" href="tel:01024182175" />
+            <ContactLine id='features-contact-presentation-contactpagecontent-contactline-35-bhewmf' icon={faEnvelope} text="suezbazaar@gmail.com" href="mailto:suezbazaar@gmail.com" />
+            <ContactLine id='features-contact-presentation-contactpagecontent-contactline-36-pgknmm' icon={faClock} text={c.hours} />
+            <ContactLine id='features-contact-presentation-contactpagecontent-contactline-37-wmvqtq' icon={faLocationDot} text={c.location} />
+            <div id='features-contact-presentation-contactpagecontent-div-38-zcoedd' className="mt-5 flex flex-wrap gap-3">{SOCIALS.map((social) => <a key={social.label} href={social.href} target="_blank" rel="noreferrer" aria-label={social.label} className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-xl text-primary transition-transform"><FontAwesomeIcon icon={social.icon} /></a>)}</div>
           </section>
-          <section id="contact.contact-page-content.section.3" className="rounded-3xl border border-outline/30 bg-surface p-6 text-center shadow-sm">
-            <Image id="contact.contact-page-content.image" src="/images/qr-code.png" width={180} height={180} alt={c.qr} className="mx-auto rounded-xl" />
-            <p id="contact.contact-page-content.p.4" className="mt-3 text-sm text-on-surface-variant"><FontAwesomeIcon id="contact.contact-page-content.font-awesome-icon.7" icon={faWhatsapp} className="me-2 text-green-600" />{c.qr}</p>
+          <section id='features-contact-presentation-contactpagecontent-section-39-t1c5lq' className="rounded-3xl border border-outline/30 bg-surface p-6 text-center shadow-sm">
+            <Image id='features-contact-presentation-contactpagecontent-image-40-dqbuon' src="/images/qr-code.png" width={180} height={180} alt={c.qr} className="mx-auto rounded-xl" />
+            <p id='features-contact-presentation-contactpagecontent-text-41-whwaxa' className="mt-3 text-sm text-on-surface-variant"><FontAwesomeIcon id='features-contact-presentation-contactpagecontent-fontawesomeicon-42-dosywk' icon={faWhatsapp} className="me-2 text-green-600" />{c.qr}</p>
           </section>
         </aside>
       </div>
 
-      <section id="contact.contact-page-content.section.4">
-        <h2 id="contact.contact-page-content.h2.2" className="mb-4 flex items-center gap-2 text-2xl font-bold"><FontAwesomeIcon id="contact.contact-page-content.font-awesome-icon.8" icon={faBriefcase} className="text-secondary" />{c.servicesTitle}</h2>
-        <div id="contact.contact-page-content.div.7" className="grid gap-4 md:grid-cols-3">{c.services.map((item, index) => <div key={item} className="rounded-2xl border border-outline/30 bg-surface p-6"><div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-secondary/15 text-xl text-secondary"><FontAwesomeIcon icon={serviceIcons[index]} /></div><h3 className="font-bold">{item}</h3></div>)}</div>
+      <section id='features-contact-presentation-contactpagecontent-section-43-xhq5zs'>
+        <h2 id='features-contact-presentation-contactpagecontent-heading-44-ysmn5c' className="mb-4 flex items-center gap-2 text-2xl font-bold"><FontAwesomeIcon id='features-contact-presentation-contactpagecontent-fontawesomeicon-45-wtq8gj' icon={faBriefcase} className="text-secondary" />{c.servicesTitle}</h2>
+        <div id='features-contact-presentation-contactpagecontent-div-46-emirmw' className="grid gap-4 md:grid-cols-3">{c.services.map((item, index) => <div key={item} className="rounded-2xl border border-outline/30 bg-surface p-6"><div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-secondary/15 text-xl text-secondary"><FontAwesomeIcon icon={serviceIcons[index]} /></div><h3 className="font-bold">{item}</h3></div>)}</div>
       </section>
 
-      <section id="contact.contact-page-content.section.5" className="rounded-3xl border border-outline/30 bg-surface p-6 md:p-8">
-        <h2 id="contact.contact-page-content.h2.3" className="mb-5 flex items-center gap-3 text-2xl font-bold"><FontAwesomeIcon id="contact.contact-page-content.font-awesome-icon.9" icon={faQuestionCircle} className="text-primary" />{c.faq}</h2>
-        <div id="contact.contact-page-content.div.8" className="space-y-3">{c.faqs.map(([question, answer], index) => <details key={question} className="group rounded-xl bg-surface-container p-4"><summary className="flex list-none items-center gap-3 font-semibold"><span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"><FontAwesomeIcon icon={faQuestionCircle} /></span><span className="flex-1">{question}</span><FontAwesomeIcon icon={faChevronDown} className="text-primary transition-transform group-open:rotate-180" /></summary><p className="mt-4 border-t border-outline/20 pt-4 leading-8 text-on-surface-variant">{answer}</p></details>)}</div>
+      <section id='features-contact-presentation-contactpagecontent-section-47-dbxe6w' className="rounded-3xl border border-outline/30 bg-surface p-6 md:p-8">
+        <h2 id='features-contact-presentation-contactpagecontent-heading-48-f8xzkj' className="mb-5 flex items-center gap-3 text-2xl font-bold"><FontAwesomeIcon id='features-contact-presentation-contactpagecontent-fontawesomeicon-49-umavda' icon={faQuestionCircle} className="text-primary" />{c.faq}</h2>
+        <div id='features-contact-presentation-contactpagecontent-div-50-pymdsi' className="space-y-3">{c.faqs.map(([question, answer], index) => <details key={question} className="group rounded-xl bg-surface-container p-4"><summary className="flex list-none items-center gap-3 font-semibold"><span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"><FontAwesomeIcon icon={faQuestionCircle} /></span><span className="flex-1">{question}</span><FontAwesomeIcon icon={faChevronDown} className="text-primary transition-transform group-open:rotate-180" /></summary><p className="mt-4 border-t border-outline/20 pt-4 leading-8 text-on-surface-variant">{answer}</p></details>)}</div>
       </section>
 
-      <div id="contact.contact-page-content.div.9" className="grid gap-4 sm:grid-cols-2">
-        <Link id="contact.contact-page-content.link" href="/privacy-policy" className="flex items-center gap-3 rounded-2xl border border-outline/30 bg-surface p-5 font-semibold"><FontAwesomeIcon id="contact.contact-page-content.font-awesome-icon.10" icon={faShieldHalved} className="text-xl text-primary" />{c.privacy}</Link>
-        <Link id="contact.contact-page-content.link.2" href="/delete-account" className="flex items-center gap-3 rounded-2xl border border-error/30 bg-error/5 p-5 font-semibold text-error"><FontAwesomeIcon id="contact.contact-page-content.font-awesome-icon.11" icon={faTrashCan} className="text-xl" />{c.delete}</Link>
+      <div id='features-contact-presentation-contactpagecontent-div-51-dzymgu' className="grid gap-4 sm:grid-cols-2">
+        <Link id='features-contact-presentation-contactpagecontent-link-52-ddyweq' href="/privacy-policy" className="flex items-center gap-3 rounded-2xl border border-outline/30 bg-surface p-5 font-semibold"><FontAwesomeIcon id='features-contact-presentation-contactpagecontent-fontawesomeicon-53-oxv1gi' icon={faShieldHalved} className="text-xl text-primary" />{c.privacy}</Link>
+        <Link id='features-contact-presentation-contactpagecontent-link-54-xspjos' href="/delete-account" className="flex items-center gap-3 rounded-2xl border border-error/30 bg-error/5 p-5 font-semibold text-error"><FontAwesomeIcon id='features-contact-presentation-contactpagecontent-fontawesomeicon-55-crbx7c' icon={faTrashCan} className="text-xl" />{c.delete}</Link>
       </div>
     </main>
   );
 }
 
 function Field({ id, icon, label, children }: { icon: IconDefinition; label: string; children: ReactNode } & { id?: string }) {
-  return <label id={id} className="block space-y-2 text-sm font-semibold"><span className="flex items-center gap-2"><FontAwesomeIcon icon={icon} className="text-primary" />{label}</span><span className="block [&>input]:w-full [&>input]:rounded-xl [&>input]:border [&>input]:border-outline/40 [&>input]:bg-surface-container [&>input]:p-3 [&>select]:w-full [&>select]:rounded-xl [&>select]:border [&>select]:border-outline/40 [&>select]:bg-surface-container [&>select]:p-3 [&>textarea]:w-full [&>textarea]:rounded-xl [&>textarea]:border [&>textarea]:border-outline/40 [&>textarea]:bg-surface-container [&>textarea]:p-3">{children}</span></label>;
+  return <label id={id} className="block space-y-2 text-sm font-semibold"><span id="features-contact-presentation-contactpagecontent-text-57-yjobir" className="flex items-center gap-2"><FontAwesomeIcon icon={icon} className="text-primary" />{label}</span><span id="features-contact-presentation-contactpagecontent-text-58-dciidj" className="block [&>input]:w-full [&>input]:rounded-xl [&>input]:border [&>input]:border-outline/40 [&>input]:bg-surface-container [&>input]:p-3 [&>select]:w-full [&>select]:rounded-xl [&>select]:border [&>select]:border-outline/40 [&>select]:bg-surface-container [&>select]:p-3 [&>textarea]:w-full [&>textarea]:rounded-xl [&>textarea]:border [&>textarea]:border-outline/40 [&>textarea]:bg-surface-container [&>textarea]:p-3">{children}</span></label>;
 }
 
 function ContactLine({ id, icon, text, href }: { icon: IconDefinition; text: string; href?: string } & { id?: string }) {
-  const body = <><span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary"><FontAwesomeIcon icon={icon} /></span><span>{text}</span></>;
-  return href ? <a id={id} href={href} className="mb-3 flex items-center gap-3 text-sm">{body}</a> : <div className="mb-3 flex items-center gap-3 text-sm">{body}</div>;
+  const body = <><span id="features-contact-presentation-contactpagecontent-text-59-4dgtl6" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary"><FontAwesomeIcon icon={icon} /></span><span id="features-contact-presentation-contactpagecontent-text-60-xfb9mt">{text}</span></>;
+  return href ? <a id={id} href={href} className="mb-3 flex items-center gap-3 text-sm">{body}</a> : <div id="features-contact-presentation-contactpagecontent-div-62-fodlyn" className="mb-3 flex items-center gap-3 text-sm">{body}</div>;
 }

@@ -82,7 +82,7 @@ export function ReleaseCommandConfirmDialog({
       }}
     >
       <DialogContent
-        id="google-play-console.release-command-confirm-dialog.dialog-content"
+        id='google-play-console-presentation-components-releasecommandconfirmdialog-dialogcontent-1-4oh3gn'
         className="max-h-[calc(100dvh-1rem)] grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden sm:max-w-2xl"
         // A confirmation must be answered deliberately: clicking away or losing
         // focus never dismisses it, only the buttons below do.
@@ -90,38 +90,38 @@ export function ReleaseCommandConfirmDialog({
         onInteractOutside={(event) => event.preventDefault()}
         onFocusOutside={(event) => event.preventDefault()}
       >
-        <DialogHeader id="google-play-console.release-command-confirm-dialog.dialog-header">
-          <DialogTitle id="google-play-console.release-command-confirm-dialog.dialog-title">
+        <DialogHeader id='google-play-console-presentation-components-releasecommandconfirmdialog-dialogheader-2-z7xa5d'>
+          <DialogTitle id='google-play-console-presentation-components-releasecommandconfirmdialog-dialogtitle-3-v4ycqk'>
             {t("releaseConsole.confirmRun.title")}
           </DialogTitle>
-          <DialogDescription id="google-play-console.release-command-confirm-dialog.dialog-description">
+          <DialogDescription id='google-play-console-presentation-components-releasecommandconfirmdialog-dialogdescription-4-9jb2ms'>
             {t("releaseConsole.confirmRun.body")}
           </DialogDescription>
         </DialogHeader>
         <div
-          id="google-play-console.release-command-confirm-dialog.div"
+          id='google-play-console-presentation-components-releasecommandconfirmdialog-div-5-ncleju'
           className="min-h-0 space-y-4 overflow-y-auto overscroll-contain pe-1 text-sm"
         >
           <ReleaseCommandSummary title={title} command={command} t={t} />
           <ReleaseCurrentVersions
-            id="google-play-console.release-command-confirm-dialog.release-current-versions"
+            id='google-play-console-presentation-components-releasecommandconfirmdialog-releasecurrentversions-6-isk9om'
             versions={versions}
             t={t}
           />
           {command?.danger !== "safe" ? (
             <p
-              id="google-play-console.release-command-confirm-dialog.p.3"
+              id='google-play-console-presentation-components-releasecommandconfirmdialog-text-7-srroe4'
               className="flex items-center gap-2 rounded-md bg-error-container p-2 text-on-error-container"
             >
               <AlertTriangle
-                id="google-play-console.release-command-confirm-dialog.alert-triangle"
+                id='google-play-console-presentation-components-releasecommandconfirmdialog-alerttriangle-8-c2e9b2'
                 className="h-4 w-4 shrink-0"
               />
               {t("releaseConsole.confirmRun.danger")}
             </p>
           ) : null}
           {command?.parameters.length ? (
-            <div id="google-play-console.release-command-confirm-dialog.div.3" className="space-y-2">
+            <div id='google-play-console-presentation-components-releasecommandconfirmdialog-div-9-icm4mp' className="space-y-2">
               {command.parameters.map((schema) => (
                 <Parameter
                   key={schema.name}
@@ -136,7 +136,7 @@ export function ReleaseCommandConfirmDialog({
           ) : null}
           {command ? (
             <ReleaseSelectedVersions
-              id="google-play-console.release-command-confirm-dialog.release-selected-versions"
+              id='google-play-console-presentation-components-releasecommandconfirmdialog-releaseselectedversions-10-h3r9te'
               commandId={command.id}
               versions={versions}
               parameters={parameters}
@@ -155,14 +155,14 @@ export function ReleaseCommandConfirmDialog({
             t={t}
           />
         </div>
-        <DialogFooter id="google-play-console.release-command-confirm-dialog.dialog-footer" className="border-t pt-3">
-          <Button id="google-play-console.release-command-confirm-dialog.button" variant="outline" onClick={onCancel}>
+        <DialogFooter id='google-play-console-presentation-components-releasecommandconfirmdialog-dialogfooter-11-gl9u3y' className="border-t pt-3">
+          <Button id='google-play-console-presentation-components-releasecommandconfirmdialog-button-12-otiq8p' variant="outline" onClick={onCancel}>
             {t("releaseConsole.confirmRun.cancel")}
           </Button>
           {/* Disabled while another job holds the page, so confirming late
               cannot start a second command. */}
           <Button
-            id="google-play-console.release-command-confirm-dialog.button.2"
+            id='google-play-console-presentation-components-releasecommandconfirmdialog-button-13-hjqrh2'
             disabled={locked || !phraseSatisfied || !minimumNativeVersionSatisfied || !requiredParametersSatisfied}
             onClick={() =>
               onConfirm({

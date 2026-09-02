@@ -41,12 +41,12 @@ export function WorkingHoursNoteCard({ id,
       id={id}
       className="min-w-0 space-y-3 rounded-xl border border-outline-variant bg-surface p-4"
     >
-      <h3 className="flex min-w-0 items-center gap-2 break-words text-sm font-bold text-on-surface">
+      <h3 id="features-profile-working-hours-presentation-workinghoursnotecard-heading-2-nodg6v" className="flex min-w-0 items-center gap-2 break-words text-sm font-bold text-on-surface">
         <StickyNote className="h-5 w-5 text-primary" />
         {text.title}
       </h3>
       {isEdit ? (
-        <textarea
+        <textarea id="features-profile-working-hours-presentation-workinghoursnotecard-textarea-3-thoree"
           value={note}
           onChange={(event) =>
             onChange?.(event.target.value.slice(0, NOTE_MAX_LENGTH))
@@ -58,7 +58,7 @@ export function WorkingHoursNoteCard({ id,
           className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 text-sm text-on-surface outline-none transition focus:border-primary"
         />
       ) : (
-        <p className="whitespace-pre-wrap break-words rounded-lg bg-surface-container-low p-3 text-xs text-on-surface-variant">
+        <p id="features-profile-working-hours-presentation-workinghoursnotecard-text-4-emusgv" className="whitespace-pre-wrap break-words rounded-lg bg-surface-container-low p-3 text-xs text-on-surface-variant">
           {note}
         </p>
       )}

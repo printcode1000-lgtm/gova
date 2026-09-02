@@ -33,11 +33,11 @@ export function RouteErrorFallback({ id,
 
   return (
     <main id={id} className="container mx-auto max-w-lg px-4 py-12 text-center" dir="rtl">
-      <h1 className="text-xl font-bold text-error">حدث خطأ في الصفحة</h1>
-      <p className="mt-2 text-sm text-on-surface-variant">
+      <h1 id="features-system-logs-application-routeerrorfallback-heading-2-v586mc" className="text-xl font-bold text-error">حدث خطأ في الصفحة</h1>
+      <p id="features-system-logs-application-routeerrorfallback-text-3-ekobwo" className="mt-2 text-sm text-on-surface-variant">
         تم التقاط تفاصيل الخطأ. يمكنك إعادة محاولة فتح الصفحة.
       </p>
-      <button type="button" className="auth-cta mt-5 px-6" onClick={reset}>
+      <button id="features-system-logs-application-routeerrorfallback-button-4-sa70bb" type="button" className="auth-cta mt-5 px-6" onClick={reset}>
         إعادة المحاولة
       </button>
     </main>

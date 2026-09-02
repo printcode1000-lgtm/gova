@@ -18,22 +18,22 @@ export function SystemNotificationSettingsButton({
   if (!state.systemSettingsAvailable) return null;
 
   return (
-    <div id="settings.system-notification-settings-button.div" className="flex flex-col gap-3 rounded-xl border border-outline-variant bg-surface p-3 sm:p-4">
-      <div id="settings.system-notification-settings-button.div.2" className="min-w-0">
-        <p id="settings.system-notification-settings-button.p" className="text-sm font-semibold text-on-surface">
+    <div id='features-settings-presentation-systemnotificationsettingsbutton-div-1-ozz8uf' className="flex flex-col gap-3 rounded-xl border border-outline-variant bg-surface p-3 sm:p-4">
+      <div id='features-settings-presentation-systemnotificationsettingsbutton-div-2-b277ap' className="min-w-0">
+        <p id='features-settings-presentation-systemnotificationsettingsbutton-text-3-bfd0my' className="text-sm font-semibold text-on-surface">
           {state.t("settings.notifications.systemSettings.title")}
         </p>
-        <p id="settings.system-notification-settings-button.p.2" className="mt-1 text-xs leading-relaxed text-on-surface-variant">
+        <p id='features-settings-presentation-systemnotificationsettingsbutton-text-4-049en3' className="mt-1 text-xs leading-relaxed text-on-surface-variant">
           {state.t("settings.notifications.systemSettings.description")}
         </p>
       </div>
-      <button id="settings.system-notification-settings-button.button"
+      <button id='features-settings-presentation-systemnotificationsettingsbutton-button-5-fcqqjq'
         type="button"
         disabled={state.systemSettingsBusy}
         onClick={() => void state.openSystemNotificationSettings()}
         className="asol-control inline-flex w-full items-center justify-center gap-2 rounded-xl border border-outline-variant px-4 py-2.5 text-sm font-semibold text-on-surface active:opacity-80 disabled:opacity-60 sm:w-auto"
       >
-        <SlidersHorizontal id="settings.system-notification-settings-button.sliders-horizontal" className="h-4 w-4" aria-hidden />
+        <SlidersHorizontal id='features-settings-presentation-systemnotificationsettingsbutton-slidershorizontal-6-ubxsqm' className="h-4 w-4" aria-hidden />
         {state.t("settings.notifications.systemSettings.button")}
       </button>
     </div>

@@ -81,16 +81,16 @@ export function ProductsSection() {
   });
 
   return (
-    <div id="onboarding.sections.products-section.div" className="space-y-6 animate-in fade-in duration-300">
-      <Card id="onboarding.sections.products-section.card">
-        <CardHeader id="onboarding.sections.products-section.card-header">
-          <CardTitle id="onboarding.sections.products-section.card-title" className="flex items-center gap-2">
-            <Package id="onboarding.sections.products-section.package" className="h-5 w-5" />
+    <div id='onboarding-presentation-sections-products-section-div-1-pinq98' className="space-y-6 animate-in fade-in duration-300">
+      <Card id='onboarding-presentation-sections-products-section-card-2-d7ydgv'>
+        <CardHeader id='onboarding-presentation-sections-products-section-cardheader-3-agnvy0'>
+          <CardTitle id='onboarding-presentation-sections-products-section-cardtitle-4-38kwkm' className="flex items-center gap-2">
+            <Package id='onboarding-presentation-sections-products-section-package-5-xkhcof' className="h-5 w-5" />
             {t('onboarding.products.title')}
           </CardTitle>
-          <CardDescription id="onboarding.sections.products-section.card-description">{t('onboarding.products.description')}</CardDescription>
+          <CardDescription id='onboarding-presentation-sections-products-section-carddescription-6-8wmc2c'>{t('onboarding.products.description')}</CardDescription>
         </CardHeader>
-        <CardContent id="onboarding.sections.products-section.card-content">
+        <CardContent id='onboarding-presentation-sections-products-section-cardcontent-7-vaaxf5'>
           {showForm && editingProduct ? (
             <ProductForm
               product={editingProduct}
@@ -101,21 +101,21 @@ export function ProductsSection() {
               }}
             />
           ) : data.products.products.length === 0 ? (
-            <div id="onboarding.sections.products-section.div.2" className="flex flex-col items-center justify-center py-12 text-center">
-              <div id="onboarding.sections.products-section.div.3" className="rounded-full bg-muted p-4 mb-4">
-                <Package id="onboarding.sections.products-section.package.2" className="h-8 w-8 text-muted-foreground" />
+            <div id='onboarding-presentation-sections-products-section-div-8-74uvzz' className="flex flex-col items-center justify-center py-12 text-center">
+              <div id='onboarding-presentation-sections-products-section-div-9-sqsidm' className="rounded-full bg-muted p-4 mb-4">
+                <Package id='onboarding-presentation-sections-products-section-package-10-mvvqm3' className="h-8 w-8 text-muted-foreground" />
               </div>
-              <h3 id="onboarding.sections.products-section.h3" className="font-medium mb-2">{t('onboarding.products.emptyTitle')}</h3>
-              <p id="onboarding.sections.products-section.p" className="text-sm text-muted-foreground mb-4 max-w-sm">
+              <h3 id='onboarding-presentation-sections-products-section-heading-11-4vgxxh' className="font-medium mb-2">{t('onboarding.products.emptyTitle')}</h3>
+              <p id='onboarding-presentation-sections-products-section-text-12-nbme0k' className="text-sm text-muted-foreground mb-4 max-w-sm">
                 {t('onboarding.products.emptyDesc')}
               </p>
-              <Button id="onboarding.sections.products-section.button" onClick={handleCreateProduct} className="gap-2">
-                <Plus id="onboarding.sections.products-section.plus" className="h-4 w-4" />
+              <Button id='onboarding-presentation-sections-products-section-button-13-ptoapk' onClick={handleCreateProduct} className="gap-2">
+                <Plus id='onboarding-presentation-sections-products-section-plus-14-dlasib' className="h-4 w-4" />
                 {t('onboarding.products.addFirst')}
               </Button>
             </div>
           ) : (
-            <div id="onboarding.sections.products-section.div.4" className="space-y-4">
+            <div id='onboarding-presentation-sections-products-section-div-15-h6fbyi' className="space-y-4">
               {data.products.products.map((product) => (
                 <div
                   key={product.id}
@@ -140,8 +140,8 @@ export function ProductsSection() {
                 </div>
               ))}
 
-              <Button id="onboarding.sections.products-section.button.2" variant="outline" onClick={handleCreateProduct} className="w-full gap-2">
-                <Plus id="onboarding.sections.products-section.plus.2" className="h-4 w-4" />
+              <Button id='onboarding-presentation-sections-products-section-button-16-qep2dl' variant="outline" onClick={handleCreateProduct} className="w-full gap-2">
+                <Plus id='onboarding-presentation-sections-products-section-plus-17-aqzgvg' className="h-4 w-4" />
                 {t('onboarding.products.addAnother')}
               </Button>
             </div>
@@ -149,7 +149,7 @@ export function ProductsSection() {
         </CardContent>
       </Card>
 
-      <StepNavigation id="onboarding.sections.products-section.step-navigation" onNext={handleNext} showSkip />
+      <StepNavigation id='onboarding-presentation-sections-products-section-stepnavigation-18-9lqosr' onNext={handleNext} showSkip />
     </div>
   );
 }

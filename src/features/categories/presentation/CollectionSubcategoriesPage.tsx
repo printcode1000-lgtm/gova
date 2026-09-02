@@ -41,10 +41,10 @@ export function CollectionSubcategoriesPage({
     : items;
 
   return (
-    <div id="categories.collection-subcategories-page.div" className="space-y-5 px-4 py-5">
-      <div id="categories.collection-subcategories-page.div.2" className="relative min-h-28 rounded-3xl bg-surface-bright space-y-3 p-4 overflow-hidden">
+    <div id='features-categories-presentation-collectionsubcategoriespage-div-1-8xxwoa' className="space-y-5 px-4 py-5">
+      <div id='features-categories-presentation-collectionsubcategoriespage-div-2-28nofy' className="relative min-h-28 rounded-3xl bg-surface-bright space-y-3 p-4 overflow-hidden">
         {heroImage && (
-          <Image id="categories.collection-subcategories-page.image"
+          <Image id='features-categories-presentation-collectionsubcategoriespage-image-3-ypgpm2'
             src={collection.imageUrl}
             alt={title}
             fill
@@ -52,15 +52,15 @@ export function CollectionSubcategoriesPage({
             priority
           />
         )}
-        <div id="categories.collection-subcategories-page.div.3" className="relative z-10">
-          <h1 id="categories.collection-subcategories-page.h1" className="text-2xl font-bold text-on-surface">{title}</h1>
+        <div id='features-categories-presentation-collectionsubcategoriespage-div-4-3gsisn' className="relative z-10">
+          <h1 id='features-categories-presentation-collectionsubcategoriespage-heading-5-mhqotc' className="text-2xl font-bold text-on-surface">{title}</h1>
         </div>
-        <div id="categories.collection-subcategories-page.div.4" className="relative">
-          <Search id="categories.collection-subcategories-page.search"
+        <div id='features-categories-presentation-collectionsubcategoriespage-div-6-paxmxg' className="relative">
+          <Search id='features-categories-presentation-collectionsubcategoriespage-search-7-rkgm61'
             className="absolute start-4 top-1/2 h-5 w-5 -translate-y-1/2 text-on-surface-variant"
             aria-hidden
           />
-          <input id="categories.collection-subcategories-page.input"
+          <input id='features-categories-presentation-collectionsubcategoriespage-input-8-vnrqqv'
             type="search"
             value={searchText}
             onChange={(event) => setSearchText(event.target.value)}
@@ -75,14 +75,14 @@ export function CollectionSubcategoriesPage({
       </div>
 
       {filteredItems.length === 0 ? (
-        <p id="categories.collection-subcategories-page.p" className="rounded-2xl bg-surface p-8 text-center text-sm text-on-surface-variant">
+        <p id='features-categories-presentation-collectionsubcategoriespage-text-9-ja26if' className="rounded-2xl bg-surface p-8 text-center text-sm text-on-surface-variant">
           {locale === "ar"
             ? "\u0644\u0627 \u062a\u0648\u062c\u062f \u0646\u062a\u0627\u0626\u062c \u0645\u0637\u0627\u0628\u0642\u0629"
             : "No matching results"}
         </p>
       ) : (
-        <div id="categories.collection-subcategories-page.div.5" className="asol-section-tonal asol-section-tonal-primary">
-          <div id="categories.collection-subcategories-page.div.6" className={categoryGridClassName}>
+        <div id='features-categories-presentation-collectionsubcategoriespage-div-10-rn1d29' className="asol-section-tonal asol-section-tonal-primary">
+          <div id='features-categories-presentation-collectionsubcategoriespage-div-11-9twhdt' className={categoryGridClassName}>
           {filteredItems.map((item) => {
             const name = locale === "ar" ? item.nameAr : item.nameEn;
             const imageSrc = item.imageUrl;

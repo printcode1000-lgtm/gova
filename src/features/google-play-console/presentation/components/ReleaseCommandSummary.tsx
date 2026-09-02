@@ -18,29 +18,29 @@ export function ReleaseCommandSummary(props: {
   const { title, command, t } = props;
   return (
       <section
-        id="google-play-console.release-command-confirm-dialog.section"
+        id='google-play-console-presentation-components-releasecommandsummary-section-1-aspnza'
         className="space-y-2 rounded-lg border bg-surface-container-low p-3"
       >
-        <p id="google-play-console.release-command-confirm-dialog.p" className="text-base font-bold">
+        <p id='google-play-console-presentation-components-releasecommandsummary-text-2-pnnzs4' className="text-base font-bold">
           {title}
         </p>
         {command ? (
           <>
             <p
-              id="google-play-console.release-command-confirm-dialog.p.2"
+              id='google-play-console-presentation-components-releasecommandsummary-text-3-vquhqw'
               className="leading-6 text-on-surface-variant"
             >
               {t(command.documentation.descriptionKey)}
             </p>
             <div
-              id="google-play-console.release-command-confirm-dialog.div.2"
+              id='google-play-console-presentation-components-releasecommandsummary-div-4-h7pwfm'
               className="flex flex-wrap items-center gap-2 text-xs"
             >
-              <code className="rounded-md bg-muted px-2 py-1" dir="ltr">
+              <code id="google-play-console-presentation-components-releasecommandsummary-code-5-uzke6l" className="rounded-md bg-muted px-2 py-1" dir="ltr">
                 npm run {command.script}
               </code>
               <span
-                id="google-play-console.release-command-confirm-dialog.span"
+                id='google-play-console-presentation-components-releasecommandsummary-text-6-y3sop1'
                 className="rounded-md bg-muted px-2 py-1"
               >
                 {t("releaseConsole.confirmRun.estimatedDuration")}: {command.estimatedDuration}

@@ -30,24 +30,24 @@ export function OtaReleaseChanges({
   })) as Parameters<typeof DeltaTable>[0]["rows"];
   return (
     <section
-      id="google-play-console.ota-release-changes.section"
+      id='google-play-console-presentation-components-otareleasechanges-section-1-teukkd'
       className="space-y-3 rounded-md border bg-surface p-4"
     >
       <select
-        id="google-play-console.ota-release-changes.select"
+        id='google-play-console-presentation-components-otareleasechanges-select-2-ytzb3z'
         className="h-10 w-full rounded-md border bg-background px-3"
         value={baseId}
         onChange={(event) => onBaseChange(event.target.value)}
         dir="ltr"
       >
-        <option value="">{emptyText}</option>
+        <option id="google-play-console-presentation-components-otareleasechanges-option-3-t0kfid" value="">{emptyText}</option>
         {candidates.map((item) => (
           <option key={item.releaseId} value={item.releaseId}>
             {item.version} / {item.releaseId}
           </option>
         ))}
       </select>
-      <DeltaTable id="google-play-console.ota-release-changes.delta-table" rows={rows} emptyText={emptyText} />
+      <DeltaTable id='google-play-console-presentation-components-otareleasechanges-deltatable-4-0phkom' rows={rows} emptyText={emptyText} />
     </section>
   );
 }

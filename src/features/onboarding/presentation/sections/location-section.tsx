@@ -66,16 +66,16 @@ export function LocationSection() {
   };
 
   return (
-    <div id="onboarding.sections.location-section.div" className="space-y-6 animate-in fade-in duration-300">
-      <Card id="onboarding.sections.location-section.card">
-        <CardHeader id="onboarding.sections.location-section.card-header">
-          <CardTitle id="onboarding.sections.location-section.card-title">{t('onboarding.location.title')}</CardTitle>
-          <CardDescription id="onboarding.sections.location-section.card-description">{t('onboarding.location.description')}</CardDescription>
+    <div id='onboarding-presentation-sections-location-section-div-1-orakgn' className="space-y-6 animate-in fade-in duration-300">
+      <Card id='onboarding-presentation-sections-location-section-card-2-bswh6k'>
+        <CardHeader id='onboarding-presentation-sections-location-section-cardheader-3-h0qimb'>
+          <CardTitle id='onboarding-presentation-sections-location-section-cardtitle-4-parxbf'>{t('onboarding.location.title')}</CardTitle>
+          <CardDescription id='onboarding-presentation-sections-location-section-carddescription-5-zzshal'>{t('onboarding.location.description')}</CardDescription>
         </CardHeader>
-        <CardContent id="onboarding.sections.location-section.card-content" className="space-y-6">
-          <div id="onboarding.sections.location-section.div.2" className="grid gap-6 lg:grid-cols-2">
-            <FormField id="onboarding.sections.location-section.form-field" label={t('onboarding.location.country')} htmlFor="country" required error={errors.country}>
-              <FormSelect id="onboarding.sections.location-section.form-select"
+        <CardContent id='onboarding-presentation-sections-location-section-cardcontent-6-dy0dgg' className="space-y-6">
+          <div id='onboarding-presentation-sections-location-section-div-7-5o4f8g' className="grid gap-6 lg:grid-cols-2">
+            <FormField id='onboarding-presentation-sections-location-section-formfield-8-41khhf' label={t('onboarding.location.country')} htmlFor="country" required error={errors.country}>
+              <FormSelect id='onboarding-presentation-sections-location-section-formselect-9-56knz6'
                 value={location.country}
                 onValueChange={(v) => updateLocation({ country: v })}
                 options={constants.countries.map((c) => ({
@@ -87,9 +87,9 @@ export function LocationSection() {
               />
             </FormField>
 
-            <FormField id="onboarding.sections.location-section.form-field.2" label={t('onboarding.location.city')} htmlFor="city" required error={errors.city}>
+            <FormField id='onboarding-presentation-sections-location-section-formfield-10-xrvicd' label={t('onboarding.location.city')} htmlFor='onboarding-presentation-sections-location-section-forminput-11-qdwt4m' required error={errors.city}>
               <FormInput
-                id="city"
+                id='onboarding-presentation-sections-location-section-forminput-11-qdwt4m'
                 value={location.city}
                 onChange={(e) => updateLocation({ city: e.target.value })}
                 placeholder={t('onboarding.location.cityPlaceholder')}
@@ -98,9 +98,9 @@ export function LocationSection() {
             </FormField>
           </div>
 
-          <FormField id="onboarding.sections.location-section.form-field.3" label={t('onboarding.location.address')} htmlFor="address" required error={errors.address}>
+          <FormField id='onboarding-presentation-sections-location-section-formfield-12-sqxbcw' label={t('onboarding.location.address')} htmlFor='onboarding-presentation-sections-location-section-forminput-13-qbosrv' required error={errors.address}>
             <FormInput
-              id="address"
+              id='onboarding-presentation-sections-location-section-forminput-13-qbosrv'
               value={location.address}
               onChange={(e) => updateLocation({ address: e.target.value })}
               placeholder={t('onboarding.location.addressPlaceholder')}
@@ -108,9 +108,9 @@ export function LocationSection() {
             />
           </FormField>
 
-          <FormField id="onboarding.sections.location-section.form-field.4" label={t('onboarding.location.postalCode')} htmlFor="postalCode" hint={t('onboarding.common.optional')}>
+          <FormField id='onboarding-presentation-sections-location-section-formfield-14-d4eofz' label={t('onboarding.location.postalCode')} htmlFor='onboarding-presentation-sections-location-section-forminput-15-vncelb' hint={t('onboarding.common.optional')}>
             <FormInput
-              id="postalCode"
+              id='onboarding-presentation-sections-location-section-forminput-15-vncelb'
               value={location.postalCode}
               onChange={(e) => updateLocation({ postalCode: e.target.value })}
               placeholder={t('onboarding.location.postalPlaceholder')}
@@ -119,16 +119,16 @@ export function LocationSection() {
         </CardContent>
       </Card>
 
-      <Card id="onboarding.sections.location-section.card.2">
-        <CardHeader id="onboarding.sections.location-section.card-header.2">
-          <CardTitle id="onboarding.sections.location-section.card-title.2" className="flex items-center gap-2">
-            <Globe id="onboarding.sections.location-section.globe" className="h-5 w-5" />
+      <Card id='onboarding-presentation-sections-location-section-card-16-lc5yvc'>
+        <CardHeader id='onboarding-presentation-sections-location-section-cardheader-17-wwaugn'>
+          <CardTitle id='onboarding-presentation-sections-location-section-cardtitle-18-6svnl1' className="flex items-center gap-2">
+            <Globe id='onboarding-presentation-sections-location-section-globe-19-3hdwsm' className="h-5 w-5" />
             {t('onboarding.location.shippingCountries')}
           </CardTitle>
-          <CardDescription id="onboarding.sections.location-section.card-description.2">{t('onboarding.location.shippingCountriesDesc')}</CardDescription>
+          <CardDescription id='onboarding-presentation-sections-location-section-carddescription-20-f41nrc'>{t('onboarding.location.shippingCountriesDesc')}</CardDescription>
         </CardHeader>
-        <CardContent id="onboarding.sections.location-section.card-content.2">
-          <div id="onboarding.sections.location-section.div.3" className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        <CardContent id='onboarding-presentation-sections-location-section-cardcontent-21-k0q8ha'>
+          <div id='onboarding-presentation-sections-location-section-div-22-0k6ycw' className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {constants.countries.map((country) => {
               const isSelected = location.shippingRegions.some((r) => r.country === country);
               return (
@@ -155,7 +155,7 @@ export function LocationSection() {
         </CardContent>
       </Card>
 
-      <StepNavigation id="onboarding.sections.location-section.step-navigation" onNext={handleNext} showSkip />
+      <StepNavigation id='onboarding-presentation-sections-location-section-stepnavigation-23-uupctb' onNext={handleNext} showSkip />
     </div>
   );
 }

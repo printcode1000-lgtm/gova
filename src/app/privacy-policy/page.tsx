@@ -2,53 +2,53 @@ import React from 'react';
 
 export default function PrivacyPolicyPage() {
   return (
-    <div id="privacy-policy.page.div" className="mx-auto w-full max-w-4xl px-4 py-12 sm:px-6">
-      <div id="privacy-policy.page.div.2" className="rounded-2xl border border-outline-variant bg-surface p-8 shadow-sm">
-        <h1 id="privacy-policy.page.h1" className="mb-6 text-center text-3xl font-bold text-primary">
+    <div id='app-privacy-policy-page-div-1-klflir' className="mx-auto w-full max-w-4xl px-4 py-12 sm:px-6">
+      <div id='app-privacy-policy-page-div-2-jvqcrw' className="rounded-2xl border border-outline-variant bg-surface p-8 shadow-sm">
+        <h1 id='app-privacy-policy-page-heading-3-89vk1w' className="mb-6 text-center text-3xl font-bold text-primary">
           سياسة الخصوصية - ASOL
         </h1>
-        <p id="privacy-policy.page.p" className="mb-8 text-on-surface-variant">
-          في <strong>ASOL</strong> نحترم خصوصية المستخدمين ونسعى لحماية بياناتهم الشخصية وفقًا
+        <p id='app-privacy-policy-page-text-4-keqzxy' className="mb-8 text-on-surface-variant">
+          في <strong id="app-privacy-policy-page-strong-5-wh8qce">ASOL</strong> نحترم خصوصية المستخدمين ونسعى لحماية بياناتهم الشخصية وفقًا
           لأفضل الممارسات.
         </p>
 
-        <div id="privacy-policy.page.div.3" className="space-y-6">
-          <section id="privacy-policy.page.section">
-            <h2 id="privacy-policy.page.h2" className="mb-3 text-xl font-semibold text-primary border-b border-outline-variant pb-2">
+        <div id='app-privacy-policy-page-div-6-e9zfch' className="space-y-6">
+          <section id='app-privacy-policy-page-section-7-gkj2jc'>
+            <h2 id='app-privacy-policy-page-heading-8-nkauwd' className="mb-3 text-xl font-semibold text-primary border-b border-outline-variant pb-2">
               المعلومات التي نقوم بجمعها
             </h2>
-            <p id="privacy-policy.page.p.2" className="text-on-surface-variant">
+            <p id='app-privacy-policy-page-text-9-athq79' className="text-on-surface-variant">
               قد نقوم بجمع بعض المعلومات الأساسية مثل الاسم ورقم الهاتف عند التسجيل في التطبيق، وذلك لتحسين
               تجربة المستخدم وتسهيل عمليات الشراء والبيع.
             </p>
           </section>
 
-          <section id="privacy-policy.page.section.2">
-            <h2 id="privacy-policy.page.h2.2" className="mb-3 text-xl font-semibold text-primary border-b border-outline-variant pb-2">
+          <section id='app-privacy-policy-page-section-10-sitq4d'>
+            <h2 id='app-privacy-policy-page-heading-11-bo3eff' className="mb-3 text-xl font-semibold text-primary border-b border-outline-variant pb-2">
               كيفية استخدام المعلومات
             </h2>
-            <p id="privacy-policy.page.p.3" className="text-on-surface-variant">
+            <p id='app-privacy-policy-page-text-12-bemglx' className="text-on-surface-variant">
               نستخدم البيانات فقط لأغراض تشغيل التطبيق وتقديم الخدمات، مثل التواصل بين مقدم الخدمة
               والمشترين، وتحسين الأداء، ودعم المستخدمين.
             </p>
           </section>
 
-          <section id="privacy-policy.page.section.3">
-            <h2 id="privacy-policy.page.h2.3" className="mb-3 text-xl font-semibold text-primary border-b border-outline-variant pb-2">
+          <section id='app-privacy-policy-page-section-13-vooona'>
+            <h2 id='app-privacy-policy-page-heading-14-fistqo' className="mb-3 text-xl font-semibold text-primary border-b border-outline-variant pb-2">
               مشاركة بيانات التواصل عند الشراء
             </h2>
-            <p id="privacy-policy.page.p.4" className="text-on-surface-variant">
+            <p id='app-privacy-policy-page-text-15-maqoyz' className="text-on-surface-variant">
               قد يظهر لمقدم الخدمة بعض بيانات التواصل مثل رقم الهاتف عند شراء منتج أو خدمة منه، وذلك لتنسيق
               التواصل وتسليم الطلب. وبإتمام الشراء، يقر المستخدم بعلمه بذلك، ولا تتحمل ASOL مسؤولية أي استخدام لهذه البيانات خارج
               نطاق تنفيذ الطلب.
             </p>
           </section>
 
-          <section id="privacy-policy.page.section.4">
-            <h2 id="privacy-policy.page.h2.4" className="mb-3 text-xl font-semibold text-primary border-b border-outline-variant pb-2">
+          <section id='app-privacy-policy-page-section-16-fuhpkw'>
+            <h2 id='app-privacy-policy-page-heading-17-n6ntjl' className="mb-3 text-xl font-semibold text-primary border-b border-outline-variant pb-2">
               طبيعة المنصة وحدود المسؤولية
             </h2>
-            <p id="privacy-policy.page.p.5" className="text-on-surface-variant">
+            <p id='app-privacy-policy-page-text-18-ltyiiz' className="text-on-surface-variant">
               تعمل ASOL كمنصة لعرض الخدمات والتواصل بين المستخدمين، ولا تضمن جدية مقدم الخدمة
               أو المشترين ولا جودة المنتج أو الخدمة. ويلتزم المستخدم بعدم الدفع إلا بعد استلام المنتج أو الحصول على الخدمة والتأكد
               منها بنفسه. كما تلتزم ASOL بحذف أي صاحب منتج أو خدمة يثبت من خلال البلاغات أو المراجعة أنه يعرض منتجًا أو
@@ -56,51 +56,51 @@ export default function PrivacyPolicyPage() {
             </p>
           </section>
 
-          <section id="privacy-policy.page.section.5">
-            <h2 id="privacy-policy.page.h2.5" className="mb-3 text-xl font-semibold text-primary border-b border-outline-variant pb-2">
+          <section id='app-privacy-policy-page-section-19-gjxdph'>
+            <h2 id='app-privacy-policy-page-heading-20-popi2z' className="mb-3 text-xl font-semibold text-primary border-b border-outline-variant pb-2">
               مشاركة البيانات
             </h2>
-            <p id="privacy-policy.page.p.6" className="text-on-surface-variant">
+            <p id='app-privacy-policy-page-text-21-up1clj' className="text-on-surface-variant">
               لا نقوم بمشاركة بيانات المستخدم مع أي طرف ثالث إلا في حال وجود التزام قانوني أو لتحسين الخدمة
               عبر مزودين موثوقين.
             </p>
           </section>
 
-          <section id="privacy-policy.page.section.6">
-            <h2 id="privacy-policy.page.h2.6" className="mb-3 text-xl font-semibold text-primary border-b border-outline-variant pb-2">
+          <section id='app-privacy-policy-page-section-22-g8mb96'>
+            <h2 id='app-privacy-policy-page-heading-23-nqlxba' className="mb-3 text-xl font-semibold text-primary border-b border-outline-variant pb-2">
               أمان البيانات
             </h2>
-            <p id="privacy-policy.page.p.7" className="text-on-surface-variant">
+            <p id='app-privacy-policy-page-text-24-iz258a' className="text-on-surface-variant">
               نستخدم تقنيات آمنة لحماية بيانات المستخدم من الوصول غير المصرح به أو التعديل أو الحذف.
             </p>
           </section>
 
-          <section id="privacy-policy.page.section.7">
-            <h2 id="privacy-policy.page.h2.7" className="mb-3 text-xl font-semibold text-primary border-b border-outline-variant pb-2">
+          <section id='app-privacy-policy-page-section-25-gvkxpj'>
+            <h2 id='app-privacy-policy-page-heading-26-5zm86i' className="mb-3 text-xl font-semibold text-primary border-b border-outline-variant pb-2">
               حقوق المستخدم
             </h2>
-            <p id="privacy-policy.page.p.8" className="text-on-surface-variant">
+            <p id='app-privacy-policy-page-text-27-nu5d9o' className="text-on-surface-variant">
               يحق للمستخدم طلب حذف بياناته أو تعديلها في أي وقت من خلال التواصل معنا عبر البريد الإلكتروني
               أدناه.
             </p>
           </section>
 
-          <section id="privacy-policy.page.section.8">
-            <h2 id="privacy-policy.page.h2.8" className="mb-3 text-xl font-semibold text-primary border-b border-outline-variant pb-2">
+          <section id='app-privacy-policy-page-section-28-xbxqeo'>
+            <h2 id='app-privacy-policy-page-heading-29-l4c0mh' className="mb-3 text-xl font-semibold text-primary border-b border-outline-variant pb-2">
               التحديثات
             </h2>
-            <p id="privacy-policy.page.p.9" className="text-on-surface-variant">
+            <p id='app-privacy-policy-page-text-30-tskhu8' className="text-on-surface-variant">
               قد نقوم بتحديث سياسة الخصوصية من وقت لآخر، وسيتم نشر أي تغييرات في هذه الصفحة.
             </p>
           </section>
 
-          <section id="privacy-policy.page.section.9">
-            <h2 id="privacy-policy.page.h2.9" className="mb-3 text-xl font-semibold text-primary border-b border-outline-variant pb-2">
+          <section id='app-privacy-policy-page-section-31-p8ygoo'>
+            <h2 id='app-privacy-policy-page-heading-32-lmepi3' className="mb-3 text-xl font-semibold text-primary border-b border-outline-variant pb-2">
               التواصل معنا
             </h2>
-            <p id="privacy-policy.page.p.10" className="text-on-surface-variant">
+            <p id='app-privacy-policy-page-text-33-r93ppl' className="text-on-surface-variant">
               لأي استفسار أو ملاحظات، يمكنكم التواصل عبر البريد الإلكتروني:{''}
-              <a href="mailto:suezbazaar@gmail.com" className="text-primary">
+              <a id="app-privacy-policy-page-link-34-qz4sun" href="mailto:suezbazaar@gmail.com" className="text-primary">
                 suezbazaar@gmail.com
               </a>
             </p>

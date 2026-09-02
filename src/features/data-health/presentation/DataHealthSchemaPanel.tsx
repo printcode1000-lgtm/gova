@@ -11,28 +11,28 @@ export function DataHealthSchemaPanel({
 }) {
   const comparison = report?.schemaComparison;
   return (
-    <section id="data-health.data-health-schema-panel.section" className="space-y-3">
-      <div id="data-health.data-health-schema-panel.div" className="rounded-md border bg-surface p-3 text-sm">
-        <div id="data-health.data-health-schema-panel.div.2" className="flex items-center gap-2 font-semibold">
-          <DatabaseZap id="data-health.data-health-schema-panel.database-zap" className="h-4 w-4" />
+    <section id='features-data-health-presentation-datahealthschemapanel-section-1-8quqyr' className="space-y-3">
+      <div id='features-data-health-presentation-datahealthschemapanel-div-2-lzopi9' className="rounded-md border bg-surface p-3 text-sm">
+        <div id='features-data-health-presentation-datahealthschemapanel-div-3-iho9dn' className="flex items-center gap-2 font-semibold">
+          <DatabaseZap id='features-data-health-presentation-datahealthschemapanel-databasezap-4-ohft8o' className="h-4 w-4" />
           مقارنة قراءة فقط
         </div>
-        <p id="data-health.data-health-schema-panel.p" className="mt-1 text-xs text-on-surface-variant">
+        <p id='features-data-health-presentation-datahealthschemapanel-text-5-vjrpf8' className="mt-1 text-xs text-on-surface-variant">
           تعمل المقارنة بين SQLite المحلية وTurso فقط في بيئة التطوير، ولا تنفذ أي تعديل على القواعد السحابية.
         </p>
       </div>
       {loading ? (
-        <div id="data-health.data-health-schema-panel.div.3" className="rounded-md border bg-surface p-6 text-center text-sm text-on-surface-variant">
+        <div id='features-data-health-presentation-datahealthschemapanel-div-6-baw3qv' className="rounded-md border bg-surface p-6 text-center text-sm text-on-surface-variant">
           جاري مقارنة بنية قواعد البيانات المحلية والسحابية...
         </div>
       ) : null}
       {!loading && comparison?.available && comparison.databases.length === 0 ? (
-        <div id="data-health.data-health-schema-panel.div.4" className="rounded-md border bg-surface p-6 text-center text-sm text-on-surface-variant">
+        <div id='features-data-health-presentation-datahealthschemapanel-div-7-xsacuf' className="rounded-md border bg-surface p-6 text-center text-sm text-on-surface-variant">
           لم تُحمّل نتيجة المقارنة بعد.
         </div>
       ) : null}
       {!loading && comparison && !comparison.available ? (
-        <div id="data-health.data-health-schema-panel.div.5" className="rounded-md border bg-surface p-6 text-center text-sm text-on-surface-variant">
+        <div id='features-data-health-presentation-datahealthschemapanel-div-8-x3owda' className="rounded-md border bg-surface p-6 text-center text-sm text-on-surface-variant">
           مقارنة البنية متاحة في بيئة التطوير فقط.
         </div>
       ) : null}

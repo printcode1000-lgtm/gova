@@ -128,11 +128,11 @@ export function ProductPropertySpecs({ id,
       })}
 
       {config.location !== false ? (
-        <div className="sm:col-span-2">
-          <p className="mb-2 text-sm font-medium">الموقع</p>
+        <div id="features-product-presentation-productpropertyspecs-div-2-8aq5wc" className="sm:col-span-2">
+          <p id="features-product-presentation-productpropertyspecs-text-3-dqe4sg" className="mb-2 text-sm font-medium">الموقع</p>
           {mode === "view" ? (
             hasLocation ? (
-              <button
+              <button id="features-product-presentation-productpropertyspecs-button-4-nyqwsb"
                 type="button"
                 onClick={() => openDeviceMaps(latitude, longitude)}
                 className="asol-control inline-flex items-center justify-center bg-primary px-5 font-semibold text-on-primary"
@@ -140,12 +140,12 @@ export function ProductPropertySpecs({ id,
                 فتح الموقع في الخرائط
               </button>
             ) : (
-              <div className="rounded-xl bg-muted/40 px-3 py-2.5 text-muted-foreground">
+              <div id="features-product-presentation-productpropertyspecs-div-5-v3po8x" className="rounded-xl bg-muted/40 px-3 py-2.5 text-muted-foreground">
                 لم يتم تحديد الموقع.
               </div>
             )
           ) : (
-            <div className="space-y-2">
+            <div id="features-product-presentation-productpropertyspecs-div-6-lrqz69" className="space-y-2">
               {mapOpen ? (
                 <AsolMap
                   modes={["picker"]}
@@ -218,7 +218,7 @@ export function ProductPropertySpecs({ id,
                   onClose={() => setMapOpen(false)}
                 />
               ) : (
-                <button
+                <button id="features-product-presentation-productpropertyspecs-button-7-4l7lse"
                   type="button"
                   onClick={() => setMapOpen(true)}
                   className="asol-control border border-input px-4 font-medium"
@@ -227,7 +227,7 @@ export function ProductPropertySpecs({ id,
                 </button>
               )}
               {mapMessage ? (
-                <p className="text-xs font-medium text-primary" role="status">
+                <p id="features-product-presentation-productpropertyspecs-text-8-ibncnx" className="text-xs font-medium text-primary" role="status">
                   {mapMessage}
                 </p>
               ) : null}

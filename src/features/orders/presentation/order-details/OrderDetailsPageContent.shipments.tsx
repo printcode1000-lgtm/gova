@@ -59,8 +59,8 @@ export function OrderLevelActions({ id,
 } & { id?: string }) {
   return (
     <section id={id} className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm">
-      <h2 className="font-bold">{text.orderActions}</h2>
-      <div className="mt-3 space-y-2">
+      <h2 id="orders-presentation-order-details-orderdetailspagecontent-shipments-heading-2-stivmh" className="font-bold">{text.orderActions}</h2>
+      <div id="orders-presentation-order-details-orderdetailspagecontent-shipments-div-3-a89d4p" className="mt-3 space-y-2">
         {isBuyer && canCancelStatus(order.calculated_status) ? (
           <OrderActionButton
             action="buyer_cancel_order"
@@ -101,11 +101,11 @@ export function ShipmentsPanel({ id,
 } & { id?: string }) {
   return (
     <section id={id} className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm">
-      <h2 className="font-bold">{text.shipments}</h2>
+      <h2 id="orders-presentation-order-details-orderdetailspagecontent-shipments-heading-7-qorn48" className="font-bold">{text.shipments}</h2>
       {details.shipments.length === 0 ? (
-        <p className="mt-2 text-sm text-muted-foreground">{text.noShipments}</p>
+        <p id="orders-presentation-order-details-orderdetailspagecontent-shipments-text-8-qbgtu9" className="mt-2 text-sm text-muted-foreground">{text.noShipments}</p>
       ) : (
-        <div className="mt-3 space-y-3">
+        <div id="orders-presentation-order-details-orderdetailspagecontent-shipments-div-9-85nrwv" className="mt-3 space-y-3">
           {details.shipments.map((shipment) => (
             <ShipmentCard
               key={String(shipment.id)}
@@ -154,13 +154,13 @@ export function ShipmentCard({ id,
 
   return (
     <div id={id} className="rounded-lg border border-outline-variant p-3">
-      <p className="text-sm font-semibold">{statusLabel(shipment.status)}</p>
-      <p className="text-xs text-muted-foreground">
+      <p id="orders-presentation-order-details-orderdetailspagecontent-shipments-text-11-oo9zxb" className="text-sm font-semibold">{statusLabel(shipment.status)}</p>
+      <p id="orders-presentation-order-details-orderdetailspagecontent-shipments-text-12-tx6d0p" className="text-xs text-muted-foreground">
         {text.carrierCompany}:{" "}
         {profileName(details.profiles[carrierId], carrierId || text.unknown)}
       </p>
       {isCarrier ? (
-        <div className="mt-3 flex flex-wrap gap-2">
+        <div id="orders-presentation-order-details-orderdetailspagecontent-shipments-div-13-dbhghe" className="mt-3 flex flex-wrap gap-2">
           {canReceive ? (
             <OrderActionButton
               action="carrier_receive_shipment"
@@ -211,11 +211,11 @@ export function ShipmentCard({ id,
         </div>
       ) : null}
       {shipmentItems.length > 0 ? (
-        <div className="mt-3 border-t border-outline-variant pt-3">
-          <p className="mb-2 text-xs font-semibold text-muted-foreground">
+        <div id="orders-presentation-order-details-orderdetailspagecontent-shipments-div-19-gceg0i" className="mt-3 border-t border-outline-variant pt-3">
+          <p id="orders-presentation-order-details-orderdetailspagecontent-shipments-text-20-7w4z9o" className="mb-2 text-xs font-semibold text-muted-foreground">
             {text.shipmentItems}
           </p>
-          <div className="space-y-2">
+          <div id="orders-presentation-order-details-orderdetailspagecontent-shipments-div-21-kr90vx" className="space-y-2">
             {shipmentItems.map((shipmentItem) => (
               <ShipmentItemRow
                 key={String(shipmentItem.id)}
@@ -253,10 +253,10 @@ export function ShipmentItemRow({ id,
   const title = String(orderItem?.product_name_snapshot ?? text.product);
   return (
     <div id={id} className="rounded-lg bg-background p-2 text-sm">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div>
-          <p className="font-semibold">{title}</p>
-          <p className="text-xs text-muted-foreground">
+      <div id="orders-presentation-order-details-orderdetailspagecontent-shipments-div-23-0yedjp" className="flex flex-wrap items-center justify-between gap-2">
+        <div id="orders-presentation-order-details-orderdetailspagecontent-shipments-div-24-2m1ics">
+          <p id="orders-presentation-order-details-orderdetailspagecontent-shipments-text-25-v45l9r" className="font-semibold">{title}</p>
+          <p id="orders-presentation-order-details-orderdetailspagecontent-shipments-text-26-trqxhb" className="text-xs text-muted-foreground">
             {text.quantity}: {String(shipmentItem.quantity ?? 1)} -{" "}
             {statusLabel(shipmentItem.status)}
           </p>

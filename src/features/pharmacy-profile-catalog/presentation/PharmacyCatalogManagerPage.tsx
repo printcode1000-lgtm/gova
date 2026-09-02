@@ -241,54 +241,54 @@ export function PharmacyCatalogManagerPage() {
   });
 
   if (isLoading) {
-    return <LoadingFrame id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.loading-frame" />;
+    return <LoadingFrame id='features-pharmacy-profile-catalog-presentation-pharmacycatalogmanagerpage-loadingframe-1-69dvnf' />;
   }
 
   if (!session?.uid) {
-    return <MessageFrame id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.message-frame" message={text.loginRequired} />;
+    return <MessageFrame id='features-pharmacy-profile-catalog-presentation-pharmacycatalogmanagerpage-messageframe-2-kbtrxk' message={text.loginRequired} />;
   }
 
   if (!allowed) {
-    return <MessageFrame id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.message-frame.2" message={text.noAccess} />;
+    return <MessageFrame id='features-pharmacy-profile-catalog-presentation-pharmacycatalogmanagerpage-messageframe-3-fsysyc' message={text.noAccess} />;
   }
 
   return (
-    <main id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.main" className="min-h-screen bg-background px-4 py-5">
-      <div id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.div" className="mx-auto flex max-w-7xl flex-col gap-4">
-        <header id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.header" className="flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
-          <div id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.2">
-            <Link id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.link"
+    <main id='features-pharmacy-profile-catalog-presentation-pharmacycatalogmanagerpage-main-4-p9uyqk' className="min-h-screen bg-background px-4 py-5">
+      <div id='features-pharmacy-profile-catalog-presentation-pharmacycatalogmanagerpage-div-5-prs22a' className="mx-auto flex max-w-7xl flex-col gap-4">
+        <header id='features-pharmacy-profile-catalog-presentation-pharmacycatalogmanagerpage-header-6-vzcbpd' className="flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
+          <div id='features-pharmacy-profile-catalog-presentation-pharmacycatalogmanagerpage-div-7-ko9rbw'>
+            <Link id='features-pharmacy-profile-catalog-presentation-pharmacycatalogmanagerpage-link-8-lt9kx9'
               href="/profile?mode=edit&tab=products"
               className="mb-2 inline-flex items-center gap-2 text-xs font-semibold text-primary"
             >
-              <ArrowRight id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.arrow-right" className="h-4 w-4" />
+              <ArrowRight id='features-pharmacy-profile-catalog-presentation-pharmacycatalogmanagerpage-arrowright-9-i9ihcb' className="h-4 w-4" />
               {text.back}
             </Link>
-            <h1 id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.h1" className="text-2xl font-bold text-on-surface">{text.title}</h1>
-            <p id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.p" className="mt-1 text-sm text-on-surface-variant">{text.subtitle}</p>
+            <h1 id='features-pharmacy-profile-catalog-presentation-pharmacycatalogmanagerpage-heading-10-chrmlo' className="text-2xl font-bold text-on-surface">{text.title}</h1>
+            <p id='features-pharmacy-profile-catalog-presentation-pharmacycatalogmanagerpage-text-11-nmtsg2' className="mt-1 text-sm text-on-surface-variant">{text.subtitle}</p>
           </div>
-          <Link id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.link.2"
+          <Link id='features-pharmacy-profile-catalog-presentation-pharmacycatalogmanagerpage-link-12-teomhi'
             href={addProductHref}
             className="inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-on-primary transition"
           >
-            <PackagePlus id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.package-plus" className="h-4 w-4" />
+            <PackagePlus id='features-pharmacy-profile-catalog-presentation-pharmacycatalogmanagerpage-packageplus-13-frgrbb' className="h-4 w-4" />
             {text.addProduct}
           </Link>
         </header>
 
         {error ? (
-          <p id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.p.2" className="rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
+          <p id='features-pharmacy-profile-catalog-presentation-pharmacycatalogmanagerpage-text-14-ayxd3r' className="rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
             {error}
           </p>
         ) : null}
 
         {!catalog && busy ? (
-          <LoadingFrame id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.loading-frame.2" compact />
+          <LoadingFrame id='features-pharmacy-profile-catalog-presentation-pharmacycatalogmanagerpage-loadingframe-15-jgtfok' compact />
         ) : (
-          <section
+          <section id="features-pharmacy-profile-catalog-presentation-pharmacycatalogmanagerpage-section-16-yddlws"
             className="grid min-h-[620px] overflow-hidden rounded-lg border border-outline-variant bg-surface lg:grid-cols-[300px_330px_1fr]"
           >
-            <ManagerColumn id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.manager-column"
+            <ManagerColumn id='features-pharmacy-profile-catalog-presentation-pharmacycatalogmanagerpage-managercolumn-17-lty3al'
               title={text.mainCategories}
               actionLabel={text.addMain}
               disabled={busy}
@@ -328,7 +328,7 @@ export function PharmacyCatalogManagerPage() {
               ))}
             </ManagerColumn>
 
-            <ManagerColumn id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.manager-column.2"
+            <ManagerColumn id='features-pharmacy-profile-catalog-presentation-pharmacycatalogmanagerpage-managercolumn-18-8i8u02'
               title={text.subcategories}
               actionLabel={text.addSub}
               disabled={busy || !activeCategoryId}
@@ -368,13 +368,13 @@ export function PharmacyCatalogManagerPage() {
               ))}
             </ManagerColumn>
 
-            <ManagerColumn id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.manager-column.3" title={text.products} disabled={busy}>
+            <ManagerColumn id='features-pharmacy-profile-catalog-presentation-pharmacycatalogmanagerpage-managercolumn-19-8bswbo' title={text.products} disabled={busy}>
               {products.length === 0 ? (
-                <p className="rounded-lg border border-dashed border-outline-variant p-8 text-center text-sm text-on-surface-variant">
+                <p id="features-pharmacy-profile-catalog-presentation-pharmacycatalogmanagerpage-text-20-6zruqc" className="rounded-lg border border-dashed border-outline-variant p-8 text-center text-sm text-on-surface-variant">
                   {text.emptyProducts}
                 </p>
               ) : (
-                <div id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.div.3" className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+                <div id='features-pharmacy-profile-catalog-presentation-pharmacycatalogmanagerpage-div-21-a4c5pp' className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
                   {products.map((product) => (
                     <ProductManagerCard
                       key={product.id}
@@ -390,7 +390,7 @@ export function PharmacyCatalogManagerPage() {
         )}
       </div>
       {editDialog ? (
-        <CreateCategoryDialog id="pharmacy-profile-catalog.pharmacy-catalog-manager-page.create-category-dialog"
+        <CreateCategoryDialog id='features-pharmacy-profile-catalog-presentation-pharmacycatalogmanagerpage-createcategorydialog-22-akwftu'
           dialog={editDialog}
           value={editName}
           disabled={busy}

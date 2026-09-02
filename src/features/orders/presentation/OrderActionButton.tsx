@@ -25,7 +25,7 @@ export function OrderActionButton({
   const danger = tone === "danger";
   const isDisabled = Boolean(busyAction) || disabled;
   return (
-    <button
+    <button id="features-orders-presentation-orderactionbutton-button-1-7ytlzv"
       type="button"
       disabled={isDisabled}
       onClick={onClick}

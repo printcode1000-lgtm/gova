@@ -110,35 +110,35 @@ export function VerificationSection() {
   };
 
   return (
-    <div id="onboarding.sections.verification-section.div" className="space-y-6 animate-in fade-in duration-300">
-      <Card id="onboarding.sections.verification-section.card">
-        <CardHeader id="onboarding.sections.verification-section.card-header">
-          <CardTitle id="onboarding.sections.verification-section.card-title" className="flex items-center gap-2">
-            <ShieldCheck id="onboarding.sections.verification-section.shield-check" className="h-5 w-5" />
+    <div id='onboarding-presentation-sections-verification-section-div-1-xoau1g' className="space-y-6 animate-in fade-in duration-300">
+      <Card id='onboarding-presentation-sections-verification-section-card-2-coylfj'>
+        <CardHeader id='onboarding-presentation-sections-verification-section-cardheader-3-iakb2f'>
+          <CardTitle id='onboarding-presentation-sections-verification-section-cardtitle-4-gdfe9w' className="flex items-center gap-2">
+            <ShieldCheck id='onboarding-presentation-sections-verification-section-shieldcheck-5-ahdpgh' className="h-5 w-5" />
             {t('onboarding.verification.title')}
           </CardTitle>
-          <CardDescription id="onboarding.sections.verification-section.card-description">{t('onboarding.verification.description')}</CardDescription>
+          <CardDescription id='onboarding-presentation-sections-verification-section-carddescription-6-v97boj'>{t('onboarding.verification.description')}</CardDescription>
         </CardHeader>
-        <CardContent id="onboarding.sections.verification-section.card-content" className="space-y-6">
-          <div id="onboarding.sections.verification-section.div.2" className="flex items-center justify-between p-4 rounded-lg bg-muted">
-            <div id="onboarding.sections.verification-section.div.3">
-              <p id="onboarding.sections.verification-section.p" className="font-medium">{t('onboarding.verification.progress')}</p>
-              <p id="onboarding.sections.verification-section.p.2" className="text-sm text-muted-foreground">
+        <CardContent id='onboarding-presentation-sections-verification-section-cardcontent-7-bdisgz' className="space-y-6">
+          <div id='onboarding-presentation-sections-verification-section-div-8-clwdcf' className="flex items-center justify-between p-4 rounded-lg bg-muted">
+            <div id='onboarding-presentation-sections-verification-section-div-9-hhfplu'>
+              <p id='onboarding-presentation-sections-verification-section-text-10-ll0oon' className="font-medium">{t('onboarding.verification.progress')}</p>
+              <p id='onboarding-presentation-sections-verification-section-text-11-2k0yuv' className="text-sm text-muted-foreground">
                 {t('onboarding.verification.documentsUploaded', {
                   uploaded: verification.documents.length,
                   total: DOCUMENT_TYPES.length,
                 })}
               </p>
             </div>
-            <div id="onboarding.sections.verification-section.div.4" className="text-right">
-              <span id="onboarding.sections.verification-section.span" className="text-2xl font-bold text-primary">
+            <div id='onboarding-presentation-sections-verification-section-div-12-nvzau8' className="text-right">
+              <span id='onboarding-presentation-sections-verification-section-text-13-fuip4y' className="text-2xl font-bold text-primary">
                 {Math.round((verification.documents.length / DOCUMENT_TYPES.length) * 100)}%
               </span>
             </div>
           </div>
 
-          <div id="onboarding.sections.verification-section.div.5" className="space-y-4">
-            <h4 id="onboarding.sections.verification-section.h4" className="font-medium">{t('onboarding.verification.uploadDocuments')}</h4>
+          <div id='onboarding-presentation-sections-verification-section-div-14-3cvuhv' className="space-y-4">
+            <h4 id='onboarding-presentation-sections-verification-section-heading-15-j9p7xf' className="font-medium">{t('onboarding.verification.uploadDocuments')}</h4>
 
             {DOCUMENT_TYPES.map((docType) => {
               const uploadedDoc = verification.documents.find((d) => d.type === docType);
@@ -208,16 +208,16 @@ export function VerificationSection() {
         </CardContent>
       </Card>
 
-      <Card id="onboarding.sections.verification-section.card.2">
-        <CardHeader id="onboarding.sections.verification-section.card-header.2">
-          <CardTitle id="onboarding.sections.verification-section.card-title.2" className="flex items-center gap-2">
-            <BadgeHelp id="onboarding.sections.verification-section.badge-help" className="h-5 w-5" />
+      <Card id='onboarding-presentation-sections-verification-section-card-16-1xyocd'>
+        <CardHeader id='onboarding-presentation-sections-verification-section-cardheader-17-jprx1o'>
+          <CardTitle id='onboarding-presentation-sections-verification-section-cardtitle-18-lzpzwd' className="flex items-center gap-2">
+            <BadgeHelp id='onboarding-presentation-sections-verification-section-badgehelp-19-kwlrhu' className="h-5 w-5" />
             {t('onboarding.verification.badgesTitle')}
           </CardTitle>
-          <CardDescription id="onboarding.sections.verification-section.card-description.2">{t('onboarding.verification.badgesDesc')}</CardDescription>
+          <CardDescription id='onboarding-presentation-sections-verification-section-carddescription-20-an9mqg'>{t('onboarding.verification.badgesDesc')}</CardDescription>
         </CardHeader>
-        <CardContent id="onboarding.sections.verification-section.card-content.2">
-          <div id="onboarding.sections.verification-section.div.6" className="grid gap-3 sm:grid-cols-2">
+        <CardContent id='onboarding-presentation-sections-verification-section-cardcontent-21-knr4mk'>
+          <div id='onboarding-presentation-sections-verification-section-div-22-5cy9gd' className="grid gap-3 sm:grid-cols-2">
             {AVAILABLE_BADGES.map((badge) => {
               const isSelected = verification.requestedBadges.includes(badge.id);
               return (
@@ -248,7 +248,7 @@ export function VerificationSection() {
         </CardContent>
       </Card>
 
-      <StepNavigation id="onboarding.sections.verification-section.step-navigation" onNext={handleNext} showSkip />
+      <StepNavigation id='onboarding-presentation-sections-verification-section-stepnavigation-23-gyhqpj' onNext={handleNext} showSkip />
     </div>
   );
 }

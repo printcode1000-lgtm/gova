@@ -157,20 +157,20 @@ export function AccountDeletionPageContent() {
 
   if (isLoading) {
     return (
-      <main id="auth.account-deletion-page-content.main" className="mx-auto max-w-3xl p-8">
-        <div id="auth.account-deletion-page-content.div" className="h-48 animate-pulse rounded-3xl bg-surface-container" />
+      <main id='features-auth-presentation-accountdeletionpagecontent-main-1-di8q0t' className="mx-auto max-w-3xl p-8">
+        <div id='features-auth-presentation-accountdeletionpagecontent-div-2-na2orf' className="h-48 animate-pulse rounded-3xl bg-surface-container" />
       </main>
     );
   }
 
   if (!session) {
     return (
-      <main id="auth.account-deletion-page-content.main.2" className="mx-auto max-w-2xl px-4 py-12" dir={isRTL ? "rtl" : "ltr"}>
-        <section id="auth.account-deletion-page-content.section" className="rounded-3xl border border-outline/30 bg-surface p-8 text-center">
-          <LockKeyhole id="auth.account-deletion-page-content.lock-keyhole" className="mx-auto mb-4 h-12 w-12 text-primary" />
-          <h1 id="auth.account-deletion-page-content.h1" className="text-2xl font-bold">{c.title}</h1>
-          <p id="auth.account-deletion-page-content.p" className="my-5 text-on-surface-variant">{c.login}</p>
-          <Link id="auth.account-deletion-page-content.link"
+      <main id='features-auth-presentation-accountdeletionpagecontent-main-3-v9oxjs' className="mx-auto max-w-2xl px-4 py-12" dir={isRTL ? "rtl" : "ltr"}>
+        <section id='features-auth-presentation-accountdeletionpagecontent-section-4-1crdo8' className="rounded-3xl border border-outline/30 bg-surface p-8 text-center">
+          <LockKeyhole id='features-auth-presentation-accountdeletionpagecontent-lockkeyhole-5-hvrhnk' className="mx-auto mb-4 h-12 w-12 text-primary" />
+          <h1 id='features-auth-presentation-accountdeletionpagecontent-heading-6-jhpi3k' className="text-2xl font-bold">{c.title}</h1>
+          <p id='features-auth-presentation-accountdeletionpagecontent-text-7-asp2nr' className="my-5 text-on-surface-variant">{c.login}</p>
+          <Link id='features-auth-presentation-accountdeletionpagecontent-link-8-etmuca'
             href="/login"
             className="inline-flex rounded-xl bg-primary px-6 py-3 font-semibold text-on-primary"
           >
@@ -183,26 +183,26 @@ export function AccountDeletionPageContent() {
 
   if (isSuperAdmin(session)) {
     return (
-      <main id="auth.account-deletion-page-content.main.3" className="mx-auto max-w-2xl px-4 py-12" dir={isRTL ? "rtl" : "ltr"}>
-        <section id="auth.account-deletion-page-content.section.2" className="rounded-3xl border border-error/30 bg-error/5 p-8 text-center">
-          <ShieldAlert id="auth.account-deletion-page-content.shield-alert" className="mx-auto mb-4 h-12 w-12 text-error" />
-          <h1 id="auth.account-deletion-page-content.h1.2" className="text-2xl font-bold">{c.title}</h1>
-          <p id="auth.account-deletion-page-content.p.2" className="mt-4 text-error">{c.protected}</p>
+      <main id='features-auth-presentation-accountdeletionpagecontent-main-9-skcqow' className="mx-auto max-w-2xl px-4 py-12" dir={isRTL ? "rtl" : "ltr"}>
+        <section id='features-auth-presentation-accountdeletionpagecontent-section-10-mufz7b' className="rounded-3xl border border-error/30 bg-error/5 p-8 text-center">
+          <ShieldAlert id='features-auth-presentation-accountdeletionpagecontent-shieldalert-11-ekvvb9' className="mx-auto mb-4 h-12 w-12 text-error" />
+          <h1 id='features-auth-presentation-accountdeletionpagecontent-heading-12-ucj5zo' className="text-2xl font-bold">{c.title}</h1>
+          <p id='features-auth-presentation-accountdeletionpagecontent-text-13-55u7zs' className="mt-4 text-error">{c.protected}</p>
         </section>
       </main>
     );
   }
 
   return (
-    <main id="auth.account-deletion-page-content.main.4" className="mx-auto max-w-3xl space-y-6 px-4 py-8" dir={isRTL ? "rtl" : "ltr"}>
-      <section id="auth.account-deletion-page-content.section.3" className="rounded-3xl border border-error/30 bg-error/5 p-7">
-        <AlertTriangle id="auth.account-deletion-page-content.alert-triangle" className="mb-4 h-12 w-12 text-error" />
-        <h1 id="auth.account-deletion-page-content.h1.3" className="text-3xl font-bold text-error">{c.title}</h1>
-        <p id="auth.account-deletion-page-content.p.3" className="mt-3 text-lg">{c.intro}</p>
+    <main id='features-auth-presentation-accountdeletionpagecontent-main-14-50fli3' className="mx-auto max-w-3xl space-y-6 px-4 py-8" dir={isRTL ? "rtl" : "ltr"}>
+      <section id='features-auth-presentation-accountdeletionpagecontent-section-15-c460tq' className="rounded-3xl border border-error/30 bg-error/5 p-7">
+        <AlertTriangle id='features-auth-presentation-accountdeletionpagecontent-alerttriangle-16-9wqopf' className="mb-4 h-12 w-12 text-error" />
+        <h1 id='features-auth-presentation-accountdeletionpagecontent-heading-17-1noyt9' className="text-3xl font-bold text-error">{c.title}</h1>
+        <p id='features-auth-presentation-accountdeletionpagecontent-text-18-sm3k52' className="mt-3 text-lg">{c.intro}</p>
       </section>
-      <section id="auth.account-deletion-page-content.section.4" className="rounded-3xl border border-outline/30 bg-surface p-7">
-        <h2 id="auth.account-deletion-page-content.h2" className="mb-5 text-xl font-bold">{c.removes}</h2>
-        <div id="auth.account-deletion-page-content.div.2" className="grid gap-3 sm:grid-cols-2">
+      <section id='features-auth-presentation-accountdeletionpagecontent-section-19-vptml8' className="rounded-3xl border border-outline/30 bg-surface p-7">
+        <h2 id='features-auth-presentation-accountdeletionpagecontent-heading-20-mkiosb' className="mb-5 text-xl font-bold">{c.removes}</h2>
+        <div id='features-auth-presentation-accountdeletionpagecontent-div-21-jgkpwe' className="grid gap-3 sm:grid-cols-2">
           {c.items.map((item, index) => {
             const Icon = [UserX, PackageX, Trash2, LockKeyhole][index];
             return (
@@ -213,14 +213,14 @@ export function AccountDeletionPageContent() {
             );
           })}
         </div>
-        <p id="auth.account-deletion-page-content.p.4" className="mt-5 rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm text-on-surface-variant">
+        <p id='features-auth-presentation-accountdeletionpagecontent-text-22-lwrexs' className="mt-5 rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm text-on-surface-variant">
           {c.shared}
         </p>
       </section>
-      <div id="auth.account-deletion-page-content.div.3" className="space-y-5 rounded-3xl border border-outline/30 bg-surface p-7">
-        <label id="auth.account-deletion-page-content.label" className="block space-y-2 font-semibold">
+      <div id='features-auth-presentation-accountdeletionpagecontent-div-23-t8c6tt' className="space-y-5 rounded-3xl border border-outline/30 bg-surface p-7">
+        <label id='features-auth-presentation-accountdeletionpagecontent-label-24-vf9yav' className="block space-y-2 font-semibold">
           {c.password}
-          <input id="auth.account-deletion-page-content.input"
+          <input id='features-auth-presentation-accountdeletionpagecontent-input-25-wpelfi'
             type="password"
             autoComplete="current-password"
             required
@@ -229,17 +229,17 @@ export function AccountDeletionPageContent() {
             className="block w-full rounded-xl border border-outline/40 bg-surface-container p-3"
           />
         </label>
-        <label id="auth.account-deletion-page-content.label.2" className="block space-y-2 font-semibold">
+        <label id='features-auth-presentation-accountdeletionpagecontent-label-26-ediv7l' className="block space-y-2 font-semibold">
           {c.phrase}
-          <div id="auth.account-deletion-page-content.div.4" className="space-y-2">
-            <code dir="ltr" className="block rounded-xl bg-surface-container p-3 text-center text-base">
+          <div id='features-auth-presentation-accountdeletionpagecontent-div-27-l427ix' className="space-y-2">
+            <code id="features-auth-presentation-accountdeletionpagecontent-code-28-suhsds" dir="ltr" className="block rounded-xl bg-surface-container p-3 text-center text-base">
               {ACCOUNT_DELETION_PHRASE_AR}
             </code>
-            <code dir="ltr" className="block rounded-xl bg-surface-container p-3 text-center text-base">
+            <code id="features-auth-presentation-accountdeletionpagecontent-code-29-tvypjc" dir="ltr" className="block rounded-xl bg-surface-container p-3 text-center text-base">
               {ACCOUNT_DELETION_PHRASE_EN}
             </code>
           </div>
-          <input id="auth.account-deletion-page-content.input.2"
+          <input id='features-auth-presentation-accountdeletionpagecontent-input-30-tudulc'
             dir="ltr"
             required
             value={phrase}
@@ -247,20 +247,20 @@ export function AccountDeletionPageContent() {
             className="block w-full rounded-xl border border-outline/40 bg-surface-container p-3"
           />
         </label>
-        <label id="auth.account-deletion-page-content.label.3" className="flex items-start gap-3 rounded-xl border border-error/20 p-4">
-          <input
+        <label id='features-auth-presentation-accountdeletionpagecontent-label-31-kdeeon' className="flex items-start gap-3 rounded-xl border border-error/20 p-4">
+          <input id="features-auth-presentation-accountdeletionpagecontent-input-32-ot6nk9"
             type="checkbox"
             checked={accepted}
             onChange={(e) => setAccepted(e.target.checked)}
             className="mt-1 h-5 w-5"
           />
-          <span id="auth.account-deletion-page-content.span">{c.acknowledge}</span>
+          <span id='features-auth-presentation-accountdeletionpagecontent-text-33-wvfrmw'>{c.acknowledge}</span>
         </label>
         {state === "error" && (
-          <p id="auth.account-deletion-page-content.p.5" className="rounded-xl bg-red-100 p-3 text-red-800">{errorMessage}</p>
+          <p id='features-auth-presentation-accountdeletionpagecontent-text-34-2k2kyw' className="rounded-xl bg-red-100 p-3 text-red-800">{errorMessage}</p>
         )}
       </div>
-      <Link id="auth.account-deletion-page-content.link.2" href="/contact-us" className="block text-center font-semibold text-primary">
+      <Link id='features-auth-presentation-accountdeletionpagecontent-link-35-7tm6zt' href="/contact-us" className="block text-center font-semibold text-primary">
         {c.contact}
       </Link>
     </main>

@@ -133,21 +133,21 @@ export const FulfillmentSettingsCard = React.forwardRef<
 
   if (isLoading) {
     return (
-      <div id="profile.fulfillment-settings-card.div" className="py-10 text-center text-sm text-on-surface-variant">
+      <div id='features-profile-presentation-fulfillmentsettingscard-div-1-pnfzyu' className="py-10 text-center text-sm text-on-surface-variant">
         {text.loading}
       </div>
     );
   }
 
   return (
-    <div id="profile.fulfillment-settings-card.div.2" className="space-y-5">
+    <div id='features-profile-presentation-fulfillmentsettingscard-div-2-kh3fft' className="space-y-5">
       {error ? (
-        <div id="profile.fulfillment-settings-card.div.3" className="rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
+        <div id='features-profile-presentation-fulfillmentsettingscard-div-3-bjk7ub' className="rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
           {error === "invalidDeliveryCarrier" ? text.invalidCarrier : error}
         </div>
       ) : null}
       {saved && !isDirty ? (
-        <div id="profile.fulfillment-settings-card.div.4" className="rounded-lg bg-success/15 px-3 py-2 text-sm text-success">
+        <div id='features-profile-presentation-fulfillmentsettingscard-div-4-nhytes' className="rounded-lg bg-success/15 px-3 py-2 text-sm text-success">
           {text.saved}
         </div>
       ) : null}
@@ -173,15 +173,15 @@ export const FulfillmentSettingsCard = React.forwardRef<
         id={PROFILE_FULFILLMENT_SECTION_IDS.shipping}
         className="space-y-4 rounded-xl border border-outline-variant p-4"
       >
-        <button id="profile.fulfillment-settings-card.button"
+        <button id='features-profile-presentation-fulfillmentsettingscard-button-6-w8y8lk'
           type="button"
           onClick={() => toggleSection("shipping")}
           aria-expanded={openSection === "shipping"}
           aria-label={text.shippingPricing}
           className="flex w-full items-center justify-between gap-2"
         >
-          <h3 id="profile.fulfillment-settings-card.h3" className="text-sm font-bold">{text.shippingPricing}</h3>
-          <ChevronDown id="profile.fulfillment-settings-card.chevron-down"
+          <h3 id='features-profile-presentation-fulfillmentsettingscard-heading-7-2cdtia' className="text-sm font-bold">{text.shippingPricing}</h3>
+          <ChevronDown id='features-profile-presentation-fulfillmentsettingscard-chevrondown-8-vxboms'
             className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${
               openSection === "shipping" ? "rotate-180" : ""
             }`}
@@ -190,8 +190,8 @@ export const FulfillmentSettingsCard = React.forwardRef<
 
         {openSection === "shipping" ? (
         <>
-        <div id="profile.fulfillment-settings-card.div.5" className="space-y-2">
-          <Label id="profile.fulfillment-settings-card.label">{text.shippingPricingMode}</Label>
+        <div id='features-profile-presentation-fulfillmentsettingscard-div-9-jtfwyu' className="space-y-2">
+          <Label id='features-profile-presentation-fulfillmentsettingscard-label-10-j8xoe9'>{text.shippingPricingMode}</Label>
           <Select
             value={safeSettings.shippingPricing.mode}
             onValueChange={(value: "free" | "flat" | "by_location") =>
@@ -204,25 +204,25 @@ export const FulfillmentSettingsCard = React.forwardRef<
               }))
             }
           >
-            <SelectTrigger id="profile.fulfillment-settings-card.select-trigger" className="w-full">
+            <SelectTrigger id='features-profile-presentation-fulfillmentsettingscard-selecttrigger-11-fbp0tm' className="w-full">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent id="profile.fulfillment-settings-card.select-content">
-              <SelectItem id="profile.fulfillment-settings-card.select-item" value="free">{text.freeShipping}</SelectItem>
-              <SelectItem id="profile.fulfillment-settings-card.select-item.2" value="flat">{text.flatShipping}</SelectItem>
-              <SelectItem id="profile.fulfillment-settings-card.select-item.3" value="by_location">
+            <SelectContent id='features-profile-presentation-fulfillmentsettingscard-selectcontent-12-otopla'>
+              <SelectItem id='features-profile-presentation-fulfillmentsettingscard-selectitem-13-eeumie' value="free">{text.freeShipping}</SelectItem>
+              <SelectItem id='features-profile-presentation-fulfillmentsettingscard-selectitem-14-v3dpfp' value="flat">{text.flatShipping}</SelectItem>
+              <SelectItem id='features-profile-presentation-fulfillmentsettingscard-selectitem-15-prer2z' value="by_location">
                 {text.locationShipping}
               </SelectItem>
             </SelectContent>
           </Select>
         </div>
 
-        <div id="profile.fulfillment-settings-card.div.6" className="grid gap-3 sm:grid-cols-2">
+        <div id='features-profile-presentation-fulfillmentsettingscard-div-16-w1uwlv' className="grid gap-3 sm:grid-cols-2">
           {safeSettings.shippingPricing.mode === "flat" ? (
-            <div id="profile.fulfillment-settings-card.div.7" className="space-y-2">
-              <Label id="profile.fulfillment-settings-card.label.2" htmlFor="shippingFlatRate">{text.flatRate}</Label>
+            <div id='features-profile-presentation-fulfillmentsettingscard-div-17-swfrdt' className="space-y-2">
+              <Label id='features-profile-presentation-fulfillmentsettingscard-label-18-eggcow' htmlFor='features-profile-presentation-fulfillmentsettingscard-input-19-c4bzc2'>{text.flatRate}</Label>
               <Input
-                id="shippingFlatRate"
+                id='features-profile-presentation-fulfillmentsettingscard-input-19-c4bzc2'
                 type="number"
                 min={0}
                 step="0.01"
@@ -240,12 +240,12 @@ export const FulfillmentSettingsCard = React.forwardRef<
             </div>
           ) : null}
 
-          <div id="profile.fulfillment-settings-card.div.8" className="space-y-2">
-            <Label id="profile.fulfillment-settings-card.label.3" htmlFor="shippingSpecialVehicleFee">
+          <div id='features-profile-presentation-fulfillmentsettingscard-div-20-9igefi' className="space-y-2">
+            <Label id='features-profile-presentation-fulfillmentsettingscard-label-21-v9odj0' htmlFor='features-profile-presentation-fulfillmentsettingscard-input-22-nop4sr'>
               {text.specialVehicleFee}
             </Label>
             <Input
-              id="shippingSpecialVehicleFee"
+              id='features-profile-presentation-fulfillmentsettingscard-input-22-nop4sr'
               type="number"
               min={0}
               step="0.01"
@@ -263,12 +263,12 @@ export const FulfillmentSettingsCard = React.forwardRef<
           </div>
 
           {safeSettings.shippingPricing.mode !== "free" ? (
-            <div id="profile.fulfillment-settings-card.div.9" className="space-y-2">
-              <Label id="profile.fulfillment-settings-card.label.4" htmlFor="shippingFreeThreshold">
+            <div id='features-profile-presentation-fulfillmentsettingscard-div-23-icpwvt' className="space-y-2">
+              <Label id='features-profile-presentation-fulfillmentsettingscard-label-24-vp9emd' htmlFor='features-profile-presentation-fulfillmentsettingscard-input-25-zbaq3h'>
                 {text.freeShippingThreshold}
               </Label>
               <Input
-                id="shippingFreeThreshold"
+                id='features-profile-presentation-fulfillmentsettingscard-input-25-zbaq3h'
                 type="number"
                 min={0}
                 step="0.01"
@@ -288,17 +288,17 @@ export const FulfillmentSettingsCard = React.forwardRef<
         </div>
 
         {safeSettings.shippingPricing.mode === "by_location" ? (
-          <p id="profile.fulfillment-settings-card.p" className="rounded-xl border border-primary/25 bg-primary/10 px-3 py-2 text-sm leading-6 text-on-surface">
+          <p id='features-profile-presentation-fulfillmentsettingscard-text-26-cirxxq' className="rounded-xl border border-primary/25 bg-primary/10 px-3 py-2 text-sm leading-6 text-on-surface">
             {locale === "ar"
               ? "سيتم تحديد قيمة الشحن بعد إنشاء الطلب ومراجعة عنوان المشتري، ولن تُضاف إلى الإجمالي إلا بعد موافقة المشتري على العرض."
               : "Shipping will be quoted after the order and buyer address are reviewed, and will only be added after the buyer accepts the quote."}
           </p>
         ) : null}
 
-        <div id="profile.fulfillment-settings-card.div.10" className="space-y-2">
-          <Label id="profile.fulfillment-settings-card.label.5" htmlFor="shippingNotes">{text.shippingNotes}</Label>
+        <div id='features-profile-presentation-fulfillmentsettingscard-div-27-9lyciq' className="space-y-2">
+          <Label id='features-profile-presentation-fulfillmentsettingscard-label-28-bfm8wh' htmlFor='features-profile-presentation-fulfillmentsettingscard-textarea-29-mfbaxl'>{text.shippingNotes}</Label>
           <Textarea
-            id="shippingNotes"
+            id='features-profile-presentation-fulfillmentsettingscard-textarea-29-mfbaxl'
             value={safeSettings.shippingPricing.notes}
             onChange={(event) =>
               updateSettings((current) => ({
@@ -313,7 +313,7 @@ export const FulfillmentSettingsCard = React.forwardRef<
             rows={3}
             placeholder={text.shippingNotesPlaceholder}
           />
-          <p id="profile.fulfillment-settings-card.p.2" className="text-end text-xs text-muted-foreground">
+          <p id='features-profile-presentation-fulfillmentsettingscard-text-30-x4lchd' className="text-end text-xs text-muted-foreground">
             {safeSettings.shippingPricing.notes.length}/1000
           </p>
         </div>
@@ -326,15 +326,15 @@ export const FulfillmentSettingsCard = React.forwardRef<
         id={PROFILE_FULFILLMENT_SECTION_IDS.returns}
         className="space-y-4 rounded-xl border border-outline-variant p-4"
       >
-        <button id="profile.fulfillment-settings-card.button.2"
+        <button id='features-profile-presentation-fulfillmentsettingscard-button-32-pzeeul'
           type="button"
           onClick={() => toggleSection("returns")}
           aria-expanded={openSection === "returns"}
           aria-label={text.returnPolicy}
           className="flex w-full items-center justify-between gap-2"
         >
-          <h3 id="profile.fulfillment-settings-card.h3.2" className="text-sm font-bold">{text.returnPolicy}</h3>
-          <ChevronDown id="profile.fulfillment-settings-card.chevron-down.2"
+          <h3 id='features-profile-presentation-fulfillmentsettingscard-heading-33-njhcye' className="text-sm font-bold">{text.returnPolicy}</h3>
+          <ChevronDown id='features-profile-presentation-fulfillmentsettingscard-chevrondown-34-n05tuu'
             className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${
               openSection === "returns" ? "rotate-180" : ""
             }`}
@@ -343,13 +343,13 @@ export const FulfillmentSettingsCard = React.forwardRef<
 
         {openSection === "returns" ? (
         <>
-        <div id="profile.fulfillment-settings-card.div.11" className="flex items-center gap-3">
-          <span id="profile.fulfillment-settings-card.span" className="text-sm font-medium leading-none">
+        <div id='features-profile-presentation-fulfillmentsettingscard-div-35-50cp1l' className="flex items-center gap-3">
+          <span id='features-profile-presentation-fulfillmentsettingscard-text-36-qgcuyo' className="text-sm font-medium leading-none">
             {settings.returns.enabled
               ? text.returnsAvailable
               : text.returnsUnavailable}
           </span>
-          <ToggleSwitch id="profile.fulfillment-settings-card.toggle-switch"
+          <ToggleSwitch id='features-profile-presentation-fulfillmentsettingscard-toggleswitch-37-jhjb3q'
             checked={settings.returns.enabled}
             onChange={(checked) =>
               updateSettings((current) => ({
@@ -365,10 +365,10 @@ export const FulfillmentSettingsCard = React.forwardRef<
           />
         </div>
 
-        <div id="profile.fulfillment-settings-card.div.12" className="space-y-2">
-          <Label id="profile.fulfillment-settings-card.label.6" htmlFor="returnWindowDays">{text.returnWindowDays}</Label>
+        <div id='features-profile-presentation-fulfillmentsettingscard-div-38-1hvvw9' className="space-y-2">
+          <Label id='features-profile-presentation-fulfillmentsettingscard-label-39-y8wro3' htmlFor='features-profile-presentation-fulfillmentsettingscard-input-40-loblta'>{text.returnWindowDays}</Label>
           <Input
-            id="returnWindowDays"
+            id='features-profile-presentation-fulfillmentsettingscard-input-40-loblta'
             type="number"
             min={0}
             max={365}
@@ -385,8 +385,8 @@ export const FulfillmentSettingsCard = React.forwardRef<
           />
         </div>
 
-        <div id="profile.fulfillment-settings-card.div.13" className="space-y-2">
-          <Label id="profile.fulfillment-settings-card.label.7">{text.returnShippingPayer}</Label>
+        <div id='features-profile-presentation-fulfillmentsettingscard-div-41-10so26' className="space-y-2">
+          <Label id='features-profile-presentation-fulfillmentsettingscard-label-42-plc0ab'>{text.returnShippingPayer}</Label>
           <Select
             value={settings.returns.returnShippingPayer}
             onValueChange={(value: "buyer" | "seller" | "case_by_case") =>
@@ -399,21 +399,21 @@ export const FulfillmentSettingsCard = React.forwardRef<
               }))
             }
           >
-            <SelectTrigger id="profile.fulfillment-settings-card.select-trigger.2" className="w-full">
+            <SelectTrigger id='features-profile-presentation-fulfillmentsettingscard-selecttrigger-43-gckz1a' className="w-full">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent id="profile.fulfillment-settings-card.select-content.2">
-              <SelectItem id="profile.fulfillment-settings-card.select-item.4" value="buyer">{text.buyer}</SelectItem>
-              <SelectItem id="profile.fulfillment-settings-card.select-item.5" value="seller">{text.seller}</SelectItem>
-              <SelectItem id="profile.fulfillment-settings-card.select-item.6" value="case_by_case">{text.caseByCase}</SelectItem>
+            <SelectContent id='features-profile-presentation-fulfillmentsettingscard-selectcontent-44-f3ryey'>
+              <SelectItem id='features-profile-presentation-fulfillmentsettingscard-selectitem-45-wpnglk' value="buyer">{text.buyer}</SelectItem>
+              <SelectItem id='features-profile-presentation-fulfillmentsettingscard-selectitem-46-yhpm6n' value="seller">{text.seller}</SelectItem>
+              <SelectItem id='features-profile-presentation-fulfillmentsettingscard-selectitem-47-4hn6bu' value="case_by_case">{text.caseByCase}</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
-        <div id="profile.fulfillment-settings-card.div.14" className="space-y-2">
-          <Label id="profile.fulfillment-settings-card.label.8" htmlFor="returnPolicyText">{text.policyText}</Label>
+        <div id='features-profile-presentation-fulfillmentsettingscard-div-48-n7oeo9' className="space-y-2">
+          <Label id='features-profile-presentation-fulfillmentsettingscard-label-49-q13av6' htmlFor='features-profile-presentation-fulfillmentsettingscard-textarea-50-6eo4x3'>{text.policyText}</Label>
           <Textarea
-            id="returnPolicyText"
+            id='features-profile-presentation-fulfillmentsettingscard-textarea-50-6eo4x3'
             value={settings.returns.policyText}
             onChange={(event) =>
               updateSettings((current) => ({
@@ -428,7 +428,7 @@ export const FulfillmentSettingsCard = React.forwardRef<
             rows={5}
             placeholder={text.policyPlaceholder}
           />
-          <p id="profile.fulfillment-settings-card.p.3" className="text-end text-xs text-muted-foreground">
+          <p id='features-profile-presentation-fulfillmentsettingscard-text-51-h6duty' className="text-end text-xs text-muted-foreground">
             {settings.returns.policyText.length}/2000
           </p>
         </div>

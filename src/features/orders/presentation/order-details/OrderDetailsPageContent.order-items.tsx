@@ -93,8 +93,8 @@ export function OrderItemRow({ id,
   const itemId = String(item.id);
   return (
     <div id={id} className="rounded-xl border border-outline-variant bg-background p-3">
-      <div className="flex gap-3">
-        <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-muted">
+      <div id="orders-presentation-order-details-orderdetailspagecontent-order-items-div-3-jgjkk2" className="flex gap-3">
+        <div id="orders-presentation-order-details-orderdetailspagecontent-order-items-div-4-ca23g7" className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-muted">
           {item.product_image_snapshot ? (
             <Image
               src={String(item.product_image_snapshot)}
@@ -107,18 +107,18 @@ export function OrderItemRow({ id,
             <PackageCheck className="m-5 h-6 w-6 text-muted-foreground" />
           )}
         </div>
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-start justify-between gap-2">
-            <div>
-              <h3 className="font-semibold">
+        <div id="orders-presentation-order-details-orderdetailspagecontent-order-items-div-5-yaovoi" className="min-w-0 flex-1">
+          <div id="orders-presentation-order-details-orderdetailspagecontent-order-items-div-6-chpvlm" className="flex flex-wrap items-start justify-between gap-2">
+            <div id="orders-presentation-order-details-orderdetailspagecontent-order-items-div-7-djb797">
+              <h3 id="orders-presentation-order-details-orderdetailspagecontent-order-items-heading-8-a6hfyw" className="font-semibold">
                 {String(item.product_name_snapshot ?? text.product)}
               </h3>
-              <p className="text-xs text-muted-foreground">
+              <p id="orders-presentation-order-details-orderdetailspagecontent-order-items-text-9-yp0zy8" className="text-xs text-muted-foreground">
                 {text.quantity}: {String(item.quantity ?? 1)} -{" "}
                 {text.itemStatus}: {statusLabel(item.status)}
               </p>
             </div>
-            <p className="font-bold">
+            <p id="orders-presentation-order-details-orderdetailspagecontent-order-items-text-10-zmkm04" className="font-bold">
               {formatMoney(item.total_price, currency)}
             </p>
           </div>
@@ -152,7 +152,7 @@ export function ItemActions({
   runAction: RunAction;
 }) {
   return (
-    <div className="mt-3 flex flex-wrap gap-2">
+    <div id="orders-presentation-order-details-orderdetailspagecontent-order-items-div-11-1acvc7" className="mt-3 flex flex-wrap gap-2">
       {isSeller && isPendingSellerResponse(item.status) ? (
         <>
           <OrderActionButton

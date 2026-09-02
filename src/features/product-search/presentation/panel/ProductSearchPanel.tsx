@@ -164,7 +164,7 @@ export function ProductSearchPanel({ id,
   const categoryControls =
     fixedMainCategoryId && fixedSubcategoryId ? null : (
       <div
-        id="product-search.panel.product-search-panel.div"
+        id='product-search-presentation-panel-productsearchpanel-div-1-gwaoyg'
         className="space-y-2"
       >
         <CategoryTabsStrip
@@ -194,7 +194,7 @@ export function ProductSearchPanel({ id,
   return (
     <section id={id} className={isCompact ? "space-y-3" : "space-y-5"}>
       {!isCompact ? (
-        <div id="product-search.panel.product-search-panel.div.2" className="flex gap-2">
+        <div id='product-search-presentation-panel-productsearchpanel-div-3-3vt1bi' className="flex gap-2">
           {(["products", "sellers"] as ProductSearchMode[]).map((item) => (
             <button key={item}
               type="button"
@@ -219,8 +219,8 @@ export function ProductSearchPanel({ id,
 
       {categoryControls}
 
-      <div id="product-search.panel.product-search-panel.div.3" className="grid gap-2 sm:grid-cols-[1fr_auto]">
-        <div id="product-search.panel.product-search-panel.div.4" className="relative">
+      <div id='product-search-presentation-panel-productsearchpanel-div-4-cgyfzm' className="grid gap-2 sm:grid-cols-[1fr_auto]">
+        <div id='product-search-presentation-panel-productsearchpanel-div-5-4zdjvh' className="relative">
           <Search className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant" />
           <Input
             value={query}
@@ -236,7 +236,7 @@ export function ProductSearchPanel({ id,
             className="asol-input-decorated-start"
           />
           {query ? (
-            <button id="product-search.panel.product-search-panel.button"
+            <button id='product-search-presentation-panel-productsearchpanel-button-6-xekvwl'
               type="button"
               onClick={() => setQuery("")}
               className="absolute end-3 top-1/2 -translate-y-1/2 text-on-surface-variant"
@@ -246,7 +246,7 @@ export function ProductSearchPanel({ id,
             </button>
           ) : null}
         </div>
-        <button id="product-search.panel.product-search-panel.button.2"
+        <button id='product-search-presentation-panel-productsearchpanel-button-7-cqgpqc'
           type="button"
           disabled={!canSearch || isLoading}
           onClick={() => void runSearch()}
@@ -270,35 +270,35 @@ export function ProductSearchPanel({ id,
             locale={locale}
             onChange={setFieldKeys}
           />
-          <div id="product-search.panel.product-search-panel.div.5" className="grid gap-2 sm:grid-cols-[220px_180px_auto]">
-            <select id="product-search.panel.product-search-panel.select"
+          <div id='product-search-presentation-panel-productsearchpanel-div-8-so8ca4' className="grid gap-2 sm:grid-cols-[220px_180px_auto]">
+            <select id='product-search-presentation-panel-productsearchpanel-select-9-m7j5v1'
               value={sort}
               onChange={(event) =>
                 setSort(event.target.value as ProductSearchSort)
               }
               className="h-10 rounded-lg border border-outline-variant bg-surface px-3 text-xs text-on-surface"
             >
-              <option value="relevance">
+              <option id="product-search-presentation-panel-productsearchpanel-option-10-oonbuk" value="relevance">
                 {locale === "ar" ? "افتراضي" : "Default"}
               </option>
-              <option value="newest">
+              <option id="product-search-presentation-panel-productsearchpanel-option-11-csfcqx" value="newest">
                 {locale === "ar" ? "الأحدث" : "Newest"}
               </option>
-              <option value="oldest">
+              <option id="product-search-presentation-panel-productsearchpanel-option-12-ihxcyi" value="oldest">
                 {locale === "ar" ? "الأقدم" : "Oldest"}
               </option>
-              <option value="name">
+              <option id="product-search-presentation-panel-productsearchpanel-option-13-u2t8de" value="name">
                 {locale === "ar" ? "الاسم" : "Name"}
               </option>
-              <option value="price_asc">
+              <option id="product-search-presentation-panel-productsearchpanel-option-14-fv0hep" value="price_asc">
                 {locale === "ar" ? "الأقل سعرًا" : "Lowest price"}
               </option>
-              <option value="price_desc">
+              <option id="product-search-presentation-panel-productsearchpanel-option-15-fmzepw" value="price_desc">
                 {locale === "ar" ? "الأعلى سعرًا" : "Highest price"}
               </option>
             </select>
             {hasRatingFilter ? (
-              <select id="product-search.panel.product-search-panel.select.2"
+              <select id='product-search-presentation-panel-productsearchpanel-select-16-0xybkk'
                 value={filters.minRating ?? ""}
                 onChange={(event) =>
                   setFilters((current) => ({
@@ -309,26 +309,26 @@ export function ProductSearchPanel({ id,
                 }
                 className="h-10 rounded-lg border border-outline-variant bg-surface px-3 text-xs text-on-surface"
               >
-                <option value="">
+                <option id="product-search-presentation-panel-productsearchpanel-option-17-pnarlj" value="">
                   {locale === "ar" ? "أي تقييم" : "Any rating"}
                 </option>
-                <option value="4">
+                <option id="product-search-presentation-panel-productsearchpanel-option-18-cqmy9e" value="4">
                   {locale === "ar" ? "4 فأعلى" : "4 and up"}
                 </option>
-                <option value="3">
+                <option id="product-search-presentation-panel-productsearchpanel-option-19-azp0f2" value="3">
                   {locale === "ar" ? "3 فأعلى" : "3 and up"}
                 </option>
-                <option value="2">
+                <option id="product-search-presentation-panel-productsearchpanel-option-20-hx1ysj" value="2">
                   {locale === "ar" ? "2 فأعلى" : "2 and up"}
                 </option>
-                <option value="1">
+                <option id="product-search-presentation-panel-productsearchpanel-option-21-xrjc8o" value="1">
                   {locale === "ar" ? "1 فأعلى" : "1 and up"}
                 </option>
               </select>
             ) : null}
             {!isCompact ? (
-              <label id="product-search.panel.product-search-panel.label" className="inline-flex items-center gap-2 text-xs text-on-surface">
-                <input id="product-search.panel.product-search-panel.input"
+              <label id='product-search-presentation-panel-productsearchpanel-label-22-xrxlql' className="inline-flex items-center gap-2 text-xs text-on-surface">
+                <input id='product-search-presentation-panel-productsearchpanel-input-23-jtt8qv'
                   type="checkbox"
                   checked={Boolean(filters.availableOnly)}
                   onChange={(event) =>
@@ -344,18 +344,18 @@ export function ProductSearchPanel({ id,
           </div>
         </>
       ) : (
-        <div id="product-search.panel.product-search-panel.div.6" className="grid gap-2 sm:grid-cols-[220px_180px]">
-          <select id="product-search.panel.product-search-panel.select.3"
+        <div id='product-search-presentation-panel-productsearchpanel-div-24-o5mpun' className="grid gap-2 sm:grid-cols-[220px_180px]">
+          <select id='product-search-presentation-panel-productsearchpanel-select-25-r9zhv3'
             value={sort}
             onChange={(event) => setSort(event.target.value as SellerSearchSort)}
             className="h-10 rounded-lg border border-outline-variant bg-surface px-3 text-xs text-on-surface"
           >
-            <option value="relevance">
+            <option id="product-search-presentation-panel-productsearchpanel-option-26-znk2sz" value="relevance">
               {locale === "ar" ? "الأكثر صلة" : "Relevance"}
             </option>
-            <option value="name">{locale === "ar" ? "الاسم" : "Name"}</option>
+            <option id="product-search-presentation-panel-productsearchpanel-option-27-wtfryf" value="name">{locale === "ar" ? "الاسم" : "Name"}</option>
           </select>
-          <select id="product-search.panel.product-search-panel.select.4"
+          <select id='product-search-presentation-panel-productsearchpanel-select-28-ut5apt'
             value={sellerMinRating ?? ""}
             onChange={(event) =>
               setSellerMinRating(
@@ -364,19 +364,19 @@ export function ProductSearchPanel({ id,
             }
             className="h-10 rounded-lg border border-outline-variant bg-surface px-3 text-xs text-on-surface"
           >
-            <option value="">
+            <option id="product-search-presentation-panel-productsearchpanel-option-29-7h1io5" value="">
               {locale === "ar" ? "أي تقييم" : "Any rating"}
             </option>
-            <option value="4">{locale === "ar" ? "4 فأعلى" : "4 and up"}</option>
-            <option value="3">{locale === "ar" ? "3 فأعلى" : "3 and up"}</option>
-            <option value="2">{locale === "ar" ? "2 فأعلى" : "2 and up"}</option>
-            <option value="1">{locale === "ar" ? "1 فأعلى" : "1 and up"}</option>
+            <option id="product-search-presentation-panel-productsearchpanel-option-30-aohmas" value="4">{locale === "ar" ? "4 فأعلى" : "4 and up"}</option>
+            <option id="product-search-presentation-panel-productsearchpanel-option-31-rohsur" value="3">{locale === "ar" ? "3 فأعلى" : "3 and up"}</option>
+            <option id="product-search-presentation-panel-productsearchpanel-option-32-iiqtup" value="2">{locale === "ar" ? "2 فأعلى" : "2 and up"}</option>
+            <option id="product-search-presentation-panel-productsearchpanel-option-33-kak4lj" value="1">{locale === "ar" ? "1 فأعلى" : "1 and up"}</option>
           </select>
         </div>
       )}
 
       {!isCompact ? (
-        <div id="product-search.panel.product-search-panel.div.7" className="text-xs text-on-surface-variant">
+        <div id='product-search-presentation-panel-productsearchpanel-div-34-2zqrum' className="text-xs text-on-surface-variant">
           {hasSearched
             ? locale === "ar"
               ? `عدد النتائج: ${total}`

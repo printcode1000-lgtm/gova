@@ -9,7 +9,7 @@ export function AuthMobileBrand({ id }: { id?: string }) {
   return (
     <div id={id} className="lg:hidden flex items-center justify-center gap-3 mb-8">
       <AppIcon size="sm" />
-      <span className="text-lg font-semibold text-on-surface">{t('header.brand')}</span>
+      <span id="features-auth-presentation-authmobilebrand-text-2-pk1khi" className="text-lg font-semibold text-on-surface">{t('header.brand')}</span>
     </div>
   );
 }

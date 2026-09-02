@@ -45,21 +45,21 @@ export default function FavoritesPage() {
       };
 
   return (
-    <div id="favorites.page.div" className="mx-auto w-full max-w-6xl px-4 py-6" dir={isRTL ? "rtl" : "ltr"}>
-      <header id="favorites.page.header" className="mb-5">
-        <div id="favorites.page.div.2" className="flex items-center gap-3">
-          <div id="favorites.page.div.3" className="flex h-11 w-11 items-center justify-center rounded-full bg-primary-container text-on-primary-container">
-            <Heart id="favorites.page.heart" className={cn("h-6 w-6", items.length > 0 && "fill-current")} />
+    <div id='app-favorites-page-div-1-lijkxc' className="mx-auto w-full max-w-6xl px-4 py-6" dir={isRTL ? "rtl" : "ltr"}>
+      <header id='app-favorites-page-header-2-0r6sox' className="mb-5">
+        <div id='app-favorites-page-div-3-c5ycov' className="flex items-center gap-3">
+          <div id='app-favorites-page-div-4-dqlxg6' className="flex h-11 w-11 items-center justify-center rounded-full bg-primary-container text-on-primary-container">
+            <Heart id='app-favorites-page-heart-5-r5f2gb' className={cn("h-6 w-6", items.length > 0 && "fill-current")} />
           </div>
-          <div id="favorites.page.div.4">
-            <h1 id="favorites.page.h1" className="text-xl font-bold text-on-surface">{labels.title}</h1>
-            <p id="favorites.page.p" className="mt-0.5 text-xs text-on-surface-variant">{labels.description}</p>
+          <div id='app-favorites-page-div-6-ppctaf'>
+            <h1 id='app-favorites-page-heading-7-bqer3x' className="text-xl font-bold text-on-surface">{labels.title}</h1>
+            <p id='app-favorites-page-text-8-fx13ul' className="mt-0.5 text-xs text-on-surface-variant">{labels.description}</p>
           </div>
         </div>
       </header>
 
-      <div id="favorites.page.div.5" className="mb-5 grid grid-cols-2 rounded-xl bg-surface-container p-1">
-        <button
+      <div id='app-favorites-page-div-9-g55fup' className="mb-5 grid grid-cols-2 rounded-xl bg-surface-container p-1">
+        <button id="app-favorites-page-button-10-smeit7"
           type="button"
           onClick={() => setActiveTab("product")}
           className={cn(
@@ -67,11 +67,11 @@ export default function FavoritesPage() {
             activeTab === "product" ? "bg-surface text-primary shadow-sm" : "text-on-surface-variant",
           )}
         >
-          <Package id="favorites.page.package" className="h-4 w-4" />
+          <Package id='app-favorites-page-package-11-wvnf6f' className="h-4 w-4" />
           {labels.products}
-          <span id="favorites.page.span" className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">{productCount}</span>
+          <span id='app-favorites-page-text-12-6mtyyf' className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">{productCount}</span>
         </button>
-        <button
+        <button id="app-favorites-page-button-13-kvatuw"
           type="button"
           onClick={() => setActiveTab("seller")}
           className={cn(
@@ -79,32 +79,32 @@ export default function FavoritesPage() {
             activeTab === "seller" ? "bg-surface text-primary shadow-sm" : "text-on-surface-variant",
           )}
         >
-          <Store id="favorites.page.store" className="h-4 w-4" />
+          <Store id='app-favorites-page-store-14-ce4xab' className="h-4 w-4" />
           {labels.sellers}
-          <span id="favorites.page.span.2" className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">{sellerCount}</span>
+          <span id='app-favorites-page-text-15-ufvifd' className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">{sellerCount}</span>
         </button>
       </div>
 
       {isLoading ? (
-        <div id="favorites.page.div.6" className="flex min-h-48 items-center justify-center">
-          <LoadingSpinner id="favorites.page.loading-spinner" size="sm" />
+        <div id='app-favorites-page-div-16-zfka4k' className="flex min-h-48 items-center justify-center">
+          <LoadingSpinner id='app-favorites-page-loadingspinner-17-v5kmkn' size="sm" />
         </div>
       ) : visibleItems.length === 0 ? (
-        <section id="favorites.page.section" className="flex min-h-64 flex-col items-center justify-center rounded-2xl border border-dashed border-outline-variant bg-surface-container-low p-6 text-center">
+        <section id='app-favorites-page-section-18-fp4k7t' className="flex min-h-64 flex-col items-center justify-center rounded-2xl border border-dashed border-outline-variant bg-surface-container-low p-6 text-center">
           {activeTab === "product" ? (
-            <Package id="favorites.page.package.2" className="mb-3 h-10 w-10 text-on-surface-variant" />
+            <Package id='app-favorites-page-package-19-wfzspw' className="mb-3 h-10 w-10 text-on-surface-variant" />
           ) : (
-            <Store id="favorites.page.store.2" className="mb-3 h-10 w-10 text-on-surface-variant" />
+            <Store id='app-favorites-page-store-20-kgfify' className="mb-3 h-10 w-10 text-on-surface-variant" />
           )}
-          <p id="favorites.page.p.2" className="text-sm font-medium text-on-surface">
+          <p id='app-favorites-page-text-21-9l6ihi' className="text-sm font-medium text-on-surface">
             {activeTab === "product" ? labels.emptyProducts : labels.emptySellers}
           </p>
-          <Link id="favorites.page.link" href="/search" className="mt-4 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-on-primary no-underline transition active:scale-95">
+          <Link id='app-favorites-page-link-22-whekha' href="/search" className="mt-4 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-on-primary no-underline transition active:scale-95">
             {labels.browse}
           </Link>
         </section>
       ) : activeTab === "product" ? (
-        <div id="favorites.page.div.7" className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+        <div id='app-favorites-page-div-23-rxrgeo' className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {visibleItems.map((item) => {
             const card = productCardFromFavorite(item);
             return (
@@ -118,7 +118,7 @@ export default function FavoritesPage() {
           })}
         </div>
       ) : (
-        <div id="favorites.page.div.8" className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+        <div id='app-favorites-page-div-24-wxte0r' className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {visibleItems.map((item) => {
             const card = sellerCardFromFavorite(item);
             return (

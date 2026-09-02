@@ -258,54 +258,54 @@ export function SuperAdminFeaturedMarqueePage() {
 
   if (sessionLoading || !authorized || !record) {
     return (
-      <main id="super-admin.super-admin-featured-marquee-page.main" className="container px-4 py-8 text-sm text-on-surface-variant">
+      <main id='features-super-admin-presentation-superadminfeaturedmarqueepage-main-1-gbv16y' className="container px-4 py-8 text-sm text-on-surface-variant">
         جاري التحقق وتحميل الإعدادات...
       </main>
     );
   }
 
   return (
-    <main id="super-admin.super-admin-featured-marquee-page.main.2" className="container mx-auto max-w-4xl px-4 py-8">
-      <header id="super-admin.super-admin-featured-marquee-page.header" className="mb-6 flex items-start gap-3">
-        <div id="super-admin.super-admin-featured-marquee-page.div" className="rounded-xl bg-primary/10 p-3 text-primary">
-          <ShieldCheck id="super-admin.super-admin-featured-marquee-page.shield-check" className="h-6 w-6" />
+    <main id='features-super-admin-presentation-superadminfeaturedmarqueepage-main-2-vhnaup' className="container mx-auto max-w-4xl px-4 py-8">
+      <header id='features-super-admin-presentation-superadminfeaturedmarqueepage-header-3-ujsg6x' className="mb-6 flex items-start gap-3">
+        <div id='features-super-admin-presentation-superadminfeaturedmarqueepage-div-4-o71kcd' className="rounded-xl bg-primary/10 p-3 text-primary">
+          <ShieldCheck id='features-super-admin-presentation-superadminfeaturedmarqueepage-shieldcheck-5-qltbdq' className="h-6 w-6" />
         </div>
-        <div id="super-admin.super-admin-featured-marquee-page.div.2">
-          <p id="super-admin.super-admin-featured-marquee-page.p" className="text-sm font-medium text-primary">
+        <div id='features-super-admin-presentation-superadminfeaturedmarqueepage-div-6-oky3mh'>
+          <p id='features-super-admin-presentation-superadminfeaturedmarqueepage-text-7-gsamlk' className="text-sm font-medium text-primary">
             منطقة السوبر أدمن
           </p>
-          <h1 id="super-admin.super-admin-featured-marquee-page.h1" className="text-2xl font-bold">
+          <h1 id='features-super-admin-presentation-superadminfeaturedmarqueepage-heading-8-j7ognm' className="text-2xl font-bold">
             إدارة شريط المنتجات المميزة للصفحة الرئيسية
           </h1>
-          <p id="super-admin.super-admin-featured-marquee-page.p.2" className="mt-1 text-sm text-muted-foreground">
+          <p id='features-super-admin-presentation-superadminfeaturedmarqueepage-text-9-2dhctk' className="mt-1 text-sm text-muted-foreground">
             اختر المنتجات التي تظهر في الشريط المتحرك داخل صفحة Home.
           </p>
         </div>
       </header>
 
-      <section id="super-admin.super-admin-featured-marquee-page.section" className="mb-4 grid gap-3 rounded-xl border bg-card p-4 sm:grid-cols-2">
-        <div id="super-admin.super-admin-featured-marquee-page.div.3">
-          <p id="super-admin.super-admin-featured-marquee-page.p.3" className="text-xs text-muted-foreground">الإصدار</p>
-          <p id="super-admin.super-admin-featured-marquee-page.p.4" className="font-semibold">{record.version}</p>
+      <section id='features-super-admin-presentation-superadminfeaturedmarqueepage-section-10-9mzcnx' className="mb-4 grid gap-3 rounded-xl border bg-card p-4 sm:grid-cols-2">
+        <div id='features-super-admin-presentation-superadminfeaturedmarqueepage-div-11-5zbtwc'>
+          <p id='features-super-admin-presentation-superadminfeaturedmarqueepage-text-12-ihpern' className="text-xs text-muted-foreground">الإصدار</p>
+          <p id='features-super-admin-presentation-superadminfeaturedmarqueepage-text-13-zogvqt' className="font-semibold">{record.version}</p>
         </div>
-        <div id="super-admin.super-admin-featured-marquee-page.div.4">
-          <p id="super-admin.super-admin-featured-marquee-page.p.5" className="text-xs text-muted-foreground">آخر تحديث</p>
-          <p id="super-admin.super-admin-featured-marquee-page.p.6" className="text-sm">
+        <div id='features-super-admin-presentation-superadminfeaturedmarqueepage-div-14-oao7uv'>
+          <p id='features-super-admin-presentation-superadminfeaturedmarqueepage-text-15-mpkgba' className="text-xs text-muted-foreground">آخر تحديث</p>
+          <p id='features-super-admin-presentation-superadminfeaturedmarqueepage-text-16-fth3p8' className="text-sm">
             {formatDateTimeDefault(record.updatedAt)}
           </p>
         </div>
       </section>
 
-      <section id="super-admin.super-admin-featured-marquee-page.section.2" className="mb-6 rounded-xl border bg-card p-4">
-        <div id="super-admin.super-admin-featured-marquee-page.div.5" className="mb-3 flex items-center gap-2">
-          <RefreshCw id="super-admin.super-admin-featured-marquee-page.refresh-cw" className="h-5 w-5 text-primary" />
-          <h2 id="super-admin.super-admin-featured-marquee-page.h2" className="font-semibold">فترة البحث عن التحديثات</h2>
+      <section id='features-super-admin-presentation-superadminfeaturedmarqueepage-section-17-in8jys' className="mb-6 rounded-xl border bg-card p-4">
+        <div id='features-super-admin-presentation-superadminfeaturedmarqueepage-div-18-qnqivf' className="mb-3 flex items-center gap-2">
+          <RefreshCw id='features-super-admin-presentation-superadminfeaturedmarqueepage-refreshcw-19-dc1mli' className="h-5 w-5 text-primary" />
+          <h2 id='features-super-admin-presentation-superadminfeaturedmarqueepage-heading-20-vt53pm' className="font-semibold">فترة البحث عن التحديثات</h2>
         </div>
-        <div id="super-admin.super-admin-featured-marquee-page.div.6" className="flex flex-wrap items-end gap-3">
-          <div id="super-admin.super-admin-featured-marquee-page.div.7" className="min-w-52 space-y-2">
-            <Label id="super-admin.super-admin-featured-marquee-page.label" htmlFor="super-admin.featured-marquee.check-interval">الفترة بالدقائق</Label>
+        <div id='features-super-admin-presentation-superadminfeaturedmarqueepage-div-21-dkv7j7' className="flex flex-wrap items-end gap-3">
+          <div id='features-super-admin-presentation-superadminfeaturedmarqueepage-div-22-yupohk' className="min-w-52 space-y-2">
+            <Label id='features-super-admin-presentation-superadminfeaturedmarqueepage-label-23-8yfd1s' htmlFor='features-super-admin-presentation-superadminfeaturedmarqueepage-input-24-lf1smz'>الفترة بالدقائق</Label>
             <Input
-              id="super-admin.featured-marquee.check-interval"
+              id='features-super-admin-presentation-superadminfeaturedmarqueepage-input-24-lf1smz'
               type="number"
               min={5}
               max={1440}
@@ -326,20 +326,20 @@ export function SuperAdminFeaturedMarqueePage() {
               {interval} دقيقة
             </Button>
           ))}
-          <Button id="super-admin.super-admin-featured-marquee-page.button"
+          <Button id='features-super-admin-presentation-superadminfeaturedmarqueepage-button-25-eavfll'
             type="button"
             variant="outline"
             onClick={() => void load()}
             disabled={busy}
           >
-            <RefreshCw id="super-admin.super-admin-featured-marquee-page.refresh-cw.2" className="me-2 h-4 w-4" />
+            <RefreshCw id='features-super-admin-presentation-superadminfeaturedmarqueepage-refreshcw-26-cnsrhr' className="me-2 h-4 w-4" />
             فحص الآن
           </Button>
         </div>
       </section>
 
       {message ? (
-        <div id="super-admin.super-admin-featured-marquee-page.div.8"
+        <div id='features-super-admin-presentation-superadminfeaturedmarqueepage-div-27-kxpla2'
           className="mb-4 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive"
           role="status"
         >
@@ -347,16 +347,16 @@ export function SuperAdminFeaturedMarqueePage() {
         </div>
       ) : null}
 
-      <section id="super-admin.super-admin-featured-marquee-page.section.3" className="mb-6 rounded-xl border bg-card p-4">
-        <div id="super-admin.super-admin-featured-marquee-page.div.9" className="mb-3 flex items-center gap-2">
-          <Plus id="super-admin.super-admin-featured-marquee-page.plus" className="h-5 w-5 text-primary" />
-          <h2 id="super-admin.super-admin-featured-marquee-page.h2.2" className="font-semibold">إضافة منتج</h2>
+      <section id='features-super-admin-presentation-superadminfeaturedmarqueepage-section-28-wfdl5b' className="mb-6 rounded-xl border bg-card p-4">
+        <div id='features-super-admin-presentation-superadminfeaturedmarqueepage-div-29-knt1va' className="mb-3 flex items-center gap-2">
+          <Plus id='features-super-admin-presentation-superadminfeaturedmarqueepage-plus-30-kq2gos' className="h-5 w-5 text-primary" />
+          <h2 id='features-super-admin-presentation-superadminfeaturedmarqueepage-heading-31-anxwyx' className="font-semibold">إضافة منتج</h2>
         </div>
-        <div id="super-admin.super-admin-featured-marquee-page.div.10" className="flex gap-2">
-          <div id="super-admin.super-admin-featured-marquee-page.div.11" className="flex-1 space-y-1">
-            <Label id="super-admin.super-admin-featured-marquee-page.label.2" htmlFor="new-product-id">معرف المنتج Product ID</Label>
+        <div id='features-super-admin-presentation-superadminfeaturedmarqueepage-div-32-ty4ctg' className="flex gap-2">
+          <div id='features-super-admin-presentation-superadminfeaturedmarqueepage-div-33-a0b76z' className="flex-1 space-y-1">
+            <Label id='features-super-admin-presentation-superadminfeaturedmarqueepage-label-34-bq7mn0' htmlFor='features-super-admin-presentation-superadminfeaturedmarqueepage-input-35-j6saok'>معرف المنتج Product ID</Label>
             <Input
-              id="new-product-id"
+              id='features-super-admin-presentation-superadminfeaturedmarqueepage-input-35-j6saok'
               placeholder="مثال: 3a1b2c-..."
               value={newProductId}
               onChange={(event) => setNewProductId(event.target.value)}
@@ -365,51 +365,51 @@ export function SuperAdminFeaturedMarqueePage() {
               }}
             />
           </div>
-          <div id="super-admin.super-admin-featured-marquee-page.div.12" className="flex items-end">
-            <Button id="super-admin.super-admin-featured-marquee-page.button.2"
+          <div id='features-super-admin-presentation-superadminfeaturedmarqueepage-div-36-vvzz7c' className="flex items-end">
+            <Button id='features-super-admin-presentation-superadminfeaturedmarqueepage-button-37-yueevi'
               type="button"
               onClick={() => void addProduct()}
               disabled={!newProductId.trim()}
             >
-              <Plus id="super-admin.super-admin-featured-marquee-page.plus.2" className="me-1 h-4 w-4" />
+              <Plus id='features-super-admin-presentation-superadminfeaturedmarqueepage-plus-38-8aibd9' className="me-1 h-4 w-4" />
               إضافة
             </Button>
           </div>
         </div>
-        <p id="super-admin.super-admin-featured-marquee-page.p.7" className="mt-2 text-xs text-muted-foreground">
-          يمكنك نسخ معرف المنتج من صفحة المنتج، من قيمة <code>productId</code> في
+        <p id='features-super-admin-presentation-superadminfeaturedmarqueepage-text-39-pdzoin' className="mt-2 text-xs text-muted-foreground">
+          يمكنك نسخ معرف المنتج من صفحة المنتج، من قيمة <code id="features-super-admin-presentation-superadminfeaturedmarqueepage-code-40-xfj0ho">productId</code> في
           الرابط.
         </p>
       </section>
 
-      <section id="super-admin.super-admin-featured-marquee-page.section.4" className="mb-6 rounded-xl border bg-card p-4">
-        <div id="super-admin.super-admin-featured-marquee-page.div.13" className="mb-3 flex items-center justify-between">
-          <div id="super-admin.super-admin-featured-marquee-page.div.14" className="flex items-center gap-2">
-            <Package id="super-admin.super-admin-featured-marquee-page.package" className="h-5 w-5 text-primary" />
-            <h2 id="super-admin.super-admin-featured-marquee-page.h2.3" className="font-semibold">
+      <section id='features-super-admin-presentation-superadminfeaturedmarqueepage-section-41-cfys7g' className="mb-6 rounded-xl border bg-card p-4">
+        <div id='features-super-admin-presentation-superadminfeaturedmarqueepage-div-42-0unhja' className="mb-3 flex items-center justify-between">
+          <div id='features-super-admin-presentation-superadminfeaturedmarqueepage-div-43-aqardk' className="flex items-center gap-2">
+            <Package id='features-super-admin-presentation-superadminfeaturedmarqueepage-package-44-mvnokz' className="h-5 w-5 text-primary" />
+            <h2 id='features-super-admin-presentation-superadminfeaturedmarqueepage-heading-45-dccjii' className="font-semibold">
               المنتجات المختارة ({items.length})
             </h2>
           </div>
-          <div id="super-admin.super-admin-featured-marquee-page.div.15" className="flex gap-2">
-            <Button id="super-admin.super-admin-featured-marquee-page.button.3"
+          <div id='features-super-admin-presentation-superadminfeaturedmarqueepage-div-46-dz3n4w' className="flex gap-2">
+            <Button id='features-super-admin-presentation-superadminfeaturedmarqueepage-button-47-i7l8ax'
               type="button"
               variant="outline"
               size="sm"
               onClick={() => void load()}
               disabled={busy}
             >
-              <RefreshCw id="super-admin.super-admin-featured-marquee-page.refresh-cw.3" className="me-1 h-3 w-3" />
+              <RefreshCw id='features-super-admin-presentation-superadminfeaturedmarqueepage-refreshcw-48-i30xvh' className="me-1 h-3 w-3" />
               تحديث
             </Button>
           </div>
         </div>
 
         {items.length === 0 ? (
-          <p id="super-admin.super-admin-featured-marquee-page.p.8" className="py-6 text-center text-sm text-muted-foreground">
+          <p id='features-super-admin-presentation-superadminfeaturedmarqueepage-text-49-siwncb' className="py-6 text-center text-sm text-muted-foreground">
             لا توجد منتجات مختارة. أضف معرفات المنتجات من الأعلى.
           </p>
         ) : (
-          <div id="super-admin.super-admin-featured-marquee-page.div.16" className="space-y-2">
+          <div id='features-super-admin-presentation-superadminfeaturedmarqueepage-div-50-vgv4ut' className="space-y-2">
             {items.map((item, index) => (
               <div
                 key={item.productId}
@@ -489,7 +489,7 @@ export function SuperAdminFeaturedMarqueePage() {
         )}
 
         {items.length > 0 ? (
-          <p id="super-admin.super-admin-featured-marquee-page.p.9" className="mt-3 text-xs text-muted-foreground">
+          <p id='features-super-admin-presentation-superadminfeaturedmarqueepage-text-51-pp7xol' className="mt-3 text-xs text-muted-foreground">
             اسحب العناصر لإعادة الترتيب. المنتجات التي لم يتم العثور عليها لن
             تحفظ.
           </p>
@@ -497,13 +497,13 @@ export function SuperAdminFeaturedMarqueePage() {
       </section>
 
       {validItems.length > 0 ? (
-        <section id="super-admin.super-admin-featured-marquee-page.section.5" className="rounded-xl border bg-card p-4">
-          <div id="super-admin.super-admin-featured-marquee-page.div.17" className="mb-3 flex items-center gap-2">
-            <Eye id="super-admin.super-admin-featured-marquee-page.eye" className="h-5 w-5 text-primary" />
-            <h2 id="super-admin.super-admin-featured-marquee-page.h2.4" className="font-semibold">المعاينة الحية</h2>
+        <section id='features-super-admin-presentation-superadminfeaturedmarqueepage-section-52-fe8lhg' className="rounded-xl border bg-card p-4">
+          <div id='features-super-admin-presentation-superadminfeaturedmarqueepage-div-53-zkyipb' className="mb-3 flex items-center gap-2">
+            <Eye id='features-super-admin-presentation-superadminfeaturedmarqueepage-eye-54-ppnuct' className="h-5 w-5 text-primary" />
+            <h2 id='features-super-admin-presentation-superadminfeaturedmarqueepage-heading-55-9mif8x' className="font-semibold">المعاينة الحية</h2>
           </div>
-          <div id="super-admin.super-admin-featured-marquee-page.div.18" className="asol-section-tonal asol-section-tonal-tertiary mx-1 rounded-xl p-4">
-            <FeaturedMarquee id="super-admin.super-admin-featured-marquee-page.featured-marquee" config={previewConfig} />
+          <div id='features-super-admin-presentation-superadminfeaturedmarqueepage-div-56-ibhs2q' className="asol-section-tonal asol-section-tonal-tertiary mx-1 rounded-xl p-4">
+            <FeaturedMarquee id='features-super-admin-presentation-superadminfeaturedmarqueepage-featuredmarquee-57-kfw56c' config={previewConfig} />
           </div>
         </section>
       ) : null}

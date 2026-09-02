@@ -14,22 +14,22 @@ import type { OtaAdminDashboard } from "@asol/ota-core";
 export function OtaReleaseFiles(props: { files: Record<string, { size: number; sha256: string }>; title: string }) {
   return (
       <section
-        id="google-play-console.tabs.ota-releases-tab.section.3"
+        id='google-play-console-presentation-components-otareleasereports-section-1-vtlx60'
         className="rounded-md border bg-surface p-4"
       >
-        <h2 id="google-play-console.tabs.ota-releases-tab.h2" className="mb-3 font-semibold">
+        <h2 id='google-play-console-presentation-components-otareleasereports-heading-2-xpbp0s' className="mb-3 font-semibold">
           {props.title}
         </h2>
         <div
-          id="google-play-console.tabs.ota-releases-tab.div.9"
+          id='google-play-console-presentation-components-otareleasereports-div-3-8mip6u'
           className="max-h-96 overflow-auto rounded-md border"
         >
           <table
-            id="google-play-console.tabs.ota-releases-tab.table"
+            id='google-play-console-presentation-components-otareleasereports-table-4-6rcusv'
             className="w-full min-w-[42rem] text-sm"
             dir="ltr"
           >
-            <tbody id="google-play-console.tabs.ota-releases-tab.tbody">
+            <tbody id='google-play-console-presentation-components-otareleasereports-tbody-5-djy7ok'>
               {Object.entries(props.files).map(([name, file]) => (
                 <tr key={name} className="border-t">
                   <td className="p-2 font-mono text-xs">{name}</td>
@@ -51,19 +51,19 @@ export function OtaAdoption(props: {
 }) {
   return (
       <section
-        id="google-play-console.tabs.ota-releases-tab.section.4"
+        id='google-play-console-presentation-components-otareleasereports-section-6-gmczgm'
         className="rounded-md border bg-surface p-4"
       >
-        <h2 id="google-play-console.tabs.ota-releases-tab.h2.2" className="mb-3 font-semibold">
+        <h2 id='google-play-console-presentation-components-otareleasereports-heading-7-vvxsuz' className="mb-3 font-semibold">
           {props.title}
         </h2>
-        <div id="google-play-console.tabs.ota-releases-tab.div.10" className="overflow-auto rounded-md border">
+        <div id='google-play-console-presentation-components-otareleasereports-div-8-gkseqb' className="overflow-auto rounded-md border">
           <table
-            id="google-play-console.tabs.ota-releases-tab.table.2"
+            id='google-play-console-presentation-components-otareleasereports-table-9-2ffc2x'
             className="w-full min-w-[42rem] text-sm"
             dir="ltr"
           >
-            <tbody id="google-play-console.tabs.ota-releases-tab.tbody.2">
+            <tbody id='google-play-console-presentation-components-otareleasereports-tbody-10-h9sfcc'>
               {props.adoption.map((item) => (
                 <tr key={item.version} className="border-t">
                   <td className="p-2 font-semibold">{item.version}</td>
@@ -73,8 +73,8 @@ export function OtaAdoption(props: {
                 </tr>
               ))}
               {!props.adoption.length ? (
-                <tr id="google-play-console.tabs.ota-releases-tab.tr">
-                  <td id="google-play-console.tabs.ota-releases-tab.td" className="p-3" colSpan={2}>
+                <tr id='google-play-console-presentation-components-otareleasereports-tr-11-gdouhk'>
+                  <td id='google-play-console-presentation-components-otareleasereports-td-12-3xxhma' className="p-3" colSpan={2}>
                     {props.emptyText}
                   </td>
                 </tr>
@@ -94,15 +94,15 @@ export function OtaHistoryAndAudit(props: {
   auditActionLabel: (action: string) => string;
 }) {
   return (
-      <div id="google-play-console.tabs.ota-releases-tab.div.11" className="grid gap-4 lg:grid-cols-2">
+      <div id='google-play-console-presentation-components-otareleasereports-div-13-gjyzgk' className="grid gap-4 lg:grid-cols-2">
         <section
-          id="google-play-console.tabs.ota-releases-tab.section.5"
+          id='google-play-console-presentation-components-otareleasereports-section-14-3exp4x'
           className="rounded-md border bg-surface p-4"
         >
-          <h2 id="google-play-console.tabs.ota-releases-tab.h2.3" className="mb-3 font-semibold">
+          <h2 id='google-play-console-presentation-components-otareleasereports-heading-15-nfvrw6' className="mb-3 font-semibold">
             {props.historyTitle}
           </h2>
-          <div id="google-play-console.tabs.ota-releases-tab.div.12" className="space-y-2">
+          <div id='google-play-console-presentation-components-otareleasereports-div-16-0jffh4' className="space-y-2">
             {props.history.map((item) => (
               <div key={item.releaseId} className="rounded-md border p-2 text-sm">
                 <strong dir="ltr">{item.version}</strong>
@@ -112,13 +112,13 @@ export function OtaHistoryAndAudit(props: {
           </div>
         </section>
         <section
-          id="google-play-console.tabs.ota-releases-tab.section.6"
+          id='google-play-console-presentation-components-otareleasereports-section-17-szvduq'
           className="rounded-md border bg-surface p-4"
         >
-          <h2 id="google-play-console.tabs.ota-releases-tab.h2.4" className="mb-3 font-semibold">
+          <h2 id='google-play-console-presentation-components-otareleasereports-heading-18-cdue2b' className="mb-3 font-semibold">
             {props.auditTitle}
           </h2>
-          <div id="google-play-console.tabs.ota-releases-tab.div.13" className="max-h-80 space-y-2 overflow-auto">
+          <div id='google-play-console-presentation-components-otareleasereports-div-19-7dhzzy' className="max-h-80 space-y-2 overflow-auto">
             {props.audit.map((item) => (
               <div key={item.id} className="rounded-md border p-2 text-sm">
                 <strong>{props.auditActionLabel(item.action)}</strong>

@@ -435,7 +435,7 @@ export function ProductPageContent({ id,
   if (editable && !isLoggedIn)
     return (
       <div id={id} className="m-6 rounded-2xl border p-6 text-center">
-        <p>يجب تسجيل الدخول لإنشاء المنتج أو تعديله.</p>
+        <p id="features-product-presentation-productpagecontent-text-4-hvmpoo">يجب تسجيل الدخول لإنشاء المنتج أو تعديله.</p>
         <Link
           href="/login"
           className="mt-4 inline-block rounded-xl bg-primary px-4 py-2 text-on-primary"
@@ -470,36 +470,36 @@ export function ProductPageContent({ id,
         onImagesPendingChange={setImagesPending}
       />
       {error ? (
-        <p className="rounded-xl bg-destructive/10 p-3 text-destructive">
+        <p id="features-product-presentation-productpagecontent-text-7-9m8xym" className="rounded-xl bg-destructive/10 p-3 text-destructive">
           {error}
         </p>
       ) : null}
       {mode === "view" && isSuperAdminSession(session) ? (
-        <div className="rounded-2xl border border-warning/30 bg-warning/5 p-4 sm:p-5">
-          <h3 className="text-sm font-semibold text-warning">
+        <div id="features-product-presentation-productpagecontent-div-8-zatlbb" className="rounded-2xl border border-warning/30 bg-warning/5 p-4 sm:p-5">
+          <h3 id="features-product-presentation-productpagecontent-heading-9-5dynra" className="text-sm font-semibold text-warning">
             {locale === "ar" ? "لوحة الإدارة الخارقة" : "Super Admin Panel"}
           </h3>
-          <div className="mt-3 grid gap-2 text-xs sm:grid-cols-2">
+          <div id="features-product-presentation-productpagecontent-div-10-5wcqum" className="mt-3 grid gap-2 text-xs sm:grid-cols-2">
             <AdminCopyValue
-              id="product.product-page-content.admin-copy.product-id"
+              id='features-product-presentation-productpagecontent-admincopyvalue-11-a0hery'
               label={locale === "ar" ? "معرف المنتج" : "Product ID"}
               value={productId || product?.id || ""}
               onCopy={copyToClipboard}
             />
             <AdminCopyValue
-              id="product.product-page-content.admin-copy.owner-id"
+              id='features-product-presentation-productpagecontent-admincopyvalue-12-xdgfsu'
               label={locale === "ar" ? "معرف المالك" : "Owner ID"}
               value={product?.uid || ""}
               onCopy={copyToClipboard}
             />
             <AdminCopyValue
-              id="product.product-page-content.admin-copy.main-category"
+              id='features-product-presentation-productpagecontent-admincopyvalue-13-slzveq'
               label={locale === "ar" ? "التصنيف الرئيسي" : "Main Category"}
               value={adminCategoryInfo.mainName}
               onCopy={copyToClipboard}
             />
             <AdminCopyValue
-              id="product.product-page-content.admin-copy.main-category-id"
+              id='features-product-presentation-productpagecontent-admincopyvalue-14-8bqrld'
               label={
                 locale === "ar" ? "معرف التصنيف الرئيسي" : "Main Category ID"
               }
@@ -507,13 +507,13 @@ export function ProductPageContent({ id,
               onCopy={copyToClipboard}
             />
             <AdminCopyValue
-              id="product.product-page-content.admin-copy.subcategory"
+              id='features-product-presentation-productpagecontent-admincopyvalue-15-pzpsba'
               label={locale === "ar" ? "التصنيف الفرعي" : "Subcategory"}
               value={adminCategoryInfo.subName}
               onCopy={copyToClipboard}
             />
             <AdminCopyValue
-              id="product.product-page-content.admin-copy.subcategory-id"
+              id='features-product-presentation-productpagecontent-admincopyvalue-16-y0m9su'
               label={locale === "ar" ? "معرف التصنيف الفرعي" : "Subcategory ID"}
               value={subcategoryId}
               onCopy={copyToClipboard}

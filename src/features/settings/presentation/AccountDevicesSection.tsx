@@ -31,42 +31,42 @@ export function AccountDevicesSection({
   );
 
   return (
-    <div id="settings.account-devices-section.div" className="space-y-3 rounded-xl border border-outline-variant bg-surface p-3 sm:p-4">
-      <div id="settings.account-devices-section.div.2" className="flex items-center justify-between gap-3">
-        <div id="settings.account-devices-section.div.3" className="min-w-0">
-          <p id="settings.account-devices-section.p" className="text-sm font-semibold text-on-surface">
+    <div id='features-settings-presentation-accountdevicessection-div-1-5guubl' className="space-y-3 rounded-xl border border-outline-variant bg-surface p-3 sm:p-4">
+      <div id='features-settings-presentation-accountdevicessection-div-2-z05sqk' className="flex items-center justify-between gap-3">
+        <div id='features-settings-presentation-accountdevicessection-div-3-k6wjuk' className="min-w-0">
+          <p id='features-settings-presentation-accountdevicessection-text-4-hjyevo' className="text-sm font-semibold text-on-surface">
             {state.t("notifications.accountDevices.title")}
           </p>
-          <p id="settings.account-devices-section.p.2" className="mt-1 text-xs leading-relaxed text-on-surface-variant">
+          <p id='features-settings-presentation-accountdevicessection-text-5-5h2ioc' className="mt-1 text-xs leading-relaxed text-on-surface-variant">
             {state.t("notifications.accountDevices.description")}
           </p>
         </div>
-        <button id="settings.account-devices-section.button"
+        <button id='features-settings-presentation-accountdevicessection-button-6-fh6aqs'
           type="button"
           disabled={state.accountDevicesLoading}
           onClick={() => void state.refreshAccountDevices()}
           aria-label={state.t("notifications.accountDevices.refresh")}
           className="asol-control flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-outline-variant text-on-surface active:opacity-80 disabled:opacity-60"
         >
-          <RefreshCw id="settings.account-devices-section.refresh-cw" className="h-4 w-4" aria-hidden />
+          <RefreshCw id='features-settings-presentation-accountdevicessection-refreshcw-7-prv3c1' className="h-4 w-4" aria-hidden />
         </button>
       </div>
 
       {state.accountDevicesLoading && devices.length === 0 ? (
-        <div id="settings.account-devices-section.div.4" className="space-y-2" aria-busy="true">
-          <Skeleton id="settings.account-devices-section.skeleton" className="h-14 w-full rounded-xl" />
-          <Skeleton id="settings.account-devices-section.skeleton.2" className="h-14 w-full rounded-xl" />
+        <div id='features-settings-presentation-accountdevicessection-div-8-aypjvz' className="space-y-2" aria-busy="true">
+          <Skeleton id='features-settings-presentation-accountdevicessection-skeleton-9-zjw597' className="h-14 w-full rounded-xl" />
+          <Skeleton id='features-settings-presentation-accountdevicessection-skeleton-10-rox4t8' className="h-14 w-full rounded-xl" />
         </div>
       ) : state.accountDevicesFailed ? (
-        <p id="settings.account-devices-section.p.3" className="rounded-lg bg-error/10 px-3 py-2 text-xs leading-relaxed text-error">
+        <p id='features-settings-presentation-accountdevicessection-text-11-dht8sf' className="rounded-lg bg-error/10 px-3 py-2 text-xs leading-relaxed text-error">
           {state.t("notifications.accountDevices.loadError")}
         </p>
       ) : devices.length === 0 ? (
-        <p className="rounded-lg bg-surface-variant px-3 py-2 text-xs leading-relaxed text-on-surface-variant">
+        <p id="features-settings-presentation-accountdevicessection-text-12-n7uerp" className="rounded-lg bg-surface-variant px-3 py-2 text-xs leading-relaxed text-on-surface-variant">
           {state.t("notifications.accountDevices.empty")}
         </p>
       ) : (
-        <ul id="settings.account-devices-section.ul" className="space-y-2">
+        <ul id='features-settings-presentation-accountdevicessection-ul-13-mshkwt' className="space-y-2">
           {devices.map((device) => {
             const isThisDevice = state.localDeviceIds.includes(device.deviceId);
             return (

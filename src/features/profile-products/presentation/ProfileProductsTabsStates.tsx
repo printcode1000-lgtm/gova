@@ -22,7 +22,7 @@ export function ProfileProductsTabsEmpty({ id,
   return (
     <div id={id} className="rounded-lg border border-dashed border-outline-variant py-8 text-center">
       <Package className={`mx-auto mb-2 ${iconSize} text-on-surface-variant`} />
-      <p className={`${textSize} text-on-surface-variant`}>
+      <p id="features-profile-products-presentation-profileproductstabsstates-text-3-s18itc" className={`${textSize} text-on-surface-variant`}>
         {label}
       </p>
     </div>

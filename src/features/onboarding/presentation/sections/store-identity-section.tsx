@@ -104,17 +104,17 @@ export function StoreIdentitySection() {
   };
 
   return (
-    <div id="onboarding.sections.store-identity-section.div" className="space-y-6 animate-in fade-in duration-300">
-      <Card id="onboarding.sections.store-identity-section.card">
-        <CardHeader id="onboarding.sections.store-identity-section.card-header">
-          <CardTitle id="onboarding.sections.store-identity-section.card-title">{t('onboarding.storeIdentity.title')}</CardTitle>
-          <CardDescription id="onboarding.sections.store-identity-section.card-description">{t('onboarding.storeIdentity.description')}</CardDescription>
+    <div id='onboarding-presentation-sections-store-identity-section-div-1-axf34n' className="space-y-6 animate-in fade-in duration-300">
+      <Card id='onboarding-presentation-sections-store-identity-section-card-2-1sddur'>
+        <CardHeader id='onboarding-presentation-sections-store-identity-section-cardheader-3-l8vfkv'>
+          <CardTitle id='onboarding-presentation-sections-store-identity-section-cardtitle-4-tk85pj'>{t('onboarding.storeIdentity.title')}</CardTitle>
+          <CardDescription id='onboarding-presentation-sections-store-identity-section-carddescription-5-vcgtia'>{t('onboarding.storeIdentity.description')}</CardDescription>
         </CardHeader>
-        <CardContent id="onboarding.sections.store-identity-section.card-content" className="space-y-6">
-          <div id="onboarding.sections.store-identity-section.div.2" className="grid gap-6 lg:grid-cols-2">
-            <FormField id="onboarding.sections.store-identity-section.form-field" label={t('onboarding.storeIdentity.storeName')} htmlFor="onboarding.store-identity.store-name" required error={errors.storeName}>
+        <CardContent id='onboarding-presentation-sections-store-identity-section-cardcontent-6-caieoj' className="space-y-6">
+          <div id='onboarding-presentation-sections-store-identity-section-div-7-fqfbcw' className="grid gap-6 lg:grid-cols-2">
+            <FormField id='onboarding-presentation-sections-store-identity-section-formfield-8-gmfv6r' label={t('onboarding.storeIdentity.storeName')} htmlFor='onboarding-presentation-sections-store-identity-section-forminput-9-jhbqee' required error={errors.storeName}>
               <FormInput
-                id="onboarding.store-identity.store-name"
+                id='onboarding-presentation-sections-store-identity-section-forminput-9-jhbqee'
                 value={storeIdentity.storeName}
                 onChange={(e) => updateStoreIdentity({ storeName: e.target.value })}
                 placeholder={t('onboarding.storeIdentity.storeNamePlaceholder')}
@@ -122,8 +122,8 @@ export function StoreIdentitySection() {
               />
             </FormField>
 
-            <FormField id="onboarding.sections.store-identity-section.form-field.2" label={t('onboarding.storeIdentity.storeCategory')} htmlFor="storeCategory" required error={errors.storeCategory}>
-              <FormSelect id="onboarding.sections.store-identity-section.form-select"
+            <FormField id='onboarding-presentation-sections-store-identity-section-formfield-10-1az67g' label={t('onboarding.storeIdentity.storeCategory')} htmlFor="storeCategory" required error={errors.storeCategory}>
+              <FormSelect id='onboarding-presentation-sections-store-identity-section-formselect-11-9cr0m2'
                 value={storeIdentity.storeCategory}
                 onValueChange={(v) => updateStoreIdentity({ storeCategory: v })}
                 options={constants.storeCategories.map((c) => ({
@@ -136,15 +136,15 @@ export function StoreIdentitySection() {
             </FormField>
           </div>
 
-          <FormField id="onboarding.sections.store-identity-section.form-field.3"
+          <FormField id='onboarding-presentation-sections-store-identity-section-formfield-12-bbdv4i'
             label={t('onboarding.storeIdentity.storeDescription')}
-            htmlFor="onboarding.store-identity.store-description"
+            htmlFor='onboarding-presentation-sections-store-identity-section-formtextarea-13-qdka6a'
             required
             hint={`${storeIdentity.storeDescription.length}/500`}
             error={errors.storeDescription}
           >
             <FormTextarea
-              id="onboarding.store-identity.store-description"
+              id='onboarding-presentation-sections-store-identity-section-formtextarea-13-qdka6a'
               value={storeIdentity.storeDescription}
               onChange={(e) => updateStoreIdentity({ storeDescription: e.target.value })}
               placeholder={t('onboarding.storeIdentity.descriptionPlaceholder')}
@@ -154,13 +154,13 @@ export function StoreIdentitySection() {
             />
           </FormField>
 
-          <FormField id="onboarding.sections.store-identity-section.form-field.4"
+          <FormField id='onboarding-presentation-sections-store-identity-section-formfield-14-b5aena'
             label={t('onboarding.storeIdentity.storeStory')}
-            htmlFor="onboarding.store-identity.store-story"
+            htmlFor='onboarding-presentation-sections-store-identity-section-formtextarea-15-zsqidv'
             hint={t('onboarding.storeIdentity.storyHint')}
           >
             <FormTextarea
-              id="onboarding.store-identity.store-story"
+              id='onboarding-presentation-sections-store-identity-section-formtextarea-15-zsqidv'
               value={storeIdentity.storeStory}
               onChange={(e) => updateStoreIdentity({ storeStory: e.target.value })}
               placeholder={t('onboarding.storeIdentity.storyPlaceholder')}
@@ -169,7 +169,7 @@ export function StoreIdentitySection() {
             />
           </FormField>
 
-          <div id="onboarding.sections.store-identity-section.div.3" className="grid gap-6 lg:grid-cols-2">
+          <div id='onboarding-presentation-sections-store-identity-section-div-16-hgqrqt' className="grid gap-6 lg:grid-cols-2">
             <StorageImageManager
               ref={setLogoHandle}
               config={{
@@ -231,14 +231,14 @@ export function StoreIdentitySection() {
             />
           </div>
 
-          <FormField id="onboarding.sections.store-identity-section.form-field.5"
+          <FormField id='onboarding-presentation-sections-store-identity-section-formfield-17-lcgrnc'
             label={t('onboarding.storeIdentity.specialties')}
             htmlFor="storeSpecialties"
             required
             hint={t('onboarding.storeIdentity.specialtiesHint')}
             error={errors.storeSpecialties}
           >
-            <MultiSelect id="onboarding.sections.store-identity-section.multi-select"
+            <MultiSelect id='onboarding-presentation-sections-store-identity-section-multiselect-18-dpiash'
               options={constants.specialties.map((s) => ({
                 value: s,
                 label: t(`onboarding.constants.specialties.${SPECIALTY_KEYS[s]}`),
@@ -251,7 +251,7 @@ export function StoreIdentitySection() {
         </CardContent>
       </Card>
 
-      <StepNavigation id="onboarding.sections.store-identity-section.step-navigation" onNext={handleNext} showSkip />
+      <StepNavigation id='onboarding-presentation-sections-store-identity-section-stepnavigation-19-jyhrte' onNext={handleNext} showSkip />
     </div>
   );
 }

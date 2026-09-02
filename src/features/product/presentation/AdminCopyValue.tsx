@@ -11,12 +11,12 @@ export function AdminCopyValue({ id,
 } & { id?: string }) {
   return (
     <div id={id} className="rounded-lg border border-outline-variant/30 bg-surface-container-high p-3">
-      <span className="block text-on-surface-variant">{label}</span>
-      <code className="mt-1 block break-all font-mono text-primary">
+      <span id="features-product-presentation-admincopyvalue-text-2-4uec6j" className="block text-on-surface-variant">{label}</span>
+      <code id="features-product-presentation-admincopyvalue-code-3-l0wdnj" className="mt-1 block break-all font-mono text-primary">
         {value || "-"}
       </code>
       {value ? (
-        <button
+        <button id="features-product-presentation-admincopyvalue-button-4-c1fpme"
           type="button"
           onClick={() => void onCopy(value)}
           className="mt-2 inline-flex items-center gap-1 rounded border border-outline-variant px-2 py-1 text-[10px]"

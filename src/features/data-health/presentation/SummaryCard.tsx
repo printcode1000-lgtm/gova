@@ -20,8 +20,8 @@ export function SummaryCard({ id,
             : "bg-surface text-on-surface";
   return (
     <div id={id} className={`rounded-md border p-3 ${toneClass}`}>
-      <div className="text-xs opacity-80">{label}</div>
-      <div className="mt-1 text-xl font-semibold">{value}</div>
+      <div id="features-data-health-presentation-summarycard-div-2-0oc8dh" className="text-xs opacity-80">{label}</div>
+      <div id="features-data-health-presentation-summarycard-div-3-txzvqi" className="mt-1 text-xl font-semibold">{value}</div>
     </div>
   );
 }

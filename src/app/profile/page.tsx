@@ -4,7 +4,7 @@ import { ProfilePageContent } from "@/features/profile/ui";
 
 function ProfilePageFallback() {
   return (
-    <div id="profile.page.div" className="container px-4 py-8 text-sm text-on-surface-variant">
+    <div id='app-profile-page-div-1-mlfetl' className="container px-4 py-8 text-sm text-on-surface-variant">
       جار تحميل الصفحة…
     </div>
   );
@@ -13,7 +13,7 @@ function ProfilePageFallback() {
 export default function ProfilePage() {
   return (
     <Suspense fallback={<ProfilePageFallback />}>
-      <ProfilePageContent id="profile.page.profile-page-content" />
+      <ProfilePageContent id='app-profile-page-profilepagecontent-2-ycxe39' />
     </Suspense>
   );
 }

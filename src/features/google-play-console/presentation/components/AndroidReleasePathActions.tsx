@@ -28,47 +28,47 @@ export function AndroidReleasePathActions({
   const openOutputsRunning = Boolean(openOutputsJob && RUNNING_STATUSES.has(openOutputsJob.status));
 
   return (
-    <div id="google-play-console.android-release-path-actions.div" className="mt-2 flex flex-wrap items-center gap-2">
-      <Button id="google-play-console.android-release-path-actions.button"
+    <div id='google-play-console-presentation-components-androidreleasepathactions-div-1-uj1fzl' className="mt-2 flex flex-wrap items-center gap-2">
+      <Button id='google-play-console-presentation-components-androidreleasepathactions-button-2-ptkcqk'
         disabled={busy}
         variant="outline"
         onClick={() => void start({ commandId: "android-open-outputs" })}
       >
         {openOutputsRunning ? (
           <LoaderCircle
-            id="google-play-console.android-release-path-actions.loader-circle"
+            id='google-play-console-presentation-components-androidreleasepathactions-loadercircle-3-yjtla6'
             className="h-4 w-4 animate-spin"
           />
         ) : (
-          <FolderOpen id="google-play-console.android-release-path-actions.folder-open" className="h-4 w-4" />
+          <FolderOpen id='google-play-console-presentation-components-androidreleasepathactions-folderopen-4-9jbday' className="h-4 w-4" />
         )}
         {t("releaseConsole.androidPaths.openOutputs")}
       </Button>
       {openOutputsRunning && openOutputsJob ? (
         <StopButton
-          id="google-play-console.android-release-path-actions.stop-button"
+          id='google-play-console-presentation-components-androidreleasepathactions-stopbutton-5-hmvytn'
           cancel={cancel}
           job={openOutputsJob}
           t={t}
         />
       ) : null}
-      <Button id="google-play-console.android-release-path-actions.button.2"
+      <Button id='google-play-console-presentation-components-androidreleasepathactions-button-6-gunnnw'
         disabled={previewState === "checking"}
         variant="outline"
         onClick={() => void openPreview()}
       >
         {previewState === "checking" ? (
           <LoaderCircle
-            id="google-play-console.android-release-path-actions.loader-circle.2"
+            id='google-play-console-presentation-components-androidreleasepathactions-loadercircle-7-ygfxay'
             className="h-4 w-4 animate-spin"
           />
         ) : (
-          <ExternalLink id="google-play-console.android-release-path-actions.external-link" className="h-4 w-4" />
+          <ExternalLink id='google-play-console-presentation-components-androidreleasepathactions-externallink-8-fzkjn7' className="h-4 w-4" />
         )}
         {t("releaseConsole.androidPaths.openPreview")}
       </Button>
       {previewState === "offline" ? (
-        <span id="google-play-console.android-release-path-actions.span"
+        <span id='google-play-console-presentation-components-androidreleasepathactions-text-9-o9hzqb'
           role="alert"
           className="rounded-md bg-error-container px-2 py-1 text-xs text-on-error-container"
         >
@@ -76,7 +76,7 @@ export function AndroidReleasePathActions({
         </span>
       ) : null}
       {openOutputsJob ? (
-        <span id="google-play-console.android-release-path-actions.span.2" className="text-xs text-on-surface-variant">
+        <span id='google-play-console-presentation-components-androidreleasepathactions-text-10-kjrcl5' className="text-xs text-on-surface-variant">
           {t(`releaseConsole.jobStatus.${openOutputsJob.status}`)}
         </span>
       ) : null}

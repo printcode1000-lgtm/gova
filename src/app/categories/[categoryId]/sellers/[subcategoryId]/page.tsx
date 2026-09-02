@@ -61,7 +61,7 @@ export default async function SellersPage({
   }
 
   return (
-    <Suspense fallback={<div id="categories.category-id.sellers.subcategory-id.page.div">Loading...</div>}>
+    <Suspense fallback={<div id='app-categories-sellers-page-div-1-ynylz9'>Loading...</div>}>
       <SellersPageContent 
         categoryId={Number(categoryId)}
         subcategoryId={Number(subcategoryId)}

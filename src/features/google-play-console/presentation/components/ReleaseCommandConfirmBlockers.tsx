@@ -37,7 +37,7 @@ export function ReleaseCommandConfirmBlockers(props: {
     <>
       {minimumNativeVersionRequired && !minimumNativeVersionSatisfied ? (
         <p
-          id="google-play-console.release-command-confirm-dialog.p.4"
+          id='google-play-console-presentation-components-releasecommandconfirmblockers-text-1-svvtng'
           role="alert"
           className="rounded-md bg-error-container p-2 text-on-error-container"
         >
@@ -46,7 +46,7 @@ export function ReleaseCommandConfirmBlockers(props: {
       ) : null}
       {!requiredParametersSatisfied ? (
         <p
-          id="google-play-console.release-command-confirm-dialog.p.5"
+          id='google-play-console-presentation-components-releasecommandconfirmblockers-text-2-qzln8u'
           role="alert"
           className="rounded-md bg-error-container p-2 text-on-error-container"
         >
@@ -54,12 +54,12 @@ export function ReleaseCommandConfirmBlockers(props: {
         </p>
       ) : null}
       {requiredPhrase && confirmedPhrase !== requiredPhrase ? (
-        <div id="google-play-console.release-command-confirm-dialog.div.4" className="space-y-1">
-          <p id="google-play-console.release-command-confirm-dialog.p.6">
+        <div id='google-play-console-presentation-components-releasecommandconfirmblockers-div-3-zinyep' className="space-y-1">
+          <p id='google-play-console-presentation-components-releasecommandconfirmblockers-text-4-qooe36'>
             {t("releaseConsole.build.confirmationExact").replace("{{phrase}}", requiredPhrase)}
           </p>
           <Input
-            id="google-play-console.release-command-confirm-dialog.input"
+            id='google-play-console-presentation-components-releasecommandconfirmblockers-input-5-r5xfit'
             value={phrase}
             placeholder={requiredPhrase}
             dir="ltr"
@@ -68,7 +68,7 @@ export function ReleaseCommandConfirmBlockers(props: {
         </div>
       ) : null}
       {locked ? (
-        <p id="google-play-console.release-command-confirm-dialog.p.7" className="rounded-md bg-muted p-2">
+        <p id='google-play-console-presentation-components-releasecommandconfirmblockers-text-6-a2t7se' className="rounded-md bg-muted p-2">
           {t("releaseConsole.confirmRun.locked")}
         </p>
       ) : null}

@@ -66,7 +66,7 @@ const DialogContent = React.forwardRef<
         className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground rtl:left-4 rtl:right-auto"
       >
         <X className="h-4 w-4" />
-        <span
+        <span id="shared-ui-dialog-text-1-7d44lc"
           className="sr-only"
         >
           Close
@@ -81,7 +81,7 @@ const DialogHeader = ({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement> & DialogUiProps) => (
-  <div
+  <div id="shared-ui-dialog-div-2-8xj3kr"
     className={cn(
       "flex flex-col space-y-1.5 text-center sm:text-left",
       className,
@@ -95,7 +95,7 @@ const DialogFooter = ({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement> & DialogUiProps) => (
-  <div
+  <div id="shared-ui-dialog-div-3-3dkmmn"
     className={cn(
       "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
       className,

@@ -22,8 +22,8 @@ import {
 export function Header({ id }: { id?: string }) {
   return (
     <header id={id} className="space-y-2 rounded-md border bg-surface p-3 sm:p-4">
-      <h1 className="text-xl font-semibold sm:text-2xl">مركز تشغيل Deploy</h1>
-      <p className="text-sm text-on-surface-variant">
+      <h1 id="features-google-play-console-presentation-deployrunbookpagesections-heading-2-3l09pf" className="text-xl font-semibold sm:text-2xl">مركز تشغيل Deploy</h1>
+      <p id="features-google-play-console-presentation-deployrunbookpagesections-text-3-1mo0yr" className="text-sm text-on-surface-variant">
         {PAGE_INTRO}
       </p>
     </header>
@@ -149,10 +149,10 @@ function InfoCard(
 ) {
   return (
     <div id={props.id} className={props.className ?? ""}>
-      <div className="min-w-0 rounded-md border bg-surface p-3">
-        <div className="text-xs text-on-surface-variant">{props.title}</div>
-        <div className="mt-1 text-lg font-semibold break-words">{props.value}</div>
-        <p className="mt-1 text-xs text-on-surface-variant break-words">{props.help}</p>
+      <div id="features-google-play-console-presentation-deployrunbookpagesections-div-9-yemsfm" className="min-w-0 rounded-md border bg-surface p-3">
+        <div id="features-google-play-console-presentation-deployrunbookpagesections-div-10-2ng6si" className="text-xs text-on-surface-variant">{props.title}</div>
+        <div id="features-google-play-console-presentation-deployrunbookpagesections-div-11-fndflv" className="mt-1 text-lg font-semibold break-words">{props.value}</div>
+        <p id="features-google-play-console-presentation-deployrunbookpagesections-text-12-afpxqg" className="mt-1 text-xs text-on-surface-variant break-words">{props.help}</p>
       </div>
     </div>
   );

@@ -42,7 +42,7 @@ export function SellersPageContent({
 
   if (isLoading && offset === 0) {
     return (
-      <div id="categories.sellers-page-content.div" className="container px-4 py-8 text-center text-sm text-on-surface-variant">
+      <div id='features-categories-presentation-sellerspagecontent-div-1-a59jcw' className="container px-4 py-8 text-center text-sm text-on-surface-variant">
         {t("profile.loading")}
       </div>
     );
@@ -50,29 +50,29 @@ export function SellersPageContent({
 
   if (error) {
     return (
-      <div id="categories.sellers-page-content.div.2" className="container px-4 py-8 text-center text-sm text-error">
+      <div id='features-categories-presentation-sellerspagecontent-div-2-ebbn3w' className="container px-4 py-8 text-center text-sm text-error">
         {locale === "ar" ? "حدث خطأ أثناء تحميل البيانات" : "Error loading data"}
       </div>
     );
   }
 
   return (
-    <div id="categories.sellers-page-content.div.3" className="container px-4 py-8">
-      <div id="categories.sellers-page-content.div.4" className="relative mb-6 min-h-28 overflow-hidden rounded-3xl bg-surface-bright p-4">
-        <Image id="categories.sellers-page-content.image"
+    <div id='features-categories-presentation-sellerspagecontent-div-3-dbu2zj' className="container px-4 py-8">
+      <div id='features-categories-presentation-sellerspagecontent-div-4-khadrz' className="relative mb-6 min-h-28 overflow-hidden rounded-3xl bg-surface-bright p-4">
+        <Image id='features-categories-presentation-sellerspagecontent-image-5-vjpufe'
           src={subcategoryImage}
           alt={locale === "ar" ? `البائعون في ${subcategoryName}` : `Sellers in ${subcategoryName}`}
           fill
           className="object-fill opacity-20"
           priority
         />
-        <div id="categories.sellers-page-content.div.5" className="relative z-10 space-y-3">
-          <h1 id="categories.sellers-page-content.h1" className="text-2xl font-bold text-on-surface">
+        <div id='features-categories-presentation-sellerspagecontent-div-6-cn12jg' className="relative z-10 space-y-3">
+          <h1 id='features-categories-presentation-sellerspagecontent-heading-7-g62xsa' className="text-2xl font-bold text-on-surface">
             {locale === "ar" ? `البائعون في ${subcategoryName}` : `Sellers in ${subcategoryName}`}
           </h1>
-          <div id="categories.sellers-page-content.div.6" className="relative">
-            <Search id="categories.sellers-page-content.search" className="absolute start-4 top-1/2 h-5 w-5 -translate-y-1/2 text-on-surface-variant" aria-hidden />
-            <input id="categories.sellers-page-content.input"
+          <div id='features-categories-presentation-sellerspagecontent-div-8-o5wq9o' className="relative">
+            <Search id='features-categories-presentation-sellerspagecontent-search-9-xfhewh' className="absolute start-4 top-1/2 h-5 w-5 -translate-y-1/2 text-on-surface-variant" aria-hidden />
+            <input id='features-categories-presentation-sellerspagecontent-input-10-gmjdf8'
               type="search"
               value={searchText}
               onChange={(event) => setSearchText(event.target.value)}
@@ -84,13 +84,13 @@ export function SellersPageContent({
       </div>
 
       {!filteredUsers || filteredUsers.length === 0 ? (
-        <p id="categories.sellers-page-content.p" className="text-center text-sm text-on-surface-variant">
+        <p id='features-categories-presentation-sellerspagecontent-text-11-nq5d40' className="text-center text-sm text-on-surface-variant">
           {normalizedSearchText
             ? locale === "ar" ? "لا توجد نتائج مطابقة" : "No matching results"
             : locale === "ar" ? "لا يوجد بائعون حاليًا" : "No sellers available"}
         </p>
       ) : (
-        <div id="categories.sellers-page-content.div.7" className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+        <div id='features-categories-presentation-sellerspagecontent-div-12-efl9q8' className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           {filteredUsers.map((user) => {
             const card = createSellerCardViewModel(user, { badge: locale === "ar" ? "بائع" : "Seller" });
             return (
@@ -106,8 +106,8 @@ export function SellersPageContent({
       )}
 
       {users && users.length === limit ? (
-        <div id="categories.sellers-page-content.div.8" className="mt-6 text-center">
-          <button
+        <div id='features-categories-presentation-sellerspagecontent-div-13-gwskmc' className="mt-6 text-center">
+          <button id="features-categories-presentation-sellerspagecontent-button-14-ej7tpk"
             type="button"
             onClick={loadMore}
             disabled={isLoading}

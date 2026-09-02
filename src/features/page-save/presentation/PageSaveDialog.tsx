@@ -85,26 +85,26 @@ export function PageSaveDialog() {
         if (!next && !isSaving) handleClose();
       }}
     >
-      <DialogContent id="page-save.page-save-dialog.dialog-content" className="z-[100] w-[calc(100%-2rem)] max-w-md overflow-hidden rounded-[1.75rem] border-primary/20 p-0 shadow-2xl duration-300 data-[state=closed]:zoom-out-50 data-[state=open]:zoom-in-50 [&>button.absolute]:hidden">
-        <div id="page-save.page-save-dialog.div" className="relative overflow-hidden bg-gradient-to-br from-primary/20 via-primary/5 to-background px-6 pb-5 pt-7">
-          <div id="page-save.page-save-dialog.div.2" className="absolute -end-12 -top-16 h-40 w-40 rounded-full bg-primary/15 blur-3xl" />
-          <div id="page-save.page-save-dialog.div.3" className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-on-primary shadow-lg shadow-primary/25">
-            <Save id="page-save.page-save-dialog.save" className="h-8 w-8" aria-hidden="true" />
+      <DialogContent id='features-page-save-presentation-pagesavedialog-dialogcontent-1-aapyjy' className="z-[100] w-[calc(100%-2rem)] max-w-md overflow-hidden rounded-[1.75rem] border-primary/20 p-0 shadow-2xl duration-300 data-[state=closed]:zoom-out-50 data-[state=open]:zoom-in-50 [&>button.absolute]:hidden">
+        <div id='features-page-save-presentation-pagesavedialog-div-2-htzbdk' className="relative overflow-hidden bg-gradient-to-br from-primary/20 via-primary/5 to-background px-6 pb-5 pt-7">
+          <div id='features-page-save-presentation-pagesavedialog-div-3-ptvdbz' className="absolute -end-12 -top-16 h-40 w-40 rounded-full bg-primary/15 blur-3xl" />
+          <div id='features-page-save-presentation-pagesavedialog-div-4-zpg7ho' className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-on-primary shadow-lg shadow-primary/25">
+            <Save id='features-page-save-presentation-pagesavedialog-save-5-zfajoi' className="h-8 w-8" aria-hidden="true" />
           </div>
-          <DialogHeader id="page-save.page-save-dialog.dialog-header" className="relative mt-5 text-center sm:text-center">
-            <DialogTitle id="page-save.page-save-dialog.dialog-title" className="text-2xl leading-tight">
+          <DialogHeader id='features-page-save-presentation-pagesavedialog-dialogheader-6-ey4wsh' className="relative mt-5 text-center sm:text-center">
+            <DialogTitle id='features-page-save-presentation-pagesavedialog-dialogtitle-7-nmwc5b' className="text-2xl leading-tight">
               {t("pageSave.dialogTitle")}
             </DialogTitle>
-            <DialogDescription id="page-save.page-save-dialog.dialog-description" className="pt-2 text-sm leading-6 text-on-surface-variant">
+            <DialogDescription id='features-page-save-presentation-pagesavedialog-dialogdescription-8-tpy7bc' className="pt-2 text-sm leading-6 text-on-surface-variant">
               {dialog?.pageLabel ?? t("pageSave.interrupted.heading")}
             </DialogDescription>
           </DialogHeader>
         </div>
 
-        <div id="page-save.page-save-dialog.div.4" className="max-h-[min(50vh,20rem)] space-y-2 overflow-y-auto px-6 py-4">
+        <div id='features-page-save-presentation-pagesavedialog-div-9-vzhkqm' className="max-h-[min(50vh,20rem)] space-y-2 overflow-y-auto px-6 py-4">
           {snapshot.interrupted.length > 0 ? (
-            <section id="page-save.page-save-dialog.section" className="space-y-2 rounded-2xl border border-warning/40 bg-warning/10 p-3">
-              <p id="page-save.page-save-dialog.p" className="text-xs font-semibold text-on-surface">
+            <section id='features-page-save-presentation-pagesavedialog-section-10-ddvacm' className="space-y-2 rounded-2xl border border-warning/40 bg-warning/10 p-3">
+              <p id='features-page-save-presentation-pagesavedialog-text-11-nycd2m' className="text-xs font-semibold text-on-surface">
                 {t("pageSave.interrupted.heading")}
               </p>
               {snapshot.interrupted.map((operation) => (
@@ -133,7 +133,7 @@ export function PageSaveDialog() {
             </section>
           ) : null}
           {dialog ? (
-            <p id="page-save.page-save-dialog.p.2" className="text-xs font-semibold text-on-surface-variant">
+            <p id='features-page-save-presentation-pagesavedialog-text-12-wbeumy' className="text-xs font-semibold text-on-surface-variant">
               {t("pageSave.itemsHeading")}
             </p>
           ) : null}
@@ -181,17 +181,17 @@ export function PageSaveDialog() {
         </div>
 
         {dialog?.requiresNavigation ? (
-          <p id="page-save.page-save-dialog.p.3" className="px-6 text-xs leading-5 text-on-surface-variant">
+          <p id='features-page-save-presentation-pagesavedialog-text-13-hiwrb4' className="px-6 text-xs leading-5 text-on-surface-variant">
             {t("pageSave.navigationHint")}
           </p>
         ) : null}
 
         {isSaving ? (
-          <p id="page-save.page-save-dialog.p.4" className="px-6 pb-2 text-center text-xs font-medium text-on-surface-variant">
+          <p id='features-page-save-presentation-pagesavedialog-text-14-s0ojoh' className="px-6 pb-2 text-center text-xs font-medium text-on-surface-variant">
             {t("pageSave.saving")}
           </p>
         ) : snapshot.lastResult === "failure" ? (
-          <p id="page-save.page-save-dialog.p.5"
+          <p id='features-page-save-presentation-pagesavedialog-text-15-ktcudc'
             role="alert"
             className="px-6 pb-2 text-center text-xs font-medium text-error"
           >
@@ -199,18 +199,18 @@ export function PageSaveDialog() {
           </p>
         ) : null}
 
-        <DialogFooter id="page-save.page-save-dialog.dialog-footer" className="flex-row flex-nowrap gap-2 px-6 pb-6 pt-2 sm:flex-row sm:space-x-0">
-          <Button id="page-save.page-save-dialog.button"
+        <DialogFooter id='features-page-save-presentation-pagesavedialog-dialogfooter-16-gu1wo4' className="flex-row flex-nowrap gap-2 px-6 pb-6 pt-2 sm:flex-row sm:space-x-0">
+          <Button id='features-page-save-presentation-pagesavedialog-button-17-jaablv'
             type="button"
             size="lg"
             className="min-w-0 flex-1 rounded-xl"
             disabled={!dialog?.canSave || isSaving}
             onClick={handleExecute}
           >
-            <Check id="page-save.page-save-dialog.check" className="me-2 h-4 w-4" />
+            <Check id='features-page-save-presentation-pagesavedialog-check-18-erbkqo' className="me-2 h-4 w-4" />
             {isSaving ? t("pageSave.saving") : t("pageSave.confirmSave")}
           </Button>
-          <Button id="page-save.page-save-dialog.button.2"
+          <Button id='features-page-save-presentation-pagesavedialog-button-19-mcadau'
             type="button"
             size="lg"
             variant="ghost"

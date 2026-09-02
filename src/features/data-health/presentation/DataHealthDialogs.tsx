@@ -65,21 +65,21 @@ function IssueDetailDialog({
 }) {
   return (
     <Dialog open={Boolean(detail)} onOpenChange={(open) => !open && setDetail(null)}>
-      <DialogContent id="data-health.data-health-dialogs.dialog-content" className="max-h-[85vh] max-w-2xl overflow-y-auto" dir="rtl">
-        <DialogHeader id="data-health.data-health-dialogs.dialog-header">
-          <DialogTitle id="data-health.data-health-dialogs.dialog-title">{detail?.title}</DialogTitle>
-          <DialogDescription id="data-health.data-health-dialogs.dialog-description">{detail?.details}</DialogDescription>
+      <DialogContent id='features-data-health-presentation-datahealthdialogs-dialogcontent-1-o6jv0v' className="max-h-[85vh] max-w-2xl overflow-y-auto" dir="rtl">
+        <DialogHeader id='features-data-health-presentation-datahealthdialogs-dialogheader-2-ogzjxz'>
+          <DialogTitle id='features-data-health-presentation-datahealthdialogs-dialogtitle-3-7mvmqs'>{detail?.title}</DialogTitle>
+          <DialogDescription id='features-data-health-presentation-datahealthdialogs-dialogdescription-4-qpmyvc'>{detail?.details}</DialogDescription>
         </DialogHeader>
         {detail ? (
-          <div id="data-health.data-health-dialogs.div" className="space-y-3 text-sm">
-            <DetailRow id="data-health.data-health-dialogs.detail-row" label="الخطورة" value={severityLabels[detail.severity]} />
-            <DetailRow id="data-health.data-health-dialogs.detail-row.2" label="المصدر" value={`${detail.database}.${detail.table}`} />
-            <DetailRow id="data-health.data-health-dialogs.detail-row.3" label="معرف السجل" value={detail.recordId} ltr />
-            <DetailRow id="data-health.data-health-dialogs.detail-row.4" label="المالك" value={detail.ownerUid || "-"} ltr />
-            <DetailRow id="data-health.data-health-dialogs.detail-row.5" label="الإجراء" value={cleanupLabels[detail.cleanupAction]} />
-            <div id="data-health.data-health-dialogs.div.2">
-              <div id="data-health.data-health-dialogs.div.3" className="mb-1 text-xs text-on-surface-variant">الدليل</div>
-              <pre className="max-h-72 overflow-auto rounded-md bg-muted p-3 text-xs" dir="ltr">
+          <div id='features-data-health-presentation-datahealthdialogs-div-5-qwuuu3' className="space-y-3 text-sm">
+            <DetailRow id='features-data-health-presentation-datahealthdialogs-detailrow-6-ry7zrr' label="الخطورة" value={severityLabels[detail.severity]} />
+            <DetailRow id='features-data-health-presentation-datahealthdialogs-detailrow-7-vrhid5' label="المصدر" value={`${detail.database}.${detail.table}`} />
+            <DetailRow id='features-data-health-presentation-datahealthdialogs-detailrow-8-pj2gn5' label="معرف السجل" value={detail.recordId} ltr />
+            <DetailRow id='features-data-health-presentation-datahealthdialogs-detailrow-9-ukxlkz' label="المالك" value={detail.ownerUid || "-"} ltr />
+            <DetailRow id='features-data-health-presentation-datahealthdialogs-detailrow-10-fafonn' label="الإجراء" value={cleanupLabels[detail.cleanupAction]} />
+            <div id='features-data-health-presentation-datahealthdialogs-div-11-fop0cg'>
+              <div id='features-data-health-presentation-datahealthdialogs-div-12-iciqgz' className="mb-1 text-xs text-on-surface-variant">الدليل</div>
+              <pre id="features-data-health-presentation-datahealthdialogs-pre-13-wznsks" className="max-h-72 overflow-auto rounded-md bg-muted p-3 text-xs" dir="ltr">
                 {JSON.stringify(detail.evidence, null, 2)}
               </pre>
             </div>
@@ -107,14 +107,14 @@ function CleanupPlanDialog({
 }) {
   return (
     <Dialog open={Boolean(plan)} onOpenChange={(open) => !open && setPlan(null)}>
-      <DialogContent id="data-health.data-health-dialogs.dialog-content.2" className="max-h-[85vh] max-w-2xl overflow-y-auto" dir="rtl">
-        <DialogHeader id="data-health.data-health-dialogs.dialog-header.2">
-          <DialogTitle id="data-health.data-health-dialogs.dialog-title.2">معاينة خطة التنظيف</DialogTitle>
-          <DialogDescription id="data-health.data-health-dialogs.dialog-description.2">
+      <DialogContent id='features-data-health-presentation-datahealthdialogs-dialogcontent-14-a2qoyb' className="max-h-[85vh] max-w-2xl overflow-y-auto" dir="rtl">
+        <DialogHeader id='features-data-health-presentation-datahealthdialogs-dialogheader-15-3i48c5'>
+          <DialogTitle id='features-data-health-presentation-datahealthdialogs-dialogtitle-16-2g6bfy'>معاينة خطة التنظيف</DialogTitle>
+          <DialogDescription id='features-data-health-presentation-datahealthdialogs-dialogdescription-17-6vw0wf'>
             الخطة صالحة حتى {dateText(plan?.expiresAt)} ولا يمكن استخدامها أكثر من مرة.
           </DialogDescription>
         </DialogHeader>
-        <div id="data-health.data-health-dialogs.div.4" className="space-y-2">
+        <div id='features-data-health-presentation-datahealthdialogs-div-18-0cxobq' className="space-y-2">
           {plan?.preview.map((item) => (
             <div key={item.issueId} className="rounded-md border p-3 text-sm">
               <div className="font-medium">{item.title}</div>
@@ -125,22 +125,22 @@ function CleanupPlanDialog({
             </div>
           ))}
         </div>
-        <div id="data-health.data-health-dialogs.div.5" className="space-y-1">
-          <label id="data-health.data-health-dialogs.label" className="text-sm font-medium">اكتب العبارة التالية للتأكيد:</label>
-          <div id="data-health.data-health-dialogs.div.6" className="select-all rounded-md bg-muted p-2 text-sm font-semibold">
+        <div id='features-data-health-presentation-datahealthdialogs-div-19-9jppa8' className="space-y-1">
+          <label id='features-data-health-presentation-datahealthdialogs-label-20-fhitry' className="text-sm font-medium">اكتب العبارة التالية للتأكيد:</label>
+          <div id='features-data-health-presentation-datahealthdialogs-div-21-9cxrvz' className="select-all rounded-md bg-muted p-2 text-sm font-semibold">
             {plan?.confirmationText}
           </div>
-          <Input id="data-health.data-health-dialogs.input"
+          <Input id='features-data-health-presentation-datahealthdialogs-input-22-ty0plj'
             value={confirmationText}
             onChange={(event) => setConfirmationText(event.target.value)}
             autoComplete="off"
           />
         </div>
-        <DialogFooter id="data-health.data-health-dialogs.dialog-footer" className="gap-2">
-          <Button id="data-health.data-health-dialogs.button" variant="outline" onClick={() => setPlan(null)}>
+        <DialogFooter id='features-data-health-presentation-datahealthdialogs-dialogfooter-23-qnukkk' className="gap-2">
+          <Button id='features-data-health-presentation-datahealthdialogs-button-24-khdnxj' variant="outline" onClick={() => setPlan(null)}>
             إلغاء
           </Button>
-          <Button id="data-health.data-health-dialogs.button.2"
+          <Button id='features-data-health-presentation-datahealthdialogs-button-25-xyjker'
             disabled={cleaning || !plan || confirmationText !== plan.confirmationText}
             onClick={stagePlanExecution}
           >
@@ -174,23 +174,23 @@ function OrderPurgeDialog({
         if (!open && !orderPurgeBusy) setOrderPurgePlan(null);
       }}
     >
-      <DialogContent id="data-health.data-health-dialogs.dialog-content.3" className="max-h-[85vh] max-w-2xl overflow-y-auto" dir="rtl">
-        <DialogHeader id="data-health.data-health-dialogs.dialog-header.3">
-          <DialogTitle id="data-health.data-health-dialogs.dialog-title.3">معاينة حذف جميع الطلبات</DialogTitle>
-          <DialogDescription id="data-health.data-health-dialogs.dialog-description.3">
+      <DialogContent id='features-data-health-presentation-datahealthdialogs-dialogcontent-26-bljxrl' className="max-h-[85vh] max-w-2xl overflow-y-auto" dir="rtl">
+        <DialogHeader id='features-data-health-presentation-datahealthdialogs-dialogheader-27-9xgpbt'>
+          <DialogTitle id='features-data-health-presentation-datahealthdialogs-dialogtitle-28-hpvybm'>معاينة حذف جميع الطلبات</DialogTitle>
+          <DialogDescription id='features-data-health-presentation-datahealthdialogs-dialogdescription-29-dxnnvl'>
             هذه عملية نهائية تشمل كل أنواع الطلبات والسجلات التابعة لها. الخطة صالحة حتى {dateText(orderPurgePlan?.expiresAt)}.
           </DialogDescription>
         </DialogHeader>
-        <div id="data-health.data-health-dialogs.div.7" className="grid gap-2 sm:grid-cols-3">
-          <DetailRow id="data-health.data-health-dialogs.detail-row.6" label="الطلبات" value={String(orderPurgePlan?.orderCount ?? 0)} />
-          <DetailRow id="data-health.data-health-dialogs.detail-row.7" label="صور الطلبات" value={String(orderPurgePlan?.imageCount ?? 0)} />
-          <DetailRow id="data-health.data-health-dialogs.detail-row.8"
+        <div id='features-data-health-presentation-datahealthdialogs-div-30-v0kyqr' className="grid gap-2 sm:grid-cols-3">
+          <DetailRow id='features-data-health-presentation-datahealthdialogs-detailrow-31-jjtwmi' label="الطلبات" value={String(orderPurgePlan?.orderCount ?? 0)} />
+          <DetailRow id='features-data-health-presentation-datahealthdialogs-detailrow-32-dcnsmw' label="صور الطلبات" value={String(orderPurgePlan?.imageCount ?? 0)} />
+          <DetailRow id='features-data-health-presentation-datahealthdialogs-detailrow-33-stdgbx'
             label="المصدر"
             value={`${orderPurgePlan?.databaseSource ?? "-"} / ${orderPurgePlan?.storageSource ?? "-"}`}
             ltr
           />
         </div>
-        <div id="data-health.data-health-dialogs.div.8" className="max-h-52 overflow-y-auto rounded-md border">
+        <div id='features-data-health-presentation-datahealthdialogs-div-34-ebloia' className="max-h-52 overflow-y-auto rounded-md border">
           {Object.entries(orderPurgePlan?.tableCounts ?? {}).map(([table, count]) => (
             <div key={table} className="flex items-center justify-between border-b px-3 py-2 text-sm last:border-b-0">
               <span dir="ltr">{table}</span>
@@ -198,26 +198,26 @@ function OrderPurgeDialog({
             </div>
           ))}
         </div>
-        <div id="data-health.data-health-dialogs.div.9" className="space-y-1">
-          <label id="data-health.data-health-dialogs.label.2" className="text-sm font-medium">اكتب العبارة التالية حرفيًا للتأكيد:</label>
-          <div id="data-health.data-health-dialogs.div.10" className="select-all rounded-md bg-muted p-2 text-sm font-semibold">
+        <div id='features-data-health-presentation-datahealthdialogs-div-35-b9ou16' className="space-y-1">
+          <label id='features-data-health-presentation-datahealthdialogs-label-36-qyueif' className="text-sm font-medium">اكتب العبارة التالية حرفيًا للتأكيد:</label>
+          <div id='features-data-health-presentation-datahealthdialogs-div-37-nsxxtd' className="select-all rounded-md bg-muted p-2 text-sm font-semibold">
             {orderPurgePlan?.confirmationText}
           </div>
-          <Input id="data-health.data-health-dialogs.input.2"
+          <Input id='features-data-health-presentation-datahealthdialogs-input-38-5aaiul'
             value={orderPurgeConfirmation}
             onChange={(event) => setOrderPurgeConfirmation(event.target.value)}
             autoComplete="off"
           />
         </div>
-        <DialogFooter id="data-health.data-health-dialogs.dialog-footer.2" className="gap-2">
-          <Button id="data-health.data-health-dialogs.button.3"
+        <DialogFooter id='features-data-health-presentation-datahealthdialogs-dialogfooter-39-lk1ehe' className="gap-2">
+          <Button id='features-data-health-presentation-datahealthdialogs-button-40-wy22fs'
             variant="outline"
             disabled={orderPurgeBusy}
             onClick={() => setOrderPurgePlan(null)}
           >
             إلغاء
           </Button>
-          <Button id="data-health.data-health-dialogs.button.4"
+          <Button id='features-data-health-presentation-datahealthdialogs-button-41-ieg6pc'
             disabled={
               orderPurgeBusy ||
               !orderPurgePlan ||

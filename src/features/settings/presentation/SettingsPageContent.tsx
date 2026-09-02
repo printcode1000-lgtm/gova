@@ -80,34 +80,34 @@ export function SettingsPageContent() {
       : `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 
   return (
-    <div id="settings.settings-page-content.div" className="mx-auto w-full max-w-4xl px-4 py-6 pb-32 sm:px-6 sm:py-12 md:px-12">
-      <header id="settings.settings-page-content.header" className="mb-12 space-y-2 text-center">
-        <h1 id="settings.settings-page-content.h1" className="text-3xl font-bold text-primary">
+    <div id='features-settings-presentation-settingspagecontent-div-1-rxag7e' className="mx-auto w-full max-w-4xl px-4 py-6 pb-32 sm:px-6 sm:py-12 md:px-12">
+      <header id='features-settings-presentation-settingspagecontent-header-2-kuqilv' className="mb-12 space-y-2 text-center">
+        <h1 id='features-settings-presentation-settingspagecontent-heading-3-qgqr9b' className="text-3xl font-bold text-primary">
           {t("settings.title")}
         </h1>
-        <p id="settings.settings-page-content.p" className="text-base text-on-surface-variant">
+        <p id='features-settings-presentation-settingspagecontent-text-4-eb83lg' className="text-base text-on-surface-variant">
           {t("settings.description")}
         </p>
         {statusText ? (
-          <p id="settings.settings-page-content.p.2" className="text-sm font-medium text-primary" role="status">
+          <p id='features-settings-presentation-settingspagecontent-text-5-fnqusd' className="text-sm font-medium text-primary" role="status">
             {statusText}
           </p>
         ) : null}
       </header>
 
       {/* Updates */}
-      <section id="settings.settings-page-content.section" className="mb-12 space-y-6">
-        <div id="settings.settings-page-content.div.2" className="asol-settings-section-secondary space-y-4">
+      <section id='features-settings-presentation-settingspagecontent-section-6-mqdnw6' className="mb-12 space-y-6">
+        <div id='features-settings-presentation-settingspagecontent-div-7-hoecqz' className="asol-settings-section-secondary space-y-4">
           {[
             {
               id: "native-version",
               label: t("ota.settings.nativeVersion"),
-              value: <span dir="ltr" key="native">{publicEnv.nativeVersion}</span>,
+              value: <span id="features-settings-presentation-settingspagecontent-text-8-gi9ufv" dir="ltr" key="native">{publicEnv.nativeVersion}</span>,
             },
             {
               id: "web-version",
               label: t("ota.settings.webVersion"),
-              value: <span dir="ltr" key="web">{publicEnv.webBundleVersion}</span>,
+              value: <span id="features-settings-presentation-settingspagecontent-text-9-vnpxng" dir="ltr" key="web">{publicEnv.webBundleVersion}</span>,
             },
             {
               id: "last-check",
@@ -138,41 +138,41 @@ export function SettingsPageContent() {
             </div>
           ))}
           {otaTotal > 0 && ota.state.download ? (
-            <div id="settings.settings-page-content.div.3" className="space-y-2 px-4" aria-live="polite">
-              <div id="settings.settings-page-content.div.4" className="flex items-center justify-between text-sm font-semibold text-on-surface">
-                <span id="settings.settings-page-content.span">{otaPercent}%</span>
-                <span id="settings.settings-page-content.span.2" dir="ltr">{formatOtaBytes(otaDownloaded)} / {formatOtaBytes(otaTotal)}</span>
+            <div id='features-settings-presentation-settingspagecontent-div-10-p4ygnt' className="space-y-2 px-4" aria-live="polite">
+              <div id='features-settings-presentation-settingspagecontent-div-11-oeojbk' className="flex items-center justify-between text-sm font-semibold text-on-surface">
+                <span id='features-settings-presentation-settingspagecontent-text-12-bkgewg'>{otaPercent}%</span>
+                <span id='features-settings-presentation-settingspagecontent-text-13-in0r6k' dir="ltr">{formatOtaBytes(otaDownloaded)} / {formatOtaBytes(otaTotal)}</span>
               </div>
-              <div id="settings.settings-page-content.div.5" className="h-2 overflow-hidden rounded-full bg-surface-variant">
-                <div id="settings.settings-page-content.div.6" className="h-full bg-primary transition-[width]" style={{ width: `${otaPercent}%` }} />
+              <div id='features-settings-presentation-settingspagecontent-div-14-nwhcv7' className="h-2 overflow-hidden rounded-full bg-surface-variant">
+                <div id='features-settings-presentation-settingspagecontent-div-15-pzhtpn' className="h-full bg-primary transition-[width]" style={{ width: `${otaPercent}%` }} />
               </div>
             </div>
           ) : null}
-          {ota.error ? <p id="settings.settings-page-content.p.3" className="px-4 text-sm text-error">{ota.error}</p> : null}
-          <div id="settings.settings-page-content.div.7" className="flex flex-wrap items-center gap-2 px-4">
+          {ota.error ? <p id='features-settings-presentation-settingspagecontent-text-16-yxtvc9' className="px-4 text-sm text-error">{ota.error}</p> : null}
+          <div id='features-settings-presentation-settingspagecontent-div-17-tx1xzq' className="flex flex-wrap items-center gap-2 px-4">
           {/*
             Shown only while a verified release is sitting on disk waiting for
             a launch. Outside that one state there is nothing to restart for,
             so the button does not exist rather than being disabled.
           */}
           {ota.state.pending?.ready ? (
-            <button id="settings.settings-page-content.button"
+            <button id='features-settings-presentation-settingspagecontent-button-18-0gok89'
               type="button"
               onClick={() => void ota.applyNow()}
               disabled={ota.busy}
               className="asol-control inline-flex items-center justify-center gap-2 rounded-xl bg-secondary px-4 py-2 text-sm font-semibold text-on-secondary disabled:opacity-60"
             >
-              <RotateCcw id="settings.settings-page-content.rotate-ccw" className="h-4 w-4" aria-hidden="true" />
+              <RotateCcw id='features-settings-presentation-settingspagecontent-rotateccw-19-8zyxrq' className="h-4 w-4" aria-hidden="true" />
               {t("ota.settings.restart")}
             </button>
           ) : null}
-          <button
+          <button id="features-settings-presentation-settingspagecontent-button-20-lfiidj"
             type="button"
             onClick={() => void ota.checkNow()}
             disabled={ota.busy}
             className="asol-control inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-on-primary disabled:opacity-60"
           >
-            <RefreshCw id="settings.settings-page-content.refresh-cw" className={`h-4 w-4 ${ota.busy ? "animate-spin" : ""}`} aria-hidden="true" />
+            <RefreshCw id='features-settings-presentation-settingspagecontent-refreshcw-21-jvqp82' className={`h-4 w-4 ${ota.busy ? "animate-spin" : ""}`} aria-hidden="true" />
             {/*
               The label follows the real stage, not a boolean. `busy` covers
               the check, the download and the extraction — minutes of work —
@@ -198,14 +198,14 @@ export function SettingsPageContent() {
 
       {/* Footer actions — restore/clear is a destructive dev-facing reset, visible to super admins only */}
       {isSuperAdmin(session) ? (
-        <footer id="settings.settings-page-content.footer" className="flex flex-col items-center justify-center gap-4 pt-12 md:flex-row-reverse">
-          <button
+        <footer id='features-settings-presentation-settingspagecontent-footer-22-xyqhwg' className="flex flex-col items-center justify-center gap-4 pt-12 md:flex-row-reverse">
+          <button id="features-settings-presentation-settingspagecontent-button-23-fzs8yj"
             type="button"
             disabled={clearing}
             className="asol-control flex w-full items-center justify-center gap-2 rounded-xl border-2 border-error/30 bg-gradient-to-r from-error/10 to-error/5 px-6 py-3 font-semibold text-error shadow-lg shadow-error/10 transition-all md:w-auto disabled:opacity-60"
             onClick={handleClearAll}
           >
-            <FontAwesomeIcon id="settings.settings-page-content.font-awesome-icon" icon={faRotateLeft} className="h-4 w-4" />
+            <FontAwesomeIcon id='features-settings-presentation-settingspagecontent-fontawesomeicon-24-worr8e' icon={faRotateLeft} className="h-4 w-4" />
             {clearing ? t("settings.clearing") : t("settings.restoreDefaults")}
           </button>
         </footer>
@@ -213,31 +213,31 @@ export function SettingsPageContent() {
 
       {/* Clear Confirmation Dialog */}
       {showClearDialog && (
-        <div id="settings.settings-page-content.div.8" className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div id="settings.settings-page-content.div.9" className="mx-4 max-w-md rounded-2xl bg-surface p-6 shadow-2xl">
-            <div id="settings.settings-page-content.div.10" className="mb-4 flex items-center gap-3">
-              <div id="settings.settings-page-content.div.11" className="flex h-12 w-12 items-center justify-center rounded-xl bg-error/20">
-                <FontAwesomeIcon id="settings.settings-page-content.font-awesome-icon.2"
+        <div id='features-settings-presentation-settingspagecontent-div-25-dzjfvm' className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div id='features-settings-presentation-settingspagecontent-div-26-s0untq' className="mx-4 max-w-md rounded-2xl bg-surface p-6 shadow-2xl">
+            <div id='features-settings-presentation-settingspagecontent-div-27-dbksck' className="mb-4 flex items-center gap-3">
+              <div id='features-settings-presentation-settingspagecontent-div-28-1tmesz' className="flex h-12 w-12 items-center justify-center rounded-xl bg-error/20">
+                <FontAwesomeIcon id='features-settings-presentation-settingspagecontent-fontawesomeicon-29-ohccwm'
                   icon={faRotateLeft}
                   className="h-6 w-6 text-error"
                 />
               </div>
-              <h3 id="settings.settings-page-content.h3" className="text-xl font-semibold text-on-surface">
+              <h3 id='features-settings-presentation-settingspagecontent-heading-30-bmmufr' className="text-xl font-semibold text-on-surface">
                 {t("settings.restoreDefaults")}
               </h3>
             </div>
-            <p id="settings.settings-page-content.p.4" className="mb-6 text-sm text-on-surface-variant">
+            <p id='features-settings-presentation-settingspagecontent-text-31-3f93dr' className="mb-6 text-sm text-on-surface-variant">
               {CLEAR_STORAGE_WARNING}
             </p>
-            <div id="settings.settings-page-content.div.12" className="flex gap-3">
-              <button id="settings.settings-page-content.button.2"
+            <div id='features-settings-presentation-settingspagecontent-div-32-o0v3dq' className="flex gap-3">
+              <button id='features-settings-presentation-settingspagecontent-button-33-vw7rqd'
                 type="button"
                 onClick={() => setShowClearDialog(false)}
                 className="asol-control flex-1 rounded-xl px-4 py-2 font-semibold text-on-surface-variant"
               >
                 إلغاء
               </button>
-              <button id="settings.settings-page-content.button.3"
+              <button id='features-settings-presentation-settingspagecontent-button-34-vsois6'
                 type="button"
                 onClick={confirmClearAll}
                 className="asol-control flex-1 rounded-xl bg-error px-4 py-2 font-semibold text-on-primary"

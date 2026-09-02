@@ -31,30 +31,30 @@ export function SellerDiscountsPreview({
   const visible = discounts.filter((discount) => discount.status === "active");
   if (isLoading) {
     return (
-      <section id="seller-discounts.seller-discounts-preview.section" className="mx-2 min-w-0 rounded-3xl border border-outline-variant/70 bg-surface p-4 text-sm text-on-surface-variant shadow-sm sm:mx-0">
+      <section id='features-seller-discounts-presentation-sellerdiscountspreview-section-1-ltusxq' className="mx-2 min-w-0 rounded-3xl border border-outline-variant/70 bg-surface p-4 text-sm text-on-surface-variant shadow-sm sm:mx-0">
         {ar ? "جاري تحميل عروض المتجر..." : "Loading store offers..."}
       </section>
     );
   }
   if (visible.length === 0) return null;
   return (
-    <section id="seller-discounts.seller-discounts-preview.section.2" className="mx-2 min-w-0 rounded-3xl border border-primary/20 bg-surface p-4 shadow-sm sm:mx-0 sm:p-6">
-      <div id="seller-discounts.seller-discounts-preview.div" className="mb-4 flex min-w-0 items-center gap-3">
-        <span id="seller-discounts.seller-discounts-preview.span" className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-          <Percent id="seller-discounts.seller-discounts-preview.percent" className="h-5 w-5" />
+    <section id='features-seller-discounts-presentation-sellerdiscountspreview-section-2-ff5mjr' className="mx-2 min-w-0 rounded-3xl border border-primary/20 bg-surface p-4 shadow-sm sm:mx-0 sm:p-6">
+      <div id='features-seller-discounts-presentation-sellerdiscountspreview-div-3-rhlpr8' className="mb-4 flex min-w-0 items-center gap-3">
+        <span id='features-seller-discounts-presentation-sellerdiscountspreview-text-4-xbjlcs' className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+          <Percent id='features-seller-discounts-presentation-sellerdiscountspreview-percent-5-dmk5zr' className="h-5 w-5" />
         </span>
-        <div id="seller-discounts.seller-discounts-preview.div.2" className="min-w-0">
-          <h2 id="seller-discounts.seller-discounts-preview.h2" className="break-words text-lg font-bold">
+        <div id='features-seller-discounts-presentation-sellerdiscountspreview-div-6-3k8v77' className="min-w-0">
+          <h2 id='features-seller-discounts-presentation-sellerdiscountspreview-heading-7-cktakm' className="break-words text-lg font-bold">
             {ar ? "عروض وخصومات المتجر" : "Store offers"}
           </h2>
-          <p id="seller-discounts.seller-discounts-preview.p" className="break-words text-xs text-on-surface-variant">
+          <p id='features-seller-discounts-presentation-sellerdiscountspreview-text-8-s2niqx' className="break-words text-xs text-on-surface-variant">
             {ar
               ? "العروض المؤهلة تطبق في السلة حسب شروط كل بائع."
               : "Eligible offers apply in cart according to seller rules."}
           </p>
         </div>
       </div>
-      <div id="seller-discounts.seller-discounts-preview.div.3" className="grid min-w-0 gap-3 md:grid-cols-2">
+      <div id='features-seller-discounts-presentation-sellerdiscountspreview-div-9-fdylga' className="grid min-w-0 gap-3 md:grid-cols-2">
         {visible.map((discount) => (
           <OfferCard key={discount.id} discount={discount} locale={locale} />
         ))}
@@ -83,28 +83,28 @@ function OfferCard({ id,
             : Percent;
   return (
     <article id={id} className="min-w-0 rounded-2xl border border-outline-variant bg-surface-container-low/40 p-3 sm:p-4">
-      <div className="flex min-w-0 items-start gap-3">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary/10 text-secondary">
+      <div id="features-seller-discounts-presentation-sellerdiscountspreview-div-11-fxwwwz" className="flex min-w-0 items-start gap-3">
+        <span id="features-seller-discounts-presentation-sellerdiscountspreview-text-12-h2uh0i" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary/10 text-secondary">
           <Icon className="h-5 w-5" />
         </span>
-        <div className="min-w-0 flex-1">
-          <h3 className="break-words text-sm font-bold text-on-surface">
+        <div id="features-seller-discounts-presentation-sellerdiscountspreview-div-13-tiwm0h" className="min-w-0 flex-1">
+          <h3 id="features-seller-discounts-presentation-sellerdiscountspreview-heading-14-kua4wg" className="break-words text-sm font-bold text-on-surface">
             {discount.title || (ar ? "عرض متاح" : "Available offer")}
           </h3>
-          <p className="mt-1 break-words text-xs leading-5 text-on-surface-variant">
+          <p id="features-seller-discounts-presentation-sellerdiscountspreview-text-15-1oa8yg" className="mt-1 break-words text-xs leading-5 text-on-surface-variant">
             {describe(discount, locale)}
           </p>
           {discount.couponCode ? (
-            <code className="mt-2 inline-flex max-w-full break-all rounded-lg border border-primary/30 bg-primary/10 px-2 py-1 text-xs font-bold text-primary">
+            <code id="features-seller-discounts-presentation-sellerdiscountspreview-code-16-rjpn9m" className="mt-2 inline-flex max-w-full break-all rounded-lg border border-primary/30 bg-primary/10 px-2 py-1 text-xs font-bold text-primary">
               {discount.couponCode}
             </code>
           ) : null}
           {discount.description ? (
-            <p className="mt-2 break-words text-xs leading-5 text-on-surface-variant">
+            <p id="features-seller-discounts-presentation-sellerdiscountspreview-text-17-y48wyo" className="mt-2 break-words text-xs leading-5 text-on-surface-variant">
               {discount.description}
             </p>
           ) : null}
-          <div className="mt-3 grid min-w-0 gap-2 border-t border-outline-variant/70 pt-3 text-[11px] leading-5 text-on-surface-variant sm:grid-cols-2">
+          <div id="features-seller-discounts-presentation-sellerdiscountspreview-div-18-mglwhs" className="mt-3 grid min-w-0 gap-2 border-t border-outline-variant/70 pt-3 text-[11px] leading-5 text-on-surface-variant sm:grid-cols-2">
             <Detail icon={Users} text={describeAudience(discount, locale)} />
             <Detail icon={ShoppingBag} text={describeScope(discount, locale)} />
             <Detail icon={CalendarDays} text={describeValidity(discount, locale)} />
@@ -126,7 +126,7 @@ function Detail({ id,
   return (
     <span id={id} className="flex min-w-0 items-start gap-1.5 rounded-lg bg-surface px-2 py-1.5">
       <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
-      <span className="min-w-0 break-words">{text}</span>
+      <span id="features-seller-discounts-presentation-sellerdiscountspreview-text-20-cw3wae" className="min-w-0 break-words">{text}</span>
     </span>
   );
 }

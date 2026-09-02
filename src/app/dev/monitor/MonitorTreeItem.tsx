@@ -24,7 +24,7 @@ export function MonitorTreeItem({ id,
 
   return (
     <div id={id} className="tree-node">
-      <div
+      <div id="app-dev-monitor-monitortreeitem-div-2-sffyp8"
         className="tree-node-row"
         onClick={() => {
           if (hasChildren) {
@@ -43,10 +43,10 @@ export function MonitorTreeItem({ id,
             : "",
         }}
       >
-        <div className="tree-node-info">
-          {hasChildren && <span>{isOpen ? "▼" : "▶"}</span>}
+        <div id="app-dev-monitor-monitortreeitem-div-3-bvpvfs" className="tree-node-info">
+          {hasChildren && <span id="app-dev-monitor-monitortreeitem-text-4-pepy3e">{isOpen ? "▼" : "▶"}</span>}
           {!hasChildren && (
-            <div
+            <div id="app-dev-monitor-monitortreeitem-div-5-fmmend"
               className="layer-dot"
               style={{
                 background: node.records?.[0]?.table
@@ -55,19 +55,19 @@ export function MonitorTreeItem({ id,
               }}
             />
           )}
-          <span style={{ fontWeight: hasChildren ? "bold" : "normal" }}>
+          <span id="app-dev-monitor-monitortreeitem-text-6-xjn1cd" style={{ fontWeight: hasChildren ? "bold" : "normal" }}>
             {node.label}
           </span>
           {hasChildren && (
-            <span style={{ color: "var(--text-muted)", fontSize: "11px" }}>
+            <span id="app-dev-monitor-monitortreeitem-text-7-29b4ar" style={{ color: "var(--text-muted)", fontSize: "11px" }}>
               ({node.count})
             </span>
           )}
         </div>
 
         {!hasChildren && node.records?.[0] && (
-          <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-            <span
+          <div id="app-dev-monitor-monitortreeitem-div-8-v2faww" style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+            <span id="app-dev-monitor-monitortreeitem-text-9-wglqp8"
               style={{
                 color: STATUS_COLORS[node.records[0].status],
                 fontSize: "11px",
@@ -76,7 +76,7 @@ export function MonitorTreeItem({ id,
             >
               {node.records[0].status.toUpperCase()}
             </span>
-            <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>
+            <span id="app-dev-monitor-monitortreeitem-text-10-rmpyuz" style={{ fontSize: "11px", color: "var(--text-muted)" }}>
               {Math.round(
                 node.records[0].executionTime ||
                   node.records[0].completedAt - node.records[0].startedAt,
@@ -88,7 +88,7 @@ export function MonitorTreeItem({ id,
       </div>
 
       {isOpen && hasChildren && (
-        <div>
+        <div id="app-dev-monitor-monitortreeitem-div-11-ht2v4f">
           {node.children.map((child) => (
             <MonitorTreeItem
               key={child.key}

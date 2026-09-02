@@ -31,26 +31,26 @@ export function BuyerDeliveryAddressPanel({
 
   if (isLoading) {
     return (
-      <div id="orders.order-details.order-details-page-content.buyer-delivery.div" className="mb-4 rounded-lg border border-outline-variant bg-muted/20 p-3 text-sm text-muted-foreground">
+      <div id='orders-presentation-order-details-orderdetailspagecontent-buyer-delivery-div-1-tyms8j' className="mb-4 rounded-lg border border-outline-variant bg-muted/20 p-3 text-sm text-muted-foreground">
         جاري تحميل بيانات التواصل...
       </div>
     );
   }
 
   return (
-    <div id="orders.order-details.order-details-page-content.buyer-delivery.div.2" className="mb-4 rounded-lg border border-warning/30 bg-warning/10 p-3 text-sm">
-      <p id="orders.order-details.order-details-page-content.buyer-delivery.p" className="leading-6 text-on-surface">{text.buyerAddressHint}</p>
-      <div id="orders.order-details.order-details-page-content.buyer-delivery.div.3" className="mt-3 flex flex-wrap gap-2">
-        <Link id="orders.order-details.order-details-page-content.buyer-delivery.link"
+    <div id='orders-presentation-order-details-orderdetailspagecontent-buyer-delivery-div-2-w0f6va' className="mb-4 rounded-lg border border-warning/30 bg-warning/10 p-3 text-sm">
+      <p id='orders-presentation-order-details-orderdetailspagecontent-buyer-delivery-text-3-nq5qdz' className="leading-6 text-on-surface">{text.buyerAddressHint}</p>
+      <div id='orders-presentation-order-details-orderdetailspagecontent-buyer-delivery-div-4-yayvir' className="mt-3 flex flex-wrap gap-2">
+        <Link id='orders-presentation-order-details-orderdetailspagecontent-buyer-delivery-link-5-mwdzvq'
           href={profileHref}
           className="inline-flex items-center gap-2 rounded-lg border border-outline-variant bg-surface px-3 py-2 text-xs font-semibold text-on-surface transition"
         >
-          <MapPin id="orders.order-details.order-details-page-content.buyer-delivery.map-pin" className="h-4 w-4" />
+          <MapPin id='orders-presentation-order-details-orderdetailspagecontent-buyer-delivery-mappin-6-wnwjvc' className="h-4 w-4" />
           {text.editBuyerAddressInProfile}
         </Link>
         {hasProfileAddress ? (
           <OrderActionButton
-            id="buyer-apply-delivery-address"
+            id='orders-presentation-order-details-orderdetailspagecontent-buyer-delivery-orderactionbutton-7-qmj2dp'
             action="buyer_apply_delivery_address"
             busyAction={busyAction}
             onClick={() => runAction("buyer_apply_delivery_address", {})}

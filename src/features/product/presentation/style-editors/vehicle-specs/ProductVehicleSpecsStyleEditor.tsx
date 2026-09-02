@@ -15,7 +15,7 @@ export function ProductVehicleSpecsStyleEditor({
   onChange,
 }: ProductVehicleSpecsStyleEditorProps) {
   return (
-    <ProductStyleCard id="product.style-editors.vehicle-specs.product-vehicle-specs-style-editor.product-style-card"
+    <ProductStyleCard id='presentation-style-editors-vehicle-specs-productvehiclespecsstyleeditor-productstylecard-1-yhzcqw'
       title="مواصفات المركبة"
       visible={value.visible}
       order={value.order}
@@ -23,12 +23,12 @@ export function ProductVehicleSpecsStyleEditor({
       onVisibleChange={(visible) => onChange({ ...value, visible })}
       onOrderChange={(order) => onChange({ ...value, order })}
     >
-      <div id="product.style-editors.vehicle-specs.product-vehicle-specs-style-editor.div" className="grid gap-2">
-        <OptionCheckbox id="product.style-editors.vehicle-specs.product-vehicle-specs-style-editor.option-checkbox" label="العلامة التجارية" checked={value.brand} disabled={disabled} onChange={(brand) => onChange({ ...value, brand })} />
-        <OptionCheckbox id="product.style-editors.vehicle-specs.product-vehicle-specs-style-editor.option-checkbox.2" label="نوع الهيكل" checked={value.bodyType} disabled={disabled} onChange={(bodyType) => onChange({ ...value, bodyType })} />
-        <OptionCheckbox id="product.style-editors.vehicle-specs.product-vehicle-specs-style-editor.option-checkbox.3" label="الوقود" checked={value.fuel} disabled={disabled} onChange={(fuel) => onChange({ ...value, fuel })} />
-        <OptionCheckbox id="product.style-editors.vehicle-specs.product-vehicle-specs-style-editor.option-checkbox.4" label="ناقل الحركة" checked={value.transmission} disabled={disabled} onChange={(transmission) => onChange({ ...value, transmission })} />
-        <OptionCheckbox id="product.style-editors.vehicle-specs.product-vehicle-specs-style-editor.option-checkbox.5" label="خاص" checked={value.special} disabled={disabled} onChange={(special) => onChange({ ...value, special })} />
+      <div id='presentation-style-editors-vehicle-specs-productvehiclespecsstyleeditor-div-2-2hpbif' className="grid gap-2">
+        <OptionCheckbox id='presentation-style-editors-vehicle-specs-productvehiclespecsstyleeditor-optioncheckbox-3-zwfvug' label="العلامة التجارية" checked={value.brand} disabled={disabled} onChange={(brand) => onChange({ ...value, brand })} />
+        <OptionCheckbox id='presentation-style-editors-vehicle-specs-productvehiclespecsstyleeditor-optioncheckbox-4-0w62oq' label="نوع الهيكل" checked={value.bodyType} disabled={disabled} onChange={(bodyType) => onChange({ ...value, bodyType })} />
+        <OptionCheckbox id='presentation-style-editors-vehicle-specs-productvehiclespecsstyleeditor-optioncheckbox-5-crtskq' label="الوقود" checked={value.fuel} disabled={disabled} onChange={(fuel) => onChange({ ...value, fuel })} />
+        <OptionCheckbox id='presentation-style-editors-vehicle-specs-productvehiclespecsstyleeditor-optioncheckbox-6-szfugx' label="ناقل الحركة" checked={value.transmission} disabled={disabled} onChange={(transmission) => onChange({ ...value, transmission })} />
+        <OptionCheckbox id='presentation-style-editors-vehicle-specs-productvehiclespecsstyleeditor-optioncheckbox-7-bisu0l' label="خاص" checked={value.special} disabled={disabled} onChange={(special) => onChange({ ...value, special })} />
       </div>
     </ProductStyleCard>
   );

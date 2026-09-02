@@ -39,7 +39,7 @@ export function DoctorAppointmentSellersPageContent({
 
   if (isLoading && offset === 0) {
     return (
-      <div id="categories.doctor-appointment-sellers-page-content.div" className="container px-4 py-8 text-center text-sm text-on-surface-variant">
+      <div id='features-categories-presentation-doctorappointmentsellerspagecontent-div-1-k9xup1' className="container px-4 py-8 text-center text-sm text-on-surface-variant">
         {t("profile.loading")}
       </div>
     );
@@ -47,29 +47,29 @@ export function DoctorAppointmentSellersPageContent({
 
   if (error) {
     return (
-      <div id="categories.doctor-appointment-sellers-page-content.div.2" className="container px-4 py-8 text-center text-sm text-error">
+      <div id='features-categories-presentation-doctorappointmentsellerspagecontent-div-2-wmj2gq' className="container px-4 py-8 text-center text-sm text-error">
         {locale === "ar" ? "حدث خطأ أثناء تحميل البيانات" : "Error loading data"}
       </div>
     );
   }
 
   return (
-    <div id="categories.doctor-appointment-sellers-page-content.div.3" className="container px-4 py-8">
-      <div id="categories.doctor-appointment-sellers-page-content.div.4" className="relative mb-6 min-h-28 overflow-hidden rounded-3xl bg-surface-bright p-4">
-        <Image id="categories.doctor-appointment-sellers-page-content.image"
+    <div id='features-categories-presentation-doctorappointmentsellerspagecontent-div-3-pqz25n' className="container px-4 py-8">
+      <div id='features-categories-presentation-doctorappointmentsellerspagecontent-div-4-duyzak' className="relative mb-6 min-h-28 overflow-hidden rounded-3xl bg-surface-bright p-4">
+        <Image id='features-categories-presentation-doctorappointmentsellerspagecontent-image-5-w4ccxn'
           src={specialtyImage}
           alt={locale === "ar" ? `الأطباء في ${specialtyName}` : `Doctors in ${specialtyName}`}
           fill
           className="object-fill opacity-20"
           priority
         />
-        <div id="categories.doctor-appointment-sellers-page-content.div.5" className="relative z-10 space-y-3">
-          <h1 id="categories.doctor-appointment-sellers-page-content.h1" className="text-2xl font-bold text-on-surface">
+        <div id='features-categories-presentation-doctorappointmentsellerspagecontent-div-6-kbn2kd' className="relative z-10 space-y-3">
+          <h1 id='features-categories-presentation-doctorappointmentsellerspagecontent-heading-7-pa2kqx' className="text-2xl font-bold text-on-surface">
             {locale === "ar" ? `الأطباء في ${specialtyName}` : `Doctors in ${specialtyName}`}
           </h1>
-          <div id="categories.doctor-appointment-sellers-page-content.div.6" className="relative">
-            <Search id="categories.doctor-appointment-sellers-page-content.search" className="absolute start-4 top-1/2 h-5 w-5 -translate-y-1/2 text-on-surface-variant" aria-hidden />
-            <input id="categories.doctor-appointment-sellers-page-content.input"
+          <div id='features-categories-presentation-doctorappointmentsellerspagecontent-div-8-gybd8t' className="relative">
+            <Search id='features-categories-presentation-doctorappointmentsellerspagecontent-search-9-nytgmw' className="absolute start-4 top-1/2 h-5 w-5 -translate-y-1/2 text-on-surface-variant" aria-hidden />
+            <input id='features-categories-presentation-doctorappointmentsellerspagecontent-input-10-4a8bax'
               type="search"
               value={searchText}
               onChange={(event) => setSearchText(event.target.value)}
@@ -81,13 +81,13 @@ export function DoctorAppointmentSellersPageContent({
       </div>
 
       {!filteredUsers || filteredUsers.length === 0 ? (
-        <p className="text-center text-sm text-on-surface-variant">
+        <p id="features-categories-presentation-doctorappointmentsellerspagecontent-text-11-frnrrf" className="text-center text-sm text-on-surface-variant">
           {normalizedSearchText
             ? locale === "ar" ? "لا توجد نتائج مطابقة" : "No matching results"
             : locale === "ar" ? "لا يوجد أطباء حاليًا" : "No doctors available"}
         </p>
       ) : (
-        <div id="categories.doctor-appointment-sellers-page-content.div.7" className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+        <div id='features-categories-presentation-doctorappointmentsellerspagecontent-div-12-tzhgek' className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           {filteredUsers.map((user) => {
             const card = createSellerCardViewModel(user, { badge: locale === "ar" ? "طبيب" : "Doctor" });
             return (
@@ -103,8 +103,8 @@ export function DoctorAppointmentSellersPageContent({
       )}
 
       {users && users.length === limit ? (
-        <div id="categories.doctor-appointment-sellers-page-content.div.8" className="mt-6 text-center">
-          <button
+        <div id='features-categories-presentation-doctorappointmentsellerspagecontent-div-13-mdbhzl' className="mt-6 text-center">
+          <button id="features-categories-presentation-doctorappointmentsellerspagecontent-button-14-5ryzwo"
             type="button"
             onClick={loadMore}
             disabled={isLoading}

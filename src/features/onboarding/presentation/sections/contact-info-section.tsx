@@ -80,16 +80,16 @@ export function ContactInfoSection() {
   const availablePlatforms = SOCIAL_PLATFORMS.filter((p) => !addedPlatforms.includes(p));
 
   return (
-    <div id="onboarding.sections.contact-info-section.div" className="space-y-6 animate-in fade-in duration-300">
-      <Card id="onboarding.sections.contact-info-section.card">
-        <CardHeader id="onboarding.sections.contact-info-section.card-header">
-          <CardTitle id="onboarding.sections.contact-info-section.card-title">{t('onboarding.contactInfo.title')}</CardTitle>
-          <CardDescription id="onboarding.sections.contact-info-section.card-description">{t('onboarding.contactInfo.description')}</CardDescription>
+    <div id='onboarding-presentation-sections-contact-info-section-div-1-evlwq1' className="space-y-6 animate-in fade-in duration-300">
+      <Card id='onboarding-presentation-sections-contact-info-section-card-2-sylihs'>
+        <CardHeader id='onboarding-presentation-sections-contact-info-section-cardheader-3-v6eweh'>
+          <CardTitle id='onboarding-presentation-sections-contact-info-section-cardtitle-4-26ksdb'>{t('onboarding.contactInfo.title')}</CardTitle>
+          <CardDescription id='onboarding-presentation-sections-contact-info-section-carddescription-5-tssoow'>{t('onboarding.contactInfo.description')}</CardDescription>
         </CardHeader>
-        <CardContent id="onboarding.sections.contact-info-section.card-content" className="space-y-6">
-          <div id="onboarding.sections.contact-info-section.div.2" className="grid gap-6 lg:grid-cols-2">
-            <FormField id="onboarding.sections.contact-info-section.form-field" label={t('onboarding.contactInfo.phoneNumber')} htmlFor="phoneNumber" required error={errors.phoneNumber}>
-              <PhoneField id="onboarding.sections.contact-info-section.phone-field"
+        <CardContent id='onboarding-presentation-sections-contact-info-section-cardcontent-6-9uyrqv' className="space-y-6">
+          <div id='onboarding-presentation-sections-contact-info-section-div-7-vjnhva' className="grid gap-6 lg:grid-cols-2">
+            <FormField id='onboarding-presentation-sections-contact-info-section-formfield-8-sa3wha' label={t('onboarding.contactInfo.phoneNumber')} htmlFor="phoneNumber" required error={errors.phoneNumber}>
+              <PhoneField id='onboarding-presentation-sections-contact-info-section-phonefield-9-iltf30'
                 labels={phoneLabels}
                 value={contactInfo.phoneNumber}
                 onChange={(phoneNumber) => updateContactInfo({ phoneNumber })}
@@ -97,8 +97,8 @@ export function ContactInfoSection() {
               />
             </FormField>
 
-            <FormField id="onboarding.sections.contact-info-section.form-field.2" label={t('onboarding.contactInfo.whatsappNumber')} htmlFor="whatsappNumber" hint={t('onboarding.common.optional')}>
-              <PhoneField id="onboarding.sections.contact-info-section.phone-field.2"
+            <FormField id='onboarding-presentation-sections-contact-info-section-formfield-10-tnigsj' label={t('onboarding.contactInfo.whatsappNumber')} htmlFor="whatsappNumber" hint={t('onboarding.common.optional')}>
+              <PhoneField id='onboarding-presentation-sections-contact-info-section-phonefield-11-i5fvdz'
                 labels={phoneLabels}
                 value={contactInfo.whatsappNumber}
                 onChange={(whatsappNumber) => updateContactInfo({ whatsappNumber })}
@@ -106,10 +106,10 @@ export function ContactInfoSection() {
             </FormField>
           </div>
 
-          <div id="onboarding.sections.contact-info-section.div.3" className="grid gap-6 lg:grid-cols-2">
-            <FormField id="onboarding.sections.contact-info-section.form-field.3" label={t('onboarding.contactInfo.email')} htmlFor="email" required error={errors.email}>
+          <div id='onboarding-presentation-sections-contact-info-section-div-12-h4zusz' className="grid gap-6 lg:grid-cols-2">
+            <FormField id='onboarding-presentation-sections-contact-info-section-formfield-13-5ebq1h' label={t('onboarding.contactInfo.email')} htmlFor='onboarding-presentation-sections-contact-info-section-forminput-14-gxnaf0' required error={errors.email}>
               <FormInput
-                id="email"
+                id='onboarding-presentation-sections-contact-info-section-forminput-14-gxnaf0'
                 value={contactInfo.email}
                 onChange={(e) => updateContactInfo({ email: e.target.value })}
                 placeholder={t('onboarding.contactInfo.emailPlaceholder')}
@@ -118,9 +118,9 @@ export function ContactInfoSection() {
               />
             </FormField>
 
-            <FormField id="onboarding.sections.contact-info-section.form-field.4" label={t('onboarding.contactInfo.website')} htmlFor="website" error={errors.website} hint={t('onboarding.common.optional')}>
+            <FormField id='onboarding-presentation-sections-contact-info-section-formfield-15-tif7h6' label={t('onboarding.contactInfo.website')} htmlFor='onboarding-presentation-sections-contact-info-section-forminput-16-gsdqq4' error={errors.website} hint={t('onboarding.common.optional')}>
               <FormInput
-                id="website"
+                id='onboarding-presentation-sections-contact-info-section-forminput-16-gsdqq4'
                 value={contactInfo.website}
                 onChange={(e) => updateContactInfo({ website: e.target.value })}
                 placeholder={t('onboarding.contactInfo.websitePlaceholder')}
@@ -130,14 +130,14 @@ export function ContactInfoSection() {
             </FormField>
           </div>
 
-          <div id="onboarding.sections.contact-info-section.div.4" className="space-y-4">
-            <div id="onboarding.sections.contact-info-section.div.5" className="flex items-center justify-between">
-              <div id="onboarding.sections.contact-info-section.div.6">
-                <Label id="onboarding.sections.contact-info-section.label" className="text-sm font-medium">{t('onboarding.contactInfo.socialLinks')}</Label>
-                <p id="onboarding.sections.contact-info-section.p" className="text-xs text-muted-foreground">{t('onboarding.contactInfo.socialHint')}</p>
+          <div id='onboarding-presentation-sections-contact-info-section-div-17-ob1qmz' className="space-y-4">
+            <div id='onboarding-presentation-sections-contact-info-section-div-18-ir0c4w' className="flex items-center justify-between">
+              <div id='onboarding-presentation-sections-contact-info-section-div-19-cvwzka'>
+                <Label id='onboarding-presentation-sections-contact-info-section-label-20-sy60jx' className="text-sm font-medium">{t('onboarding.contactInfo.socialLinks')}</Label>
+                <p id='onboarding-presentation-sections-contact-info-section-text-21-esbsuk' className="text-xs text-muted-foreground">{t('onboarding.contactInfo.socialHint')}</p>
               </div>
               {availablePlatforms.length > 0 && (
-                <div id="onboarding.sections.contact-info-section.div.7" className="flex flex-wrap gap-1">
+                <div id='onboarding-presentation-sections-contact-info-section-div-22-rme9f7' className="flex flex-wrap gap-1">
                   {availablePlatforms.map((platform) => (
                     <Button
                       key={platform}
@@ -155,7 +155,7 @@ export function ContactInfoSection() {
             </div>
 
             {contactInfo.socialLinks.length > 0 && (
-              <div id="onboarding.sections.contact-info-section.div.8" className="space-y-3">
+              <div id='onboarding-presentation-sections-contact-info-section-div-23-xchpiu' className="space-y-3">
                 {contactInfo.socialLinks.map((link) => (
                   <div key={link.platform} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
                     <span className="text-sm font-medium">
@@ -186,7 +186,7 @@ export function ContactInfoSection() {
         </CardContent>
       </Card>
 
-      <StepNavigation id="onboarding.sections.contact-info-section.step-navigation" onNext={handleNext} showSkip />
+      <StepNavigation id='onboarding-presentation-sections-contact-info-section-stepnavigation-24-0yen4s' onNext={handleNext} showSkip />
     </div>
   );
 }

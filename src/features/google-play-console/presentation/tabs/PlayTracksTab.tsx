@@ -25,7 +25,7 @@ export function PlayTracksTab() {
   const [notes, setNotes] = React.useState("");
   if (!tracks.snapshot)
     return (
-      <div id="google-play-console.tabs.play-tracks-tab.div" className="p-4 text-sm">
+      <div id='google-play-console-presentation-tabs-playtrackstab-div-1-f0d9dj' className="p-4 text-sm">
         {t("releaseConsole.loading")}
       </div>
     );
@@ -59,8 +59,8 @@ export function PlayTracksTab() {
     return tracks.uploadMapping(form);
   };
   return (
-    <section id="google-play-console.tabs.play-tracks-tab.section" className="space-y-4">
-      <div id="google-play-console.tabs.play-tracks-tab.div.2" className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+    <section id='google-play-console-presentation-tabs-playtrackstab-section-2-6v5fl5' className="space-y-4">
+      <div id='google-play-console-presentation-tabs-playtrackstab-div-3-lxd0hc' className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
         {(tracks.snapshot.tracks ?? []).map((item) => (
           <div key={item.track} className="rounded-md border bg-surface p-3">
             <h2 className="font-semibold" dir="ltr">
@@ -72,24 +72,24 @@ export function PlayTracksTab() {
           </div>
         ))}
       </div>
-      <div id="google-play-console.tabs.play-tracks-tab.div.3" className="grid gap-4 lg:grid-cols-2">
+      <div id='google-play-console-presentation-tabs-playtrackstab-div-4-rmxevf' className="grid gap-4 lg:grid-cols-2">
         <section
-          id="google-play-console.tabs.play-tracks-tab.section.2"
+          id='google-play-console-presentation-tabs-playtrackstab-section-5-rndkdq'
           className="space-y-3 rounded-md border bg-surface p-4"
         >
-          <h2 id="google-play-console.tabs.play-tracks-tab.h2" className="font-semibold">
+          <h2 id='google-play-console-presentation-tabs-playtrackstab-heading-6-larwed' className="font-semibold">
             {t("releaseConsole.tracks.update")}
           </h2>
-          <TrackSelect id="google-play-console.tabs.play-tracks-tab.track-select" value={track} onChange={setTrack} />
+          <TrackSelect id='google-play-console-presentation-tabs-playtrackstab-trackselect-7-u4xzrs' value={track} onChange={setTrack} />
           <Input
-            id="google-play-console.tabs.play-tracks-tab.input"
+            id='google-play-console-presentation-tabs-playtrackstab-input-8-v2qvbj'
             value={versionCode}
             onChange={(event) => setVersionCode(event.target.value)}
             placeholder={t("releaseConsole.tracks.versionCode")}
             dir="ltr"
           />
           <select
-            id="google-play-console.tabs.play-tracks-tab.select"
+            id='google-play-console-presentation-tabs-playtrackstab-select-9-hjtbqt'
             className="h-10 w-full rounded-md border bg-background px-3"
             value={status}
             onChange={(event) => setStatus(event.target.value as typeof status)}
@@ -101,7 +101,7 @@ export function PlayTracksTab() {
             ))}
           </select>
           <Input
-            id="google-play-console.tabs.play-tracks-tab.input.2"
+            id='google-play-console-presentation-tabs-playtrackstab-input-10-hl5wut'
             type="number"
             min="0"
             max="1"
@@ -111,52 +111,52 @@ export function PlayTracksTab() {
             placeholder={t("releaseConsole.tracks.rollout")}
           />
           <Textarea
-            id="google-play-console.tabs.play-tracks-tab.textarea"
+            id='google-play-console-presentation-tabs-playtrackstab-textarea-11-tmlzzg'
             value={notes}
             onChange={(event) => setNotes(event.target.value)}
             placeholder={t("releaseConsole.tracks.changelog")}
           />
         </section>
         <section
-          id="google-play-console.tabs.play-tracks-tab.section.3"
+          id='google-play-console-presentation-tabs-playtrackstab-section-12-r443xe'
           className="space-y-3 rounded-md border bg-surface p-4"
         >
-          <h2 id="google-play-console.tabs.play-tracks-tab.h2.2" className="font-semibold">
+          <h2 id='google-play-console-presentation-tabs-playtrackstab-heading-13-f3nes2' className="font-semibold">
             {t("releaseConsole.tracks.promote")}
           </h2>
           <div
-            id="google-play-console.tabs.play-tracks-tab.div.4"
+            id='google-play-console-presentation-tabs-playtrackstab-div-14-ukrypx'
             className="grid grid-cols-[1fr_auto_1fr] items-center gap-2"
           >
             <TrackSelect
-              id="google-play-console.tabs.play-tracks-tab.track-select.2"
+              id='google-play-console-presentation-tabs-playtrackstab-trackselect-15-x9533n'
               value={fromTrack}
               onChange={setFromTrack}
             />
-            <ArrowRight id="google-play-console.tabs.play-tracks-tab.arrow-right" className="h-4 w-4" />
+            <ArrowRight id='google-play-console-presentation-tabs-playtrackstab-arrowright-16-38uz4b' className="h-4 w-4" />
             <TrackSelect
-              id="google-play-console.tabs.play-tracks-tab.track-select.3"
+              id='google-play-console-presentation-tabs-playtrackstab-trackselect-17-zlejxs'
               value={toTrack}
               onChange={setToTrack}
             />
           </div>
           <Button
-            id="google-play-console.tabs.play-tracks-tab.button"
+            id='google-play-console-presentation-tabs-playtrackstab-button-18-uedjg5'
             disabled={!versionCode || tracks.busy}
             onClick={() => void promote()}
           >
             {t("releaseConsole.tracks.promote")}
           </Button>
-          <label id="google-play-console.tabs.play-tracks-tab.label" className="block border-t pt-3 text-sm">
+          <label id='google-play-console-presentation-tabs-playtrackstab-label-19-qllrrz' className="block border-t pt-3 text-sm">
             <span
-              id="google-play-console.tabs.play-tracks-tab.span"
+              id='google-play-console-presentation-tabs-playtrackstab-text-20-iuuazj'
               className="mb-2 flex items-center gap-2 font-medium"
             >
-              <FileUp id="google-play-console.tabs.play-tracks-tab.file-up" className="h-4 w-4" />
+              <FileUp id='google-play-console-presentation-tabs-playtrackstab-fileup-21-k86mep' className="h-4 w-4" />
               {t("releaseConsole.tracks.mapping")}
             </span>
             <Input
-              id="google-play-console.tabs.play-tracks-tab.input.3"
+              id='google-play-console-presentation-tabs-playtrackstab-input-22-vrhwdw'
               type="file"
               accept="text/plain"
               onChange={(event) => void mapping(event.target.files)}

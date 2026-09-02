@@ -99,6 +99,8 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run docs:runtime-coverage` | `Tooling` | 1 |  | 0 |
 | `npm run doctor:environment` | `Tooling` | 1 |  | 0 |
 | `npm run doctor:environment:production` | `Tooling` | 1 |  | 0 |
+| `npm run dom:id:check` | `Tooling` | 1 |  | 0 |
+| `npm run dom:id:write` | `Tooling` | 1 |  | 0 |
 | `npm run env:ownership` | `Tooling` | 1 |  | 0 |
 | `npm run fastlane` | `Tooling` | 1 |  | 0 |
 | `npm run fastlane:android:aab:signed` | `Android`, `Tooling` | 1 | `Android release package (APK/AAB)` | 0 |

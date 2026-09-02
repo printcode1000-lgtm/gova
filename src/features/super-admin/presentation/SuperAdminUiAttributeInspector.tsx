@@ -139,11 +139,11 @@ export function SuperAdminUiAttributeInspector() {
       {...{ [INSPECTOR_CONTROL_ATTRIBUTE]: "true" }}
     >
       {enabled ? (
-        <pre className="max-h-32 max-w-64 overflow-auto whitespace-pre-wrap break-words rounded-2xl bg-surface px-3 py-2 text-xs font-semibold text-on-surface shadow-lg" dir="auto">
+        <pre id="features-super-admin-presentation-superadminuiattributeinspector-pre-1-9xaqvo" className="max-h-32 max-w-64 overflow-auto whitespace-pre-wrap break-words rounded-2xl bg-surface px-3 py-2 text-xs font-semibold text-on-surface shadow-lg" dir="auto">
           {status}
         </pre>
       ) : null}
-      <button
+      <button id="features-super-admin-presentation-superadminuiattributeinspector-button-2-kal5qx"
         type="button"
         onClick={() => {
           setEnabled((current) => !current);
@@ -156,7 +156,7 @@ export function SuperAdminUiAttributeInspector() {
         aria-pressed={enabled}
         {...{ [INSPECTOR_CONTROL_ATTRIBUTE]: "true" }}
       >
-        {enabled ? copyState === "copied" ? <Check id="super-admin.super-admin-ui-attribute-inspector.check" className="h-5 w-5" /> : <X id="super-admin.super-admin-ui-attribute-inspector.x" className="h-5 w-5" /> : <ScanLine id="super-admin.super-admin-ui-attribute-inspector.scan-line" className="h-5 w-5" />}
+        {enabled ? copyState === "copied" ? <Check id='features-super-admin-presentation-superadminuiattributeinspector-check-3-ffcpeh' className="h-5 w-5" /> : <X id='features-super-admin-presentation-superadminuiattributeinspector-x-4-wqxro2' className="h-5 w-5" /> : <ScanLine id='features-super-admin-presentation-superadminuiattributeinspector-scanline-5-rhdyhy' className="h-5 w-5" />}
       </button>
     </OverlayChromeBranch>
   );

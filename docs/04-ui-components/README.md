@@ -8,6 +8,7 @@ Canonical UI behavior and interaction policies shared across pages and features.
 
 - [Touch Interaction Policy](./touch-interaction-policy.md) — binding touch-first interaction rules.
 - [Page Snapshot System](./page-snapshot-system.md) — required top-level page snapshot behavior.
+- [Static DOM Identity](./static-dom-identity.md) — permanent source-owned IDs for static JSX DOM.
 - [Profile Edit Navigation](./profile-edit-navigation.md) — direct profile-section selection, active-tab synchronization, and snapshot restoration rules.
 - [Profile Preview Responsive Layout](./profile-preview-responsive-layout.md) — production and static profile-preview containment rules.
 - [Theme System](./theme-system.md) — shared visual/theme rules.
@@ -18,7 +19,7 @@ Canonical UI behavior and interaction policies shared across pages and features.
 
 ## Invariants
 
-UI remains touch-first: no hover-only behavior, pointer-cursor affordances, or inaccessible DOM title tooltips. Top-level page surfaces must preserve the page-snapshot contract. Presentation code must not bypass application services, repositories, or sealed package boundaries.
+UI remains touch-first: no hover-only behavior, pointer-cursor affordances, or inaccessible DOM title tooltips. Static repository-owned JSX DOM must keep permanent source-owned IDs. Top-level page surfaces must preserve the page-snapshot contract. Presentation code must not bypass application services, repositories, or sealed package boundaries.
 
 ## Change Impact
 

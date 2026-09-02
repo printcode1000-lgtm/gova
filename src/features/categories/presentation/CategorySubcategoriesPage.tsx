@@ -82,10 +82,10 @@ export function CategorySubcategoriesPage({
     : "/images/mainCategories";
 
   return (
-    <div id="categories.category-subcategories-page.div" className="space-y-5 px-4 py-5">
-      <div id="categories.category-subcategories-page.div.2" className="relative min-h-28 rounded-3xl bg-surface-bright space-y-3 p-4 overflow-hidden">
+    <div id='features-categories-presentation-categorysubcategoriespage-div-1-wrlhhz' className="space-y-5 px-4 py-5">
+      <div id='features-categories-presentation-categorysubcategoriespage-div-2-qzxxsi' className="relative min-h-28 rounded-3xl bg-surface-bright space-y-3 p-4 overflow-hidden">
         {headerImage && (
-          <Image id="categories.category-subcategories-page.image"
+          <Image id='features-categories-presentation-categorysubcategoriespage-image-3-uqog3l'
             src={`${headerImageBasePath}/${headerImage}`}
             alt={pageTitle}
             fill
@@ -93,15 +93,15 @@ export function CategorySubcategoriesPage({
             priority
           />
         )}
-        <div id="categories.category-subcategories-page.div.3" className="relative z-10">
-          <h1 id="categories.category-subcategories-page.h1" className="text-2xl font-bold text-on-surface">{pageTitle}</h1>
+        <div id='features-categories-presentation-categorysubcategoriespage-div-4-p4rovi' className="relative z-10">
+          <h1 id='features-categories-presentation-categorysubcategoriespage-heading-5-gjmzys' className="text-2xl font-bold text-on-surface">{pageTitle}</h1>
         </div>
-        <div id="categories.category-subcategories-page.div.4" className="relative">
-          <Search id="categories.category-subcategories-page.search"
+        <div id='features-categories-presentation-categorysubcategoriespage-div-6-qtqrrb' className="relative">
+          <Search id='features-categories-presentation-categorysubcategoriespage-search-7-vm8kus'
             className="absolute start-4 top-1/2 h-5 w-5 -translate-y-1/2 text-on-surface-variant"
             aria-hidden
           />
-          <input id="categories.category-subcategories-page.input"
+          <input id='features-categories-presentation-categorysubcategoriespage-input-8-lta9np'
             type="search"
             value={searchText}
             onChange={(event) => setSearchText(event.target.value)}
@@ -116,20 +116,20 @@ export function CategorySubcategoriesPage({
       </div>
 
       {visibleItems.length === 0 ? (
-        <p id="categories.category-subcategories-page.p" className="rounded-2xl bg-surface p-8 text-center text-sm text-on-surface-variant">
+        <p id='features-categories-presentation-categorysubcategoriespage-text-9-rxacfl' className="rounded-2xl bg-surface p-8 text-center text-sm text-on-surface-variant">
           {locale === "ar"
             ? "\u0644\u0627 \u062a\u0648\u062c\u062f \u062a\u0635\u0646\u064a\u0641\u0627\u062a \u0641\u0631\u0639\u064a\u0629"
             : "No subcategories"}
         </p>
       ) : filteredItems.length === 0 ? (
-        <p id="categories.category-subcategories-page.p.2" className="rounded-2xl bg-surface p-8 text-center text-sm text-on-surface-variant">
+        <p id='features-categories-presentation-categorysubcategoriespage-text-10-gu34le' className="rounded-2xl bg-surface p-8 text-center text-sm text-on-surface-variant">
           {locale === "ar"
             ? "\u0644\u0627 \u062a\u0648\u062c\u062f \u0646\u062a\u0627\u0626\u062c \u0645\u0637\u0627\u0628\u0642\u0629"
             : "No matching results"}
         </p>
       ) : (
-        <div id="categories.category-subcategories-page.div.5" className="asol-section-tonal asol-section-tonal-primary-soft">
-          <div id="categories.category-subcategories-page.div.6" className={categoryGridClassName}>
+        <div id='features-categories-presentation-categorysubcategoriespage-div-11-q6871c' className="asol-section-tonal asol-section-tonal-primary-soft">
+          <div id='features-categories-presentation-categorysubcategoriespage-div-12-xsjy6m' className={categoryGridClassName}>
             {filteredItems.map((item) => {
               const name = locale === "ar" ? item.nameAr : item.nameEn;
               const imageSrc = item.imageUrl;

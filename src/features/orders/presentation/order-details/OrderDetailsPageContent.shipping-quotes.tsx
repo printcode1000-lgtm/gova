@@ -85,14 +85,14 @@ export function ShippingQuotePanel({ id,
 
   return (
     <section id={id} className="mt-4 overflow-hidden rounded-xl border border-primary/25 bg-primary/5">
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-primary/15 px-3 py-3">
-        <div className="flex items-center gap-2">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/15 text-primary">
+      <div id="orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-div-2-b8ec3l" className="flex flex-wrap items-center justify-between gap-2 border-b border-primary/15 px-3 py-3">
+        <div id="orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-div-3-a0b4qs" className="flex items-center gap-2">
+          <span id="orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-text-4-kvjano" className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/15 text-primary">
             <MapPin className="h-5 w-5" />
           </span>
-          <div>
-            <h3 className="text-sm font-bold">عرض الشحن حسب المكان</h3>
-            <p className="text-xs text-muted-foreground">
+          <div id="orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-div-5-wqn5bv">
+            <h3 id="orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-heading-6-p0zetq" className="text-sm font-bold">عرض الشحن حسب المكان</h3>
+            <p id="orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-text-7-ndd2ep" className="text-xs text-muted-foreground">
               الإصدار {String(latest.version ?? 1)} ·{" "}
               {statusText[status] ?? status}
             </p>
@@ -108,7 +108,7 @@ export function ShippingQuotePanel({ id,
       </div>
 
       {status !== "requested" ? (
-        <div className="grid gap-2 px-3 py-3 text-sm sm:grid-cols-3">
+        <div id="orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-div-8-fqeioe" className="grid gap-2 px-3 py-3 text-sm sm:grid-cols-3">
           <QuoteAmount
             label="الشحن الأساسي"
             value={latest.base_shipping_price}
@@ -126,21 +126,21 @@ export function ShippingQuotePanel({ id,
             emphasized
           />
           {latest.notes ? (
-            <p className="rounded-lg bg-surface px-3 py-2 text-xs leading-5 text-muted-foreground sm:col-span-3">
+            <p id="orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-text-9-opi9tv" className="rounded-lg bg-surface px-3 py-2 text-xs leading-5 text-muted-foreground sm:col-span-3">
               {String(latest.notes)}
             </p>
           ) : null}
         </div>
       ) : (
-        <p className="px-3 py-3 text-sm leading-6 text-muted-foreground">
+        <p id="orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-text-10-3qnomc" className="px-3 py-3 text-sm leading-6 text-muted-foreground">
           تُراجع وجهة المشتري أولًا، ثم تُرسل قيمة الشحن. لا تُضاف القيمة إلى
           إجمالي الطلب إلا بعد موافقة المشتري.
         </p>
       )}
 
       {canSend ? (
-        <div className="grid gap-3 border-t border-primary/15 px-3 py-3 sm:grid-cols-[180px_1fr_auto] sm:items-end">
-          <label className="space-y-1 text-xs font-semibold">
+        <div id="orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-div-11-mvcssx" className="grid gap-3 border-t border-primary/15 px-3 py-3 sm:grid-cols-[180px_1fr_auto] sm:items-end">
+          <label id="orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-label-12-mbxdkk" className="space-y-1 text-xs font-semibold">
             قيمة الشحن الأساسية بالجنيه
             <Input
               type="number"
@@ -152,7 +152,7 @@ export function ShippingQuotePanel({ id,
               placeholder="0.00"
             />
           </label>
-          <label className="space-y-1 text-xs font-semibold">
+          <label id="orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-label-13-tsmm6g" className="space-y-1 text-xs font-semibold">
             توضيح اختياري للمشتري
             <Textarea
               value={notes}
@@ -162,7 +162,7 @@ export function ShippingQuotePanel({ id,
               placeholder="المسافة أو طريقة التوصيل أو مدة الوصول"
             />
           </label>
-          <button
+          <button id="orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-button-14-ixvnp2"
             type="button"
             disabled={!validAmount || sending || Boolean(busyAction)}
             onClick={() =>
@@ -185,7 +185,7 @@ export function ShippingQuotePanel({ id,
       ) : null}
 
       {canRespond ? (
-        <div className="flex flex-wrap gap-2 border-t border-primary/15 px-3 py-3">
+        <div id="orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-div-15-wjdcus" className="flex flex-wrap gap-2 border-t border-primary/15 px-3 py-3">
           <OrderActionButton
             action="buyer_accept_shipping_quote"
             busyAction={busyAction}
@@ -228,8 +228,8 @@ export function QuoteAmount({ id,
     <div id={id}
       className={`rounded-lg bg-surface px-3 py-2 ${emphasized ? "ring-1 ring-primary/30" : ""}`}
     >
-      <p className="text-xs text-muted-foreground">{label}</p>
-      <p
+      <p id="orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-text-19-y2yrxu" className="text-xs text-muted-foreground">{label}</p>
+      <p id="orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-text-20-dh5qtv"
         className={`mt-1 ${emphasized ? "font-bold text-primary" : "font-semibold"}`}
       >
         {formatMoney(value, currency)}

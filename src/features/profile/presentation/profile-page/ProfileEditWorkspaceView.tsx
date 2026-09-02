@@ -33,17 +33,17 @@ export function ProfileEditWorkspaceView({ model }: { model: ProfilePageContentM
 const { t, locale, session, superAdmin, registrationRef, specialtiesRef, productsRef, contactsRef, storeRef, workingHoursRef, fulfillmentRef, discountsRef, activeTab, carouselHeight, animateCarouselHeight, carouselRef, panelRefs, handleCarouselScroll, sectionStatuses, saveError, handleRegistrationStatus, handleSpecialtiesStatus, handleProductsStatus, handleContactStatus, handleStoreStatus, handleWorkingHoursStatus, handleFulfillmentStatus, handleDiscountsStatus } = model;
 return (
         <div
-          id="edit-profile-card"
+          id='profile-presentation-profile-page-profileeditworkspaceview-div-1-kpbevk'
           className="mx-auto flex w-full max-w-4xl flex-col gap-3 pt-1 sm:gap-4 sm:pt-2"
         >
-          <ProfileEditTabsBar id="profile.profile-page.profile-edit-workspace-view.profile-edit-tabs-bar" model={model} />
+          <ProfileEditTabsBar id='profile-presentation-profile-page-profileeditworkspaceview-profileedittabsbar-2-1zx3up' model={model} />
 
-          <ProfileEditSaveFeedback id="profile.profile-page.profile-edit-workspace-view.profile-edit-save-feedback" model={model} />
+          <ProfileEditSaveFeedback id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsavefeedback-3-nyaopz' model={model} />
 
-          <Card id="profile.profile-page.profile-edit-workspace-view.card" className="order-3 w-full max-w-full overflow-hidden rounded-3xl border border-outline-variant/50 bg-surface/95 shadow-xl shadow-primary/5">
-            <CardContent id="profile.profile-page.profile-edit-workspace-view.card-content" className="p-0">
-              <div id="profile.profile-page.profile-edit-workspace-view.div" className="relative">
-                <div id="profile.profile-page.profile-edit-workspace-view.div.2"
+          <Card id='profile-presentation-profile-page-profileeditworkspaceview-card-4-chftbq' className="order-3 w-full max-w-full overflow-hidden rounded-3xl border border-outline-variant/50 bg-surface/95 shadow-xl shadow-primary/5">
+            <CardContent id='profile-presentation-profile-page-profileeditworkspaceview-cardcontent-5-spvk2b' className="p-0">
+              <div id='profile-presentation-profile-page-profileeditworkspaceview-div-6-ojpfuv' className="relative">
+                <div id='profile-presentation-profile-page-profileeditworkspaceview-div-7-qnevwy'
                   data-snapshot-id="profile-edit-carousel-scroll"
                   ref={carouselRef}
                   onScroll={handleCarouselScroll}
@@ -63,7 +63,7 @@ return (
                     inert={activeTab !== "registration"}
                     className="w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
-                    <ProfileEditSectionFrame id="profile.profile-page.profile-edit-workspace-view.profile-edit-section-frame"
+                    <ProfileEditSectionFrame id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-9-ynox7w'
                       icon={faUserCircle}
                       title={t("onboarding.contactInfo.primaryContact")}
                       status={sectionStatuses.registration}
@@ -86,7 +86,7 @@ return (
                     inert={activeTab !== "specialties"}
                     className="w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
-                    <ProfileEditSectionFrame id="profile.profile-page.profile-edit-workspace-view.profile-edit-section-frame.2"
+                    <ProfileEditSectionFrame id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-11-zfl6bg'
                       icon={faStar}
                       title={t("onboarding.storeIdentity.specialties")}
                       status={sectionStatuses.specialties}
@@ -111,7 +111,7 @@ return (
                     inert={activeTab !== "store"}
                     className="w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
-                    <ProfileEditSectionFrame id="profile.profile-page.profile-edit-workspace-view.profile-edit-section-frame.3"
+                    <ProfileEditSectionFrame id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-13-krapbq'
                       icon={faBuilding}
                       title={t("onboarding.storeIdentity.title")}
                       status={sectionStatuses.store}
@@ -134,7 +134,7 @@ return (
                     inert={activeTab !== "products"}
                     className="w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
-                    <ProfileEditSectionFrame id="profile.profile-page.profile-edit-workspace-view.profile-edit-section-frame.4"
+                    <ProfileEditSectionFrame id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-15-piput6'
                       icon={faTags}
                       title={t("onboarding.storeIdentity.products")}
                       status={sectionStatuses.products}
@@ -158,7 +158,7 @@ return (
                     inert={activeTab !== "contact"}
                     className="w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
-                    <ProfileEditSectionFrame id="profile.profile-page.profile-edit-workspace-view.profile-edit-section-frame.5"
+                    <ProfileEditSectionFrame id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-17-ucrnnq'
                       icon={faComments}
                       title={t("onboarding.contactInfo.additionalContact")}
                       status={sectionStatuses.contact}
@@ -182,7 +182,7 @@ return (
                     inert={activeTab !== "workingHours"}
                     className="w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
-                    <ProfileEditSectionFrame id="profile.profile-page.profile-edit-workspace-view.profile-edit-section-frame.6"
+                    <ProfileEditSectionFrame id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-19-kxfrnb'
                       icon={faClock}
                       title={locale === "ar" ? "مواعيد العمل" : "Working hours"}
                       status={sectionStatuses.workingHours}
@@ -205,7 +205,7 @@ return (
                     inert={activeTab !== "fulfillment"}
                     className="w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
-                    <ProfileEditSectionFrame id="profile.profile-page.profile-edit-workspace-view.profile-edit-section-frame.7"
+                    <ProfileEditSectionFrame id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-21-fo6s6g'
                       icon={faTruckFast}
                       title={locale === "ar" ? "الشحن والإرجاع" : "Shipping"}
                       status={sectionStatuses.fulfillment}
@@ -228,7 +228,7 @@ return (
                     inert={activeTab !== "discounts"}
                     className="w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
-                    <ProfileEditSectionFrame id="profile.profile-page.profile-edit-workspace-view.profile-edit-section-frame.8"
+                    <ProfileEditSectionFrame id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-23-gpqagb'
                       icon={faPercent}
                       title={locale === "ar" ? "العروض والخصومات" : "Offers"}
                       status={sectionStatuses.discounts}
@@ -247,7 +247,7 @@ return (
               </div>
 
               {saveError ? (
-                <div id="profile.profile-page.profile-edit-workspace-view.div.3" className="mx-3 mb-3 rounded-lg bg-error/15 px-3 py-2 text-sm text-error sm:mx-5">
+                <div id='profile-presentation-profile-page-profileeditworkspaceview-div-24-pqrdwg' className="mx-3 mb-3 rounded-lg bg-error/15 px-3 py-2 text-sm text-error sm:mx-5">
                   {saveError}
                 </div>
               ) : null}

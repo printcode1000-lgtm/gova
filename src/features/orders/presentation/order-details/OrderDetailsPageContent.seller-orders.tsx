@@ -111,18 +111,18 @@ export function SellerOrderCard({ id,
 
   return (
     <article id={id} className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm">
-      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-outline-variant pb-3">
-        <div>
-          <h2 className="font-bold">{profileName(sellerProfile, sellerId)}</h2>
-          <p className="text-sm text-muted-foreground">
+      <div id="orders-presentation-order-details-orderdetailspagecontent-seller-orders-div-2-put7dx" className="flex flex-wrap items-start justify-between gap-3 border-b border-outline-variant pb-3">
+        <div id="orders-presentation-order-details-orderdetailspagecontent-seller-orders-div-3-miw0cr">
+          <h2 id="orders-presentation-order-details-orderdetailspagecontent-seller-orders-heading-4-60nssn" className="font-bold">{profileName(sellerProfile, sellerId)}</h2>
+          <p id="orders-presentation-order-details-orderdetailspagecontent-seller-orders-text-5-a60zei" className="text-sm text-muted-foreground">
             {text.sellerStatus}: {statusLabel(sellerOrder.status)}
           </p>
           {carrierId ? (
-            <p className="mt-1 text-sm text-muted-foreground">
+            <p id="orders-presentation-order-details-orderdetailspagecontent-seller-orders-text-6-hqmens" className="mt-1 text-sm text-muted-foreground">
               {text.carrier}: {profileName(carrierProfile, carrierId)}
             </p>
           ) : (
-            <p className="mt-1 text-sm text-error">{text.noCarrier}</p>
+            <p id="orders-presentation-order-details-orderdetailspagecontent-seller-orders-text-7-f4ch9f" className="mt-1 text-sm text-error">{text.noCarrier}</p>
           )}
         </div>
         <ProfileLinks sellerId={sellerId} carrierId={carrierId} />
@@ -139,19 +139,19 @@ export function SellerOrderCard({ id,
 
       {showFulfillmentEdit ? <SellerFulfillmentEditPanel orderId={orderId} /> : null}
 
-      <div className="mt-3 rounded-lg border border-outline-variant bg-muted/10 p-3 text-sm">
-        <p className="text-xs font-semibold text-muted-foreground">تسعير الشحن على الطلب</p>
-        <p className="mt-1 leading-6 text-on-surface">
+      <div id="orders-presentation-order-details-orderdetailspagecontent-seller-orders-div-8-8fsi9l" className="mt-3 rounded-lg border border-outline-variant bg-muted/10 p-3 text-sm">
+        <p id="orders-presentation-order-details-orderdetailspagecontent-seller-orders-text-9-r4fs1p" className="text-xs font-semibold text-muted-foreground">تسعير الشحن على الطلب</p>
+        <p id="orders-presentation-order-details-orderdetailspagecontent-seller-orders-text-10-fpab2i" className="mt-1 leading-6 text-on-surface">
           {sellerFulfillmentShippingSummary(fulfillmentSnapshot)}
         </p>
-        <p className="mt-3 text-xs font-semibold text-muted-foreground">سياسة الإرجاع على الطلب</p>
-        <p className="mt-1 leading-6 text-on-surface">
+        <p id="orders-presentation-order-details-orderdetailspagecontent-seller-orders-text-11-vjjydr" className="mt-3 text-xs font-semibold text-muted-foreground">سياسة الإرجاع على الطلب</p>
+        <p id="orders-presentation-order-details-orderdetailspagecontent-seller-orders-text-12-yu6bfy" className="mt-1 leading-6 text-on-surface">
           {sellerFulfillmentReturnsSummary(fulfillmentSnapshot)}
         </p>
       </div>
 
       {hasPendingItems ? (
-        <p
+        <p id="orders-presentation-order-details-orderdetailspagecontent-seller-orders-text-13-lh7yew"
           className={`mt-3 rounded-lg px-3 py-2 text-sm ${
             isSeller
               ? "bg-primary/10 text-primary"
@@ -174,7 +174,7 @@ export function SellerOrderCard({ id,
         />
       ) : null}
 
-      <div className="mt-4 space-y-3">
+      <div id="orders-presentation-order-details-orderdetailspagecontent-seller-orders-div-14-o17rdc" className="mt-4 space-y-3">
         {sellerItems.map((item) => (
           <OrderItemRow
             key={String(item.id)}
@@ -199,7 +199,7 @@ export function SellerOrderCard({ id,
         ))}
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-2 border-t border-outline-variant pt-3">
+      <div id="orders-presentation-order-details-orderdetailspagecontent-seller-orders-div-15-pxndt7" className="mt-4 flex flex-wrap gap-2 border-t border-outline-variant pt-3">
         {isBuyer ? (
           <OrderActionButton
             action="buyer_cancel_seller_order"

@@ -149,21 +149,21 @@ export function ContactQuickAddGrid({ id,
 
   return (
     <div id={id} className="rounded-2xl border border-outline-variant/60 bg-surface-container-low p-3 sm:p-4">
-      <div className="mb-3 flex items-center justify-between gap-3">
-        <p className="flex items-center gap-2 text-sm font-bold text-on-surface">
-          <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary/10 text-primary">
+      <div id="profile-presentation-contact-info-contactinfocard-contact-types-div-2-kxhmuy" className="mb-3 flex items-center justify-between gap-3">
+        <p id="profile-presentation-contact-info-contactinfocard-contact-types-text-3-uwo8es" className="flex items-center gap-2 text-sm font-bold text-on-surface">
+          <span id="profile-presentation-contact-info-contactinfocard-contact-types-text-4-rqvo1w" className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary/10 text-primary">
             <FontAwesomeIcon icon={faPlus} className="h-4 w-4" />
           </span>
           {title}
         </p>
         {addedCount > 0 ? (
-          <span className="rounded-full bg-primary/10 px-2 py-1 text-[11px] font-semibold text-primary">
+          <span id="profile-presentation-contact-info-contactinfocard-contact-types-text-5-0w3lfb" className="rounded-full bg-primary/10 px-2 py-1 text-[11px] font-semibold text-primary">
             {addedCount}
           </span>
         ) : null}
       </div>
 
-      <div className="flex snap-x snap-mandatory gap-1 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div id="profile-presentation-contact-info-contactinfocard-contact-types-div-6-9bqz7t" className="flex snap-x snap-mandatory gap-1 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {items.map((item) => (
           <button
             key={item.id}

@@ -86,13 +86,13 @@ export function SellerCard({ id,
           className="absolute end-2 top-2 z-10"
         />
       ) : null}
-      <button
+      <button id="features-seller-card-presentation-sellercard-button-2-nwaag6"
         type="button"
         onClick={(event) => onOpen?.(event, card)}
         className={`w-full text-start focus:outline-hidden focus-visible:ring-2 focus-visible:ring-primary ${horizontal ? "flex items-center gap-3" : "block"}`}
         aria-label={card.title || card.href}
       >
-        <div
+        <div id="features-seller-card-presentation-sellercard-div-3-mohi8d"
           className={`relative shrink-0 overflow-hidden bg-surface-bright ${avatarClass[variant]}`}
         >
           {card.avatarUrl ? (
@@ -105,26 +105,26 @@ export function SellerCard({ id,
               unoptimized={shouldUseUnoptimizedImage(card.avatarUrl)}
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center text-lg font-bold text-on-surface-variant">
+            <div id="features-seller-card-presentation-sellercard-div-4-a8zanz" className="flex h-full w-full items-center justify-center text-lg font-bold text-on-surface-variant">
               {card.initials !== "?" ? card.initials : <Store className="h-6 w-6" />}
             </div>
           )}
         </div>
-        <div className={horizontal ? "min-w-0 flex-1" : "mt-3 min-w-0"}>
+        <div id="features-seller-card-presentation-sellercard-div-5-h5pjcl" className={horizontal ? "min-w-0 flex-1" : "mt-3 min-w-0"}>
           {card.title ? (
-            <p className="line-clamp-2 text-sm font-semibold text-on-surface">{card.title}</p>
+            <p id="features-seller-card-presentation-sellercard-text-6-wps3w8" className="line-clamp-2 text-sm font-semibold text-on-surface">{card.title}</p>
           ) : null}
           {card.subtitle ? (
-            <p className="mt-1 truncate text-[11px] text-on-surface-variant">{card.subtitle}</p>
+            <p id="features-seller-card-presentation-sellercard-text-7-5oubzx" className="mt-1 truncate text-[11px] text-on-surface-variant">{card.subtitle}</p>
           ) : null}
           {card.description && !horizontal ? (
-            <p className="mt-1 line-clamp-2 text-[11px] text-on-surface-variant">{card.description}</p>
+            <p id="features-seller-card-presentation-sellercard-text-8-dfwtzu" className="mt-1 line-clamp-2 text-[11px] text-on-surface-variant">{card.description}</p>
           ) : null}
           {card.ratingText ? (
-            <p className="mt-1 text-[11px] font-medium text-tertiary">{card.ratingText}</p>
+            <p id="features-seller-card-presentation-sellercard-text-9-yxq7sa" className="mt-1 text-[11px] font-medium text-tertiary">{card.ratingText}</p>
           ) : null}
           {card.badges.length > 0 ? (
-            <div className="mt-2 flex flex-wrap justify-center gap-1">
+            <div id="features-seller-card-presentation-sellercard-div-10-cduns8" className="mt-2 flex flex-wrap justify-center gap-1">
               {card.badges.map((badge, badgeIndex) => (
                 <span
                   key={badge.label}
@@ -136,12 +136,12 @@ export function SellerCard({ id,
             </div>
           ) : null}
           {!horizontal ? (
-            <p className="mt-1 truncate text-[10px] text-on-surface-variant">{card.uid}</p>
+            <p id="features-seller-card-presentation-sellercard-text-11-fko8lv" className="mt-1 truncate text-[10px] text-on-surface-variant">{card.uid}</p>
           ) : null}
         </div>
       </button>
       {actions.length > 0 ? (
-        <div
+        <div id="features-seller-card-presentation-sellercard-div-12-4ndc3q"
           className="mt-3 grid gap-1"
           style={{ gridTemplateColumns: `repeat(${actions.length}, minmax(0, 1fr))` }}
         >

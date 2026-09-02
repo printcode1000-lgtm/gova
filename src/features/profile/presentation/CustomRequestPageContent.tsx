@@ -188,26 +188,26 @@ export function CustomRequestPageContent() {
 
   if (isLoading) {
     return (
-      <main id="profile.custom-request-page-content.main" className="flex min-h-[60vh] items-center justify-center">
-        <Loader2 id="profile.custom-request-page-content.loader2" className="h-7 w-7 animate-spin text-primary" />
+      <main id='features-profile-presentation-customrequestpagecontent-main-1-6ovamk' className="flex min-h-[60vh] items-center justify-center">
+        <Loader2 id='features-profile-presentation-customrequestpagecontent-loader2-2-y4lsya' className="h-7 w-7 animate-spin text-primary" />
       </main>
     );
   }
 
   if (!sellerUid) {
     return (
-      <main id="profile.custom-request-page-content.main.2" className="mx-auto max-w-xl px-4 py-14 text-center">
-        <p id="profile.custom-request-page-content.p" className="text-on-surface-variant">{copy.invalidSeller}</p>
+      <main id='features-profile-presentation-customrequestpagecontent-main-3-izye0x' className="mx-auto max-w-xl px-4 py-14 text-center">
+        <p id='features-profile-presentation-customrequestpagecontent-text-4-l82noj' className="text-on-surface-variant">{copy.invalidSeller}</p>
       </main>
     );
   }
 
   if (!session?.uid) {
     return (
-      <main id="profile.custom-request-page-content.main.3" className="mx-auto max-w-xl px-4 py-14 text-center">
-        <ImagePlus id="profile.custom-request-page-content.image-plus" className="mx-auto h-12 w-12 text-primary" />
-        <p id="profile.custom-request-page-content.p.2" className="mt-4 text-on-surface-variant">{copy.login}</p>
-        <a id="profile.custom-request-page-content.a"
+      <main id='features-profile-presentation-customrequestpagecontent-main-5-zpcbjm' className="mx-auto max-w-xl px-4 py-14 text-center">
+        <ImagePlus id='features-profile-presentation-customrequestpagecontent-imageplus-6-daoruh' className="mx-auto h-12 w-12 text-primary" />
+        <p id='features-profile-presentation-customrequestpagecontent-text-7-psgb6k' className="mt-4 text-on-surface-variant">{copy.login}</p>
+        <a id='features-profile-presentation-customrequestpagecontent-link-8-ozovb4'
           href="/login"
           className="mt-6 inline-flex rounded-xl bg-primary px-6 py-3 font-bold text-on-primary"
         >
@@ -218,40 +218,40 @@ export function CustomRequestPageContent() {
   }
 
   return (
-    <main id="profile.custom-request-page-content.main.4"
+    <main id='features-profile-presentation-customrequestpagecontent-main-9-gn2a0y'
       className="mx-auto w-full max-w-3xl px-4 pb-28 pt-5 sm:px-6 sm:pt-8"
       dir={isRTL ? "rtl" : "ltr"}
     >
-      <div id="profile.custom-request-page-content.div" className="mb-5 flex items-start gap-3">
-        <button id="profile.custom-request-page-content.button"
+      <div id='features-profile-presentation-customrequestpagecontent-div-10-ylacsn' className="mb-5 flex items-start gap-3">
+        <button id='features-profile-presentation-customrequestpagecontent-button-11-qwypyq'
           type="button"
           onClick={() => router.back()}
           className="asol-control-icon mt-1 shrink-0 rounded-full"
           aria-label={copy.back}
         >
-          <ArrowLeft id="profile.custom-request-page-content.arrow-left" className={isRTL ? "h-5 w-5 rotate-180" : "h-5 w-5"} />
+          <ArrowLeft id='features-profile-presentation-customrequestpagecontent-arrowleft-12-8su4bf' className={isRTL ? "h-5 w-5 rotate-180" : "h-5 w-5"} />
         </button>
-        <span id="profile.custom-request-page-content.span" className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary-container text-primary">
-          <ImagePlus id="profile.custom-request-page-content.image-plus.2" className="h-6 w-6" />
+        <span id='features-profile-presentation-customrequestpagecontent-text-13-hbfv5d' className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary-container text-primary">
+          <ImagePlus id='features-profile-presentation-customrequestpagecontent-imageplus-14-iezzpu' className="h-6 w-6" />
         </span>
-        <div id="profile.custom-request-page-content.div.2" className="min-w-0">
-          <h1 id="profile.custom-request-page-content.h1" className="text-2xl font-bold">
+        <div id='features-profile-presentation-customrequestpagecontent-div-15-z7unga' className="min-w-0">
+          <h1 id='features-profile-presentation-customrequestpagecontent-heading-16-uhcmxo' className="text-2xl font-bold">
             {t("profilePreview.customRequestTo")} {isLoadingSeller ? "…" : sellerName}
           </h1>
-          <p id="profile.custom-request-page-content.p.3" className="mt-1 max-w-2xl text-sm leading-6 text-on-surface-variant">
+          <p id='features-profile-presentation-customrequestpagecontent-text-17-ddwx7o' className="mt-1 max-w-2xl text-sm leading-6 text-on-surface-variant">
             {copy.subtitle}
           </p>
         </div>
       </div>
 
-      <div id="profile.custom-request-page-content.div.3" className="space-y-6 rounded-3xl border border-outline-variant bg-surface p-4 shadow-sm sm:p-6">
-        <fieldset id="profile.custom-request-page-content.fieldset" disabled={busy} className="min-w-0 space-y-6 disabled:opacity-70">
-          <div id="profile.custom-request-page-content.div.4" className="space-y-2">
-            <label id="profile.custom-request-page-content.label" className="text-sm font-bold" htmlFor="custom-request-title">
+      <div id='features-profile-presentation-customrequestpagecontent-div-18-vwpv8n' className="space-y-6 rounded-3xl border border-outline-variant bg-surface p-4 shadow-sm sm:p-6">
+        <fieldset id='features-profile-presentation-customrequestpagecontent-fieldset-19-2uot54' disabled={busy} className="min-w-0 space-y-6 disabled:opacity-70">
+          <div id='features-profile-presentation-customrequestpagecontent-div-20-qfuh8m' className="space-y-2">
+            <label id='features-profile-presentation-customrequestpagecontent-label-21-jga4hj' className="text-sm font-bold" htmlFor='features-profile-presentation-customrequestpagecontent-input-22-xs9iin'>
               {copy.titleLabel}
             </label>
             <Input
-              id="custom-request-title"
+              id='features-profile-presentation-customrequestpagecontent-input-22-xs9iin'
               value={title}
               onChange={(event) => setTitle(event.target.value)}
               placeholder={copy.titlePlaceholder}
@@ -259,12 +259,12 @@ export function CustomRequestPageContent() {
             />
           </div>
 
-          <div id="profile.custom-request-page-content.div.5" className="space-y-2">
-            <label id="profile.custom-request-page-content.label.2" className="text-sm font-bold" htmlFor="custom-request-description">
+          <div id='features-profile-presentation-customrequestpagecontent-div-23-ow4o5m' className="space-y-2">
+            <label id='features-profile-presentation-customrequestpagecontent-label-24-s7rzll' className="text-sm font-bold" htmlFor='features-profile-presentation-customrequestpagecontent-textarea-25-kjltvs'>
               {copy.descriptionLabel}
             </label>
             <Textarea
-              id="custom-request-description"
+              id='features-profile-presentation-customrequestpagecontent-textarea-25-kjltvs'
               value={description}
               onChange={(event) => {
                 setDescription(event.target.value);
@@ -277,9 +277,9 @@ export function CustomRequestPageContent() {
             />
           </div>
 
-          <div id="profile.custom-request-page-content.div.6" className="space-y-2">
-            <p id="profile.custom-request-page-content.p.4" className="text-sm font-bold">{copy.images}</p>
-            <div id="profile.custom-request-page-content.div.7" className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div id='features-profile-presentation-customrequestpagecontent-div-26-qkwkes' className="space-y-2">
+            <p id='features-profile-presentation-customrequestpagecontent-text-27-gi67zs' className="text-sm font-bold">{copy.images}</p>
+            <div id='features-profile-presentation-customrequestpagecontent-div-28-sdboeo' className="grid grid-cols-2 gap-3 sm:grid-cols-4">
               {Array.from({ length: 4 }, (_, index) => (
                 <StorageImageManager
                   key={index}
@@ -318,14 +318,14 @@ export function CustomRequestPageContent() {
         </fieldset>
 
         {result ? (
-          <p id="profile.custom-request-page-content.p.5"
+          <p id='features-profile-presentation-customrequestpagecontent-text-29-i8ugly'
             className="rounded-2xl bg-error/15 px-4 py-3 text-sm font-semibold leading-6 text-error"
             role="alert"
           >
             {result.message}
           </p>
         ) : !canSubmit ? (
-          <p id="profile.custom-request-page-content.p.6" className="text-xs text-on-surface-variant">{copy.validation}</p>
+          <p id='features-profile-presentation-customrequestpagecontent-text-30-kipgeu' className="text-xs text-on-surface-variant">{copy.validation}</p>
         ) : null}
       </div>
     </main>

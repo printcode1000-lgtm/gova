@@ -342,17 +342,17 @@ usePageSaveRegistration({
 });
 
 const earlyView = isLoading ? (
-      <div id="profile.profile-page.profile-page-content.model.div" className="container px-4 py-8 text-sm text-on-surface-variant">
+      <div id='profile-presentation-profile-page-profilepagecontent-model-div-1-xnrreg' className="container px-4 py-8 text-sm text-on-surface-variant">
         {t("profile.loading")}
       </div>
     ) : !isLoggedIn && !isViewingOtherProfile ? (
-      <div id="profile.profile-page.profile-page-content.model.div.2" className="container px-4 py-8 max-w-lg mx-auto text-center space-y-4">
-        <p id="profile.profile-page.profile-page-content.model.p" className="text-on-surface-variant">{t("profile.loginRequired")}</p>
-        <Link id="profile.profile-page.profile-page-content.model.link"
+      <div id='profile-presentation-profile-page-profilepagecontent-model-div-2-p1k9bs' className="container px-4 py-8 max-w-lg mx-auto text-center space-y-4">
+        <p id='profile-presentation-profile-page-profilepagecontent-model-text-3-w9cnkl' className="text-on-surface-variant">{t("profile.loginRequired")}</p>
+        <Link id='profile-presentation-profile-page-profilepagecontent-model-link-4-ampoek'
           href="/login"
           className="inline-flex items-center gap-2 auth-cta px-6 h-11"
         >
-          <LogIn id="profile.profile-page.profile-page-content.model.log-in" className="h-4 w-4" />
+          <LogIn id='profile-presentation-profile-page-profilepagecontent-model-login-5-rzkkiv' className="h-4 w-4" />
           {t("sidebar.login")}
         </Link>
       </div>

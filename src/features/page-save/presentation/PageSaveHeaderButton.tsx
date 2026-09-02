@@ -57,12 +57,12 @@ function PageSaveHeaderControl({
       {(isDirty || hasPersistedPending) && !isSaving && !successFlash ? (
         <>
           <span
-            id="page-save.page-save-header-button.span"
+            id='features-page-save-presentation-pagesaveheaderbutton-text-2-utoq2c'
             aria-hidden="true"
             className="asol-page-save-wave pointer-events-none absolute inset-0 rounded-full"
           />
           <span
-            id="page-save.page-save-header-button.span.2"
+            id='features-page-save-presentation-pagesaveheaderbutton-text-3-dznzfg'
             aria-hidden="true"
             className="asol-page-save-wave asol-page-save-wave--delayed pointer-events-none absolute inset-0 rounded-full"
           />
@@ -70,19 +70,19 @@ function PageSaveHeaderControl({
       ) : null}
       {successFlash ? (
         <Check
-          id="page-save.page-save-header-button.check"
+          id='features-page-save-presentation-pagesaveheaderbutton-check-4-3jrrjx'
           className="relative z-10 h-5 w-5"
           aria-hidden="true"
         />
       ) : isSaving ? (
         <LoadingSpinner
-          id="page-save.page-save-header-button.loading-spinner"
+          id='features-page-save-presentation-pagesaveheaderbutton-loadingspinner-5-3z22eu'
           size="sm"
           className="relative z-10"
         />
       ) : (
         <Save
-          id="page-save.page-save-header-button.save"
+          id='features-page-save-presentation-pagesaveheaderbutton-save-6-ydxx6x'
           className="relative z-10 h-5 w-5"
           aria-hidden="true"
         />

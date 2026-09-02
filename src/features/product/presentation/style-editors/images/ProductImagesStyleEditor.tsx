@@ -17,7 +17,7 @@ export function ProductImagesStyleEditor({
   onChange,
 }: ProductImagesStyleEditorProps) {
   return (
-    <ProductStyleCard id="product.style-editors.images.product-images-style-editor.product-style-card"
+    <ProductStyleCard id='presentation-style-editors-images-productimagesstyleeditor-productstylecard-1-h232mv'
       title="الصور"
       visible={value.visible}
       order={value.order}
@@ -25,9 +25,9 @@ export function ProductImagesStyleEditor({
       onVisibleChange={(visible) => onChange({ ...value, visible })}
       onOrderChange={(order) => onChange({ ...value, order })}
     >
-      <label id="product.style-editors.images.product-images-style-editor.label" className="flex items-center gap-3 text-sm">
+      <label id='presentation-style-editors-images-productimagesstyleeditor-label-2-ubyz1y' className="flex items-center gap-3 text-sm">
         عدد الصور
-        <input id="product.style-editors.images.product-images-style-editor.input"
+        <input id='presentation-style-editors-images-productimagesstyleeditor-input-3-8ypoo1'
           type="number"
           min={1}
           step={1}

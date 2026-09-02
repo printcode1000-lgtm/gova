@@ -46,17 +46,17 @@ export function MerchantInfoSection() {
   const showBusinessFields = merchantInfo.businessType && merchantInfo.businessType !== 'individual';
 
   return (
-    <div id="onboarding.sections.merchant-info-section.div" className="space-y-6 animate-in fade-in duration-300">
-      <Card id="onboarding.sections.merchant-info-section.card">
-        <CardHeader id="onboarding.sections.merchant-info-section.card-header">
-          <CardTitle id="onboarding.sections.merchant-info-section.card-title">{t('onboarding.merchantInfo.title')}</CardTitle>
-          <CardDescription id="onboarding.sections.merchant-info-section.card-description">{t('onboarding.merchantInfo.description')}</CardDescription>
+    <div id='onboarding-presentation-sections-merchant-info-section-div-1-6sxnt5' className="space-y-6 animate-in fade-in duration-300">
+      <Card id='onboarding-presentation-sections-merchant-info-section-card-2-j0xny9'>
+        <CardHeader id='onboarding-presentation-sections-merchant-info-section-cardheader-3-3wwst4'>
+          <CardTitle id='onboarding-presentation-sections-merchant-info-section-cardtitle-4-pimh2b'>{t('onboarding.merchantInfo.title')}</CardTitle>
+          <CardDescription id='onboarding-presentation-sections-merchant-info-section-carddescription-5-uykr4o'>{t('onboarding.merchantInfo.description')}</CardDescription>
         </CardHeader>
-        <CardContent id="onboarding.sections.merchant-info-section.card-content" className="space-y-6">
-          <div id="onboarding.sections.merchant-info-section.div.2" className="grid gap-6 lg:grid-cols-2">
-            <FormField id="onboarding.sections.merchant-info-section.form-field" label={t('onboarding.merchantInfo.yourName')} htmlFor="merchantName" required error={errors.merchantName}>
+        <CardContent id='onboarding-presentation-sections-merchant-info-section-cardcontent-6-qq3yo0' className="space-y-6">
+          <div id='onboarding-presentation-sections-merchant-info-section-div-7-xcpnwn' className="grid gap-6 lg:grid-cols-2">
+            <FormField id='onboarding-presentation-sections-merchant-info-section-formfield-8-5boa30' label={t('onboarding.merchantInfo.yourName')} htmlFor='onboarding-presentation-sections-merchant-info-section-forminput-9-zsotyd' required error={errors.merchantName}>
               <FormInput
-                id="merchantName"
+                id='onboarding-presentation-sections-merchant-info-section-forminput-9-zsotyd'
                 value={merchantInfo.merchantName}
                 onChange={(e) => updateMerchantInfo({ merchantName: e.target.value })}
                 placeholder={t('onboarding.merchantInfo.namePlaceholder')}
@@ -64,8 +64,8 @@ export function MerchantInfoSection() {
               />
             </FormField>
 
-            <FormField id="onboarding.sections.merchant-info-section.form-field.2" label={t('onboarding.merchantInfo.businessType')} htmlFor="businessType" required error={errors.businessType}>
-              <FormSelect id="onboarding.sections.merchant-info-section.form-select"
+            <FormField id='onboarding-presentation-sections-merchant-info-section-formfield-10-edzy6n' label={t('onboarding.merchantInfo.businessType')} htmlFor="businessType" required error={errors.businessType}>
+              <FormSelect id='onboarding-presentation-sections-merchant-info-section-formselect-11-gwzxbo'
                 value={merchantInfo.businessType as string}
                 onValueChange={(v) => updateMerchantInfo({ businessType: v as BusinessType })}
                 options={constants.businessTypes.map((b) => ({
@@ -79,10 +79,10 @@ export function MerchantInfoSection() {
           </div>
 
           {showBusinessFields && (
-            <div id="onboarding.sections.merchant-info-section.div.3" className="space-y-6 animate-in slide-in-from-top-2 duration-200">
-              <FormField id="onboarding.sections.merchant-info-section.form-field.3" label={t('onboarding.merchantInfo.companyName')} htmlFor="companyName" required={showBusinessFields} error={errors.companyName}>
+            <div id='onboarding-presentation-sections-merchant-info-section-div-12-dddoha' className="space-y-6 animate-in slide-in-from-top-2 duration-200">
+              <FormField id='onboarding-presentation-sections-merchant-info-section-formfield-13-2pqthw' label={t('onboarding.merchantInfo.companyName')} htmlFor='onboarding-presentation-sections-merchant-info-section-forminput-14-nwgxns' required={showBusinessFields} error={errors.companyName}>
                 <FormInput
-                  id="companyName"
+                  id='onboarding-presentation-sections-merchant-info-section-forminput-14-nwgxns'
                   value={merchantInfo.companyName || ''}
                   onChange={(e) => updateMerchantInfo({ companyName: e.target.value })}
                   placeholder={t('onboarding.merchantInfo.companyPlaceholder')}
@@ -90,19 +90,19 @@ export function MerchantInfoSection() {
                 />
               </FormField>
 
-              <div id="onboarding.sections.merchant-info-section.div.4" className="grid gap-6 lg:grid-cols-2">
-                <FormField id="onboarding.sections.merchant-info-section.form-field.4" label={t('onboarding.merchantInfo.registrationNumber')} htmlFor="registrationNumber" hint={t('onboarding.common.optional')}>
+              <div id='onboarding-presentation-sections-merchant-info-section-div-15-ybfu8k' className="grid gap-6 lg:grid-cols-2">
+                <FormField id='onboarding-presentation-sections-merchant-info-section-formfield-16-yve7uk' label={t('onboarding.merchantInfo.registrationNumber')} htmlFor='onboarding-presentation-sections-merchant-info-section-forminput-17-kuab90' hint={t('onboarding.common.optional')}>
                   <FormInput
-                    id="registrationNumber"
+                    id='onboarding-presentation-sections-merchant-info-section-forminput-17-kuab90'
                     value={merchantInfo.registrationNumber || ''}
                     onChange={(e) => updateMerchantInfo({ registrationNumber: e.target.value })}
                     placeholder={t('onboarding.merchantInfo.registrationPlaceholder')}
                   />
                 </FormField>
 
-                <FormField id="onboarding.sections.merchant-info-section.form-field.5" label={t('onboarding.merchantInfo.taxId')} htmlFor="taxId" hint={t('onboarding.common.optional')}>
+                <FormField id='onboarding-presentation-sections-merchant-info-section-formfield-18-rfyaey' label={t('onboarding.merchantInfo.taxId')} htmlFor='onboarding-presentation-sections-merchant-info-section-forminput-19-jcq0si' hint={t('onboarding.common.optional')}>
                   <FormInput
-                    id="taxId"
+                    id='onboarding-presentation-sections-merchant-info-section-forminput-19-jcq0si'
                     value={merchantInfo.taxId || ''}
                     onChange={(e) => updateMerchantInfo({ taxId: e.target.value })}
                     placeholder={t('onboarding.merchantInfo.taxPlaceholder')}
@@ -112,8 +112,8 @@ export function MerchantInfoSection() {
             </div>
           )}
 
-          <FormField id="onboarding.sections.merchant-info-section.form-field.6" label={t('onboarding.merchantInfo.yearsInBusiness')} htmlFor="businessAge" hint={t('onboarding.merchantInfo.yearsHint')}>
-            <FormSelect id="onboarding.sections.merchant-info-section.form-select.2"
+          <FormField id='onboarding-presentation-sections-merchant-info-section-formfield-20-58etaw' label={t('onboarding.merchantInfo.yearsInBusiness')} htmlFor="businessAge" hint={t('onboarding.merchantInfo.yearsHint')}>
+            <FormSelect id='onboarding-presentation-sections-merchant-info-section-formselect-21-bwb5t2'
               value={merchantInfo.businessAge?.toString() || ''}
               onValueChange={(v) => updateMerchantInfo({ businessAge: v ? parseInt(v) : '' })}
               options={BUSINESS_AGE_VALUES.map((value, index) => ({
@@ -126,7 +126,7 @@ export function MerchantInfoSection() {
         </CardContent>
       </Card>
 
-      <StepNavigation id="onboarding.sections.merchant-info-section.step-navigation" onNext={handleNext} showSkip />
+      <StepNavigation id='onboarding-presentation-sections-merchant-info-section-stepnavigation-22-ho5bdj' onNext={handleNext} showSkip />
     </div>
   );
 }

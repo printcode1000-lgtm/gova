@@ -59,7 +59,7 @@ export function ProductAddToCartButton({
   };
 
   return (
-    <button
+    <button id="features-cart-presentation-productaddtocartbutton-button-1-cw7net"
       type="button"
       aria-label="إضافة إلى السلة"
       onClick={() => void handleAdd()}

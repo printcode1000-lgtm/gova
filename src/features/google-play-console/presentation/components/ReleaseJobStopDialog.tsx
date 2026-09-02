@@ -35,10 +35,10 @@ export function ReleaseJobStopDialog({ id, job, t, onConfirm, onCancel }: {
           <DialogTitle>{t("releaseConsole.stopConfirm.title")}</DialogTitle>
           <DialogDescription>{t("releaseConsole.stopConfirm.body")}</DialogDescription>
         </DialogHeader>
-        <div className="space-y-2 text-sm">
-          <code className="block text-xs" dir="ltr">npm run {job?.command.script}</code>
-          <code className="block text-xs" dir="ltr">{job?.id}</code>
-          <p className="flex items-center gap-2 rounded-md bg-error-container p-2 text-on-error-container">
+        <div id="google-play-console-presentation-components-releasejobstopdialog-div-2-lbfj8i" className="space-y-2 text-sm">
+          <code id="google-play-console-presentation-components-releasejobstopdialog-code-3-nvnstn" className="block text-xs" dir="ltr">npm run {job?.command.script}</code>
+          <code id="google-play-console-presentation-components-releasejobstopdialog-code-4-b1ug7u" className="block text-xs" dir="ltr">{job?.id}</code>
+          <p id="google-play-console-presentation-components-releasejobstopdialog-text-5-lkuupj" className="flex items-center gap-2 rounded-md bg-error-container p-2 text-on-error-container">
             <AlertTriangle className="h-4 w-4 shrink-0" />
             {t("releaseConsole.stopConfirm.warning")}
           </p>

@@ -37,7 +37,7 @@ export function ProfileEditTabsBar({ id,
 
   return (
     <div id={id} className="order-2 w-full max-w-full overflow-hidden rounded-2xl border border-outline-variant/40 bg-surface-container-low/85 shadow-sm backdrop-blur-xl">
-      <div
+      <div id="profile-presentation-profile-page-profileeditworkspacechrome-div-2-9oleon"
         ref={model.tabsScrollRef}
         data-snapshot-id="profile-edit-tabs-scroll"
         className="flex snap-x snap-mandatory scroll-smooth items-stretch gap-1.5 overflow-x-auto overscroll-x-contain px-2 py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
@@ -132,7 +132,7 @@ export function ProfileEditSaveFeedback({ id,
 
   return (
     <div id={id} className="order-1 w-full max-w-full overflow-hidden rounded-3xl border border-error/20 bg-error/5 p-3 shadow-lg shadow-error/5 backdrop-blur-xl sm:p-4">
-      <p className="inline-flex items-center gap-2 text-sm font-semibold text-error">
+      <p id="profile-presentation-profile-page-profileeditworkspacechrome-text-4-cwzzju" className="inline-flex items-center gap-2 text-sm font-semibold text-error">
         <FontAwesomeIcon icon={faTriangleExclamation} className="h-4 w-4" />
         {model.saveError}
       </p>

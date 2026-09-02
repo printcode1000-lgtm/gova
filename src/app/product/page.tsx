@@ -4,7 +4,7 @@ import { ProductPageContent } from "@/features/product/ui";
 export default function ProductPage() {
   return (
     <Suspense fallback={null}>
-      <ProductPageContent id="product.page.product-page-content" />
+      <ProductPageContent id='app-product-page-productpagecontent-1-xectah' />
     </Suspense>
   );
 }

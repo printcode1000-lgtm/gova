@@ -362,7 +362,7 @@ export function HeroSlider({ id,
 
   return (
     <div id={id}>
-      <section
+      <section id="features-advertisements-presentation-heroslider-section-3-dvjcjw"
         ref={containerRef}
         onKeyDown={handleKeyDown}
         tabIndex={0}
@@ -373,13 +373,13 @@ export function HeroSlider({ id,
       >
         {/* Phase 10 - Skeleton loading state */}
         {showSkeleton && (
-          <div className="absolute inset-0 z-50 rounded-xl overflow-hidden">
+          <div id="features-advertisements-presentation-heroslider-div-4-8xkfkf" className="absolute inset-0 z-50 rounded-xl overflow-hidden">
             <Skeleton className="w-full h-full" />
           </div>
         )}
 
         {!hasSlides && !(isViewMode && probingEntries.length > 0) && (
-          <div className="absolute inset-0 flex items-center justify-center bg-muted px-6 text-center text-sm text-muted-foreground">
+          <div id="features-advertisements-presentation-heroslider-div-5-kf0ndd" className="absolute inset-0 flex items-center justify-center bg-muted px-6 text-center text-sm text-muted-foreground">
             {mode !== "view"
               ? t("heroSlider.addSlide")
               : t("heroSlider.noSlides")}
@@ -387,7 +387,7 @@ export function HeroSlider({ id,
         )}
 
         {isViewMode && probingEntries.length > 0 && (
-          <div className="absolute h-px w-px overflow-hidden" aria-hidden>
+          <div id="features-advertisements-presentation-heroslider-div-6-xgxyww" className="absolute h-px w-px overflow-hidden" aria-hidden>
             {probingEntries.map(({ slide, originalIndex }) => (
               <HeroSliderImageProbe
                 key={`probe-${originalIndex}-${slide.priority}`}
@@ -402,7 +402,7 @@ export function HeroSlider({ id,
         {/* Render slider contents if config is loaded */}
         {isConfigLoaded && hasSlides && (
           <>
-            <div
+            <div id="features-advertisements-presentation-heroslider-div-7-zj73ya"
               className="relative w-full h-full overflow-hidden"
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}

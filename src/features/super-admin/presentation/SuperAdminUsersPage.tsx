@@ -193,13 +193,13 @@ export function SuperAdminUsersPage() {
   };
 
   if (isLoading) {
-    return <div id="super-admin.super-admin-users-page.div" className="p-4 text-sm text-on-surface-variant">جاري التحميل...</div>;
+    return <div id='features-super-admin-presentation-superadminuserspage-div-1-cuiiul' className="p-4 text-sm text-on-surface-variant">جاري التحميل...</div>;
   }
 
   if (!allowed) {
     return (
-      <div id="super-admin.super-admin-users-page.div.2" className="mx-auto max-w-2xl p-6">
-        <div id="super-admin.super-admin-users-page.div.3" className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
+      <div id='features-super-admin-presentation-superadminuserspage-div-2-zgz9vu' className="mx-auto max-w-2xl p-6">
+        <div id='features-super-admin-presentation-superadminuserspage-div-3-0hzesj' className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
           هذه الصفحة متاحة للسوبر أدمن فقط.
         </div>
       </div>
@@ -207,100 +207,100 @@ export function SuperAdminUsersPage() {
   }
 
   return (
-    <main id="super-admin.super-admin-users-page.main" className="mx-auto w-full max-w-7xl space-y-5 p-4 pb-24">
-      <header id="super-admin.super-admin-users-page.header" className="flex flex-wrap items-center justify-between gap-3">
-        <div id="super-admin.super-admin-users-page.div.4">
-          <h1 id="super-admin.super-admin-users-page.h1" className="text-2xl font-semibold text-on-surface">
+    <main id='features-super-admin-presentation-superadminuserspage-main-4-oge75p' className="mx-auto w-full max-w-7xl space-y-5 p-4 pb-24">
+      <header id='features-super-admin-presentation-superadminuserspage-header-5-h4tlmg' className="flex flex-wrap items-center justify-between gap-3">
+        <div id='features-super-admin-presentation-superadminuserspage-div-6-imqkyh'>
+          <h1 id='features-super-admin-presentation-superadminuserspage-heading-7-z9jjex' className="text-2xl font-semibold text-on-surface">
             بحث المستخدمين
           </h1>
-          <p id="super-admin.super-admin-users-page.p" className="text-sm text-on-surface-variant">
+          <p id='features-super-admin-presentation-superadminuserspage-text-8-aiwklh' className="text-sm text-on-surface-variant">
             بحث بالاسم، الهاتف، عدد المنتجات، التخصصات، فتح الحساب بصلاحياته أو حذفه نهائياً.
           </p>
         </div>
-        <div id="super-admin.super-admin-users-page.div.5" className="rounded-lg border bg-amber-50 px-3 py-2 text-sm text-amber-800">
+        <div id='features-super-admin-presentation-superadminuserspage-div-9-qnn71q' className="rounded-lg border bg-amber-50 px-3 py-2 text-sm text-amber-800">
           الانتحال يعطي صلاحيات كاملة للحساب المختار.
         </div>
       </header>
 
-      <section id="super-admin.super-admin-users-page.section" className="grid gap-3 rounded-lg border bg-surface p-3 md:grid-cols-[1.5fr_1fr_0.7fr_0.7fr_auto]">
-        <label id="super-admin.super-admin-users-page.label" className="space-y-1">
-          <span id="super-admin.super-admin-users-page.span" className="text-xs text-on-surface-variant">بحث عام</span>
-          <Input id="super-admin.super-admin-users-page.input.2"
+      <section id='features-super-admin-presentation-superadminuserspage-section-10-l81hnd' className="grid gap-3 rounded-lg border bg-surface p-3 md:grid-cols-[1.5fr_1fr_0.7fr_0.7fr_auto]">
+        <label id='features-super-admin-presentation-superadminuserspage-label-11-bxsskq' className="space-y-1">
+          <span id='features-super-admin-presentation-superadminuserspage-text-12-u7iaaa' className="text-xs text-on-surface-variant">بحث عام</span>
+          <Input id='features-super-admin-presentation-superadminuserspage-input-13-r6vgdg'
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="اسم، هاتف، بريد، UID"
           />
         </label>
-        <label id="super-admin.super-admin-users-page.label.2" className="space-y-1">
-          <span id="super-admin.super-admin-users-page.span.2" className="text-xs text-on-surface-variant">التخصص</span>
-          <Input id="super-admin.super-admin-users-page.input.3"
+        <label id='features-super-admin-presentation-superadminuserspage-label-14-xtziga' className="space-y-1">
+          <span id='features-super-admin-presentation-superadminuserspage-text-15-unndm1' className="text-xs text-on-surface-variant">التخصص</span>
+          <Input id='features-super-admin-presentation-superadminuserspage-input-16-2np3if'
             value={specialty}
             onChange={(event) => setSpecialty(event.target.value)}
             placeholder="pharmacies أو delivery"
             dir="ltr"
           />
         </label>
-        <label id="super-admin.super-admin-users-page.label.3" className="space-y-1">
-          <span id="super-admin.super-admin-users-page.span.3" className="text-xs text-on-surface-variant">أقل منتجات</span>
-          <Input id="super-admin.super-admin-users-page.input.4"
+        <label id='features-super-admin-presentation-superadminuserspage-label-17-zzcu3f' className="space-y-1">
+          <span id='features-super-admin-presentation-superadminuserspage-text-18-mkznf7' className="text-xs text-on-surface-variant">أقل منتجات</span>
+          <Input id='features-super-admin-presentation-superadminuserspage-input-19-tqam1m'
             value={minProducts}
             onChange={(event) => setMinProducts(event.target.value)}
             inputMode="numeric"
           />
         </label>
-        <label id="super-admin.super-admin-users-page.label.4" className="space-y-1">
-          <span id="super-admin.super-admin-users-page.span.4" className="text-xs text-on-surface-variant">أكثر منتجات</span>
-          <Input id="super-admin.super-admin-users-page.input.5"
+        <label id='features-super-admin-presentation-superadminuserspage-label-20-bfxhtz' className="space-y-1">
+          <span id='features-super-admin-presentation-superadminuserspage-text-21-khwngk' className="text-xs text-on-surface-variant">أكثر منتجات</span>
+          <Input id='features-super-admin-presentation-superadminuserspage-input-22-1fovta'
             value={maxProducts}
             onChange={(event) => setMaxProducts(event.target.value)}
             inputMode="numeric"
           />
         </label>
-        <div id="super-admin.super-admin-users-page.div.6" className="flex items-end gap-2">
-          <label id="super-admin.super-admin-users-page.label.5" className="flex h-10 items-center gap-2 whitespace-nowrap rounded-md border px-3 text-sm">
-            <input id="super-admin.super-admin-users-page.input"
+        <div id='features-super-admin-presentation-superadminuserspage-div-23-sxpvyc' className="flex items-end gap-2">
+          <label id='features-super-admin-presentation-superadminuserspage-label-24-onkdlf' className="flex h-10 items-center gap-2 whitespace-nowrap rounded-md border px-3 text-sm">
+            <input id='features-super-admin-presentation-superadminuserspage-input-25-50bcmq'
               type="checkbox"
               checked={withProductsOnly}
               onChange={(event) => setWithProductsOnly(event.target.checked)}
             />
             لديهم منتجات
           </label>
-          <Button id="super-admin.super-admin-users-page.button" type="button" onClick={search} disabled={loading}>
-            <Search id="super-admin.super-admin-users-page.search" className="h-4 w-4" />
+          <Button id='features-super-admin-presentation-superadminuserspage-button-26-fcgjrh' type="button" onClick={search} disabled={loading}>
+            <Search id='features-super-admin-presentation-superadminuserspage-search-27-khjvta' className="h-4 w-4" />
             {loading ? "بحث..." : "بحث"}
           </Button>
         </div>
       </section>
 
       {error ? (
-        <div id="super-admin.super-admin-users-page.div.7" className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+        <div id='features-super-admin-presentation-superadminuserspage-div-28-xzuby6' className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
           {error}
         </div>
       ) : null}
 
-      <section id="super-admin.super-admin-users-page.section.2" className="overflow-hidden rounded-lg border bg-surface">
-        <div id="super-admin.super-admin-users-page.div.8" className="flex items-center justify-between border-b p-3">
-          <div id="super-admin.super-admin-users-page.div.9" className="flex items-center gap-2 text-sm font-semibold">
-            <UserRoundSearch id="super-admin.super-admin-users-page.user-round-search" className="h-4 w-4" />
+      <section id='features-super-admin-presentation-superadminuserspage-section-29-odxhjy' className="overflow-hidden rounded-lg border bg-surface">
+        <div id='features-super-admin-presentation-superadminuserspage-div-30-uxlnma' className="flex items-center justify-between border-b p-3">
+          <div id='features-super-admin-presentation-superadminuserspage-div-31-kpxs2y' className="flex items-center gap-2 text-sm font-semibold">
+            <UserRoundSearch id='features-super-admin-presentation-superadminuserspage-userroundsearch-32-zawdfm' className="h-4 w-4" />
             النتائج
           </div>
-          <span id="super-admin.super-admin-users-page.span.5" className="text-xs text-on-surface-variant">
+          <span id='features-super-admin-presentation-superadminuserspage-text-33-fdjslb' className="text-xs text-on-surface-variant">
             {results.length} مستخدم
           </span>
         </div>
-        <div id="super-admin.super-admin-users-page.div.10" className="overflow-x-auto">
-          <table id="super-admin.super-admin-users-page.table" className="w-full min-w-[980px] text-sm">
-            <thead id="super-admin.super-admin-users-page.thead" className="bg-muted/50 text-xs text-on-surface-variant">
-              <tr id="super-admin.super-admin-users-page.tr">
-                <th id="super-admin.super-admin-users-page.th" className="p-3 text-start">المستخدم</th>
-                <th id="super-admin.super-admin-users-page.th.2" className="p-3 text-start">الهاتف</th>
-                <th id="super-admin.super-admin-users-page.th.3" className="p-3 text-start">المنتجات</th>
-                <th id="super-admin.super-admin-users-page.th.4" className="p-3 text-start">التخصصات</th>
-                <th id="super-admin.super-admin-users-page.th.5" className="p-3 text-start">التواريخ</th>
-                <th id="super-admin.super-admin-users-page.th.6" className="p-3 text-start">إجراءات</th>
+        <div id='features-super-admin-presentation-superadminuserspage-div-34-donop2' className="overflow-x-auto">
+          <table id='features-super-admin-presentation-superadminuserspage-table-35-fig0n0' className="w-full min-w-[980px] text-sm">
+            <thead id='features-super-admin-presentation-superadminuserspage-thead-36-ir8tof' className="bg-muted/50 text-xs text-on-surface-variant">
+              <tr id='features-super-admin-presentation-superadminuserspage-tr-37-e2himv'>
+                <th id='features-super-admin-presentation-superadminuserspage-th-38-fqglvb' className="p-3 text-start">المستخدم</th>
+                <th id='features-super-admin-presentation-superadminuserspage-th-39-rpbose' className="p-3 text-start">الهاتف</th>
+                <th id='features-super-admin-presentation-superadminuserspage-th-40-st0utm' className="p-3 text-start">المنتجات</th>
+                <th id='features-super-admin-presentation-superadminuserspage-th-41-du2lv8' className="p-3 text-start">التخصصات</th>
+                <th id='features-super-admin-presentation-superadminuserspage-th-42-d4vpme' className="p-3 text-start">التواريخ</th>
+                <th id='features-super-admin-presentation-superadminuserspage-th-43-briaqq' className="p-3 text-start">إجراءات</th>
               </tr>
             </thead>
-            <tbody id="super-admin.super-admin-users-page.tbody">
+            <tbody id='features-super-admin-presentation-superadminuserspage-tbody-44-cov2ed'>
               {results.map((user) => (
                 <tr key={user.uid} className="border-t align-top">
                   <td className="max-w-xs p-3">
@@ -401,8 +401,8 @@ export function SuperAdminUsersPage() {
                 </tr>
               ))}
               {results.length === 0 && !loading ? (
-                <tr id="super-admin.super-admin-users-page.tr.2">
-                  <td id="super-admin.super-admin-users-page.td" colSpan={6} className="p-8 text-center text-on-surface-variant">
+                <tr id='features-super-admin-presentation-superadminuserspage-tr-45-zmvbwp'>
+                  <td id='features-super-admin-presentation-superadminuserspage-td-46-aqbhry' colSpan={6} className="p-8 text-center text-on-surface-variant">
                     لا توجد نتائج مطابقة.
                   </td>
                 </tr>
@@ -412,8 +412,8 @@ export function SuperAdminUsersPage() {
         </div>
       </section>
 
-      <div id="super-admin.super-admin-users-page.div.11" className="flex items-center gap-2 rounded-lg border bg-amber-50 p-3 text-sm text-amber-800">
-        <ShieldAlert id="super-admin.super-admin-users-page.shield-alert" className="h-4 w-4" />
+      <div id='features-super-admin-presentation-superadminuserspage-div-47-teyuzn' className="flex items-center gap-2 rounded-lg border bg-amber-50 p-3 text-sm text-amber-800">
+        <ShieldAlert id='features-super-admin-presentation-superadminuserspage-shieldalert-48-z1ngsk' className="h-4 w-4" />
         يتم تسجيل كل عملية انتحال أو حذف حساب في سجل النظام.
       </div>
     </main>

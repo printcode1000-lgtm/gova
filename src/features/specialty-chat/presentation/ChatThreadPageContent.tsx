@@ -126,20 +126,20 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
 
   if (isLoading) {
     return (
-      <main id="specialty-chat.chat-thread-page-content.main" className="flex min-h-[60vh] items-center justify-center">
-        <Loader2 id="specialty-chat.chat-thread-page-content.loader2" className="h-6 w-6 animate-spin text-primary" />
+      <main id='features-specialty-chat-presentation-chatthreadpagecontent-main-1-xgkw35' className="flex min-h-[60vh] items-center justify-center">
+        <Loader2 id='features-specialty-chat-presentation-chatthreadpagecontent-loader2-2-mydzx0' className="h-6 w-6 animate-spin text-primary" />
       </main>
     );
   }
 
   if (!conversation) {
     return (
-      <main className="mx-auto flex min-h-[60vh] max-w-3xl flex-col items-center justify-center px-4 text-center">
-        <MessageCircle id="specialty-chat.chat-thread-page-content.message-circle" className="h-12 w-12 text-muted-foreground" />
-        <h1 id="specialty-chat.chat-thread-page-content.h1" className="mt-4 text-xl font-bold">
+      <main id="features-specialty-chat-presentation-chatthreadpagecontent-main-3-091eb1" className="mx-auto flex min-h-[60vh] max-w-3xl flex-col items-center justify-center px-4 text-center">
+        <MessageCircle id='features-specialty-chat-presentation-chatthreadpagecontent-messagecircle-4-um5s0r' className="h-12 w-12 text-muted-foreground" />
+        <h1 id='features-specialty-chat-presentation-chatthreadpagecontent-heading-5-o5a556' className="mt-4 text-xl font-bold">
           {locale === "ar" ? "المحادثة غير موجودة على هذا الجهاز" : "Conversation not found on this device"}
         </h1>
-        <Link id="specialty-chat.chat-thread-page-content.link" href="/notifications?filter=chat" className="mt-5 rounded-xl bg-primary px-5 py-2.5 font-semibold text-on-primary">
+        <Link id='features-specialty-chat-presentation-chatthreadpagecontent-link-6-jfn9qk' href="/notifications?filter=chat" className="mt-5 rounded-xl bg-primary px-5 py-2.5 font-semibold text-on-primary">
           {locale === "ar" ? "العودة إلى المحادثات" : "Back to chats"}
         </Link>
       </main>
@@ -162,21 +162,21 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
   const BackIcon = isRTL ? ArrowRight : ArrowLeft;
 
   return (
-    <main id="specialty-chat.chat-thread-page-content.main.2" className="mx-auto w-full max-w-3xl px-3 pb-40 pt-3 sm:px-5">
-      <header id="specialty-chat.chat-thread-page-content.header" className="sticky top-0 z-20 -mx-3 flex items-center gap-3 border-b border-outline-variant bg-surface/95 px-3 py-3 backdrop-blur sm:-mx-5 sm:px-5">
-        <Link id="specialty-chat.chat-thread-page-content.link.2" href="/notifications?filter=chat" aria-label={locale === "ar" ? "العودة" : "Back"} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
+    <main id='features-specialty-chat-presentation-chatthreadpagecontent-main-7-8vzsjj' className="mx-auto w-full max-w-3xl px-3 pb-40 pt-3 sm:px-5">
+      <header id='features-specialty-chat-presentation-chatthreadpagecontent-header-8-hzuvqp' className="sticky top-0 z-20 -mx-3 flex items-center gap-3 border-b border-outline-variant bg-surface/95 px-3 py-3 backdrop-blur sm:-mx-5 sm:px-5">
+        <Link id='features-specialty-chat-presentation-chatthreadpagecontent-link-9-knei07' href="/notifications?filter=chat" aria-label={locale === "ar" ? "العودة" : "Back"} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
           <BackIcon className="h-5 w-5" />
         </Link>
-        <span id="specialty-chat.chat-thread-page-content.span" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300">
-          <MessageCircle id="specialty-chat.chat-thread-page-content.message-circle.2" className="h-5 w-5" />
+        <span id='features-specialty-chat-presentation-chatthreadpagecontent-text-10-6rj305' className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300">
+          <MessageCircle id='features-specialty-chat-presentation-chatthreadpagecontent-messagecircle-11-qoxyed' className="h-5 w-5" />
         </span>
-        <span id="specialty-chat.chat-thread-page-content.span.2" className="min-w-0">
-          <strong className="block truncate text-on-surface">{title}</strong>
-          {specialty ? <span id="specialty-chat.chat-thread-page-content.span.3" className="block truncate text-xs text-muted-foreground">{specialty}</span> : null}
+        <span id='features-specialty-chat-presentation-chatthreadpagecontent-text-12-rx01lu' className="min-w-0">
+          <strong id="features-specialty-chat-presentation-chatthreadpagecontent-strong-13-pba5k3" className="block truncate text-on-surface">{title}</strong>
+          {specialty ? <span id='features-specialty-chat-presentation-chatthreadpagecontent-text-14-hfnifm' className="block truncate text-xs text-muted-foreground">{specialty}</span> : null}
         </span>
       </header>
 
-      <section id="specialty-chat.chat-thread-page-content.section" className="space-y-2 py-4" aria-label={title}>
+      <section id='features-specialty-chat-presentation-chatthreadpagecontent-section-15-absopf' className="space-y-2 py-4" aria-label={title}>
         {messages.map((message, index) => {
           const outgoing = message.metadata?.outgoing === true;
           const showDay = index === 0 || chatMessageDayKey(messages[index - 1].createdAt) !== chatMessageDayKey(message.createdAt);
@@ -216,18 +216,18 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
             </React.Fragment>
           );
         })}
-        <div id="specialty-chat.chat-thread-page-content.div" ref={endRef} />
+        <div id='features-specialty-chat-presentation-chatthreadpagecontent-div-16-44nbde' ref={endRef} />
       </section>
 
-      <div id="specialty-chat.chat-thread-page-content.div.2"
+      <div id='features-specialty-chat-presentation-chatthreadpagecontent-div-17-ipvynq'
         className="fixed inset-x-0 z-40 px-3 sm:px-5"
         style={{ bottom: BOTTOM_NAV_CLEARANCE }}
       >
-        <div id="specialty-chat.chat-thread-page-content.div.3" className="mx-auto max-w-3xl rounded-2xl border border-outline-variant bg-surface/95 p-2 shadow-xl backdrop-blur">
-          {status ? <p id="specialty-chat.chat-thread-page-content.p" className="mb-2 rounded-xl bg-error/10 px-3 py-2 text-xs font-semibold text-error" role="status">{status}</p> : null}
+        <div id='features-specialty-chat-presentation-chatthreadpagecontent-div-18-e6pg1x' className="mx-auto max-w-3xl rounded-2xl border border-outline-variant bg-surface/95 p-2 shadow-xl backdrop-blur">
+          {status ? <p id='features-specialty-chat-presentation-chatthreadpagecontent-text-19-zermun' className="mb-2 rounded-xl bg-error/10 px-3 py-2 text-xs font-semibold text-error" role="status">{status}</p> : null}
           {canReply ? (
-            <div id="specialty-chat.chat-thread-page-content.div.4" className="flex items-end gap-2">
-              <textarea id="specialty-chat.chat-thread-page-content.textarea"
+            <div id='features-specialty-chat-presentation-chatthreadpagecontent-div-20-v4fawi' className="flex items-end gap-2">
+              <textarea id='features-specialty-chat-presentation-chatthreadpagecontent-textarea-21-awpimq'
                 value={reply}
                 onChange={(event) => setReply(event.target.value.slice(0, 800))}
                 onKeyDown={(event) => {
@@ -240,18 +240,18 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
                 placeholder={locale === "ar" ? "اكتب رسالة..." : "Write a message..."}
                 className="max-h-28 min-h-11 min-w-0 flex-1 resize-none rounded-xl border border-outline-variant bg-surface-container px-3 py-2.5 text-sm outline-none focus:border-primary"
               />
-              <button
+              <button id="features-specialty-chat-presentation-chatthreadpagecontent-button-22-y4u6fq"
                 type="button"
                 disabled={replying || !reply.trim()}
                 onClick={() => void sendReply()}
                 aria-label={locale === "ar" ? "إرسال" : "Send"}
                 className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary text-on-primary disabled:opacity-50"
               >
-                {replying ? <Loader2 id="specialty-chat.chat-thread-page-content.loader2.2" className="h-5 w-5 animate-spin" /> : <Send id="specialty-chat.chat-thread-page-content.send" className="h-5 w-5" />}
+                {replying ? <Loader2 id='features-specialty-chat-presentation-chatthreadpagecontent-loader2-23-yyort7' className="h-5 w-5 animate-spin" /> : <Send id='features-specialty-chat-presentation-chatthreadpagecontent-send-24-7rlboh' className="h-5 w-5" />}
               </button>
             </div>
           ) : (
-            <p id="specialty-chat.chat-thread-page-content.p.2" className="px-3 py-2 text-center text-sm text-muted-foreground">
+            <p id='features-specialty-chat-presentation-chatthreadpagecontent-text-25-ll9f9j' className="px-3 py-2 text-center text-sm text-muted-foreground">
               {conversation.kind === "broadcast"
                 ? locale === "ar"
                   ? "ستظهر محادثة مستقلة هنا عند وصول رد من أحد مقدمي الخدمة."

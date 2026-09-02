@@ -61,14 +61,14 @@ export function PhoneCountryDialog({
             {title}
           </DialogTitle>
         </DialogHeader>
-        <div
+        <div id="shared-ui-phone-country-dialog-div-2-imozkx"
           className="p-3"
         >
-          <div
+          <div id="shared-ui-phone-country-dialog-div-3-qfnxek"
             className="relative"
           >
             <Search className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant" />
-            <input
+            <input id="shared-ui-phone-country-dialog-input-4-chyyhj"
               type="search"
               inputMode="search"
               value={search}
@@ -79,17 +79,17 @@ export function PhoneCountryDialog({
             />
           </div>
         </div>
-        <div
+        <div id="shared-ui-phone-country-dialog-div-5-ozxzhg"
           className="max-h-[55vh] overflow-y-auto overscroll-y-contain px-3 pb-3"
         >
           {visible.length === 0 ? (
-            <p
+            <p id="shared-ui-phone-country-dialog-text-6-8dfum4"
               className="px-2 py-6 text-center text-sm text-on-surface-variant"
             >
               {emptyLabel}
             </p>
           ) : (
-            <ul
+            <ul id="shared-ui-phone-country-dialog-ul-7-as9vlv"
               className="space-y-1"
             >
               {visible.map((choice) => (

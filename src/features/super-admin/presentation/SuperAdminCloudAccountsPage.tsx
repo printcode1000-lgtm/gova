@@ -9,14 +9,14 @@ import { SuperAdminCloudAccountsContent } from "./SuperAdminCloudAccountsContent
 
 function SuperAdminCloudAccountsLoading() {
   return (
-    <div id="super-admin.super-admin-cloud-accounts-page.div" className="p-4 text-sm text-on-surface-variant">جاري التحميل...</div>
+    <div id='features-super-admin-presentation-superadmincloudaccountspage-div-1-atkgmx' className="p-4 text-sm text-on-surface-variant">جاري التحميل...</div>
   );
 }
 
 function SuperAdminCloudAccountsForbidden() {
   return (
-    <div id="super-admin.super-admin-cloud-accounts-page.div.2" className="mx-auto max-w-2xl p-6">
-      <div id="super-admin.super-admin-cloud-accounts-page.div.3" className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
+    <div id='features-super-admin-presentation-superadmincloudaccountspage-div-2-lbnt2b' className="mx-auto max-w-2xl p-6">
+      <div id='features-super-admin-presentation-superadmincloudaccountspage-div-3-zgjk4l' className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
         هذه الصفحة متاحة للسوبر أدمن فقط.
       </div>
     </div>

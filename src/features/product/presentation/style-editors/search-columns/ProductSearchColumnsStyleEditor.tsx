@@ -109,14 +109,14 @@ export function ProductSearchColumnsStyleEditor({
   };
 
   return (
-    <section id="product.style-editors.search-columns.product-search-columns-style-editor.section" className="rounded-xl border border-outline-variant bg-background p-4 shadow-sm">
-      <div id="product.style-editors.search-columns.product-search-columns-style-editor.div" className="border-b border-outline-variant pb-3">
-        <h3 id="product.style-editors.search-columns.product-search-columns-style-editor.h3" className="text-sm font-bold">أعمدة البحث</h3>
-        <p id="product.style-editors.search-columns.product-search-columns-style-editor.p" className="mt-1 text-xs text-muted-foreground">
+    <section id='presentation-style-editors-search-columns-productsearchcolumnsstyleeditor-section-1-ugqvai' className="rounded-xl border border-outline-variant bg-background p-4 shadow-sm">
+      <div id='presentation-style-editors-search-columns-productsearchcolumnsstyleeditor-div-2-28sr8y' className="border-b border-outline-variant pb-3">
+        <h3 id='presentation-style-editors-search-columns-productsearchcolumnsstyleeditor-heading-3-ehjcon' className="text-sm font-bold">أعمدة البحث</h3>
+        <p id='presentation-style-editors-search-columns-productsearchcolumnsstyleeditor-text-4-ijifcj' className="mt-1 text-xs text-muted-foreground">
           هذه الحاوية لا تملك ترتيبًا. ترتيب المكونات يتحكم فقط في ظهور المكونات داخل صفحة المنتج.
         </p>
       </div>
-      <div id="product.style-editors.search-columns.product-search-columns-style-editor.div.2" className="mt-4 space-y-4">
+      <div id='presentation-style-editors-search-columns-productsearchcolumnsstyleeditor-div-5-npzpix' className="mt-4 space-y-4">
         {GROUPS.map((group) => (
           <div key={group.key} className="rounded-lg border border-outline-variant p-3">
             <h4 className="mb-2 text-xs font-bold text-primary">{group.title}</h4>

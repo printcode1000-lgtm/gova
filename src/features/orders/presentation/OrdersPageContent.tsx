@@ -70,57 +70,57 @@ export function OrdersPageContent() {
 
   if (sessionLoading) {
     return (
-      <main id="orders.orders-page-content.main" className="flex min-h-[50vh] items-center justify-center">
-        <Loader2 id="orders.orders-page-content.loader2" className="h-6 w-6 animate-spin text-primary" />
+      <main id='features-orders-presentation-orderspagecontent-main-1-wwtzdf' className="flex min-h-[50vh] items-center justify-center">
+        <Loader2 id='features-orders-presentation-orderspagecontent-loader2-2-lt0x9p' className="h-6 w-6 animate-spin text-primary" />
       </main>
     );
   }
 
   if (!session?.uid) {
     return (
-      <main id="orders.orders-page-content.main.2" className="mx-auto max-w-4xl px-4 py-10 text-center">
-        <h1 id="orders.orders-page-content.h1" className="text-2xl font-bold">{copy.title}</h1>
-        <p id="orders.orders-page-content.p" className="mt-3 text-muted-foreground">{copy.login}</p>
+      <main id='features-orders-presentation-orderspagecontent-main-3-c9dslo' className="mx-auto max-w-4xl px-4 py-10 text-center">
+        <h1 id='features-orders-presentation-orderspagecontent-heading-4-tma1gi' className="text-2xl font-bold">{copy.title}</h1>
+        <p id='features-orders-presentation-orderspagecontent-text-5-vvqqaq' className="mt-3 text-muted-foreground">{copy.login}</p>
       </main>
     );
   }
 
   return (
-    <main id="orders.orders-page-content.main.3" className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
-      <div id="orders.orders-page-content.div" className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
-        <div id="orders.orders-page-content.div.2">
-          <h1 id="orders.orders-page-content.h1.2" className="text-2xl font-bold">{copy.title}</h1>
-          <p id="orders.orders-page-content.p.2" className="mt-1 text-sm text-muted-foreground">{copy.description}</p>
+    <main id='features-orders-presentation-orderspagecontent-main-6-h8iowi' className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
+      <div id='features-orders-presentation-orderspagecontent-div-7-gouh6i' className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
+        <div id='features-orders-presentation-orderspagecontent-div-8-lhvi7z'>
+          <h1 id='features-orders-presentation-orderspagecontent-heading-9-b6iutm' className="text-2xl font-bold">{copy.title}</h1>
+          <p id='features-orders-presentation-orderspagecontent-text-10-biyyn9' className="mt-1 text-sm text-muted-foreground">{copy.description}</p>
         </div>
         {admin ? (
-          <span id="orders.orders-page-content.span" className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
-            <ShieldCheck id="orders.orders-page-content.shield-check" className="h-4 w-4" />
+          <span id='features-orders-presentation-orderspagecontent-text-11-m3wb29' className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
+            <ShieldCheck id='features-orders-presentation-orderspagecontent-shieldcheck-12-q6dv3s' className="h-4 w-4" />
             {copy.admin}
           </span>
         ) : null}
       </div>
 
       {error ? (
-        <p id="orders.orders-page-content.p.3" className="mb-4 rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
+        <p id='features-orders-presentation-orderspagecontent-text-13-8bjetb' className="mb-4 rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
           {error}
         </p>
       ) : null}
 
       {loading ? (
-        <div id="orders.orders-page-content.div.3" className="flex min-h-[30vh] items-center justify-center">
-          <Loader2 id="orders.orders-page-content.loader2.2" className="h-6 w-6 animate-spin text-primary" />
+        <div id='features-orders-presentation-orderspagecontent-div-14-lvuspp' className="flex min-h-[30vh] items-center justify-center">
+          <Loader2 id='features-orders-presentation-orderspagecontent-loader2-15-ypvofo' className="h-6 w-6 animate-spin text-primary" />
         </div>
       ) : items.length === 0 ? (
-        <section className="rounded-xl border border-dashed border-outline-variant p-10 text-center">
-          <ClipboardList id="orders.orders-page-content.clipboard-list" className="mx-auto h-10 w-10 text-muted-foreground" />
-          <h2 id="orders.orders-page-content.h2" className="mt-4 text-lg font-bold">{copy.emptyTitle}</h2>
-          <p id="orders.orders-page-content.p.4" className="mt-2 text-sm text-muted-foreground">
+        <section id="features-orders-presentation-orderspagecontent-section-16-mdt1uw" className="rounded-xl border border-dashed border-outline-variant p-10 text-center">
+          <ClipboardList id='features-orders-presentation-orderspagecontent-clipboardlist-17-ytwpht' className="mx-auto h-10 w-10 text-muted-foreground" />
+          <h2 id='features-orders-presentation-orderspagecontent-heading-18-3vnfww' className="mt-4 text-lg font-bold">{copy.emptyTitle}</h2>
+          <p id='features-orders-presentation-orderspagecontent-text-19-u4eeyn' className="mt-2 text-sm text-muted-foreground">
             {copy.emptyDescription}
           </p>
         </section>
       ) : (
         <>
-          <section id="orders.orders-page-content.section" className="grid gap-4 md:grid-cols-2">
+          <section id='features-orders-presentation-orderspagecontent-section-20-rlkmqp' className="grid gap-4 md:grid-cols-2">
             {items.map(({ order, viewerRoles }) => {
               const id = String(order.id);
               const detailRole = primaryViewerRole(viewerRoles, admin);
@@ -188,8 +188,8 @@ export function OrdersPageContent() {
           </section>
 
           {hasMore ? (
-            <div id="orders.orders-page-content.div.4" className="mt-6 flex justify-center">
-              <button
+            <div id='features-orders-presentation-orderspagecontent-div-21-wagclb' className="mt-6 flex justify-center">
+              <button id="features-orders-presentation-orderspagecontent-button-22-c0vcbz"
                 type="button"
                 onClick={() => void loadOrders()}
                 disabled={loadingMore}
@@ -197,7 +197,7 @@ export function OrdersPageContent() {
               >
                 {loadingMore ? (
                   <>
-                    <Loader2 id="orders.orders-page-content.loader2.3" className="h-4 w-4 animate-spin" />
+                    <Loader2 id='features-orders-presentation-orderspagecontent-loader2-23-6h5wto' className="h-4 w-4 animate-spin" />
                     {copy.loadingMore}
                   </>
                 ) : (

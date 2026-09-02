@@ -88,18 +88,18 @@ export function SuperAdminImpersonationBanner() {
   if (!original || !session || isSuperAdmin(session)) return null;
 
   return (
-    <div id="super-admin.super-admin-impersonation-banner.div"
+    <div id='features-super-admin-presentation-superadminimpersonationbanner-div-1-qjqxdm'
       ref={bannerRef}
       className="fixed inset-x-0 top-0 z-[90] border-b border-amber-300 bg-amber-100 px-3 pb-2 pt-[calc(0.5rem+var(--asol-safe-area-top))] text-amber-950 shadow-sm"
     >
-      <div id="super-admin.super-admin-impersonation-banner.div.2" className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2 text-sm">
-        <div id="super-admin.super-admin-impersonation-banner.div.3" className="flex items-center gap-2">
-          <ShieldAlert id="super-admin.super-admin-impersonation-banner.shield-alert" className="h-4 w-4" />
-          <span id="super-admin.super-admin-impersonation-banner.span">
+      <div id='features-super-admin-presentation-superadminimpersonationbanner-div-2-bp46f8' className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2 text-sm">
+        <div id='features-super-admin-presentation-superadminimpersonationbanner-div-3-hpgy5q' className="flex items-center gap-2">
+          <ShieldAlert id='features-super-admin-presentation-superadminimpersonationbanner-shieldalert-4-ldviks' className="h-4 w-4" />
+          <span id='features-super-admin-presentation-superadminimpersonationbanner-text-5-esjhir'>
             أنت الآن داخل حساب {session.phone || session.uid} بصلاحيات كاملة.
           </span>
         </div>
-        <Button id="super-admin.super-admin-impersonation-banner.button" type="button" size="sm" variant="outline" onClick={stop}>
+        <Button id='features-super-admin-presentation-superadminimpersonationbanner-button-6-rstbbi' type="button" size="sm" variant="outline" onClick={stop}>
           إنهاء الانتحال والعودة للسوبر أدمن
         </Button>
       </div>

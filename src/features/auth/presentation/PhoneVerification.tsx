@@ -128,10 +128,10 @@ export function PhoneVerification({ id,
           name="phone"
           control={formContext.control}
           render={({ field, fieldState }) => (
-            <div id="auth.phone-verification.div.2" className="space-y-2">
-              <span id="auth.phone-verification.span" className="text-sm font-semibold text-on-surface">{t('auth.phone.label')}</span>
-              <div id="auth.phone-verification.div.3" className="flex items-center gap-2">
-                <PhoneField id="auth.phone-verification.div.4"
+            <div id='features-auth-presentation-phoneverification-div-2-sklcso' className="space-y-2">
+              <span id='features-auth-presentation-phoneverification-text-3-g4yvnh' className="text-sm font-semibold text-on-surface">{t('auth.phone.label')}</span>
+              <div id='features-auth-presentation-phoneverification-div-4-wsvtrn' className="flex items-center gap-2">
+                <PhoneField id='features-auth-presentation-phoneverification-phonefield-5-ul2zil'
                   className="flex-1"
                   labels={phoneLabels}
                   disabled={phoneVerified}
@@ -153,7 +153,7 @@ export function PhoneVerification({ id,
                   }}
                 />
                 {!phoneVerified && (
-                  <button id="auth.phone-verification.button"
+                  <button id='features-auth-presentation-phoneverification-button-6-v3zqur'
                     type="button"
                     onClick={() => void handleSendOtpWrapper()}
                     disabled={isSending || !canSend}
@@ -165,23 +165,23 @@ export function PhoneVerification({ id,
                   >
                     {isWaveActive && (
                       <>
-                        <span id="auth.phone-verification.span.3"
+                        <span id='features-auth-presentation-phoneverification-text-7-gmzkmz'
                           aria-hidden="true"
                           className="asol-phone-verify-wave pointer-events-none absolute inset-0 rounded-full"
                         />
-                        <span id="auth.phone-verification.span.4"
+                        <span id='features-auth-presentation-phoneverification-text-8-ncjhr3'
                           aria-hidden="true"
                           className="asol-phone-verify-wave asol-phone-verify-wave--delayed pointer-events-none absolute inset-0 rounded-full"
                         />
                       </>
                     )}
-                    <span id="auth.phone-verification.span.5" className="relative z-10 text-center leading-none">
+                    <span id='features-auth-presentation-phoneverification-text-9-rmmj8j' className="relative z-10 text-center leading-none">
                       {isSending ? '...' : otpSent ? t('auth.phone.resend') : t('auth.phone.verify')}
                     </span>
                   </button>
                 )}
                 {phoneVerified && (
-                  <button id="auth.phone-verification.button.2"
+                  <button id='features-auth-presentation-phoneverification-button-10-1d9wpd'
                     type="button"
                     onClick={handleEditPhoneWrapper}
                     aria-label={t('auth.phone.edit')}
@@ -192,24 +192,24 @@ export function PhoneVerification({ id,
                 )}
               </div>
               {phoneVerified && (
-                <p id="auth.phone-verification.p" className="text-xs text-success flex items-center gap-1 mt-1">
+                <p id='features-auth-presentation-phoneverification-text-11-2wndnf' className="text-xs text-success flex items-center gap-1 mt-1">
                   <CheckCircle2 className="h-3.5 w-3.5" />
                   {t('auth.phone.verified')}
                 </p>
               )}
-              {fieldState.error && <p id="auth.phone-verification.p.2" className="text-xs text-error">{fieldState.error.message}</p>}
-              {otpError && !otpSent && <p id="auth.phone-verification.p.3" className="text-xs text-error mt-1">{otpError}</p>}
+              {fieldState.error && <p id='features-auth-presentation-phoneverification-text-12-wnia5x' className="text-xs text-error">{fieldState.error.message}</p>}
+              {otpError && !otpSent && <p id='features-auth-presentation-phoneverification-text-13-jo1pgi' className="text-xs text-error mt-1">{otpError}</p>}
             </div>
           )}
         />
 
         {otpSent && !phoneVerified && (
-          <div id="auth.phone-verification.div.5" className="asol-auth-tonal-panel space-y-4">
-            <div id="auth.phone-verification.div.6" className="space-y-1">
-              <p id="auth.phone-verification.p.4" className="text-sm font-semibold text-on-surface">{t('auth.phone.enterOtp')}</p>
-              <p id="auth.phone-verification.p.5" className="text-xs text-on-surface-variant">
+          <div id='features-auth-presentation-phoneverification-div-14-hg05tu' className="asol-auth-tonal-panel space-y-4">
+            <div id='features-auth-presentation-phoneverification-div-15-dscmxt' className="space-y-1">
+              <p id='features-auth-presentation-phoneverification-text-16-xebcwm' className="text-sm font-semibold text-on-surface">{t('auth.phone.enterOtp')}</p>
+              <p id='features-auth-presentation-phoneverification-text-17-wkh9mv' className="text-xs text-on-surface-variant">
                 {t('auth.phone.sentTo')}{' '}
-                <span id="auth.phone-verification.span.6" className="font-medium text-on-surface">{formatPhoneDisplay(phone)}</span>
+                <span id='features-auth-presentation-phoneverification-text-18-vqmncc' className="font-medium text-on-surface">{formatPhoneDisplay(phone)}</span>
               </p>
             </div>
 
@@ -221,10 +221,10 @@ export function PhoneVerification({ id,
               hasError={!!otpError}
             />
 
-            {otpError && <p id="auth.phone-verification.p.6" className="text-xs text-error text-center">{otpError}</p>}
+            {otpError && <p id='features-auth-presentation-phoneverification-text-19-ekmwyp' className="text-xs text-error text-center">{otpError}</p>}
 
-            <div id="auth.phone-verification.div.7" className="flex items-center gap-3 w-full">
-              <button id="auth.phone-verification.button.3"
+            <div id='features-auth-presentation-phoneverification-div-20-v9cuej' className="flex items-center gap-3 w-full">
+              <button id='features-auth-presentation-phoneverification-button-21-da01ho'
                 type="button"
                 onClick={() => void handleVerifyOtpWrapper()}
                 disabled={otp.length !== 4 || isVerifying}
@@ -232,7 +232,7 @@ export function PhoneVerification({ id,
               >
                 {isVerifying ? t('auth.phone.verifying') : t('auth.phone.verifyOtp')}
               </button>
-              <button id="auth.phone-verification.button.4"
+              <button id='features-auth-presentation-phoneverification-button-22-a0z14b'
                 type="button"
                 onClick={() => void handleSendOtpWrapper()}
                 disabled={countdown > 0 || isSending}
@@ -250,13 +250,13 @@ export function PhoneVerification({ id,
   // Props mode (profile)
   return (
     <div id={id} className="space-y-4">
-      <div id="auth.phone-verification.div.9" className="space-y-2">
-        <span id="auth.phone-verification.span.7" className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-on-surface">
+      <div id='features-auth-presentation-phoneverification-div-24-t66hmf' className="space-y-2">
+        <span id='features-auth-presentation-phoneverification-text-25-rtj7kk' className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-on-surface">
           <Smartphone className="h-4 w-4 text-primary" />
           {t('auth.login.phone')}
         </span>
-        <div id="auth.phone-verification.div.10" className="flex items-center gap-2">
-          <PhoneField id="auth.phone-verification.div.11"
+        <div id='features-auth-presentation-phoneverification-div-26-ui51kk' className="flex items-center gap-2">
+          <PhoneField id='features-auth-presentation-phoneverification-phonefield-27-xueps7'
             className="min-w-0 flex-1"
             labels={phoneLabels}
             disabled={phoneVerified}
@@ -276,7 +276,7 @@ export function PhoneVerification({ id,
           />
 
           {!phoneVerified ? (
-            <button id="auth.phone-verification.button.5"
+            <button id='features-auth-presentation-phoneverification-button-28-mq18yu'
               type="button"
               onClick={() => void handleSendOtpWrapper()}
               disabled={isSending || !canSend}
@@ -288,17 +288,17 @@ export function PhoneVerification({ id,
             >
               {isWaveActive && (
                 <>
-                  <span id="auth.phone-verification.span.9"
+                  <span id='features-auth-presentation-phoneverification-text-29-fbbdoc'
                     aria-hidden="true"
                     className="asol-phone-verify-wave pointer-events-none absolute inset-0 rounded-full"
                   />
-                  <span id="auth.phone-verification.span.10"
+                  <span id='features-auth-presentation-phoneverification-text-30-dng558'
                     aria-hidden="true"
                     className="asol-phone-verify-wave asol-phone-verify-wave--delayed pointer-events-none absolute inset-0 rounded-full"
                   />
                 </>
               )}
-              <span id="auth.phone-verification.span.11" className="relative z-10 text-center leading-none">
+              <span id='features-auth-presentation-phoneverification-text-31-e4fi4j' className="relative z-10 text-center leading-none">
                 {isSending
                   ? '...'
                   : otpSent
@@ -307,7 +307,7 @@ export function PhoneVerification({ id,
               </span>
             </button>
           ) : (
-            <button id="auth.phone-verification.button.6"
+            <button id='features-auth-presentation-phoneverification-button-32-olkips'
               type="button"
               onClick={handleEditPhoneWrapper}
               aria-label={t('auth.phone.edit')}
@@ -319,24 +319,24 @@ export function PhoneVerification({ id,
         </div>
 
         {phoneVerified ? (
-          <p id="auth.phone-verification.p.7" className="mt-1 flex items-center gap-1 text-[10px] sm:text-xs text-success">
+          <p id='features-auth-presentation-phoneverification-text-33-clp9cd' className="mt-1 flex items-center gap-1 text-[10px] sm:text-xs text-success">
             <CheckCircle2 className="h-3.5 w-3.5" />
             {t('auth.phone.verified')}
           </p>
         ) : null}
-        {error ? <p id="auth.phone-verification.p.8" className="text-[10px] sm:text-xs text-error">{error}</p> : null}
-        {otpError && !otpSent ? <p id="auth.phone-verification.p.9" className="text-[10px] sm:text-xs text-error mt-1">{otpError}</p> : null}
+        {error ? <p id='features-auth-presentation-phoneverification-text-34-3f2w7c' className="text-[10px] sm:text-xs text-error">{error}</p> : null}
+        {otpError && !otpSent ? <p id='features-auth-presentation-phoneverification-text-35-mdkvjy' className="text-[10px] sm:text-xs text-error mt-1">{otpError}</p> : null}
       </div>
 
       {otpSent && !phoneVerified ? (
-        <div id="auth.phone-verification.div.12" className="asol-auth-tonal-panel space-y-3 sm:space-y-4">
-          <div id="auth.phone-verification.div.13" className="space-y-1">
-            <p id="auth.phone-verification.p.10" className="text-xs sm:text-sm font-semibold text-on-surface">
+        <div id='features-auth-presentation-phoneverification-div-36-38w7zx' className="asol-auth-tonal-panel space-y-3 sm:space-y-4">
+          <div id='features-auth-presentation-phoneverification-div-37-ktbg2b' className="space-y-1">
+            <p id='features-auth-presentation-phoneverification-text-38-lwkknn' className="text-xs sm:text-sm font-semibold text-on-surface">
               {t('auth.phone.enterOtp')}
             </p>
-            <p id="auth.phone-verification.p.11" className="text-[10px] sm:text-xs text-on-surface-variant">
+            <p id='features-auth-presentation-phoneverification-text-39-6waurh' className="text-[10px] sm:text-xs text-on-surface-variant">
               {t('auth.phone.sentTo')}{' '}
-              <span id="auth.phone-verification.span.12" className="font-medium text-on-surface">
+              <span id='features-auth-presentation-phoneverification-text-40-rcz1tl' className="font-medium text-on-surface">
                 {formatPhoneDisplay(phone)}
               </span>
             </p>
@@ -350,11 +350,11 @@ export function PhoneVerification({ id,
             hasError={Boolean(otpError)}
           />
           {otpError ? (
-            <p id="auth.phone-verification.p.12" className="text-center text-[10px] sm:text-xs text-error">{otpError}</p>
+            <p id='features-auth-presentation-phoneverification-text-41-wmd9mv' className="text-center text-[10px] sm:text-xs text-error">{otpError}</p>
           ) : null}
 
-          <div id="auth.phone-verification.div.14" className="flex w-full items-center gap-2 sm:gap-3">
-            <button id="auth.phone-verification.button.7"
+          <div id='features-auth-presentation-phoneverification-div-42-d4hud2' className="flex w-full items-center gap-2 sm:gap-3">
+            <button id='features-auth-presentation-phoneverification-button-43-fs1i65'
               type="button"
               onClick={() => void handleVerifyOtpWrapper()}
               disabled={otp.length !== 4 || isVerifying}
@@ -364,7 +364,7 @@ export function PhoneVerification({ id,
                 ? t('auth.phone.verifying')
                 : t('auth.phone.verifyOtp')}
             </button>
-            <button id="auth.phone-verification.button.8"
+            <button id='features-auth-presentation-phoneverification-button-44-tce4gr'
               type="button"
               onClick={() => void handleSendOtpWrapper()}
               disabled={countdown > 0 || isSending}

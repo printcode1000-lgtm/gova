@@ -128,30 +128,30 @@ export function OrderSummary({ id,
 } & { id?: string }) {
   return (
     <section id={id} className="mb-5 grid gap-4 md:grid-cols-3">
-      <div className="rounded-xl border border-outline-variant bg-surface p-4">
-        <p className="text-sm text-muted-foreground">{text.total}</p>
-        <p className="mt-1 text-xl font-bold">
+      <div id="orders-presentation-order-details-orderdetailspagecontent-navigation-summary-div-3-bbu7vq" className="rounded-xl border border-outline-variant bg-surface p-4">
+        <p id="orders-presentation-order-details-orderdetailspagecontent-navigation-summary-text-4-u6ivo2" className="text-sm text-muted-foreground">{text.total}</p>
+        <p id="orders-presentation-order-details-orderdetailspagecontent-navigation-summary-text-5-6pe0uw" className="mt-1 text-xl font-bold">
           {formatMoney(order.grand_total, currency)}
         </p>
         {hasPendingShippingQuote ? (
-          <p className="mt-2 text-xs leading-5 text-warning">
+          <p id="orders-presentation-order-details-orderdetailspagecontent-navigation-summary-text-6-d9duma" className="mt-2 text-xs leading-5 text-warning">
             الإجمالي مبدئي حتى قبول عرض الشحن حسب المكان.
           </p>
         ) : null}
       </div>
-      <div className="rounded-xl border border-outline-variant bg-surface p-4">
-        <p className="text-sm text-muted-foreground">{text.remaining}</p>
-        <p className="mt-1 text-xl font-bold">
+      <div id="orders-presentation-order-details-orderdetailspagecontent-navigation-summary-div-7-f99vap" className="rounded-xl border border-outline-variant bg-surface p-4">
+        <p id="orders-presentation-order-details-orderdetailspagecontent-navigation-summary-text-8-zbgg3g" className="text-sm text-muted-foreground">{text.remaining}</p>
+        <p id="orders-presentation-order-details-orderdetailspagecontent-navigation-summary-text-9-uknmyl" className="mt-1 text-xl font-bold">
           {formatMoney(order.remaining_total, currency)}
         </p>
       </div>
-      <div className="rounded-xl border border-outline-variant bg-surface p-4">
-        <p className="text-sm text-muted-foreground">{text.buyerAddress}</p>
-        <p className="mt-1 text-sm font-semibold">
+      <div id="orders-presentation-order-details-orderdetailspagecontent-navigation-summary-div-10-ja0dbh" className="rounded-xl border border-outline-variant bg-surface p-4">
+        <p id="orders-presentation-order-details-orderdetailspagecontent-navigation-summary-text-11-ky7ogs" className="text-sm text-muted-foreground">{text.buyerAddress}</p>
+        <p id="orders-presentation-order-details-orderdetailspagecontent-navigation-summary-text-12-0ik7um" className="mt-1 text-sm font-semibold">
           {buyerAddress || text.noAddress}
         </p>
         {buyerPhone ? (
-          <p className="mt-1 text-xs text-muted-foreground">{buyerPhone}</p>
+          <p id="orders-presentation-order-details-orderdetailspagecontent-navigation-summary-text-13-3qvnjm" className="mt-1 text-xs text-muted-foreground">{buyerPhone}</p>
         ) : null}
       </div>
     </section>

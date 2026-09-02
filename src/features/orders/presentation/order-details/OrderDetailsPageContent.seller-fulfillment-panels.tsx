@@ -52,13 +52,13 @@ export function SellerCarrierLinkPanel({ id,
 
   return (
     <div id={id} className="mt-3 rounded-lg border border-warning/30 bg-warning/10 p-3 text-sm">
-      <p className="leading-6 text-on-surface">{text.noCarrierSellerHint}</p>
+      <p id="orders-presentation-order-details-orderdetailspagecontent-seller-fulfillment-panels-text-3-wsyf5x" className="leading-6 text-on-surface">{text.noCarrierSellerHint}</p>
       {carrierUids.length > 1 ? (
-        <label className="mt-3 block space-y-1.5">
-          <span className="text-xs font-semibold text-muted-foreground">
+        <label id="orders-presentation-order-details-orderdetailspagecontent-seller-fulfillment-panels-label-4-zkd700" className="mt-3 block space-y-1.5">
+          <span id="orders-presentation-order-details-orderdetailspagecontent-seller-fulfillment-panels-text-5-4zzinz" className="text-xs font-semibold text-muted-foreground">
             مقدم التوصيل
           </span>
-          <select
+          <select id="orders-presentation-order-details-orderdetailspagecontent-seller-fulfillment-panels-select-6-lsey4y"
             value={selectedCarrierUid}
             onChange={(event) => setSelectedCarrierUid(event.target.value)}
             className="h-10 w-full rounded-lg border border-outline-variant bg-surface px-3 text-sm"
@@ -71,7 +71,7 @@ export function SellerCarrierLinkPanel({ id,
           </select>
         </label>
       ) : null}
-      <div className="mt-3 flex flex-wrap gap-2">
+      <div id="orders-presentation-order-details-orderdetailspagecontent-seller-fulfillment-panels-div-7-3p3ts7" className="mt-3 flex flex-wrap gap-2">
         <Link
           href={profileHref}
           className="inline-flex items-center gap-2 rounded-lg border border-outline-variant bg-surface px-3 py-2 text-xs font-semibold text-on-surface transition"
@@ -100,8 +100,8 @@ export function SellerCarrierLinkPanel({ id,
 export function SellerFulfillmentEditPanel({ id, orderId }: { orderId: string } & { id?: string }) {
   return (
     <div id={id} className="mt-3 rounded-lg border border-outline-variant bg-muted/20 p-3 text-sm">
-      <p className="leading-6 text-on-surface">{text.sellerFulfillmentHint}</p>
-      <div className="mt-3 flex flex-wrap gap-2">
+      <p id="orders-presentation-order-details-orderdetailspagecontent-seller-fulfillment-panels-text-10-zve67q" className="leading-6 text-on-surface">{text.sellerFulfillmentHint}</p>
+      <div id="orders-presentation-order-details-orderdetailspagecontent-seller-fulfillment-panels-div-11-49zvix" className="mt-3 flex flex-wrap gap-2">
         <Link
           href={profileFulfillmentSectionHref(orderId, "shipping")}
           className="inline-flex items-center gap-2 rounded-lg border border-outline-variant bg-surface px-3 py-2 text-xs font-semibold text-on-surface transition"

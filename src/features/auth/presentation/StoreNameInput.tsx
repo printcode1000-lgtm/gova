@@ -15,12 +15,12 @@ export function StoreNameInput() {
       name="storeName"
       control={control}
       render={({ field, fieldState }) => (
-        <div id="auth.store-name-input.div" className="space-y-2">
-          <label id="auth.store-name-input.label" htmlFor="registration-store-name" className="text-sm font-semibold text-on-surface">
+        <div id='features-auth-presentation-storenameinput-div-1-2inkro' className="space-y-2">
+          <label id='features-auth-presentation-storenameinput-label-2-nrzoy7' htmlFor='features-auth-presentation-storenameinput-input-3-ovlhvz' className="text-sm font-semibold text-on-surface">
             {t('auth.storeName.label')}
           </label>
           <input
-            id="registration-store-name"
+            id='features-auth-presentation-storenameinput-input-3-ovlhvz'
             name="storeName"
             type="text"
             autoComplete="organization"
@@ -30,8 +30,8 @@ export function StoreNameInput() {
             onChange={field.onChange}
             maxLength={120}
           />
-          <p id="auth.store-name-input.p" className="text-xs text-on-surface-variant">{t('auth.storeName.hint')}</p>
-          {fieldState.error && <p id="auth.store-name-input.p.2" className="text-xs text-error">{fieldState.error.message}</p>}
+          <p id='features-auth-presentation-storenameinput-text-4-eddpbv' className="text-xs text-on-surface-variant">{t('auth.storeName.hint')}</p>
+          {fieldState.error && <p id='features-auth-presentation-storenameinput-text-5-djqpzo' className="text-xs text-error">{fieldState.error.message}</p>}
         </div>
       )}
     />

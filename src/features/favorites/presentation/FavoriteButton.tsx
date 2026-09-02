@@ -48,7 +48,7 @@ export function FavoriteButton({ item, className, label, variant = "favorite" }:
       : "إضافة إلى المفضلة";
 
   return (
-    <button
+    <button id="features-favorites-presentation-favoritebutton-button-1-0as0mw"
       type="button"
       aria-label={ariaLabel}
       onClick={(event) => void handleClick(event)}
@@ -70,7 +70,7 @@ export function FavoriteButton({ item, className, label, variant = "favorite" }:
       ) : (
         <Heart className={cn("h-5 w-5", active && "fill-current")} />
       )}
-      {label ? <span>{label}</span> : null}
+      {label ? <span id="features-favorites-presentation-favoritebutton-text-2-soqmaz">{label}</span> : null}
     </button>
   );
 }

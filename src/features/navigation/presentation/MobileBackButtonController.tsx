@@ -13,13 +13,13 @@ export function MobileBackButtonController() {
   if (!showExitHint) return null;
 
   return (
-    <div id="navigation.mobile-back-button-controller.div"
+    <div id='features-navigation-presentation-mobilebackbuttoncontroller-div-1-jr6jse'
       role="status"
       aria-live="polite"
       className="fixed inset-x-4 z-[140] mx-auto flex max-w-sm items-center justify-center gap-2 rounded-2xl bg-inverse-surface px-4 py-3 text-sm font-semibold text-inverse-on-surface shadow-xl"
       style={{ bottom: BOTTOM_NAV_CLEARANCE }}
     >
-      <LogOut id="navigation.mobile-back-button-controller.log-out" className="h-4 w-4" aria-hidden="true" />
+      <LogOut id='features-navigation-presentation-mobilebackbuttoncontroller-logout-2-nml5zw' className="h-4 w-4" aria-hidden="true" />
       {t('navigation.pressBackAgainToExit')}
     </div>
   );

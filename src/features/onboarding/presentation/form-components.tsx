@@ -37,16 +37,16 @@ export function FormField({ id,
 }: FormFieldProps & { id?: string }) {
   return (
     <div id={id} className={cn('space-y-2', className)}>
-      <div className="flex items-center justify-between">
+      <div id="features-onboarding-presentation-form-components-div-2-4dh0en" className="flex items-center justify-between">
         <Label htmlFor={htmlFor} className="text-sm font-medium">
           {label}
-          {required && <span className="text-destructive ml-1">*</span>}
+          {required && <span id="features-onboarding-presentation-form-components-text-3-qunafv" className="text-destructive ml-1">*</span>}
         </Label>
-        {hint && <span className="text-xs text-muted-foreground">{hint}</span>}
+        {hint && <span id="features-onboarding-presentation-form-components-text-4-pwnh5f" className="text-xs text-muted-foreground">{hint}</span>}
       </div>
       {children}
       {error && (
-        <p className="text-xs text-destructive flex items-center gap-1">
+        <p id="features-onboarding-presentation-form-components-text-5-co2ywm" className="text-xs text-destructive flex items-center gap-1">
           <AlertCircle className="h-3 w-3" />
           {error}
         </p>
@@ -151,7 +151,7 @@ export function MultiSelect({ id,
 
   return (
     <div id={id} className="space-y-2">
-      <div className="flex flex-wrap gap-2">
+      <div id="features-onboarding-presentation-form-components-div-8-7mqmjp" className="flex flex-wrap gap-2">
         {value.map((v) => {
           const option = options.find((o) => o.value === v);
           return (
@@ -170,7 +170,7 @@ export function MultiSelect({ id,
       </div>
 
       {(!max || value.length < max) && (
-        <div className="relative">
+        <div id="features-onboarding-presentation-form-components-div-9-d4za8y" className="relative">
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -178,7 +178,7 @@ export function MultiSelect({ id,
             className="w-full"
           />
           {search && filteredOptions.length > 0 && (
-            <div className="absolute top-full left-0 right-0 mt-1 bg-background border rounded-md shadow-lg z-10 max-h-40 overflow-auto">
+            <div id="features-onboarding-presentation-form-components-div-10-befdu0" className="absolute top-full left-0 right-0 mt-1 bg-background border rounded-md shadow-lg z-10 max-h-40 overflow-auto">
               {filteredOptions.map((opt) => (
                 <button
                   key={opt.value}

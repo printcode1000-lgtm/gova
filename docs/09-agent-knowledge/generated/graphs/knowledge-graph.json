@@ -1420,6 +1420,36 @@
       ]
     },
     {
+      "id": "command:dom:id:check",
+      "kind": "command",
+      "name": "npm run dom:id:check",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "check",
+        "dom",
+        "dom:id:check",
+        "id",
+        "npm",
+        "npm run dom:id:check",
+        "run"
+      ]
+    },
+    {
+      "id": "command:dom:id:write",
+      "kind": "command",
+      "name": "npm run dom:id:write",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "dom",
+        "dom:id:write",
+        "id",
+        "npm",
+        "npm run dom:id:write",
+        "run",
+        "write"
+      ]
+    },
+    {
       "id": "command:env:ownership",
       "kind": "command",
       "name": "npm run env:ownership",
@@ -9977,6 +10007,66 @@
         "shared",
         "ui",
         "ui components domain"
+      ]
+    },
+    {
+      "id": "document:docs/04-ui-components/static-dom-identity.md",
+      "kind": "document",
+      "name": "Static DOM Identity",
+      "path": "docs/04-ui-components/static-dom-identity.md",
+      "summary": "Static DOM Identity gives repository-authored JSX DOM elements a permanent HTML `id` that can be audited by tooling without adding runtime work. The identity is source-owned: React rendering, deployment, CSS edits, copy changes, file moves, and refactors must not regenerate it.",
+      "tags": [
+        "adding",
+        "and",
+        "audited",
+        "be",
+        "by",
+        "can",
+        "changes",
+        "copy",
+        "css",
+        "deployment",
+        "docs/04-ui-components/static-dom-identity",
+        "docs/04-ui-components/static-dom-identity-manifest",
+        "docs/04-ui-components/static-dom-identity-manifest.json",
+        "docs/04-ui-components/static-dom-identity.md",
+        "dom",
+        "edits",
+        "elements",
+        "file",
+        "gives",
+        "html",
+        "id",
+        "identity",
+        "is",
+        "it",
+        "json",
+        "jsx",
+        "md",
+        "moves",
+        "must",
+        "not",
+        "permanent",
+        "react",
+        "refactors",
+        "regenerate",
+        "rendering",
+        "repository-authored",
+        "runtime",
+        "source-owned",
+        "src/app",
+        "src/features",
+        "src/shared",
+        "src/shared/dom/identity/static-ids",
+        "src/shared/dom/identity/static-ids.json",
+        "static",
+        "static dom identity",
+        "static dom identity gives repository-authored jsx dom elements a permanent html `id` that can be audited by tooling without adding runtime work. the identity is source-owned: react rendering, deployment, css edits, copy changes, file moves, and refactors must not regenerate it.",
+        "that",
+        "the",
+        "tooling",
+        "without",
+        "work"
       ]
     },
     {
@@ -26560,6 +26650,17 @@
       ]
     },
     {
+      "id": "script:scripts/dom-id-check.ts",
+      "kind": "script",
+      "name": "dom-id-check.ts",
+      "path": "scripts/dom-id-check.ts",
+      "tags": [
+        "scripts/dom-id-check",
+        "scripts/dom-id-check.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/encrypt-mobile-push-credential-blob.ts",
       "kind": "script",
       "name": "encrypt-mobile-push-credential-blob.ts",
@@ -26732,6 +26833,17 @@
       "tags": [
         "scripts/load-release-env",
         "scripts/load-release-env.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/migrate-static-dom-ids.ts",
+      "kind": "script",
+      "name": "migrate-static-dom-ids.ts",
+      "path": "scripts/migrate-static-dom-ids.ts",
+      "tags": [
+        "scripts/migrate-static-dom-ids",
+        "scripts/migrate-static-dom-ids.ts",
         "ts"
       ]
     },
@@ -28479,6 +28591,28 @@
       "tags": [
         "packages/architecture-core/src/checks/runtime-target-contract",
         "packages/architecture-core/src/checks/runtime-target-contract.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/architecture-core/src/checks/static-dom-identity-contract.ts",
+      "kind": "source",
+      "name": "static-dom-identity-contract.ts",
+      "path": "packages/architecture-core/src/checks/static-dom-identity-contract.ts",
+      "tags": [
+        "packages/architecture-core/src/checks/static-dom-identity-contract",
+        "packages/architecture-core/src/checks/static-dom-identity-contract.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/architecture-core/src/checks/static-dom-runtime-registry-contract.ts",
+      "kind": "source",
+      "name": "static-dom-runtime-registry-contract.ts",
+      "path": "packages/architecture-core/src/checks/static-dom-runtime-registry-contract.ts",
+      "tags": [
+        "packages/architecture-core/src/checks/static-dom-runtime-registry-contract",
+        "packages/architecture-core/src/checks/static-dom-runtime-registry-contract.ts",
         "ts"
       ]
     },
@@ -52595,6 +52729,30 @@
       ]
     },
     {
+      "id": "test:packages/architecture-core/src/tests/static-dom-identity-contract.test.ts",
+      "kind": "test",
+      "name": "static-dom-identity-contract.test.ts",
+      "path": "packages/architecture-core/src/tests/static-dom-identity-contract.test.ts",
+      "tags": [
+        "packages/architecture-core/src/tests/static-dom-identity-contract",
+        "packages/architecture-core/src/tests/static-dom-identity-contract.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/architecture-core/src/tests/static-dom-runtime-registry-contract.test.ts",
+      "kind": "test",
+      "name": "static-dom-runtime-registry-contract.test.ts",
+      "path": "packages/architecture-core/src/tests/static-dom-runtime-registry-contract.test.ts",
+      "tags": [
+        "packages/architecture-core/src/tests/static-dom-runtime-registry-contract",
+        "packages/architecture-core/src/tests/static-dom-runtime-registry-contract.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/auth-core/src/tests/index.test.ts",
       "kind": "test",
       "name": "index.test.ts",
@@ -56626,6 +56784,26 @@
     },
     {
       "from": "command:doctor:environment",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:dom:id:check",
+      "to": "script:scripts/dom-id-check.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:dom:id:check",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:dom:id:write",
+      "to": "script:scripts/dom-id-check.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:dom:id:write",
       "to": "runtime:tooling",
       "kind": "targets-runtime"
     },
@@ -69204,6 +69382,12 @@
     },
     {
       "from": "document:docs/04-ui-components/README.md",
+      "to": "document:docs/04-ui-components/static-dom-identity.md",
+      "kind": "references",
+      "detail": "./static-dom-identity.md"
+    },
+    {
+      "from": "document:docs/04-ui-components/README.md",
       "to": "document:docs/04-ui-components/theme-system.md",
       "kind": "references",
       "detail": "./theme-system.md"
@@ -69213,6 +69397,29 @@
       "to": "document:docs/04-ui-components/touch-interaction-policy.md",
       "kind": "references",
       "detail": "./touch-interaction-policy.md"
+    },
+    {
+      "from": "document:docs/04-ui-components/static-dom-identity.md",
+      "to": "domain:ui-components",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/04-ui-components/static-dom-identity.md",
+      "to": "feature:ota",
+      "kind": "references",
+      "detail": "src/features"
+    },
+    {
+      "from": "document:docs/04-ui-components/static-dom-identity.md",
+      "to": "source:src/app/page.tsx",
+      "kind": "references",
+      "detail": "src/app"
+    },
+    {
+      "from": "document:docs/04-ui-components/static-dom-identity.md",
+      "to": "source:src/shared/utils.ts",
+      "kind": "references",
+      "detail": "src/shared"
     },
     {
       "from": "document:docs/04-ui-components/theme-system.md",
@@ -76756,6 +76963,30 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/checks/static-dom-identity-contract.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/checks/static-dom-identity-contract.ts",
+      "kind": "documents",
+      "detail": "packages/architecture-core/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/checks/static-dom-runtime-registry-contract.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/checks/static-dom-runtime-registry-contract.ts",
+      "kind": "documents",
+      "detail": "packages/architecture-core/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:packages/architecture-core/src/checks/storage-core-contract.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -81712,6 +81943,30 @@
     },
     {
       "from": "domain:architecture",
+      "to": "test:packages/architecture-core/src/tests/static-dom-identity-contract.test.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "test:packages/architecture-core/src/tests/static-dom-identity-contract.test.ts",
+      "kind": "documents",
+      "detail": "packages/architecture-core/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "test:packages/architecture-core/src/tests/static-dom-runtime-registry-contract.test.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "test:packages/architecture-core/src/tests/static-dom-runtime-registry-contract.test.ts",
+      "kind": "documents",
+      "detail": "packages/architecture-core/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "test:packages/auth-core/src/tests/index.test.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -85012,6 +85267,12 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "script:scripts/dom-id-check.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "script:scripts/encrypt-mobile-push-credential-blob.ts",
       "kind": "documents",
       "detail": "scripts/"
@@ -85103,6 +85364,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "script:scripts/load-release-env.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/migrate-static-dom-ids.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -108003,6 +108270,11 @@
     {
       "from": "package:@asol/architecture-core",
       "to": "external-dependency:${specifier}",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/architecture-core",
+      "to": "external-dependency:react",
       "kind": "imports"
     },
     {
@@ -135065,6 +135337,17 @@
       "detail": "./runtime-knowledge"
     },
     {
+      "from": "script:scripts/dom-id-check.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/dom-id-check.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "imports",
+      "detail": "@asol/architecture-core"
+    },
+    {
       "from": "script:scripts/encrypt-mobile-push-credential-blob.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
@@ -135316,6 +135599,23 @@
       "to": "package:@asol/env-core",
       "kind": "imports",
       "detail": "@asol/env-core/process"
+    },
+    {
+      "from": "script:scripts/migrate-static-dom-ids.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/migrate-static-dom-ids.ts",
+      "to": "external-dependency:typescript",
+      "kind": "imports",
+      "detail": "typescript"
+    },
+    {
+      "from": "script:scripts/migrate-static-dom-ids.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "imports",
+      "detail": "@asol/architecture-core"
     },
     {
       "from": "script:scripts/open-android-outputs.ts",
@@ -138989,6 +139289,90 @@
       "detail": "./architecture-types"
     },
     {
+      "from": "source:packages/architecture-core/src/checks/static-dom-identity-contract.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/static-dom-identity-contract.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/static-dom-identity-contract.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/static-dom-identity-contract.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/static-dom-identity-contract.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/static-dom-identity-contract.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/static-dom-identity-contract.ts",
+      "to": "external-dependency:typescript",
+      "kind": "imports",
+      "detail": "typescript"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/static-dom-identity-contract.ts",
+      "to": "source:packages/architecture-core/src/checks/architecture-types.ts",
+      "kind": "imports",
+      "detail": "./architecture-types"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/static-dom-runtime-registry-contract.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/static-dom-runtime-registry-contract.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/static-dom-runtime-registry-contract.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/static-dom-runtime-registry-contract.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/static-dom-runtime-registry-contract.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/static-dom-runtime-registry-contract.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/static-dom-runtime-registry-contract.ts",
+      "to": "external-dependency:typescript",
+      "kind": "imports",
+      "detail": "typescript"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/static-dom-runtime-registry-contract.ts",
+      "to": "source:packages/architecture-core/src/checks/architecture-types.ts",
+      "kind": "imports",
+      "detail": "./architecture-types"
+    },
+    {
       "from": "source:packages/architecture-core/src/checks/storage-core-contract.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -139410,6 +139794,18 @@
     },
     {
       "from": "source:packages/architecture-core/src/index.ts",
+      "to": "source:packages/architecture-core/src/checks/static-dom-identity-contract.ts",
+      "kind": "imports",
+      "detail": "./checks/static-dom-identity-contract"
+    },
+    {
+      "from": "source:packages/architecture-core/src/index.ts",
+      "to": "source:packages/architecture-core/src/checks/static-dom-runtime-registry-contract.ts",
+      "kind": "imports",
+      "detail": "./checks/static-dom-runtime-registry-contract"
+    },
+    {
+      "from": "source:packages/architecture-core/src/index.ts",
       "to": "source:packages/architecture-core/src/contracts/contract.ts",
       "kind": "imports",
       "detail": "./contracts/contract"
@@ -139713,6 +140109,18 @@
       "to": "source:packages/architecture-core/src/checks/runtime-target-contract.ts",
       "kind": "imports",
       "detail": "./checks/runtime-target-contract"
+    },
+    {
+      "from": "source:packages/architecture-core/src/runner.ts",
+      "to": "source:packages/architecture-core/src/checks/static-dom-identity-contract.ts",
+      "kind": "imports",
+      "detail": "./checks/static-dom-identity-contract"
+    },
+    {
+      "from": "source:packages/architecture-core/src/runner.ts",
+      "to": "source:packages/architecture-core/src/checks/static-dom-runtime-registry-contract.ts",
+      "kind": "imports",
+      "detail": "./checks/static-dom-runtime-registry-contract"
     },
     {
       "from": "source:packages/architecture-core/src/runner.ts",
@@ -236883,6 +237291,111 @@
     },
     {
       "from": "test:packages/architecture-core/src/tests/index.test.ts",
+      "to": "test:packages/architecture-core/src/tests/static-dom-identity-contract.test.ts",
+      "kind": "imports",
+      "detail": "./static-dom-identity-contract.test"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/index.test.ts",
+      "to": "test:packages/architecture-core/src/tests/static-dom-runtime-registry-contract.test.ts",
+      "kind": "imports",
+      "detail": "./static-dom-runtime-registry-contract.test"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/index.test.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/static-dom-identity-contract.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/static-dom-identity-contract.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/static-dom-identity-contract.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/static-dom-identity-contract.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/static-dom-identity-contract.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/static-dom-identity-contract.test.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/static-dom-identity-contract.test.ts",
+      "to": "external-dependency:react",
+      "kind": "imports",
+      "detail": "react"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/static-dom-identity-contract.test.ts",
+      "to": "source:packages/architecture-core/src/index.ts",
+      "kind": "imports",
+      "detail": "../index"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/static-dom-identity-contract.test.ts",
+      "to": "external-dependency:react",
+      "kind": "tests"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/static-dom-identity-contract.test.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/static-dom-runtime-registry-contract.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/static-dom-runtime-registry-contract.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/static-dom-runtime-registry-contract.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/static-dom-runtime-registry-contract.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/static-dom-runtime-registry-contract.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/static-dom-runtime-registry-contract.test.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/static-dom-runtime-registry-contract.test.ts",
+      "to": "source:packages/architecture-core/src/index.ts",
+      "kind": "imports",
+      "detail": "../index"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/static-dom-runtime-registry-contract.test.ts",
       "to": "package:@asol/architecture-core",
       "kind": "tests"
     },

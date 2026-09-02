@@ -125,17 +125,17 @@ export function OrderDetailsPageContent({ id, orderId }: { orderId: string } & {
   if (!session?.uid) {
     return (
       <main id={id} className="mx-auto max-w-4xl px-4 py-10 text-center">
-        <h1 className="text-2xl font-bold">{text.detailsTitle}</h1>
-        <p className="mt-3 text-muted-foreground">{text.loginRequired}</p>
+        <h1 id="features-orders-presentation-orderdetailspagecontent-heading-3-es1b4l" className="text-2xl font-bold">{text.detailsTitle}</h1>
+        <p id="features-orders-presentation-orderdetailspagecontent-text-4-wz8k3y" className="mt-3 text-muted-foreground">{text.loginRequired}</p>
       </main>
     );
   }
 
   if (!details) {
     return (
-      <main className="mx-auto max-w-4xl px-4 py-10">
+      <main id="features-orders-presentation-orderdetailspagecontent-main-5-utgtxy" className="mx-auto max-w-4xl px-4 py-10">
         <BackToOrders />
-        <p className="mt-6 rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
+        <p id="features-orders-presentation-orderdetailspagecontent-text-6-xum2ed" className="mt-6 rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
           {error || text.notFound}
         </p>
       </main>
@@ -155,18 +155,18 @@ export function OrderDetailsPageContent({ id, orderId }: { orderId: string } & {
 
   return (
     <main id={id} className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
-      <header className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
-        <div>
+      <header id="features-orders-presentation-orderdetailspagecontent-header-8-rxzz11" className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
+        <div id="features-orders-presentation-orderdetailspagecontent-div-9-hufad4">
           <BackToOrders />
-          <h1 className="mt-3 text-2xl font-bold">
+          <h1 id="features-orders-presentation-orderdetailspagecontent-heading-10-giiyco" className="mt-3 text-2xl font-bold">
             {text.order} {String(order.order_number ?? order.id)}
           </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p id="features-orders-presentation-orderdetailspagecontent-text-11-0emeve" className="mt-1 text-sm text-muted-foreground">
             {text.status}: {statusLabel(order.calculated_status)} - {text.cod}
           </p>
         </div>
         {admin ? (
-          <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
+          <span id="features-orders-presentation-orderdetailspagecontent-text-12-5jqeee" className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
             <ShieldCheck className="h-4 w-4" />
             {text.adminAllRoles}
           </span>
@@ -174,7 +174,7 @@ export function OrderDetailsPageContent({ id, orderId }: { orderId: string } & {
       </header>
 
       {error ? (
-        <p className="mb-4 rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
+        <p id="features-orders-presentation-orderdetailspagecontent-text-13-eecr7c" className="mb-4 rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
           {error}
         </p>
       ) : null}
@@ -220,8 +220,8 @@ export function OrderDetailsPageContent({ id, orderId }: { orderId: string } & {
         />
       ) : null}
 
-      <div className="grid gap-5 lg:grid-cols-[1fr_320px]">
-        <section className="space-y-4">
+      <div id="features-orders-presentation-orderdetailspagecontent-div-14-qjtp7g" className="grid gap-5 lg:grid-cols-[1fr_320px]">
+        <section id="features-orders-presentation-orderdetailspagecontent-section-15-8tqkhr" className="space-y-4">
           {details.sellerOrders.map((sellerOrder) => (
             <SellerOrderCard
               key={String(sellerOrder.id)}
@@ -237,7 +237,7 @@ export function OrderDetailsPageContent({ id, orderId }: { orderId: string } & {
           ))}
         </section>
 
-        <aside className="space-y-4">
+        <aside id="features-orders-presentation-orderdetailspagecontent-aside-16-qd57yv" className="space-y-4">
           <OrderLevelActions
             order={order}
             isBuyer={isBuyer}

@@ -43,14 +43,14 @@ export function AppHeader({
 
   return (
     <>
-      <header className={cn(
+      <header id="shared-layouts-appheader-header-1-uaolwp" className={cn(
         "fixed top-0 w-full z-50 pt-[var(--asol-app-header-inset)] shadow-sm border-b border-outline-variant rounded-b-2xl",
         resolvedScheme === 'dark' ? 'asol-surface-neutral' : 'bg-[#F8FBFF]'
       )}>
         {/* Row height is driven by the shared variable so the content padding
             in `.asol-shell-main` can never drift out of sync with it. */}
-        <div id="shared.layouts.app-header.div" className="flex justify-between items-center h-[var(--asol-header-bar-height)] w-full max-w-7xl mx-auto px-2">
-          <div id="shared.layouts.app-header.div.2" className="flex items-center gap-3">
+        <div id='shared-layouts-appheader-div-2-1yazbt' className="flex justify-between items-center h-[var(--asol-header-bar-height)] w-full max-w-7xl mx-auto px-2">
+          <div id='shared-layouts-appheader-div-3-8w7vil' className="flex items-center gap-3">
             <button
               type="button"
               id="header-menu-button"
@@ -66,7 +66,7 @@ export function AppHeader({
               aria-label={t('sidebar.menu')}
               onPointerDown={toggleSidebar}
             >
-              <Menu id="shared.layouts.app-header.menu" className="w-5 h-5" />
+              <Menu id='shared-layouts-appheader-menu-5-qvbs67' className="w-5 h-5" />
             </button>
 
             {/* Saving belongs next to the menu: it is about the page the user
@@ -74,7 +74,7 @@ export function AppHeader({
             <PageSaveHeaderButton />
           </div>
 
-          <div id="shared.layouts.app-header.div.3" className="flex items-center gap-2">
+          <div id='shared-layouts-appheader-div-6-aoh3is' className="flex items-center gap-2">
             <SpecialtyRequestComposer />
 
             <Link
@@ -91,7 +91,7 @@ export function AppHeader({
               aria-current={isSearchActive ? 'page' : undefined}
               aria-label={t('header.search')}
             >
-              <Search id="shared.layouts.app-header.search" className="w-5 h-5" />
+              <Search id='shared-layouts-appheader-search-8-hesiuz' className="w-5 h-5" />
             </Link>
 
             <Link
@@ -108,9 +108,9 @@ export function AppHeader({
               aria-current={isCartActive ? 'page' : undefined}
               aria-label={t('header.cart')}
             >
-              <ShoppingCart id="shared.layouts.app-header.shopping-cart" className="w-5 h-5" />
+              <ShoppingCart id='shared-layouts-appheader-shoppingcart-10-okfpkd' className="w-5 h-5" />
               {totalQuantity > 0 ? (
-                <span id="shared.layouts.app-header.span"
+                <span id='shared-layouts-appheader-text-11-43en61'
                   key={flashToken}
                   className="absolute top-2 end-2 w-2 h-2 rounded-full bg-error border border-background animate-pulse-subtle data-[flash=true]:animate-[ping_0.65s_ease-out_1]"
                   data-flash={flashToken > 0}

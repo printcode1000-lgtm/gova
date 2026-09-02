@@ -19,30 +19,30 @@ export function DataHealthTopologyPanel({ report }: { report: DataHealthReport }
   );
 
   return (
-    <section id="data-health.data-health-topology-panel.section" className="overflow-hidden rounded-md border bg-surface" dir="rtl">
-      <div id="data-health.data-health-topology-panel.div" className="flex flex-wrap items-center justify-between gap-2 border-b p-3">
-        <div id="data-health.data-health-topology-panel.div.2" className="flex items-center gap-2 text-sm font-semibold">
-          <Layers3 id="data-health.data-health-topology-panel.layers3" className="h-4 w-4 text-primary" />
+    <section id='features-data-health-presentation-datahealthtopologypanel-section-1-gwbi4q' className="overflow-hidden rounded-md border bg-surface" dir="rtl">
+      <div id='features-data-health-presentation-datahealthtopologypanel-div-2-n5kver' className="flex flex-wrap items-center justify-between gap-2 border-b p-3">
+        <div id='features-data-health-presentation-datahealthtopologypanel-div-3-qv15my' className="flex items-center gap-2 text-sm font-semibold">
+          <Layers3 id='features-data-health-presentation-datahealthtopologypanel-layers3-4-h5rofa' className="h-4 w-4 text-primary" />
           خريطة قواعد البيانات والتخزين الفعلية
         </div>
-        <div id="data-health.data-health-topology-panel.div.3" className="text-xs text-on-surface-variant">
+        <div id='features-data-health-presentation-datahealthtopologypanel-div-5-lbbktr' className="text-xs text-on-surface-variant">
           فحص اتصال مستقل لكل قاعدة ومخزن أثناء هذه العملية
         </div>
       </div>
 
-      <div id="data-health.data-health-topology-panel.div.4" className="grid divide-y lg:grid-cols-2 lg:divide-x lg:divide-y-0" dir="rtl">
-        <div id="data-health.data-health-topology-panel.div.5" className="p-3">
-          <TopologyDatabaseGroup id="data-health.data-health-topology-panel.topology-database-group" label="قواعد النظام الأساسية" items={coreDatabases} />
-          <TopologyDatabaseGroup id="data-health.data-health-topology-panel.topology-database-group.2" label={`قواعد ملفات التعريف (${profileShards.length})`} items={profileShards} />
-          <TopologyDatabaseGroup id="data-health.data-health-topology-panel.topology-database-group.3" label={`قواعد الطلبات (${orderShards.length})`} items={orderShards} />
+      <div id='features-data-health-presentation-datahealthtopologypanel-div-6-kpbmym' className="grid divide-y lg:grid-cols-2 lg:divide-x lg:divide-y-0" dir="rtl">
+        <div id='features-data-health-presentation-datahealthtopologypanel-div-7-097dga' className="p-3">
+          <TopologyDatabaseGroup id='features-data-health-presentation-datahealthtopologypanel-topologydatabasegroup-8-df8dj7' label="قواعد النظام الأساسية" items={coreDatabases} />
+          <TopologyDatabaseGroup id='features-data-health-presentation-datahealthtopologypanel-topologydatabasegroup-9-bcxgr4' label={`قواعد ملفات التعريف (${profileShards.length})`} items={profileShards} />
+          <TopologyDatabaseGroup id='features-data-health-presentation-datahealthtopologypanel-topologydatabasegroup-10-qxwu99' label={`قواعد الطلبات (${orderShards.length})`} items={orderShards} />
         </div>
 
-        <div id="data-health.data-health-topology-panel.div.6" className="p-3">
-          <div id="data-health.data-health-topology-panel.div.7" className="mb-2 flex items-center gap-2 text-sm font-semibold">
-            <HardDrive id="data-health.data-health-topology-panel.hard-drive" className="h-4 w-4 text-primary" />
+        <div id='features-data-health-presentation-datahealthtopologypanel-div-11-8v7fvq' className="p-3">
+          <div id='features-data-health-presentation-datahealthtopologypanel-div-12-qu6o1i' className="mb-2 flex items-center gap-2 text-sm font-semibold">
+            <HardDrive id='features-data-health-presentation-datahealthtopologypanel-harddrive-13-k7b28u' className="h-4 w-4 text-primary" />
             مخازن الصور
           </div>
-          <div id="data-health.data-health-topology-panel.div.8" className="space-y-2">
+          <div id='features-data-health-presentation-datahealthtopologypanel-div-14-g1bvax' className="space-y-2">
             {report.topology.storage.map((storage) => (
               <div key={storage.id} className="rounded-md border p-3">
                 <div className="flex flex-wrap items-start justify-between gap-2">
@@ -89,9 +89,9 @@ export function DataHealthTopologyPanel({ report }: { report: DataHealthReport }
               </div>
             ))}
           </div>
-          <div id="data-health.data-health-topology-panel.div.9" className="mt-4">
-            <div id="data-health.data-health-topology-panel.div.10" className="mb-2 text-sm font-semibold">كل مصادر الصور المفحوصة</div>
-            <div id="data-health.data-health-topology-panel.div.11" className="overflow-hidden rounded-md border">
+          <div id='features-data-health-presentation-datahealthtopologypanel-div-15-zi1rxr' className="mt-4">
+            <div id='features-data-health-presentation-datahealthtopologypanel-div-16-1xql2u' className="mb-2 text-sm font-semibold">كل مصادر الصور المفحوصة</div>
+            <div id='features-data-health-presentation-datahealthtopologypanel-div-17-pqc4i2' className="overflow-hidden rounded-md border">
               {report.topology.imageSources.map((source) => (
                 <div
                   key={`${source.database}.${source.table}`}
@@ -140,10 +140,10 @@ function TopologyDatabaseGroup({ id,
 } & { id?: string }) {
   return (
     <div id={id} className="mb-4 last:mb-0">
-      <div className="mb-2 text-xs font-semibold text-on-surface-variant">
+      <div id="features-data-health-presentation-datahealthtopologypanel-div-19-kkuejs" className="mb-2 text-xs font-semibold text-on-surface-variant">
         {label}
       </div>
-      <div className="overflow-hidden rounded-md border">
+      <div id="features-data-health-presentation-datahealthtopologypanel-div-20-6hftjf" className="overflow-hidden rounded-md border">
         {items.map((database) => (
           <div
             key={database.id}

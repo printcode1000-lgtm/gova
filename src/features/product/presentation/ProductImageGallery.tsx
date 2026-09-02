@@ -165,7 +165,7 @@ export function ProductImageGallery({ id, images }: { images: StoredImage[] } & 
 
   return (
     <div id={id} className="w-full">
-      <div
+      <div id="features-product-presentation-productimagegallery-div-3-qepoae"
         className="relative aspect-square overflow-hidden rounded-2xl bg-muted sm:aspect-[4/3]"
         style={{ touchAction: "none" }}
         onPointerDown={pointerDown}
@@ -174,7 +174,7 @@ export function ProductImageGallery({ id, images }: { images: StoredImage[] } & 
         onPointerCancel={pointerEnd}
         onPointerLeave={clearGesture}
       >
-        <div
+        <div id="features-product-presentation-productimagegallery-div-4-4umrhi"
           className={`relative h-full w-full transition-[opacity,transform] duration-300 ${loaded.has(active.url) ? "opacity-100" : "opacity-0"}`}
           style={{
             transform: `translate3d(${offset.x}px, ${offset.y}px, 0) scale(${scale})`,
@@ -196,7 +196,7 @@ export function ProductImageGallery({ id, images }: { images: StoredImage[] } & 
         </div>
       </div>
       {validImages.length > 1 ? (
-        <div
+        <div id="features-product-presentation-productimagegallery-div-5-ni4jvu"
           className="mt-3 flex justify-center gap-2 overflow-x-auto pb-1"
           style={{ touchAction: "pan-x" }}
         >

@@ -84,17 +84,17 @@ export function CreateCategoryDialog({ id,
   const placeholder = dialog.kind === "category" ? text.mainNamePlaceholder : text.subNamePlaceholder;
   return (
     <div id={id} className="fixed inset-0 z-50 grid place-items-center bg-black/50 p-4">
-      <form
+      <form id="pharmacy-profile-catalog-presentation-catalog-manager-pharmacycatalogmanagerpage-dialogs-form-2-y0ipfh"
         className="w-full max-w-md rounded-lg border border-outline-variant bg-surface p-4 shadow-xl"
         onSubmit={(event) => {
           event.preventDefault();
           onSubmit();
         }}
       >
-        <h2 className="text-base font-bold text-on-surface">{title}</h2>
-        <label className="mt-4 block space-y-1.5 text-sm font-semibold text-on-surface">
-          <span>{text.nameLabel}</span>
-          <input
+        <h2 id="pharmacy-profile-catalog-presentation-catalog-manager-pharmacycatalogmanagerpage-dialogs-heading-3-9odpce" className="text-base font-bold text-on-surface">{title}</h2>
+        <label id="pharmacy-profile-catalog-presentation-catalog-manager-pharmacycatalogmanagerpage-dialogs-label-4-cg4f4f" className="mt-4 block space-y-1.5 text-sm font-semibold text-on-surface">
+          <span id="pharmacy-profile-catalog-presentation-catalog-manager-pharmacycatalogmanagerpage-dialogs-text-5-ghdjch">{text.nameLabel}</span>
+          <input id="pharmacy-profile-catalog-presentation-catalog-manager-pharmacycatalogmanagerpage-dialogs-input-6-qfhtx1"
             autoFocus
             value={value}
             maxLength={120}
@@ -104,8 +104,8 @@ export function CreateCategoryDialog({ id,
             className="h-10 w-full rounded-lg border border-outline-variant bg-surface px-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </label>
-        <div className="mt-5 flex justify-end gap-2">
-          <button
+        <div id="pharmacy-profile-catalog-presentation-catalog-manager-pharmacycatalogmanagerpage-dialogs-div-7-2vrxns" className="mt-5 flex justify-end gap-2">
+          <button id="pharmacy-profile-catalog-presentation-catalog-manager-pharmacycatalogmanagerpage-dialogs-button-8-zdzwjq"
             type="button"
             disabled={disabled}
             onClick={onClose}
@@ -113,7 +113,7 @@ export function CreateCategoryDialog({ id,
           >
             {text.cancel}
           </button>
-          <button
+          <button id="pharmacy-profile-catalog-presentation-catalog-manager-pharmacycatalogmanagerpage-dialogs-button-9-ouoa2d"
             type="submit"
             disabled={disabled || !value.trim()}
             className="h-9 rounded-lg bg-primary px-4 text-xs font-semibold text-on-primary disabled:opacity-60"
@@ -165,10 +165,10 @@ export function ManagerColumn({ id,
 } & { id?: string }) {
   return (
     <div id={id} className="flex min-h-0 flex-col gap-3 border-b border-outline-variant p-3 lg:border-b-0 lg:border-e">
-      <div className="flex items-center justify-between gap-2">
-        <h2 className="text-sm font-bold text-on-surface">{title}</h2>
+      <div id="pharmacy-profile-catalog-presentation-catalog-manager-pharmacycatalogmanagerpage-dialogs-div-12-apj6z8" className="flex items-center justify-between gap-2">
+        <h2 id="pharmacy-profile-catalog-presentation-catalog-manager-pharmacycatalogmanagerpage-dialogs-heading-13-s7k8rt" className="text-sm font-bold text-on-surface">{title}</h2>
         {actionLabel && onAdd ? (
-          <button
+          <button id="pharmacy-profile-catalog-presentation-catalog-manager-pharmacycatalogmanagerpage-dialogs-button-14-szqvok"
             type="button"
             disabled={disabled}
             onClick={onAdd}
@@ -179,7 +179,7 @@ export function ManagerColumn({ id,
           </button>
         ) : null}
       </div>
-      <div className="min-h-0 flex-1 space-y-2 overflow-y-auto pe-1">{children}</div>
+      <div id="pharmacy-profile-catalog-presentation-catalog-manager-pharmacycatalogmanagerpage-dialogs-div-15-wnxmln" className="min-h-0 flex-1 space-y-2 overflow-y-auto pe-1">{children}</div>
     </div>
   );
 }
@@ -196,16 +196,16 @@ export function ProductManagerCard({ id,
 } & { id?: string }) {
   return (
     <article id={id} className={`rounded-lg border border-outline-variant bg-surface-container-low p-2 ${product.status === "hidden" ? "opacity-55" : ""}`}>
-      <div className="flex gap-3">
-        <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-md bg-surface-bright">
+      <div id="pharmacy-profile-catalog-presentation-catalog-manager-pharmacycatalogmanagerpage-dialogs-div-17-mp82hh" className="flex gap-3">
+        <div id="pharmacy-profile-catalog-presentation-catalog-manager-pharmacycatalogmanagerpage-dialogs-div-18-1z1ceo" className="relative h-16 w-16 shrink-0 overflow-hidden rounded-md bg-surface-bright">
           {product.imageUrl ? (
             <Image src={product.imageUrl} alt={product.nameAr} fill className="object-cover" />
           ) : null}
         </div>
-        <div className="min-w-0 flex-1">
-          <p className="line-clamp-2 text-xs font-semibold text-on-surface">{product.nameAr}</p>
-          <p className="mt-1 truncate text-[10px] text-on-surface-variant">{product.nameEn}</p>
-          <div className="mt-2 flex items-center justify-between gap-2">
+        <div id="pharmacy-profile-catalog-presentation-catalog-manager-pharmacycatalogmanagerpage-dialogs-div-19-zny3gs" className="min-w-0 flex-1">
+          <p id="pharmacy-profile-catalog-presentation-catalog-manager-pharmacycatalogmanagerpage-dialogs-text-20-ycm3pt" className="line-clamp-2 text-xs font-semibold text-on-surface">{product.nameAr}</p>
+          <p id="pharmacy-profile-catalog-presentation-catalog-manager-pharmacycatalogmanagerpage-dialogs-text-21-ttgewv" className="mt-1 truncate text-[10px] text-on-surface-variant">{product.nameEn}</p>
+          <div id="pharmacy-profile-catalog-presentation-catalog-manager-pharmacycatalogmanagerpage-dialogs-div-22-qvaznx" className="mt-2 flex items-center justify-between gap-2">
             <StatusBadge hidden={product.status === "hidden"} />
             <VisibilityButton
               hidden={product.status === "hidden"}
@@ -237,7 +237,7 @@ export function VisibilityButton({
   onClick: React.MouseEventHandler<HTMLButtonElement>;
 } & { id?: string }) {
   return (
-    <button
+    <button id="pharmacy-profile-catalog-presentation-catalog-manager-pharmacycatalogmanagerpage-dialogs-button-24-2fgfcw"
       type="button"
       disabled={disabled}
       onClick={onClick}
@@ -260,7 +260,7 @@ export function LoadingFrame({ id, compact = false, }: { compact?: boolean; } & 
 export function MessageFrame({ id, message, }: { message: string; } & { id?: string }) {
   return (
     <main id={id} className="grid min-h-screen place-items-center bg-background p-4">
-      <p className="rounded-lg border border-outline-variant bg-surface p-5 text-center text-sm text-on-surface">
+      <p id="pharmacy-profile-catalog-presentation-catalog-manager-pharmacycatalogmanagerpage-dialogs-text-27-9rwdow" className="rounded-lg border border-outline-variant bg-surface p-5 text-center text-sm text-on-surface">
         {message}
       </p>
     </main>

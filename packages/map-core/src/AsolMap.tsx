@@ -588,7 +588,7 @@ export const AsolMap = forwardRef<AsolMapHandle, AsolMapProps>(
         aria-label={props.ariaLabel ?? "Interactive map"}
         aria-busy={status === "loading"}
       >
-        <div
+        <div id="pkg-map-core-src-asolmap-div-2-00kf82"
           ref={containerRef}
           className="asol-map__canvas"
           role="application"
@@ -606,15 +606,15 @@ export const AsolMap = forwardRef<AsolMapHandle, AsolMapProps>(
         )}
         {props.children}
         {status === "loading" && (
-          <div className="asol-map__overlay" role="status">
-            <span className="asol-map__spinner" aria-hidden="true" />
-            <span>{props.loadingLabel ?? "Loading map…"}</span>
+          <div id="pkg-map-core-src-asolmap-div-3-qpv1kp" className="asol-map__overlay" role="status">
+            <span id="pkg-map-core-src-asolmap-text-4-j9ljtg" className="asol-map__spinner" aria-hidden="true" />
+            <span id="pkg-map-core-src-asolmap-text-5-dibyfb">{props.loadingLabel ?? "Loading map…"}</span>
           </div>
         )}
         {status === "error" && (
-          <div className="asol-map__overlay" role="alert">
-            <p>{fatal?.message ?? "The map could not be loaded."}</p>
-            <button
+          <div id="pkg-map-core-src-asolmap-div-6-khhe95" className="asol-map__overlay" role="alert">
+            <p id="pkg-map-core-src-asolmap-text-7-fpll15">{fatal?.message ?? "The map could not be loaded."}</p>
+            <button id="pkg-map-core-src-asolmap-button-8-xxmxno"
               className="asol-map__retry"
               type="button"
               onClick={() => {

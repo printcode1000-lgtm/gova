@@ -30,17 +30,17 @@ const phoneLabels = phoneFieldLabels(t, locale);
 return (
         /* Additional Contact Section without outer Card */
         <>
-          <div id="profile.contact-info.additional-contact-view.div" className="mb-6 flex items-center justify-between">
-            <ContactSectionHeader id="profile.contact-info.additional-contact-view.contact-section-header"
+          <div id='profile-presentation-contact-info-additionalcontactview-div-1-zsqwaa' className="mb-6 flex items-center justify-between">
+            <ContactSectionHeader id='profile-presentation-contact-info-additionalcontactview-contactsectionheader-2-ignnd6'
               icon={Share2}
               title={t('onboarding.contactInfo.additionalContact')}
               description={t('onboarding.contactInfo.additionalContactHint')}
             />
           </div>
 
-          <div id="profile.contact-info.additional-contact-view.div.2" className="space-y-4">
+          <div id='profile-presentation-contact-info-additionalcontactview-div-3-7krzwb' className="space-y-4">
             {!readOnly && (
-              <ContactQuickAddGrid id="profile.contact-info.additional-contact-view.contact-quick-add-grid"
+              <ContactQuickAddGrid id='profile-presentation-contact-info-additionalcontactview-contactquickaddgrid-4-bnprce'
                 items={quickAddItems}
                 selectedId={activeKindId}
                 onSelect={selectContactKind}
@@ -105,24 +105,24 @@ return (
 
             {/* Additional Emails */}
             {activeKindId === 'email' && localData.emails.filter((e) => e.id !== 'primary').length > 0 && (
-              <div id="profile.contact-info.additional-contact-view.div.3" className="space-y-2">
-                <div id="profile.contact-info.additional-contact-view.div.4" className="flex items-center gap-2">
-                  <span id="profile.contact-info.additional-contact-view.span" className="text-sm font-semibold flex items-center gap-2">
-                    <FontAwesomeIcon id="profile.contact-info.additional-contact-view.font-awesome-icon" icon={quickAddIcon('email')} className="h-4 w-4" style={{ color: quickAddColor('email') }} />
-                    <span id="profile.contact-info.additional-contact-view.span.2" style={{ color: quickAddColor('email') }}>{t('onboarding.contactInfo.emails')}</span>
+              <div id='profile-presentation-contact-info-additionalcontactview-div-5-m5hyln' className="space-y-2">
+                <div id='profile-presentation-contact-info-additionalcontactview-div-6-k6jqjb' className="flex items-center gap-2">
+                  <span id='profile-presentation-contact-info-additionalcontactview-text-7-ws8fta' className="text-sm font-semibold flex items-center gap-2">
+                    <FontAwesomeIcon id='profile-presentation-contact-info-additionalcontactview-fontawesomeicon-8-gcj7du' icon={quickAddIcon('email')} className="h-4 w-4" style={{ color: quickAddColor('email') }} />
+                    <span id='profile-presentation-contact-info-additionalcontactview-text-9-a4uab1' style={{ color: quickAddColor('email') }}>{t('onboarding.contactInfo.emails')}</span>
                   </span>
                   {!readOnly && (
-                    <Button id="profile.contact-info.additional-contact-view.button"
+                    <Button id='profile-presentation-contact-info-additionalcontactview-button-10-fpbbna'
                       variant="outline"
                       size="sm"
                       onClick={addEmail}
                       className="gap-1 h-6 px-2 text-xs"
                     >
-                      <Plus id="profile.contact-info.additional-contact-view.plus" className="h-3 w-3" />
+                      <Plus id='profile-presentation-contact-info-additionalcontactview-plus-11-cyz2nc' className="h-3 w-3" />
                     </Button>
                   )}
                 </div>
-                <div id="profile.contact-info.additional-contact-view.div.5" className="space-y-2">
+                <div id='profile-presentation-contact-info-additionalcontactview-div-12-tnwnmv' className="space-y-2">
                   {localData.emails.filter((e) => e.id !== 'primary').map((emailLink, index) => (
                     <ContactEntryCard
                       key={emailLink.id}
@@ -151,7 +151,7 @@ return (
 
             {/* Social Links */}
             {SOCIAL_PLATFORMS.some((platform) => platform === activeKindId) && localData.socialLinks.length > 0 && (
-              <div id="profile.contact-info.additional-contact-view.div.6" className="space-y-4">
+              <div id='profile-presentation-contact-info-additionalcontactview-div-13-rrkm9p' className="space-y-4">
                 {SOCIAL_PLATFORMS.map((platform) => {
                   if (platform !== activeKindId) return null;
                   const platformLinks = groupedSocialLinks[platform];
@@ -212,24 +212,24 @@ return (
 
             {/* Websites */}
             {activeKindId === 'website' && localData.websites.length > 0 && (
-              <div id="profile.contact-info.additional-contact-view.div.7" className="space-y-2">
-                <div id="profile.contact-info.additional-contact-view.div.8" className="flex items-center gap-2">
-                  <span id="profile.contact-info.additional-contact-view.span.3" className="text-sm font-semibold flex items-center gap-2">
-                    <FontAwesomeIcon id="profile.contact-info.additional-contact-view.font-awesome-icon.2" icon={quickAddIcon('website')} className="h-4 w-4" style={{ color: quickAddColor('website') }} />
-                    <span id="profile.contact-info.additional-contact-view.span.4" style={{ color: quickAddColor('website') }}>{t('onboarding.contactInfo.websites')}</span>
+              <div id='profile-presentation-contact-info-additionalcontactview-div-14-obwoqh' className="space-y-2">
+                <div id='profile-presentation-contact-info-additionalcontactview-div-15-1jvmrn' className="flex items-center gap-2">
+                  <span id='profile-presentation-contact-info-additionalcontactview-text-16-oykrtb' className="text-sm font-semibold flex items-center gap-2">
+                    <FontAwesomeIcon id='profile-presentation-contact-info-additionalcontactview-fontawesomeicon-17-ckg3ry' icon={quickAddIcon('website')} className="h-4 w-4" style={{ color: quickAddColor('website') }} />
+                    <span id='profile-presentation-contact-info-additionalcontactview-text-18-lqstnb' style={{ color: quickAddColor('website') }}>{t('onboarding.contactInfo.websites')}</span>
                   </span>
                   {!readOnly && (
-                    <Button id="profile.contact-info.additional-contact-view.button.2"
+                    <Button id='profile-presentation-contact-info-additionalcontactview-button-19-selo9h'
                       variant="outline"
                       size="sm"
                       onClick={addWebsite}
                       className="gap-1 h-6 px-2 text-xs"
                     >
-                      <Plus id="profile.contact-info.additional-contact-view.plus.2" className="h-3 w-3" />
+                      <Plus id='profile-presentation-contact-info-additionalcontactview-plus-20-v3xwfo' className="h-3 w-3" />
                     </Button>
                   )}
                 </div>
-                <div id="profile.contact-info.additional-contact-view.div.9" className="space-y-2">
+                <div id='profile-presentation-contact-info-additionalcontactview-div-21-anwwbg' className="space-y-2">
                   {localData.websites.map((site, index) => (
                     <ContactEntryCard
                       key={site.id}
@@ -256,26 +256,26 @@ return (
 
             {/* Locations */}
             {activeKindId === 'location' && localData.locations.length > 0 && (
-              <div id="profile.contact-info.additional-contact-view.div.10" className="space-y-4">
-                <div id="profile.contact-info.additional-contact-view.div.11" className="flex items-center gap-2">
-                  <span id="profile.contact-info.additional-contact-view.span.5" className="text-sm font-semibold flex items-center gap-2">
-                    <FontAwesomeIcon id="profile.contact-info.additional-contact-view.font-awesome-icon.3" icon={quickAddIcon('location')} className="h-4 w-4" style={{ color: quickAddColor('location') }} />
-                    <span id="profile.contact-info.additional-contact-view.span.6" style={{ color: quickAddColor('location') }}>{locale === 'ar' ? 'المواقع' : 'Locations'}</span>
+              <div id='profile-presentation-contact-info-additionalcontactview-div-22-89wwue' className="space-y-4">
+                <div id='profile-presentation-contact-info-additionalcontactview-div-23-vhxirl' className="flex items-center gap-2">
+                  <span id='profile-presentation-contact-info-additionalcontactview-text-24-kzh2lv' className="text-sm font-semibold flex items-center gap-2">
+                    <FontAwesomeIcon id='profile-presentation-contact-info-additionalcontactview-fontawesomeicon-25-d9z3qa' icon={quickAddIcon('location')} className="h-4 w-4" style={{ color: quickAddColor('location') }} />
+                    <span id='profile-presentation-contact-info-additionalcontactview-text-26-ikhfra' style={{ color: quickAddColor('location') }}>{locale === 'ar' ? 'المواقع' : 'Locations'}</span>
                   </span>
                   {!readOnly && (
-                    <Button id="profile.contact-info.additional-contact-view.button.3"
+                    <Button id='profile-presentation-contact-info-additionalcontactview-button-27-tpq6z2'
                       variant="outline"
                       size="sm"
                       onClick={addLocation}
                       className="gap-1 h-6 px-2 text-xs"
                       aria-label={locale === 'ar' ? 'إضافة موقع آخر' : 'Add another location'}
                     >
-                      <Plus id="profile.contact-info.additional-contact-view.plus.3" className="h-3 w-3" />
+                      <Plus id='profile-presentation-contact-info-additionalcontactview-plus-28-zidh67' className="h-3 w-3" />
                     </Button>
                   )}
                 </div>
                 
-                <div id="profile.contact-info.additional-contact-view.div.12" className="space-y-4">
+                <div id='profile-presentation-contact-info-additionalcontactview-div-29-tguhrl' className="space-y-4">
                   {localData.locations.map((loc, idx) => (
                     <div
                       key={loc.id}
@@ -434,7 +434,7 @@ return (
             )}
           </div>
 
-          <ConfirmDialog id="profile.contact-info.additional-contact-view.confirm-dialog"
+          <ConfirmDialog id='profile-presentation-contact-info-additionalcontactview-confirmdialog-30-k2cl7g'
             open={pendingRemoval !== null}
             title={t('onboarding.contactInfo.removeConfirm.title')}
             message={t('onboarding.contactInfo.removeConfirm.message')}

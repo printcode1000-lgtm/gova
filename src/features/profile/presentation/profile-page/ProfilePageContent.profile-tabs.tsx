@@ -61,26 +61,26 @@ export function ProfileEditSectionFrame({ id,
       style={{ borderColor: `${color}44` }}
     >
       {!hideHeader ? (
-        <div
+        <div id="profile-presentation-profile-page-profilepagecontent-profile-tabs-div-2-w0prjy"
           className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl px-3 py-3"
           style={{ backgroundColor: `${color}10` }}
         >
-          <div className="flex min-w-0 items-center gap-3">
-            <span
+          <div id="profile-presentation-profile-page-profilepagecontent-profile-tabs-div-3-wquhgt" className="flex min-w-0 items-center gap-3">
+            <span id="profile-presentation-profile-page-profilepagecontent-profile-tabs-text-4-vksbhq"
               className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl"
               style={{ backgroundColor: `${color}18`, color }}
             >
               <FontAwesomeIcon icon={icon} className="h-5 w-5" />
             </span>
-            <div className="min-w-0">
-              <h2 className="truncate text-base font-bold text-on-surface">
+            <div id="profile-presentation-profile-page-profilepagecontent-profile-tabs-div-5-4z29ec" className="min-w-0">
+              <h2 id="profile-presentation-profile-page-profilepagecontent-profile-tabs-heading-6-xzrwn4" className="truncate text-base font-bold text-on-surface">
                 {title}
               </h2>
             </div>
           </div>
         </div>
       ) : null}
-      <div className="[&_.auth-input]:shadow-sm [&_button]:transition-all">
+      <div id="profile-presentation-profile-page-profilepagecontent-profile-tabs-div-7-fwcra7" className="[&_.auth-input]:shadow-sm [&_button]:transition-all">
         {children}
       </div>
     </section>

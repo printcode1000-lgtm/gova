@@ -51,18 +51,18 @@ function CompletionScreen({ id,
 
   return (
     <div id={id} className="flex flex-col items-center justify-center py-16 text-center space-y-6 animate-in fade-in duration-500">
-      <div className="rounded-full asol-ring-secondary p-4">
+      <div id="features-onboarding-presentation-onboarding-page-div-2-fduvzq" className="rounded-full asol-ring-secondary p-4">
         <PartyPopper className="h-12 w-12 text-secondary" />
       </div>
 
-      <div className="space-y-2">
-        <h1 className="text-3xl font-bold">{t('onboarding.completion.title')}</h1>
-        <p className="text-lg text-muted-foreground max-w-md">
+      <div id="features-onboarding-presentation-onboarding-page-div-3-ve2qbt" className="space-y-2">
+        <h1 id="features-onboarding-presentation-onboarding-page-heading-4-tuxqfe" className="text-3xl font-bold">{t('onboarding.completion.title')}</h1>
+        <p id="features-onboarding-presentation-onboarding-page-text-5-xy9zhb" className="text-lg text-muted-foreground max-w-md">
           {t('onboarding.completion.message', { storeName })}
         </p>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-3">
+      <div id="features-onboarding-presentation-onboarding-page-div-6-u4dbdu" className="flex flex-col sm:flex-row gap-3">
         <Button variant="outline" size="lg" onClick={onEdit}>
           {t('onboarding.completion.editSetup')}
         </Button>
@@ -73,23 +73,23 @@ function CompletionScreen({ id,
 
       <Card className="w-full max-w-lg mt-8">
         <CardContent className="p-6">
-          <h3 className="font-semibold mb-4">{t('onboarding.completion.summaryTitle')}</h3>
-          <div className="space-y-3 text-sm">
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">{t('onboarding.completion.productsAdded')}</span>
-              <span className="font-medium">{data.products.products.length}</span>
+          <h3 id="features-onboarding-presentation-onboarding-page-heading-7-gbhvmg" className="font-semibold mb-4">{t('onboarding.completion.summaryTitle')}</h3>
+          <div id="features-onboarding-presentation-onboarding-page-div-8-yvjfsz" className="space-y-3 text-sm">
+            <div id="features-onboarding-presentation-onboarding-page-div-9-w13lxz" className="flex justify-between">
+              <span id="features-onboarding-presentation-onboarding-page-text-10-iekcty" className="text-muted-foreground">{t('onboarding.completion.productsAdded')}</span>
+              <span id="features-onboarding-presentation-onboarding-page-text-11-o86txg" className="font-medium">{data.products.products.length}</span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">{t('onboarding.completion.collections')}</span>
-              <span className="font-medium">{data.collections.collections.length}</span>
+            <div id="features-onboarding-presentation-onboarding-page-div-12-9zxbjx" className="flex justify-between">
+              <span id="features-onboarding-presentation-onboarding-page-text-13-inrupn" className="text-muted-foreground">{t('onboarding.completion.collections')}</span>
+              <span id="features-onboarding-presentation-onboarding-page-text-14-llkbdb" className="font-medium">{data.collections.collections.length}</span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">{t('onboarding.completion.shippingMethods')}</span>
-              <span className="font-medium">{data.shipping.methods.length}</span>
+            <div id="features-onboarding-presentation-onboarding-page-div-15-qnvkfk" className="flex justify-between">
+              <span id="features-onboarding-presentation-onboarding-page-text-16-8awwoc" className="text-muted-foreground">{t('onboarding.completion.shippingMethods')}</span>
+              <span id="features-onboarding-presentation-onboarding-page-text-17-6rw3iy" className="font-medium">{data.shipping.methods.length}</span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">{t('onboarding.completion.categories')}</span>
-              <span className="font-medium">
+            <div id="features-onboarding-presentation-onboarding-page-div-18-5uwcin" className="flex justify-between">
+              <span id="features-onboarding-presentation-onboarding-page-text-19-eolczt" className="text-muted-foreground">{t('onboarding.completion.categories')}</span>
+              <span id="features-onboarding-presentation-onboarding-page-text-20-tnfvyp" className="font-medium">
                 {data.categories.selectedCategories.filter((c) => c.isSelected).length}
               </span>
             </div>
@@ -132,14 +132,14 @@ export function OnboardingPage() {
   const config = stepConfig[currentStep];
   const mainContent =
     isComplete && showCompletion ? (
-      <CompletionScreen id="onboarding.onboarding-page.completion-screen" onEdit={handleStepNavigate} />
+      <CompletionScreen id='features-onboarding-presentation-onboarding-page-completionscreen-21-wwlu6m' onEdit={handleStepNavigate} />
     ) : (
       <>
-        <div id="onboarding.onboarding-page.div" className="mb-6">
-          <h2 id="onboarding.onboarding-page.h2" className="text-2xl font-bold">{config.title}</h2>
-          <p id="onboarding.onboarding-page.p" className="text-muted-foreground">{config.description}</p>
+        <div id='features-onboarding-presentation-onboarding-page-div-22-wrgrtt' className="mb-6">
+          <h2 id='features-onboarding-presentation-onboarding-page-heading-23-84joiq' className="text-2xl font-bold">{config.title}</h2>
+          <p id='features-onboarding-presentation-onboarding-page-text-24-61fynw' className="text-muted-foreground">{config.description}</p>
         </div>
-        <div id="onboarding.onboarding-page.div.2"
+        <div id='features-onboarding-presentation-onboarding-page-div-25-oygjjo'
           className={cn(
             'transition-opacity duration-200',
             isTransitioning ? 'opacity-0' : 'opacity-100',
@@ -152,24 +152,24 @@ export function OnboardingPage() {
 
   return (
     <OnboardingSaveBridgeProvider setImagesPending={setImagesPending}>
-      <div id="onboarding.onboarding-page.div.3" className="asol-onboarding-shell">
-      <div id="onboarding.onboarding-page.div.4" className="hidden lg:block">
-        <div id="onboarding.onboarding-page.div.5" className="flex">
-          <aside id="onboarding.onboarding-page.aside" className="w-80 min-h-screen border-r asol-onboarding-sidebar p-6 sticky top-0">
-            <div id="onboarding.onboarding-page.div.6" className="space-y-6">
-              <div id="onboarding.onboarding-page.div.7">
-                <h1 id="onboarding.onboarding-page.h1" className="text-xl font-bold">{t('onboarding.page.title')}</h1>
-                <p id="onboarding.onboarding-page.p.2" className="text-sm text-muted-foreground">
+      <div id='features-onboarding-presentation-onboarding-page-div-26-synles' className="asol-onboarding-shell">
+      <div id='features-onboarding-presentation-onboarding-page-div-27-z4hwff' className="hidden lg:block">
+        <div id='features-onboarding-presentation-onboarding-page-div-28-i9r9eq' className="flex">
+          <aside id='features-onboarding-presentation-onboarding-page-aside-29-i6upaa' className="w-80 min-h-screen border-r asol-onboarding-sidebar p-6 sticky top-0">
+            <div id='features-onboarding-presentation-onboarding-page-div-30-we7pan' className="space-y-6">
+              <div id='features-onboarding-presentation-onboarding-page-div-31-dymcxu'>
+                <h1 id='features-onboarding-presentation-onboarding-page-heading-32-9cssmu' className="text-xl font-bold">{t('onboarding.page.title')}</h1>
+                <p id='features-onboarding-presentation-onboarding-page-text-33-qhiajb' className="text-sm text-muted-foreground">
                   {t('onboarding.page.subtitle')}
                 </p>
               </div>
 
-              <OnboardingProgress id="onboarding.onboarding-page.onboarding-progress" />
+              <OnboardingProgress id='features-onboarding-presentation-onboarding-page-onboardingprogress-34-drgk75' />
 
-              <OnboardingSidebar id="onboarding.onboarding-page.onboarding-sidebar" onStepNavigate={handleStepNavigate} />
+              <OnboardingSidebar id='features-onboarding-presentation-onboarding-page-onboardingsidebar-35-xodtkf' onStepNavigate={handleStepNavigate} />
 
               {isComplete && showCompletion && (
-                <Button id="onboarding.onboarding-page.button"
+                <Button id='features-onboarding-presentation-onboarding-page-button-36-64ckom'
                   variant="secondary"
                   className="w-full"
                   onClick={() => setShowCompletion(true)}
@@ -181,29 +181,29 @@ export function OnboardingPage() {
             </div>
           </aside>
 
-          <main id="onboarding.onboarding-page.main" className="flex-1 p-8 asol-onboarding-main">
-            <div id="onboarding.onboarding-page.div.8" className="max-w-3xl mx-auto">{mainContent}</div>
+          <main id='features-onboarding-presentation-onboarding-page-main-37-ophshy' className="flex-1 p-8 asol-onboarding-main">
+            <div id='features-onboarding-presentation-onboarding-page-div-38-dcrqis' className="max-w-3xl mx-auto">{mainContent}</div>
           </main>
         </div>
       </div>
 
-      <div id="onboarding.onboarding-page.div.9" className="lg:hidden">
-        <MobileOnboardingNav id="onboarding.onboarding-page.mobile-onboarding-nav"
+      <div id='features-onboarding-presentation-onboarding-page-div-39-hsumil' className="lg:hidden">
+        <MobileOnboardingNav id='features-onboarding-presentation-onboarding-page-mobileonboardingnav-40-cascf4'
           showCompletion={isComplete && showCompletion}
           onShowCompletion={() => setShowCompletion(true)}
           onStepNavigate={handleStepNavigate}
         />
 
-        <main id="onboarding.onboarding-page.main.2" className="px-4 py-6">
-          <div id="onboarding.onboarding-page.div.10" className="max-w-2xl mx-auto">
-            <div id="onboarding.onboarding-page.div.11"
+        <main id='features-onboarding-presentation-onboarding-page-main-41-mgy5ve' className="px-4 py-6">
+          <div id='features-onboarding-presentation-onboarding-page-div-42-jx411y' className="max-w-2xl mx-auto">
+            <div id='features-onboarding-presentation-onboarding-page-div-43-83jhkd'
               className={cn(
                 'transition-opacity duration-200',
                 isTransitioning ? 'opacity-0' : 'opacity-100',
               )}
             >
               {isComplete && showCompletion ? (
-                <CompletionScreen id="onboarding.onboarding-page.completion-screen.2" onEdit={handleStepNavigate} />
+                <CompletionScreen id='features-onboarding-presentation-onboarding-page-completionscreen-44-z5qzoz' onEdit={handleStepNavigate} />
               ) : (
                 <CurrentSection />
               )}

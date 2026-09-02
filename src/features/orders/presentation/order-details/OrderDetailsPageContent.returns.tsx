@@ -57,12 +57,12 @@ export function ReturnsPanel({
   runAction: RunAction;
 }) {
   return (
-    <section id="orders.order-details.order-details-page-content.returns.section" className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm">
-      <h2 id="orders.order-details.order-details-page-content.returns.h2" className="font-bold">{text.returns}</h2>
+    <section id='orders-presentation-order-details-orderdetailspagecontent-returns-section-1-fojfdf' className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm">
+      <h2 id='orders-presentation-order-details-orderdetailspagecontent-returns-heading-2-7m3k5g' className="font-bold">{text.returns}</h2>
       {details.returns.length === 0 ? (
-        <p id="orders.order-details.order-details-page-content.returns.p" className="mt-2 text-sm text-muted-foreground">{text.noReturns}</p>
+        <p id='orders-presentation-order-details-orderdetailspagecontent-returns-text-3-y2mk3b' className="mt-2 text-sm text-muted-foreground">{text.noReturns}</p>
       ) : (
-        <div id="orders.order-details.order-details-page-content.returns.div" className="mt-3 space-y-3">
+        <div id='orders-presentation-order-details-orderdetailspagecontent-returns-div-4-uddcqj' className="mt-3 space-y-3">
           {details.returns.map((returnRequest) => {
             const requestItems = details.returnItems.filter(
               (item) =>

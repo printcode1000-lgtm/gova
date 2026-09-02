@@ -18,13 +18,13 @@ export function DataHealthPage() {
 
   if (page.isLoading) {
     return (
-      <div id="data-health.data-health-page.div" className="p-4 text-sm text-on-surface-variant">جاري التحميل...</div>
+      <div id='features-data-health-presentation-datahealthpage-div-1-cbe51i' className="p-4 text-sm text-on-surface-variant">جاري التحميل...</div>
     );
   }
   if (!page.allowed) {
     return (
-      <div id="data-health.data-health-page.div.2" className="mx-auto max-w-2xl p-6">
-        <div id="data-health.data-health-page.div.3" className="rounded-md border border-red-200 bg-red-50 p-4 text-red-700">
+      <div id='features-data-health-presentation-datahealthpage-div-2-4rgasr' className="mx-auto max-w-2xl p-6">
+        <div id='features-data-health-presentation-datahealthpage-div-3-e0eq9f' className="rounded-md border border-red-200 bg-red-50 p-4 text-red-700">
           هذه الصفحة متاحة للسوبر أدمن فقط.
         </div>
       </div>
@@ -32,17 +32,17 @@ export function DataHealthPage() {
   }
 
   return (
-    <main id="data-health.data-health-page.main" className="mx-auto w-full max-w-7xl space-y-4 p-4 pb-24">
-      <header id="data-health.data-health-page.header" className="flex flex-wrap items-start justify-between gap-3">
-        <div id="data-health.data-health-page.div.4">
-          <h1 id="data-health.data-health-page.h1" className="flex items-center gap-2 text-2xl font-semibold text-on-surface">
-            <DatabaseZap id="data-health.data-health-page.database-zap" className="h-6 w-6 text-primary" />
+    <main id='features-data-health-presentation-datahealthpage-main-4-wadmiw' className="mx-auto w-full max-w-7xl space-y-4 p-4 pb-24">
+      <header id='features-data-health-presentation-datahealthpage-header-5-s70t5h' className="flex flex-wrap items-start justify-between gap-3">
+        <div id='features-data-health-presentation-datahealthpage-div-6-uhqwol'>
+          <h1 id='features-data-health-presentation-datahealthpage-heading-7-tmfvzq' className="flex items-center gap-2 text-2xl font-semibold text-on-surface">
+            <DatabaseZap id='features-data-health-presentation-datahealthpage-databasezap-8-stq9ev' className="h-6 w-6 text-primary" />
             سلامة البيانات
           </h1>
-          <div id="data-health.data-health-page.div.5" className="mt-1 flex flex-wrap items-center gap-2 text-sm text-on-surface-variant">
-            <span id="data-health.data-health-page.span">فحص العلاقات والصور وبنية القواعد مع تنظيف مؤكد وقابل للتدقيق.</span>
+          <div id='features-data-health-presentation-datahealthpage-div-9-f7l6q1' className="mt-1 flex flex-wrap items-center gap-2 text-sm text-on-surface-variant">
+            <span id='features-data-health-presentation-datahealthpage-text-10-zvd3df'>فحص العلاقات والصور وبنية القواعد مع تنظيف مؤكد وقابل للتدقيق.</span>
             {page.report ? (
-              <span id="data-health.data-health-page.span.2"
+              <span id='features-data-health-presentation-datahealthpage-text-11-tbkoip'
                 className={`rounded border px-2 py-0.5 text-xs ${
                   page.report.environment === "production"
                     ? "border-red-200 bg-red-50 text-red-700"
@@ -56,8 +56,8 @@ export function DataHealthPage() {
             ) : null}
           </div>
         </div>
-        <div id="data-health.data-health-page.div.6" className="flex flex-wrap gap-2">
-          <Button id="data-health.data-health-page.button"
+        <div id='features-data-health-presentation-datahealthpage-div-12-lsnxyl' className="flex flex-wrap gap-2">
+          <Button id='features-data-health-presentation-datahealthpage-button-13-az3g6x'
             type="button"
             size="icon"
             variant="outline"
@@ -65,9 +65,9 @@ export function DataHealthPage() {
             onClick={() => page.exportReport("json")}
             disabled={!page.report}
           >
-            <FileJson id="data-health.data-health-page.file-json" className="h-4 w-4" />
+            <FileJson id='features-data-health-presentation-datahealthpage-filejson-14-px5vua' className="h-4 w-4" />
           </Button>
-          <Button id="data-health.data-health-page.button.2"
+          <Button id='features-data-health-presentation-datahealthpage-button-15-xnjily'
             type="button"
             size="icon"
             variant="outline"
@@ -75,36 +75,36 @@ export function DataHealthPage() {
             onClick={() => page.exportReport("csv")}
             disabled={!page.report}
           >
-            <Download id="data-health.data-health-page.download" className="h-4 w-4" />
+            <Download id='features-data-health-presentation-datahealthpage-download-16-wadehy' className="h-4 w-4" />
           </Button>
-          <Button id="data-health.data-health-page.button.3" type="button" onClick={page.scan} disabled={page.loading}>
-            <RefreshCw id="data-health.data-health-page.refresh-cw" className={`h-4 w-4 ${page.loading ? "animate-spin" : ""}`} />
+          <Button id='features-data-health-presentation-datahealthpage-button-17-0yr1vz' type="button" onClick={page.scan} disabled={page.loading}>
+            <RefreshCw id='features-data-health-presentation-datahealthpage-refreshcw-18-mv5ntx' className={`h-4 w-4 ${page.loading ? "animate-spin" : ""}`} />
             {page.loading ? "جاري الفحص" : "فحص جديد"}
           </Button>
         </div>
       </header>
 
       {page.report ? (
-        <section id="data-health.data-health-page.section" className="grid gap-2 sm:grid-cols-3 lg:grid-cols-7">
-          <SummaryCard id="data-health.data-health-page.summary-card" label="السجلات المفحوصة" value={page.report.scannedRecords} />
-          <SummaryCard id="data-health.data-health-page.summary-card.2" label="المشكلات" value={page.report.summary.total} />
-          <SummaryCard id="data-health.data-health-page.summary-card.3" label="حرج" value={page.report.summary.critical} tone="red" />
-          <SummaryCard id="data-health.data-health-page.summary-card.4" label="تحذير" value={page.report.summary.warning} tone="amber" />
-          <SummaryCard id="data-health.data-health-page.summary-card.5" label="معلومات" value={page.report.summary.info} tone="blue" />
-          <SummaryCard id="data-health.data-health-page.summary-card.6" label="قابل للتنظيف" value={page.report.summary.cleanable} tone="green" />
-          <SummaryCard id="data-health.data-health-page.summary-card.7" label="في الحجر" value={page.report.summary.quarantined} tone="amber" />
+        <section id='features-data-health-presentation-datahealthpage-section-19-kazdmj' className="grid gap-2 sm:grid-cols-3 lg:grid-cols-7">
+          <SummaryCard id='features-data-health-presentation-datahealthpage-summarycard-20-xijnr3' label="السجلات المفحوصة" value={page.report.scannedRecords} />
+          <SummaryCard id='features-data-health-presentation-datahealthpage-summarycard-21-qbynan' label="المشكلات" value={page.report.summary.total} />
+          <SummaryCard id='features-data-health-presentation-datahealthpage-summarycard-22-cttcvd' label="حرج" value={page.report.summary.critical} tone="red" />
+          <SummaryCard id='features-data-health-presentation-datahealthpage-summarycard-23-sivxto' label="تحذير" value={page.report.summary.warning} tone="amber" />
+          <SummaryCard id='features-data-health-presentation-datahealthpage-summarycard-24-tvi00w' label="معلومات" value={page.report.summary.info} tone="blue" />
+          <SummaryCard id='features-data-health-presentation-datahealthpage-summarycard-25-hao5iz' label="قابل للتنظيف" value={page.report.summary.cleanable} tone="green" />
+          <SummaryCard id='features-data-health-presentation-datahealthpage-summarycard-26-pwovk1' label="في الحجر" value={page.report.summary.quarantined} tone="amber" />
         </section>
       ) : null}
 
       {page.report ? <DataHealthTopologyPanel report={page.report} /> : null}
 
       {page.error ? (
-        <div id="data-health.data-health-page.div.7" className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+        <div id='features-data-health-presentation-datahealthpage-div-27-ugnbxk' className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
           {page.error}
         </div>
       ) : null}
       {page.notice ? (
-        <div id="data-health.data-health-page.div.8" className="rounded-md border border-green-200 bg-green-50 p-3 text-sm text-green-700">
+        <div id='features-data-health-presentation-datahealthpage-div-28-7oemlh' className="rounded-md border border-green-200 bg-green-50 p-3 text-sm text-green-700">
           {page.notice}
         </div>
       ) : null}
@@ -116,13 +116,13 @@ export function DataHealthPage() {
           if (value === "schema") void page.loadSchemaComparison();
         }}
       >
-        <TabsList id="data-health.data-health-page.tabs-list" className="w-full justify-start overflow-x-auto">
-          <TabsTrigger id="data-health.data-health-page.tabs-trigger" value="findings">النتائج</TabsTrigger>
-          <TabsTrigger id="data-health.data-health-page.tabs-trigger.2" value="schema">مقارنة البنية</TabsTrigger>
-          <TabsTrigger id="data-health.data-health-page.tabs-trigger.3" value="history">السجل والتدقيق</TabsTrigger>
+        <TabsList id='features-data-health-presentation-datahealthpage-tabslist-29-yrb6jx' className="w-full justify-start overflow-x-auto">
+          <TabsTrigger id='features-data-health-presentation-datahealthpage-tabstrigger-30-ftl9uq' value="findings">النتائج</TabsTrigger>
+          <TabsTrigger id='features-data-health-presentation-datahealthpage-tabstrigger-31-4tspbv' value="schema">مقارنة البنية</TabsTrigger>
+          <TabsTrigger id='features-data-health-presentation-datahealthpage-tabstrigger-32-6wmns9' value="history">السجل والتدقيق</TabsTrigger>
         </TabsList>
 
-        <TabsContent id="data-health.data-health-page.tabs-content" value="findings">
+        <TabsContent id='features-data-health-presentation-datahealthpage-tabscontent-33-wvo6sf' value="findings">
           {page.report ? (
             <DataHealthFindingsPanel
               report={page.report}
@@ -158,11 +158,11 @@ export function DataHealthPage() {
           ) : null}
         </TabsContent>
 
-        <TabsContent id="data-health.data-health-page.tabs-content.2" value="schema">
+        <TabsContent id='features-data-health-presentation-datahealthpage-tabscontent-34-h8bvtj' value="schema">
           <DataHealthSchemaPanel report={page.report} loading={page.schemaLoading} />
         </TabsContent>
 
-        <TabsContent id="data-health.data-health-page.tabs-content.3" value="history">
+        <TabsContent id='features-data-health-presentation-datahealthpage-tabscontent-35-ctawdu' value="history">
           <DataHealthHistoryPanel
             history={page.history}
             onRelease={page.releaseQuarantine}

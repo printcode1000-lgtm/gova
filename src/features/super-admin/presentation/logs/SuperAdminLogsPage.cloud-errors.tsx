@@ -103,27 +103,27 @@ export function CloudErrorsContainer({
   };
 
   return (
-    <section id="super-admin.logs.super-admin-logs-page.cloud-errors.section" className="mb-6 overflow-hidden rounded-xl border border-destructive/30 bg-card">
-      <div id="super-admin.logs.super-admin-logs-page.cloud-errors.div" className="flex flex-wrap items-center justify-between gap-3 border-b border-destructive/20 bg-destructive/5 p-4">
-        <div id="super-admin.logs.super-admin-logs-page.cloud-errors.div.2">
-          <h2 id="super-admin.logs.super-admin-logs-page.cloud-errors.h2" className="flex items-center gap-2 font-bold text-destructive">
-            <CloudAlert id="super-admin.logs.super-admin-logs-page.cloud-errors.cloud-alert" className="h-5 w-5" />
+    <section id='super-admin-presentation-logs-superadminlogspage-cloud-errors-section-1-0qlkq7' className="mb-6 overflow-hidden rounded-xl border border-destructive/30 bg-card">
+      <div id='super-admin-presentation-logs-superadminlogspage-cloud-errors-div-2-6exkmj' className="flex flex-wrap items-center justify-between gap-3 border-b border-destructive/20 bg-destructive/5 p-4">
+        <div id='super-admin-presentation-logs-superadminlogspage-cloud-errors-div-3-wxkfev'>
+          <h2 id='super-admin-presentation-logs-superadminlogspage-cloud-errors-heading-4-p4slaq' className="flex items-center gap-2 font-bold text-destructive">
+            <CloudAlert id='super-admin-presentation-logs-superadminlogspage-cloud-errors-cloudalert-5-s9gkwg' className="h-5 w-5" />
             أخطاء السحابة
           </h2>
-          <p id="super-admin.logs.super-admin-logs-page.cloud-errors.p" className="mt-1 text-xs text-muted-foreground">
+          <p id='super-admin-presentation-logs-superadminlogspage-cloud-errors-text-6-5thlts' className="mt-1 text-xs text-muted-foreground">
             أخطاء موثقة من الخادم فقط. يتم تحديثها تلقائيًا كل 20 ثانية.
             {lastUpdatedAt && (
-              <span id="super-admin.logs.super-admin-logs-page.cloud-errors.span" className="ms-1">
+              <span id='super-admin-presentation-logs-superadminlogspage-cloud-errors-text-7-7r2igs' className="ms-1">
                 آخر تحديث: {formatAdminClock(lastUpdatedAt, { seconds: true })}
               </span>
             )}
           </p>
         </div>
-        <div id="super-admin.logs.super-admin-logs-page.cloud-errors.div.3" className="flex items-center gap-2">
-          <span id="super-admin.logs.super-admin-logs-page.cloud-errors.span.2" className="rounded-full bg-destructive/10 px-3 py-1 text-xs font-bold text-destructive">
+        <div id='super-admin-presentation-logs-superadminlogspage-cloud-errors-div-8-vs4vos' className="flex items-center gap-2">
+          <span id='super-admin-presentation-logs-superadminlogspage-cloud-errors-text-9-iquitb' className="rounded-full bg-destructive/10 px-3 py-1 text-xs font-bold text-destructive">
             {filtered.length} / {cloudErrors.length}
           </span>
-          <Button id="super-admin.logs.super-admin-logs-page.cloud-errors.button"
+          <Button id='super-admin-presentation-logs-superadminlogspage-cloud-errors-button-10-bhy4nd'
             type="button"
             size="icon"
             variant="outline"
@@ -132,14 +132,14 @@ export function CloudErrorsContainer({
             aria-label="تحديث أخطاء السحابة"
 
           >
-            <RefreshCw id="super-admin.logs.super-admin-logs-page.cloud-errors.refresh-cw"
+            <RefreshCw id='super-admin-presentation-logs-superadminlogspage-cloud-errors-refreshcw-11-rtckrm'
               className={cn(
                 "h-4 w-4",
                 loadState === "loading" && "animate-spin",
               )}
             />
           </Button>
-          <Button id="super-admin.logs.super-admin-logs-page.cloud-errors.button.2"
+          <Button id='super-admin-presentation-logs-superadminlogspage-cloud-errors-button-12-qqejgz'
             type="button"
             size="sm"
             variant="outline"
@@ -151,28 +151,28 @@ export function CloudErrorsContainer({
               )
             }
           >
-            <ClipboardCopy id="super-admin.logs.super-admin-logs-page.cloud-errors.clipboard-copy" className="me-2 h-4 w-4" />
+            <ClipboardCopy id='super-admin-presentation-logs-superadminlogspage-cloud-errors-clipboardcopy-13-xl5blb' className="me-2 h-4 w-4" />
             {copyState === "all" ? "تم النسخ" : "نسخ النتائج"}
           </Button>
         </div>
       </div>
 
-      <div id="super-admin.logs.super-admin-logs-page.cloud-errors.div.4" className="grid gap-3 border-b p-4 md:grid-cols-[minmax(0,1fr)_180px_220px]">
-        <label id="super-admin.logs.super-admin-logs-page.cloud-errors.label" className="relative">
-          <Search id="super-admin.logs.super-admin-logs-page.cloud-errors.search" className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <input id="super-admin.logs.super-admin-logs-page.cloud-errors.input"
+      <div id='super-admin-presentation-logs-superadminlogspage-cloud-errors-div-14-mwivkr' className="grid gap-3 border-b p-4 md:grid-cols-[minmax(0,1fr)_180px_220px]">
+        <label id='super-admin-presentation-logs-superadminlogspage-cloud-errors-label-15-ypmmc1' className="relative">
+          <Search id='super-admin-presentation-logs-superadminlogspage-cloud-errors-search-16-tuhpv6' className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <input id='super-admin-presentation-logs-superadminlogspage-cloud-errors-input-17-ekbm8v'
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="ابحث في الرسالة أو المسار أو Stack..."
             className="asol-input-decorated-start h-10 w-full rounded-md border bg-background pe-3 text-sm"
           />
         </label>
-        <select id="super-admin.logs.super-admin-logs-page.cloud-errors.select"
+        <select id='super-admin-presentation-logs-superadminlogspage-cloud-errors-select-18-rerxqs'
           value={status}
           onChange={(event) => setStatus(event.target.value)}
           className="h-10 rounded-md border bg-background px-3 text-sm"
         >
-          <option value="all">كل حالات HTTP</option>
+          <option id="super-admin-presentation-logs-superadminlogspage-cloud-errors-option-19-tquuwt" value="all">كل حالات HTTP</option>
           {[
             ...new Set(
               cloudErrors.map((entry) => String(entry.statusCode ?? "unknown")),
@@ -185,12 +185,12 @@ export function CloudErrorsContainer({
               </option>
             ))}
         </select>
-        <select id="super-admin.logs.super-admin-logs-page.cloud-errors.select.2"
+        <select id='super-admin-presentation-logs-superadminlogspage-cloud-errors-select-20-diajqf'
           value={feature}
           onChange={(event) => setFeature(event.target.value)}
           className="h-10 rounded-md border bg-background px-3 text-sm"
         >
-          <option value="all">كل الخدمات والميزات</option>
+          <option id="super-admin-presentation-logs-superadminlogspage-cloud-errors-option-21-lzroj7" value="all">كل الخدمات والميزات</option>
           {features.map((value) => (
             <option key={value} value={value}>
               {value}
@@ -200,19 +200,19 @@ export function CloudErrorsContainer({
       </div>
 
       {loadState === "error" && (
-        <p id="super-admin.logs.super-admin-logs-page.cloud-errors.p.2" className="border-b border-amber-500/20 bg-amber-500/10 px-4 py-3 text-xs text-amber-800">
+        <p id='super-admin-presentation-logs-superadminlogspage-cloud-errors-text-22-vbb4tn' className="border-b border-amber-500/20 bg-amber-500/10 px-4 py-3 text-xs text-amber-800">
           تعذر تحديث أخطاء السحابة. البيانات الظاهرة هي آخر بيانات ناجحة ولم يتم
           حذفها.
         </p>
       )}
 
-      <div id="super-admin.logs.super-admin-logs-page.cloud-errors.div.5" className="max-h-[55vh] overflow-auto p-3">
+      <div id='super-admin-presentation-logs-superadminlogspage-cloud-errors-div-23-cfetkr' className="max-h-[55vh] overflow-auto p-3">
         {loadState === "loading" && !cloudErrors.length ? (
-          <p id="super-admin.logs.super-admin-logs-page.cloud-errors.p.3" className="py-12 text-center text-sm text-muted-foreground">
+          <p id='super-admin-presentation-logs-superadminlogspage-cloud-errors-text-24-kzfvvd' className="py-12 text-center text-sm text-muted-foreground">
             جارٍ تحميل أخطاء السحابة…
           </p>
         ) : filtered.length ? (
-          <div id="super-admin.logs.super-admin-logs-page.cloud-errors.div.6" className="space-y-3">
+          <div id='super-admin-presentation-logs-superadminlogspage-cloud-errors-div-25-3solbh' className="space-y-3">
             {filtered.map((entry) => (
               <article
                 key={entry.id}
@@ -366,7 +366,7 @@ export function CloudErrorsContainer({
             ))}
           </div>
         ) : (
-          <p id="super-admin.logs.super-admin-logs-page.cloud-errors.p.4" className="py-12 text-center text-sm text-muted-foreground">
+          <p id='super-admin-presentation-logs-superadminlogspage-cloud-errors-text-26-9qo5pr' className="py-12 text-center text-sm text-muted-foreground">
             لا توجد أخطاء سحابية مطابقة.
           </p>
         )}

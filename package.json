@@ -43,6 +43,8 @@
     "runtime:check:changed": "npx tsx scripts/runtime/check.ts changed",
     "intelligence:retrain": "npx tsx scripts/retrain-project-intelligence.ts",
     "architecture:check": "npx tsx scripts/architecture-check.ts",
+    "dom:id:check": "npx tsx scripts/dom-id-check.ts",
+    "dom:id:write": "npx tsx scripts/dom-id-check.ts --write",
     "gates:verify": "npx tsx scripts/generated-gate-contract.ts",
     "category:validate": "npx tsx scripts/validate-categories.ts",
     "catalog:validate": "npx tsx scripts/validate-catalog.ts && npm run test:catalog-display",

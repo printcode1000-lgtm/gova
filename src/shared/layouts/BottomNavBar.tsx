@@ -50,7 +50,7 @@ export function BottomNavBar() {
   return (
     <nav
       ref={navRef}
-      id="bottom-navigation-bar"
+      id='shared-layouts-bottomnavbar-nav-1-ezyfqp'
       className={cn(
         "fixed inset-x-0 bottom-0 z-50 flex min-h-12 items-center justify-around rounded-t-2xl border-t border-outline-variant pt-0 pb-[calc(0.25rem+var(--asol-safe-area-bottom))] shadow-lg",
         resolvedScheme === 'dark' ? 'asol-surface-neutral' : 'bg-[#F8FBFF]'

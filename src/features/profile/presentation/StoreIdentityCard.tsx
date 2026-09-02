@@ -243,16 +243,16 @@ export const StoreIdentityCard = React.forwardRef<
 
   if (isLoading) {
     return (
-      <div id="profile.store-identity-card.div" className="py-10 text-center text-sm text-on-surface-variant">
+      <div id='features-profile-presentation-storeidentitycard-div-1-rcrnbl' className="py-10 text-center text-sm text-on-surface-variant">
         {t("profile.loading")}
       </div>
     );
   }
 
   return (
-    <div id="profile.store-identity-card.div.2" className="space-y-5">
+    <div id='features-profile-presentation-storeidentitycard-div-2-s7nwrp' className="space-y-5">
       {error || imagesError ? (
-        <div id="profile.store-identity-card.div.3" className="rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
+        <div id='features-profile-presentation-storeidentitycard-div-3-tobwzh' className="rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
           {error ?? imagesError}
         </div>
       ) : null}
@@ -277,12 +277,12 @@ export const StoreIdentityCard = React.forwardRef<
         />
       ) : null}
 
-      <div id="profile.store-identity-card.div.4" className="space-y-2">
-        <Label id="profile.store-identity-card.label" htmlFor="profile.store-identity.store-name">
+      <div id='features-profile-presentation-storeidentitycard-div-4-zbwfka' className="space-y-2">
+        <Label id='features-profile-presentation-storeidentitycard-label-5-uhtmev' htmlFor='features-profile-presentation-storeidentitycard-input-6-uqax9t'>
           {t("onboarding.storeIdentity.storeName")}
         </Label>
         <Input
-          id="profile.store-identity.store-name"
+          id='features-profile-presentation-storeidentitycard-input-6-uqax9t'
           value={details.storeName}
           onChange={(event) => updateField("storeName", event.target.value)}
           placeholder={t("onboarding.storeIdentity.storeNamePlaceholder")}
@@ -291,12 +291,12 @@ export const StoreIdentityCard = React.forwardRef<
         />
       </div>
 
-      <div id="profile.store-identity-card.div.5" className="space-y-2">
-        <Label id="profile.store-identity-card.label.2" htmlFor="profile.store-identity.store-description">
+      <div id='features-profile-presentation-storeidentitycard-div-7-pxecfi' className="space-y-2">
+        <Label id='features-profile-presentation-storeidentitycard-label-8-w5qhti' htmlFor='features-profile-presentation-storeidentitycard-textarea-9-cj1jsp'>
           {t("onboarding.storeIdentity.storeDescription")}
         </Label>
         <Textarea
-          id="profile.store-identity.store-description"
+          id='features-profile-presentation-storeidentitycard-textarea-9-cj1jsp'
           value={details.storeDescription}
           onChange={(event) =>
             updateField("storeDescription", event.target.value)
@@ -306,17 +306,17 @@ export const StoreIdentityCard = React.forwardRef<
           maxLength={100}
           disabled={readOnly}
         />
-        <p id="profile.store-identity-card.p" className="text-end text-xs text-muted-foreground">
+        <p id='features-profile-presentation-storeidentitycard-text-10-hq92lz' className="text-end text-xs text-muted-foreground">
           {details.storeDescription.length}/100
         </p>
       </div>
 
-      <div id="profile.store-identity-card.div.6" className="space-y-2">
-        <Label id="profile.store-identity-card.label.3" htmlFor="profile.store-identity.store-story">
+      <div id='features-profile-presentation-storeidentitycard-div-11-2pcih4' className="space-y-2">
+        <Label id='features-profile-presentation-storeidentitycard-label-12-7dp6lw' htmlFor='features-profile-presentation-storeidentitycard-textarea-13-cslkw1'>
           {t("onboarding.storeIdentity.storeStory")}
         </Label>
         <Textarea
-          id="profile.store-identity.store-story"
+          id='features-profile-presentation-storeidentitycard-textarea-13-cslkw1'
           value={details.storeStory}
           onChange={(event) => updateField("storeStory", event.target.value)}
           placeholder={t("onboarding.storeIdentity.storyPlaceholder")}
@@ -324,12 +324,12 @@ export const StoreIdentityCard = React.forwardRef<
           maxLength={500}
           disabled={readOnly}
         />
-        <p id="profile.store-identity-card.p.2" className="text-end text-xs text-muted-foreground">
+        <p id='features-profile-presentation-storeidentitycard-text-14-wdxhdo' className="text-end text-xs text-muted-foreground">
           {details.storeStory.length}/500
         </p>
       </div>
 
-      <RatingSettingsEditor id="profile.store-identity-card.rating-settings-editor"
+      <RatingSettingsEditor id='features-profile-presentation-storeidentitycard-ratingsettingseditor-15-8xq98o'
         enabled={details.ratingSettings.enabled}
         mode={details.ratingSettings.mode}
         disabled={readOnly}

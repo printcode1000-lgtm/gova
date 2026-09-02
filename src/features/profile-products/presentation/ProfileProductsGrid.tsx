@@ -27,7 +27,7 @@ export function ProfileProductsGrid({
   onViewProduct: (product: ProductRecord) => void;
 }) {
   return (
-    <div id="profile-products.profile-products-grid.div" className="grid min-w-0 grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
+    <div id='features-profile-products-presentation-profileproductsgrid-div-1-m5jf20' className="grid min-w-0 grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
       {products.map((product) => {
         const featured = featuredProductIds.includes(product.id);
         const card = createProductCardViewModel(product);

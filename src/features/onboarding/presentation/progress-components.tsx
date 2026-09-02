@@ -70,18 +70,18 @@ export function OnboardingProgress({ id }: { id?: string }) {
 
   return (
     <div id={id} className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-lg font-semibold">{t('onboarding.progress.title')}</h2>
-          <p className="text-sm text-muted-foreground">
+      <div id="features-onboarding-presentation-progress-components-div-2-hiyauh" className="flex items-center justify-between">
+        <div id="features-onboarding-presentation-progress-components-div-3-xij5be">
+          <h2 id="features-onboarding-presentation-progress-components-heading-4-njikwj" className="text-lg font-semibold">{t('onboarding.progress.title')}</h2>
+          <p id="features-onboarding-presentation-progress-components-text-5-ozakcb" className="text-sm text-muted-foreground">
             {t('onboarding.progress.sectionsCompleted', {
               completed: completedSteps.length,
               total: stepOrder.length,
             })}
           </p>
         </div>
-        <div className="text-right">
-          <span className="text-2xl font-bold text-primary">{progress}%</span>
+        <div id="features-onboarding-presentation-progress-components-div-6-xgxd8c" className="text-right">
+          <span id="features-onboarding-presentation-progress-components-text-7-rti6dp" className="text-2xl font-bold text-primary">{progress}%</span>
         </div>
       </div>
       <Progress value={progress} className="h-2" />
@@ -176,8 +176,8 @@ export function MobileOnboardingNav({ id,
 
   return (
     <div id={id} className="sticky top-0 z-50 asol-onboarding-sticky-bar border-b">
-      <div className="px-4 py-3 space-y-3">
-        <div className="flex items-center gap-3">
+      <div id="features-onboarding-presentation-progress-components-div-11-ivlp6f" className="px-4 py-3 space-y-3">
+        <div id="features-onboarding-presentation-progress-components-div-12-7srim7" className="flex items-center gap-3">
           <Button
             variant="ghost"
             size="icon"
@@ -188,13 +188,13 @@ export function MobileOnboardingNav({ id,
             <ChevronLeft className="h-5 w-5" />
           </Button>
 
-          <div className="flex items-center gap-2 flex-1 min-w-0">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground shrink-0">
+          <div id="features-onboarding-presentation-progress-components-div-13-preigb" className="flex items-center gap-2 flex-1 min-w-0">
+            <div id="features-onboarding-presentation-progress-components-div-14-qhreop" className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground shrink-0">
               <Icon className="h-4 w-4" />
             </div>
-            <div className="min-w-0">
-              <p className="text-sm font-medium truncate">{config.title}</p>
-              <p className="text-xs text-muted-foreground">
+            <div id="features-onboarding-presentation-progress-components-div-15-rmdosz" className="min-w-0">
+              <p id="features-onboarding-presentation-progress-components-text-16-iljtym" className="text-sm font-medium truncate">{config.title}</p>
+              <p id="features-onboarding-presentation-progress-components-text-17-mgz1hs" className="text-xs text-muted-foreground">
                 {t('onboarding.progress.stepOf', {
                   current: currentIndex + 1,
                   total: stepOrder.length,
@@ -276,7 +276,7 @@ export function StepNavigation({ id,
         {prevLabel ?? t('onboarding.nav.back')}
       </Button>
 
-      <div className="flex items-center gap-3">
+      <div id="features-onboarding-presentation-progress-components-div-19-lli3of" className="flex items-center gap-3">
         {showSkip && !isComplete && (
           <Button variant="ghost" onClick={nextStep} disabled={isSubmitting}>
             {t('onboarding.nav.skip')}
@@ -285,7 +285,7 @@ export function StepNavigation({ id,
         <Button onClick={handleNext} disabled={isSubmitting} className="gap-2">
           {isSubmitting ? (
             <>
-              <span className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full" />
+              <span id="features-onboarding-presentation-progress-components-text-20-0t6zqj" className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full" />
               {t('onboarding.nav.saving')}
             </>
           ) : isLast ? (

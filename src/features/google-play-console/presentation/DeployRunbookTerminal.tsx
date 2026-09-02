@@ -61,7 +61,7 @@ export function TerminalOutput(props: { text: string } & { id?: string }) {
         "sm:min-h-64 sm:max-h-[42rem] rounded-md bg-muted"
       }
     >
-      <pre className="min-w-0 p-3 text-xs whitespace-pre-wrap break-words" dir="ltr">
+      <pre id="features-google-play-console-presentation-deployrunbookterminal-pre-3-r6alkr" className="min-w-0 p-3 text-xs whitespace-pre-wrap break-words" dir="ltr">
         {props.text || empty}
       </pre>
     </div>
@@ -93,12 +93,12 @@ function IndicatorCard(
 ) {
   return (
     <div id={props.id} className={props.className ?? ""}>
-      <div className="min-w-0 rounded-md border bg-surface p-3">
-        <div className="text-xs text-on-surface-variant">{props.label}</div>
-        <div className="mt-1 text-sm font-semibold break-words sm:text-base" dir="ltr">
+      <div id="features-google-play-console-presentation-deployrunbookterminal-div-6-gtyfsr" className="min-w-0 rounded-md border bg-surface p-3">
+        <div id="features-google-play-console-presentation-deployrunbookterminal-div-7-ffkqki" className="text-xs text-on-surface-variant">{props.label}</div>
+        <div id="features-google-play-console-presentation-deployrunbookterminal-div-8-6mqyet" className="mt-1 text-sm font-semibold break-words sm:text-base" dir="ltr">
           {props.value || "—"}
         </div>
-        <p className="mt-1 text-[11px] text-on-surface-variant break-words">{props.help}</p>
+        <p id="features-google-play-console-presentation-deployrunbookterminal-text-9-viuxns" className="mt-1 text-[11px] text-on-surface-variant break-words">{props.help}</p>
       </div>
     </div>
   );

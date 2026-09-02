@@ -73,43 +73,43 @@ export function MarketingSection() {
   };
 
   return (
-    <div id="onboarding.sections.marketing-section.div" className="space-y-6 animate-in fade-in duration-300">
-      <Card id="onboarding.sections.marketing-section.card">
-        <CardHeader id="onboarding.sections.marketing-section.card-header">
-          <CardTitle id="onboarding.sections.marketing-section.card-title" className="flex items-center gap-2">
-            <Megaphone id="onboarding.sections.marketing-section.megaphone" className="h-5 w-5" />
+    <div id='onboarding-presentation-sections-marketing-section-div-1-zwqooj' className="space-y-6 animate-in fade-in duration-300">
+      <Card id='onboarding-presentation-sections-marketing-section-card-2-cniyld'>
+        <CardHeader id='onboarding-presentation-sections-marketing-section-cardheader-3-myzpdx'>
+          <CardTitle id='onboarding-presentation-sections-marketing-section-cardtitle-4-1gxpn0' className="flex items-center gap-2">
+            <Megaphone id='onboarding-presentation-sections-marketing-section-megaphone-5-rvfduq' className="h-5 w-5" />
             {t('onboarding.marketing.title')}
           </CardTitle>
-          <CardDescription id="onboarding.sections.marketing-section.card-description">{t('onboarding.marketing.description')}</CardDescription>
+          <CardDescription id='onboarding-presentation-sections-marketing-section-carddescription-6-hkbkbz'>{t('onboarding.marketing.description')}</CardDescription>
         </CardHeader>
-        <CardContent id="onboarding.sections.marketing-section.card-content">
+        <CardContent id='onboarding-presentation-sections-marketing-section-cardcontent-7-dnxcha'>
           <Tabs defaultValue="featured" className="space-y-6">
-            <TabsList id="onboarding.sections.marketing-section.tabs-list" className="grid w-full grid-cols-3">
-              <TabsTrigger id="onboarding.sections.marketing-section.tabs-trigger" value="featured">{t('onboarding.marketing.tabs.featured')}</TabsTrigger>
-              <TabsTrigger id="onboarding.sections.marketing-section.tabs-trigger.2" value="coupons">{t('onboarding.marketing.tabs.coupons')}</TabsTrigger>
-              <TabsTrigger id="onboarding.sections.marketing-section.tabs-trigger.3" value="campaigns">{t('onboarding.marketing.tabs.campaigns')}</TabsTrigger>
+            <TabsList id='onboarding-presentation-sections-marketing-section-tabslist-8-5oh63j' className="grid w-full grid-cols-3">
+              <TabsTrigger id='onboarding-presentation-sections-marketing-section-tabstrigger-9-z79wyg' value="featured">{t('onboarding.marketing.tabs.featured')}</TabsTrigger>
+              <TabsTrigger id='onboarding-presentation-sections-marketing-section-tabstrigger-10-5xqdyf' value="coupons">{t('onboarding.marketing.tabs.coupons')}</TabsTrigger>
+              <TabsTrigger id='onboarding-presentation-sections-marketing-section-tabstrigger-11-zfr0bk' value="campaigns">{t('onboarding.marketing.tabs.campaigns')}</TabsTrigger>
             </TabsList>
 
-            <TabsContent id="onboarding.sections.marketing-section.tabs-content" value="featured" className="space-y-4">
-              <div id="onboarding.sections.marketing-section.div.2" className="flex items-center justify-between">
-                <div id="onboarding.sections.marketing-section.div.3">
-                  <Label id="onboarding.sections.marketing-section.label" className="font-medium">{t('onboarding.marketing.featuredTitle')}</Label>
-                  <p id="onboarding.sections.marketing-section.p" className="text-sm text-muted-foreground">
+            <TabsContent id='onboarding-presentation-sections-marketing-section-tabscontent-12-q2v8vh' value="featured" className="space-y-4">
+              <div id='onboarding-presentation-sections-marketing-section-div-13-8gpyfk' className="flex items-center justify-between">
+                <div id='onboarding-presentation-sections-marketing-section-div-14-rewfv7'>
+                  <Label id='onboarding-presentation-sections-marketing-section-label-15-65qvsl' className="font-medium">{t('onboarding.marketing.featuredTitle')}</Label>
+                  <p id='onboarding-presentation-sections-marketing-section-text-16-ngokkk' className="text-sm text-muted-foreground">
                     {t('onboarding.marketing.featuredDesc')}
                   </p>
                 </div>
-                <Badge id="onboarding.sections.marketing-section.badge" variant="secondary">
+                <Badge id='onboarding-presentation-sections-marketing-section-badge-17-bi7bhu' variant="secondary">
                   {t('onboarding.common.selected', { count: marketing.featuredProductIds.length })}
                 </Badge>
               </div>
 
               {products.products.length === 0 ? (
-                <div id="onboarding.sections.marketing-section.div.4" className="text-center py-8 text-muted-foreground">
-                  <Tag id="onboarding.sections.marketing-section.tag" className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                  <p id="onboarding.sections.marketing-section.p.2">{t('onboarding.marketing.noProducts')}</p>
+                <div id='onboarding-presentation-sections-marketing-section-div-18-vbbe1h' className="text-center py-8 text-muted-foreground">
+                  <Tag id='onboarding-presentation-sections-marketing-section-tag-19-vkykj6' className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                  <p id='onboarding-presentation-sections-marketing-section-text-20-5ptkbh'>{t('onboarding.marketing.noProducts')}</p>
                 </div>
               ) : (
-                <div id="onboarding.sections.marketing-section.div.5" className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                <div id='onboarding-presentation-sections-marketing-section-div-21-kasxsf' className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                   {products.products.map((product) => (
                     <label
                       key={product.id}
@@ -140,31 +140,31 @@ export function MarketingSection() {
               )}
             </TabsContent>
 
-            <TabsContent id="onboarding.sections.marketing-section.tabs-content.2" value="coupons" className="space-y-6">
-              <div id="onboarding.sections.marketing-section.div.6" className="p-4 rounded-lg border space-y-4">
-                <h4 id="onboarding.sections.marketing-section.h4" className="font-medium">{t('onboarding.marketing.createCoupon')}</h4>
+            <TabsContent id='onboarding-presentation-sections-marketing-section-tabscontent-22-6lwhwx' value="coupons" className="space-y-6">
+              <div id='onboarding-presentation-sections-marketing-section-div-23-rnwvyh' className="p-4 rounded-lg border space-y-4">
+                <h4 id='onboarding-presentation-sections-marketing-section-heading-24-nvjmne' className="font-medium">{t('onboarding.marketing.createCoupon')}</h4>
 
-                <div id="onboarding.sections.marketing-section.div.7" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                  <FormField id="onboarding.sections.marketing-section.form-field" label={t('onboarding.marketing.couponCode')} htmlFor="couponCode">
-                    <div id="onboarding.sections.marketing-section.div.8" className="flex gap-2">
+                <div id='onboarding-presentation-sections-marketing-section-div-25-zsyqij' className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                  <FormField id='onboarding-presentation-sections-marketing-section-formfield-26-xf6an8' label={t('onboarding.marketing.couponCode')} htmlFor='onboarding-presentation-sections-marketing-section-forminput-28-etsjoc'>
+                    <div id='onboarding-presentation-sections-marketing-section-div-27-7udhka' className="flex gap-2">
                       <FormInput
-                        id="couponCode"
+                        id='onboarding-presentation-sections-marketing-section-forminput-28-etsjoc'
                         value={newCoupon.code}
                         onChange={(e) => setNewCoupon({ ...newCoupon, code: e.target.value.toUpperCase() })}
                         className="font-mono uppercase"
                       />
-                      <Button id="onboarding.sections.marketing-section.button"
+                      <Button id='onboarding-presentation-sections-marketing-section-button-29-2tpauh'
                         variant="outline"
                         size="icon"
                         onClick={() => setNewCoupon({ ...newCoupon, code: generateCouponCode() })}
                       >
-                        <Tag id="onboarding.sections.marketing-section.tag.2" className="h-4 w-4" />
+                        <Tag id='onboarding-presentation-sections-marketing-section-tag-30-d8sp8i' className="h-4 w-4" />
                       </Button>
                     </div>
                   </FormField>
 
-                  <FormField id="onboarding.sections.marketing-section.form-field.2" label={t('onboarding.marketing.discountType')} htmlFor="discountType">
-                    <FormSelect id="onboarding.sections.marketing-section.form-select"
+                  <FormField id='onboarding-presentation-sections-marketing-section-formfield-31-jrthwd' label={t('onboarding.marketing.discountType')} htmlFor="discountType">
+                    <FormSelect id='onboarding-presentation-sections-marketing-section-formselect-32-lww73r'
                       value={newCoupon.discountType || 'percentage'}
                       onValueChange={(v) =>
                         setNewCoupon({ ...newCoupon, discountType: v as 'percentage' | 'fixed' })
@@ -176,14 +176,14 @@ export function MarketingSection() {
                     />
                   </FormField>
 
-                  <FormField id="onboarding.sections.marketing-section.form-field.3" label={t('onboarding.marketing.discountValue')} htmlFor="discountValue">
-                    <div id="onboarding.sections.marketing-section.div.9" className="relative">
+                  <FormField id='onboarding-presentation-sections-marketing-section-formfield-33-qkvkuh' label={t('onboarding.marketing.discountValue')} htmlFor="discountValue">
+                    <div id='onboarding-presentation-sections-marketing-section-div-34-ytzf5m' className="relative">
                       {newCoupon.discountType === 'percentage' ? (
-                        <Percent id="onboarding.sections.marketing-section.percent" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Percent id='onboarding-presentation-sections-marketing-section-percent-35-rw5njd' className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       ) : (
-                        <DollarSign id="onboarding.sections.marketing-section.dollar-sign" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <DollarSign id='onboarding-presentation-sections-marketing-section-dollarsign-36-f0ljkf' className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       )}
-                      <FormInput id="onboarding.sections.marketing-section.form-input"
+                      <FormInput id='onboarding-presentation-sections-marketing-section-forminput-37-hxih7u'
                         type="number"
                         value={newCoupon.discountValue}
                         onChange={(e) => setNewCoupon({ ...newCoupon, discountValue: parseFloat(e.target.value) || 0 })}
@@ -194,10 +194,10 @@ export function MarketingSection() {
                     </div>
                   </FormField>
 
-                  <FormField id="onboarding.sections.marketing-section.form-field.4" label={t('onboarding.marketing.minPurchase')} htmlFor="minPurchase">
-                    <div id="onboarding.sections.marketing-section.div.10" className="relative">
-                      <DollarSign id="onboarding.sections.marketing-section.dollar-sign.2" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                      <FormInput id="onboarding.sections.marketing-section.form-input.2"
+                  <FormField id='onboarding-presentation-sections-marketing-section-formfield-38-4rfboq' label={t('onboarding.marketing.minPurchase')} htmlFor="minPurchase">
+                    <div id='onboarding-presentation-sections-marketing-section-div-39-pyo0p7' className="relative">
+                      <DollarSign id='onboarding-presentation-sections-marketing-section-dollarsign-40-5f4nyb' className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <FormInput id='onboarding-presentation-sections-marketing-section-forminput-41-r6xfir'
                         type="number"
                         value={newCoupon.minPurchase}
                         onChange={(e) => setNewCoupon({ ...newCoupon, minPurchase: parseFloat(e.target.value) || 0 })}
@@ -208,15 +208,15 @@ export function MarketingSection() {
                   </FormField>
                 </div>
 
-                <Button id="onboarding.sections.marketing-section.button.2" onClick={addCoupon} className="gap-2">
-                  <Plus id="onboarding.sections.marketing-section.plus" className="h-4 w-4" />
+                <Button id='onboarding-presentation-sections-marketing-section-button-42-md5pk7' onClick={addCoupon} className="gap-2">
+                  <Plus id='onboarding-presentation-sections-marketing-section-plus-43-rpx2e6' className="h-4 w-4" />
                   {t('onboarding.marketing.createCouponBtn')}
                 </Button>
               </div>
 
               {marketing.coupons.length > 0 && (
-                <div id="onboarding.sections.marketing-section.div.11" className="space-y-2">
-                  <h4 id="onboarding.sections.marketing-section.h4.2" className="font-medium">{t('onboarding.marketing.activeCoupons')}</h4>
+                <div id='onboarding-presentation-sections-marketing-section-div-44-hkoieu' className="space-y-2">
+                  <h4 id='onboarding-presentation-sections-marketing-section-heading-45-finqoe' className="font-medium">{t('onboarding.marketing.activeCoupons')}</h4>
                   {marketing.coupons.map((coupon) => (
                     <div
                       key={coupon.id}
@@ -241,18 +241,18 @@ export function MarketingSection() {
               )}
             </TabsContent>
 
-            <TabsContent id="onboarding.sections.marketing-section.tabs-content.3" value="campaigns" className="space-y-4">
-              <div id="onboarding.sections.marketing-section.div.12" className="text-center py-8 text-muted-foreground">
-                <Calendar id="onboarding.sections.marketing-section.calendar" className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                <p id="onboarding.sections.marketing-section.p.3">{t('onboarding.marketing.campaignsDesc')}</p>
-                <p id="onboarding.sections.marketing-section.p.4" className="text-sm mt-2">{t('onboarding.marketing.comingSoon')}</p>
+            <TabsContent id='onboarding-presentation-sections-marketing-section-tabscontent-46-clk8u6' value="campaigns" className="space-y-4">
+              <div id='onboarding-presentation-sections-marketing-section-div-47-zhqk4l' className="text-center py-8 text-muted-foreground">
+                <Calendar id='onboarding-presentation-sections-marketing-section-calendar-48-cevzsv' className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                <p id='onboarding-presentation-sections-marketing-section-text-49-sooac7'>{t('onboarding.marketing.campaignsDesc')}</p>
+                <p id='onboarding-presentation-sections-marketing-section-text-50-di3zl5' className="text-sm mt-2">{t('onboarding.marketing.comingSoon')}</p>
               </div>
             </TabsContent>
           </Tabs>
         </CardContent>
       </Card>
 
-      <StepNavigation id="onboarding.sections.marketing-section.step-navigation" onNext={handleNext} />
+      <StepNavigation id='onboarding-presentation-sections-marketing-section-stepnavigation-51-pahr40' onNext={handleNext} />
     </div>
   );
 }

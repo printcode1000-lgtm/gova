@@ -131,36 +131,36 @@ export function CartPageContent() {
   };
 
   return (
-    <main id="cart.cart-page-content.main" className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
-      <div id="cart.cart-page-content.div" className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
-        <div id="cart.cart-page-content.div.2">
-          <h1 id="cart.cart-page-content.h1" className="text-2xl font-bold text-on-surface">{copy.title}</h1>
-          <p id="cart.cart-page-content.p" className="mt-1 text-sm text-muted-foreground">
+    <main id='features-cart-presentation-cartpagecontent-main-1-13frco' className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
+      <div id='features-cart-presentation-cartpagecontent-div-2-vvynjg' className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
+        <div id='features-cart-presentation-cartpagecontent-div-3-ez1ckc'>
+          <h1 id='features-cart-presentation-cartpagecontent-heading-4-rokwzs' className="text-2xl font-bold text-on-surface">{copy.title}</h1>
+          <p id='features-cart-presentation-cartpagecontent-text-5-suyhzx' className="mt-1 text-sm text-muted-foreground">
             {copy.description}
           </p>
         </div>
         {items.length > 0 ? (
-          <button id="cart.cart-page-content.button"
+          <button id='features-cart-presentation-cartpagecontent-button-6-po7t3o'
             type="button"
             onClick={() => void clearCart()}
             className="inline-flex items-center gap-2 rounded-lg border border-outline-variant px-4 py-2 text-sm font-semibold text-on-surface transition"
           >
-            <Trash2 id="cart.cart-page-content.trash2" className="h-4 w-4" />
+            <Trash2 id='features-cart-presentation-cartpagecontent-trash2-7-mmngbm' className="h-4 w-4" />
             {copy.clear}
           </button>
         ) : null}
       </div>
 
       {items.length === 0 ? (
-        <section id="cart.cart-page-content.section" className="rounded-xl border border-dashed border-outline-variant p-10 text-center">
-          <div id="cart.cart-page-content.div.3" className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-muted">
-            <ShoppingCart id="cart.cart-page-content.shopping-cart" className="h-7 w-7 text-muted-foreground" />
+        <section id='features-cart-presentation-cartpagecontent-section-8-fkqvtx' className="rounded-xl border border-dashed border-outline-variant p-10 text-center">
+          <div id='features-cart-presentation-cartpagecontent-div-9-9dwoym' className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-muted">
+            <ShoppingCart id='features-cart-presentation-cartpagecontent-shoppingcart-10-rtevqe' className="h-7 w-7 text-muted-foreground" />
           </div>
-          <h2 id="cart.cart-page-content.h2" className="mt-4 text-lg font-bold">{copy.emptyTitle}</h2>
-          <p id="cart.cart-page-content.p.2" className="mt-2 text-sm text-muted-foreground">
+          <h2 id='features-cart-presentation-cartpagecontent-heading-11-atp1hq' className="mt-4 text-lg font-bold">{copy.emptyTitle}</h2>
+          <p id='features-cart-presentation-cartpagecontent-text-12-tyvvjq' className="mt-2 text-sm text-muted-foreground">
             {copy.emptyText}
           </p>
-          <Link id="cart.cart-page-content.link"
+          <Link id='features-cart-presentation-cartpagecontent-link-13-xnwsy5'
             href="/home"
             className="mt-5 inline-flex rounded-xl bg-primary px-5 py-2.5 font-semibold text-on-primary"
           >
@@ -168,22 +168,22 @@ export function CartPageContent() {
           </Link>
         </section>
       ) : (
-        <div id="cart.cart-page-content.div.4" className="grid gap-6 lg:grid-cols-[1fr_340px]">
-          <section id="cart.cart-page-content.section.2" className="space-y-4">
+        <div id='features-cart-presentation-cartpagecontent-div-14-9oyhsz' className="grid gap-6 lg:grid-cols-[1fr_340px]">
+          <section id='features-cart-presentation-cartpagecontent-section-15-vf3uej' className="space-y-4">
             {unifiedDeliveryAvailable ? (
-              <div id="cart.cart-page-content.div.5" className="rounded-xl border border-primary/30 bg-primary/10 p-4">
-                <div id="cart.cart-page-content.div.6" className="flex items-start gap-3">
-                  <Truck id="cart.cart-page-content.truck" className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-                  <div id="cart.cart-page-content.div.7">
-                    <h2 id="cart.cart-page-content.h2.2" className="font-bold text-primary">
+              <div id='features-cart-presentation-cartpagecontent-div-16-okx0be' className="rounded-xl border border-primary/30 bg-primary/10 p-4">
+                <div id='features-cart-presentation-cartpagecontent-div-17-sfkpo5' className="flex items-start gap-3">
+                  <Truck id='features-cart-presentation-cartpagecontent-truck-18-9wqsw3' className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+                  <div id='features-cart-presentation-cartpagecontent-div-19-gxltgq'>
+                    <h2 id='features-cart-presentation-cartpagecontent-heading-20-i60vpa' className="font-bold text-primary">
                       توصيل موحّد لعدة بائعين
                     </h2>
-                    <p id="cart.cart-page-content.p.3" className="mt-1 text-sm leading-6 text-muted-foreground">
+                    <p id='features-cart-presentation-cartpagecontent-text-21-kopyi7' className="mt-1 text-sm leading-6 text-muted-foreground">
                       سيطلب النظام عرضًا واحدًا لجمع المنتجات من{""}
                       {sellerGroups.length} بائعين وتسليمها إليك في شحنة واحدة،
                       ولن تُحسب رسوم كل بائع بصورة منفصلة.
                     </p>
-                    <p id="cart.cart-page-content.p.4" className="mt-2 text-xs font-semibold text-on-surface">
+                    <p id='features-cart-presentation-cartpagecontent-text-22-nilfhl' className="mt-2 text-xs font-semibold text-on-surface">
                       تكلفة التوصيل المنفصل المؤكدة حاليًا:{""}
                       {formatMoney(separateDeliveryEstimateMinor)}
                       {sellerGroups.some((group) => group.quoteRequired)
@@ -402,100 +402,100 @@ export function CartPageContent() {
             ))}
           </section>
 
-          <aside id="cart.cart-page-content.aside" className="h-fit rounded-xl border border-outline-variant bg-surface p-4 shadow-sm">
-            <h2 id="cart.cart-page-content.h2.3" className="font-bold">{copy.summary}</h2>
-            <div id="cart.cart-page-content.div.8" className="mt-4 space-y-3 text-sm">
-              <label id="cart.cart-page-content.label" className="block space-y-1.5">
-                <span id="cart.cart-page-content.span" className="text-xs font-semibold text-muted-foreground">
+          <aside id='features-cart-presentation-cartpagecontent-aside-23-4r03s6' className="h-fit rounded-xl border border-outline-variant bg-surface p-4 shadow-sm">
+            <h2 id='features-cart-presentation-cartpagecontent-heading-24-mrjytu' className="font-bold">{copy.summary}</h2>
+            <div id='features-cart-presentation-cartpagecontent-div-25-ovi1bq' className="mt-4 space-y-3 text-sm">
+              <label id='features-cart-presentation-cartpagecontent-label-26-plxomv' className="block space-y-1.5">
+                <span id='features-cart-presentation-cartpagecontent-text-27-dbjv8k' className="text-xs font-semibold text-muted-foreground">
                   {copy.coupon}
                 </span>
-                <input id="cart.cart-page-content.input"
+                <input id='features-cart-presentation-cartpagecontent-input-28-m7fa0d'
                   value={couponText}
                   onChange={(event) => setCouponText(event.target.value)}
                   placeholder="WELCOME10"
                   className="h-10 w-full rounded-lg border border-outline-variant bg-surface px-3 text-sm"
                 />
-                <span id="cart.cart-page-content.span.2" className="block text-[11px] text-muted-foreground">
+                <span id='features-cart-presentation-cartpagecontent-text-29-xbm5jf' className="block text-[11px] text-muted-foreground">
                   {copy.couponHint}
                 </span>
               </label>
-              <div id="cart.cart-page-content.div.9" className="flex justify-between">
-                <span id="cart.cart-page-content.span.3" className="text-muted-foreground">{copy.itemCount}</span>
-                <span id="cart.cart-page-content.span.4" className="font-semibold">{totalQuantity}</span>
+              <div id='features-cart-presentation-cartpagecontent-div-30-0vqpb3' className="flex justify-between">
+                <span id='features-cart-presentation-cartpagecontent-text-31-bmii6w' className="text-muted-foreground">{copy.itemCount}</span>
+                <span id='features-cart-presentation-cartpagecontent-text-32-vr6qvr' className="font-semibold">{totalQuantity}</span>
               </div>
-              <div id="cart.cart-page-content.div.10" className="flex justify-between">
-                <span id="cart.cart-page-content.span.5" className="text-muted-foreground">{copy.productsTotal}</span>
-                <span id="cart.cart-page-content.span.6" className="font-semibold">
+              <div id='features-cart-presentation-cartpagecontent-div-33-g5xz5z' className="flex justify-between">
+                <span id='features-cart-presentation-cartpagecontent-text-34-lsn1rl' className="text-muted-foreground">{copy.productsTotal}</span>
+                <span id='features-cart-presentation-cartpagecontent-text-35-empm0c' className="font-semibold">
                   {formatMoney(productsTotalMinor, locale)}
                 </span>
               </div>
               {isLoadingDiscountQuote ? (
-                <div id="cart.cart-page-content.div.11" className="flex justify-between text-primary">
-                  <span id="cart.cart-page-content.span.7">{copy.loadingDiscounts}</span>
-                  <span id="cart.cart-page-content.span.8">...</span>
+                <div id='features-cart-presentation-cartpagecontent-div-36-16tald' className="flex justify-between text-primary">
+                  <span id='features-cart-presentation-cartpagecontent-text-37-w1y4z0'>{copy.loadingDiscounts}</span>
+                  <span id='features-cart-presentation-cartpagecontent-text-38-vcgbkl'>...</span>
                 </div>
               ) : null}
               {productsDiscountMinor > 0 ? (
-                <div id="cart.cart-page-content.div.12" className="flex justify-between text-primary">
-                  <span id="cart.cart-page-content.span.9">خصومات المنتجات والطلبات</span>
-                  <span id="cart.cart-page-content.span.10" className="font-semibold">
+                <div id='features-cart-presentation-cartpagecontent-div-39-1wgesh' className="flex justify-between text-primary">
+                  <span id='features-cart-presentation-cartpagecontent-text-40-up7xk9'>خصومات المنتجات والطلبات</span>
+                  <span id='features-cart-presentation-cartpagecontent-text-41-xq1aii' className="font-semibold">
                     -{formatMoney(productsDiscountMinor)}
                   </span>
                 </div>
               ) : null}
-              <div id="cart.cart-page-content.div.13" className="flex justify-between">
-                <span id="cart.cart-page-content.span.11" className="text-muted-foreground">
+              <div id='features-cart-presentation-cartpagecontent-div-42-ayifjj' className="flex justify-between">
+                <span id='features-cart-presentation-cartpagecontent-text-43-86etka' className="text-muted-foreground">
                   {unifiedDeliveryAvailable
                     ? "التوصيل الموحد"
                     : hasPendingShippingQuote
                       ? "رسوم الشحن المؤكدة حاليًا"
                       : "إجمالي الشحن"}
                 </span>
-                <span id="cart.cart-page-content.span.12" className="font-semibold">
+                <span id='features-cart-presentation-cartpagecontent-text-44-ktjhf1' className="font-semibold">
                   {unifiedDeliveryAvailable
                     ? "بانتظار العروض"
                     : formatMoney(shippingTotalMinor)}
                 </span>
               </div>
               {shippingDiscountMinor > 0 && !unifiedDeliveryAvailable ? (
-                <div id="cart.cart-page-content.div.14" className="flex justify-between text-primary">
-                  <span id="cart.cart-page-content.span.13">خصم الشحن</span>
-                  <span id="cart.cart-page-content.span.14" className="font-semibold">
+                <div id='features-cart-presentation-cartpagecontent-div-45-cl3xui' className="flex justify-between text-primary">
+                  <span id='features-cart-presentation-cartpagecontent-text-46-u28lyf'>خصم الشحن</span>
+                  <span id='features-cart-presentation-cartpagecontent-text-47-7mt9qe' className="font-semibold">
                     -{formatMoney(shippingDiscountMinor)}
                   </span>
                 </div>
               ) : null}
-              <div id="cart.cart-page-content.div.15" className="border-t border-outline-variant pt-3">
-                <div id="cart.cart-page-content.div.16" className="flex justify-between text-base font-bold">
-                  <span id="cart.cart-page-content.span.15">{copy.total}</span>
-                  <span id="cart.cart-page-content.span.16">{formatMoney(totalMinor, locale)}</span>
+              <div id='features-cart-presentation-cartpagecontent-div-48-fqsurl' className="border-t border-outline-variant pt-3">
+                <div id='features-cart-presentation-cartpagecontent-div-49-e8iuci' className="flex justify-between text-base font-bold">
+                  <span id='features-cart-presentation-cartpagecontent-text-50-8uqa0a'>{copy.total}</span>
+                  <span id='features-cart-presentation-cartpagecontent-text-51-xwxzad'>{formatMoney(totalMinor, locale)}</span>
                 </div>
               </div>
             </div>
             {hasPendingShippingQuote ? (
-              <p id="cart.cart-page-content.p.5" className="mt-4 rounded-lg border border-warning/30 bg-warning/10 px-3 py-2 text-sm leading-6 text-on-surface">
+              <p id='features-cart-presentation-cartpagecontent-text-52-ihymvt' className="mt-4 rounded-lg border border-warning/30 bg-warning/10 px-3 py-2 text-sm leading-6 text-on-surface">
                 {unifiedDeliveryAvailable
                   ? "الإجمالي مبدئي ولا يشمل التوصيل الموحد. ستظهر عروض مقدمي التوصيل في صفحة الطلب، ولن تُضاف أي قيمة إلا بعد اختيارك وموافقتك."
                   : "الإجمالي مبدئي ولا يشمل عروض الشحن حسب المكان. ستُضاف قيمة كل عرض فقط بعد موافقتك عليه من صفحة تفاصيل الطلب."}
               </p>
             ) : null}
             {submitError ? (
-              <p id="cart.cart-page-content.p.6" className="mt-4 rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
+              <p id='features-cart-presentation-cartpagecontent-text-53-ujehbi' className="mt-4 rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
                 {submitError}
               </p>
             ) : null}
-            <button
+            <button id="features-cart-presentation-cartpagecontent-button-54-oeqmtd"
               type="button"
               disabled={isSubmitting || isSessionLoading}
               onClick={submitOrder}
               className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 font-bold text-on-primary transition disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isSubmitting ? (
-                <Loader2 id="cart.cart-page-content.loader2" className="h-4 w-4 animate-spin" />
+                <Loader2 id='features-cart-presentation-cartpagecontent-loader2-55-ms5wre' className="h-4 w-4 animate-spin" />
               ) : null}
               {copy.submit}
             </button>
-            <p id="cart.cart-page-content.p.7" className="mt-3 text-xs leading-5 text-muted-foreground">
+            <p id='features-cart-presentation-cartpagecontent-text-56-m7h4z3' className="mt-3 text-xs leading-5 text-muted-foreground">
               {copy.submitHint}
             </p>
           </aside>

@@ -4,6 +4,7 @@ import type { CSSProperties, ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 
 import { useOpenInAsolHeaderPrompt } from '@/features/sharing';
+import STATIC_DOM_IDS from '@/shared/dom/identity/static-ids.json';
 
 import { AppHeader } from './AppHeader';
 import { BottomNavBar } from './BottomNavBar';
@@ -30,7 +31,7 @@ export function AppShell({ children, id }: AppShellProps) {
     <div id={id} style={shellStyle}>
       <PageSaveRuntimeInit />
       <AppHeader installPrompt={installPrompt} />
-      <main
+      <main id={STATIC_DOM_IDS.ids.shell.appShellMain}
         className="asol-canvas asol-shell-main min-h-screen"
         style={{ paddingBottom: BOTTOM_NAV_CLEARANCE }}
       >

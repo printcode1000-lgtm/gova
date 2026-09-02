@@ -37,42 +37,42 @@ export function FulfillmentCarrierSearch({
   onToggle: () => void;
 }) {
   return (
-    <section id="profile.fulfillment-settings.fulfillment-carrier-search.section" className="space-y-4 rounded-xl border border-outline-variant p-4">
+    <section id='profile-presentation-fulfillment-settings-fulfillmentcarriersearch-section-1-ux35vb' className="space-y-4 rounded-xl border border-outline-variant p-4">
       <button
-        id="profile.fulfillment-settings.fulfillment-carrier-search.div"
+        id='profile-presentation-fulfillment-settings-fulfillmentcarriersearch-button-2-dcowsn'
         type="button"
         onClick={onToggle}
         aria-expanded={open}
         aria-label={text.shippingMethods}
         className="flex w-full items-center justify-between gap-2"
       >
-        <span id="profile.fulfillment-settings.fulfillment-carrier-search.span" className="flex items-center gap-2">
-          <Truck id="profile.fulfillment-settings.fulfillment-carrier-search.truck" className="h-5 w-5 text-primary" />
-          <h3 id="profile.fulfillment-settings.fulfillment-carrier-search.h3" className="text-sm font-bold">{text.shippingMethods}</h3>
+        <span id='profile-presentation-fulfillment-settings-fulfillmentcarriersearch-text-3-unwzi7' className="flex items-center gap-2">
+          <Truck id='profile-presentation-fulfillment-settings-fulfillmentcarriersearch-truck-4-zbocge' className="h-5 w-5 text-primary" />
+          <h3 id='profile-presentation-fulfillment-settings-fulfillmentcarriersearch-heading-5-kkdyp5' className="text-sm font-bold">{text.shippingMethods}</h3>
         </span>
-        <ChevronDown id="profile.fulfillment-settings.fulfillment-carrier-search.chevron-down" className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`} />
+        <ChevronDown id='profile-presentation-fulfillment-settings-fulfillmentcarriersearch-chevrondown-6-weuyhl' className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
 
       {open ? (
-        <div id="profile.fulfillment-settings.fulfillment-carrier-search.div.2" className="space-y-3">
-          <form id="profile.fulfillment-settings.fulfillment-carrier-search.form"
+        <div id='profile-presentation-fulfillment-settings-fulfillmentcarriersearch-div-7-u8xpax' className="space-y-3">
+          <form id='profile-presentation-fulfillment-settings-fulfillmentcarriersearch-form-8-z1kpjd'
             className="flex gap-2"
             onSubmit={(event) => {
               event.preventDefault();
               submitSearch();
             }}
           >
-            <div id="profile.fulfillment-settings.fulfillment-carrier-search.div.3" className="relative min-w-0 flex-1">
-              <Search id="profile.fulfillment-settings.fulfillment-carrier-search.search" className="absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <div id='profile-presentation-fulfillment-settings-fulfillmentcarriersearch-div-9-2qzjsa' className="relative min-w-0 flex-1">
+              <Search id='profile-presentation-fulfillment-settings-fulfillmentcarriersearch-search-10-srcylw' className="absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
-                id="deliveryProviderSearch"
+                id='profile-presentation-fulfillment-settings-fulfillmentcarriersearch-input-11-ehakzu'
                 value={searchText}
                 onChange={(event) => setSearchText(event.target.value)}
                 placeholder={text.searchPlaceholder}
                 className="asol-input-decorated-start"
               />
             </div>
-            <button id="profile.fulfillment-settings.fulfillment-carrier-search.button"
+            <button id='profile-presentation-fulfillment-settings-fulfillmentcarriersearch-button-12-pdmjdc'
               type="submit"
               className="h-10 shrink-0 rounded-md bg-primary px-4 text-sm font-semibold text-on-primary transition"
             >
@@ -81,16 +81,16 @@ export function FulfillmentCarrierSearch({
           </form>
 
           {isLoadingDeliveryUsers ? (
-            <p id="profile.fulfillment-settings.fulfillment-carrier-search.p" className="text-sm text-muted-foreground">
+            <p id='profile-presentation-fulfillment-settings-fulfillmentcarriersearch-text-13-aekzm8' className="text-sm text-muted-foreground">
               {text.loadingProviders}
             </p>
           ) : displayedUsers.length === 0 ? (
-            <p id="profile.fulfillment-settings.fulfillment-carrier-search.p.2" className="rounded-lg border border-dashed border-outline-variant p-4 text-center text-sm text-muted-foreground">
+            <p id='profile-presentation-fulfillment-settings-fulfillmentcarriersearch-text-14-2o7u5k' className="rounded-lg border border-dashed border-outline-variant p-4 text-center text-sm text-muted-foreground">
               {emptyDeliveryProvidersMessage}
             </p>
           ) : (
             <div
-              id="profile.fulfillment-settings.fulfillment-carrier-search.div.4"
+              id='profile-presentation-fulfillment-settings-fulfillmentcarriersearch-div-15-il2svn'
               className="grid max-h-[21rem] grid-cols-2 content-start gap-3 overflow-y-auto overscroll-y-contain pe-1"
             >
               {displayedUsers.map((user) => {
@@ -121,7 +121,7 @@ export function FulfillmentCarrierSearch({
           )}
 
           {selectedCount > 0 ? (
-            <p id="profile.fulfillment-settings.fulfillment-carrier-search.p.3" className="text-xs text-muted-foreground">
+            <p id='profile-presentation-fulfillment-settings-fulfillmentcarriersearch-text-16-qm4kj6' className="text-xs text-muted-foreground">
               {text.selectedCount(selectedCount)}
             </p>
           ) : null}

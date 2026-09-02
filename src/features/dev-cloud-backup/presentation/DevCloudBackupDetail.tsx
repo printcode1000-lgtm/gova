@@ -10,8 +10,8 @@ export function DevCloudBackupDetail({ id,
 } & { id?: string }) {
   return (
     <div id={id} className="grid gap-1 sm:grid-cols-[150px_1fr]">
-      <div className="text-xs text-on-surface-variant">{label}</div>
-      <div className="break-all font-medium" dir={ltr ? "ltr" : undefined}>
+      <div id="features-dev-cloud-backup-presentation-devcloudbackupdetail-div-2-wnk3u2" className="text-xs text-on-surface-variant">{label}</div>
+      <div id="features-dev-cloud-backup-presentation-devcloudbackupdetail-div-3-lacse1" className="break-all font-medium" dir={ltr ? "ltr" : undefined}>
         {value}
       </div>
     </div>
@@ -27,8 +27,8 @@ export function DevCloudBackupSummary({ id,
 } & { id?: string }) {
   return (
     <div id={id} className="rounded-md border bg-muted p-2">
-      <div className="text-xs text-on-surface-variant">{label}</div>
-      <div className="mt-1 text-lg font-semibold">{value}</div>
+      <div id="features-dev-cloud-backup-presentation-devcloudbackupdetail-div-5-gmo6zb" className="text-xs text-on-surface-variant">{label}</div>
+      <div id="features-dev-cloud-backup-presentation-devcloudbackupdetail-div-6-prj1mi" className="mt-1 text-lg font-semibold">{value}</div>
     </div>
   );
 }
@@ -42,8 +42,8 @@ export function DevCloudBackupDiffList({ id,
 } & { id?: string }) {
   return (
     <div id={id} className="rounded-md border">
-      <div className="border-b px-3 py-2 text-xs font-semibold">{title}</div>
-      <div className="max-h-48 overflow-y-auto">
+      <div id="features-dev-cloud-backup-presentation-devcloudbackupdetail-div-8-iidt3h" className="border-b px-3 py-2 text-xs font-semibold">{title}</div>
+      <div id="features-dev-cloud-backup-presentation-devcloudbackupdetail-div-9-dht2yk" className="max-h-48 overflow-y-auto">
         {items.map((item) => (
           <div
             key={item}

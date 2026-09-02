@@ -180,8 +180,8 @@ export function SuperAdminErrorFloatingButton() {
 
   if (!expanded) {
     return (
-      <OverlayChromeBranch id="system-logs.super-admin-error-floating-button.overlay-chrome-branch" className="contents">
-        <button
+      <OverlayChromeBranch id='features-system-logs-application-superadminerrorfloatingbutton-overlaychromebranch-1-otjh9i' className="contents">
+        <button id="features-system-logs-application-superadminerrorfloatingbutton-button-2-kbzlqo"
           type="button"
           onClick={() => setExpanded(true)}
           className={
@@ -193,15 +193,15 @@ export function SuperAdminErrorFloatingButton() {
           aria-label={`أخطاء النظام: ${errorCount} — عرض الأدوات`}
           {...{ [OVERLAY_CHROME_ATTRIBUTE]: "true" }}
         >
-          <span id="system-logs.super-admin-error-floating-button.span" className="tabular-nums">{errorCount}</span>
+          <span id='features-system-logs-application-superadminerrorfloatingbutton-text-3-ashfqo' className="tabular-nums">{errorCount}</span>
         </button>
       </OverlayChromeBranch>
     );
   }
 
   return (
-    <OverlayChromeBranch id="system-logs.super-admin-error-floating-button.overlay-chrome-branch.2" className="contents">
-      <div
+    <OverlayChromeBranch id='features-system-logs-application-superadminerrorfloatingbutton-overlaychromebranch-4-8hpupz' className="contents">
+      <div id="features-system-logs-application-superadminerrorfloatingbutton-div-5-zyud1f"
         ref={toolbarRef}
         className={
           FLOATING_POSITION_CLASS +
@@ -211,7 +211,7 @@ export function SuperAdminErrorFloatingButton() {
         aria-label={`أخطاء النظام: ${errorCount}`}
         {...{ [OVERLAY_CHROME_ATTRIBUTE]: "true" }}
       >
-        <button id="system-logs.super-admin-error-floating-button.button"
+        <button id='features-system-logs-application-superadminerrorfloatingbutton-button-6-wc77mn'
           type="button"
           onClick={() => {
             setExpanded(false);
@@ -220,15 +220,15 @@ export function SuperAdminErrorFloatingButton() {
           className="flex items-center gap-1 rounded-full px-2 py-1 active:bg-on-error/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-error"
           aria-label={`فتح سجل الأخطاء: ${errorCount}`}
         >
-          <span id="system-logs.super-admin-error-floating-button.span.2" className="relative flex h-4 w-4 shrink-0 items-center justify-center">
-            <Bug id="system-logs.super-admin-error-floating-button.bug" className="h-4 w-4" />
-            <span id="system-logs.super-admin-error-floating-button.span.3" className="absolute -end-0.5 -top-0.5 h-2 w-2 rounded-full bg-white ring-1 ring-error" />
+          <span id='features-system-logs-application-superadminerrorfloatingbutton-text-7-1k5jx6' className="relative flex h-4 w-4 shrink-0 items-center justify-center">
+            <Bug id='features-system-logs-application-superadminerrorfloatingbutton-bug-8-1cjsdu' className="h-4 w-4" />
+            <span id='features-system-logs-application-superadminerrorfloatingbutton-text-9-jdcrgg' className="absolute -end-0.5 -top-0.5 h-2 w-2 rounded-full bg-white ring-1 ring-error" />
           </span>
-          <span id="system-logs.super-admin-error-floating-button.span.4" className="tabular-nums">{errorCount}</span>
-          <ChevronLeft id="system-logs.super-admin-error-floating-button.chevron-left" className="h-3.5 w-3.5 shrink-0" />
+          <span id='features-system-logs-application-superadminerrorfloatingbutton-text-10-qorkd6' className="tabular-nums">{errorCount}</span>
+          <ChevronLeft id='features-system-logs-application-superadminerrorfloatingbutton-chevronleft-11-knkorn' className="h-3.5 w-3.5 shrink-0" />
         </button>
-        <span id="system-logs.super-admin-error-floating-button.span.5" className="my-1 w-px shrink-0 bg-on-error/25" aria-hidden />
-        <button id="system-logs.super-admin-error-floating-button.button.2"
+        <span id='features-system-logs-application-superadminerrorfloatingbutton-text-12-x3fnfo' className="my-1 w-px shrink-0 bg-on-error/25" aria-hidden />
+        <button id='features-system-logs-application-superadminerrorfloatingbutton-button-13-wkc8pf'
           type="button"
           onClick={() => void copyErrorLogs()}
           className="rounded-full px-1.5 py-1 active:bg-on-error/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-error"
@@ -237,19 +237,19 @@ export function SuperAdminErrorFloatingButton() {
           }
         >
           {copied ? (
-            <Check id="system-logs.super-admin-error-floating-button.check" className="h-3.5 w-3.5 shrink-0" />
+            <Check id='features-system-logs-application-superadminerrorfloatingbutton-check-14-3d3iww' className="h-3.5 w-3.5 shrink-0" />
           ) : (
-            <ClipboardCopy id="system-logs.super-admin-error-floating-button.clipboard-copy" className="h-3.5 w-3.5 shrink-0" />
+            <ClipboardCopy id='features-system-logs-application-superadminerrorfloatingbutton-clipboardcopy-15-cnhtsy' className="h-3.5 w-3.5 shrink-0" />
           )}
         </button>
-        <span id="system-logs.super-admin-error-floating-button.span.6" className="my-1 w-px shrink-0 bg-on-error/25" aria-hidden />
-        <button id="system-logs.super-admin-error-floating-button.button.3"
+        <span id='features-system-logs-application-superadminerrorfloatingbutton-text-16-wk6aq7' className="my-1 w-px shrink-0 bg-on-error/25" aria-hidden />
+        <button id='features-system-logs-application-superadminerrorfloatingbutton-button-17-gdfc5m'
           type="button"
           onClick={stageClearAllLogs}
           className="rounded-full px-1.5 py-1 active:bg-on-error/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-error"
           aria-label="إضافة حذف جميع السجلات إلى الحفظ"
         >
-          <ListPlus id="system-logs.super-admin-error-floating-button.list-plus" className="h-3.5 w-3.5 shrink-0" />
+          <ListPlus id='features-system-logs-application-superadminerrorfloatingbutton-listplus-18-5jfqpe' className="h-3.5 w-3.5 shrink-0" />
         </button>
       </div>
     </OverlayChromeBranch>

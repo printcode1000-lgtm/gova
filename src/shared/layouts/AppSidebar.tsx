@@ -224,11 +224,11 @@ export const AppSidebar = React.memo(function AppSidebar({
 
   return (
     <>
-      <div id="shared.layouts.app-sidebar.div"
+      <div id='shared-layouts-appsidebar-div-1-s9pbao'
         className={`fixed inset-0 z-[60] overflow-hidden ${isOpen ? "" : "pointer-events-none"}`}
         aria-hidden={!isOpen}
       >
-        <div id="shared.layouts.app-sidebar.div.2"
+        <div id='shared-layouts-appsidebar-div-2-ujntnc'
           className={cn(
             "absolute inset-0 asol-overlay-dim transition-opacity duration-300",
             isOpen ? "opacity-100" : "opacity-0",
@@ -242,7 +242,7 @@ export const AppSidebar = React.memo(function AppSidebar({
             clickOutsideDeactivates: false,
           }}
         >
-          <div
+          <div id="shared-layouts-appsidebar-div-3-nezeae"
             ref={sidebarRef}
             role="dialog"
             aria-modal={isOpen}
@@ -258,11 +258,11 @@ export const AppSidebar = React.memo(function AppSidebar({
             )}
             dir={isRTL ? "rtl" : "ltr"}
           >
-            <div id="shared.layouts.app-sidebar.div.3" className="flex shrink-0 items-center justify-between border-b border-outline-variant/30 asol-section-tonal-primary px-3 pb-3 pt-[calc(0.75rem+var(--asol-safe-area-top))]">
-              <span id="shared.layouts.app-sidebar.span" className="text-sm font-semibold text-on-primary-container px-2">
+            <div id='shared-layouts-appsidebar-div-4-aq48ad' className="flex shrink-0 items-center justify-between border-b border-outline-variant/30 asol-section-tonal-primary px-3 pb-3 pt-[calc(0.75rem+var(--asol-safe-area-top))]">
+              <span id='shared-layouts-appsidebar-text-5-kwl5vy' className="text-sm font-semibold text-on-primary-container px-2">
                 {t("sidebar.menu")}
               </span>
-              <button
+              <button id="shared-layouts-appsidebar-button-6-vlf1bu"
                 type="button"
                 className={cn(
                   "asol-control-icon flex items-center justify-center rounded-full active:opacity-80",
@@ -272,14 +272,14 @@ export const AppSidebar = React.memo(function AppSidebar({
                 onClick={onClose}
                 aria-label={t("sidebar.close")}
               >
-                <X id="shared.layouts.app-sidebar.x" className="w-5 h-5" />
+                <X id='shared-layouts-appsidebar-x-7-4uxir2' className="w-5 h-5" />
               </button>
             </div>
 
-            <div id="shared.layouts.app-sidebar.div.4" className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto overscroll-contain p-3 pt-2 pb-[calc(0.75rem+var(--asol-safe-area-bottom))] [scrollbar-width:thin] [&>*]:shrink-0">
+            <div id='shared-layouts-appsidebar-div-8-nsyyay' className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto overscroll-contain p-3 pt-2 pb-[calc(0.75rem+var(--asol-safe-area-bottom))] [scrollbar-width:thin] [&>*]:shrink-0">
               {isLoggedIn ? (
                 <>
-                  <div id="shared.layouts.app-sidebar.div.5"
+                  <div id='shared-layouts-appsidebar-div-9-i4rngy'
                     className={cn(
                       "asol-control space-y-2 rounded-2xl border p-2.5",
                       resolvedScheme === "dark"
@@ -288,13 +288,13 @@ export const AppSidebar = React.memo(function AppSidebar({
                       sidebarSurface,
                     )}
                   >
-                    <div id="shared.layouts.app-sidebar.div.6"
+                    <div id='shared-layouts-appsidebar-div-10-ykjfiy'
                       className={cn(
                         "px-1.5 py-1 text-xs font-semibold flex items-center gap-2",
                         sidebarTone,
                       )}
                     >
-                      <span id="shared.layouts.app-sidebar.span.2"
+                      <span id='shared-layouts-appsidebar-text-11-oqb7zl'
                         className={cn(
                           "relative flex shrink-0 items-center justify-center overflow-hidden rounded-full",
                           storeImages.avatarUrl ? "h-14 w-14" : "h-7 w-7",
@@ -304,7 +304,7 @@ export const AppSidebar = React.memo(function AppSidebar({
                         )}
                       >
                         {storeImages.avatarUrl ? (
-                          <NextImage id="shared.layouts.app-sidebar.next-image"
+                          <NextImage id='shared-layouts-appsidebar-nextimage-12-zglt85'
                             src={storeImages.avatarUrl}
                             alt=""
                             fill
@@ -313,13 +313,13 @@ export const AppSidebar = React.memo(function AppSidebar({
                             unoptimized={shouldUseUnoptimizedImage(storeImages.avatarUrl)}
                           />
                         ) : (
-                          <User id="shared.layouts.app-sidebar.user" className={sidebarSmallIconClass} />
+                          <User id='shared-layouts-appsidebar-user-13-tj1git' className={sidebarSmallIconClass} />
                         )}
                       </span>
-                      <div id="shared.layouts.app-sidebar.div.7" className="min-w-0 flex-1">
-                        <p id="shared.layouts.app-sidebar.p">{t("nav.profile")}</p>
+                      <div id='shared-layouts-appsidebar-div-14-niaevb' className="min-w-0 flex-1">
+                        <p id='shared-layouts-appsidebar-text-15-svc3ah'>{t("nav.profile")}</p>
                         {profileIdentityLabel ? (
-                          <p id="shared.layouts.app-sidebar.p.2"
+                          <p id='shared-layouts-appsidebar-text-16-fianqm'
                             dir="auto"
                             className="truncate text-start font-normal opacity-70"
                           >
@@ -328,8 +328,8 @@ export const AppSidebar = React.memo(function AppSidebar({
                         ) : null}
                       </div>
                     </div>
-                    <div id="shared.layouts.app-sidebar.div.8" className="flex gap-1 px-1.5 py-1">
-                      <div id="shared.layouts.app-sidebar.div.9"
+                    <div id='shared-layouts-appsidebar-div-17-oo7czn' className="flex gap-1 px-1.5 py-1">
+                      <div id='shared-layouts-appsidebar-div-18-dluscd'
                         className={cn(
                           "flex w-full rounded-xl p-1",
                           resolvedScheme === "dark"
@@ -337,12 +337,12 @@ export const AppSidebar = React.memo(function AppSidebar({
                             : "bg-blue-50",
                         )}
                       >
-                        <Link id="shared.layouts.app-sidebar.link"
+                        <Link id='shared-layouts-appsidebar-link-19-sujzys'
                           href="/profile?mode=preview"
                           onClick={onClose}
                           className="flex-1"
                         >
-                          <button id="shared.layouts.app-sidebar.button"
+                          <button id='shared-layouts-appsidebar-button-20-vxdhpj'
                             type="button"
                             className={cn(
                               "w-full flex items-center justify-center gap-2 rounded-lg py-2 px-3 text-sm font-medium transition-all",
@@ -351,16 +351,16 @@ export const AppSidebar = React.memo(function AppSidebar({
                                 : cn(sidebarTone, sidebarPressSurface),
                             )}
                           >
-                            <Eye id="shared.layouts.app-sidebar.eye" className="w-4 h-4" />
+                            <Eye id='shared-layouts-appsidebar-eye-21-lgnvdp' className="w-4 h-4" />
                             {t("sidebar.preview")}
                           </button>
                         </Link>
-                        <Link id="shared.layouts.app-sidebar.link.2"
+                        <Link id='shared-layouts-appsidebar-link-22-bfs3m7'
                           href="/profile?mode=edit"
                           onClick={onClose}
                           className="flex-1"
                         >
-                          <button id="shared.layouts.app-sidebar.button.2"
+                          <button id='shared-layouts-appsidebar-button-23-yiyz0d'
                             type="button"
                             className={cn(
                               "w-full flex items-center justify-center gap-2 rounded-lg py-2 px-3 text-sm font-medium transition-all",
@@ -369,7 +369,7 @@ export const AppSidebar = React.memo(function AppSidebar({
                                 : cn(sidebarTone, sidebarPressSurface),
                             )}
                           >
-                            <Edit id="shared.layouts.app-sidebar.edit" className="w-4 h-4" />
+                            <Edit id='shared-layouts-appsidebar-edit-24-3tws23' className="w-4 h-4" />
                             {t("sidebar.edit")}
                           </button>
                         </Link>
@@ -395,15 +395,15 @@ export const AppSidebar = React.memo(function AppSidebar({
                   ) : null}
                 </>
               ) : (
-                <Link id="shared.layouts.app-sidebar.link.3" href="/login" onClick={onClose}>
-                  <button id="shared.layouts.app-sidebar.button.3" type="button" className={sidebarControlClass}>
-                    <LogIn id="shared.layouts.app-sidebar.log-in" className={sidebarIconClass} />
+                <Link id='shared-layouts-appsidebar-link-25-legggw' href="/login" onClick={onClose}>
+                  <button id='shared-layouts-appsidebar-button-26-nkz7vf' type="button" className={sidebarControlClass}>
+                    <LogIn id='shared-layouts-appsidebar-login-27-vkuisb' className={sidebarIconClass} />
                     {t("sidebar.login")}
                   </button>
                 </Link>
               )}
 
-              <div id="shared.layouts.app-sidebar.div.10"
+              <div id='shared-layouts-appsidebar-div-28-xgxn3g'
                 className={cn(
                   "asol-control overflow-hidden rounded-2xl border",
                   resolvedScheme === "dark"
@@ -412,15 +412,15 @@ export const AppSidebar = React.memo(function AppSidebar({
                   sidebarSurface,
                 )}
               >
-                <button id="shared.layouts.app-sidebar.button.4"
+                <button id='shared-layouts-appsidebar-button-29-bvndog'
                   type="button"
                   onClick={handleSettingsGroupToggle}
                   aria-expanded={settingsGroupOpen}
                   className={cn(sidebarControlClass, "rounded-none")}
                 >
-                  <Settings2 id="shared.layouts.app-sidebar.settings2" className={sidebarIconClass} />
+                  <Settings2 id='shared-layouts-appsidebar-settings2-30-vhetsf' className={sidebarIconClass} />
                   {t("sidebar.settings")}
-                  <ChevronDown id="shared.layouts.app-sidebar.chevron-down"
+                  <ChevronDown id='shared-layouts-appsidebar-chevrondown-31-5mzx2k'
                     className={cn(
                       "ms-auto h-4 w-4 transition-transform",
                       settingsGroupOpen && "rotate-180",
@@ -428,8 +428,8 @@ export const AppSidebar = React.memo(function AppSidebar({
                   />
                 </button>
                 {settingsGroupOpen && (
-                  <div id="shared.layouts.app-sidebar.div.11" className="flex flex-wrap justify-center gap-2 px-2 pb-2 pt-1">
-                    <button id="shared.layouts.app-sidebar.button.5"
+                  <div id='shared-layouts-appsidebar-div-32-chgu3k' className="flex flex-wrap justify-center gap-2 px-2 pb-2 pt-1">
+                    <button id='shared-layouts-appsidebar-button-33-fswgms'
                       type="button"
                       onClick={handleToggleLanguage}
                       aria-label={t("settings.languageLabel")}
@@ -439,14 +439,14 @@ export const AppSidebar = React.memo(function AppSidebar({
                         sidebarPressSurface,
                       )}
                     >
-                      <Languages id="shared.layouts.app-sidebar.languages" className={sidebarIconClass} />
-                      <span id="shared.layouts.app-sidebar.span.3">
+                      <Languages id='shared-layouts-appsidebar-languages-34-haam8r' className={sidebarIconClass} />
+                      <span id='shared-layouts-appsidebar-text-35-t6ueuo'>
                         {appPreferences.locale === "ar"
                           ? t("common.arabic")
                           : t("common.english")}
                       </span>
                     </button>
-                    <button id="shared.layouts.app-sidebar.button.6"
+                    <button id='shared-layouts-appsidebar-button-36-f55p74'
                       type="button"
                       onClick={handleToggleTheme}
                       aria-label={t("settings.visualTheme")}
@@ -457,17 +457,17 @@ export const AppSidebar = React.memo(function AppSidebar({
                       )}
                     >
                       {themePreferences.themeMode === "dark" ? (
-                        <Moon id="shared.layouts.app-sidebar.moon" className={sidebarIconClass} />
+                        <Moon id='shared-layouts-appsidebar-moon-37-atkpo8' className={sidebarIconClass} />
                       ) : (
-                        <Sun id="shared.layouts.app-sidebar.sun" className={sidebarIconClass} />
+                        <Sun id='shared-layouts-appsidebar-sun-38-na4lwk' className={sidebarIconClass} />
                       )}
-                      <span id="shared.layouts.app-sidebar.span.4">
+                      <span id='shared-layouts-appsidebar-text-39-abz1zz'>
                         {themePreferences.themeMode === "dark"
                           ? t("theme.dark")
                           : t("theme.light")}
                       </span>
                     </button>
-                    <Link id="shared.layouts.app-sidebar.link.4"
+                    <Link id='shared-layouts-appsidebar-link-40-vfa4jk'
                       href="/settings/notifications"
                       onClick={onClose}
                       aria-label={t("sidebar.browserNotifications")}
@@ -477,40 +477,40 @@ export const AppSidebar = React.memo(function AppSidebar({
                         sidebarPressSurface,
                       )}
                     >
-                      <Bell id="shared.layouts.app-sidebar.bell" className={sidebarIconClass} />
-                      <span id="shared.layouts.app-sidebar.span.5">{t("sidebar.browserNotifications")}</span>
+                      <Bell id='shared-layouts-appsidebar-bell-41-tesc9c' className={sidebarIconClass} />
+                      <span id='shared-layouts-appsidebar-text-42-zm81y4'>{t("sidebar.browserNotifications")}</span>
                     </Link>
                   </div>
                 )}
               </div>
 
-              <Link id="shared.layouts.app-sidebar.link.5" href="/contact-us" onClick={onClose}>
-                <button id="shared.layouts.app-sidebar.button.7" type="button" className={sidebarControlClass}>
-                  <MessagesSquare id="shared.layouts.app-sidebar.messages-square" className={sidebarIconClass} />
+              <Link id='shared-layouts-appsidebar-link-43-vyixw0' href="/contact-us" onClick={onClose}>
+                <button id='shared-layouts-appsidebar-button-44-0ow0s5' type="button" className={sidebarControlClass}>
+                  <MessagesSquare id='shared-layouts-appsidebar-messagessquare-45-n96kqt' className={sidebarIconClass} />
                   {t("sidebar.contactUs")}
                 </button>
               </Link>
-              <Link id="shared.layouts.app-sidebar.link.6" href="/privacy-policy" onClick={onClose}>
-                <button id="shared.layouts.app-sidebar.button.8" type="button" className={sidebarControlClass}>
-                  <FileText id="shared.layouts.app-sidebar.file-text" className={sidebarIconClass} />
+              <Link id='shared-layouts-appsidebar-link-46-je36hb' href="/privacy-policy" onClick={onClose}>
+                <button id='shared-layouts-appsidebar-button-47-yrfvya' type="button" className={sidebarControlClass}>
+                  <FileText id='shared-layouts-appsidebar-filetext-48-hbv4m2' className={sidebarIconClass} />
                   {t("sidebar.privacyPolicy")}
                 </button>
               </Link>
-              <Link id="shared.layouts.app-sidebar.link.7" href="/settings" onClick={onClose}>
-                <button id="shared.layouts.app-sidebar.button.9" type="button" className={sidebarControlClass}>
-                  <Info id="shared.layouts.app-sidebar.info" className={sidebarIconClass} />
+              <Link id='shared-layouts-appsidebar-link-49-iit5xg' href="/settings" onClick={onClose}>
+                <button id='shared-layouts-appsidebar-button-50-cth6bl' type="button" className={sidebarControlClass}>
+                  <Info id='shared-layouts-appsidebar-info-51-xxua9t' className={sidebarIconClass} />
                   {t("sidebar.about")}
                 </button>
               </Link>
 
               {isLoggedIn ? (
-                <button id="shared.layouts.app-sidebar.button.10"
+                <button id='shared-layouts-appsidebar-button-52-owqeli'
                   type="button"
                   onClick={handleLogout}
                   disabled={logout.isPending}
                   className={cn(sidebarControlClass, "disabled:opacity-60")}
                 >
-                  <LogOut id="shared.layouts.app-sidebar.log-out" className={sidebarIconClass} />
+                  <LogOut id='shared-layouts-appsidebar-logout-53-btwcji' className={sidebarIconClass} />
                   {t("sidebar.logout")}
                 </button>
               ) : null}
@@ -520,34 +520,34 @@ export const AppSidebar = React.memo(function AppSidebar({
       </div>
 
       {logoutDialogOpen && (
-        <div id="shared.layouts.app-sidebar.div.12" className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
-          <div id="shared.layouts.app-sidebar.div.13" className="bg-white rounded-xl p-5 max-w-sm w-full shadow-xl">
-            <div id="shared.layouts.app-sidebar.div.14" className="flex items-center gap-3 mb-3">
-              <div id="shared.layouts.app-sidebar.div.15" className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
-                <FontAwesomeIcon id="shared.layouts.app-sidebar.font-awesome-icon"
+        <div id='shared-layouts-appsidebar-div-54-u8cjkv' className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
+          <div id='shared-layouts-appsidebar-div-55-qja5lt' className="bg-white rounded-xl p-5 max-w-sm w-full shadow-xl">
+            <div id='shared-layouts-appsidebar-div-56-1zus5k' className="flex items-center gap-3 mb-3">
+              <div id='shared-layouts-appsidebar-div-57-2k5r3r' className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                <FontAwesomeIcon id='shared-layouts-appsidebar-fontawesomeicon-58-91lccw'
                   icon={faTriangleExclamation}
                   className="text-red-600 text-lg"
                 />
               </div>
-              <h2 id="shared.layouts.app-sidebar.h2" className="text-base font-semibold text-right">
+              <h2 id='shared-layouts-appsidebar-heading-59-t6w0rp' className="text-base font-semibold text-right">
                 {t("sidebar.logoutConfirmTitle")}
               </h2>
             </div>
-            <p id="shared.layouts.app-sidebar.p.3" className="text-gray-600 mb-4 text-sm text-right">
+            <p id='shared-layouts-appsidebar-text-60-gbpi4j' className="text-gray-600 mb-4 text-sm text-right">
               {t("sidebar.logoutConfirmMessage")}
             </p>
-            <div id="shared.layouts.app-sidebar.div.16" className="flex gap-2 flex-row-reverse">
-              <button id="shared.layouts.app-sidebar.button.11"
+            <div id='shared-layouts-appsidebar-div-61-2ylicr' className="flex gap-2 flex-row-reverse">
+              <button id='shared-layouts-appsidebar-button-62-2y1egl'
                 onClick={confirmLogout}
                 disabled={logout.isPending}
                 className="flex-1 bg-red-600 text-white py-2 px-3 rounded-lg disabled:opacity-50 text-sm flex items-center justify-center gap-2"
               >
-                <FontAwesomeIcon id="shared.layouts.app-sidebar.font-awesome-icon.2" icon={faRightFromBracket} />
+                <FontAwesomeIcon id='shared-layouts-appsidebar-fontawesomeicon-63-6bsc5p' icon={faRightFromBracket} />
                 {logout.isPending
                   ? t("sidebar.logoutting")
                   : t("sidebar.logoutConfirm")}
               </button>
-              <button id="shared.layouts.app-sidebar.button.12"
+              <button id='shared-layouts-appsidebar-button-64-coixhp'
                 onClick={() => setLogoutDialogOpen(false)}
                 disabled={logout.isPending}
                 className="flex-1 border border-gray-300 py-2 px-3 rounded-lg disabled:opacity-50 text-sm"

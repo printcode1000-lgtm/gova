@@ -84,16 +84,16 @@ export function ProductForm({
   };
 
   return (
-    <div id="onboarding.sections.product-form.div" className="space-y-6">
-      <div id="onboarding.sections.product-form.div.2" className="grid gap-6 lg:grid-cols-2">
-        <FormField id="onboarding.sections.product-form.form-field"
+    <div id='onboarding-presentation-sections-productform-div-1-0rvpg1' className="space-y-6">
+      <div id='onboarding-presentation-sections-productform-div-2-d8siya' className="grid gap-6 lg:grid-cols-2">
+        <FormField id='onboarding-presentation-sections-productform-formfield-3-skgkuu'
           label={t("onboarding.products.productTitle")}
-          htmlFor="title"
+          htmlFor='onboarding-presentation-sections-productform-forminput-4-nhbben'
           required
           error={errors.title}
         >
           <FormInput
-            id="title"
+            id='onboarding-presentation-sections-productform-forminput-4-nhbben'
             value={product.title}
             onChange={(event) => onChange({ title: event.target.value })}
             placeholder={t("onboarding.products.titlePlaceholder")}
@@ -101,13 +101,13 @@ export function ProductForm({
           />
         </FormField>
 
-        <FormField id="onboarding.sections.product-form.form-field.2"
+        <FormField id='onboarding-presentation-sections-productform-formfield-5-ytwssh'
           label={t("onboarding.products.category")}
           htmlFor="category"
           required
           error={errors.category}
         >
-          <FormSelect id="onboarding.sections.product-form.form-select"
+          <FormSelect id='onboarding-presentation-sections-productform-formselect-6-wo4uqr'
             value={product.category}
             onValueChange={(value) => onChange({ category: value })}
             options={categories.map((category) => ({
@@ -120,14 +120,14 @@ export function ProductForm({
         </FormField>
       </div>
 
-      <FormField id="onboarding.sections.product-form.form-field.3"
+      <FormField id='onboarding-presentation-sections-productform-formfield-7-ryhqx1'
         label={t("onboarding.products.descriptionLabel")}
-        htmlFor="description"
+        htmlFor='onboarding-presentation-sections-productform-formtextarea-8-eucw0e'
         required
         error={errors.description}
       >
         <FormTextarea
-          id="description"
+          id='onboarding-presentation-sections-productform-formtextarea-8-eucw0e'
           value={product.description}
           onChange={(event) => onChange({ description: event.target.value })}
           placeholder={t("onboarding.products.descriptionPlaceholder")}
@@ -187,17 +187,17 @@ export function ProductForm({
         label={t("onboarding.products.productImage")}
       />
 
-      <div id="onboarding.sections.product-form.div.3" className="grid gap-6 sm:grid-cols-2">
-        <FormField id="onboarding.sections.product-form.form-field.4"
+      <div id='onboarding-presentation-sections-productform-div-9-yqhyw4' className="grid gap-6 sm:grid-cols-2">
+        <FormField id='onboarding-presentation-sections-productform-formfield-10-gbhy6y'
           label={t("onboarding.products.price")}
-          htmlFor="basePrice"
+          htmlFor='onboarding-presentation-sections-productform-forminput-13-ihalpi'
           required
           error={errors.basePrice}
         >
-          <div id="onboarding.sections.product-form.div.4" className="relative">
-            <DollarSign id="onboarding.sections.product-form.dollar-sign" className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <div id='onboarding-presentation-sections-productform-div-11-xgcope' className="relative">
+            <DollarSign id='onboarding-presentation-sections-productform-dollarsign-12-f18kkv' className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <FormInput
-              id="basePrice"
+              id='onboarding-presentation-sections-productform-forminput-13-ihalpi'
               type="number"
               value={product.basePrice || ""}
               onChange={(event) =>
@@ -211,15 +211,15 @@ export function ProductForm({
           </div>
         </FormField>
 
-        <FormField id="onboarding.sections.product-form.form-field.5"
+        <FormField id='onboarding-presentation-sections-productform-formfield-14-xauevd'
           label={t("onboarding.products.discountPrice")}
-          htmlFor="discountPrice"
+          htmlFor='onboarding-presentation-sections-productform-forminput-17-fjubpp'
           hint={t("onboarding.common.optional")}
         >
-          <div id="onboarding.sections.product-form.div.5" className="relative">
-            <DollarSign id="onboarding.sections.product-form.dollar-sign.2" className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <div id='onboarding-presentation-sections-productform-div-15-wbjgzn' className="relative">
+            <DollarSign id='onboarding-presentation-sections-productform-dollarsign-16-k1zl25' className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <FormInput
-              id="discountPrice"
+              id='onboarding-presentation-sections-productform-forminput-17-fjubpp'
               type="number"
               value={product.discountPrice || ""}
               onChange={(event) =>
@@ -236,37 +236,37 @@ export function ProductForm({
         </FormField>
       </div>
 
-      <div id="onboarding.sections.product-form.div.6" className="flex items-center justify-between rounded-lg border p-4">
-        <div id="onboarding.sections.product-form.div.7">
-          <Label id="onboarding.sections.product-form.label">{t("onboarding.products.featured")}</Label>
-          <p id="onboarding.sections.product-form.p" className="text-sm text-muted-foreground">
+      <div id='onboarding-presentation-sections-productform-div-18-goxrlf' className="flex items-center justify-between rounded-lg border p-4">
+        <div id='onboarding-presentation-sections-productform-div-19-ukygv0'>
+          <Label id='onboarding-presentation-sections-productform-label-20-0wjyrn'>{t("onboarding.products.featured")}</Label>
+          <p id='onboarding-presentation-sections-productform-text-21-cjvlz4' className="text-sm text-muted-foreground">
             {t("onboarding.products.featuredDesc")}
           </p>
         </div>
-        <Switch id="onboarding.sections.product-form.switch"
+        <Switch id='onboarding-presentation-sections-productform-switch-22-58f9yi'
           checked={product.isFeatured}
           onCheckedChange={(checked) => onChange({ isFeatured: checked })}
         />
       </div>
 
-      <div id="onboarding.sections.product-form.div.8" className="space-y-4">
-        <div id="onboarding.sections.product-form.div.9" className="flex items-center justify-between">
-          <div id="onboarding.sections.product-form.div.10">
-            <Label id="onboarding.sections.product-form.label.2" className="text-base">
+      <div id='onboarding-presentation-sections-productform-div-23-vmcmgb' className="space-y-4">
+        <div id='onboarding-presentation-sections-productform-div-24-96gbpy' className="flex items-center justify-between">
+          <div id='onboarding-presentation-sections-productform-div-25-o9zmue'>
+            <Label id='onboarding-presentation-sections-productform-label-26-uz302o' className="text-base">
               {t("onboarding.products.variants")}
             </Label>
-            <p id="onboarding.sections.product-form.p.2" className="text-sm text-muted-foreground">
+            <p id='onboarding-presentation-sections-productform-text-27-fzjj04' className="text-sm text-muted-foreground">
               {t("onboarding.products.variantsDesc")}
             </p>
           </div>
-          <Button id="onboarding.sections.product-form.button" variant="outline" size="sm" onClick={addVariant} className="gap-2">
-            <Plus id="onboarding.sections.product-form.plus" className="h-4 w-4" />
+          <Button id='onboarding-presentation-sections-productform-button-28-oz4ttq' variant="outline" size="sm" onClick={addVariant} className="gap-2">
+            <Plus id='onboarding-presentation-sections-productform-plus-29-p7nxka' className="h-4 w-4" />
             {t("onboarding.products.addVariant")}
           </Button>
         </div>
 
         {product.variants.length > 0 ? (
-          <div id="onboarding.sections.product-form.div.11" className="space-y-3">
+          <div id='onboarding-presentation-sections-productform-div-30-had7z0' className="space-y-3">
             {product.variants.map((variant, index) => {
               return (
                 <div key={variant.id} className="space-y-4 rounded-lg border p-4">
@@ -336,8 +336,8 @@ export function ProductForm({
         ) : null}
       </div>
 
-      <div id="onboarding.sections.product-form.div.12" className="flex justify-end gap-3 border-t pt-4">
-        <Button id="onboarding.sections.product-form.button.2" variant="outline" onClick={onCancel}>
+      <div id='onboarding-presentation-sections-productform-div-31-tpsgth' className="flex justify-end gap-3 border-t pt-4">
+        <Button id='onboarding-presentation-sections-productform-button-32-n4iapa' variant="outline" onClick={onCancel}>
           {t("onboarding.common.cancel")}
         </Button>
       </div>

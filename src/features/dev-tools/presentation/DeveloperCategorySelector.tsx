@@ -291,36 +291,36 @@ export function DeveloperCategorySelector() {
   const controlsDisabled = !isStyleLoaded;
 
   return (
-    <main id="dev-tools.developer-category-selector.main" className="mx-auto w-full px-4 py-8 sm:px-6" data-voice-input="off">
-      <section id="dev-tools.developer-category-selector.section" className="rounded-3xl border bg-card p-5 shadow-sm sm:p-8">
-        <p id="dev-tools.developer-category-selector.p" className="mb-2 w-full text-xs font-semibold uppercase tracking-wider text-primary">
+    <main id='features-dev-tools-presentation-developercategoryselector-main-1-dhrw2e' className="mx-auto w-full px-4 py-8 sm:px-6" data-voice-input="off">
+      <section id='features-dev-tools-presentation-developercategoryselector-section-2-gxdgo2' className="rounded-3xl border bg-card p-5 shadow-sm sm:p-8">
+        <p id='features-dev-tools-presentation-developercategoryselector-text-3-xeqisv' className="mb-2 w-full text-xs font-semibold uppercase tracking-wider text-primary">
           Developer only
         </p>
-        <h1 id="dev-tools.developer-category-selector.h1" className="text-2xl font-bold">محدد التصنيفات</h1>
-        <p id="dev-tools.developer-category-selector.p.2" className="mt-2 text-sm text-muted-foreground">
+        <h1 id='features-dev-tools-presentation-developercategoryselector-heading-4-mmvogg' className="text-2xl font-bold">محدد التصنيفات</h1>
+        <p id='features-dev-tools-presentation-developercategoryselector-text-5-gweduc' className="mt-2 text-sm text-muted-foreground">
           أداة لمراجعة العلاقة بين التصنيفات الرئيسية والفرعية وضبط مكونات عرض المنتج.
         </p>
 
         {isLoading ? (
-          <div id="dev-tools.developer-category-selector.div" className="flex min-h-48 items-center justify-center">
-            <LoadingSpinner id="dev-tools.developer-category-selector.loading-spinner" />
+          <div id='features-dev-tools-presentation-developercategoryselector-div-6-n4fzdk' className="flex min-h-48 items-center justify-center">
+            <LoadingSpinner id='features-dev-tools-presentation-developercategoryselector-loadingspinner-7-byaiv7' />
           </div>
         ) : loadError ? (
-          <p id="dev-tools.developer-category-selector.p.3" className="mt-8 rounded-2xl bg-destructive/10 p-4 text-sm text-destructive">
+          <p id='features-dev-tools-presentation-developercategoryselector-text-8-njks32' className="mt-8 rounded-2xl bg-destructive/10 p-4 text-sm text-destructive">
             تعذر تحميل بيانات التصنيفات.
           </p>
         ) : (
-          <div id="dev-tools.developer-category-selector.div.2" className="mt-8 grid gap-6 sm:grid-cols-2">
-            <div id="dev-tools.developer-category-selector.div.3" className="space-y-2">
-              <label id="dev-tools.developer-category-selector.label" className="text-sm font-semibold">التصنيف الرئيسي</label>
+          <div id='features-dev-tools-presentation-developercategoryselector-div-9-bzfhmp' className="mt-8 grid gap-6 sm:grid-cols-2">
+            <div id='features-dev-tools-presentation-developercategoryselector-div-10-uvdv0s' className="space-y-2">
+              <label id='features-dev-tools-presentation-developercategoryselector-label-11-anyp3b' className="text-sm font-semibold">التصنيف الرئيسي</label>
               <Select
                 value={mainCategoryId}
                 onValueChange={handleMainCategoryChange}
               >
-                <SelectTrigger id="dev-tools.developer-category-selector.select-trigger">
+                <SelectTrigger id='features-dev-tools-presentation-developercategoryselector-selecttrigger-12-chabjk'>
                   <SelectValue placeholder="اختر تصنيفًا رئيسيًا" />
                 </SelectTrigger>
-                <SelectContent id="dev-tools.developer-category-selector.select-content">
+                <SelectContent id='features-dev-tools-presentation-developercategoryselector-selectcontent-13-4asow2'>
                   {mainCategoryOptions.map((category) => (
                     <SelectItem
                       key={category.id}
@@ -333,14 +333,14 @@ export function DeveloperCategorySelector() {
               </Select>
             </div>
 
-            <div id="dev-tools.developer-category-selector.div.4" className="space-y-2">
-              <label id="dev-tools.developer-category-selector.label.2" className="text-sm font-semibold">التصنيف الفرعي</label>
+            <div id='features-dev-tools-presentation-developercategoryselector-div-14-msg5o5' className="space-y-2">
+              <label id='features-dev-tools-presentation-developercategoryselector-label-15-ajgzhk' className="text-sm font-semibold">التصنيف الفرعي</label>
               <Select
                 value={subcategoryId}
                 onValueChange={handleSubcategoryChange}
                 disabled={!mainCategoryId || subcategoryOptions.length === 0}
               >
-                <SelectTrigger id="dev-tools.developer-category-selector.select-trigger.2">
+                <SelectTrigger id='features-dev-tools-presentation-developercategoryselector-selecttrigger-16-glzjxb'>
                   <SelectValue
                     placeholder={
                       mainCategoryId && subcategoryOptions.length === 0
@@ -349,7 +349,7 @@ export function DeveloperCategorySelector() {
                     }
                   />
                 </SelectTrigger>
-                <SelectContent id="dev-tools.developer-category-selector.select-content.2">
+                <SelectContent id='features-dev-tools-presentation-developercategoryselector-selectcontent-17-gzqenq'>
                   {subcategoryOptions.map((subcategory) => (
                     <SelectItem
                       key={subcategory.value}
@@ -362,19 +362,19 @@ export function DeveloperCategorySelector() {
               </Select>
             </div>
 
-            <details className="group sm:col-span-2">
-              <summary id="dev-tools.developer-category-selector.summary" className="flex list-none items-center justify-between rounded-xl border bg-muted/40 px-4 py-3 font-semibold transition-colors">
-                <span id="dev-tools.developer-category-selector.span">معلومات العناصر المختارة</span>
-                <span id="dev-tools.developer-category-selector.span.2" className="text-lg text-muted-foreground transition-transform group-open:rotate-180">
+            <details id="features-dev-tools-presentation-developercategoryselector-details-18-y2hyik" className="group sm:col-span-2">
+              <summary id='features-dev-tools-presentation-developercategoryselector-summary-19-tipguj' className="flex list-none items-center justify-between rounded-xl border bg-muted/40 px-4 py-3 font-semibold transition-colors">
+                <span id='features-dev-tools-presentation-developercategoryselector-text-20-wazwlq'>معلومات العناصر المختارة</span>
+                <span id='features-dev-tools-presentation-developercategoryselector-text-21-zvpj9i' className="text-lg text-muted-foreground transition-transform group-open:rotate-180">
                   ^
                 </span>
               </summary>
-              <div id="dev-tools.developer-category-selector.div.5" className="mt-3 grid gap-4 lg:grid-cols-2">
-                <SelectedRecordDetails id="dev-tools.developer-category-selector.selected-record-details"
+              <div id='features-dev-tools-presentation-developercategoryselector-div-22-xgw4j6' className="mt-3 grid gap-4 lg:grid-cols-2">
+                <SelectedRecordDetails id='features-dev-tools-presentation-developercategoryselector-selectedrecorddetails-23-vd1qmk'
                   title="بيانات التصنيف الرئيسي"
                   record={selectedMainDetails}
                 />
-                <SelectedRecordDetails id="dev-tools.developer-category-selector.selected-record-details.2"
+                <SelectedRecordDetails id='features-dev-tools-presentation-developercategoryselector-selectedrecorddetails-24-kudug7'
                   title="بيانات التصنيف الفرعي"
                   record={selectedSubcategoryDetails}
                 />
@@ -382,16 +382,16 @@ export function DeveloperCategorySelector() {
             </details>
 
             {mainCategoryId && subcategoryId ? (
-              <div id="dev-tools.developer-category-selector.div.6" className="space-y-6 sm:col-span-2">
-                <div id="dev-tools.developer-category-selector.div.7" className="rounded-xl border bg-muted/20 p-4">
-                  <div id="dev-tools.developer-category-selector.div.8" className="flex flex-wrap items-center justify-between gap-2">
-                    <h2 id="dev-tools.developer-category-selector.h2" className="font-bold">إعدادات المكونات</h2>
-                    <span id="dev-tools.developer-category-selector.span.3" className="text-xs text-muted-foreground">
+              <div id='features-dev-tools-presentation-developercategoryselector-div-25-jwu6yj' className="space-y-6 sm:col-span-2">
+                <div id='features-dev-tools-presentation-developercategoryselector-div-26-jrguki' className="rounded-xl border bg-muted/20 p-4">
+                  <div id='features-dev-tools-presentation-developercategoryselector-div-27-xlmjfd' className="flex flex-wrap items-center justify-between gap-2">
+                    <h2 id='features-dev-tools-presentation-developercategoryselector-heading-28-l7ir6v' className="font-bold">إعدادات المكونات</h2>
+                    <span id='features-dev-tools-presentation-developercategoryselector-text-29-omwipk' className="text-xs text-muted-foreground">
                       {styleStatus === "loading" && "جاري تحميل الإعدادات..."}
                       {styleStatus === "error" && "تعذر تحميل الإعدادات"}
                     </span>
                   </div>
-                  <div id="dev-tools.developer-category-selector.div.9" className="mt-4 grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
+                  <div id='features-dev-tools-presentation-developercategoryselector-div-30-l54o3g' className="mt-4 grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
                     <ProductImagesStyleEditor
                       value={components.images}
                       disabled={controlsDisabled}
@@ -455,10 +455,10 @@ export function DeveloperCategorySelector() {
                   </div>
                 </div>
 
-                <div id="dev-tools.developer-category-selector.div.10" className="rounded-xl border p-4">
-                  <div id="dev-tools.developer-category-selector.div.11" className="flex flex-wrap items-center justify-between gap-3">
-                    <h2 id="dev-tools.developer-category-selector.h2.2" className="font-bold">معاينة المنتج</h2>
-                    <div id="dev-tools.developer-category-selector.div.12" className="grid grid-cols-3 gap-2">
+                <div id='features-dev-tools-presentation-developercategoryselector-div-31-ouodp5' className="rounded-xl border p-4">
+                  <div id='features-dev-tools-presentation-developercategoryselector-div-32-gvehv0' className="flex flex-wrap items-center justify-between gap-3">
+                    <h2 id='features-dev-tools-presentation-developercategoryselector-heading-33-an71is' className="font-bold">معاينة المنتج</h2>
+                    <div id='features-dev-tools-presentation-developercategoryselector-div-34-yrxlmc' className="grid grid-cols-3 gap-2">
                       {(
                         [
                           ["view", "عرض"],
@@ -482,12 +482,12 @@ export function DeveloperCategorySelector() {
                     </div>
                   </div>
 
-                  <div id="dev-tools.developer-category-selector.div.13"
+                  <div id='features-dev-tools-presentation-developercategoryselector-div-35-qggmva'
                     key={`${mainCategoryId}-${subcategoryId}-${previewMode}`}
                     className="mt-5 space-y-4 rounded-xl bg-muted/20 p-3 sm:p-5"
                   >
                     {/* Omit productId so the non-persisted preview never queries the reviews API. */}
-                    <ProductComponentsRenderer id="dev-tools.developer-category-selector.product-components-renderer"
+                    <ProductComponentsRenderer id='features-dev-tools-presentation-developercategoryselector-productcomponentsrenderer-36-syyeoc'
                       mode={previewMode}
                       components={previewStyleComponents}
                       product={previewDetails}
@@ -495,20 +495,20 @@ export function DeveloperCategorySelector() {
                       mainCategoryId={mainCategoryId}
                       ownerUid="demo-owner"
                       shareAction={
-                        <button id="dev-tools.developer-category-selector.button"
+                        <button id='features-dev-tools-presentation-developercategoryselector-button-37-zsx0td'
                           type="button"
                           className="inline-flex items-center gap-2 rounded-xl border px-4 py-2"
                         >
-                          <Share2 id="dev-tools.developer-category-selector.share2" className="h-4 w-4" />
+                          <Share2 id='features-dev-tools-presentation-developercategoryselector-share2-38-4k271b' className="h-4 w-4" />
                           مشاركة المنتج
                         </button>
                       }
                       profileAction={
-                        <button id="dev-tools.developer-category-selector.button.2"
+                        <button id='features-dev-tools-presentation-developercategoryselector-button-39-5hs05l'
                           type="button"
                           className="inline-flex items-center gap-2 rounded-xl border px-4 py-2"
                         >
-                          <UserCircle id="dev-tools.developer-category-selector.user-circle" className="h-4 w-4" />
+                          <UserCircle id='features-dev-tools-presentation-developercategoryselector-usercircle-40-vj0mtr' className="h-4 w-4" />
                           بروفايل صاحب المنتج
                         </button>
                       }

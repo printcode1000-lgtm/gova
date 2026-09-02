@@ -40,8 +40,8 @@ export function ReleaseCurrentVersions({ id, versions, t }: {
 } & { id?: string }) {
   const unavailable = t("releaseConsole.confirmRun.versionUnavailable");
   return <section id={id} className="space-y-2" aria-label={t("releaseConsole.confirmRun.versionSummaryTitle")}>
-    <h3 className="font-semibold">{t("releaseConsole.confirmRun.versionSummaryTitle")}</h3>
-    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-5">
+    <h3 id="google-play-console-presentation-components-releaseversionsummary-heading-2-r396zv" className="font-semibold">{t("releaseConsole.confirmRun.versionSummaryTitle")}</h3>
+    <div id="google-play-console-presentation-components-releaseversionsummary-div-3-dq5pqo" className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-5">
       <VersionCard label={t("releaseConsole.confirmRun.currentAndroidProductionVersion")}
         value={versions.androidProduction ?? unavailable} />
       <VersionCard label={t("releaseConsole.confirmRun.currentAndroidVersion")}
@@ -54,17 +54,17 @@ export function ReleaseCurrentVersions({ id, versions, t }: {
         value={versions.otaCurrent ?? unavailable} />
     </div>
     {versions.androidTruthError ? (
-      <p className="text-sm text-destructive">{versions.androidTruthError}</p>
+      <p id="google-play-console-presentation-components-releaseversionsummary-text-4-fvvvgm" className="text-sm text-destructive">{versions.androidTruthError}</p>
     ) : null}
     {versions.iosStoreDistribution === false ? (
-      <p className="text-sm text-on-surface-variant">
+      <p id="google-play-console-presentation-components-releaseversionsummary-text-5-xevqj9" className="text-sm text-on-surface-variant">
         {t("releaseConsole.confirmRun.appStoreDistributionNotLive")}
       </p>
     ) : versions.iosTruthError ? (
-      <p className="text-sm text-destructive">{versions.iosTruthError}</p>
+      <p id="google-play-console-presentation-components-releaseversionsummary-text-6-r4zcga" className="text-sm text-destructive">{versions.iosTruthError}</p>
     ) : null}
     {versions.iosStoreDistribution !== false && versions.iosReady === false ? (
-      <p className="text-sm text-destructive">{t("releaseConsole.confirmRun.appStoreCredentialsMissing")}</p>
+      <p id="google-play-console-presentation-components-releaseversionsummary-text-7-vwt5r1" className="text-sm text-destructive">{t("releaseConsole.confirmRun.appStoreCredentialsMissing")}</p>
     ) : null}
   </section>;
 }
@@ -104,8 +104,8 @@ export function ReleaseSelectedVersions({ id, commandId, versions, parameters, t
   ].filter((item): item is [string, string] => Boolean(item?.[1]));
   if (selected.length === 0) return null;
   return <section id={id} className="space-y-2" aria-label={t("releaseConsole.confirmRun.planSummaryTitle")}>
-    <h3 className="font-semibold">{t("releaseConsole.confirmRun.planSummaryTitle")}</h3>
-    <div className="grid gap-2 sm:grid-cols-2">
+    <h3 id="google-play-console-presentation-components-releaseversionsummary-heading-9-y2txne" className="font-semibold">{t("releaseConsole.confirmRun.planSummaryTitle")}</h3>
+    <div id="google-play-console-presentation-components-releaseversionsummary-div-10-pm4n4i" className="grid gap-2 sm:grid-cols-2">
       {selected.map(([label, version]) => (
         <VersionCard key={label} label={t(`releaseConsole.confirmRun.${label}`)}
           value={version} emphasized />
@@ -122,7 +122,7 @@ function VersionCard({ id, label, value, emphasized = false, }: {
   return <div id={id} role="status" className={`rounded-lg border p-3 ${emphasized
     ? "border-primary bg-primary/10"
     : "bg-muted/40"}`}>
-    <p className="text-xs leading-5 text-on-surface-variant">{label}</p>
-    <code className="mt-1 block text-lg font-bold" dir="ltr">{value}</code>
+    <p id="google-play-console-presentation-components-releaseversionsummary-text-12-chm07f" className="text-xs leading-5 text-on-surface-variant">{label}</p>
+    <code id="google-play-console-presentation-components-releaseversionsummary-code-13-0n4ow0" className="mt-1 block text-lg font-bold" dir="ltr">{value}</code>
   </div>;
 }

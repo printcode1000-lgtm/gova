@@ -174,7 +174,7 @@ export function SuperAdminHeroSliderPage() {
 
   if (isLoading || !authorized) {
     return (
-      <main id="super-admin.super-admin-hero-slider-page.main" className="container px-4 py-8 text-sm text-on-surface-variant">
+      <main id='features-super-admin-presentation-superadminherosliderpage-main-1-qtozea' className="container px-4 py-8 text-sm text-on-surface-variant">
         جاري التحقق من الصلاحيات…
       </main>
     );
@@ -182,17 +182,17 @@ export function SuperAdminHeroSliderPage() {
 
   if (loadFailed) {
     return (
-      <main id="super-admin.super-admin-hero-slider-page.main.2" className="container mx-auto max-w-6xl px-4 py-8">
-        <div id="super-admin.super-admin-hero-slider-page.div" className="rounded-lg border border-destructive/30 bg-card px-4 py-6">
-          <p id="super-admin.super-admin-hero-slider-page.p" className="text-sm text-destructive">{message}</p>
-          <Button id="super-admin.super-admin-hero-slider-page.button"
+      <main id='features-super-admin-presentation-superadminherosliderpage-main-2-in3om3' className="container mx-auto max-w-6xl px-4 py-8">
+        <div id='features-super-admin-presentation-superadminherosliderpage-div-3-gmhubr' className="rounded-lg border border-destructive/30 bg-card px-4 py-6">
+          <p id='features-super-admin-presentation-superadminherosliderpage-text-4-zj49qm' className="text-sm text-destructive">{message}</p>
+          <Button id='features-super-admin-presentation-superadminherosliderpage-button-5-ut4y2d'
             type="button"
             variant="outline"
             className="mt-4"
             onClick={() => void load()}
             disabled={busy}
           >
-            <RefreshCw id="super-admin.super-admin-hero-slider-page.refresh-cw" className="me-2 h-4 w-4" />
+            <RefreshCw id='features-super-admin-presentation-superadminherosliderpage-refreshcw-6-r0eib0' className="me-2 h-4 w-4" />
             إعادة المحاولة
           </Button>
         </div>
@@ -202,31 +202,31 @@ export function SuperAdminHeroSliderPage() {
 
   if (!config || !record) {
     return (
-      <main id="super-admin.super-admin-hero-slider-page.main.3" className="container px-4 py-8 text-sm text-on-surface-variant">
+      <main id='features-super-admin-presentation-superadminherosliderpage-main-7-umtebp' className="container px-4 py-8 text-sm text-on-surface-variant">
         جاري تحميل الإعدادات…
       </main>
     );
   }
 
   return (
-    <main id="super-admin.super-admin-hero-slider-page.main.4" className="container mx-auto max-w-6xl px-4 py-8">
-      <header id="super-admin.super-admin-hero-slider-page.header" className="mb-6 flex items-start gap-3">
-        <div id="super-admin.super-admin-hero-slider-page.div.2" className="rounded-xl bg-primary/10 p-3 text-primary">
-          <ShieldCheck id="super-admin.super-admin-hero-slider-page.shield-check" className="h-6 w-6" />
+    <main id='features-super-admin-presentation-superadminherosliderpage-main-8-vuvzlr' className="container mx-auto max-w-6xl px-4 py-8">
+      <header id='features-super-admin-presentation-superadminherosliderpage-header-9-muw1uk' className="mb-6 flex items-start gap-3">
+        <div id='features-super-admin-presentation-superadminherosliderpage-div-10-ecgssg' className="rounded-xl bg-primary/10 p-3 text-primary">
+          <ShieldCheck id='features-super-admin-presentation-superadminherosliderpage-shieldcheck-11-d8edae' className="h-6 w-6" />
         </div>
-        <div id="super-admin.super-admin-hero-slider-page.div.3">
-          <p id="super-admin.super-admin-hero-slider-page.p.2" className="text-sm font-medium text-primary">منطقة السوبر أدمن</p>
-          <h1 id="super-admin.super-admin-hero-slider-page.h1" className="text-2xl font-bold">
+        <div id='features-super-admin-presentation-superadminherosliderpage-div-12-tz8fwh'>
+          <p id='features-super-admin-presentation-superadminherosliderpage-text-13-n6ee97' className="text-sm font-medium text-primary">منطقة السوبر أدمن</p>
+          <h1 id='features-super-admin-presentation-superadminherosliderpage-heading-14-jww9a2' className="text-2xl font-bold">
             إدارة Hero Slider للصفحة الرئيسية
           </h1>
-          <p id="super-admin.super-admin-hero-slider-page.p.3" className="mt-1 text-sm text-muted-foreground">
+          <p id='features-super-admin-presentation-superadminherosliderpage-text-15-xkrtde' className="mt-1 text-sm text-muted-foreground">
             سجل واحد يتحكم مباشرة في المكوّن داخل Home.
           </p>
         </div>
       </header>
 
       {message && (
-        <div id="super-admin.super-admin-hero-slider-page.div.4"
+        <div id='features-super-admin-presentation-superadminherosliderpage-div-16-mtbp2x'
           className="mb-4 rounded-lg border bg-card px-4 py-3 text-sm"
           role="status"
         >
@@ -234,29 +234,29 @@ export function SuperAdminHeroSliderPage() {
         </div>
       )}
 
-      <section id="super-admin.super-admin-hero-slider-page.section" className="mb-4 grid gap-3 rounded-xl border bg-card p-4 sm:grid-cols-2 lg:grid-cols-3">
-        <div id="super-admin.super-admin-hero-slider-page.div.5">
-          <p id="super-admin.super-admin-hero-slider-page.p.4" className="text-xs text-muted-foreground">الإصدار</p>
-          <p id="super-admin.super-admin-hero-slider-page.p.5" className="font-semibold">{record.version}</p>
+      <section id='features-super-admin-presentation-superadminherosliderpage-section-17-ifmnci' className="mb-4 grid gap-3 rounded-xl border bg-card p-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div id='features-super-admin-presentation-superadminherosliderpage-div-18-txjpj5'>
+          <p id='features-super-admin-presentation-superadminherosliderpage-text-19-tmoph3' className="text-xs text-muted-foreground">الإصدار</p>
+          <p id='features-super-admin-presentation-superadminherosliderpage-text-20-yuggzj' className="font-semibold">{record.version}</p>
         </div>
-        <div id="super-admin.super-admin-hero-slider-page.div.6">
-          <p id="super-admin.super-admin-hero-slider-page.p.6" className="text-xs text-muted-foreground">آخر تحديث</p>
-          <p id="super-admin.super-admin-hero-slider-page.p.7" className="text-sm">
+        <div id='features-super-admin-presentation-superadminherosliderpage-div-21-s8ukff'>
+          <p id='features-super-admin-presentation-superadminherosliderpage-text-22-b9cxon' className="text-xs text-muted-foreground">آخر تحديث</p>
+          <p id='features-super-admin-presentation-superadminherosliderpage-text-23-hqclzb' className="text-sm">
             {formatDateTimeDefault(record.updatedAt)}
           </p>
         </div>
       </section>
 
-      <section id="super-admin.super-admin-hero-slider-page.section.2" className="mb-6 rounded-xl border bg-card p-4">
-        <div id="super-admin.super-admin-hero-slider-page.div.7" className="mb-3 flex items-center gap-2">
-          <RefreshCw id="super-admin.super-admin-hero-slider-page.refresh-cw.2" className="h-5 w-5 text-primary" />
-          <h2 id="super-admin.super-admin-hero-slider-page.h2" className="font-semibold">فترة البحث عن تحديثات</h2>
+      <section id='features-super-admin-presentation-superadminherosliderpage-section-24-xt3ybs' className="mb-6 rounded-xl border bg-card p-4">
+        <div id='features-super-admin-presentation-superadminherosliderpage-div-25-yzdxhg' className="mb-3 flex items-center gap-2">
+          <RefreshCw id='features-super-admin-presentation-superadminherosliderpage-refreshcw-26-rkkufi' className="h-5 w-5 text-primary" />
+          <h2 id='features-super-admin-presentation-superadminherosliderpage-heading-27-saxy84' className="font-semibold">فترة البحث عن تحديثات</h2>
         </div>
-        <div id="super-admin.super-admin-hero-slider-page.div.8" className="flex flex-wrap items-end gap-3">
-          <div id="super-admin.super-admin-hero-slider-page.div.9" className="min-w-52 space-y-2">
-            <Label id="super-admin.super-admin-hero-slider-page.label" htmlFor="super-admin.hero-slider.check-interval">الفترة بالدقائق</Label>
+        <div id='features-super-admin-presentation-superadminherosliderpage-div-28-wwycyt' className="flex flex-wrap items-end gap-3">
+          <div id='features-super-admin-presentation-superadminherosliderpage-div-29-h92anz' className="min-w-52 space-y-2">
+            <Label id='features-super-admin-presentation-superadminherosliderpage-label-30-18xs4x' htmlFor='features-super-admin-presentation-superadminherosliderpage-input-31-2wrr4v'>الفترة بالدقائق</Label>
             <Input
-              id="super-admin.hero-slider.check-interval"
+              id='features-super-admin-presentation-superadminherosliderpage-input-31-2wrr4v'
               type="number"
               min={5}
               max={1440}
@@ -283,17 +283,17 @@ export function SuperAdminHeroSliderPage() {
             </Button>
           ))}
         </div>
-        <p id="super-admin.super-admin-hero-slider-page.p.8" className="mt-3 text-xs text-muted-foreground">
+        <p id='features-super-admin-presentation-superadminherosliderpage-text-32-rfa9sl' className="mt-3 text-xs text-muted-foreground">
           المعاينة تعرض كل التعديلات والصور محلياً قبل تطبيقها على الصفحة
           الرئيسية.
         </p>
       </section>
 
-      <div id="super-admin.super-admin-hero-slider-page.div.10" className="mb-3 flex items-center gap-2">
-        <Eye id="super-admin.super-admin-hero-slider-page.eye" className="h-5 w-5 text-primary" />
-        <h2 id="super-admin.super-admin-hero-slider-page.h2.2" className="font-semibold">المعاينة الحية والتحرير</h2>
+      <div id='features-super-admin-presentation-superadminherosliderpage-div-33-kv6fnd' className="mb-3 flex items-center gap-2">
+        <Eye id='features-super-admin-presentation-superadminherosliderpage-eye-34-982khi' className="h-5 w-5 text-primary" />
+        <h2 id='features-super-admin-presentation-superadminherosliderpage-heading-35-tapd6h' className="font-semibold">المعاينة الحية والتحرير</h2>
       </div>
-      <HeroSlider id="super-admin.super-admin-hero-slider-page.hero-slider"
+      <HeroSlider id='features-super-admin-presentation-superadminherosliderpage-heroslider-36-h4imoc'
         mode="admin-edit"
         config={config}
         onChange={handleConfigChange}

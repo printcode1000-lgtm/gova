@@ -76,25 +76,25 @@ export function BrandIdentitySection() {
   };
 
   return (
-    <div id="onboarding.sections.brand-identity-section.div" className="space-y-6 animate-in fade-in duration-300">
-      <Card id="onboarding.sections.brand-identity-section.card">
-        <CardHeader id="onboarding.sections.brand-identity-section.card-header">
-          <CardTitle id="onboarding.sections.brand-identity-section.card-title" className="flex items-center gap-2">
-            <Heart id="onboarding.sections.brand-identity-section.heart" className="h-5 w-5" />
+    <div id='onboarding-presentation-sections-brand-identity-section-div-1-asg7vh' className="space-y-6 animate-in fade-in duration-300">
+      <Card id='onboarding-presentation-sections-brand-identity-section-card-2-of7lzp'>
+        <CardHeader id='onboarding-presentation-sections-brand-identity-section-cardheader-3-m7ss8u'>
+          <CardTitle id='onboarding-presentation-sections-brand-identity-section-cardtitle-4-il0tve' className="flex items-center gap-2">
+            <Heart id='onboarding-presentation-sections-brand-identity-section-heart-5-7hfjfh' className="h-5 w-5" />
             {t('onboarding.brandIdentity.title')}
           </CardTitle>
-          <CardDescription id="onboarding.sections.brand-identity-section.card-description">{t('onboarding.brandIdentity.description')}</CardDescription>
+          <CardDescription id='onboarding-presentation-sections-brand-identity-section-carddescription-6-aiynqu'>{t('onboarding.brandIdentity.description')}</CardDescription>
         </CardHeader>
-        <CardContent id="onboarding.sections.brand-identity-section.card-content" className="space-y-6">
-          <FormField id="onboarding.sections.brand-identity-section.form-field"
+        <CardContent id='onboarding-presentation-sections-brand-identity-section-cardcontent-7-elcxge' className="space-y-6">
+          <FormField id='onboarding-presentation-sections-brand-identity-section-formfield-8-mloiwl'
             label={t('onboarding.brandIdentity.mission')}
-            htmlFor="mission"
+            htmlFor='onboarding-presentation-sections-brand-identity-section-formtextarea-9-rhaawf'
             required
             hint={`${brandIdentity.mission.length}/300`}
             error={errors.mission}
           >
             <FormTextarea
-              id="mission"
+              id='onboarding-presentation-sections-brand-identity-section-formtextarea-9-rhaawf'
               value={brandIdentity.mission}
               onChange={(e) => updateBrandIdentity({ mission: e.target.value })}
               placeholder={t('onboarding.brandIdentity.missionPlaceholder')}
@@ -104,15 +104,15 @@ export function BrandIdentitySection() {
             />
           </FormField>
 
-          <FormField id="onboarding.sections.brand-identity-section.form-field.2"
+          <FormField id='onboarding-presentation-sections-brand-identity-section-formfield-10-oflbxu'
             label={t('onboarding.brandIdentity.vision')}
-            htmlFor="vision"
+            htmlFor='onboarding-presentation-sections-brand-identity-section-formtextarea-11-dptcoj'
             required
             hint={`${brandIdentity.vision.length}/300`}
             error={errors.vision}
           >
             <FormTextarea
-              id="vision"
+              id='onboarding-presentation-sections-brand-identity-section-formtextarea-11-dptcoj'
               value={brandIdentity.vision}
               onChange={(e) => updateBrandIdentity({ vision: e.target.value })}
               placeholder={t('onboarding.brandIdentity.visionPlaceholder')}
@@ -122,20 +122,20 @@ export function BrandIdentitySection() {
             />
           </FormField>
 
-          <div id="onboarding.sections.brand-identity-section.div.2" className="space-y-3">
-            <div id="onboarding.sections.brand-identity-section.div.3" className="flex items-center justify-between">
-              <div id="onboarding.sections.brand-identity-section.div.4">
-                <Label id="onboarding.sections.brand-identity-section.label" className="text-sm font-medium">{t('onboarding.brandIdentity.usps')}</Label>
-                <p id="onboarding.sections.brand-identity-section.p" className="text-xs text-muted-foreground">
+          <div id='onboarding-presentation-sections-brand-identity-section-div-12-17skgc' className="space-y-3">
+            <div id='onboarding-presentation-sections-brand-identity-section-div-13-5mit3o' className="flex items-center justify-between">
+              <div id='onboarding-presentation-sections-brand-identity-section-div-14-3dtujv'>
+                <Label id='onboarding-presentation-sections-brand-identity-section-label-15-0okzik' className="text-sm font-medium">{t('onboarding.brandIdentity.usps')}</Label>
+                <p id='onboarding-presentation-sections-brand-identity-section-text-16-sfl2hr' className="text-xs text-muted-foreground">
                   {t('onboarding.brandIdentity.uspsHint')}
                 </p>
               </div>
               {errors.uniqueSellingPoints && (
-                <span id="onboarding.sections.brand-identity-section.span" className="text-xs text-destructive">{errors.uniqueSellingPoints}</span>
+                <span id='onboarding-presentation-sections-brand-identity-section-text-17-sfhyeq' className="text-xs text-destructive">{errors.uniqueSellingPoints}</span>
               )}
             </div>
 
-            <div id="onboarding.sections.brand-identity-section.div.5" className="flex flex-wrap gap-2">
+            <div id='onboarding-presentation-sections-brand-identity-section-div-18-cwtzzk' className="flex flex-wrap gap-2">
               {brandIdentity.uniqueSellingPoints.map((usp) => (
                 <Badge key={usp} variant="secondary" className="gap-1 pl-3">
                   <Sparkles className="h-3 w-3" />
@@ -147,15 +147,15 @@ export function BrandIdentitySection() {
               ))}
             </div>
 
-            <div id="onboarding.sections.brand-identity-section.div.6" className="flex gap-2">
-              <Input id="onboarding.sections.brand-identity-section.input"
+            <div id='onboarding-presentation-sections-brand-identity-section-div-19-3hiaix' className="flex gap-2">
+              <Input id='onboarding-presentation-sections-brand-identity-section-input-20-uz2xep'
                 value={newUSP}
                 onChange={(e) => setNewUSP(e.target.value)}
                 placeholder={t('onboarding.brandIdentity.uspPlaceholder')}
                 onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addUSP())}
                 disabled={brandIdentity.uniqueSellingPoints.length >= 5}
               />
-              <Button id="onboarding.sections.brand-identity-section.button"
+              <Button id='onboarding-presentation-sections-brand-identity-section-button-21-h9gtdx'
                 type="button"
                 onClick={addUSP}
                 disabled={!newUSP.trim() || brandIdentity.uniqueSellingPoints.length >= 5}
@@ -165,8 +165,8 @@ export function BrandIdentitySection() {
             </div>
           </div>
 
-          <FormField id="onboarding.sections.brand-identity-section.form-field.3" label={t('onboarding.brandIdentity.brandValues')} htmlFor="brandValues" hint={t('onboarding.brandIdentity.brandValuesHint')}>
-            <CheckboxGroup id="onboarding.sections.brand-identity-section.checkbox-group"
+          <FormField id='onboarding-presentation-sections-brand-identity-section-formfield-22-4lxtcq' label={t('onboarding.brandIdentity.brandValues')} htmlFor="brandValues" hint={t('onboarding.brandIdentity.brandValuesHint')}>
+            <CheckboxGroup id='onboarding-presentation-sections-brand-identity-section-checkboxgroup-23-stmiwg'
               options={constants.brandValues.map((v) => ({
                 value: v,
                 label: t(`onboarding.constants.brandValues.${BRAND_VALUE_KEYS[v]}`),
@@ -179,7 +179,7 @@ export function BrandIdentitySection() {
         </CardContent>
       </Card>
 
-      <StepNavigation id="onboarding.sections.brand-identity-section.step-navigation" onNext={handleNext} showSkip />
+      <StepNavigation id='onboarding-presentation-sections-brand-identity-section-stepnavigation-24-ktchy5' onNext={handleNext} showSkip />
     </div>
   );
 }

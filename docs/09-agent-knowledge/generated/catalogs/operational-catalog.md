@@ -113,6 +113,8 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run docs:runtime-coverage` | `npx tsx scripts/docs/runtime-coverage-cli.ts` |
 | `npm run doctor:environment` | `npx tsx scripts/check-environment-requirements.ts --scenario=all` |
 | `npm run doctor:environment:production` | `npx tsx scripts/check-environment-requirements.ts --scenario=production --skip-outdated` |
+| `npm run dom:id:check` | `npx tsx scripts/dom-id-check.ts` |
+| `npm run dom:id:write` | `npx tsx scripts/dom-id-check.ts --write` |
 | `npm run env:ownership` | `npx tsx scripts/runtime-env-ownership-report.ts` |
 | `npm run fastlane` | `npx tsx scripts/fastlane-runner.ts` |
 | `npm run fastlane:android:aab:signed` | `npx tsx scripts/fastlane-runner.ts android aab_signed` |

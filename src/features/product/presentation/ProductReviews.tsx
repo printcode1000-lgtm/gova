@@ -244,7 +244,7 @@ export function ProductReviews({ id,
   return (
     <div id={id} className="min-w-0 space-y-5">
       <ProductReviewsSummary
-        id={id ? `${id}.summary` : "summary"}
+        id={id ? `${id}-summary-a1b2c3` : "product-reviews-summary-a1b2c3"}
         average={average}
         total={total}
         canRate={canRate}
@@ -253,14 +253,14 @@ export function ProductReviews({ id,
         }
         onRate={() => openReview(result?.currentUserReview ?? null)}
       />
-      <section ref={sectionRef} className="min-w-0 space-y-4">
-        <div className="flex min-w-0 flex-wrap items-center justify-between gap-2">
-          <h3 className="flex min-w-0 items-center gap-2 break-words text-xl font-bold">
+      <section id="features-product-presentation-productreviews-section-3-orbyj1" ref={sectionRef} className="min-w-0 space-y-4">
+        <div id="features-product-presentation-productreviews-div-4-vh7ppb" className="flex min-w-0 flex-wrap items-center justify-between gap-2">
+          <h3 id="features-product-presentation-productreviews-heading-5-kxum4k" className="flex min-w-0 items-center gap-2 break-words text-xl font-bold">
             <MessageSquare className="h-5 w-5" />
             تقييمات العملاء
           </h3>
           {result?.hasMore ? (
-            <button
+            <button id="features-product-presentation-productreviews-button-6-8zonxa"
               type="button"
               onClick={() => load(result.reviews.length, true)}
               className="flex max-w-full items-center gap-1 break-words text-sm font-semibold text-primary"
@@ -270,15 +270,15 @@ export function ProductReviews({ id,
             </button>
           ) : null}
         </div>
-        <div className="grid min-w-0 gap-5 rounded-2xl border bg-card p-5 md:grid-cols-2">
-          <div className="min-w-0 border-b pb-5 text-center md:border-b-0 md:border-l md:pb-0">
-            <strong className="text-5xl">{average.toFixed(1)}</strong>
+        <div id="features-product-presentation-productreviews-div-7-eorb4i" className="grid min-w-0 gap-5 rounded-2xl border bg-card p-5 md:grid-cols-2">
+          <div id="features-product-presentation-productreviews-div-8-xcql6x" className="min-w-0 border-b pb-5 text-center md:border-b-0 md:border-l md:pb-0">
+            <strong id="features-product-presentation-productreviews-strong-9-dsfmdk" className="text-5xl">{average.toFixed(1)}</strong>
             <Stars value={average} size="text-2xl" />
-            <p className="mt-2 break-words text-sm text-muted-foreground">
+            <p id="features-product-presentation-productreviews-text-10-phkjol" className="mt-2 break-words text-sm text-muted-foreground">
               بناءً على {total} تقييم
             </p>
           </div>
-          <div className="min-w-0 space-y-2">
+          <div id="features-product-presentation-productreviews-div-11-9xf6me" className="min-w-0 space-y-2">
             {(result?.distribution ?? []).map((item) => (
               <div
                 key={item.rating}
@@ -296,25 +296,25 @@ export function ProductReviews({ id,
             ))}
           </div>
         </div>
-        <div className="flex justify-end">
-          <select
+        <div id="features-product-presentation-productreviews-div-12-k9g1xp" className="flex justify-end">
+          <select id="features-product-presentation-productreviews-select-13-kldajn"
             value={sort}
             onChange={(event) => setSort(event.target.value as ReviewSort)}
             className="asol-control asol-field-surface border border-input px-3"
           >
-            <option value="newest">الأحدث أولًا</option>
-            <option value="highest">الأعلى تقييمًا</option>
-            <option value="lowest">الأدنى تقييمًا</option>
+            <option id="features-product-presentation-productreviews-option-14-emm1n2" value="newest">الأحدث أولًا</option>
+            <option id="features-product-presentation-productreviews-option-15-n9bobl" value="highest">الأعلى تقييمًا</option>
+            <option id="features-product-presentation-productreviews-option-16-ve9kx3" value="lowest">الأدنى تقييمًا</option>
           </select>
         </div>
         {loading && !result ? (
-          <p className="py-8 text-center">جارٍ التحميل…</p>
+          <p id="features-product-presentation-productreviews-text-17-xo4qfa" className="py-8 text-center">جارٍ التحميل…</p>
         ) : result?.reviews.length === 0 ? (
-          <p className="rounded-2xl border bg-card p-8 text-center text-muted-foreground">
+          <p id="features-product-presentation-productreviews-text-18-1nfwsj" className="rounded-2xl border bg-card p-8 text-center text-muted-foreground">
             لا توجد مراجعات بعد.
           </p>
         ) : (
-          <div className="min-w-0 space-y-3">
+          <div id="features-product-presentation-productreviews-div-19-nosx47" className="min-w-0 space-y-3">
             {result?.reviews.map((review) => (
               <article
                 key={review.id}
@@ -440,7 +440,7 @@ export function ProductReviews({ id,
           </div>
         )}
         {result?.hasMore ? (
-          <button
+          <button id="features-product-presentation-productreviews-button-20-qw2bfm"
             type="button"
             disabled={loading}
             onClick={() => load(result.reviews.length, true)}
@@ -452,7 +452,7 @@ export function ProductReviews({ id,
       </section>
       {modal ? (
         <ProductReviewDialog
-          id={id ? `${id}.review-dialog` : "review-dialog"}
+          id={id ? `${id}-review-dialog-d4e5f6` : "product-reviews-review-dialog-d4e5f6"}
           comment={comment}
           commentsEnabled={commentsEnabled}
           editing={editing}
@@ -464,7 +464,7 @@ export function ProductReviews({ id,
       ) : null}
       {replyReview ? (
         <ProductReviewReplyDialog
-          id={id ? `${id}.reply-dialog` : "reply-dialog"}
+          id={id ? `${id}-reply-dialog-g7h8i9` : "product-reviews-reply-dialog-g7h8i9"}
           replyText={replyText}
           onClose={() => setReplyReview(null)}
           onReplyTextChange={changeReplyText}

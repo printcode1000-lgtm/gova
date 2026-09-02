@@ -18,23 +18,23 @@ export function StoreImagesTab() {
   useStoreImagesPageSave(store, true);
   if (!store.snapshot)
     return (
-      <div id="google-play-console.tabs.store-images-tab.div" className="p-4 text-sm">
+      <div id='google-play-console-presentation-tabs-storeimagestab-div-1-yr4023' className="p-4 text-sm">
         {t("releaseConsole.loading")}
       </div>
     );
   return (
-    <section id="google-play-console.tabs.store-images-tab.section" className="space-y-4">
+    <section id='google-play-console-presentation-tabs-storeimagestab-section-2-fr91bm' className="space-y-4">
       <div
-        id="google-play-console.tabs.store-images-tab.div.2"
+        id='google-play-console-presentation-tabs-storeimagestab-div-3-pynyl0'
         className="grid gap-3 rounded-md border bg-surface p-4 md:grid-cols-[10rem_14rem_1fr]"
       >
         <Input
-          id="google-play-console.tabs.store-images-tab.input"
+          id='google-play-console-presentation-tabs-storeimagestab-input-4-08hfar'
           value={store.language}
           onChange={(event) => store.setLanguage(event.target.value)}
         />
         <select
-          id="google-play-console.tabs.store-images-tab.select"
+          id='google-play-console-presentation-tabs-storeimagestab-select-5-meruhf'
           className="h-10 rounded-md border bg-background px-3"
           value={store.imageType}
           onChange={(event) => store.setImageType(event.target.value as GooglePlayImageType)}
@@ -46,7 +46,7 @@ export function StoreImagesTab() {
           ))}
         </select>
         <Input
-          id="google-play-console.tabs.store-images-tab.input.2"
+          id='google-play-console-presentation-tabs-storeimagestab-input-6-6pqtsw'
           type="file"
           accept="image/png,image/jpeg"
           multiple
@@ -54,11 +54,11 @@ export function StoreImagesTab() {
         />
       </div>
       {store.stagedUploads.length > 0 ? (
-        <p id="google-play-console.tabs.store-images-tab.p" className="text-sm text-on-surface-variant">
+        <p id='google-play-console-presentation-tabs-storeimagestab-text-7-829xxn' className="text-sm text-on-surface-variant">
           {store.stagedUploads.length} صورة مجهزة.
         </p>
       ) : null}
-      <div id="google-play-console.tabs.store-images-tab.div.3" className="grid gap-3 md:grid-cols-2">
+      <div id='google-play-console-presentation-tabs-storeimagestab-div-8-mubgat' className="grid gap-3 md:grid-cols-2">
         {store.snapshot.images.map((group) => (
           <section key={`${group.language}:${group.imageType}`} className="rounded-md border bg-surface p-3">
             <h2 className="mb-2 text-sm font-semibold">
@@ -93,11 +93,11 @@ export function StoreImagesTab() {
           </section>
         ))}
       </div>
-      <section id="google-play-console.tabs.store-images-tab.section.2" className="rounded-md border bg-surface p-4">
-        <h2 id="google-play-console.tabs.store-images-tab.h2" className="mb-3 font-semibold">
+      <section id='google-play-console-presentation-tabs-storeimagestab-section-9-8rjmji' className="rounded-md border bg-surface p-4">
+        <h2 id='google-play-console-presentation-tabs-storeimagestab-heading-10-utsg9j' className="mb-3 font-semibold">
           {t("releaseConsole.images.backups")}
         </h2>
-        <div id="google-play-console.tabs.store-images-tab.div.4" className="grid gap-2 md:grid-cols-2">
+        <div id='google-play-console-presentation-tabs-storeimagestab-div-11-yxt6nn' className="grid gap-2 md:grid-cols-2">
           {(store.snapshot.backups ?? []).map((backup) => (
             <div key={backup.name} className="flex items-center justify-between gap-2 rounded-md border p-2 text-sm">
               <span className="min-w-0 truncate" dir="ltr">

@@ -32,7 +32,7 @@ interface Props { config?: ToolbarConfig; onAction: (id: AsolMapControlId, value
 export function AsolMapControls({ config = {}, onAction, toolbarLabel = 'Map controls', zoomInLabel = 'Zoom in', zoomOutLabel = 'Zoom out' }: Props) {
   const controls = (Object.keys(config) as AsolMapControlId[]).filter((id) => item(config[id]));
   if (!controls.length) return null;
-  return <div className="asol-map__controls" role="toolbar" aria-label={toolbarLabel}>
+  return <div id="pkg-map-core-src-asolmapcontrols-div-1-h4gosk" className="asol-map__controls" role="toolbar" aria-label={toolbarLabel}>
     {controls.map((id) => {
       const details = item(config[id])!;
       const label = details.label ?? defaultLabels[id];

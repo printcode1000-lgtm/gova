@@ -82,22 +82,22 @@ export default function HomeScreen({ displayCategories }: HomeScreenProps) {
   );
 
   return (
-    <div id="home.home-screen.div" className="space-y-6 pb-8">
-      <div id="home.home-screen.div.2" className="px-4">
-        <HeroSlider id="home.home-screen.hero-slider" config={homeHeroSliderConfig} />
+    <div id='features-home-presentation-homescreen-div-1-yfhfqc' className="space-y-6 pb-8">
+      <div id='features-home-presentation-homescreen-div-2-s008q1' className="px-4">
+        <HeroSlider id='features-home-presentation-homescreen-heroslider-3-1mzgle' config={homeHeroSliderConfig} />
       </div>
 
-      <section id="home.home-screen.section" className="mx-2 sm:mx-4">
-        <FeaturedMarquee id="home.home-screen.featured-marquee" config={homeFeaturedMarqueeConfig} />
+      <section id='features-home-presentation-homescreen-section-4-b8ldus' className="mx-2 sm:mx-4">
+        <FeaturedMarquee id='features-home-presentation-homescreen-featuredmarquee-5-9ge6a3' config={homeFeaturedMarqueeConfig} />
       </section>
 
       {homeTrendingRibbonConfig.items.length > 0 ? (
-        <section id="home.home-screen.section.2" className="overflow-hidden rounded-2xl border border-error/20 shadow-sm">
-          <TrendingRibbon id="home.home-screen.trending-ribbon" config={homeTrendingRibbonConfig} />
+        <section id='features-home-presentation-homescreen-section-6-f5vpov' className="overflow-hidden rounded-2xl border border-error/20 shadow-sm">
+          <TrendingRibbon id='features-home-presentation-homescreen-trendingribbon-7-91g9hh' config={homeTrendingRibbonConfig} />
         </section>
       ) : null}
 
-      <div id="home.home-screen.div.3" className="asol-section-tonal asol-section-tonal-primary-soft mx-2 sm:mx-4">
+      <div id='features-home-presentation-homescreen-div-8-r3pjjb' className="asol-section-tonal asol-section-tonal-primary-soft mx-2 sm:mx-4">
         <CategoriesGrid displayCategories={displayCategories} />
       </div>
 

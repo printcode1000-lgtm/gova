@@ -28,29 +28,29 @@ export function PrimaryContactView({ model }: { model: ContactInfoCardModel }) {
 const { data, onChange, readOnly, hidePrimarySection, t, locale, shouldWrapInCard, localData, setLocalData, isPasswordOpen, setIsPasswordOpen, passwordData, setPasswordData, openMapId, setOpenMapId, mapMessages, setMapMessages, updateField, addPhone, updatePhone, removePhone, addAnotherPhone, phonesForAdditional, groupedPhones, addedPhoneTypes, availablePhoneTypes, hasAdditionalEmails, hasWebsites, handleAddItem, addWebsite, updateWebsite, removeWebsite, addEmail, updateEmail, removeEmail, addSocialLink, updateSocialLink, removeSocialLink, addAnotherLink, addLocation, updateLocationEntry, removeLocation, setMapMessage, addedPlatforms, availablePlatforms, quickAddItems, selectedKindId, selectContactKind, activeKindId, pendingRemoval, requestRemoveEntry, cancelRemoveEntry, confirmRemoveEntry, groupedSocialLinks } = model;
 const phoneLabels = phoneFieldLabels(t, locale);
 return (
-        <Card id="profile.contact-info.primary-contact-view.card">
-          <CardHeader id="profile.contact-info.primary-contact-view.card-header">
-            <CardTitle id="profile.contact-info.primary-contact-view.card-title">{t('onboarding.contactInfo.title')}</CardTitle>
-            <CardDescription id="profile.contact-info.primary-contact-view.card-description">{t('onboarding.contactInfo.description')}</CardDescription>
+        <Card id='profile-presentation-contact-info-primarycontactview-card-1-7b5dxj'>
+          <CardHeader id='profile-presentation-contact-info-primarycontactview-cardheader-2-71y27c'>
+            <CardTitle id='profile-presentation-contact-info-primarycontactview-cardtitle-3-q9uamc'>{t('onboarding.contactInfo.title')}</CardTitle>
+            <CardDescription id='profile-presentation-contact-info-primarycontactview-carddescription-4-shte1d'>{t('onboarding.contactInfo.description')}</CardDescription>
           </CardHeader>
-          <CardContent id="profile.contact-info.primary-contact-view.card-content" className="space-y-6">
+          <CardContent id='profile-presentation-contact-info-primarycontactview-cardcontent-5-twrunn' className="space-y-6">
             {/* Primary Contact Section */}
-            <Card id="profile.contact-info.primary-contact-view.card.2">
-              <CardHeader id="profile.contact-info.primary-contact-view.card-header.2">
-                <ContactSectionHeader id="profile.contact-info.primary-contact-view.contact-section-header"
+            <Card id='profile-presentation-contact-info-primarycontactview-card-6-ebffo5'>
+              <CardHeader id='profile-presentation-contact-info-primarycontactview-cardheader-7-gr88k3'>
+                <ContactSectionHeader id='profile-presentation-contact-info-primarycontactview-contactsectionheader-8-n92qel'
                   icon={Phone}
                   title={t('onboarding.contactInfo.primaryContact')}
                   description={t('onboarding.contactInfo.primaryContactHint')}
                 />
               </CardHeader>
-              <CardContent id="profile.contact-info.primary-contact-view.card-content.2" className="space-y-4">
+              <CardContent id='profile-presentation-contact-info-primarycontactview-cardcontent-9-7v65nm' className="space-y-4">
                 {/* Primary WhatsApp */}
-                <div id="profile.contact-info.primary-contact-view.div" className="space-y-2">
-                  <Label id="profile.contact-info.primary-contact-view.label" className="text-sm font-semibold flex items-center gap-2 text-on-surface">
-                    <MessageCircle id="profile.contact-info.primary-contact-view.message-circle" className="h-4 w-4 text-primary" />
+                <div id='profile-presentation-contact-info-primarycontactview-div-10-xknvvi' className="space-y-2">
+                  <Label id='profile-presentation-contact-info-primarycontactview-label-11-4bmkbs' className="text-sm font-semibold flex items-center gap-2 text-on-surface">
+                    <MessageCircle id='profile-presentation-contact-info-primarycontactview-messagecircle-12-4z2ves' className="h-4 w-4 text-primary" />
                     {t('onboarding.contactInfo.phoneTypes.whatsapp')}
                   </Label>
-                  <PhoneField id="profile.contact-info.primary-contact-view.div.2"
+                  <PhoneField id='profile-presentation-contact-info-primarycontactview-phonefield-13-sqffdn'
                     labels={phoneLabels}
                     inputClassName="auth-input w-full"
                     value={localData.phones.find((p) => p.id === 'primary-whatsapp')?.number || ''}
@@ -60,12 +60,12 @@ return (
                 </div>
 
                 {/* Primary Email */}
-                <div id="profile.contact-info.primary-contact-view.div.3" className="space-y-2">
-                  <Label id="profile.contact-info.primary-contact-view.label.2" className="text-sm font-medium flex items-center gap-2">
-                    <Mail id="profile.contact-info.primary-contact-view.mail" className="h-4 w-4 text-muted-foreground" />
+                <div id='profile-presentation-contact-info-primarycontactview-div-14-bspsf7' className="space-y-2">
+                  <Label id='profile-presentation-contact-info-primarycontactview-label-15-gq44eg' className="text-sm font-medium flex items-center gap-2">
+                    <Mail id='profile-presentation-contact-info-primarycontactview-mail-16-nlenif' className="h-4 w-4 text-muted-foreground" />
                     {t('onboarding.contactInfo.email')}
                   </Label>
-                  <Input id="profile.contact-info.primary-contact-view.input.2"
+                  <Input id='profile-presentation-contact-info-primarycontactview-input-17-z2tatz'
                     value={localData.emails.find((e) => e.id === 'primary')?.email || ''}
                     onChange={(e) => updateEmail('primary', { email: e.target.value })}
                     placeholder={t('onboarding.contactInfo.emailPlaceholder')}
@@ -76,43 +76,43 @@ return (
 
                 {/* Password Change Section */}
                 {!readOnly && (
-                  <div id="profile.contact-info.primary-contact-view.div.4" className="space-y-2">
-                    <Button id="profile.contact-info.primary-contact-view.button"
+                  <div id='profile-presentation-contact-info-primarycontactview-div-18-06ud7z' className="space-y-2">
+                    <Button id='profile-presentation-contact-info-primarycontactview-button-19-ix1zy3'
                       variant="ghost"
                       size="sm"
                       className="w-full justify-start gap-2"
                       onClick={() => setIsPasswordOpen(!isPasswordOpen)}
                     >
-                      <Lock id="profile.contact-info.primary-contact-view.lock" className="h-4 w-4" />
+                      <Lock id='profile-presentation-contact-info-primarycontactview-lock-20-a9pnsf' className="h-4 w-4" />
                       {t('onboarding.contactInfo.changePassword')}
-                      <ChevronDown id="profile.contact-info.primary-contact-view.chevron-down" className={`h-4 w-4 transition-transform ${isPasswordOpen ? 'rotate-180' : ''}`} />
+                      <ChevronDown id='profile-presentation-contact-info-primarycontactview-chevrondown-21-vlnmfc' className={`h-4 w-4 transition-transform ${isPasswordOpen ? 'rotate-180' : ''}`} />
                     </Button>
                     {isPasswordOpen && (
-                      <div id="profile.contact-info.primary-contact-view.div.5" className="space-y-4 pt-4">
-                        <div id="profile.contact-info.primary-contact-view.div.6" className="space-y-2">
-                          <Label id="profile.contact-info.primary-contact-view.label.3" htmlFor="profile.primary-contact.current-password">{t('onboarding.contactInfo.currentPassword')}</Label>
+                      <div id='profile-presentation-contact-info-primarycontactview-div-22-zcxcyx' className="space-y-4 pt-4">
+                        <div id='profile-presentation-contact-info-primarycontactview-div-23-ljipcj' className="space-y-2">
+                          <Label id='profile-presentation-contact-info-primarycontactview-label-24-k0amoe' htmlFor='profile-presentation-contact-info-primarycontactview-input-25-tgc1ve'>{t('onboarding.contactInfo.currentPassword')}</Label>
                           <Input
-                            id="profile.primary-contact.current-password"
+                            id='profile-presentation-contact-info-primarycontactview-input-25-tgc1ve'
                             type="password"
                             value={passwordData.currentPassword}
                             onChange={(e) => setPasswordData({ ...passwordData, currentPassword: foldPasswordDigits(e.target.value) })}
                             placeholder={t('onboarding.contactInfo.currentPasswordPlaceholder')}
                           />
                         </div>
-                        <div id="profile.contact-info.primary-contact-view.div.7" className="space-y-2">
-                          <Label id="profile.contact-info.primary-contact-view.label.4" htmlFor="profile.primary-contact.new-password">{t('onboarding.contactInfo.newPassword')}</Label>
+                        <div id='profile-presentation-contact-info-primarycontactview-div-26-58wqrc' className="space-y-2">
+                          <Label id='profile-presentation-contact-info-primarycontactview-label-27-qqxn1t' htmlFor='profile-presentation-contact-info-primarycontactview-input-28-8h7bqg'>{t('onboarding.contactInfo.newPassword')}</Label>
                           <Input
-                            id="profile.primary-contact.new-password"
+                            id='profile-presentation-contact-info-primarycontactview-input-28-8h7bqg'
                             type="password"
                             value={passwordData.newPassword}
                             onChange={(e) => setPasswordData({ ...passwordData, newPassword: foldPasswordDigits(e.target.value) })}
                             placeholder={t('onboarding.contactInfo.newPasswordPlaceholder')}
                           />
                         </div>
-                        <div id="profile.contact-info.primary-contact-view.div.8" className="space-y-2">
-                          <Label id="profile.contact-info.primary-contact-view.label.5" htmlFor="profile.primary-contact.confirm-password">{t('onboarding.contactInfo.confirmPassword')}</Label>
+                        <div id='profile-presentation-contact-info-primarycontactview-div-29-gdkins' className="space-y-2">
+                          <Label id='profile-presentation-contact-info-primarycontactview-label-30-cvxedy' htmlFor='profile-presentation-contact-info-primarycontactview-input-31-sqzn1d'>{t('onboarding.contactInfo.confirmPassword')}</Label>
                           <Input
-                            id="profile.primary-contact.confirm-password"
+                            id='profile-presentation-contact-info-primarycontactview-input-31-sqzn1d'
                             type="password"
                             value={passwordData.confirmPassword}
                             onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: foldPasswordDigits(e.target.value) })}
@@ -127,21 +127,21 @@ return (
             </Card>
 
             {/* Additional Contact Section */}
-            <Card id="profile.contact-info.primary-contact-view.card.3">
-              <CardHeader id="profile.contact-info.primary-contact-view.card-header.3">
-                <div id="profile.contact-info.primary-contact-view.div.9" className="flex items-center justify-between">
-                  <div id="profile.contact-info.primary-contact-view.div.10">
-                    <CardTitle id="profile.contact-info.primary-contact-view.card-title.2" className="text-base flex items-center gap-2">
-                      <Share2 id="profile.contact-info.primary-contact-view.share2" className="h-4 w-4 text-muted-foreground" />
+            <Card id='profile-presentation-contact-info-primarycontactview-card-32-3nff19'>
+              <CardHeader id='profile-presentation-contact-info-primarycontactview-cardheader-33-lpvhim'>
+                <div id='profile-presentation-contact-info-primarycontactview-div-34-y8fhxb' className="flex items-center justify-between">
+                  <div id='profile-presentation-contact-info-primarycontactview-div-35-qz5ik7'>
+                    <CardTitle id='profile-presentation-contact-info-primarycontactview-cardtitle-36-rlxhab' className="text-base flex items-center gap-2">
+                      <Share2 id='profile-presentation-contact-info-primarycontactview-share2-37-6eiwgh' className="h-4 w-4 text-muted-foreground" />
                       {t('onboarding.contactInfo.additionalContact')}
                     </CardTitle>
-                    <CardDescription id="profile.contact-info.primary-contact-view.card-description.2" className="text-xs">{t('onboarding.contactInfo.additionalContactHint')}</CardDescription>
+                    <CardDescription id='profile-presentation-contact-info-primarycontactview-carddescription-38-hrbuoj' className="text-xs">{t('onboarding.contactInfo.additionalContactHint')}</CardDescription>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent id="profile.contact-info.primary-contact-view.card-content.3" className="space-y-3 sm:space-y-4">
+              <CardContent id='profile-presentation-contact-info-primarycontactview-cardcontent-39-7kfnt8' className="space-y-3 sm:space-y-4">
                 {!readOnly && (
-                  <ContactQuickAddGrid id="profile.contact-info.primary-contact-view.contact-quick-add-grid"
+                  <ContactQuickAddGrid id='profile-presentation-contact-info-primarycontactview-contactquickaddgrid-40-1c00yf'
                     items={quickAddItems}
                     selectedId={activeKindId}
                     onSelect={selectContactKind}
@@ -206,24 +206,24 @@ return (
 
             {/* Additional Emails */}
             {activeKindId === 'email' && localData.emails.filter((e) => e.id !== 'primary').length > 0 && (
-              <div id="profile.contact-info.primary-contact-view.div.11" className="space-y-2">
-                <div id="profile.contact-info.primary-contact-view.div.12" className="flex items-center gap-2">
-                  <span id="profile.contact-info.primary-contact-view.span.2" className="text-sm font-semibold flex items-center gap-2">
-                    <FontAwesomeIcon id="profile.contact-info.primary-contact-view.font-awesome-icon" icon={quickAddIcon('email')} className="h-4 w-4" style={{ color: quickAddColor('email') }} />
-                    <span id="profile.contact-info.primary-contact-view.span.3" style={{ color: quickAddColor('email') }}>{t('onboarding.contactInfo.emails')}</span>
+              <div id='profile-presentation-contact-info-primarycontactview-div-41-9t507i' className="space-y-2">
+                <div id='profile-presentation-contact-info-primarycontactview-div-42-ryhjzr' className="flex items-center gap-2">
+                  <span id='profile-presentation-contact-info-primarycontactview-text-43-rkdzrw' className="text-sm font-semibold flex items-center gap-2">
+                    <FontAwesomeIcon id='profile-presentation-contact-info-primarycontactview-fontawesomeicon-44-fovopi' icon={quickAddIcon('email')} className="h-4 w-4" style={{ color: quickAddColor('email') }} />
+                    <span id='profile-presentation-contact-info-primarycontactview-text-45-wbeehn' style={{ color: quickAddColor('email') }}>{t('onboarding.contactInfo.emails')}</span>
                   </span>
                   {!readOnly && (
-                    <Button id="profile.contact-info.primary-contact-view.button.2"
+                    <Button id='profile-presentation-contact-info-primarycontactview-button-46-0dtb8b'
                       variant="outline"
                       size="sm"
                       onClick={addEmail}
                       className="gap-1 h-6 px-2 text-xs"
                     >
-                      <Plus id="profile.contact-info.primary-contact-view.plus" className="h-3 w-3" />
+                      <Plus id='profile-presentation-contact-info-primarycontactview-plus-47-gll5zo' className="h-3 w-3" />
                     </Button>
                   )}
                 </div>
-                <div id="profile.contact-info.primary-contact-view.div.13" className="space-y-2">
+                <div id='profile-presentation-contact-info-primarycontactview-div-48-42abzs' className="space-y-2">
                   {localData.emails.filter((e) => e.id !== 'primary').map((emailLink, index) => (
                     <ContactEntryCard
                       key={emailLink.id}
@@ -252,7 +252,7 @@ return (
 
             {/* Social Links */}
             {SOCIAL_PLATFORMS.some((platform) => platform === activeKindId) && localData.socialLinks.length > 0 && (
-              <div id="profile.contact-info.primary-contact-view.div.14" className="space-y-4">
+              <div id='profile-presentation-contact-info-primarycontactview-div-49-tz1cz4' className="space-y-4">
                 {SOCIAL_PLATFORMS.map((platform) => {
                   if (platform !== activeKindId) return null;
                   const platformLinks = groupedSocialLinks[platform];
@@ -313,24 +313,24 @@ return (
 
             {/* Websites */}
             {activeKindId === 'website' && localData.websites.length > 0 && (
-              <div id="profile.contact-info.primary-contact-view.div.15" className="space-y-2">
-                <div id="profile.contact-info.primary-contact-view.div.16" className="flex items-center gap-2">
-                  <span id="profile.contact-info.primary-contact-view.span.4" className="text-sm font-semibold flex items-center gap-2">
-                    <FontAwesomeIcon id="profile.contact-info.primary-contact-view.font-awesome-icon.2" icon={quickAddIcon('website')} className="h-4 w-4" style={{ color: quickAddColor('website') }} />
-                    <span id="profile.contact-info.primary-contact-view.span.5" style={{ color: quickAddColor('website') }}>{t('onboarding.contactInfo.websites')}</span>
+              <div id='profile-presentation-contact-info-primarycontactview-div-50-hlmppt' className="space-y-2">
+                <div id='profile-presentation-contact-info-primarycontactview-div-51-1zxsxs' className="flex items-center gap-2">
+                  <span id='profile-presentation-contact-info-primarycontactview-text-52-robhny' className="text-sm font-semibold flex items-center gap-2">
+                    <FontAwesomeIcon id='profile-presentation-contact-info-primarycontactview-fontawesomeicon-53-6jhlbh' icon={quickAddIcon('website')} className="h-4 w-4" style={{ color: quickAddColor('website') }} />
+                    <span id='profile-presentation-contact-info-primarycontactview-text-54-ozwrzk' style={{ color: quickAddColor('website') }}>{t('onboarding.contactInfo.websites')}</span>
                   </span>
                   {!readOnly && (
-                    <Button id="profile.contact-info.primary-contact-view.button.3"
+                    <Button id='profile-presentation-contact-info-primarycontactview-button-55-feqsad'
                       variant="outline"
                       size="sm"
                       onClick={addWebsite}
                       className="gap-1 h-6 px-2 text-xs"
                     >
-                      <Plus id="profile.contact-info.primary-contact-view.plus.2" className="h-3 w-3" />
+                      <Plus id='profile-presentation-contact-info-primarycontactview-plus-56-8rscxt' className="h-3 w-3" />
                     </Button>
                   )}
                 </div>
-                <div id="profile.contact-info.primary-contact-view.div.17" className="space-y-2">
+                <div id='profile-presentation-contact-info-primarycontactview-div-57-cwhdvv' className="space-y-2">
                   {localData.websites.map((site, index) => (
                     <ContactEntryCard
                       key={site.id}
@@ -358,7 +358,7 @@ return (
         </Card>
           </CardContent>
 
-          <ConfirmDialog id="profile.contact-info.primary-contact-view.confirm-dialog"
+          <ConfirmDialog id='profile-presentation-contact-info-primarycontactview-confirmdialog-58-dzjryh'
             open={pendingRemoval !== null}
             title={t('onboarding.contactInfo.removeConfirm.title')}
             message={t('onboarding.contactInfo.removeConfirm.message')}

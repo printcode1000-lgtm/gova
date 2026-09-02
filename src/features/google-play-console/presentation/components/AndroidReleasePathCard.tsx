@@ -45,21 +45,21 @@ export function AndroidReleasePathCard({
   const disabled = busy || !enabled || missingEnv.length > 0;
 
   return (
-    <article id="google-play-console.android-release-path-card.article" className="rounded-md border bg-surface p-3">
-      <label id="google-play-console.android-release-path-card.label" className="flex items-start gap-2">
+    <article id='google-play-console-presentation-components-androidreleasepathcard-article-1-nkrw8x' className="rounded-md border bg-surface p-3">
+      <label id='google-play-console-presentation-components-androidreleasepathcard-label-2-migtck' className="flex items-start gap-2">
         <input
-          id="google-play-console.android-release-path-card.input"
+          id='google-play-console-presentation-components-androidreleasepathcard-input-3-bvypdv'
           checked={enabled}
           className="mt-1 h-4 w-4 accent-primary"
           type="checkbox"
           onChange={(event) => setEnabled(event.target.checked)}
         />
-        <span id="google-play-console.android-release-path-card.span">
-          <span id="google-play-console.android-release-path-card.span.2" className="block font-semibold">
+        <span id='google-play-console-presentation-components-androidreleasepathcard-text-4-qj3xpo'>
+          <span id='google-play-console-presentation-components-androidreleasepathcard-text-5-1zy7bk' className="block font-semibold">
             {t(path.title)}
           </span>
           <span
-            id="google-play-console.android-release-path-card.span.3"
+            id='google-play-console-presentation-components-androidreleasepathcard-text-6-1pueo7'
             className="mt-1 block text-xs leading-5 text-on-surface-variant"
           >
             {t("releaseConsole.androidPaths.branchCheckboxHelp")}
@@ -67,27 +67,27 @@ export function AndroidReleasePathCard({
         </span>
       </label>
       <p
-        id="google-play-console.android-release-path-card.p"
+        id='google-play-console-presentation-components-androidreleasepathcard-text-7-gmwt0m'
         className="mt-3 text-sm leading-6 text-on-surface-variant"
       >
         {t(path.description)}
       </p>
-      <div id="google-play-console.android-release-path-card.div" className="mt-3 flex flex-wrap gap-2">
+      <div id='google-play-console-presentation-components-androidreleasepathcard-div-8-pzzq9c' className="mt-3 flex flex-wrap gap-2">
         <Button
-          id="google-play-console.android-release-path-card.button"
+          id='google-play-console-presentation-components-androidreleasepathcard-button-9-0qdslz'
           disabled={disabled}
           variant={path.danger ? "destructive" : "default"}
           onClick={() => void start({ commandId: path.id })}
         >
           {running ? (
             <LoaderCircle
-              id="google-play-console.android-release-path-card.loader-circle"
+              id='google-play-console-presentation-components-androidreleasepathcard-loadercircle-10-4mnygr'
               className="h-4 w-4 animate-spin"
             />
           ) : path.danger ? (
-            <CloudUpload id="google-play-console.android-release-path-card.cloud-upload" className="h-4 w-4" />
+            <CloudUpload id='google-play-console-presentation-components-androidreleasepathcard-cloudupload-11-cgvzsk' className="h-4 w-4" />
           ) : (
-            <Play id="google-play-console.android-release-path-card.play" className="h-4 w-4" />
+            <Play id='google-play-console-presentation-components-androidreleasepathcard-play-12-v7krxt' className="h-4 w-4" />
           )}
           {running ? runningLabel(job, t) : t(path.action)}
         </Button>
@@ -106,7 +106,7 @@ export function AndroidReleasePathCard({
         ))}
         {running && job ? (
           <StopButton
-            id="google-play-console.android-release-path-card.stop-button"
+            id='google-play-console-presentation-components-androidreleasepathcard-stopbutton-13-r5laoe'
             cancel={cancel}
             job={job}
             t={t}
@@ -114,7 +114,7 @@ export function AndroidReleasePathCard({
         ) : null}
       </div>
       <p
-        id="google-play-console.android-release-path-card.p.2"
+        id='google-play-console-presentation-components-androidreleasepathcard-text-14-75kozr'
         className="mt-2 text-xs leading-5 text-on-surface-variant"
       >
         {enabled
@@ -122,11 +122,11 @@ export function AndroidReleasePathCard({
           : t("releaseConsole.androidPaths.skippedBranchHelp")}
       </p>
       {missingEnv.length > 0 ? (
-        <p id="google-play-console.android-release-path-card.p.3" className="mt-2 rounded-md bg-muted p-2 text-xs">
+        <p id='google-play-console-presentation-components-androidreleasepathcard-text-15-reg4mk' className="mt-2 rounded-md bg-muted p-2 text-xs">
           {t("releaseConsole.build.notReady", { names: missingEnv.join(", ") })}
         </p>
       ) : null}
-      {job ? <StatusChip id="google-play-console.android-release-path-card.status-chip" job={job} t={t} /> : null}
+      {job ? <StatusChip id='google-play-console-presentation-components-androidreleasepathcard-statuschip-16-asrdxw' job={job} t={t} /> : null}
       {secondaryJobs.map(({ secondary, job: secondaryJob }) =>
         secondaryJob ? <StatusChip key={secondary.id} job={secondaryJob} t={t} /> : null,
       )}

@@ -228,18 +228,18 @@ export function TrendingRibbon({ id, config }: TrendingRibbonProps & { id?: stri
       }}
       className="asol-section-tonal-error overflow-hidden relative flex items-center py-2 mx-2 sm:mx-4 rounded-xl touch-pan-y cursor-grab active:cursor-grabbing pointer-events-auto"
     >
-      <div className="flex items-center gap-2 px-4 z-10 border-s border-outline-variant/40 shrink-0 asol-tonal-error rounded-e-xl py-1">
+      <div id="features-advertisements-presentation-trendingribbon-div-2-zon8aw" className="flex items-center gap-2 px-4 z-10 border-s border-outline-variant/40 shrink-0 asol-tonal-error rounded-e-xl py-1">
         <TrendingUp
           className="w-5 h-5 text-error animate-pulse-subtle"
           aria-hidden
         />
-        <span className="text-xs font-bold text-on-error-container">
+        <span id="features-advertisements-presentation-trendingribbon-text-3-hb8uyz" className="text-xs font-bold text-on-error-container">
           {displayLabel}
         </span>
       </div>
 
-      <div className="flex-1 overflow-hidden" dir="ltr">
-        <div
+      <div id="features-advertisements-presentation-trendingribbon-div-4-dtb2il" className="flex-1 overflow-hidden" dir="ltr">
+        <div id="features-advertisements-presentation-trendingribbon-div-5-b4pqrx"
           ref={trackRef}
           className="flex w-max will-change-transform gap-8 items-center pr-4"
         >

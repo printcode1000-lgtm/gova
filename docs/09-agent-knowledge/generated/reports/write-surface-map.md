@@ -5,8 +5,8 @@
 
 # Write Surface Map
 
-Detected write-like surfaces: **374**
-Unproven gateway paths: **145**
+Detected write-like surfaces: **375**
+Unproven gateway paths: **146**
 
 | Source | Owner | Operations | Gateway | Proven | Route | Runtimes | Risk |
 |---|---|---|---|---|---|---|---|
@@ -21,6 +21,7 @@ Unproven gateway paths: **145**
 | `packages/architecture-core/src/checks/native-contract.ts` | `@asol/architecture-core` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/architecture-core/src/checks/page-save-gateway-contract.ts` | `@asol/architecture-core` | save | `@asol/page-save-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/architecture-core/src/checks/page-save-write-gateway-contract.ts` | `@asol/architecture-core` | create, delete, patch, save | `@asol/page-save-core` | yes | `` | android, development, ios, static-out, web | medium |
+| `packages/architecture-core/src/checks/static-dom-identity-contract.ts` | `@asol/architecture-core` | update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/architecture-core/src/checks/system-logs-contract.ts` | `@asol/architecture-core` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/architecture-core/src/contracts/contract.ts` | `@asol/architecture-core` | create, delete, insert, update | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/architecture-core/src/registry/application-features-registry.ts` | `@asol/architecture-core` | save, upload | `@asol/page-save-core, @asol/data-core, @asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |

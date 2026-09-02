@@ -39,19 +39,19 @@ export function AddressBalloon({ config, onConfirm, onDismiss }: Props) {
   };
 
   return (
-    <form
+    <form id="pkg-map-core-src-addressballoon-form-1-lzw74h"
       className="asol-map__address"
       onSubmit={(event) => {
         event.preventDefault();
         confirm();
       }}
     >
-      <p className="asol-map__address-title">
+      <p id="pkg-map-core-src-addressballoon-text-2-xzm2m7" className="asol-map__address-title">
         <MapPin aria-hidden="true" />
-        <span>{config.title ?? 'Address'}</span>
+        <span id="pkg-map-core-src-addressballoon-text-3-lur0ma">{config.title ?? 'Address'}</span>
       </p>
 
-      <input
+      <input id="pkg-map-core-src-addressballoon-input-4-1er4rl"
         ref={inputRef}
         className="asol-map__address-input"
         type="text"
@@ -63,22 +63,22 @@ export function AddressBalloon({ config, onConfirm, onDismiss }: Props) {
         }}
       />
 
-      <div className="asol-map__address-actions">
-        <button
+      <div id="pkg-map-core-src-addressballoon-div-5-kfjgas" className="asol-map__address-actions">
+        <button id="pkg-map-core-src-addressballoon-button-6-kpqkv9"
           type="button"
           className="asol-map__address-button asol-map__address-button--ghost"
           onClick={onDismiss}
         >
           <X aria-hidden="true" />
-          <span>{config.cancelLabel ?? 'Cancel'}</span>
+          <span id="pkg-map-core-src-addressballoon-text-7-3cdvfp">{config.cancelLabel ?? 'Cancel'}</span>
         </button>
-        <button
+        <button id="pkg-map-core-src-addressballoon-button-8-bafj0y"
           type="submit"
           className="asol-map__address-button asol-map__address-button--primary"
           disabled={!canConfirm}
         >
           <Check aria-hidden="true" />
-          <span>{config.confirmLabel ?? 'Confirm'}</span>
+          <span id="pkg-map-core-src-addressballoon-text-9-8c8kel">{config.confirmLabel ?? 'Confirm'}</span>
         </button>
       </div>
     </form>
