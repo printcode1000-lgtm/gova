@@ -23,6 +23,9 @@ jobs:
           export PYTHONDONTWRITEBYTECODE=1
 
           echo 'PHASE 1: sync integration and install current persistent runtime'
+          git -C "$REPO" remote set-url origin https://github.com/printcode1000-lgtm/gova.git
+          git -C "$REPO" config --local credential.helper ''
+          git -C "$REPO" config --local credential.https://github.com.helper ''
           git -C "$REPO" fetch --quiet origin main integration
           mkdir -p /home/hesham/gova-agents
           if [ ! -e "$IW/.git" ]; then
@@ -100,6 +103,9 @@ jobs:
                   shell: bash
                   run: |
                     set -euo pipefail
+                    git -C /home/hesham/gova remote set-url origin https://github.com/printcode1000-lgtm/gova.git
+                    git -C /home/hesham/gova config --local credential.helper ''
+                    git -C /home/hesham/gova config --local credential.https://github.com.helper ''
                     git -C /home/hesham/gova fetch --quiet origin integration
                     mkdir -p /home/hesham/gova-agents
                     if [ ! -e /home/hesham/gova-agents/integration/.git ]; then
