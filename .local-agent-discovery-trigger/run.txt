@@ -1,1 +1,1 @@
-rerun final real codex monitor verification using bootstrap token
+rerun final real codex monitor verification after helper-chain reset
