@@ -5,7 +5,7 @@ on:
     branches:
       - integration
     paths:
-      - ".agent-repair/run-multi-agent-sim-2.trigger"
+      - ".agent-repair/run-multi-agent-sim-3.trigger"
 permissions:
   contents: read
 jobs:
@@ -24,11 +24,4 @@ jobs:
           fi
           git -C /home/hesham/gova-agents/integration checkout integration
           git -C /home/hesham/gova-agents/integration reset --hard origin/integration
-          python3 - <<'PY'
-          from pathlib import Path
-          p=Path('/home/hesham/gova-agents/integration/.agent-repair/multi-agent-sim.py')
-          s=p.read_text()
-          s=s.replace("doc.write_text(d.rstrip()+addition+'\\n')", "doc.write_text((d.rstrip()+addition).rstrip()+'\\n')")
-          p.write_text(s)
-          PY
-          PYTHONDONTWRITEBYTECODE=1 python3 /home/hesham/gova-agents/integration/.agent-repair/multi-agent-sim.py
+          PYTHONDONTWRITEBYTECODE=1 python3 /home/hesham/gova-agents/integration/.agent-repair/multi-agent-sim-v2.py
