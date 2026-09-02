@@ -142,9 +142,10 @@ def main():
         baseline = git(cw, "rev-parse", "HEAD")
 
         prompt = """You are a real local validation worker inside an isolated Gova Git worktree.
-Read the relevant local-agent runtime documentation before editing. There is a concrete usability defect to fix: tools/local-agent/selftest.py leaves its generated sim-* agents/tasks/messages/events in the persistent SQLite runtime after a successful run, so the new monitor accumulates stale test agents. Implement the SMALLEST safe fix so a successful self-test removes only records created by that self-test tag while preserving unrelated runtime records and preserving the printed JSON result.
+Read the relevant local-agent runtime documentation before editing. You MUST edit tools/local-agent/selftest.py in this run; a prose-only answer is a failed task.
+Concrete defect: tools/local-agent/selftest.py leaves its generated sim-* agents/tasks/messages/events in the persistent SQLite runtime after a successful run, so the new monitor accumulates stale test agents. Implement the SMALLEST safe fix so a successful self-test removes only records created by that self-test tag while preserving unrelated runtime records and preserving the printed JSON result.
 You may inspect tools/local-agent/selftest.py, tools/local-agent/codex_test.py, tools/local-agent/gateway.py, tools/local-agent/monitor.py and the relevant docs. Modify ONLY tools/local-agent/selftest.py.
-Constraints: do not push, fetch, merge, rebase, create remote branches, edit workflows, or touch main/integration refs. Do not install dependencies. Do not delete unrelated gateway runtime or user data. Do not git add or commit; leave your source change in the worktree for the harness to review and commit safely. Run `python3 -m py_compile tools/local-agent/selftest.py` and `python3 tools/local-agent/monitor.py --once`. End by printing `CODEX_REAL_WORKER_DONE` and a one-line summary of the exact cleanup you implemented."""
+Constraints: do not push, fetch, merge, rebase, create remote branches, edit workflows, or touch main/integration refs. Do not install dependencies. Do not delete unrelated gateway runtime or user data. Do not git add or commit; leave the actual source edit in the worktree for the trusted harness to review and commit safely. Run `python3 -m py_compile tools/local-agent/selftest.py` and `python3 tools/local-agent/monitor.py --once`. Verify with `git diff -- tools/local-agent/selftest.py` that a real patch remains. End only after that diff is non-empty by printing `CODEX_REAL_WORKER_DONE` and a one-line summary of the exact cleanup you implemented."""
         cmd = " ".join([
             shlex.quote(str(codex)), "--ask-for-approval", "never", "exec",
             "-C", shlex.quote(str(cw)), "--sandbox", "workspace-write",
@@ -153,7 +154,6 @@ Constraints: do not push, fetch, merge, rebase, create remote branches, edit wor
         _, started = call("POST", "/v1/exec/start", {"agent_id": codex_agent, "task_id": codex_task, "command": cmd})
         cid = started["command_id"]
 
-        # A second peer works concurrently while Codex is live.
         _, peer = call("POST", "/v1/exec/start", {
             "agent_id": reviewer, "task_id": review_task,
             "command": "printf reviewer-online; sleep 2; git status --short",
@@ -169,17 +169,14 @@ Constraints: do not push, fetch, merge, rebase, create remote branches, edit wor
         _, logs = call("GET", f"/v1/commands/{urllib.parse.quote(cid)}/logs?tail=30000")
         combined_logs = logs.get("stdout", "") + logs.get("stderr", "")
         if final.get("exit_code") != 0 or "CODEX_REAL_WORKER_DONE" not in combined_logs:
-            raise RuntimeError(f"real Codex worker failed: {final}\n{logs.get('stdout','')}\n{logs.get('stderr','')}")
+            raise RuntimeError(f"real Codex worker failed: {final}\n{combined_logs}")
 
         changed = [x for x in git(cw, "diff", "--name-only").splitlines() if x]
         if changed != ["tools/local-agent/selftest.py"]:
-            raise RuntimeError(f"Codex must change only tools/local-agent/selftest.py, got: {changed}")
+            raise RuntimeError(f"Codex must change only tools/local-agent/selftest.py, got: {changed}\n--- Codex output ---\n{combined_logs}")
         if git(cw, "status", "--porcelain").strip() == "":
-            raise RuntimeError("Codex reported completion without a working-tree change")
+            raise RuntimeError(f"Codex reported completion without a working-tree change\n--- Codex output ---\n{combined_logs}")
 
-        # Validate the real Codex edit first; the trusted harness creates the
-        # local branch commit outside Codex's workspace sandbox so shared Git
-        # metadata never has to be writable by the model process itself.
         subprocess.run(["python3", "-m", "py_compile", str(cw / "tools/local-agent/selftest.py")], check=True)
         subprocess.run(["python3", str(cw / "tools/local-agent/monitor.py"), "--once"], check=True, stdout=subprocess.DEVNULL)
         git(cw, "config", "user.name", "gova-codex-real-worker")
@@ -196,7 +193,6 @@ Constraints: do not push, fetch, merge, rebase, create remote branches, edit wor
         result["codex_changed_paths"] = changed_committed
         result["codex_diff_stat"] = git(cw, "diff", "--stat", f"{baseline}..{head}")
 
-        # Real peer communication + handoff before integration.
         call("POST", "/v1/message/send", {"sender": codex_agent, "recipient": reviewer, "kind": "review", "body": f"Review commit {head}"})
         call("POST", "/v1/task/checkpoint", {"agent_id": codex_agent, "task_id": codex_task, "fields": {"completed": ["real-codex-run", "local-change", "trusted-local-commit"], "tests": ["py_compile", "monitor --once"], "next_action": "peer review"}})
         call("POST", "/v1/task/handoff", {"task_id": codex_task, "from_agent": codex_agent, "to_agent": reviewer, "notes": f"Review real Codex commit {head}"})
