@@ -119,6 +119,40 @@ Service routes also log any unmapped `5xx` before returning it
 (`businessErrorResponse`), so a swallowed server fault is visible in the
 deployment's own output rather than only in a status code.
 
+## A third failure: the moved route answers a different status
+
+A route can be shipped by the right owner, reach its data, and still be wrong.
+
+Most canonical routes map errors through `mapServiceError`, so a mirror using the
+shared `businessApiErrorStatus` matches by construction. Sixteen do not — they
+map statuses themselves — and a mirror written against the shared mapping
+silently downgrades those:
+
+| Code | Canonical | Shared mapping |
+| --- | --- | --- |
+| `profileNotFound` | `404` (the rule is "a code containing `NotFound` is a 404") | `500` |
+| `invalidHeroSliderConfig` and siblings | `400` | `500` |
+| `featureFlagUnknown` | `400` | `500` |
+
+Each turns a caller's mistake into a server fault at the new origin — the exact
+thing "no supported client behaviour is lost" forbids, and invisible to anything
+that only checks the route exists.
+
+**Fix:** the mapping moves with the route. Each is ported into the service's own
+`lib/http.ts` as a named responder — `reviewErrorResponse`,
+`advertisementsAdminErrorResponse`, `featureFlagErrorResponse` — rather than
+folded into the shared mapping, because these rules are the route family's, not
+the application's.
+
+`npm run test:mirror-status-parity` (part of `test:deployment-tools`) refuses the
+shape that allows it: a canonical route that maps statuses itself may not be
+mirrored by a route that uses only a generic responder. Three shapes pass, and
+each is a real answer to *who decides the status*:
+
+1. the mirror delegates to the canonical handler — one mapping, cannot drift;
+2. it uses a named responder that is not one of the generic ones;
+3. it decides inline, with an explicit non-2xx status literal.
+
 ## Working the backlog down
 
 For each pair, decide which of the two facts is wrong:

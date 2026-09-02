@@ -1,6 +1,6 @@
 import { assertSubmainEnv, createSubmainRuntime } from '@asol/submain-composition';
 
-import { businessErrorResponse, corsHeaders, preflight } from '../../lib/http';
+import { featureFlagErrorResponse, corsHeaders, preflight } from '../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -29,7 +29,7 @@ export async function GET(request: Request): Promise<Response> {
     const flags = await social.featureFlags.listForAdmin({ uid, phone });
     return Response.json(flags, { status: 200, headers: corsHeaders(request) });
   } catch (error) {
-    return businessErrorResponse(request, error);
+    return featureFlagErrorResponse(request, error);
   }
 }
 
@@ -56,7 +56,7 @@ export async function PUT(request: Request): Promise<Response> {
     });
     return Response.json(updated, { status: 200, headers: corsHeaders(request) });
   } catch (error) {
-    return businessErrorResponse(request, error);
+    return featureFlagErrorResponse(request, error);
   }
 }
 

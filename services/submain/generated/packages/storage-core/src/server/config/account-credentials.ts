@@ -32,6 +32,29 @@ function readEnv(key: string): string | undefined {
   return process.env[key];
 }
 
+/**
+ * The public base URL of an account's bucket, and nothing else.
+ *
+ * Turning a stored key into a public URL is a read that needs one value. It went
+ * through `getAccountS3Credentials`, which demands the access key and the secret
+ * as well — so an account that only renders images had to hold the credentials
+ * that can overwrite them. `asol-submain` renders the home surfaces and holds no
+ * R2 write credential, and every advertisements read answered
+ * `StorageCoreError: Missing required credentials for account "general": R2_ENDPOINT`.
+ *
+ * Least privilege is the point of splitting the accounts: a read must not demand
+ * the credentials of a write. Signing and uploading still go through the full
+ * credential set below.
+ */
+export function getAccountPublicBaseUrl(accountId: string): string {
+  const account = getStorageAccount(accountId);
+  const publicUrl = readEnv(`${account.envPrefix}_PUBLIC_URL`);
+  if (!publicUrl) {
+    throw StorageCoreError.missingCredentials(accountId, [`${account.envPrefix}_PUBLIC_URL`]);
+  }
+  return publicUrl;
+}
+
 export function getAccountS3Credentials(accountId: string): AccountS3Credentials {
   const account = getStorageAccount(accountId);
   const p = account.envPrefix;

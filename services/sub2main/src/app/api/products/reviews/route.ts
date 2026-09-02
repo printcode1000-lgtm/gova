@@ -1,7 +1,7 @@
 import { assertSub2mainEnv, createSub2mainRuntime } from '@asol/sub2main-composition';
 import type { SaveReviewInput, UpdateReviewInput } from '@/features/product/domain/product-review.entity';
 
-import { businessErrorResponse, corsHeaders, preflight } from '../../../lib/http';
+import { reviewErrorResponse, corsHeaders, preflight } from '../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -30,7 +30,7 @@ export async function GET(request: Request): Promise<Response> {
     );
     return Response.json(data, { status: 200, headers: corsHeaders(request) });
   } catch (error) {
-    return businessErrorResponse(request, error);
+    return reviewErrorResponse(request, error);
   }
 }
 
@@ -42,7 +42,7 @@ export async function POST(request: Request): Promise<Response> {
     const created = await products.reviews.create((await request.json()) as SaveReviewInput);
     return Response.json(created, { status: 201, headers: corsHeaders(request) });
   } catch (error) {
-    return businessErrorResponse(request, error);
+    return reviewErrorResponse(request, error);
   }
 }
 
@@ -54,7 +54,7 @@ export async function PUT(request: Request): Promise<Response> {
     const updated = await products.reviews.update((await request.json()) as UpdateReviewInput);
     return Response.json(updated, { status: 200, headers: corsHeaders(request) });
   } catch (error) {
-    return businessErrorResponse(request, error);
+    return reviewErrorResponse(request, error);
   }
 }
 
@@ -67,7 +67,7 @@ export async function DELETE(request: Request): Promise<Response> {
     await products.reviews.delete(q.get('reviewId') ?? '', q.get('uid') ?? '');
     return Response.json({ deleted: true }, { status: 200, headers: corsHeaders(request) });
   } catch (error) {
-    return businessErrorResponse(request, error);
+    return reviewErrorResponse(request, error);
   }
 }
 

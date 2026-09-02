@@ -68,3 +68,46 @@ export function businessErrorResponse(request: Request, error: unknown): Respons
     { status: mapped.status, headers: corsHeaders(request) },
   );
 }
+
+/**
+ * The home surfaces' own mapping, ported exactly.
+ *
+ * The application never answers `500` here. An admin read refuses with `403`,
+ * and a rejected configuration is a `400` — `invalidHeroSliderConfig` and its
+ * siblings are the caller's mistake, not a server fault. The shared mapping does
+ * not know those codes and would answer `500` for every one of them, which is a
+ * different answer to the same request.
+ */
+export function advertisementsAdminErrorResponse(request: Request, error: unknown): Response {
+  const message = error instanceof Error ? error.message : 'forbidden';
+  return Response.json({ error: message }, { status: 403, headers: corsHeaders(request) });
+}
+
+export function advertisementsSaveErrorResponse(
+  request: Request,
+  error: unknown,
+  fallbackCode: string,
+): Response {
+  const message = error instanceof Error ? error.message : fallbackCode;
+  return Response.json(
+    { error: message },
+    { status: message === 'forbidden' ? 403 : 400, headers: corsHeaders(request) },
+  );
+}
+
+/**
+ * Feature flags: `forbidden` is a `403`, an unknown flag key and a malformed
+ * body are `400`. Anything else is a genuine server fault.
+ */
+export function featureFlagErrorResponse(request: Request, error: unknown): Response {
+  const message = error instanceof Error ? error.message : 'internalServerError';
+  const status =
+    message === 'forbidden' ? 403 : message === 'featureFlagUnknown' ? 400 : 500;
+  if (status >= 500) {
+    console.error(
+      `[${new URL(request.url).pathname}] unmapped failure:`,
+      error instanceof Error ? (error.stack ?? error.message) : String(error),
+    );
+  }
+  return Response.json({ error: message }, { status, headers: corsHeaders(request) });
+}

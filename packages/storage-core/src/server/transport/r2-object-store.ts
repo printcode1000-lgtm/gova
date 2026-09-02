@@ -6,7 +6,7 @@ import {
   HeadObjectCommand,
   ListObjectsV2Command,
 } from '../../adapters/s3-client.adapter';
-import { getAccountS3Credentials } from '../config/account-credentials';
+import { getAccountPublicBaseUrl, getAccountS3Credentials } from '../config/account-credentials';
 import { StorageCoreError } from '../../errors/storage-core-error';
 
 function cleanKey(key: string): string {
@@ -14,8 +14,9 @@ function cleanKey(key: string): string {
 }
 
 export function buildR2PublicObjectUrl(key: string, accountId = 'general'): string {
-  const creds = getAccountS3Credentials(accountId);
-  const base = creds.publicUrl.replace(/\/+$/, '');
+  // The public base URL only. Demanding the full credential set here forced a
+  // read-only account to hold write keys — see `getAccountPublicBaseUrl`.
+  const base = getAccountPublicBaseUrl(accountId).replace(/\/+$/, '');
   return `${base}/${cleanKey(key)}`;
 }
 

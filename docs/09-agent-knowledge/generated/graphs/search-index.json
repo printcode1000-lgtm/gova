@@ -3321,6 +3321,20 @@
       ]
     },
     {
+      "id": "command:test:mirror-status-parity",
+      "kind": "command",
+      "name": "npm run test:mirror-status-parity",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "mirror-status-parity",
+        "npm",
+        "npm run test:mirror-status-parity",
+        "run",
+        "test",
+        "test:mirror-status-parity"
+      ]
+    },
+    {
       "id": "command:test:native-core",
       "kind": "command",
       "name": "npm run test:native-core",
@@ -54889,6 +54903,18 @@
       "tags": [
         "scripts/tests/local-agent-control-plane",
         "scripts/tests/local-agent-control-plane.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:scripts/tests/mirror-status-parity.test.ts",
+      "kind": "test",
+      "name": "mirror-status-parity.test.ts",
+      "path": "scripts/tests/mirror-status-parity.test.ts",
+      "tags": [
+        "scripts/tests/mirror-status-parity",
+        "scripts/tests/mirror-status-parity.test.ts",
         "test",
         "ts"
       ]

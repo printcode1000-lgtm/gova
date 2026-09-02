@@ -3321,6 +3321,20 @@
       ]
     },
     {
+      "id": "command:test:mirror-status-parity",
+      "kind": "command",
+      "name": "npm run test:mirror-status-parity",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "mirror-status-parity",
+        "npm",
+        "npm run test:mirror-status-parity",
+        "run",
+        "test",
+        "test:mirror-status-parity"
+      ]
+    },
+    {
       "id": "command:test:native-core",
       "kind": "command",
       "name": "npm run test:native-core",
@@ -54894,6 +54908,18 @@
       ]
     },
     {
+      "id": "test:scripts/tests/mirror-status-parity.test.ts",
+      "kind": "test",
+      "name": "mirror-status-parity.test.ts",
+      "path": "scripts/tests/mirror-status-parity.test.ts",
+      "tags": [
+        "scripts/tests/mirror-status-parity",
+        "scripts/tests/mirror-status-parity.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:scripts/tests/pipeline-coverage.test.ts",
       "kind": "test",
       "name": "pipeline-coverage.test.ts",
@@ -58835,6 +58861,11 @@
     },
     {
       "from": "command:test:deployment-tools",
+      "to": "test:scripts/tests/mirror-status-parity.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:deployment-tools",
       "to": "test:scripts/tests/pipeline-coverage.test.ts",
       "kind": "invokes"
     },
@@ -59152,6 +59183,16 @@
       "from": "command:test:marketplace-orders",
       "to": "environment-key:NODE_OPTIONS",
       "kind": "uses-environment"
+    },
+    {
+      "from": "command:test:mirror-status-parity",
+      "to": "test:scripts/tests/mirror-status-parity.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:mirror-status-parity",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
     },
     {
       "from": "command:test:native-core",
@@ -89599,6 +89640,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "test:scripts/tests/local-agent-control-plane.test.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "test:scripts/tests/mirror-status-parity.test.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -245652,6 +245699,11 @@
       "from": "test:scripts/tests/local-agent-control-plane.test.ts",
       "to": "script:scripts/github-ci-policy.ts",
       "kind": "tests"
+    },
+    {
+      "from": "test:scripts/tests/mirror-status-parity.test.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
     },
     {
       "from": "test:scripts/tests/pipeline-coverage.test.ts",

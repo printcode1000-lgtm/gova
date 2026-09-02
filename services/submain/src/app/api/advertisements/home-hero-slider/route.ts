@@ -1,7 +1,7 @@
 import { assertSubmainEnv, createSubmainRuntime } from '@asol/submain-composition';
 import type { HomeHeroConfig } from '@asol/hero-slider-core';
 
-import { businessErrorResponse, corsHeaders, preflight } from '../../../lib/http';
+import { advertisementsAdminErrorResponse, advertisementsSaveErrorResponse, corsHeaders, preflight } from '../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -28,7 +28,7 @@ export async function GET(request: Request): Promise<Response> {
     });
     return Response.json(admin, { status: 200, headers: corsHeaders(request) });
   } catch (error) {
-    return businessErrorResponse(request, error);
+    return advertisementsAdminErrorResponse(request, error);
   }
 }
 
@@ -49,7 +49,7 @@ export async function PUT(request: Request): Promise<Response> {
     );
     return Response.json(saved, { status: 200, headers: corsHeaders(request) });
   } catch (error) {
-    return businessErrorResponse(request, error);
+    return advertisementsSaveErrorResponse(request, error, 'invalidHeroSliderConfig');
   }
 }
 
