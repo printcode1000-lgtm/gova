@@ -1,0 +1,24 @@
+[Unit]
+Description=Gova Persistent Local Agent Gateway
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=hesham
+WorkingDirectory=/home/hesham/gova
+Environment=PYTHONUNBUFFERED=1
+Environment=GOVA_AGENT_REPO=/home/hesham/gova
+Environment=GOVA_AGENT_WORKTREES=/home/hesham/gova-agents
+Environment=GOVA_AGENT_RUNTIME=/home/hesham/.local/share/gova-agent-runtime
+Environment=GOVA_AGENT_AUTH_FILE=/home/hesham/.config/gova-agent/auth
+Environment=GOVA_AGENT_BIND=0.0.0.0
+Environment=GOVA_AGENT_PORT=8765
+ExecStart=/usr/bin/python3 /home/hesham/.local/lib/gova-agent/gateway.py
+Restart=always
+RestartSec=1
+KillMode=process
+TimeoutStopSec=3
+
+[Install]
+WantedBy=multi-user.target

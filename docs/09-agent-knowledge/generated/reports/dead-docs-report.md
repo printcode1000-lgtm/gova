@@ -5,7 +5,7 @@
 
 # Dead Docs Report
 
-Findings: **91**
+Findings: **92**
 
 | Kind | Source | Reference | Detail |
 |---|---|---|---|
@@ -95,8 +95,9 @@ Findings: **91**
 | `missing-file` | `docs/07-mobile-and-release/capacitor/ota-update-system.md` | `src/features/release-commands/domain/content-version.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/07-mobile-and-release/capacitor/ota-update-system.md` | `src/features/super-admin/presentation/SuperAdminOtaReleasesPage.tsx` | documentation mentions a missing repository path |
 | `missing-file` | `docs/07-mobile-and-release/deployment-targets.md` | `packages/native-core/android/build/` | documentation mentions a missing repository path |
-| `missing-file` | `docs/07-mobile-and-release/local-agent-runner-pool.md` | `packages/simulation-core` | documentation mentions a missing repository path |
 | `missing-file` | `docs/07-mobile-and-release/release-and-secrets.md` | `scripts/lib/` | documentation mentions a missing repository path |
 | `missing-file` | `docs/08-troubleshooting/problems/ota-publish-static-export-failures.md` | `scripts/ota-publish.ts` | documentation mentions a missing repository path |
+| `missing-file` | `docs/09-agent-knowledge/local-agent-runtime.md` | `scripts/local-agent-watch.ts` | documentation mentions a missing repository path |
 | `missing-package` | `docs/01-architecture/04-composition/dependency-wiring.md` | `@asol/my-feature-core` | documentation mentions unknown package @asol/my-feature-core |
 | `missing-package` | `docs/05-platform-features/sealed-packages/ota-core-module.md` | `@asol/notifications` | documentation mentions unknown package @asol/notifications |
+| `missing-package` | `docs/09-agent-knowledge/local-agent-runtime.md` | `@asol/local-agent-core` | documentation mentions unknown package @asol/local-agent-core |

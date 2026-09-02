@@ -7,7 +7,7 @@
 
 Runtime coverage is inherited from each owner's owned source/test/script nodes, not only direct owner edges.
 
-Owners scored: **98**
+Owners scored: **97**
 Average coverage: **82%**
 Weak owners (<70%): **11**
 
@@ -65,7 +65,6 @@ Weak owners (<70%): **11**
 | `packages/featured-marquee-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/gova-deployment-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/hero-slider-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
-| `packages/local-agent-core` | package | yes | yes | yes | yes | yes | NO | yes | yes | 88% |
 | `packages/map-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/notifications-composition` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/notifications-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |

@@ -23,7 +23,7 @@ Binding on every agent and developer working on this project.
 
 ## Fixed Two-Branch Repository Model
 
-The repository has exactly two recognized remote branches: `main` and `agent-request/chatgpt`. This is the normal project topology, not an exception. `main` is the production/release branch; `agent-request/chatgpt` is the permanent ChatGPT working branch. Never create, push, request, or depend on any third remote branch, including feature branches, `codex/**`, other `agent-request/**` refs, `agent-control`, rescue branches, staging branches, or temporary branches. Local worktrees are allowed only when they do not create additional remote refs.
+The repository has exactly two recognized remote branches: `main` and `integration`. `main` is the production/release branch. `integration` is the persistent non-production aggregation branch for verified agent results. Every agent performs mutable task work in a dedicated local Git worktree and local `agent/<agent>/<task>` branch under `/home/hesham/gova-agents`; task branches are never pushed to GitHub. Normal commands, coordination, locks, checkpoints, handoffs, and result streaming use the persistent `gova-agent-gateway` service directly, not GitHub Actions. Completed verified work is submitted through the gateway to `integration`. Never create, push, request, or depend on any third remote branch. Promotion from `integration` to `main` is a separate deliberate release action.
 
 ## Active MCP Servers & Skills Reference
 

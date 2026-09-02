@@ -258,4 +258,3 @@
 - **Branch Checkpoint & Resume**: If an intermediate phase fails (e.g. temporary Vercel deploy timeout on one service), the state is recorded. Rerunning `deploy:all` or `--branch=<name>` skips completed branches whose input hashes match and resumes execution from the smallest failed branch.
 
 ---
-

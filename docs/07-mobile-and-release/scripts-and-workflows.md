@@ -38,13 +38,6 @@ npm run github:block-branches -- --dry-run
 npm run github:ci-policy
 
 # Local agent GitHub workflows
-gh workflow run local-agent-status.yml -f paths='__tracked__'
-gh workflow run local-agent-inspect.yml -f agent_id='agent-1' -f mode='search' -f paths='__tracked__' -f pattern='ProductRepository'
-gh workflow run local-agent-inspect.yml -f agent_id='agent-1' -f mode='read' -f paths='package.json,docs/README.md'
-gh workflow run local-agent-workspace.yml -f agent_id='agent-1' -f patch_base64='<base64-diff>' -f commit_message='Agent change'
-gh workflow run local-agent-workspace.yml -f agent_id='agent-1' -f shell_command='npm run docs:generate' -f commit_message='Regenerate catalogs'
-gh workflow run local-agent-main.yml -f agent_id='agent-1' -f patch_base64='<base64-diff>' -f commit_message='Main change'
-gh workflow run local-agent-coordination.yml -f agent_id='agent-1' -f action='lock' -f scope='src/app'
 
 # Local agent control plane (machine-local)
 npm run local-agent:doctor
@@ -263,52 +256,10 @@ resolved by path. It is in `deploy:all` preflight and in `verify:all`.
 
 ## GitHub CI and `main`
 
-See [github-ci-policy.md](./github-ci-policy.md). GitHub Actions is not a
-correctness gate. Every push to `main` starts the OIDC-authenticated deployment
-workflow for the exact pushed SHA; a commit that touches `docs/**` also runs the
-path-filtered docs workflow.
+See [github-ci-policy.md](./github-ci-policy.md). GitHub Actions is not the command transport for local agents. The only local-agent workflow is the manual `local-agent-bootstrap.yml`, used for initial install/reinstall/recovery of `gova-agent-gateway.service`. Normal agent commands, reads, writes, locks, messages, checkpoints, handoffs, and streaming results travel directly through the persistent gateway and create no GitHub Actions run.
 
-Both repository workflows prefer the local self-hosted runner with
-`runs-on: [self-hosted, Linux, X64, gova]`. A GitHub-hosted selector confirms the
-runner is unavailable through repeated checks before falling back to
-GitHub-hosted execution. Deployment still ends by dispatching the exact SHA to
-the Vercel production path. The selector may read `GOVA_RUNNER_STATUS_TOKEN` to
-call the GitHub runner-status API; deploy still uses OIDC for the Vercel
-production endpoint. The runner pool lives under
-`/home/hesham/gova/.local/github-runners`, which git ignores, so the pool sits
-inside the one project root while its `_work` checkouts stay untracked. Local
-agent jobs never check out source: they run against `/home/hesham/gova` directly
-and mutate through isolated worktrees, so the live developer workspace is never
-reset or cleaned.
+The production deploy workflow remains tied to pushes on `main`. Documentation validation remains path-filtered. `tools/local-agent/**` is control-plane-only and is excluded from production deployment triggering. Agent task work is isolated in local worktrees under `/home/hesham/gova-agents` and is submitted to `integration` only after verification.
 
-Local agent workflows are manually dispatched only. `local-agent-status.yml`
-reads local and GitHub state without mutating anything and can inspect metadata
-for up to 10,000 tracked files with `paths='__tracked__'`.
-`local-agent-inspect.yml` performs full local reads and searches across up to
-50,000 tracked files and writes the complete output into the local coordination
-log so GitHub log truncation does not cut the result. Agent mutation should
-start with `local-agent-workspace.yml` for isolated parallel branches. Use
-`local-agent-main.yml` only when a job must push directly to `main`; direct-main
-jobs are serialized by the workflow concurrency group.
-
-`local-agent-workspace.yml` is the controlled path for parallel remote edit
-requests. It is manually dispatched, runs only on the local `gova` runner pool,
-applies a supplied git diff through `scripts/local-agent-main-apply.ts`, runs one
-allowlisted verification command, commits, and must not push a `codex/agent-*` branch; remote mutation is limited to `main` or `agent-request/chatgpt`.
-`local-agent-main.yml` is the serialized direct-`main` variant. A job may carry a
-patch, a shell command, both, or neither, so a shell-only job never has to
-fabricate a diff. Both use the local coordination channel documented in
-[Local Agent Runner Pool](./local-agent-runner-pool.md). They cannot use
-GitHub-hosted fallback, cannot consume GitHub secrets, and refuse secret-bearing
-file paths.
-
-`local-agent-coordination.yml` is the shared identity, heartbeat, lock, and
-messaging surface, and keeps coordination snapshots machine-local; the remote `agent-control` branch is forbidden that cloud agents read.
-
-`local-agent-gateway.yml` must not be used to create disposable request branches. The permanent `agent-request/chatgpt` ref is not a request branch and must never be deleted by gateway cleanup. Any gateway path that requires a third remote ref is disabled by the fixed two-branch policy.
-
-Control-plane paths are excluded from `deploy-main.yml`, so a coordination change
-does not consume a production deployment.
 
 ## Branch protection
 
@@ -325,16 +276,13 @@ GitHub status check.
 
 ## Fixed two-branch repository model
 
-The repository has exactly two recognized remote branches:
+The only recognized remote branches are:
 
-- `main` — production, release, and canonical integration.
-- `agent-request/chatgpt` — the permanent ChatGPT/OpenAI working branch.
+- `main` — production and release.
+- `integration` — persistent non-production aggregation for verified agent results.
 
-This is the normal branch model, not an exception. No third remote branch may be created. Former control-plane patterns such as `codex/**`, other `agent-request/**` refs, and `agent-control` are not permitted remote namespaces. Isolation for other agents must stay local (for example, local worktrees) until work is intentionally written to one of the two recognized branches.
+No third remote branch is allowed. Every task-specific `agent/<agent>/<task>` ref is local-only and must never be pushed. `.githooks/pre-push.d/10-main-only` and the GitHub creation ruleset enforce the exact two-ref remote allowlist. Promotion from `integration` to `main` is a separate deliberate release action.
 
-`.githooks/pre-push.d/10-main-only` enforces the exact two-ref allowlist locally. The GitHub branch-creation ruleset enforces the same allowlist server-side with no wildcard exclusions and no bypass actors. Deletion of stray unauthorized branches remains possible for cleanup.
-
-`agent-request/chatgpt` is persistent and must never be treated as a disposable gateway/request branch. ChatGPT prepares work there; production still comes only from `main`.
 
 ## The pre-push hook
 

@@ -10,20 +10,20 @@
 | Kind | Count |
 |---|---:|
 | artifact | 4 |
-| command | 286 |
+| command | 275 |
 | config | 12 |
-| document | 261 |
+| document | 264 |
 | domain | 10 |
-| environment-key | 271 |
+| environment-key | 241 |
 | external-dependency | 108 |
 | feature | 47 |
-| package | 44 |
+| package | 43 |
 | route | 177 |
 | runtime | 7 |
-| script | 161 |
+| script | 150 |
 | service | 7 |
-| source | 2241 |
-| test | 236 |
+| source | 2216 |
+| test | 234 |
 
 ## Domains
 
@@ -61,7 +61,6 @@
 | @asol/google-play-store-assets-core | `packages/google-play-store-assets-core` | Google Play store listing image assets; Layer: capability; Public exports: ., ./images |
 | @asol/gova-deployment-core | `packages/gova-deployment-core` | The gova deployment build view and its artifact gate; Layer: capability; Public exports: . |
 | @asol/hero-slider-core | `packages/hero-slider-core` | Hero slider UI capability; Layer: capability; Public exports: ., ./server |
-| @asol/local-agent-core | `packages/local-agent-core` | local agent control plane: runner pool, coordination, memory admission, monitor, host tools and peer linking; Layer: capability; Public exports: ., ./host, ./monitor |
 | @asol/map-core | `packages/map-core` | MapLibre map capability; Layer: capability; Public exports: . |
 | @asol/native-core | `packages/native-core` | Capacitor / native device capabilities; Layer: capability; Public exports: ., ./capability-keys, ./platform-globals, ./scripts/android-build-preflight, ./scripts/validate-android-r8-policy |
 | @asol/notifications-composition | `packages/notifications-composition` | Composition root for the notifications account; Layer: composition; Public exports: . |

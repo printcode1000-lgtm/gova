@@ -4,7 +4,7 @@
 
 The Gova Local Runner is an authenticated host-control execution surface, not a repository-only sandbox.
 
-As of 2026-08-31, the ChatGPT path is operational through the permanent `agent-request/chatgpt` branch and the self-hosted runner pool. A validated request is dispatched to a Local Runner job, and the supplied `shell_command` is executed through `/bin/bash -lc` with the operating-system authority of the runner account.
+As of 2026-08-31, the ChatGPT path is operational through the permanent `integration` branch and the self-hosted runner pool. A validated request is dispatched to a Local Runner job, and the supplied `shell_command` is executed through `/bin/bash -lc` with the operating-system authority of the runner account.
 
 This authority is **per dispatched job**. It is not a permanent SSH session, an always-open remote shell, or background control when no Local Runner job is running.
 
@@ -57,7 +57,7 @@ See `docs/07-mobile-and-release/local-server-filesystem-boundary.md` for the fil
 
 The standing trust boundary is GitHub plus the local operating system:
 
-1. `agent-request/chatgpt` is the permanent ChatGPT request branch.
+1. `integration` is the permanent ChatGPT request branch.
 2. The gateway accepts that branch only; it does not create or delete remote request branches.
 3. Request documents are validated before dispatch.
 4. Dispatch requests target `main`, use a closed workflow/input contract, are time-limited, and use single-use request IDs.
@@ -161,7 +161,7 @@ These are repository-integrity and host-stability controls. They are not a gener
 The repository recognizes exactly two remote branches:
 
 - `main`
-- `agent-request/chatgpt`
+- `integration`
 
 The active `fixed-two-branches` GitHub ruleset blocks creation of every other remote branch and has no bypass actor.
 
@@ -175,8 +175,6 @@ Antigravity is a permanently denied Local Runner host tool. This is a binding re
 
 Enforcement is defense in depth:
 
-- `.github/workflows/local-agent-main.yml` and `.github/workflows/local-agent-workspace.yml` contain no Antigravity setup, wrapper, or invocation step;
-- `@asol/local-agent-core/host` always reports Antigravity as disallowed;
 - a machine-local `.local/host-tools.json` file cannot enable it;
 - attempting `setHostToolAllowed(true)` or toggling the tool is refused;
 - PATH refusal shims for both `antigravity` and `agy` are always installed for Local Runner subprocess environments;

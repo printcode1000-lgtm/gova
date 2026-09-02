@@ -1,0 +1,22 @@
+name: local-agent-bootstrap
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  bootstrap:
+    runs-on: [self-hosted, Linux, X64, gova]
+    timeout-minutes: 15
+    steps:
+      - name: Install persistent local-agent gateway
+        shell: bash
+        run: |
+          set -euo pipefail
+          git -C /home/hesham/gova fetch --quiet origin integration
+          mkdir -p /home/hesham/gova-agents
+          if [ ! -e /home/hesham/gova-agents/integration/.git ]; then
+            git -C /home/hesham/gova worktree add /home/hesham/gova-agents/integration integration
+          fi
+          git -C /home/hesham/gova-agents/integration checkout integration
+          git -C /home/hesham/gova-agents/integration reset --hard origin/integration
+          GOVA_AGENT_REPO=/home/hesham/gova-agents/integration bash /home/hesham/gova-agents/integration/tools/local-agent/install.sh

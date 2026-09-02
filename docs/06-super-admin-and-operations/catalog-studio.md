@@ -104,4 +104,3 @@ npm run build:static
 failed-draft isolation, stale-write rejection, referenced-image protection, unsafe image names and
 the static source exclusion. The write smoke test used during implementation also commits identical
 bytes transactionally and uploads then recoverably removes an unreferenced test image.
-

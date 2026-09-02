@@ -11,7 +11,7 @@ Canonical inventory of every sealed `@asol/*` package in `packages/`.
 
 ## Scope
 
-Covers all 44 sealed packages under `packages/`. Does not cover `services/*/generated/` mirrors.
+Covers all 43 sealed packages under `packages/`. Does not cover `services/*/generated/` mirrors.
 
 ## Source of Truth
 
@@ -256,20 +256,6 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:hero-slider-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
-
-### @asol/local-agent-core
-
-| Field | Value |
-|---|---|
-| **Package** | `@asol/local-agent-core` |
-| **Folder** | `packages/local-agent-core/` |
-| **Purpose** | local agent control plane: runner pool, coordination, memory admission, monitor, host tools and peer linking |
-| **Architectural Layer** | capability |
-| **Public Exports** | `.` · `./host` · `./monitor` |
-| **Infrastructure Privileges** | none |
-| **May Import App (`@/`)** | no |
-| **Test Gate** | `npm run test:local-agent-core` |
 | **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/map-core
@@ -640,4 +626,4 @@ This Markdown file is **generated** and verified by `architecture:check`.
 
 | Metric | Value |
 |---|---|
-| Packages | 44 |
+| Packages | 43 |

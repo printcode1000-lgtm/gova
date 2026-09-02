@@ -17,10 +17,8 @@ on:
     # each one previously starting a release that then fought the previous one
     # for the single-deploy lock.
     paths-ignore:
-      - ".agent-control/**"
+      - "tools/local-agent/**"
       - ".github/workflows/local-agent-*.yml"
-      - "packages/local-agent-core/**"
-      - "scripts/local-agent-*.ts"
       - "docs/**"
       - "note/**"
       - ".agents/**"
