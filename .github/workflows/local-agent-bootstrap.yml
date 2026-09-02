@@ -15,6 +15,8 @@ jobs:
     steps:
       - name: Real multi-agent monitor and Codex verification
         shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           REPO=/home/hesham/gova
@@ -24,9 +26,9 @@ jobs:
 
           echo 'PHASE 1: sync integration and install current persistent runtime'
           git -C "$REPO" remote set-url origin https://github.com/printcode1000-lgtm/gova.git
-          git -C "$REPO" config --local credential.helper ''
-          git -C "$REPO" config --local credential.https://github.com.helper ''
-          git -C "$REPO" fetch --quiet origin main integration
+          BASIC=$(printf 'x-access-token:%s' "$GITHUB_TOKEN" | base64 -w0)
+          git -C "$REPO" -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $BASIC" fetch --quiet origin main integration
+          unset BASIC
           mkdir -p /home/hesham/gova-agents
           if [ ! -e "$IW/.git" ]; then
             git -C "$REPO" worktree add "$IW" integration
@@ -104,8 +106,8 @@ jobs:
                   run: |
                     set -euo pipefail
                     git -C /home/hesham/gova remote set-url origin https://github.com/printcode1000-lgtm/gova.git
-                    git -C /home/hesham/gova config --local credential.helper ''
-                    git -C /home/hesham/gova config --local credential.https://github.com.helper ''
+                    git -C /home/hesham/gova config --local --unset-all credential.helper 2>/dev/null || true
+                    git -C /home/hesham/gova config --local credential.helper /home/hesham/.local/lib/gova-agent/git_credential.py
                     git -C /home/hesham/gova fetch --quiet origin integration
                     mkdir -p /home/hesham/gova-agents
                     if [ ! -e /home/hesham/gova-agents/integration/.git ]; then
