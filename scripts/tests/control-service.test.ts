@@ -104,8 +104,15 @@ for (const [file, fn] of SEAM_ERROR_MAPPERS) {
   // application and 401 here, and an unrecognised error was 500 there and 400
   // here. A hardcoded status is how that comes back.
   const hardcoded = [...source.matchAll(/status:\s*(\d{3})/g)].map((match) => match[1]!);
+  // `204` on operational-route.ts is the preflight, not an error: a preflight
+  // carries no body and reports no failure, so it is outside the mapping's
+  // domain and its status is fixed by the CORS contract, not by us.
   const allowed = new Set(
-    file === 'control/system-logs.ts' ? ['401', '403'] : file === 'control/operational-route.ts' ? ['401', '503'] : [],
+    file === 'control/system-logs.ts'
+      ? ['401', '403']
+      : file === 'control/operational-route.ts'
+        ? ['401', '503', '204']
+        : [],
   );
   for (const status of hardcoded) {
     assert.ok(

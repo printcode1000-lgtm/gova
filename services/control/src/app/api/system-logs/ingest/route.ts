@@ -1,3 +1,4 @@
+import { controlPreflight } from '@/control/operational-route';
 import { isIngestRateLimited, normalizeIngestPayload, persistentSystemLogService, readBoundedJsonBody, systemLogError, validateIngestBatchSize } from '@/control/system-logs';
 import type { SystemLogInput } from '@asol/system-logs-core/server';
 
@@ -11,4 +12,6 @@ export async function POST(request: Request): Promise<Response> {
     return Response.json({ ok: true });
   } catch (error) { return systemLogError(error); }
 }
-export async function OPTIONS() { return new Response(null, { status: 204 }); }
+export function OPTIONS(request: Request): Response {
+  return controlPreflight(request);
+}

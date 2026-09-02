@@ -27,3 +27,4 @@ A log of project problems and their solutions for recurrence and environment set
 | 22 | Every SQLite-backed product reads back empty (`PRAGMA` executed with `run()`) | [sqlite-pragma-run-empty-product.md](./sqlite-pragma-run-empty-product.md) |
 | 23 | A route's owner does not ship it: `307` then `404` (sign-in down while every gate was green) | [owned-route-not-shipped.md](./owned-route-not-shipped.md) |
 | 24 | A push to `main` produces no Vercel deployment (intermittent, cause on Vercel's side; the failure is safe) | [main-push-without-vercel-deployment.md](./main-push-without-vercel-deployment.md) |
+| 25 | `Unable to reach the server` while the server is up: a preflight answered `204` with no CORS headers | [preflight-answered-without-cors-headers.md](./preflight-answered-without-cors-headers.md) |

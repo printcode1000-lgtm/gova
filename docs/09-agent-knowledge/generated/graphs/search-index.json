@@ -3783,6 +3783,20 @@
       ]
     },
     {
+      "id": "command:test:service-cors",
+      "kind": "command",
+      "name": "npm run test:service-cors",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run test:service-cors",
+        "run",
+        "service-cors",
+        "test",
+        "test:service-cors"
+      ]
+    },
+    {
       "id": "command:test:service-mirror-core",
       "kind": "command",
       "name": "npm run test:service-mirror-core",
@@ -14756,6 +14770,41 @@
         "test",
         "ts",
         "with"
+      ]
+    },
+    {
+      "id": "document:docs/08-troubleshooting/problems/preflight-answered-without-cors-headers.md",
+      "kind": "document",
+      "name": "A route reports `Unable to reach the server` while the server is up",
+      "path": "docs/08-troubleshooting/problems/preflight-answered-without-cors-headers.md",
+      "summary": "The browser reports a network failure for a route whose origin is healthy:",
+      "tags": [
+        "@asol/service-runtime-core",
+        "a route reports `unable to reach the server` while the server is up",
+        "browser",
+        "docs/08-troubleshooting/problems/preflight-answered-without-cors-headers",
+        "docs/08-troubleshooting/problems/preflight-answered-without-cors-headers.md",
+        "failure",
+        "for",
+        "healthy",
+        "is",
+        "md",
+        "network",
+        "origin",
+        "reach",
+        "reports",
+        "route",
+        "server",
+        "services/control/src/proxy",
+        "services/control/src/proxy.ts",
+        "the",
+        "the browser reports a network failure for a route whose origin is healthy:",
+        "to",
+        "ts",
+        "unable",
+        "up",
+        "while",
+        "whose"
       ]
     },
     {
@@ -37417,6 +37466,17 @@
       ]
     },
     {
+      "id": "source:packages/service-runtime-core/src/domain/service-proxy.ts",
+      "kind": "source",
+      "name": "service-proxy.ts",
+      "path": "packages/service-runtime-core/src/domain/service-proxy.ts",
+      "tags": [
+        "packages/service-runtime-core/src/domain/service-proxy",
+        "packages/service-runtime-core/src/domain/service-proxy.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/service-runtime-core/src/index.ts",
       "kind": "source",
       "name": "index.ts",
@@ -39143,6 +39203,17 @@
       ]
     },
     {
+      "id": "source:services/control/src/proxy.ts",
+      "kind": "source",
+      "name": "proxy.ts",
+      "path": "services/control/src/proxy.ts",
+      "tags": [
+        "services/control/src/proxy",
+        "services/control/src/proxy.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:services/notifications/next-env.d.ts",
       "kind": "source",
       "name": "next-env.d.ts",
@@ -39196,6 +39267,17 @@
         "services/notifications/src/app/layout",
         "services/notifications/src/app/layout.tsx",
         "tsx"
+      ]
+    },
+    {
+      "id": "source:services/notifications/src/proxy.ts",
+      "kind": "source",
+      "name": "proxy.ts",
+      "path": "services/notifications/src/proxy.ts",
+      "tags": [
+        "services/notifications/src/proxy",
+        "services/notifications/src/proxy.ts",
+        "ts"
       ]
     },
     {
@@ -39273,6 +39355,17 @@
       "tags": [
         "services/orders/src/app/lib/http",
         "services/orders/src/app/lib/http.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/orders/src/proxy.ts",
+      "kind": "source",
+      "name": "proxy.ts",
+      "path": "services/orders/src/proxy.ts",
+      "tags": [
+        "services/orders/src/proxy",
+        "services/orders/src/proxy.ts",
         "ts"
       ]
     },
@@ -39373,6 +39466,17 @@
       "tags": [
         "services/products/src/app/lib/http",
         "services/products/src/app/lib/http.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/products/src/proxy.ts",
+      "kind": "source",
+      "name": "proxy.ts",
+      "path": "services/products/src/proxy.ts",
+      "tags": [
+        "services/products/src/proxy",
+        "services/products/src/proxy.ts",
         "ts"
       ]
     },
@@ -39530,6 +39634,17 @@
       "tags": [
         "services/profiles/src/app/lib/http",
         "services/profiles/src/app/lib/http.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/profiles/src/proxy.ts",
+      "kind": "source",
+      "name": "proxy.ts",
+      "path": "services/profiles/src/proxy.ts",
+      "tags": [
+        "services/profiles/src/proxy",
+        "services/profiles/src/proxy.ts",
         "ts"
       ]
     },
@@ -39812,6 +39927,17 @@
       ]
     },
     {
+      "id": "source:services/sub2main/src/proxy.ts",
+      "kind": "source",
+      "name": "proxy.ts",
+      "path": "services/sub2main/src/proxy.ts",
+      "tags": [
+        "services/sub2main/src/proxy",
+        "services/sub2main/src/proxy.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:services/sub2main/stubs/better-sqlite3.js",
       "kind": "source",
       "name": "better-sqlite3.js",
@@ -40077,6 +40203,17 @@
       ]
     },
     {
+      "id": "source:services/submain/src/app/api/notifications/device-token/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/notifications/device-token/route.ts",
+      "tags": [
+        "services/submain/src/app/api/notifications/device-token/route",
+        "services/submain/src/app/api/notifications/device-token/route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:services/submain/src/app/api/notifications/devices/route.ts",
       "kind": "source",
       "name": "route.ts",
@@ -40264,6 +40401,17 @@
       "tags": [
         "services/submain/src/instrumentation",
         "services/submain/src/instrumentation.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/proxy.ts",
+      "kind": "source",
+      "name": "proxy.ts",
+      "path": "services/submain/src/proxy.ts",
+      "tags": [
+        "services/submain/src/proxy",
+        "services/submain/src/proxy.ts",
         "ts"
       ]
     },
@@ -55087,6 +55235,18 @@
       "tags": [
         "scripts/tests/secret-presence-status",
         "scripts/tests/secret-presence-status.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:scripts/tests/service-cors-boundary.test.ts",
+      "kind": "test",
+      "name": "service-cors-boundary.test.ts",
+      "path": "scripts/tests/service-cors-boundary.test.ts",
+      "tags": [
+        "scripts/tests/service-cors-boundary",
+        "scripts/tests/service-cors-boundary.test.ts",
         "test",
         "ts"
       ]

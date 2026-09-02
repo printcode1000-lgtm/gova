@@ -19,6 +19,9 @@ export { INTERNAL_SERVER_ERROR, errorMessageOf, mapErrorStatus } from './domain/
 export type { ServiceHttp, ServiceHttpOptions } from './domain/service-http';
 export { createServiceHttp } from './domain/service-http';
 
+export type { ServiceProxyOptions } from './domain/service-proxy';
+export { createServiceProxy } from './domain/service-proxy';
+
 export type {
   HealthReport,
   CredentialHealthOptions,

@@ -230,5 +230,6 @@ for what happens when it does not.
 | `control:smoke` | control's auth boundary, plus a release-barrier read of its own shard, plus a scan of the server log for unregistered ports |
 | `smoke:deployed` | the deployed origins: gova health, a legacy `307` redirect that must not be followed, control's auth boundary, and each workload's data route |
 | `smoke:owned-reads` | **every** owned GET route on every account, against production. A `4xx` passes — the handler ran and refused; a `5xx`, or an unconfigured-port body behind a `200`, fails. Runs as part of `smoke:deployed`. |
+| `test:service-cors` | every deployment installs the shared CORS boundary (`createServiceProxy`) at `/api/:path*`, and a preflight for a path **no route implements** answers with a real `Access-Control-Allow-Origin`, `DELETE` among the allowed methods, and the shared `BROWSER_REQUEST_HEADERS`. A bare `204` fails: without the header the browser never sends the request, and the caller sees a network outage from a healthy server. Runs inside `test:deployment-tools`. |
 | `test:route-ownership` | every owned route+method is shipped by its owner, and the known-unshipped backlog only shrinks |
 | `test:mirror-status-parity` | a canonical route that maps statuses itself is never mirrored by one using only a generic responder |

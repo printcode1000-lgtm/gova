@@ -1,9 +1,44 @@
 import 'server-only';
 
+import { BROWSER_REQUEST_HEADERS } from '@asol/service-runtime-core';
+
 import { businessApiErrorStatus } from '@/core/api/business-api-error-status';
 
-export function controlJson(body: unknown, status = 200): Response {
-  return Response.json(body, { status });
+/**
+ * Control answers a browser, not only a machine.
+ *
+ * These routes were written for the deploy callback and for GitHub, so they
+ * carried no CORS headers at all and every preflight got a bare `204`. The
+ * Super Admin console is a browser client on a different origin: without
+ * `Access-Control-Allow-Origin` on the preflight the browser refuses to send
+ * the request, and the console reports `Unable to reach the server` for a
+ * runtime that is up and answering. Every Super Admin surface was unreachable
+ * that way — user search, System Logs, OTA administration, build jobs.
+ *
+ * The header list is `BROWSER_REQUEST_HEADERS`, shared with the six workloads,
+ * so no origin can answer a narrower list than the client sends.
+ */
+export function controlCorsHeaders(request: Request): Record<string, string> {
+  const origin = request.headers.get('origin');
+  return {
+    'Access-Control-Allow-Origin': origin ?? '*',
+    'Access-Control-Allow-Methods': 'GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': BROWSER_REQUEST_HEADERS,
+    'Access-Control-Max-Age': '86400',
+    Vary: 'Origin',
+  };
+}
+
+/** The preflight every control route answers. */
+export function controlPreflight(request: Request): Response {
+  return new Response(null, { status: 204, headers: controlCorsHeaders(request) });
+}
+
+export function controlJson(body: unknown, status = 200, request?: Request): Response {
+  return Response.json(body, {
+    status,
+    headers: request ? controlCorsHeaders(request) : undefined,
+  });
 }
 
 /**
@@ -16,10 +51,13 @@ export function controlJson(body: unknown, status = 200): Response {
  * three into `401` or `400`, which told the caller to retry a run that was
  * already going.
  */
-export function controlError(error: unknown): Response {
+export function controlError(error: unknown, request?: Request): Response {
   const message = error instanceof Error ? error.message : 'Internal Server Error';
   const mapped = businessApiErrorStatus(message);
-  return Response.json({ error: mapped.code }, { status: mapped.status });
+  return Response.json(
+    { error: mapped.code },
+    { status: mapped.status, headers: request ? controlCorsHeaders(request) : undefined },
+  );
 }
 
 /**
