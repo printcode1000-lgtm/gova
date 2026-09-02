@@ -21,17 +21,11 @@ on:
       - "scripts/architecture-check.ts"
       - "scripts/runtime/**"
       - "scripts/github-ci-policy.ts"
-      - "packages/local-agent-core/**"
-      - "scripts/local-agent-*.ts"
       - "package.json"
       - "package-lock.json"
       - ".github/workflows/docs.yml"
-      - ".github/workflows/local-agent-coordination.yml"
-      - ".github/workflows/local-agent-gateway.yml"
-      - ".github/workflows/local-agent-inspect.yml"
-      - ".github/workflows/local-agent-main.yml"
-      - ".github/workflows/local-agent-workspace.yml"
-      - ".github/workflows/local-agent-status.yml"
+      - ".github/workflows/local-agent-bootstrap.yml"
+      - "tools/local-agent/**"
   pull_request:
     branches:
       - main
@@ -46,18 +40,11 @@ on:
       - "scripts/architecture-check.ts"
       - "scripts/runtime/**"
       - "scripts/github-ci-policy.ts"
-      - "packages/local-agent-core/**"
-      - "scripts/local-agent-*.ts"
       - "package.json"
       - "package-lock.json"
       - ".github/workflows/docs.yml"
-      - ".github/workflows/local-agent-coordination.yml"
-      - ".github/workflows/local-agent-gateway.yml"
-      - ".github/workflows/local-agent-inspect.yml"
-      - ".github/workflows/local-agent-main.yml"
-      - ".github/workflows/local-agent-workspace.yml"
-      - ".github/workflows/local-agent-status.yml"
-
+      - ".github/workflows/local-agent-bootstrap.yml"
+      - "tools/local-agent/**"
 permissions:
   actions: read
   contents: read

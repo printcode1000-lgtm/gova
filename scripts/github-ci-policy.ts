@@ -1,6 +1,5 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
-import { CONTROL_PLANE_BRANCH_NAMESPACES } from "@asol/local-agent-core";
 /**
  * Local GitHub CI policy.
  *
@@ -14,15 +13,7 @@ import { CONTROL_PLANE_BRANCH_NAMESPACES } from "@asol/local-agent-core";
 const ROOT = process.cwd();
 const DOCS_WORKFLOW = "docs.yml";
 const DEPLOY_WORKFLOW = "deploy-main.yml";
-const LOCAL_AGENT_WORKFLOW = "local-agent-main.yml";
-const LOCAL_AGENT_INSPECT_WORKFLOW = "local-agent-inspect.yml";
-const LOCAL_AGENT_WORKSPACE_WORKFLOW = "local-agent-workspace.yml";
-const LOCAL_AGENT_STATUS_WORKFLOW = "local-agent-status.yml";
-const LOCAL_AGENT_COORDINATION_WORKFLOW = "local-agent-coordination.yml";
-const LOCAL_AGENT_GATEWAY_WORKFLOW = "local-agent-gateway.yml";
-const LOCAL_WORKSPACE_ENV = "GOVA_LOCAL_WORKSPACE: /home/hesham/gova";
-const COORDINATION_ENV = "GOVA_AGENT_COORDINATION_DIR: /home/hesham/gova/.local/github-runners/gova-coordination";
-const LOCAL_WORKING_DIRECTORY = "working-directory: /home/hesham/gova";
+const LOCAL_AGENT_BOOTSTRAP_WORKFLOW = "local-agent-bootstrap.yml";
 
 /**
  * Control-plane paths that must never trigger a production deployment. A
@@ -30,10 +21,8 @@ const LOCAL_WORKING_DIRECTORY = "working-directory: /home/hesham/gova";
  * change what production serves.
  */
 export const DEPLOY_CONTROL_PLANE_IGNORES = [
-  ".agent-control/**",
   ".github/workflows/local-agent-*.yml",
-  "packages/local-agent-core/**",
-  "scripts/local-agent-*.ts",
+  "tools/local-agent/**",
   "docs/**",
   "note/**",
   ".agents/**",
@@ -51,12 +40,7 @@ const RUNNER_STATUS_SECRET = "secrets.GOVA_RUNNER_STATUS_TOKEN";
 export const ALLOWED_WORKFLOW_FILES = [
   DEPLOY_WORKFLOW,
   DOCS_WORKFLOW,
-  LOCAL_AGENT_COORDINATION_WORKFLOW,
-  LOCAL_AGENT_GATEWAY_WORKFLOW,
-  LOCAL_AGENT_INSPECT_WORKFLOW,
-  LOCAL_AGENT_WORKFLOW,
-  LOCAL_AGENT_STATUS_WORKFLOW,
-  LOCAL_AGENT_WORKSPACE_WORKFLOW,
+  LOCAL_AGENT_BOOTSTRAP_WORKFLOW,
 ] as const;
 
 const FORBIDDEN_EVENTS = [
@@ -164,17 +148,6 @@ const ALLOWED_DOCS_ACTIONS = new Set([
   "actions/setup-node@v4",
 ]);
 
-/**
- * Local agent jobs execute one script against the already-installed workspace.
- * Checkout, Node setup, and dependency installation are deliberately absent:
- * `/home/hesham/gova` is the real workspace, so re-materialising it per job is
- * pure latency.
- */
-const ALLOWED_LOCAL_AGENT_RUN_COMMANDS = new Set(["npx tsx scripts/local-agent-main-apply.ts"]);
-const ALLOWED_LOCAL_AGENT_STATUS_RUN_COMMANDS = new Set(["npx tsx scripts/local-agent-status.ts"]);
-const ALLOWED_LOCAL_AGENT_INSPECT_RUN_COMMANDS = new Set(["npx tsx scripts/local-agent-inspect.ts"]);
-const ALLOWED_LOCAL_AGENT_COORDINATION_RUN_COMMANDS = new Set(["npx tsx scripts/local-agent-coordination.ts"]);
-const ALLOWED_LOCAL_AGENT_GATEWAY_RUN_COMMANDS = new Set(["npx tsx scripts/local-agent-gateway.ts"]);
 
 export const DOCS_WORKFLOW_PATH_FILTERS = [
   "docs/**",
@@ -187,17 +160,11 @@ export const DOCS_WORKFLOW_PATH_FILTERS = [
   "scripts/architecture-check.ts",
   "scripts/runtime/**",
   "scripts/github-ci-policy.ts",
-  "packages/local-agent-core/**",
-  "scripts/local-agent-*.ts",
   "package.json",
   "package-lock.json",
   ".github/workflows/docs.yml",
-  ".github/workflows/local-agent-coordination.yml",
-  ".github/workflows/local-agent-gateway.yml",
-  ".github/workflows/local-agent-inspect.yml",
-  ".github/workflows/local-agent-main.yml",
-  ".github/workflows/local-agent-workspace.yml",
-  ".github/workflows/local-agent-status.yml",
+  ".github/workflows/local-agent-bootstrap.yml",
+  "tools/local-agent/**",
 ] as const;
 
 export const FORBIDDEN_CI_PATHS = [
@@ -428,213 +395,19 @@ export function deploymentWorkflowViolations(source: string): string[] {
  * in `/home/hesham/gova`, reach the coordination channel there, and never
  * re-materialise the workspace it already has.
  */
-function localWorkspaceViolations(body: string, label: string): string[] {
-  const errors: string[] = [];
-  if (!body.includes(LOCAL_WORKING_DIRECTORY)) {
-    errors.push(`${label} must run in /home/hesham/gova, the real workspace.`);
-  }
-  if (!body.includes(LOCAL_WORKSPACE_ENV)) {
-    errors.push(`${label} must export GOVA_LOCAL_WORKSPACE=/home/hesham/gova.`);
-  }
-  if (!body.includes(COORDINATION_ENV) && label !== "Local agent status workflow") {
-    errors.push(`${label} must expose the coordination channel under the workspace .local root.`);
-  }
-  if (/github-runners\/gova-coordination/.test(body) && !body.includes(COORDINATION_ENV)) {
-    errors.push(`${label} references a coordination directory outside the workspace .local root.`);
-  }
-  if (/actions\/checkout@/i.test(body)) {
-    errors.push(`${label} must not check out the repository; /home/hesham/gova is already the workspace.`);
-  }
-  if (/actions\/setup-node@/i.test(body)) {
-    errors.push(`${label} must not install a Node toolchain; the runner host already has one.`);
-  }
-  if (/npm ci/.test(body)) {
-    errors.push(`${label} must not run npm ci; the workspace dependencies are already installed.`);
-  }
-  return errors;
-}
-
-export function localAgentWorkflowViolations(source: string): string[] {
+export function localAgentBootstrapWorkflowViolations(source: string): string[] {
   const errors: string[] = [];
   const body = stripYamlComments(source);
-  if (!/^name:\s*local-agent-(main|workspace)\s*$/m.test(body)) {
-    errors.push("Local agent workflow name must be exactly `local-agent-main` or `local-agent-workspace`.");
-  }
-  if (!/^ {2}workflow_dispatch:\s*$/m.test(body)) errors.push("Local agent workflow must be manually dispatched.");
-  if (!body.includes("patch_base64:")) errors.push("Local agent workflow must require patch_base64 input.");
-  if (!body.includes("commit_message:")) errors.push("Local agent workflow must require commit_message input.");
-  if (!body.includes("permissions:") || !body.includes("contents: write")) {
-    errors.push("Local agent workflow must have contents: write for direct main pushes.");
-  }
-  if (!body.includes(SELF_HOSTED_RUNNER)) {
-    errors.push("Local agent workflow must run only on the gova self-hosted runner.");
-  }
-  if (body.includes(GITHUB_HOSTED_RUNNER)) {
-    errors.push("Local agent workflow must not fall back to GitHub-hosted execution.");
-  }
-  errors.push(...localWorkspaceViolations(body, "Local agent workflow"));
-  if (!body.includes("npx tsx scripts/local-agent-main-apply.ts")) {
-    errors.push("Local agent workflow must delegate edits to scripts/local-agent-main-apply.ts.");
-  }
-  if (!body.includes("shell_command:") || !body.includes("patch_base64:")) {
-    errors.push("Local agent workflow must accept both patch_base64 and shell_command so a shell-only job needs no fake patch.");
-  }
-  if (/^\s+patch_base64:[\s\S]{0,200}?required: true/m.test(body)) {
-    errors.push("Local agent workflow must not require patch_base64; shell-only jobs are valid.");
-  }
-  if (body.includes("${{ secrets.")) errors.push("Local agent workflow must not consume GitHub secrets.");
-  errors.push(...runCommandViolations(body, ALLOWED_LOCAL_AGENT_RUN_COMMANDS, "Local agent workflow"));
+  if (!/^name:\s*local-agent-bootstrap\s*$/m.test(body)) errors.push("Local agent bootstrap workflow name must be exactly `local-agent-bootstrap`.");
+  if (!/^ {2}workflow_dispatch:\s*$/m.test(body)) errors.push("Local agent bootstrap workflow must be manually dispatched.");
+  if (/(^|\n)\s*(push|pull_request)\s*:/m.test(body)) errors.push("Local agent bootstrap must not run on push or pull_request.");
+  if (!body.includes("permissions:") || !body.includes("contents: read") || body.includes("contents: write")) errors.push("Local agent bootstrap must be repository read-only.");
+  if (!body.includes(SELF_HOSTED_RUNNER) || body.includes(GITHUB_HOSTED_RUNNER)) errors.push("Local agent bootstrap must run only on the gova self-hosted runner.");
+  if (body.includes("${{ secrets.")) errors.push("Local agent bootstrap must not consume GitHub secrets.");
+  if (body.includes("actions/checkout@") || body.includes("actions/setup-node@") || /npm ci/.test(body)) errors.push("Local agent bootstrap must reuse the host checkout/toolchain and must not reinstall dependencies.");
+  if (!body.includes("/home/hesham/gova-agents/integration") || !body.includes("tools/local-agent/install.sh")) errors.push("Local agent bootstrap must install from the integration worktree.");
   const jobIds = docsWorkflowJobIds(body);
-  const allowedJobIds = ["apply-and-push", "apply-and-push-branch"];
-  if (jobIds.length !== 1 || !allowedJobIds.includes(jobIds[0]!)) {
-    errors.push(`Local agent workflow must contain exactly one approved apply job. Found: ${jobIds.join(", ") || "(none)"}.`);
-  }
-  for (const event of [...FORBIDDEN_EVENTS, "push", "pull_request"] as const) {
-    if (new RegExp(`(^|\\n)\\s*${event}\\s*:`, "m").test(body)) {
-      errors.push(`GitHub event ${event} is forbidden for the local agent workflow.`);
-    }
-  }
-  return errors;
-}
-
-export function localAgentStatusWorkflowViolations(source: string): string[] {
-  const errors: string[] = [];
-  const body = stripYamlComments(source);
-  if (!/^name:\s*local-agent-status\s*$/m.test(body)) {
-    errors.push("Local agent status workflow name must be exactly `local-agent-status`.");
-  }
-  if (!/^ {2}workflow_dispatch:\s*$/m.test(body)) errors.push("Local agent status workflow must be manually dispatched.");
-  if (!body.includes("paths:")) errors.push("Local agent status workflow must accept paths input.");
-  if (!body.includes("permissions:") || !body.includes("actions: read") || !body.includes("contents: read")) {
-    errors.push("Local agent status workflow must be read-only.");
-  }
-  if (body.includes("contents: write")) errors.push("Local agent status workflow must not push.");
-  if (!body.includes(SELF_HOSTED_RUNNER)) errors.push("Local agent status workflow must run only on the gova self-hosted runner.");
-  if (body.includes(GITHUB_HOSTED_RUNNER)) errors.push("Local agent status workflow must not fall back to GitHub-hosted execution.");
-  if (!body.includes("GOVA_RUNNER_STATUS_TOKEN: ${{ secrets.GOVA_RUNNER_STATUS_TOKEN }}")) {
-    errors.push("Local agent status workflow must use the runner status token for GitHub state reads.");
-  }
-  errors.push(...localWorkspaceViolations(body, "Local agent status workflow"));
-  if (!body.includes("npx tsx scripts/local-agent-status.ts")) {
-    errors.push("Local agent status workflow must delegate reads to scripts/local-agent-status.ts.");
-  }
-  errors.push(...runCommandViolations(body, ALLOWED_LOCAL_AGENT_STATUS_RUN_COMMANDS, "Local agent status workflow"));
-  const jobIds = docsWorkflowJobIds(body);
-  if (jobIds.length !== 1 || jobIds[0] !== "local-status") {
-    errors.push(`Local agent status workflow must contain exactly one job named local-status. Found: ${jobIds.join(", ") || "(none)"}.`);
-  }
-  for (const event of [...FORBIDDEN_EVENTS, "push", "pull_request"] as const) {
-    if (new RegExp(`(^|\\n)\\s*${event}\\s*:`, "m").test(body)) {
-      errors.push(`GitHub event ${event} is forbidden for the local agent status workflow.`);
-    }
-  }
-  return errors;
-}
-
-export function localAgentInspectWorkflowViolations(source: string): string[] {
-  const errors: string[] = [];
-  const body = stripYamlComments(source);
-  if (!/^name:\s*local-agent-inspect\s*$/m.test(body)) {
-    errors.push("Local agent inspect workflow name must be exactly `local-agent-inspect`.");
-  }
-  if (!/^ {2}workflow_dispatch:\s*$/m.test(body)) errors.push("Local agent inspect workflow must be manually dispatched.");
-  for (const input of ["agent_id:", "mode:", "paths:", "pattern:"]) {
-    if (!body.includes(input)) errors.push(`Local agent inspect workflow must accept ${input} input.`);
-  }
-  if (!body.includes("permissions:") || !body.includes("contents: read")) {
-    errors.push("Local agent inspect workflow must be read-only.");
-  }
-  if (body.includes("contents: write")) errors.push("Local agent inspect workflow must not push.");
-  if (!body.includes(SELF_HOSTED_RUNNER)) errors.push("Local agent inspect workflow must run only on the gova self-hosted runner.");
-  if (body.includes(GITHUB_HOSTED_RUNNER)) errors.push("Local agent inspect workflow must not fall back to GitHub-hosted execution.");
-  errors.push(...localWorkspaceViolations(body, "Local agent inspect workflow"));
-  if (!body.includes("npx tsx scripts/local-agent-inspect.ts")) {
-    errors.push("Local agent inspect workflow must delegate reads to scripts/local-agent-inspect.ts.");
-  }
-  if (body.includes("${{ secrets.")) errors.push("Local agent inspect workflow must not consume GitHub secrets.");
-  errors.push(...runCommandViolations(body, ALLOWED_LOCAL_AGENT_INSPECT_RUN_COMMANDS, "Local agent inspect workflow"));
-  const jobIds = docsWorkflowJobIds(body);
-  if (jobIds.length !== 1 || jobIds[0] !== "inspect") {
-    errors.push(`Local agent inspect workflow must contain exactly one job named inspect. Found: ${jobIds.join(", ") || "(none)"}.`);
-  }
-  for (const event of [...FORBIDDEN_EVENTS, "push", "pull_request"] as const) {
-    if (new RegExp(`(^|\\n)\\s*${event}\\s*:`, "m").test(body)) {
-      errors.push(`GitHub event ${event} is forbidden for the local agent inspect workflow.`);
-    }
-  }
-  return errors;
-}
-
-export function localAgentCoordinationWorkflowViolations(source: string): string[] {
-  const errors: string[] = [];
-  const body = stripYamlComments(source);
-  if (!/^name:\s*local-agent-coordination\s*$/m.test(body)) {
-    errors.push("Local agent coordination workflow name must be exactly `local-agent-coordination`.");
-  }
-  if (!/^ {2}workflow_dispatch:\s*$/m.test(body)) errors.push("Local agent coordination workflow must be manually dispatched.");
-  for (const input of ["agent_id:", "action:", "scope:", "message_kind:", "message_body:"]) {
-    if (!body.includes(input)) errors.push(`Local agent coordination workflow must accept ${input} input.`);
-  }
-  if (!body.includes("permissions:") || !body.includes("contents: read")) {
-    errors.push("Local agent coordination workflow must be read-only against the repository.");
-  }
-  if (body.includes("contents: write")) errors.push("Local agent coordination workflow must not push to tracked branches.");
-  if (!body.includes(SELF_HOSTED_RUNNER)) errors.push("Local agent coordination workflow must run only on the gova self-hosted runner.");
-  if (body.includes(GITHUB_HOSTED_RUNNER)) errors.push("Local agent coordination workflow must not fall back to GitHub-hosted execution.");
-  if (body.includes("${{ secrets.")) errors.push("Local agent coordination workflow must not consume GitHub secrets.");
-  errors.push(...localWorkspaceViolations(body, "Local agent coordination workflow"));
-  if (!body.includes("npx tsx scripts/local-agent-coordination.ts")) {
-    errors.push("Local agent coordination workflow must delegate to scripts/local-agent-coordination.ts.");
-  }
-  errors.push(...runCommandViolations(body, ALLOWED_LOCAL_AGENT_COORDINATION_RUN_COMMANDS, "Local agent coordination workflow"));
-  const jobIds = docsWorkflowJobIds(body);
-  if (jobIds.length !== 1 || jobIds[0] !== "coordinate") {
-    errors.push(`Local agent coordination workflow must contain exactly one job named coordinate. Found: ${jobIds.join(", ") || "(none)"}.`);
-  }
-  for (const event of [...FORBIDDEN_EVENTS, "push", "pull_request"] as const) {
-    if (new RegExp(`(^|\\n)\\s*${event}\\s*:`, "m").test(body)) {
-      errors.push(`GitHub event ${event} is forbidden for the local agent coordination workflow.`);
-    }
-  }
-  return errors;
-}
-
-export function localAgentGatewayWorkflowViolations(source: string): string[] {
-  const errors: string[] = [];
-  const body = stripYamlComments(source);
-  if (!/^name:\s*local-agent-gateway\s*$/m.test(body)) {
-    errors.push("Dispatch gateway workflow name must be exactly `local-agent-gateway`.");
-  }
-  // The gateway is the one local workflow that must react to a push: an agent
-  // without workflow_dispatch API access reaches it by pushing a request branch.
-  if (!/^ {2}push:\s*$/m.test(body) || !body.includes('- "agent-request/**"')) {
-    errors.push("Dispatch gateway workflow must trigger on push to agent-request/** branches only.");
-  }
-  if (/^ {4}branches:\s*$/m.test(body) && /^ {6}- main\s*$/m.test(body)) {
-    errors.push("Dispatch gateway workflow must never trigger on main.");
-  }
-  if (/(^|\n)\s*workflow_dispatch\s*:/m.test(body)) {
-    errors.push("Dispatch gateway workflow must not be dispatchable itself; it exists to dispatch others.");
-  }
-  if (!body.includes(SELF_HOSTED_RUNNER)) errors.push("Dispatch gateway workflow must run only on the gova self-hosted runner.");
-  if (body.includes(GITHUB_HOSTED_RUNNER)) errors.push("Dispatch gateway workflow must not fall back to GitHub-hosted execution.");
-  if (body.includes("${{ secrets.")) {
-    errors.push("Dispatch gateway workflow must not consume GitHub secrets; it uses a credential that stays on the machine.");
-  }
-  errors.push(...localWorkspaceViolations(body, "Dispatch gateway workflow"));
-  if (!body.includes("npx tsx scripts/local-agent-gateway.ts")) {
-    errors.push("Dispatch gateway workflow must delegate validation and dispatch to scripts/local-agent-gateway.ts.");
-  }
-  errors.push(...runCommandViolations(body, ALLOWED_LOCAL_AGENT_GATEWAY_RUN_COMMANDS, "Local agent gateway workflow"));
-  const jobIds = docsWorkflowJobIds(body);
-  if (jobIds.length !== 1 || jobIds[0] !== "gateway") {
-    errors.push(`Dispatch gateway workflow must contain exactly one job named gateway. Found: ${jobIds.join(", ") || "(none)"}.`);
-  }
-  for (const event of [...FORBIDDEN_EVENTS, "pull_request"] as const) {
-    if (new RegExp(`(^|\\n)\\s*${event}\\s*:`, "m").test(body)) {
-      errors.push(`GitHub event ${event} is forbidden for the dispatch gateway workflow.`);
-    }
-  }
+  if (jobIds.length !== 1 || jobIds[0] !== "bootstrap") errors.push(`Local agent bootstrap must contain exactly one bootstrap job. Found: ${jobIds.join(", ") || "(none)"}.`);
   return errors;
 }
 
@@ -659,68 +432,19 @@ export function collectGithubCiPolicyErrors(root = ROOT): string[] {
   const deployPath = path.join(workflowsDir, DEPLOY_WORKFLOW);
   if (existsSync(deployPath)) errors.push(...deploymentWorkflowViolations(readFileSync(deployPath, "utf8")));
   else errors.push(`Missing .github/workflows/${DEPLOY_WORKFLOW}.`);
-  const localAgentInspectPath = path.join(workflowsDir, LOCAL_AGENT_INSPECT_WORKFLOW);
-  if (existsSync(localAgentInspectPath)) {
-    errors.push(...localAgentInspectWorkflowViolations(readFileSync(localAgentInspectPath, "utf8")));
-  } else {
-    errors.push(`Missing .github/workflows/${LOCAL_AGENT_INSPECT_WORKFLOW}.`);
-  }
-  const localAgentPath = path.join(workflowsDir, LOCAL_AGENT_WORKFLOW);
-  if (existsSync(localAgentPath)) errors.push(...localAgentWorkflowViolations(readFileSync(localAgentPath, "utf8")));
-  else errors.push(`Missing .github/workflows/${LOCAL_AGENT_WORKFLOW}.`);
-  const localAgentWorkspacePath = path.join(workflowsDir, LOCAL_AGENT_WORKSPACE_WORKFLOW);
-  if (existsSync(localAgentWorkspacePath)) {
-    errors.push(...localAgentWorkflowViolations(readFileSync(localAgentWorkspacePath, "utf8")));
-  } else {
-    errors.push(`Missing .github/workflows/${LOCAL_AGENT_WORKSPACE_WORKFLOW}.`);
-  }
-  const localAgentStatusPath = path.join(workflowsDir, LOCAL_AGENT_STATUS_WORKFLOW);
-  if (existsSync(localAgentStatusPath)) {
-    errors.push(...localAgentStatusWorkflowViolations(readFileSync(localAgentStatusPath, "utf8")));
-  } else {
-    errors.push(`Missing .github/workflows/${LOCAL_AGENT_STATUS_WORKFLOW}.`);
-  }
-  const coordinationPath = path.join(workflowsDir, LOCAL_AGENT_COORDINATION_WORKFLOW);
-  if (existsSync(coordinationPath)) {
-    errors.push(...localAgentCoordinationWorkflowViolations(readFileSync(coordinationPath, "utf8")));
-  } else {
-    errors.push(`Missing .github/workflows/${LOCAL_AGENT_COORDINATION_WORKFLOW}.`);
-  }
-  const gatewayPath = path.join(workflowsDir, LOCAL_AGENT_GATEWAY_WORKFLOW);
-  if (existsSync(gatewayPath)) {
-    errors.push(...localAgentGatewayWorkflowViolations(readFileSync(gatewayPath, "utf8")));
-  } else {
-    errors.push(`Missing .github/workflows/${LOCAL_AGENT_GATEWAY_WORKFLOW}.`);
-  }
-  // `main` stays the only project branch, but the control plane needs three
-  // namespaces to be creatable. The ruleset script and the pre-push hook must
-  // agree with that list exactly — no more, no less.
-  const namespacesPath = path.join(root, "packages", "local-agent-core", "src", "control-branch-namespaces.ts");
-  if (existsSync(namespacesPath)) {
-    const source = readFileSync(namespacesPath, "utf8");
-    const declared = [...source.matchAll(/"(refs\/heads\/[^"]+)"/g)].map((match) => match[1]!);
-    if (declared.join(",") !== CONTROL_PLANE_BRANCH_NAMESPACES.join(",")) {
-      errors.push(`Control-plane branch namespaces changed unexpectedly: ${declared.join(", ") || "(none)"}.`);
-    }
-  } else {
-    errors.push("Missing packages/local-agent-core/src/control-branch-namespaces.ts.");
-  }
+  const bootstrapPath = path.join(workflowsDir, LOCAL_AGENT_BOOTSTRAP_WORKFLOW);
+  if (existsSync(bootstrapPath)) errors.push(...localAgentBootstrapWorkflowViolations(readFileSync(bootstrapPath, "utf8")));
+  else errors.push(`Missing .github/workflows/${LOCAL_AGENT_BOOTSTRAP_WORKFLOW}.`);
   const blockBranchesPath = path.join(root, "scripts", "block-branch-creation.ts");
   if (existsSync(blockBranchesPath)) {
     const source = readFileSync(blockBranchesPath, "utf8");
-    if (!source.includes("'refs/heads/main', ...CONTROL_PLANE_BRANCH_NAMESPACES")) {
-      errors.push("main-only ruleset must exclude main plus exactly the control-plane namespaces.");
-    }
+    if (!source.includes("exclude: ['refs/heads/main', 'refs/heads/integration']")) errors.push("fixed-two-branches ruleset must exclude exactly main and integration.");
+    if (source.includes("CONTROL_PLANE_BRANCH_NAMESPACES") || source.includes("agent-request/chatgpt")) errors.push("branch ruleset utility still references the retired control branch architecture.");
   }
   const hookPath = path.join(root, ".githooks", "pre-push.d", "10-main-only");
   if (existsSync(hookPath)) {
     const hook = readFileSync(hookPath, "utf8");
-    for (const namespace of CONTROL_PLANE_BRANCH_NAMESPACES) {
-      const pattern = namespace.replace(/\*\*$/, "*");
-      if (!hook.includes(`${pattern})`)) {
-        errors.push(`pre-push hook must let the control-plane namespace through: ${namespace}`);
-      }
-    }
+    if (!hook.includes("refs/heads/main|refs/heads/integration") || hook.includes("agent-request/chatgpt")) errors.push("pre-push hook must allow exactly main and integration.");
   }
   const protectPath = path.join(root, "scripts", "protect-main-branch.ts");
   if (existsSync(protectPath)) {

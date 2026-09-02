@@ -180,10 +180,6 @@ ALLOWED_TO_IMPORT → `@asol/trending-ribbon-core`
 
 `@asol/hero-slider-core` has no production `@asol/*` imports.
 
-### @asol/local-agent-core
-
-`@asol/local-agent-core` has no production `@asol/*` imports.
-
 ### @asol/map-core
 
 `@asol/map-core`
@@ -351,5 +347,5 @@ ALLOWED_TO_IMPORT → `@asol/account-declarations`
 
 | Metric | Value |
 |---|---|
-| Packages | 44 |
+| Packages | 43 |
 | Import edges | 56 |

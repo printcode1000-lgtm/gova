@@ -126,15 +126,6 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run ios:push:validate` | `iOS`, `Tooling` | 1 |  | 0 |
 | `npm run ios:spm:normalize` | `iOS`, `Tooling` | 1 |  | 0 |
 | `npm run lint` | `Tooling` | 0 |  | 0 |
-| `npm run local-agent:cleanup` | `Tooling` | 1 |  | 0 |
-| `npm run local-agent:coordination` | `Tooling` | 1 |  | 0 |
-| `npm run local-agent:dispatch:check` | `Tooling` | 1 |  | 0 |
-| `npm run local-agent:doctor` | `Tooling` | 1 |  | 0 |
-| `npm run local-agent:host:backup` | `Tooling` | 1 |  | 0 |
-| `npm run local-agent:host:restore` | `Tooling` | 1 |  | 0 |
-| `npm run local-agent:status` | `Tooling` | 1 |  | 0 |
-| `npm run local-agent:watch` | `Tooling` | 1 |  | 0 |
-| `npm run local-agent:watch:window` | `Tooling` | 0 |  | 0 |
 | `npm run maplibre:sync` | `Tooling` | 1 |  | 0 |
 | `npm run notifications:check:local` | `Tooling` | 1 |  | 0 |
 | `npm run notifications:deploy` | `Independent services`, `Tooling` | 1 |  | 0 |
@@ -228,8 +219,6 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:image-upload-queue` | `Tooling` | 1 |  | 0 |
 | `npm run test:import-without-composition` | `Tooling` | 1 |  | 0 |
 | `npm run test:installation-bootstrap` | `Tooling` | 1 |  | 0 |
-| `npm run test:local-agent-core` | `Tooling` | 1 |  | 0 |
-| `npm run test:local-agent-workflows` | `Tooling` | 1 |  | 0 |
 | `npm run test:map-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:marketplace-orders` | `Tooling` | 10 |  | 1 |
 | `npm run test:mirror-status-parity` | `Tooling` | 1 |  | 0 |

@@ -22,7 +22,6 @@ The repository manages **42 sealed packages** under `packages/`, categorized acr
 | `@asol/format-core` | Currency, dates, phone numbers, and localized text formatting | `none` | `.`, `./currency`, `./phone`, `./date` |
 | `@asol/google-play-store-assets-core` | Google Play listing assets, store graphics, and metadata | `none` | `.`, `./assets` |
 | `@asol/hero-slider-core` | Hero slider UI components, slide animations, and auto-play logic | `none` | `.`, `./ui` |
-| `@asol/local-agent-core` | Local agent control plane: runner pool, coordination, memory admission, monitor, host tools and peer linking | `none` | `.`, `./monitor`, `./host` |
 | `@asol/map-core` | MapLibre GL map rendering, marker clustering, and location pinning | `maplibre-gl` | `.`, `./ui`, `./clustering` |
 | `@asol/native-core` | Capacitor bridge, native device capabilities, plugins, and OS policies | `@capacitor/*`, `@capawesome/*`, `@capgo/*` | `.`, `./adapters/*`, `./capabilities` |
 | `@asol/notifications-core` | Push notification delivery (Web Push, FCM HTTP v1, APNs) | `web-push`, `google-auth-library` | `.`, `./delivery`, `./providers/*` |

@@ -160,4 +160,3 @@ fulfillment, reviews, auth user/profile, product reviews, follow, seller discoun
 catalog overrides, product-search request/result types, and profile working hours) are owned under
 each domain's browser-safe `./<domain>/entities` door. Application feature entity files re-export
 from those doors.
-

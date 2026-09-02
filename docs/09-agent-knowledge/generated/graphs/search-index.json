@@ -1824,136 +1824,6 @@
       ]
     },
     {
-      "id": "command:local-agent:cleanup",
-      "kind": "command",
-      "name": "npm run local-agent:cleanup",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "cleanup",
-        "local-agent",
-        "local-agent:cleanup",
-        "npm",
-        "npm run local-agent:cleanup",
-        "run"
-      ]
-    },
-    {
-      "id": "command:local-agent:coordination",
-      "kind": "command",
-      "name": "npm run local-agent:coordination",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "coordination",
-        "local-agent",
-        "local-agent:coordination",
-        "npm",
-        "npm run local-agent:coordination",
-        "run"
-      ]
-    },
-    {
-      "id": "command:local-agent:dispatch:check",
-      "kind": "command",
-      "name": "npm run local-agent:dispatch:check",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "check",
-        "dispatch",
-        "local-agent",
-        "local-agent:dispatch:check",
-        "npm",
-        "npm run local-agent:dispatch:check",
-        "run"
-      ]
-    },
-    {
-      "id": "command:local-agent:doctor",
-      "kind": "command",
-      "name": "npm run local-agent:doctor",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "doctor",
-        "local-agent",
-        "local-agent:doctor",
-        "npm",
-        "npm run local-agent:doctor",
-        "run"
-      ]
-    },
-    {
-      "id": "command:local-agent:host:backup",
-      "kind": "command",
-      "name": "npm run local-agent:host:backup",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "backup",
-        "host",
-        "local-agent",
-        "local-agent:host:backup",
-        "npm",
-        "npm run local-agent:host:backup",
-        "run"
-      ]
-    },
-    {
-      "id": "command:local-agent:host:restore",
-      "kind": "command",
-      "name": "npm run local-agent:host:restore",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "host",
-        "local-agent",
-        "local-agent:host:restore",
-        "npm",
-        "npm run local-agent:host:restore",
-        "restore",
-        "run"
-      ]
-    },
-    {
-      "id": "command:local-agent:status",
-      "kind": "command",
-      "name": "npm run local-agent:status",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "local-agent",
-        "local-agent:status",
-        "npm",
-        "npm run local-agent:status",
-        "run",
-        "status"
-      ]
-    },
-    {
-      "id": "command:local-agent:watch",
-      "kind": "command",
-      "name": "npm run local-agent:watch",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "local-agent",
-        "local-agent:watch",
-        "npm",
-        "npm run local-agent:watch",
-        "run",
-        "watch"
-      ]
-    },
-    {
-      "id": "command:local-agent:watch:window",
-      "kind": "command",
-      "name": "npm run local-agent:watch:window",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "local-agent",
-        "local-agent:watch:window",
-        "npm",
-        "npm run local-agent:watch:window",
-        "run",
-        "watch",
-        "window"
-      ]
-    },
-    {
       "id": "command:maplibre:sync",
       "kind": "command",
       "name": "npm run maplibre:sync",
@@ -3262,34 +3132,6 @@
         "run",
         "test",
         "test:installation-bootstrap"
-      ]
-    },
-    {
-      "id": "command:test:local-agent-core",
-      "kind": "command",
-      "name": "npm run test:local-agent-core",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "local-agent-core",
-        "npm",
-        "npm run test:local-agent-core",
-        "run",
-        "test",
-        "test:local-agent-core"
-      ]
-    },
-    {
-      "id": "command:test:local-agent-workflows",
-      "kind": "command",
-      "name": "npm run test:local-agent-workflows",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "local-agent-workflows",
-        "npm",
-        "npm run test:local-agent-workflows",
-        "run",
-        "test",
-        "test:local-agent-workflows"
       ]
     },
     {
@@ -6377,9 +6219,6 @@
         "@asol/gova-deployment-core",
         "@asol/hero-slider-core",
         "@asol/hero-slider-core/server",
-        "@asol/local-agent-core",
-        "@asol/local-agent-core/host",
-        "@asol/local-agent-core/monitor",
         "@asol/map-core",
         "@asol/native-core",
         "@asol/native-core/capability-keys",
@@ -6482,7 +6321,6 @@
         "packages/google-play-store-assets-core/",
         "packages/gova-deployment-core/",
         "packages/hero-slider-core/",
-        "packages/local-agent-core/",
         "packages/map-core/",
         "packages/native-core/",
         "packages/notifications-composition/",
@@ -6560,7 +6398,6 @@
         "@asol/google-play-store-assets-core",
         "@asol/gova-deployment-core",
         "@asol/hero-slider-core",
-        "@asol/local-agent-core",
         "@asol/map-core",
         "@asol/native-core",
         "@asol/notifications-composition",
@@ -6716,7 +6553,6 @@
         "@asol/google-play-store-assets-core",
         "@asol/gova-deployment-core",
         "@asol/hero-slider-core",
-        "@asol/local-agent-core",
         "@asol/map-core",
         "@asol/native-core",
         "@asol/notifications-composition",
@@ -6784,7 +6620,6 @@
         "packages/google-play-store-assets-core/",
         "packages/gova-deployment-core/",
         "packages/hero-slider-core/",
-        "packages/local-agent-core/",
         "packages/map-core/",
         "packages/native-core/",
         "packages/notifications-composition/",
@@ -6985,12 +6820,11 @@
       "kind": "document",
       "name": "ADR-0006: Fixed Two-Branch Repository Model",
       "path": "docs/01-architecture/09-decisions/ADR-0006-main-only-branch.md",
-      "summary": "Accepted (2026-08), finalized 2026-08-31",
+      "summary": "Accepted; superseded topology finalized 2026-09-02.",
       "tags": [
-        "2026-08",
-        "2026-08-31",
+        "2026-09-02",
         "accepted",
-        "accepted (2026-08), finalized 2026-08-31",
+        "accepted; superseded topology finalized 2026-09-02.",
         "adr-0006",
         "adr-0006: fixed two-branch repository model",
         "docs/01-architecture/09-decisions/adr-0006-main-only-branch",
@@ -6999,11 +6833,11 @@
         "fixed",
         "md",
         "model",
-        "packages/local-agent-core/src/control-branch-namespaces",
-        "packages/local-agent-core/src/control-branch-namespaces.ts",
         "repository",
         "scripts/block-branch-creation",
         "scripts/block-branch-creation.ts",
+        "superseded",
+        "topology",
         "ts",
         "two-branch"
       ]
@@ -13638,147 +13472,84 @@
       "kind": "document",
       "name": "GitHub CI Policy",
       "path": "docs/07-mobile-and-release/github-ci-policy.md",
-      "summary": "GitHub Actions is not a general application correctness gate. Direct pushes to `main` must not wait on reviews, pull requests, branch protection, or required status checks. Every push dispatches production deployment of that exact revision; this is release orchestration, not corr",
+      "summary": "GitHub Actions is not the normal transport for local-agent commands. The persistent local gateway owns command execution, coordination, worktrees, locks, checkpoints, handoffs, and result streaming.",
       "tags": [
         "actions",
-        "application",
-        "branch",
-        "checks",
+        "and",
+        "checkpoints",
         "ci",
-        "corr",
-        "correctness",
-        "deployment",
-        "direct",
-        "dispatches",
+        "command",
+        "commands",
+        "coordination",
         "docs/07-mobile-and-release/github-ci-policy",
         "docs/07-mobile-and-release/github-ci-policy.md",
-        "every",
-        "exact",
-        "gate",
-        "general",
+        "execution",
+        "for",
+        "gateway",
         "github",
-        "github actions is not a general application correctness gate. direct pushes to `main` must not wait on reviews, pull requests, branch protection, or required status checks. every push dispatches production deployment of that exact revision; this is release orchestration, not corr",
+        "github actions is not the normal transport for local-agent commands. the persistent local gateway owns command execution, coordination, worktrees, locks, checkpoints, handoffs, and result streaming.",
         "github ci policy",
+        "handoffs",
         "is",
-        "main",
+        "local",
+        "local-agent",
+        "locks",
         "md",
-        "must",
+        "normal",
         "not",
-        "of",
-        "on",
-        "or",
-        "orchestration",
+        "owns",
+        "persistent",
         "policy",
-        "production",
-        "protection",
-        "pull",
-        "push",
-        "pushes",
-        "release",
-        "requests",
-        "required",
-        "reviews",
-        "revision",
-        "scripts/architecture-check",
-        "scripts/architecture-check.ts",
-        "scripts/block-branch-creation",
-        "scripts/block-branch-creation.ts",
-        "scripts/docs/docs-ci",
-        "scripts/docs/docs-ci.ts",
-        "scripts/github-ci-policy",
-        "scripts/github-ci-policy.ts",
-        "scripts/protect-main-branch",
-        "scripts/protect-main-branch.ts",
-        "scripts/runtime/check",
-        "scripts/runtime/check.ts",
-        "scripts/tests/github-ci-policy",
-        "scripts/tests/github-ci-policy.test.ts",
-        "scripts/tests/local-agent-control-plane",
-        "scripts/tests/local-agent-control-plane.test.ts",
-        "status",
-        "test",
-        "that",
-        "this",
-        "to",
-        "ts",
-        "wait"
+        "result",
+        "streaming",
+        "the",
+        "transport",
+        "worktrees"
       ]
     },
     {
       "id": "document:docs/07-mobile-and-release/local-agent-runner-pool.md",
       "kind": "document",
-      "name": "Local Agent Runner Pool",
+      "name": "Persistent Local Agent Runtime",
       "path": "docs/07-mobile-and-release/local-agent-runner-pool.md",
-      "summary": "This document is the operating guide for the local agent control plane: the self-hosted runner pool, the workflows that drive it, and the coordination channel that lets cloud and local agents work on Gova at the same time.",
+      "summary": "`/home/hesham/gova` is the canonical repository clone and Git object source. Agents do not mutate it as a shared task workspace. The persistent `gova-agent-gateway` multiplexes all agent operations after a one-time/manual GitHub bootstrap.",
       "tags": [
-        "@asol/architecture-core",
-        "@asol/local-agent-core",
-        "@asol/local-agent-core/host",
-        "@asol/local-agent-core/monitor",
+        "/home/hesham/gova",
+        "`/home/hesham/gova` is the canonical repository clone and git object source. agents do not mutate it as a shared task workspace. the persistent `gova-agent-gateway` multiplexes all agent operations after a one-time/manual github bootstrap.",
+        "after",
         "agent",
         "agents",
+        "all",
         "and",
-        "at",
-        "channel",
-        "cloud",
-        "control",
-        "coordination",
+        "as",
+        "bootstrap",
+        "canonical",
+        "clone",
+        "do",
         "docs/07-mobile-and-release/local-agent-runner-pool",
         "docs/07-mobile-and-release/local-agent-runner-pool.md",
-        "document",
-        "drive",
-        "env",
-        "fastlane/",
-        "fastlane/.env",
-        "for",
-        "gova",
-        "guide",
+        "git",
+        "github",
+        "gova-agent-gateway",
         "is",
         "it",
-        "lets",
         "local",
-        "local agent runner pool",
         "md",
-        "on",
-        "operating",
-        "packages/local-agent-core/src/paths",
-        "packages/local-agent-core/src/paths.ts",
-        "packages/local-agent-core/src/remote-hosts",
-        "packages/local-agent-core/src/remote-hosts.ts",
-        "packages/simulation-core",
-        "plane",
-        "pool",
-        "runner",
-        "same",
-        "scripts/architecture-check",
-        "scripts/architecture-check.ts",
-        "scripts/github-ci-policy",
-        "scripts/github-ci-policy.ts",
-        "scripts/local-agent-gateway",
-        "scripts/local-agent-gateway.ts",
-        "scripts/local-agent-inspect",
-        "scripts/local-agent-inspect.ts",
-        "scripts/local-agent-main-apply",
-        "scripts/local-agent-main-apply.ts",
-        "scripts/local-agent-status",
-        "scripts/local-agent-status.ts",
-        "scripts/tests/",
-        "scripts/tests/local-agent-control-plane",
-        "scripts/tests/local-agent-control-plane.test.ts",
-        "self-hosted",
-        "src/app",
-        "src/app/page",
-        "src/app/page.tsx",
-        "test",
-        "that",
+        "multiplexes",
+        "mutate",
+        "not",
+        "object",
+        "one-time/manual",
+        "operations",
+        "persistent",
+        "persistent local agent runtime",
+        "repository",
+        "runtime",
+        "shared",
+        "source",
+        "task",
         "the",
-        "this",
-        "this document is the operating guide for the local agent control plane: the self-hosted runner pool, the workflows that drive it, and the coordination channel that lets cloud and local agents work on gova at the same time.",
-        "time",
-        "ts",
-        "tsx",
-        "work",
-        "workflows"
+        "workspace"
       ]
     },
     {
@@ -13788,7 +13559,6 @@
       "path": "docs/07-mobile-and-release/local-runner-full-host-control.md",
       "summary": "The Gova Local Runner is an authenticated host-control execution surface, not a repository-only sandbox.",
       "tags": [
-        "@asol/local-agent-core/host",
         "an",
         "authenticated",
         "control",
@@ -14012,8 +13782,6 @@
         "scripts & workflows",
         "scripts/build-all-services",
         "scripts/build-all-services.ts",
-        "scripts/local-agent-main-apply",
-        "scripts/local-agent-main-apply.ts",
         "scripts/verify-service-mirrors",
         "scripts/verify-service-mirrors.ts",
         "the",
@@ -15903,6 +15671,23 @@
       ]
     },
     {
+      "id": "document:docs/09-agent-knowledge/local-agent-runtime.md",
+      "kind": "document",
+      "name": "Persistent Local Agent Runtime",
+      "path": "docs/09-agent-knowledge/local-agent-runtime.md",
+      "tags": [
+        "@asol/local-agent-core",
+        "agent",
+        "docs/09-agent-knowledge/local-agent-runtime",
+        "docs/09-agent-knowledge/local-agent-runtime.md",
+        "local",
+        "md",
+        "persistent",
+        "persistent local agent runtime",
+        "runtime"
+      ]
+    },
+    {
       "id": "document:docs/09-agent-knowledge/README.md",
       "kind": "document",
       "name": "Agent Knowledge System",
@@ -17711,19 +17496,6 @@
       ]
     },
     {
-      "id": "environment-key:DOCS_CONTRACT_CHANGE",
-      "kind": "environment-key",
-      "name": "DOCS_CONTRACT_CHANGE",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "docs_contract_change",
-        "environment",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
       "id": "environment-key:FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD",
       "kind": "environment-key",
       "name": "FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD",
@@ -18036,19 +17808,6 @@
       ]
     },
     {
-      "id": "environment-key:GIT_INDEX_FILE",
-      "kind": "environment-key",
-      "name": "GIT_INDEX_FILE",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "git_index_file",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
       "id": "environment-key:GITHUB_ACTIONS",
       "kind": "environment-key",
       "name": "GITHUB_ACTIONS",
@@ -18075,19 +17834,6 @@
       ]
     },
     {
-      "id": "environment-key:GITHUB_REF_NAME",
-      "kind": "environment-key",
-      "name": "GITHUB_REF_NAME",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "github_ref_name",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
       "id": "environment-key:GITHUB_REPOSITORY",
       "kind": "environment-key",
       "name": "GITHUB_REPOSITORY",
@@ -18095,19 +17841,6 @@
       "tags": [
         "environment",
         "github_repository",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
-      "id": "environment-key:GITHUB_RUN_ID",
-      "kind": "environment-key",
-      "name": "GITHUB_RUN_ID",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "github_run_id",
         "server",
         "server tooling environment",
         "tooling"
@@ -18335,110 +18068,6 @@
       ]
     },
     {
-      "id": "environment-key:GOVA_AGENT_ADMISSION_TIMEOUT_MS",
-      "kind": "environment-key",
-      "name": "GOVA_AGENT_ADMISSION_TIMEOUT_MS",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "gova_agent_admission_timeout_ms",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
-      "id": "environment-key:GOVA_AGENT_COORDINATION_DIR",
-      "kind": "environment-key",
-      "name": "GOVA_AGENT_COORDINATION_DIR",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "gova_agent_coordination_dir",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
-      "id": "environment-key:GOVA_AGENT_MAX_CONCURRENT_MUTATIONS",
-      "kind": "environment-key",
-      "name": "GOVA_AGENT_MAX_CONCURRENT_MUTATIONS",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "gova_agent_max_concurrent_mutations",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
-      "id": "environment-key:GOVA_AGENT_MEMORY_FLOOR_MB",
-      "kind": "environment-key",
-      "name": "GOVA_AGENT_MEMORY_FLOOR_MB",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "gova_agent_memory_floor_mb",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
-      "id": "environment-key:GOVA_AGENT_STALE_LOCK_MS",
-      "kind": "environment-key",
-      "name": "GOVA_AGENT_STALE_LOCK_MS",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "gova_agent_stale_lock_ms",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
-      "id": "environment-key:GOVA_HOST_PROFILE",
-      "kind": "environment-key",
-      "name": "GOVA_HOST_PROFILE",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "gova_host_profile",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
-      "id": "environment-key:GOVA_LOCAL_WORKSPACE",
-      "kind": "environment-key",
-      "name": "GOVA_LOCAL_WORKSPACE",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "gova_local_workspace",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
-      "id": "environment-key:GOVA_RUNNER_POOL_DIR",
-      "kind": "environment-key",
-      "name": "GOVA_RUNNER_POOL_DIR",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "gova_runner_pool_dir",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
       "id": "environment-key:HOME",
       "kind": "environment-key",
       "name": "HOME",
@@ -18511,214 +18140,6 @@
       "tags": [
         "environment",
         "legacy_product_database_url",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
-      "id": "environment-key:LOCAL_AGENT_COMMIT_MESSAGE",
-      "kind": "environment-key",
-      "name": "LOCAL_AGENT_COMMIT_MESSAGE",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "local_agent_commit_message",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
-      "id": "environment-key:LOCAL_AGENT_EXECUTION_TARGET",
-      "kind": "environment-key",
-      "name": "LOCAL_AGENT_EXECUTION_TARGET",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "local_agent_execution_target",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
-      "id": "environment-key:LOCAL_AGENT_ID",
-      "kind": "environment-key",
-      "name": "LOCAL_AGENT_ID",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "local_agent_id",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
-      "id": "environment-key:LOCAL_AGENT_INSPECT_MODE",
-      "kind": "environment-key",
-      "name": "LOCAL_AGENT_INSPECT_MODE",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "local_agent_inspect_mode",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
-      "id": "environment-key:LOCAL_AGENT_INSPECT_PATHS",
-      "kind": "environment-key",
-      "name": "LOCAL_AGENT_INSPECT_PATHS",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "local_agent_inspect_paths",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
-      "id": "environment-key:LOCAL_AGENT_INSPECT_PATTERN",
-      "kind": "environment-key",
-      "name": "LOCAL_AGENT_INSPECT_PATTERN",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "local_agent_inspect_pattern",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
-      "id": "environment-key:LOCAL_AGENT_ORIGIN",
-      "kind": "environment-key",
-      "name": "LOCAL_AGENT_ORIGIN",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "local_agent_origin",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
-      "id": "environment-key:LOCAL_AGENT_PATCH_BASE64",
-      "kind": "environment-key",
-      "name": "LOCAL_AGENT_PATCH_BASE64",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "local_agent_patch_base64",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
-      "id": "environment-key:LOCAL_AGENT_REQUEST_BRANCH",
-      "kind": "environment-key",
-      "name": "LOCAL_AGENT_REQUEST_BRANCH",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "local_agent_request_branch",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
-      "id": "environment-key:LOCAL_AGENT_REQUEST_ID",
-      "kind": "environment-key",
-      "name": "LOCAL_AGENT_REQUEST_ID",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "local_agent_request_id",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
-      "id": "environment-key:LOCAL_AGENT_SCOPES",
-      "kind": "environment-key",
-      "name": "LOCAL_AGENT_SCOPES",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "local_agent_scopes",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
-      "id": "environment-key:LOCAL_AGENT_SHELL_COMMAND",
-      "kind": "environment-key",
-      "name": "LOCAL_AGENT_SHELL_COMMAND",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "local_agent_shell_command",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
-      "id": "environment-key:LOCAL_AGENT_STATUS_PATHS",
-      "kind": "environment-key",
-      "name": "LOCAL_AGENT_STATUS_PATHS",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "local_agent_status_paths",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
-      "id": "environment-key:LOCAL_AGENT_TARGET_MODE",
-      "kind": "environment-key",
-      "name": "LOCAL_AGENT_TARGET_MODE",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "local_agent_target_mode",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
-      "id": "environment-key:LOCAL_AGENT_TIMEOUT_MINUTES",
-      "kind": "environment-key",
-      "name": "LOCAL_AGENT_TIMEOUT_MINUTES",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "local_agent_timeout_minutes",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
-      "id": "environment-key:LOCAL_AGENT_VERIFICATION",
-      "kind": "environment-key",
-      "name": "LOCAL_AGENT_VERIFICATION",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "local_agent_verification",
         "server",
         "server tooling environment",
         "tooling"
@@ -19557,19 +18978,6 @@
       ]
     },
     {
-      "id": "environment-key:RUNNER_NAME",
-      "kind": "environment-key",
-      "name": "RUNNER_NAME",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "runner_name",
-        "server",
-        "server tooling environment",
-        "tooling"
-      ]
-    },
-    {
       "id": "environment-key:SYNTHETIC_ANALYTICS_R2_ACCESS_KEY_ID",
       "kind": "environment-key",
       "name": "SYNTHETIC_ANALYTICS_R2_ACCESS_KEY_ID",
@@ -19918,19 +19326,6 @@
         "server tooling environment",
         "tooling",
         "turso_profiles_organization"
-      ]
-    },
-    {
-      "id": "environment-key:USER",
-      "kind": "environment-key",
-      "name": "USER",
-      "summary": "Server/tooling environment key name",
-      "tags": [
-        "environment",
-        "server",
-        "server tooling environment",
-        "tooling",
-        "user"
       ]
     },
     {
@@ -22657,39 +22052,6 @@
         "packages/hero-slider-core",
         "slider",
         "ui"
-      ]
-    },
-    {
-      "id": "package:@asol/local-agent-core",
-      "kind": "package",
-      "name": "@asol/local-agent-core",
-      "path": "packages/local-agent-core",
-      "summary": "local agent control plane: runner pool, coordination, memory admission, monitor, host tools and peer linking; Layer: capability; Public exports: ., ./host, ./monitor",
-      "tags": [
-        ".",
-        "./host",
-        "./monitor",
-        "/host",
-        "/monitor",
-        "@asol/local-agent-core",
-        "admission",
-        "agent",
-        "and",
-        "capability",
-        "control",
-        "coordination",
-        "host",
-        "linking",
-        "local",
-        "local agent control plane: runner pool, coordination, memory admission, monitor, host tools and peer linking",
-        "memory",
-        "monitor",
-        "packages/local-agent-core",
-        "peer",
-        "plane",
-        "pool",
-        "runner",
-        "tools"
       ]
     },
     {
@@ -27212,127 +26574,6 @@
       "tags": [
         "scripts/load-release-env",
         "scripts/load-release-env.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/local-agent-cleanup.ts",
-      "kind": "script",
-      "name": "local-agent-cleanup.ts",
-      "path": "scripts/local-agent-cleanup.ts",
-      "tags": [
-        "scripts/local-agent-cleanup",
-        "scripts/local-agent-cleanup.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/local-agent-coordination.ts",
-      "kind": "script",
-      "name": "local-agent-coordination.ts",
-      "path": "scripts/local-agent-coordination.ts",
-      "tags": [
-        "scripts/local-agent-coordination",
-        "scripts/local-agent-coordination.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/local-agent-dispatch-check.ts",
-      "kind": "script",
-      "name": "local-agent-dispatch-check.ts",
-      "path": "scripts/local-agent-dispatch-check.ts",
-      "tags": [
-        "scripts/local-agent-dispatch-check",
-        "scripts/local-agent-dispatch-check.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/local-agent-doctor.ts",
-      "kind": "script",
-      "name": "local-agent-doctor.ts",
-      "path": "scripts/local-agent-doctor.ts",
-      "tags": [
-        "scripts/local-agent-doctor",
-        "scripts/local-agent-doctor.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/local-agent-gateway.ts",
-      "kind": "script",
-      "name": "local-agent-gateway.ts",
-      "path": "scripts/local-agent-gateway.ts",
-      "tags": [
-        "scripts/local-agent-gateway",
-        "scripts/local-agent-gateway.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/local-agent-host-backup.ts",
-      "kind": "script",
-      "name": "local-agent-host-backup.ts",
-      "path": "scripts/local-agent-host-backup.ts",
-      "tags": [
-        "scripts/local-agent-host-backup",
-        "scripts/local-agent-host-backup.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/local-agent-host-restore.ts",
-      "kind": "script",
-      "name": "local-agent-host-restore.ts",
-      "path": "scripts/local-agent-host-restore.ts",
-      "tags": [
-        "scripts/local-agent-host-restore",
-        "scripts/local-agent-host-restore.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/local-agent-inspect.ts",
-      "kind": "script",
-      "name": "local-agent-inspect.ts",
-      "path": "scripts/local-agent-inspect.ts",
-      "tags": [
-        "scripts/local-agent-inspect",
-        "scripts/local-agent-inspect.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/local-agent-main-apply.ts",
-      "kind": "script",
-      "name": "local-agent-main-apply.ts",
-      "path": "scripts/local-agent-main-apply.ts",
-      "tags": [
-        "scripts/local-agent-main-apply",
-        "scripts/local-agent-main-apply.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/local-agent-status.ts",
-      "kind": "script",
-      "name": "local-agent-status.ts",
-      "path": "scripts/local-agent-status.ts",
-      "tags": [
-        "scripts/local-agent-status",
-        "scripts/local-agent-status.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/local-agent-watch.ts",
-      "kind": "script",
-      "name": "local-agent-watch.ts",
-      "path": "scripts/local-agent-watch.ts",
-      "tags": [
-        "scripts/local-agent-watch",
-        "scripts/local-agent-watch.ts",
         "ts"
       ]
     },
@@ -32962,281 +32203,6 @@
       "tags": [
         "packages/hero-slider-core/src/server/home-hero-slider-service",
         "packages/hero-slider-core/src/server/home-hero-slider-service.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/admission.ts",
-      "kind": "source",
-      "name": "admission.ts",
-      "path": "packages/local-agent-core/src/admission.ts",
-      "tags": [
-        "packages/local-agent-core/src/admission",
-        "packages/local-agent-core/src/admission.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/agent-registry.ts",
-      "kind": "source",
-      "name": "agent-registry.ts",
-      "path": "packages/local-agent-core/src/agent-registry.ts",
-      "tags": [
-        "packages/local-agent-core/src/agent-registry",
-        "packages/local-agent-core/src/agent-registry.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/control-branch-namespaces.ts",
-      "kind": "source",
-      "name": "control-branch-namespaces.ts",
-      "path": "packages/local-agent-core/src/control-branch-namespaces.ts",
-      "tags": [
-        "packages/local-agent-core/src/control-branch-namespaces",
-        "packages/local-agent-core/src/control-branch-namespaces.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/control-branch.ts",
-      "kind": "source",
-      "name": "control-branch.ts",
-      "path": "packages/local-agent-core/src/control-branch.ts",
-      "tags": [
-        "packages/local-agent-core/src/control-branch",
-        "packages/local-agent-core/src/control-branch.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/coordination-snapshot.ts",
-      "kind": "source",
-      "name": "coordination-snapshot.ts",
-      "path": "packages/local-agent-core/src/coordination-snapshot.ts",
-      "tags": [
-        "packages/local-agent-core/src/coordination-snapshot",
-        "packages/local-agent-core/src/coordination-snapshot.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/git.ts",
-      "kind": "source",
-      "name": "git.ts",
-      "path": "packages/local-agent-core/src/git.ts",
-      "tags": [
-        "packages/local-agent-core/src/git",
-        "packages/local-agent-core/src/git.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/github-api.ts",
-      "kind": "source",
-      "name": "github-api.ts",
-      "path": "packages/local-agent-core/src/github-api.ts",
-      "tags": [
-        "packages/local-agent-core/src/github-api",
-        "packages/local-agent-core/src/github-api.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/host-inventory.ts",
-      "kind": "source",
-      "name": "host-inventory.ts",
-      "path": "packages/local-agent-core/src/host-inventory.ts",
-      "tags": [
-        "packages/local-agent-core/src/host-inventory",
-        "packages/local-agent-core/src/host-inventory.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/host-tools.ts",
-      "kind": "source",
-      "name": "host-tools.ts",
-      "path": "packages/local-agent-core/src/host-tools.ts",
-      "tags": [
-        "packages/local-agent-core/src/host-tools",
-        "packages/local-agent-core/src/host-tools.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/host.ts",
-      "kind": "source",
-      "name": "host.ts",
-      "path": "packages/local-agent-core/src/host.ts",
-      "tags": [
-        "packages/local-agent-core/src/host",
-        "packages/local-agent-core/src/host.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/index.ts",
-      "kind": "source",
-      "name": "index.ts",
-      "path": "packages/local-agent-core/src/index.ts",
-      "tags": [
-        "packages/local-agent-core/src/index",
-        "packages/local-agent-core/src/index.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/json-store.ts",
-      "kind": "source",
-      "name": "json-store.ts",
-      "path": "packages/local-agent-core/src/json-store.ts",
-      "tags": [
-        "packages/local-agent-core/src/json-store",
-        "packages/local-agent-core/src/json-store.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/lock-store.ts",
-      "kind": "source",
-      "name": "lock-store.ts",
-      "path": "packages/local-agent-core/src/lock-store.ts",
-      "tags": [
-        "packages/local-agent-core/src/lock-store",
-        "packages/local-agent-core/src/lock-store.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/message-store.ts",
-      "kind": "source",
-      "name": "message-store.ts",
-      "path": "packages/local-agent-core/src/message-store.ts",
-      "tags": [
-        "packages/local-agent-core/src/message-store",
-        "packages/local-agent-core/src/message-store.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/monitor.ts",
-      "kind": "source",
-      "name": "monitor.ts",
-      "path": "packages/local-agent-core/src/monitor.ts",
-      "tags": [
-        "packages/local-agent-core/src/monitor",
-        "packages/local-agent-core/src/monitor.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/operation-log.ts",
-      "kind": "source",
-      "name": "operation-log.ts",
-      "path": "packages/local-agent-core/src/operation-log.ts",
-      "tags": [
-        "packages/local-agent-core/src/operation-log",
-        "packages/local-agent-core/src/operation-log.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/paths.ts",
-      "kind": "source",
-      "name": "paths.ts",
-      "path": "packages/local-agent-core/src/paths.ts",
-      "tags": [
-        "packages/local-agent-core/src/paths",
-        "packages/local-agent-core/src/paths.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/remote-hosts.ts",
-      "kind": "source",
-      "name": "remote-hosts.ts",
-      "path": "packages/local-agent-core/src/remote-hosts.ts",
-      "tags": [
-        "packages/local-agent-core/src/remote-hosts",
-        "packages/local-agent-core/src/remote-hosts.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/request-contract.ts",
-      "kind": "source",
-      "name": "request-contract.ts",
-      "path": "packages/local-agent-core/src/request-contract.ts",
-      "tags": [
-        "packages/local-agent-core/src/request-contract",
-        "packages/local-agent-core/src/request-contract.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/request-store.ts",
-      "kind": "source",
-      "name": "request-store.ts",
-      "path": "packages/local-agent-core/src/request-store.ts",
-      "tags": [
-        "packages/local-agent-core/src/request-store",
-        "packages/local-agent-core/src/request-store.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/secret-paths.ts",
-      "kind": "source",
-      "name": "secret-paths.ts",
-      "path": "packages/local-agent-core/src/secret-paths.ts",
-      "tags": [
-        "packages/local-agent-core/src/secret-paths",
-        "packages/local-agent-core/src/secret-paths.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/swap-hygiene.ts",
-      "kind": "source",
-      "name": "swap-hygiene.ts",
-      "path": "packages/local-agent-core/src/swap-hygiene.ts",
-      "tags": [
-        "packages/local-agent-core/src/swap-hygiene",
-        "packages/local-agent-core/src/swap-hygiene.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/watch-model.ts",
-      "kind": "source",
-      "name": "watch-model.ts",
-      "path": "packages/local-agent-core/src/watch-model.ts",
-      "tags": [
-        "packages/local-agent-core/src/watch-model",
-        "packages/local-agent-core/src/watch-model.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/watch-render.ts",
-      "kind": "source",
-      "name": "watch-render.ts",
-      "path": "packages/local-agent-core/src/watch-render.ts",
-      "tags": [
-        "packages/local-agent-core/src/watch-render",
-        "packages/local-agent-core/src/watch-render.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/local-agent-core/src/worktree.ts",
-      "kind": "source",
-      "name": "worktree.ts",
-      "path": "packages/local-agent-core/src/worktree.ts",
-      "tags": [
-        "packages/local-agent-core/src/worktree",
-        "packages/local-agent-core/src/worktree.ts",
         "ts"
       ]
     },
@@ -53807,18 +52773,6 @@
       ]
     },
     {
-      "id": "test:packages/local-agent-core/src/tests/index.test.ts",
-      "kind": "test",
-      "name": "index.test.ts",
-      "path": "packages/local-agent-core/src/tests/index.test.ts",
-      "tags": [
-        "packages/local-agent-core/src/tests/index",
-        "packages/local-agent-core/src/tests/index.test.ts",
-        "test",
-        "ts"
-      ]
-    },
-    {
       "id": "test:packages/map-core/src/tests/index.test.ts",
       "kind": "test",
       "name": "index.test.ts",
@@ -54978,18 +53932,6 @@
       "tags": [
         "scripts/tests/github-ci-policy",
         "scripts/tests/github-ci-policy.test.ts",
-        "test",
-        "ts"
-      ]
-    },
-    {
-      "id": "test:scripts/tests/local-agent-control-plane.test.ts",
-      "kind": "test",
-      "name": "local-agent-control-plane.test.ts",
-      "path": "scripts/tests/local-agent-control-plane.test.ts",
-      "tags": [
-        "scripts/tests/local-agent-control-plane",
-        "scripts/tests/local-agent-control-plane.test.ts",
         "test",
         "ts"
       ]

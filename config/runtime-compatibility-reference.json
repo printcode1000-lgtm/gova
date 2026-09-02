@@ -160,7 +160,7 @@
     "tsx": "4.23.12",
     "typescript": "5.9.3"
   },
-  "packageLockDigest": "a7aa1c4d5adcf2be6e364b3339b38815bb20131756ce7c5b94f9b67142aacdfc",
+  "packageLockDigest": "a0e922d2e2a579871cb5389469a092d83907fbe347286910bdb3e7c4bdae4b93",
   "workspacePackages": {
     "account-bridge": "@asol/account-bridge@0.1.0",
     "account-declarations": "@asol/account-declarations@0.1.0",
@@ -179,7 +179,6 @@
     "google-play-store-assets-core": "@asol/google-play-store-assets-core@0.1.0",
     "gova-deployment-core": "@asol/gova-deployment-core@0.1.0",
     "hero-slider-core": "@asol/hero-slider-core@0.1.0",
-    "local-agent-core": "@asol/local-agent-core@0.1.0",
     "map-core": "@asol/map-core@0.1.0",
     "native-core": "@asol/native-core@0.1.0",
     "notifications-composition": "@asol/notifications-composition@0.1.0",

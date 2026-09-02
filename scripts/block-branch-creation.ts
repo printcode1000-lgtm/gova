@@ -2,7 +2,6 @@ import { execFileSync } from 'child_process';
 import { existsSync } from 'fs';
 import dotenv from 'dotenv';
 
-import { CONTROL_PLANE_BRANCH_NAMESPACES } from '@asol/local-agent-core';
 
 /**
  * Blocks branch creation on GitHub for every ref except the two recognized branches.
@@ -70,7 +69,7 @@ function buildPayload(): RulesetPayload {
         // creation rule would not fire on it either way — the exclusion is there so a
         // future rule added to this ruleset cannot accidentally catch it.
         include: ['~ALL'],
-        exclude: ['refs/heads/main', ...CONTROL_PLANE_BRANCH_NAMESPACES],
+        exclude: ['refs/heads/main', 'refs/heads/integration'],
       },
     },
     // Creation only. Not `deletion` and not `update`: deleting a stray branch must stay
@@ -174,7 +173,7 @@ async function apply(repository: string, token: string, payload: RulesetPayload)
     live.enforcement === 'active' && (live.rules ?? []).some((rule) => rule.type === 'creation');
   console.log(
     blocking
-      ? '\nBranch creation is blocked for every ref except main and agent-request/chatgpt.'
+      ? '\nBranch creation is blocked for every ref except main and integration.'
       : '\nWARNING: the ruleset came back without an active creation rule. Check it on GitHub.',
   );
 }

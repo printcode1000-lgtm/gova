@@ -58,7 +58,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `voice-input` | feature | 1 | 0 | 0 | 0 | 0 | 2 |
 | `@asol/account-bridge` | package | 16 | 8 | 26 | 0 | 25 | 4 |
 | `@asol/account-declarations` | package | 13 | 8 | 13 | 0 | 36 | 0 |
-| `@asol/architecture-core` | package | 19 | 4 | 0 | 0 | 6 | 7 |
+| `@asol/architecture-core` | package | 18 | 4 | 0 | 0 | 6 | 7 |
 | `@asol/auth-core` | package | 11 | 6 | 142 | 0 | 103 | 3 |
 | `@asol/backup-core` | package | 7 | 2 | 137 | 0 | 11 | 3 |
 | `@asol/branding-core` | package | 12 | 1 | 49 | 0 | 8 | 1 |
@@ -73,7 +73,6 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/google-play-store-assets-core` | package | 7 | 2 | 15 | 0 | 23 | 0 |
 | `@asol/gova-deployment-core` | package | 4 | 2 | 0 | 0 | 4 | 3 |
 | `@asol/hero-slider-core` | package | 7 | 2 | 139 | 0 | 23 | 1 |
-| `@asol/local-agent-core` | package | 5 | 2 | 0 | 0 | 23 | 0 |
 | `@asol/map-core` | package | 10 | 1 | 2 | 0 | 9 | 7 |
 | `@asol/native-core` | package | 33 | 20 | 48 | 0 | 84 | 27 |
 | `@asol/notifications-composition` | package | 11 | 1 | 0 | 0 | 2 | 4 |

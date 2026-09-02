@@ -7,7 +7,7 @@
 
 Key **names only**. Values are never emitted. Command assignments are redacted elsewhere in generated catalogs.
 
-Keys: **271**
+Keys: **241**
 
 | Key | Visibility | Static/native | Consumers (sample) | Relevance | Classification | Runtime checks |
 |---|---|---|---|---|---|---|
@@ -94,7 +94,6 @@ Keys: **271**
 | `CAPACITOR_SERVER_URL` | server-only | unknown | none | native/fastlane | missing/unknown consumers | npm run runtime:check:changed |
 | `CI` | server-only | unknown | `scripts/schema-sync.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `DOCS_CI_BASE_REF` | server-only | unknown | `scripts/docs/docs-ci.ts`, `scripts/docs/mutability-check.ts`, `scripts/runtime/check.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `DOCS_CONTRACT_CHANGE` | server-only | unknown | `scripts/local-agent-main-apply.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD` | server-only | dangerous | none | native/fastlane | missing/unknown consumers | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `FASTLANE_SKIP_UPDATE_CHECK` | server-only | unknown | `scripts/fastlane-runner.ts` | native/fastlane | server-only | npm run runtime:check:changed |
 | `FASTLANE_USER` | server-only | unknown | none | native/fastlane | missing/unknown consumers | npm run runtime:check:changed |
@@ -119,12 +118,9 @@ Keys: **271**
 | `FIREBASE_PROJECT_NAME` | server-only | unknown | none | unclassified | missing/unknown consumers | npm run runtime:check:changed |
 | `FIREBASE_PROJECT_NUMBER` | server-only | unknown | none | unclassified | missing/unknown consumers | npm run runtime:check:changed |
 | `FIREBASE_STORAGE_BUCKET` | server-only | unknown | none | object-storage | missing/unknown consumers | npm run runtime:check:changed |
-| `GIT_INDEX_FILE` | server-only | unknown | `packages/local-agent-core/src/control-branch.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `GITHUB_ACTIONS` | server-only | dangerous | `src/core/config/runtime-context.server.ts`, `src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `GITHUB_ADMIN_TOKEN` | server-only | dangerous | `packages/release-core/src/pipeline/push-main-branch.ts`, `scripts/block-branch-creation.ts`, `scripts/protect-main-branch.ts` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
-| `GITHUB_REF_NAME` | server-only | unknown | `scripts/local-agent-gateway.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `GITHUB_REPOSITORY` | server-only | unknown | `packages/release-core/src/pipeline/push-main-branch.ts`, `scripts/block-branch-creation.ts`, `scripts/protect-main-branch.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `GITHUB_RUN_ID` | server-only | unknown | `scripts/local-agent-coordination.ts`, `scripts/local-agent-gateway.ts`, `scripts/local-agent-inspect.ts`, `scripts/local-agent-main-apply.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `GOOGLE_PLAY_JSON_KEY_FILE` | server-only | unknown | `packages/ota-core/src/publishing/adapters/google-play.adapter.ts`, `src/features/google-play-console/domain/development-guard.server.ts` | native/fastlane | server-only | npm run runtime:check:changed |
 | `GOOGLE_PLAY_PACKAGE_NAME` | server-only | unknown | `packages/ota-core/src/publishing/adapters/google-play.adapter.ts`, `src/features/google-play-console/domain/development-guard.server.ts` | native/fastlane | server-only | npm run runtime:check:changed |
 | `GOOGLE_PLAY_SERVICE_ACCOUNT_AUTH_PROVIDER_X509_CERT_URL` | server-only | unknown | `packages/ota-core/src/publishing/adapters/google-play.adapter.ts`, `src/features/google-play-console/domain/development-guard.server.ts` | native/fastlane | server-only | npm run runtime:check:changed |
@@ -142,36 +138,12 @@ Keys: **271**
 | `GOOGLE_PLAY_SERVICE_ACCOUNT_UNIQUE_ID` | server-only | unknown | `packages/ota-core/src/publishing/adapters/google-play.adapter.ts`, `src/features/google-play-console/domain/development-guard.server.ts` | native/fastlane | server-only | npm run runtime:check:changed |
 | `GOOGLE_PLAY_SERVICE_ACCOUNT_UNIVERSE_DOMAIN` | server-only | unknown | `packages/ota-core/src/publishing/adapters/google-play.adapter.ts`, `src/features/google-play-console/domain/development-guard.server.ts` | native/fastlane | server-only | npm run runtime:check:changed |
 | `GOOGLE_PLAY_TRACK` | server-only | unknown | none | native/fastlane | missing/unknown consumers | npm run runtime:check:changed |
-| `GOVA_AGENT_ADMISSION_TIMEOUT_MS` | server-only | unknown | `packages/local-agent-core/src/tests/index.test.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `GOVA_AGENT_COORDINATION_DIR` | server-only | unknown | `packages/local-agent-core/src/paths.ts`, `packages/local-agent-core/src/tests/index.test.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `GOVA_AGENT_MAX_CONCURRENT_MUTATIONS` | server-only | unknown | `packages/local-agent-core/src/tests/index.test.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `GOVA_AGENT_MEMORY_FLOOR_MB` | server-only | unknown | `packages/local-agent-core/src/admission.ts`, `packages/local-agent-core/src/tests/index.test.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `GOVA_AGENT_STALE_LOCK_MS` | server-only | unknown | `packages/local-agent-core/src/lock-store.ts`, `packages/local-agent-core/src/tests/index.test.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `GOVA_HOST_PROFILE` | server-only | unknown | `packages/local-agent-core/src/paths.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `GOVA_LOCAL_WORKSPACE` | server-only | unknown | `packages/local-agent-core/src/paths.ts`, `packages/local-agent-core/src/tests/index.test.ts`, `scripts/local-agent-main-apply.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `GOVA_RUNNER_POOL_DIR` | server-only | unknown | `packages/local-agent-core/src/paths.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `HOME` | server-only | unknown | `packages/local-agent-core/src/host-inventory.ts`, `packages/native-core/scripts/android-build-preflight.ts` | unclassified | server-only | npm run runtime:check:changed |
+| `HOME` | server-only | unknown | `packages/native-core/scripts/android-build-preflight.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `HOST` | server-only | unknown | `packages/ota-core/scripts/serve-static.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `JAVA_HOME` | server-only | unknown | `packages/native-core/scripts/android-build-preflight.ts`, `scripts/check-environment-requirements.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `LANG` | server-only | unknown | `scripts/fastlane-runner.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `LC_ALL` | server-only | unknown | `scripts/fastlane-runner.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `LEGACY_PRODUCT_DATABASE_URL` | server-only | unknown | `packages/data-core/src/tooling/migrate-product-database.ts` | vercel/database | server-only | npm run runtime:check:changed |
-| `LOCAL_AGENT_COMMIT_MESSAGE` | server-only | unknown | `scripts/local-agent-main-apply.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `LOCAL_AGENT_EXECUTION_TARGET` | server-only | unknown | `scripts/local-agent-main-apply.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `LOCAL_AGENT_ID` | server-only | unknown | `scripts/local-agent-inspect.ts`, `scripts/local-agent-main-apply.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `LOCAL_AGENT_INSPECT_MODE` | server-only | unknown | `scripts/local-agent-inspect.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `LOCAL_AGENT_INSPECT_PATHS` | server-only | unknown | `scripts/local-agent-inspect.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `LOCAL_AGENT_INSPECT_PATTERN` | server-only | unknown | `scripts/local-agent-inspect.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `LOCAL_AGENT_ORIGIN` | server-only | unknown | `scripts/local-agent-main-apply.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `LOCAL_AGENT_PATCH_BASE64` | server-only | unknown | `scripts/local-agent-main-apply.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `LOCAL_AGENT_REQUEST_BRANCH` | server-only | unknown | `scripts/local-agent-gateway.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `LOCAL_AGENT_REQUEST_ID` | server-only | unknown | `scripts/local-agent-main-apply.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `LOCAL_AGENT_SCOPES` | server-only | unknown | `scripts/local-agent-main-apply.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `LOCAL_AGENT_SHELL_COMMAND` | server-only | unknown | `scripts/local-agent-main-apply.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `LOCAL_AGENT_STATUS_PATHS` | server-only | unknown | `scripts/local-agent-status.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `LOCAL_AGENT_TARGET_MODE` | server-only | unknown | `scripts/local-agent-main-apply.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `LOCAL_AGENT_TIMEOUT_MINUTES` | server-only | unknown | `scripts/local-agent-main-apply.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `LOCAL_AGENT_VERIFICATION` | server-only | unknown | `scripts/local-agent-main-apply.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `LOCALAPPDATA` | server-only | unknown | `scripts/android/adb.ts`, `scripts/build-android-signed.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `NEXT_PHASE` | server-only | dangerous | `src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `NEXT_PUBLIC_` | client-visible | allowed | `src/core/config/business-api-origins.ts` | unclassified | client-visible | npm run runtime:check:changed |
@@ -236,7 +208,6 @@ Keys: **271**
 | `R2_SECRET_ACCESS_KEY` | server-only | dangerous | `packages/storage-core/src/tests/integration/credential-isolation.test.ts`, `packages/storage-core/src/tests/unit/account-credentials.test.ts` | object-storage | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `R2_WAREHOUSE_NAME` | server-only | unknown | none | object-storage | missing/unknown consumers | npm run runtime:check:changed |
 | `RUBY_BIN` | server-only | unknown | `scripts/fastlane-runner.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `RUNNER_NAME` | server-only | unknown | `packages/local-agent-core/src/operation-log.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `SYNTHETIC_ANALYTICS_R2_ACCESS_KEY_ID` | server-only | unknown | `packages/storage-core/src/tests/integration/add-account.test.ts` | object-storage | server-only | npm run runtime:check:changed |
 | `SYNTHETIC_ANALYTICS_R2_BUCKET_NAME` | server-only | unknown | `packages/storage-core/src/tests/integration/add-account.test.ts` | object-storage | server-only | npm run runtime:check:changed |
 | `SYNTHETIC_ANALYTICS_R2_ENDPOINT` | server-only | unknown | `packages/storage-core/src/tests/integration/add-account.test.ts` | object-storage | server-only | npm run runtime:check:changed |
@@ -264,7 +235,6 @@ Keys: **271**
 | `TURSO_PRODUCT_ORGANIZATION` | server-only | unknown | none | vercel/database | missing/unknown consumers | npm run runtime:check:changed |
 | `TURSO_PROFILES_API_TOKEN` | server-only | dangerous | none | vercel/database | missing/unknown consumers | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `TURSO_PROFILES_ORGANIZATION` | server-only | unknown | none | vercel/database | missing/unknown consumers | npm run runtime:check:changed |
-| `USER` | server-only | unknown | `packages/local-agent-core/src/host-inventory.ts`, `scripts/local-agent-host-restore.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `VERCEL` | server-only | dangerous | `packages/native-core/scripts/validate-ios-push-policy.ts`, `scripts/schema-sync.ts`, `scripts/test-data-health-environment.ts`, `src/core/config/runtime-context.server.ts`, `src/features/data-health/tests/development-guard.test.ts`, `src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` | vercel/database | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `VERCEL_ACCESS_TOKEN` | server-only | dangerous | `scripts/push-production-deploy-env.ts`, `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` | vercel/database | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `VERCEL_ENV` | server-only | dangerous | `src/core/config/runtime-context.server.ts`, `src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` | vercel/database | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |

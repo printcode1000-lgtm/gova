@@ -47,7 +47,7 @@ These are **registered** dual owners, not bypasses:
 
 ## git push --no-verify
 
-Bypasses the local pre-push hook (`10-main-only`) only; it does not bypass the GitHub two-branch ruleset. The only recognized remote refs remain `main` and `agent-request/chatgpt`.
+Bypasses the local pre-push hook (`10-main-only`) only; it does not bypass the GitHub two-branch ruleset. The only recognized remote refs remain `main` and `integration`.
 
 ## Source Map
 

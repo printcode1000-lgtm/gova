@@ -11,7 +11,7 @@ Machine-readable capability ownership reference. Each capability has exactly one
 
 ## Scope
 
-All 44 sealed `@asol/*` packages. Application-layer orchestration lives under `src/features/*` — see [application-feature-catalog.md](./application-feature-catalog.md).
+All 43 sealed `@asol/*` packages. Application-layer orchestration lives under `src/features/*` — see [application-feature-catalog.md](./application-feature-catalog.md).
 
 ## Source of Truth
 
@@ -323,24 +323,6 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 | **Canonical Documents** | [package-catalog.md](./package-catalog.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 **Source Map:** `packages/hero-slider-core/` · registry: `packages/architecture-core/src/registry/capability-registry.ts`
-
----
-
-## local agent control plane: runner pool, coordination, memory admission, monitor, host tools and peer linking
-
-| Field | Value |
-|---|---|
-| **Capability** | local agent control plane: runner pool, coordination, memory admission, monitor, host tools and peer linking |
-| **Owner Package** | `@asol/local-agent-core` |
-| **Architectural Layer** | capability |
-| **Public Gateway** | `@asol/local-agent-core` · `@asol/local-agent-core/host` · `@asol/local-agent-core/monitor` |
-| **Allowed Consumers** | Application via declared doors; composition packages wire ports |
-| **Composition Root** | `N/A` (capability must not import `@/`) |
-| **Infrastructure Owner** | none (pure logic or ports) |
-| **Status** | CLOSED (sealed package with registry entry) |
-| **Canonical Documents** | [package-catalog.md](./package-catalog.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
-
-**Source Map:** `packages/local-agent-core/` · registry: `packages/architecture-core/src/registry/capability-registry.ts`
 
 ---
 
@@ -816,9 +798,9 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 
 | Metric | Value |
 |---|---|
-| Sealed packages | 44 |
+| Sealed packages | 43 |
 | Layer `bridge` | 1 |
-| Layer `capability` | 34 |
+| Layer `capability` | 33 |
 | Layer `composition` | 7 |
 | Layer `declarations` | 1 |
 | Layer `enforcement` | 1 |

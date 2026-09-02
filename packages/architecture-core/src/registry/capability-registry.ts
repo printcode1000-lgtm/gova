@@ -189,14 +189,6 @@ export const CAPABILITY_PACKAGES: readonly CapabilityPackage[] = [
     mayImportApp: false,
   },
   {
-    folder: 'local-agent-core',
-    name: '@asol/local-agent-core',
-    owns: 'local agent control plane: runner pool, coordination, memory admission, monitor, host tools and peer linking',
-    layer: 'capability',
-    vendorModules: [],
-    mayImportApp: false,
-  },
-  {
     folder: 'map-core',
     name: '@asol/map-core',
     owns: 'MapLibre map capability',
