@@ -1,1 +1,1 @@
-rerun complete local runner conversation worktree with dependency reuse
+build complete Local Runner tree locally from all conversation changes
