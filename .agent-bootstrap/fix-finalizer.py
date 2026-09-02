@@ -16,5 +16,9 @@ anchor='    # Modernize the GitHub CI policy without touching its docs/deploy po
 block='''    # Keep production deployment blind to persistent local-agent control-plane changes.\n    deploy_path = ROOT/'.github/workflows/deploy-main.yml'\n    deploy = deploy_path.read_text(encoding='utf8')\n    for retired in ['      - ".agent-control/**"\\n', '      - "packages/local-agent-core/**"\\n', '      - "scripts/local-agent-*.ts"\\n']:\n        deploy = deploy.replace(retired, '')\n    if '      - "tools/local-agent/**"\\n' not in deploy:\n        paths_anchor = '    paths-ignore:\\n'\n        if paths_anchor not in deploy: raise RuntimeError('deploy-main paths-ignore anchor missing')\n        deploy = deploy.replace(paths_anchor, paths_anchor + '      - "tools/local-agent/**"\\n', 1)\n    deploy_path.write_text(deploy, encoding='utf8')\n\n'''
 if anchor not in s: raise SystemExit('expected finalizer deploy-policy anchor not found')
 s=s.replace(anchor,block+anchor,1)
+lock_anchor="    run(['npm','install','--package-lock-only','--ignore-scripts'])\n    phase('workspace-metadata-refreshed')\n"
+lock_new="    run(['npm','install','--package-lock-only','--ignore-scripts'])\n    phase('workspace-metadata-refreshed')\n    run(['npx','tsx','scripts/runtime-compatibility-reference.ts','--write','--confirm-reviewed-compatible-tree'])\n    phase('runtime-compatibility-reference-refreshed')\n"
+if lock_anchor not in s: raise SystemExit('expected runtime compatibility insertion anchor not found')
+s=s.replace(lock_anchor,lock_new,1)
 p.write_text(s,encoding='utf8')
-print('finalizer docs, regex, and deploy-ignore repairs applied')
+print('finalizer docs, regex, deploy-ignore, and runtime-reference repairs applied')
