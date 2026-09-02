@@ -22,7 +22,10 @@ import { ACCOUNT_DECLARATIONS } from "@asol/account-declarations";
 import { ensureReleaseSecretsRestored } from "./ensure-release-secrets-restored";
 import { protectedDocumentationCommitArgs } from "./deployment-commit-trailer";
 import { loadReleaseEnvironment } from "./load-release-env";
-import { publishReleaseReadiness } from "./release-readiness-publish";
+import {
+  publishReleaseReadiness,
+  retractReleaseReadiness,
+} from "./release-readiness-publish";
 import {
   captureReleaseRollbackBaseline,
   rollbackReleaseBaseline,
@@ -518,6 +521,7 @@ async function runReleaseTransaction(input: {
   const baselines = await captureReleaseRollbackBaseline(input.logPrefix);
 
   const reports: VercelDeploymentReport[] = [];
+  let readinessPublished = false;
   try {
     // The six Git-disconnected workloads, then control as its own mandatory
     // step. Control is never a seventh workload target, but a release that did
@@ -541,6 +545,7 @@ async function runReleaseTransaction(input: {
 
     // Only now may the GitHub-linked gova build publish: the barrier it waits on
     // is this state, and nothing else in this process may mark the SHA ready.
+    readinessPublished = true;
     await publishReleaseReadiness({
       revision: input.revision,
       runId: input.runId,
@@ -568,6 +573,19 @@ async function runReleaseTransaction(input: {
     const partial = (error as { reports?: VercelDeploymentReport[] }).reports;
     if (partial) reports.push(...partial);
     printFinalSummary(reports);
+
+    // Withdraw the readiness before rolling anything back. It is what unblocks
+    // the gova build, and a build that arrives after the rollback would publish
+    // a frontend over backends this failure path has just reverted.
+    if (readinessPublished) {
+      await retractReleaseReadiness({
+        revision: input.revision,
+        runId: input.runId,
+        reason: error instanceof Error ? error.message : String(error),
+        logPrefix: input.logPrefix,
+      });
+    }
+
     const restored = await rollbackReleaseBaseline(baselines, input.logPrefix).catch(
       (rollbackError) => {
         console.error(

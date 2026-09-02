@@ -36,6 +36,17 @@ backends were still deploying. Under the barrier that ordering cannot work: main
 cannot become READY until readiness is published, and readiness cannot be
 published until the backends are done.
 
+**A failed release withdraws its readiness.** Readiness is the only thing that
+unblocks the gova build, so leaving it `ready` for a revision whose release then
+failed lets a late frontend build publish over backends the rollback has already
+reverted — a frontend on one SHA above backends on another, the one state the
+barrier exists to prevent. The transaction marks the revision `failed` before it
+rolls anything back, which makes `build:vercel` fail closed for that SHA forever.
+
+That is not hypothetical. A `deploy:push` whose gova deployment never appeared on
+Vercel left `ready` standing, and the topology had to be realigned by hand with
+an extra release.
+
 **The baseline is captured before the first mutation.** A failure after step 2
 has already changed production. Capturing names and deployment ids up front is
 what lets the failure path re-promote the previous deployments automatically
