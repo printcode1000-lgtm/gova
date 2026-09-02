@@ -1,1 +1,0 @@
-rerun complete recovery validation after installer readiness fix
