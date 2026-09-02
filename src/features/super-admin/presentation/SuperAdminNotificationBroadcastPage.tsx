@@ -362,8 +362,8 @@ export function SuperAdminNotificationBroadcastPage() {
 function StatCard({ id, title, value }: { title: string; value: number } & { id?: string }) {
   return (
     <div id={id} className="rounded-xl border bg-card p-4">
-      <p id="features-super-admin-presentation-superadminnotificationbroadcastpage-text-63-d3ihug" className="text-xs text-muted-foreground">{title}</p>
-      <p id="features-super-admin-presentation-superadminnotificationbroadcastpage-text-64-stofmm" className="mt-1 text-2xl font-bold">{value}</p>
+      <p id={id ? `${id}-text-63-d3ihug` : undefined} className="text-xs text-muted-foreground">{title}</p>
+      <p id={id ? `${id}-text-64-stofmm` : undefined} className="mt-1 text-2xl font-bold">{value}</p>
     </div>
   );
 }
@@ -388,15 +388,15 @@ function RecipientRow({ id,
       ) : (
         <Square className="mt-1 h-5 w-5 shrink-0 text-muted-foreground" />
       )}
-      <div id="features-super-admin-presentation-superadminnotificationbroadcastpage-div-66-wvi5yt" className="min-w-0 flex-1">
-        <p id="features-super-admin-presentation-superadminnotificationbroadcastpage-text-67-4gkdjr" className="font-semibold" dir="ltr">
+      <div className="min-w-0 flex-1">
+        <p className="font-semibold" dir="ltr">
           {recipient.uid}
         </p>
-        <p id="features-super-admin-presentation-superadminnotificationbroadcastpage-text-68-f1swbj" className="mt-1 text-xs text-muted-foreground">
+        <p className="mt-1 text-xs text-muted-foreground">
           {recipient.phoneMasked}
           {recipient.emailMasked ? ` - ${recipient.emailMasked}` : ""}
         </p>
-        <p id="features-super-admin-presentation-superadminnotificationbroadcastpage-text-69-ifltcy" className="mt-1 text-xs text-muted-foreground">
+        <p className="mt-1 text-xs text-muted-foreground">
           رموز الأجهزة: {recipient.tokenCount} | المنصات:{""}
           {recipient.platforms.join(",")} | المزودون:{""}
           {recipient.providers.join(",")}

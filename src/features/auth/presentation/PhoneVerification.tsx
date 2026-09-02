@@ -213,7 +213,7 @@ export function PhoneVerification({ id,
               </p>
             </div>
 
-            <OtpInput
+            <OtpInput id="phone-verification-phone-verification-otp-input-dc057e"
               value={otp}
               onChange={setOtp}
               onComplete={() => void handleVerifyOtpWrapper()}
@@ -342,7 +342,7 @@ export function PhoneVerification({ id,
             </p>
           </div>
 
-          <OtpInput
+          <OtpInput id="phone-verification-phone-verification-otp-input-80acdd"
             value={otp}
             onChange={setOtp}
             onComplete={() => void handleVerifyOtpWrapper()}

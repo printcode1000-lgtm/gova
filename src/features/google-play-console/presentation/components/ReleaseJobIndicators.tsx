@@ -75,9 +75,9 @@ export function StatusChip({ id, job, t }: {
       className={`mt-2 flex flex-nowrap items-center gap-2 overflow-x-auto rounded-md p-2 text-xs ${tone}`}
     >
       <Icon className={`h-4 w-4 shrink-0 ${running ? "animate-spin" : ""}`} />
-      <span id="google-play-console-presentation-components-releasejobindicators-text-3-qkz6vt" className="shrink-0 font-semibold">{t(`releaseConsole.jobStatus.${job.status}`)}</span>
+      <span id={id ? `${id}-text-3-qkz6vt` : undefined} className="shrink-0 font-semibold">{t(`releaseConsole.jobStatus.${job.status}`)}</span>
       {job.stage ? (
-        <span id="google-play-console-presentation-components-releasejobindicators-text-4-bbuq5o" className="shrink-0">
+        <span id={id ? `${id}-text-4-bbuq5o` : undefined} className="shrink-0">
           {t(
             job.status === "failed"
               ? "releaseConsole.jobProgress.failedAt"
@@ -89,11 +89,11 @@ export function StatusChip({ id, job, t }: {
       {/* The step names the individual check, test or package inside the
           stage — on a failed job it is what was running when it broke. */}
       {job.activity ? (
-        <span id="google-play-console-presentation-components-releasejobindicators-text-5-zka07e" dir="ltr" className="shrink-0 font-mono opacity-80">{job.activity}</span>
+        <span id={id ? `${id}-text-5-zka07e` : undefined} dir="ltr" className="shrink-0 font-mono opacity-80">{job.activity}</span>
       ) : null}
-      <code id="google-play-console-presentation-components-releasejobindicators-code-6-4eujwf" dir="ltr" className="shrink-0">{job.id}</code>
+      <code id={id ? `${id}-code-6-4eujwf` : undefined} dir="ltr" className="shrink-0">{job.id}</code>
       {job.error ? (
-        <span id="google-play-console-presentation-components-releasejobindicators-text-7-zaluwd" dir="ltr" className="min-w-0 truncate">{job.error}</span>
+        <span id={id ? `${id}-text-7-zaluwd` : undefined} dir="ltr" className="min-w-0 truncate">{job.error}</span>
       ) : null}
     </p>
   );

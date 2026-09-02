@@ -120,7 +120,7 @@ export function WorkingHoursCard({ id,
         <p id="features-profile-working-hours-presentation-workinghourscard-text-6-rhdyy5" className="break-words text-sm text-on-surface-variant">{text.notSet}</p>
       ) : null}
 
-      <CategoryTabsStrip
+      <CategoryTabsStrip id="working-hours-card-working-hours-card-category-tabs-strip-d387ea"
         level="sub"
         items={value.days.map((day) => ({
           id: day.day,

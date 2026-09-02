@@ -17,11 +17,11 @@ import { PageSaveHeaderButton } from '@/features/page-save/ui';
 
 import { AppSidebar } from './AppSidebar';
 
-export function AppHeader({
+export function AppHeader({ id,
   installPrompt,
 }: {
   installPrompt: AsolInstallPrompt | null;
-}) {
+} & { id?: string }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const resolvedScheme = useResolvedColorScheme();
   const { t, locale } = useTranslation();
@@ -43,17 +43,17 @@ export function AppHeader({
 
   return (
     <>
-      <header id="shared-layouts-appheader-header-1-uaolwp" className={cn(
+      <header id={id ? `${id}-header-1-uaolwp` : undefined} className={cn(
         "fixed top-0 w-full z-50 pt-[var(--asol-app-header-inset)] shadow-sm border-b border-outline-variant rounded-b-2xl",
         resolvedScheme === 'dark' ? 'asol-surface-neutral' : 'bg-[#F8FBFF]'
       )}>
         {/* Row height is driven by the shared variable so the content padding
             in `.asol-shell-main` can never drift out of sync with it. */}
-        <div id='shared-layouts-appheader-div-2-1yazbt' className="flex justify-between items-center h-[var(--asol-header-bar-height)] w-full max-w-7xl mx-auto px-2">
-          <div id='shared-layouts-appheader-div-3-8w7vil' className="flex items-center gap-3">
+        <div id={id ? `${id}-div-2-1yazbt` : undefined} className="flex justify-between items-center h-[var(--asol-header-bar-height)] w-full max-w-7xl mx-auto px-2">
+          <div id={id ? `${id}-div-3-8w7vil` : undefined} className="flex items-center gap-3">
             <button
               type="button"
-              id="header-menu-button"
+              id={id ? `${id}-header-menu-button` : undefined}
               className={cn(
                 "asol-control-icon flex items-center justify-center rounded-full transition-all duration-200",
                 isSidebarOpen
@@ -74,7 +74,7 @@ export function AppHeader({
             <PageSaveHeaderButton />
           </div>
 
-          <div id='shared-layouts-appheader-div-6-aoh3is' className="flex items-center gap-2">
+          <div id={id ? `${id}-div-6-aoh3is` : undefined} className="flex items-center gap-2">
             <SpecialtyRequestComposer />
 
             <Link
@@ -110,7 +110,7 @@ export function AppHeader({
             >
               <ShoppingCart id='shared-layouts-appheader-shoppingcart-10-okfpkd' className="w-5 h-5" />
               {totalQuantity > 0 ? (
-                <span id='shared-layouts-appheader-text-11-43en61'
+                <span id={id ? `${id}-text-11-43en61` : undefined}
                   key={flashToken}
                   className="absolute top-2 end-2 w-2 h-2 rounded-full bg-error border border-background animate-pulse-subtle data-[flash=true]:animate-[ping_0.65s_ease-out_1]"
                   data-flash={flashToken > 0}
@@ -124,7 +124,7 @@ export function AppHeader({
         ) : null}
       </header>
 
-      <AppSidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      <AppSidebar id={id ? `${id}-app-sidebar-5dbc38` : undefined} isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
     </>
   );
 }

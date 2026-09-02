@@ -30,14 +30,14 @@ export function AppShell({ children, id }: AppShellProps) {
   return (
     <div id={id} style={shellStyle}>
       <PageSaveRuntimeInit />
-      <AppHeader installPrompt={installPrompt} />
+      <AppHeader id={id ? `${id}-app-header-675c2d` : undefined} installPrompt={installPrompt} />
       <main id={STATIC_DOM_IDS.ids.shell.appShellMain}
         className="asol-canvas asol-shell-main min-h-screen"
         style={{ paddingBottom: BOTTOM_NAV_CLEARANCE }}
       >
         {children}
       </main>
-      <BottomNavBar />
+      <BottomNavBar id={id ? `${id}-bottom-nav-bar-862c03` : undefined} />
     </div>
   );
 }

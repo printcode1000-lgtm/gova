@@ -31,7 +31,7 @@ export function ReleaseJobStopDialog({ id, job, t, onConfirm, onCancel }: {
         onInteractOutside={(event) => event.preventDefault()}
         onFocusOutside={(event) => event.preventDefault()}
       >
-        <DialogHeader>
+        <DialogHeader id="release-job-stop-dialog-release-job-stop-dialog-dialog-header-171a0f">
           <DialogTitle>{t("releaseConsole.stopConfirm.title")}</DialogTitle>
           <DialogDescription>{t("releaseConsole.stopConfirm.body")}</DialogDescription>
         </DialogHeader>
@@ -43,7 +43,7 @@ export function ReleaseJobStopDialog({ id, job, t, onConfirm, onCancel }: {
             {t("releaseConsole.stopConfirm.warning")}
           </p>
         </div>
-        <DialogFooter>
+        <DialogFooter id="release-job-stop-dialog-release-job-stop-dialog-dialog-footer-c4448c">
           <Button variant="outline" onClick={onCancel}>
             {t("releaseConsole.stopConfirm.keepRunning")}
           </Button>

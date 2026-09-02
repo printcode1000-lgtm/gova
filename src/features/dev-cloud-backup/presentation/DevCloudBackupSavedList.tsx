@@ -112,15 +112,15 @@ function SavedBackupRow({ id,
 
   return (
     <div id={id} className="grid gap-3 p-3 text-sm md:grid-cols-[1fr_auto]">
-      <div id="features-dev-cloud-backup-presentation-devcloudbackupsavedlist-div-7-p7gct7" className="min-w-0">
-        <div id="features-dev-cloud-backup-presentation-devcloudbackupsavedlist-div-8-r81owe" className="break-all font-medium" dir="ltr">
+      <div className="min-w-0">
+        <div className="break-all font-medium" dir="ltr">
           {backup.fileName}
         </div>
-        <div id="features-dev-cloud-backup-presentation-devcloudbackupsavedlist-div-9-ais8r3" className="mt-1 text-xs text-on-surface-variant">
+        <div className="mt-1 text-xs text-on-surface-variant">
           {dateText(backup.modifiedAt)}، {sizeText(backup.sizeBytes)}
         </div>
         {operationStatus ? (
-          <div id="features-dev-cloud-backup-presentation-devcloudbackupsavedlist-div-10-a668ao"
+          <div
             className={`mt-2 rounded-md border px-2 py-1 text-xs ${
               operationStatus.phase === "failed"
                 ? "border-red-200 bg-red-50 text-red-700"
@@ -129,7 +129,7 @@ function SavedBackupRow({ id,
                   : "border-blue-200 bg-blue-50 text-blue-800"
             }`}
           >
-            <span id="features-dev-cloud-backup-presentation-devcloudbackupsavedlist-text-11-okysfv" className="inline-flex items-center gap-1">
+            <span className="inline-flex items-center gap-1">
               {operationStatus.phase === "running" ? (
                 <RefreshCw className="h-3 w-3 animate-spin" />
               ) : null}
@@ -138,7 +138,7 @@ function SavedBackupRow({ id,
           </div>
         ) : null}
       </div>
-      <div id="features-dev-cloud-backup-presentation-devcloudbackupsavedlist-div-12-dlkg8y" className="flex flex-wrap gap-2 md:justify-end">
+      <div className="flex flex-wrap gap-2 md:justify-end">
         <Button
           type="button"
           size="sm"

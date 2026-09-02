@@ -37,28 +37,28 @@ export function CommandBranchCard(props: {
 
   return (
     <article id={props.id} className="min-w-0 w-full rounded-md border bg-surface p-3 text-sm">
-      <label id="google-play-console-presentation-components-androidreleaserunbookbranchcard-label-2-jsggte" className="flex items-start gap-2">
-        <input id="google-play-console-presentation-components-androidreleaserunbookbranchcard-input-3-t7ekfb"
+      <label className="flex items-start gap-2">
+        <input
           type="checkbox"
           className="mt-0.5 shrink-0"
           checked={props.selected}
           onChange={props.onToggle}
         />
-        <span id="google-play-console-presentation-components-androidreleaserunbookbranchcard-text-4-suigwl" className="min-w-0">
-          <span id="google-play-console-presentation-components-androidreleaserunbookbranchcard-text-5-pzlrjx" className="block font-medium break-words">{props.item.label}</span>
-          <span id="google-play-console-presentation-components-androidreleaserunbookbranchcard-text-6-dtzppl" className="mt-1 block text-xs text-on-surface-variant break-words">
+        <span className="min-w-0">
+          <span className="block font-medium break-words">{props.item.label}</span>
+          <span className="mt-1 block text-xs text-on-surface-variant break-words">
             {props.help ?? defaultHelp}
           </span>
         </span>
       </label>
-      <code id="google-play-console-presentation-components-androidreleaserunbookbranchcard-code-7-gesfu9"
+      <code
         className="mt-2 block w-full min-w-0 overflow-x-auto whitespace-pre-wrap break-all text-xs"
         dir="ltr"
       >
         {props.item.command}
       </code>
       {props.item.dangerous ? (
-        <span id="google-play-console-presentation-components-androidreleaserunbookbranchcard-text-8-p59ysi"
+        <span
           className={
             "mt-2 inline-flex rounded-full bg-error-container px-2 py-0.5 " +
             "text-xs text-on-error-container"
@@ -67,9 +67,9 @@ export function CommandBranchCard(props: {
           {props.t("releaseConsole.androidPaths.dangerBadge")}
         </span>
       ) : null}
-      <div id="google-play-console-presentation-components-androidreleaserunbookbranchcard-div-9-j9xaxc" className="mt-3 flex flex-wrap gap-2">
+      <div className="mt-3 flex flex-wrap gap-2">
         {props.item.patternOnly ? (
-          <p id="google-play-console-presentation-components-androidreleaserunbookbranchcard-text-10-nhyo9v" className="text-xs text-on-surface-variant">
+          <p className="text-xs text-on-surface-variant">
             {props.t("releaseConsole.androidPaths.patternOnlyHelp")}
           </p>
         ) : (
@@ -100,13 +100,13 @@ export function CommandBranchCard(props: {
           </>
         )}
       </div>
-      <p id="google-play-console-presentation-components-androidreleaserunbookbranchcard-text-11-mlpuul" className="mt-2 text-xs text-on-surface-variant break-words">
+      <p className="mt-2 text-xs text-on-surface-variant break-words">
         {props.selected
           ? props.t("releaseConsole.androidPaths.enabledBranchHelp")
           : props.t("releaseConsole.androidPaths.skippedBranchHelp")}
       </p>
       {props.missingEnv.length > 0 ? (
-        <p id="google-play-console-presentation-components-androidreleaserunbookbranchcard-text-12-iodb4b" className="mt-2 rounded-md bg-muted p-2 text-xs">
+        <p className="mt-2 rounded-md bg-muted p-2 text-xs">
           {props.t("releaseConsole.build.notReady", { names: props.missingEnv.join(", ") })}
         </p>
       ) : null}

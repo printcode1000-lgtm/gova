@@ -30,18 +30,18 @@ interface PageSaveHeaderControlProps {
  * Generic visual control. Its root identity belongs to each caller usage site;
  * fixed internal subparts are runtime-scoped from that caller identity.
  */
-function PageSaveHeaderControl({
+function PageSaveHeaderControl({ id,
   isDirty,
   hasPersistedPending,
   isSaving,
   successFlash,
   ariaLabel,
   onOpen,
-}: PageSaveHeaderControlProps) {
+}: PageSaveHeaderControlProps & { id?: string }) {
   return (
     <button
       type="button"
-      id="header-page-save-button"
+      id={id ? `${id}-page-save-button` : undefined}
       onClick={onOpen}
       disabled={isSaving || successFlash}
       aria-label={ariaLabel}
@@ -57,12 +57,12 @@ function PageSaveHeaderControl({
       {(isDirty || hasPersistedPending) && !isSaving && !successFlash ? (
         <>
           <span
-            id='features-page-save-presentation-pagesaveheaderbutton-text-2-utoq2c'
+            id={id ? `${id}-text-2-utoq2c` : undefined}
             aria-hidden="true"
             className="asol-page-save-wave pointer-events-none absolute inset-0 rounded-full"
           />
           <span
-            id='features-page-save-presentation-pagesaveheaderbutton-text-3-dznzfg'
+            id={id ? `${id}-text-3-dznzfg` : undefined}
             aria-hidden="true"
             className="asol-page-save-wave asol-page-save-wave--delayed pointer-events-none absolute inset-0 rounded-full"
           />
@@ -76,7 +76,7 @@ function PageSaveHeaderControl({
         />
       ) : isSaving ? (
         <LoadingSpinner
-          id='features-page-save-presentation-pagesaveheaderbutton-loadingspinner-5-3z22eu'
+          id={id ? `${id}-loading-spinner-5a87bc` : undefined}
           size="sm"
           className="relative z-10"
         />
@@ -180,23 +180,23 @@ export function PageSaveHeaderButton() {
   const registrationId = snapshot.registrationId ?? null;
   const control =
     registrationId === "profile-edit" ? (
-      <PageSaveHeaderControl
+      <PageSaveHeaderControl id="page-save-header-button-page-save-header-button-page-save-header-control-f92104"
         {...controlProps}
       />
     ) : registrationId === "pharmacy-catalog-manager" ? (
-      <PageSaveHeaderControl
+      <PageSaveHeaderControl id="page-save-header-button-page-save-header-button-page-save-header-control-785641"
         {...controlProps}
       />
     ) : registrationId === "custom-request" ? (
-      <PageSaveHeaderControl
+      <PageSaveHeaderControl id="page-save-header-button-page-save-header-button-page-save-header-control-98eb35"
         {...controlProps}
       />
     ) : registrationId === null ? (
-      <PageSaveHeaderControl
+      <PageSaveHeaderControl id="page-save-header-button-page-save-header-button-page-save-header-control-b76e38"
         {...controlProps}
       />
     ) : (
-      <PageSaveHeaderControl
+      <PageSaveHeaderControl id="page-save-header-button-page-save-header-button-page-save-header-control-6ec972"
         {...controlProps}
       />
     );

@@ -421,7 +421,7 @@ export function ProductPageContent({ id,
   if (loading || sessionLoading)
     return (
       <div id={id} className="flex min-h-[50vh] items-center justify-center">
-        <LoadingSpinner size="lg" />
+        <LoadingSpinner id="product-page-content-product-page-content-loading-spinner-e925d5" size="lg" />
       </div>
     );
 

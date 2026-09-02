@@ -98,7 +98,7 @@ function ContactActionGroup({ id, group }: { group: ContactGroup } & { id?: stri
         }}
         aria-label={group.label}
       >
-        <a id="shared-ui-contact-action-bar-link-6-xksark"
+        <a
           href={option.href}
           target={isExternalHref(option.href) ? "_blank" : undefined}
           rel={isExternalHref(option.href) ? "noreferrer" : undefined}
@@ -129,7 +129,7 @@ function ContactActionGroup({ id, group }: { group: ContactGroup } & { id?: stri
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center" className="min-w-64">
-        <div id="shared-ui-contact-action-bar-div-8-7dwdw6" dir="rtl">
+        <div dir="rtl">
           <DropdownMenuLabel className="flex items-center gap-2" style={{ color }}>
             <FontAwesomeIcon icon={icon} className="h-4 w-4" />
             {group.label}

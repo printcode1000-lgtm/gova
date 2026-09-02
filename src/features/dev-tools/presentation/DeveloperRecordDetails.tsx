@@ -17,9 +17,9 @@ export function SelectedRecordDetails({ id,
 } & { id?: string }) {
   return (
     <div id={id} className="overflow-hidden rounded-xl border bg-background/70">
-      <h3 id="features-dev-tools-presentation-developerrecorddetails-heading-2-pdndo4" className="border-b px-4 py-3 text-sm font-bold">{title}</h3>
+      <h3 id={id ? `${id}-heading-2-pdndo4` : undefined} className="border-b px-4 py-3 text-sm font-bold">{title}</h3>
       {record ? (
-        <dl id="features-dev-tools-presentation-developerrecorddetails-dl-3-khcttz" className="divide-y text-sm">
+        <dl id={id ? `${id}-dl-3-khcttz` : undefined} className="divide-y text-sm">
           {Object.entries(record).map(([key, value]) => (
             <div
               key={key}
@@ -41,7 +41,7 @@ export function SelectedRecordDetails({ id,
           ))}
         </dl>
       ) : (
-        <p id="features-dev-tools-presentation-developerrecorddetails-text-4-mbvqwd" className="px-4 py-5 text-sm text-muted-foreground">
+        <p id={id ? `${id}-text-4-mbvqwd` : undefined} className="px-4 py-5 text-sm text-muted-foreground">
           لم يتم الاختيار بعد.
         </p>
       )}

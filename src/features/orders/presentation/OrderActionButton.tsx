@@ -4,7 +4,7 @@ import { Loader2, PackageCheck, XCircle } from "lucide-react";
 
 import { commandLabel } from "./order-labels";
 
-export function OrderActionButton({
+export function OrderActionButton({ elementScope,
   action,
   busyAction,
   id,
@@ -20,12 +20,12 @@ export function OrderActionButton({
   tone?: "normal" | "danger";
   full?: boolean;
   disabled?: boolean;
-} & { id?: string }) {
+} & { id?: string } & { elementScope?: string }) {
   const busy = busyAction === `${action}:${id}` || busyAction === `${action}:`;
   const danger = tone === "danger";
   const isDisabled = Boolean(busyAction) || disabled;
   return (
-    <button id="features-orders-presentation-orderactionbutton-button-1-7ytlzv"
+    <button id={elementScope ? `${elementScope}-button-1-7ytlzv` : undefined}
       type="button"
       disabled={isDisabled}
       onClick={onClick}

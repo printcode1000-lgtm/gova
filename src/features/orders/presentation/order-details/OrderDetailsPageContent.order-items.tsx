@@ -155,13 +155,13 @@ export function ItemActions({
     <div id="orders-presentation-order-details-orderdetailspagecontent-order-items-div-11-1acvc7" className="mt-3 flex flex-wrap gap-2">
       {isSeller && isPendingSellerResponse(item.status) ? (
         <>
-          <OrderActionButton
+          <OrderActionButton elementScope="order-details-page-content-order-items-item-actions-order-action-button-260ed1"
             action="seller_accept_item"
             busyAction={busyAction}
             id={itemId}
             onClick={() => runAction("seller_accept_item", { itemId })}
           />
-          <OrderActionButton
+          <OrderActionButton elementScope="order-details-page-content-order-items-item-actions-order-action-button-336823"
             action="seller_reject_item"
             busyAction={busyAction}
             id={itemId}
@@ -171,7 +171,7 @@ export function ItemActions({
         </>
       ) : null}
       {isSeller && item.status === "seller_accepted" ? (
-        <OrderActionButton
+        <OrderActionButton elementScope="order-details-page-content-order-items-item-actions-order-action-button-1cf867"
           action="seller_prepare_item"
           busyAction={busyAction}
           id={itemId}
@@ -179,7 +179,7 @@ export function ItemActions({
         />
       ) : null}
       {isSeller && item.status === "preparing" ? (
-        <OrderActionButton
+        <OrderActionButton elementScope="order-details-page-content-order-items-item-actions-order-action-button-c83e18"
           action="seller_ready_item"
           busyAction={busyAction}
           id={itemId}
@@ -187,7 +187,7 @@ export function ItemActions({
         />
       ) : null}
       {isBuyer && canCancelStatus(item.status) ? (
-        <OrderActionButton
+        <OrderActionButton elementScope="order-details-page-content-order-items-item-actions-order-action-button-a14098"
           action="buyer_cancel_item"
           busyAction={busyAction}
           id={itemId}
@@ -196,7 +196,7 @@ export function ItemActions({
         />
       ) : null}
       {isBuyer && canRejectDeliveryStatus(item.status) ? (
-        <OrderActionButton
+        <OrderActionButton elementScope="order-details-page-content-order-items-item-actions-order-action-button-48531f"
           action="buyer_reject_delivery_item"
           busyAction={busyAction}
           id={itemId}
@@ -205,7 +205,7 @@ export function ItemActions({
         />
       ) : null}
       {isBuyer && canRequestReturnStatus(item.status) ? (
-        <OrderActionButton
+        <OrderActionButton elementScope="order-details-page-content-order-items-item-actions-order-action-button-328fee"
           action="buyer_request_return_item"
           busyAction={busyAction}
           id={itemId}

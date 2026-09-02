@@ -188,7 +188,7 @@ function PharmacyTabButton({ id,
       }`}
     >
       <PharmacyCategoryIcon icon={icon} className="h-4 w-4 text-center" />
-      <span id="features-pharmacy-profile-catalog-presentation-pharmacynestedtabs-text-9-kmp4vf" className="whitespace-nowrap">{item.nameAr}</span>
+      <span className="whitespace-nowrap">{item.nameAr}</span>
     </button>
   );
 }

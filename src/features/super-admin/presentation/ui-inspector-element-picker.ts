@@ -22,3 +22,19 @@ export function pickInspectedElement(target: unknown): InspectedElement | null {
   if (node.nodeType === ELEMENT_NODE) return node as unknown as InspectedElement;
   return (node.parentElement as InspectedElement | undefined) ?? null;
 }
+
+/**
+ * Resolve the closest real DOM identity for a touched node.
+ *
+ * Third-party controls often paint an internal SVG/path below the repository
+ * element that owns the stable id. Walking only through DOM parents keeps the
+ * picked identity precise while still making those internal nodes inspectable.
+ */
+export function pickIdentifiedElement(target: unknown): InspectedElement | null {
+  let current = pickInspectedElement(target);
+  while (current) {
+    if ((current.getAttribute("id") ?? "").length > 0) return current;
+    current = current.parentElement as InspectedElement | null;
+  }
+  return null;
+}

@@ -31,7 +31,7 @@ export interface BadgeProps
 
 function Badge({ className, variant, ...props }: BadgeProps & { id?: string }) {
   return (
-    <div id="shared-ui-badge-div-1-1captr"
+    <div id={props.id}
       className={cn(badgeVariants({ variant }), className)}
       {...props}
     />

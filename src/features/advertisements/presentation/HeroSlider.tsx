@@ -374,7 +374,7 @@ export function HeroSlider({ id,
         {/* Phase 10 - Skeleton loading state */}
         {showSkeleton && (
           <div id="features-advertisements-presentation-heroslider-div-4-8xkfkf" className="absolute inset-0 z-50 rounded-xl overflow-hidden">
-            <Skeleton className="w-full h-full" />
+            <Skeleton id="hero-slider-hero-slider-skeleton-58892e" className="w-full h-full" />
           </div>
         )}
 

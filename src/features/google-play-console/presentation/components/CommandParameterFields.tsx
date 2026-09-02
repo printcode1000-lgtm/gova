@@ -31,14 +31,14 @@ export function Parameter({ id, command, schema, value, t, onChange }: {
   onChange: (id: string, name: BuildParameterName, value: unknown) => void;
 } & { id?: string }) {
   const help = command.id === "cap-build" || command.id === "release-android" ? (
-    <p id="google-play-console-presentation-components-commandparameterfields-text-7-l7nlzt" className="text-xs leading-5 text-on-surface-variant">
+    <p className="text-xs leading-5 text-on-surface-variant">
       {t(`releaseConsole.capBuild.${schema.name}`)}
     </p>
   ) : null;
   if (schema.type === "boolean") return (
     <div id={id} className="space-y-1">
-      <label id="google-play-console-presentation-components-commandparameterfields-label-9-ozhbum" className="flex gap-2">
-        <input id="google-play-console-presentation-components-commandparameterfields-input-10-eespuu" type="checkbox" checked={value === true}
+      <label className="flex gap-2">
+        <input type="checkbox" checked={value === true}
           onChange={(event) => onChange(command.id, schema.name, event.target.checked)} />
         {t(`releaseConsole.parameters.${schema.name}`)}
       </label>
@@ -50,8 +50,8 @@ export function Parameter({ id, command, schema, value, t, onChange }: {
     onChange={(event) => onChange(command.id, schema.name, event.target.value)} />;
   if (schema.type === "enum" && schema.name === "nativeVersionAction") return (
     <fieldset id={id} className="space-y-2">
-      <legend id="google-play-console-presentation-components-commandparameterfields-legend-13-g6qweu" className="font-medium">{t("releaseConsole.parameters.nativeVersionAction")}</legend>
-      <div id="google-play-console-presentation-components-commandparameterfields-div-14-yxdr9r" className="grid gap-2 sm:grid-cols-2">
+      <legend className="font-medium">{t("releaseConsole.parameters.nativeVersionAction")}</legend>
+      <div className="grid gap-2 sm:grid-cols-2">
         {schema.values.map((item) => {
           const selected = value === item;
           return <label id={id} key={item}
@@ -72,14 +72,14 @@ export function Parameter({ id, command, schema, value, t, onChange }: {
   );
   if (schema.type === "enum") return (
     <div id={id} className="space-y-1">
-      <label id="google-play-console-presentation-components-commandparameterfields-label-16-fwyw9e" className="block font-medium" htmlFor={`${command.id}-${schema.name}`}>
+      <label className="block font-medium" htmlFor={`${command.id}-${schema.name}`}>
         {t(`releaseConsole.parameters.${schema.name}`)}
       </label>
       <select id={`${command.id}-${schema.name}`}
         className="h-10 w-full rounded-md border bg-background px-3"
         value={String(value ?? "")}
         onChange={(event) => onChange(command.id, schema.name, event.target.value)}>
-        <option id="google-play-console-presentation-components-commandparameterfields-option-18-rmuaw3" value="">{t(`releaseConsole.parameters.${schema.name}`)}</option>
+        <option value="">{t(`releaseConsole.parameters.${schema.name}`)}</option>
         {schema.values.map((item) => (
           <option key={item} value={item}>
             {t(`releaseConsole.parameterValues.${item}`)}

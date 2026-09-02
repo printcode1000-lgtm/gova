@@ -109,17 +109,17 @@ export function ShippingQuotePanel({ id,
 
       {status !== "requested" ? (
         <div id="orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-div-8-fqeioe" className="grid gap-2 px-3 py-3 text-sm sm:grid-cols-3">
-          <QuoteAmount
+          <QuoteAmount id="order-details-page-content-shipping-quotes-shipping-quote-panel-quote-amount-ed63fe"
             label="الشحن الأساسي"
             value={latest.base_shipping_price}
             currency={currency}
           />
-          <QuoteAmount
+          <QuoteAmount id="order-details-page-content-shipping-quotes-shipping-quote-panel-quote-amount-1b972f"
             label="سيارة النقل عند الحاجة"
             value={latest.special_vehicle_fee}
             currency={currency}
           />
-          <QuoteAmount
+          <QuoteAmount id="order-details-page-content-shipping-quotes-shipping-quote-panel-quote-amount-94755a"
             label="إجمالي العرض"
             value={latest.total_shipping_price}
             currency={currency}
@@ -142,7 +142,7 @@ export function ShippingQuotePanel({ id,
         <div id="orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-div-11-mvcssx" className="grid gap-3 border-t border-primary/15 px-3 py-3 sm:grid-cols-[180px_1fr_auto] sm:items-end">
           <label id="orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-label-12-mbxdkk" className="space-y-1 text-xs font-semibold">
             قيمة الشحن الأساسية بالجنيه
-            <Input
+            <Input id="order-details-page-content-shipping-quotes-shipping-quote-panel-input-113ef0"
               type="number"
               min={0}
               step="0.01"
@@ -154,7 +154,7 @@ export function ShippingQuotePanel({ id,
           </label>
           <label id="orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-label-13-tsmm6g" className="space-y-1 text-xs font-semibold">
             توضيح اختياري للمشتري
-            <Textarea
+            <Textarea id="order-details-page-content-shipping-quotes-shipping-quote-panel-textarea-234d75"
               value={notes}
               onChange={(event) => setNotes(event.target.value)}
               maxLength={1000}
@@ -186,7 +186,7 @@ export function ShippingQuotePanel({ id,
 
       {canRespond ? (
         <div id="orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-div-15-wjdcus" className="flex flex-wrap gap-2 border-t border-primary/15 px-3 py-3">
-          <OrderActionButton
+          <OrderActionButton elementScope="order-details-page-content-shipping-quotes-shipping-quote-panel-order-action-button-251c80"
             action="buyer_accept_shipping_quote"
             busyAction={busyAction}
             id={String(latest.id)}
@@ -196,7 +196,7 @@ export function ShippingQuotePanel({ id,
               })
             }
           />
-          <OrderActionButton
+          <OrderActionButton elementScope="order-details-page-content-shipping-quotes-shipping-quote-panel-order-action-button-e135b0"
             action="buyer_reject_shipping_quote"
             busyAction={busyAction}
             id={String(latest.id)}
@@ -228,8 +228,8 @@ export function QuoteAmount({ id,
     <div id={id}
       className={`rounded-lg bg-surface px-3 py-2 ${emphasized ? "ring-1 ring-primary/30" : ""}`}
     >
-      <p id="orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-text-19-y2yrxu" className="text-xs text-muted-foreground">{label}</p>
-      <p id="orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-text-20-dh5qtv"
+      <p id={id ? `${id}-text-19-y2yrxu` : undefined} className="text-xs text-muted-foreground">{label}</p>
+      <p id={id ? `${id}-text-20-dh5qtv` : undefined}
         className={`mt-1 ${emphasized ? "font-bold text-primary" : "font-semibold"}`}
       >
         {formatMoney(value, currency)}

@@ -167,7 +167,7 @@ export function ProductSearchPanel({ id,
         id='product-search-presentation-panel-productsearchpanel-div-1-gwaoyg'
         className="space-y-2"
       >
-        <CategoryTabsStrip
+        <CategoryTabsStrip id="product-search-panel-product-search-panel-category-tabs-strip-c527b6"
           items={categoryTabs}
           level="main"
           selectedId={mainCategoryId}
@@ -178,7 +178,7 @@ export function ProductSearchPanel({ id,
           }}
         />
         {subOptions.length > 0 ? (
-          <CategoryTabsStrip
+          <CategoryTabsStrip id="product-search-panel-product-search-panel-category-tabs-strip-02bb31"
             items={subOptions}
             level="sub"
             selectedId={subcategoryId}
@@ -222,7 +222,7 @@ export function ProductSearchPanel({ id,
       <div id='product-search-presentation-panel-productsearchpanel-div-4-cgyfzm' className="grid gap-2 sm:grid-cols-[1fr_auto]">
         <div id='product-search-presentation-panel-productsearchpanel-div-5-4zdjvh' className="relative">
           <Search className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant" />
-          <Input
+          <Input id="product-search-panel-product-search-panel-input-adf566"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             onKeyDown={(event) => {

@@ -63,8 +63,8 @@ export function RatingSettingsEditor({ id,
             <SelectValue placeholder={labels.placeholder} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="stars">{labels.stars}</SelectItem>
-            <SelectItem value="stars-comments">
+            <SelectItem id="rating-settings-editor-rating-settings-editor-select-item-bbf7a1" value="stars">{labels.stars}</SelectItem>
+            <SelectItem id="rating-settings-editor-rating-settings-editor-select-item-71d4c7" value="stars-comments">
               {labels.starsComments}
             </SelectItem>
           </SelectContent>

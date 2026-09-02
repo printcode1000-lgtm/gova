@@ -96,6 +96,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run deploy:env:push` | `npx tsx scripts/push-production-deploy-env.ts` |
 | `npm run deploy:push` | `npx tsx scripts/deploy-push.ts` |
 | `npm run deploy:push:all` | `npx tsx scripts/deploy-push.ts --vercel-target=all` |
+| `npm run deploy:push:fast` | `npx tsx scripts/deploy-push.ts --fast --vercel-target=all` |
 | `npm run deploy:push:main` | `npx tsx scripts/deploy-push.ts --vercel-target=none` |
 | `npm run deploy:redeploy-main` | `npx tsx scripts/redeploy-main-vercel.ts` |
 | `npm run deploy:revision` | `npx tsx scripts/deploy-revision.ts` |

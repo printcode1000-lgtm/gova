@@ -252,7 +252,7 @@ export function VisibilityButton({
 export function LoadingFrame({ id, compact = false, }: { compact?: boolean; } & { id?: string }) {
   return (
     <div id={id} className={`flex items-center justify-center ${compact ? "min-h-[360px]" : "min-h-screen"}`}>
-      <LoadingSpinner size="lg" />
+      <LoadingSpinner id="pharmacy-catalog-manager-page-dialogs-loading-frame-loading-spinner-046aa4" size="lg" />
     </div>
   );
 }

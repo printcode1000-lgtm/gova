@@ -270,11 +270,11 @@ export function FollowButton({
                   </div>
                 </div>
                 <div id='features-follow-presentation-followbutton-div-32-aztbej' className="space-y-1.5">
-                  <Label id='features-follow-presentation-followbutton-label-33-dafkvy' htmlFor={`follower-notification-title-${targetId}`}>
+                  <Label id='features-follow-presentation-followbutton-label-33-dafkvy' htmlFor="follow-button-follow-button-input-f32eed">
                     {t("follow.dialog.notification.titleLabel")}
                   </Label>
                   <Input
-                    id={`follower-notification-title-${targetId}`}
+                    id="follow-button-follow-button-input-f32eed"
                     value={notificationTitle}
                     maxLength={120}
                     onChange={(event) => setNotificationTitle(event.target.value)}
@@ -285,11 +285,11 @@ export function FollowButton({
                   </p>
                 </div>
                 <div id='features-follow-presentation-followbutton-div-36-aajhbi' className="space-y-1.5">
-                  <Label id='features-follow-presentation-followbutton-label-37-lbonvw' htmlFor={`follower-notification-body-${targetId}`}>
+                  <Label id='features-follow-presentation-followbutton-label-37-lbonvw' htmlFor="follow-button-follow-button-textarea-8ad2bd">
                     {t("follow.dialog.notification.messageLabel")}
                   </Label>
                   <Textarea
-                    id={`follower-notification-body-${targetId}`}
+                    id="follow-button-follow-button-textarea-8ad2bd"
                     value={notificationBody}
                     maxLength={1000}
                     rows={4}

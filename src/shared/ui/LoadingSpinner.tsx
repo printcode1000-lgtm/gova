@@ -17,11 +17,11 @@ export function LoadingSpinner({ size = 'md', className, ...props }: LoadingSpin
   };
 
   return (
-    <div id="shared-ui-loadingspinner-div-1-omivvs"
+    <div id={props.id}
       className={cn('flex items-center justify-center', className)}
       {...props}
     >
-      <div id="shared-ui-loadingspinner-div-2-qdangp"
+      <div id={props.id ? `${props.id}-div-2-qdangp` : undefined}
         className={cn(
           'rounded-full animate-spin',
           sizeClasses[size]

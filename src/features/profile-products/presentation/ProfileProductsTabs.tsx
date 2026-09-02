@@ -132,14 +132,14 @@ export function ProfileProductsTabs({ id,
   if (tabs.length === 0) {
     return (
       <section id={id} className="space-y-3">
-        <ProfileProductsTabsEmpty label={labels.emptySpecialties} />
+        <ProfileProductsTabsEmpty id="profile-products-tabs-profile-products-tabs-profile-products-tabs-empty-eda110" label={labels.emptySpecialties} />
       </section>
     );
   }
 
   return (
     <section id={id} className="space-y-4">
-      <CategoryTabsStrip
+      <CategoryTabsStrip id="profile-products-tabs-profile-products-tabs-category-tabs-strip-67783d"
         items={tabs}
         level="main"
         selectedId={selectedMainId}
@@ -148,7 +148,7 @@ export function ProfileProductsTabs({ id,
       />
 
       {activeMain?.subTabs.length ? (
-        <CategoryTabsStrip
+        <CategoryTabsStrip id="profile-products-tabs-profile-products-tabs-category-tabs-strip-c49da8"
           items={activeMain.subTabs.map((tab) => ({
             id: tab.id,
             label: tab.label,
@@ -226,9 +226,9 @@ export function ProfileProductsTabs({ id,
 
       <div id="features-profile-products-presentation-profileproductstabs-div-11-n2561e" className="min-h-[160px]">
         {productsLoading ? (
-          <ProfileProductsTabsLoading size="sm" />
+          <ProfileProductsTabsLoading id="profile-products-tabs-profile-products-tabs-profile-products-tabs-loading-bbff5d" size="sm" />
         ) : visibleProducts.length === 0 ? (
-          <ProfileProductsTabsEmpty
+          <ProfileProductsTabsEmpty id="profile-products-tabs-profile-products-tabs-profile-products-tabs-empty-5d1a5a"
             label={labels.emptyProducts}
             iconSize="h-7 w-7"
             textSize="text-xs"

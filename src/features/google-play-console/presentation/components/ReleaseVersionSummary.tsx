@@ -42,15 +42,15 @@ export function ReleaseCurrentVersions({ id, versions, t }: {
   return <section id={id} className="space-y-2" aria-label={t("releaseConsole.confirmRun.versionSummaryTitle")}>
     <h3 id="google-play-console-presentation-components-releaseversionsummary-heading-2-r396zv" className="font-semibold">{t("releaseConsole.confirmRun.versionSummaryTitle")}</h3>
     <div id="google-play-console-presentation-components-releaseversionsummary-div-3-dq5pqo" className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-5">
-      <VersionCard label={t("releaseConsole.confirmRun.currentAndroidProductionVersion")}
+      <VersionCard id="release-version-summary-release-current-versions-version-card-e23152" label={t("releaseConsole.confirmRun.currentAndroidProductionVersion")}
         value={versions.androidProduction ?? unavailable} />
-      <VersionCard label={t("releaseConsole.confirmRun.currentAndroidVersion")}
+      <VersionCard id="release-version-summary-release-current-versions-version-card-1d56e5" label={t("releaseConsole.confirmRun.currentAndroidVersion")}
         value={versions.androidCurrent ?? unavailable} />
-      <VersionCard label={t("releaseConsole.confirmRun.currentIosProductionVersion")}
+      <VersionCard id="release-version-summary-release-current-versions-version-card-4a23f7" label={t("releaseConsole.confirmRun.currentIosProductionVersion")}
         value={versions.iosProduction ?? unavailable} />
-      <VersionCard label={t("releaseConsole.confirmRun.currentContentVersion")}
+      <VersionCard id="release-version-summary-release-current-versions-version-card-3c7734" label={t("releaseConsole.confirmRun.currentContentVersion")}
         value={versions.contentCurrent ?? unavailable} />
-      <VersionCard label={t("releaseConsole.confirmRun.currentOtaVersion")}
+      <VersionCard id="release-version-summary-release-current-versions-version-card-240096" label={t("releaseConsole.confirmRun.currentOtaVersion")}
         value={versions.otaCurrent ?? unavailable} />
     </div>
     {versions.androidTruthError ? (
@@ -122,7 +122,7 @@ function VersionCard({ id, label, value, emphasized = false, }: {
   return <div id={id} role="status" className={`rounded-lg border p-3 ${emphasized
     ? "border-primary bg-primary/10"
     : "bg-muted/40"}`}>
-    <p id="google-play-console-presentation-components-releaseversionsummary-text-12-chm07f" className="text-xs leading-5 text-on-surface-variant">{label}</p>
-    <code id="google-play-console-presentation-components-releaseversionsummary-code-13-0n4ow0" className="mt-1 block text-lg font-bold" dir="ltr">{value}</code>
+    <p id={id ? `${id}-text-12-chm07f` : undefined} className="text-xs leading-5 text-on-surface-variant">{label}</p>
+    <code id={id ? `${id}-code-13-0n4ow0` : undefined} className="mt-1 block text-lg font-bold" dir="ltr">{value}</code>
   </div>;
 }

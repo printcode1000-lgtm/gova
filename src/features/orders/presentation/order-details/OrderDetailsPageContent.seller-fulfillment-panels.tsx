@@ -80,7 +80,7 @@ export function SellerCarrierLinkPanel({ id,
           {text.linkCarrierInProfile}
         </Link>
         {selectedCarrierUid ? (
-          <OrderActionButton
+          <OrderActionButton elementScope="order-details-page-content-seller-fulfillment-panels-seller-carrier-link-panel-order-action-button-eaa8cf"
             action="seller_assign_delivery_carrier"
             busyAction={busyAction}
             id={sellerOrderId}

@@ -10,7 +10,7 @@ const Card = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & CardUiProps
 >(({ className, ...props }, ref) => (
-  <div id="shared-ui-card-div-1-nqibji"
+  <div id={props.id}
     ref={ref}
     className={cn(
       'asol-card-neutral text-card-foreground',
@@ -25,7 +25,7 @@ const CardHeader = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & CardUiProps
 >(({ className, ...props }, ref) => (
-  <div id="shared-ui-card-div-2-dfbkq6"
+  <div id={props.id}
     ref={ref}
     className={cn('flex flex-col space-y-1.5 p-6', className)}
     {...props}
@@ -37,7 +37,7 @@ const CardTitle = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLHeadingElement> & CardUiProps
 >(({ className, ...props }, ref) => (
-  <h3 id="shared-ui-card-heading-3-jn5vi9"
+  <h3 id={props.id}
     ref={ref}
     className={cn(
       'text-2xl font-semibold leading-none tracking-tight',
@@ -52,7 +52,7 @@ const CardDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement> & CardUiProps
 >(({ className, ...props }, ref) => (
-  <p id="shared-ui-card-text-4-5pta6h"
+  <p id={props.id}
     ref={ref}
     className={cn('text-sm text-muted-foreground', className)}
     {...props}
@@ -64,7 +64,7 @@ const CardContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & CardUiProps
 >(({ className, ...props }, ref) => (
-  <div id="shared-ui-card-div-5-afohrh" ref={ref} className={cn('p-6 pt-0', className)} {...props} />
+  <div id={props.id} ref={ref} className={cn('p-6 pt-0', className)} {...props} />
 ));
 CardContent.displayName = 'CardContent';
 

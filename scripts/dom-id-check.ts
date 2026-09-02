@@ -2,6 +2,8 @@ import {
   formatStaticDomIdentityReport,
   formatStaticDomRuntimeRegistryReport,
   scanStaticDomIdentities,
+  scanStaticDomComponentRepeatability,
+  formatStaticDomComponentRepeatabilityReport,
   scanStaticDomRuntimeRegistry,
   writeStaticDomIdentityManifest,
 } from '@asol/architecture-core';
@@ -12,6 +14,11 @@ try {
   if (write) {
     const manifest = writeStaticDomIdentityManifest();
     const registry = scanStaticDomRuntimeRegistry();
+    const repeatability = scanStaticDomComponentRepeatability();
+    if (repeatability.violations.length > 0) {
+      console.error(formatStaticDomComponentRepeatabilityReport(repeatability.violations));
+      process.exit(1);
+    }
     if (registry.violations.length > 0) {
       console.error(formatStaticDomRuntimeRegistryReport(registry.violations));
       process.exit(1);
@@ -22,9 +29,14 @@ try {
 
   const staticResult = scanStaticDomIdentities();
   const registryResult = scanStaticDomRuntimeRegistry();
+  const repeatabilityResult = scanStaticDomComponentRepeatability();
   let failed = false;
   if (staticResult.violations.length > 0) {
     console.error(formatStaticDomIdentityReport(staticResult.violations));
+    failed = true;
+  }
+  if (repeatabilityResult.violations.length > 0) {
+    console.error(formatStaticDomComponentRepeatabilityReport(repeatabilityResult.violations));
     failed = true;
   }
   if (registryResult.violations.length > 0) {

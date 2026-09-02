@@ -30,15 +30,15 @@ export function SettingsToggleRow({
           : "flex flex-col gap-3 rounded-xl border border-outline-variant bg-surface p-3 sm:flex-row sm:items-center sm:justify-between sm:p-4"
       }
     >
-      <div id="features-settings-presentation-settingstogglerow-div-2-8h3zip"
+      <div id={id ? `${id}-div-2-8h3zip` : undefined}
         className="min-w-0"
       >
-        <p id="features-settings-presentation-settingstogglerow-text-3-mix8ya"
+        <p id={id ? `${id}-text-3-mix8ya` : undefined}
           className="text-sm font-semibold text-on-surface"
         >
           {title}
         </p>
-        <p id="features-settings-presentation-settingstogglerow-text-4-mdzlsz"
+        <p id={id ? `${id}-text-4-mdzlsz` : undefined}
           className="mt-1 text-xs leading-relaxed text-on-surface-variant"
         >
           {description}

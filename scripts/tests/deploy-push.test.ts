@@ -25,6 +25,7 @@ assert.deepEqual(parseArgv(["--vercel-target=none"]), {
     allowEmpty: false,
     allowManifestDowngrade: false,
     allowScratchFiles: false,
+    fast: false,
   },
   targetArgs: ["--vercel-target=none"],
 });
@@ -33,10 +34,14 @@ assert.deepEqual(parseArgv(["--allow-empty", "--allow-scratch-files"]), {
     allowEmpty: true,
     allowManifestDowngrade: false,
     allowScratchFiles: true,
+    fast: false,
   },
   targetArgs: [],
 });
 assert.equal(parseArgv(["--allow-manifest-downgrade"]).flags.allowManifestDowngrade, true);
+// `--fast` is a flag, never a target: it must not reach parseProvidedTargets.
+assert.equal(parseArgv(["--fast"]).flags.fast, true);
+assert.deepEqual(parseArgv(["--fast"]).targetArgs, []);
 assert.throws(() => parseArgv(["--skip-preflight"]), /Unknown option/);
 
 assert.deepEqual(parseProvidedTargets([]), null);
@@ -183,6 +188,29 @@ for (const command of ["services:sync", "services:build", "control:build"]) {
 assert.ok(
   mirrorGate.indexOf('"services:sync"') < mirrorGate.indexOf('"services:build"'),
   "The mirrors must be synced before they are built.",
+);
+
+// `--fast` must never reach the maintenance path: that path writes no git and
+// therefore never checks the branch, which is the only way a publish flag could
+// deploy from something other than main.
+const mainFn = deployPushSource.slice(deployPushSource.indexOf("async function main("));
+assert.ok(
+  mainFn.indexOf("flags.fast && isolatedTargets.length !== ALL_DEPLOY_PUSH_TARGETS.length") <
+    mainFn.indexOf("await runTargetedMaintenanceDeploy("),
+  "--fast must be refused for a partial selection before the maintenance path is taken.",
+);
+
+// The deployment commit must be written on top of origin/main, not beside it.
+assert.ok(
+  mainFn.indexOf("advanceToOriginMain()") < mainFn.indexOf('"git", ["add", "-A"]'),
+  "deploy:push must advance HEAD to origin/main before it stages the tree.",
+);
+const advance = deployPushSource.slice(
+  deployPushSource.indexOf("function advanceToOriginMain("),
+);
+assert.ok(
+  advance.includes('"--ff-only"'),
+  "Only a fast-forward is automatic: a rebase over an uncommitted tree loses work.",
 );
 
 for (const entry of ["debug.log", "notes.tmp", "src/__probe__.ts", "scratchpad/out.txt"]) {

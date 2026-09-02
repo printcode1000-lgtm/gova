@@ -140,10 +140,10 @@ function TopologyDatabaseGroup({ id,
 } & { id?: string }) {
   return (
     <div id={id} className="mb-4 last:mb-0">
-      <div id="features-data-health-presentation-datahealthtopologypanel-div-19-kkuejs" className="mb-2 text-xs font-semibold text-on-surface-variant">
+      <div id={id ? `${id}-div-19-kkuejs` : undefined} className="mb-2 text-xs font-semibold text-on-surface-variant">
         {label}
       </div>
-      <div id="features-data-health-presentation-datahealthtopologypanel-div-20-6hftjf" className="overflow-hidden rounded-md border">
+      <div id={id ? `${id}-div-20-6hftjf` : undefined} className="overflow-hidden rounded-md border">
         {items.map((database) => (
           <div
             key={database.id}

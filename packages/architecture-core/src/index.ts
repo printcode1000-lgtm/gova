@@ -77,3 +77,12 @@ export {
   type StaticDomRuntimeRegistryViolation,
   type StaticDomRuntimeRegistryViolationType,
 } from './checks/static-dom-runtime-registry-contract';
+
+export {
+  checkStaticDomComponentRepeatabilityContract,
+  formatStaticDomComponentRepeatabilityReport,
+  scanStaticDomComponentRepeatability,
+  type StaticDomComponentRepeatabilityResult,
+  type StaticDomComponentRepeatabilityViolation,
+  type StaticDomComponentRepeatabilityViolationType,
+} from './checks/static-dom-component-repeatability-contract';

@@ -359,7 +359,7 @@ export function UnifiedDeliveryPlanPanel({
         !["separate_selected", "cancelled", "completed"].includes(
           String(plan.status),
         ) ? (
-          <OrderActionButton
+          <OrderActionButton elementScope="order-details-page-content-delivery-plan-unified-delivery-plan-panel-order-action-button-7aff4e"
             action="buyer_choose_separate_delivery"
             busyAction={busyAction}
             id={planId}
@@ -375,7 +375,7 @@ export function UnifiedDeliveryPlanPanel({
         plan.status === "accepted" &&
         acceptedQuote &&
         !shipmentExists ? (
-          <OrderActionButton
+          <OrderActionButton elementScope="order-details-page-content-delivery-plan-unified-delivery-plan-panel-order-action-button-ff574f"
             action="admin_create_unified_delivery_shipment"
             busyAction={busyAction}
             id={planId}

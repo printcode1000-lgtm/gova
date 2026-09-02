@@ -5,6 +5,7 @@ import { dirname, join, relative } from 'node:path';
 import ts from 'typescript';
 
 import { ROOT, addViolation } from './architecture-types';
+import { scanStaticDomComponentRepeatability } from './static-dom-component-repeatability-contract';
 
 export const STATIC_DOM_ID_MANIFEST = 'docs/04-ui-components/static-dom-identity-manifest.json';
 
@@ -51,6 +52,7 @@ export interface StaticDomIdentityViolation {
     | 'missing-id'
     | 'empty-id'
     | 'invalid-format'
+  | 'dynamic-literal-id'
     | 'runtime-generated-id'
     | 'forbidden-use-id'
     | 'duplicate-id'
@@ -139,6 +141,15 @@ function isInsideDynamicCollection(node: ts.Node): boolean {
       ) {
         return true;
       }
+      if (
+        ts.isPropertyAccessExpression(expression) &&
+        ts.isIdentifier(expression.expression) &&
+        expression.expression.text === 'Array' &&
+        expression.name.text === 'from' &&
+        call.arguments[1] === parent
+      ) {
+        return true;
+      }
     }
     current = parent;
   }
@@ -148,9 +159,18 @@ function isInsideDynamicCollection(node: ts.Node): boolean {
 function expressionContainsUseId(expression: ts.Expression): boolean {
   let found = false;
   function visit(node: ts.Node): void {
-    if (ts.isCallExpression(node) && ts.isIdentifier(node.expression) && node.expression.text === 'useId') {
-      found = true;
-      return;
+    if (ts.isCallExpression(node)) {
+      if (ts.isIdentifier(node.expression) && node.expression.text === 'useId') {
+        found = true;
+        return;
+      }
+      if (
+        ts.isPropertyAccessExpression(node.expression) &&
+        node.expression.name.text === 'useId'
+      ) {
+        found = true;
+        return;
+      }
     }
     ts.forEachChild(node, visit);
   }
@@ -191,30 +211,129 @@ function expressionContainsRuntimeGenerator(expression: ts.Expression): boolean 
   return found;
 }
 
+function scopedTemplateSource(expression: ts.Expression): string | undefined {
+  if (ts.isIdentifier(expression) && /(scope|Scope|id|Id)$/.test(expression.text)) return expression.text;
+  if (
+    ts.isPropertyAccessExpression(expression) &&
+    /(scope|Scope|id|Id)$/.test(expression.name.text)
+  ) return expression.getText();
+  return undefined;
+}
+
 function scopedTemplateInfo(expression: ts.Expression): { id: string; semanticName: string } | undefined {
   if (!ts.isTemplateExpression(expression)) return undefined;
   if (expression.head.text !== '') return undefined;
   if (expression.templateSpans.length !== 1) return undefined;
   const [span] = expression.templateSpans;
-  if (!ts.isIdentifier(span.expression) || !/(scope|Scope|id|Id)$/.test(span.expression.text)) return undefined;
+  const source = scopedTemplateSource(span.expression);
+  if (!source) return undefined;
   const suffix = span.literal.text;
   if (!/^-[a-z][a-z0-9-]*-[a-z0-9]{6}$/.test(suffix)) return undefined;
-  return { id: '${' + span.expression.text + '}' + suffix, semanticName: semanticNameFromId('scope' + suffix) };
+  return { id: '${' + source + '}' + suffix, semanticName: semanticNameFromId('scope' + suffix) };
 }
 
-function explicitPropInfo(expression: ts.Expression): { id: string; semanticName: string } | undefined {
-  if (ts.isIdentifier(expression) && expression.text === 'id') {
-    return { id: '${id}', semanticName: 'explicit-prop-root' };
-  }
-  if (
-    ts.isPropertyAccessExpression(expression) &&
-    expression.name.text === 'id' &&
-    ts.isIdentifier(expression.expression) &&
-    /props/i.test(expression.expression.text)
-  ) {
-    return { id: '${props.id}', semanticName: 'explicit-prop-root' };
+function enclosingFunctionLike(node: ts.Node): ts.FunctionLikeDeclaration | undefined {
+  let current: ts.Node | undefined = node;
+  while (current?.parent) {
+    current = current.parent;
+    if (
+      ts.isFunctionDeclaration(current) ||
+      ts.isFunctionExpression(current) ||
+      ts.isArrowFunction(current) ||
+      ts.isMethodDeclaration(current)
+    ) {
+      return current;
+    }
   }
   return undefined;
+}
+
+function objectBindingContainsName(name: ts.BindingName, target: string): boolean {
+  if (!ts.isObjectBindingPattern(name)) return false;
+  return name.elements.some((element) => {
+    if (ts.isIdentifier(element.name) && element.name.text === target) return true;
+    return false;
+  });
+}
+
+function isComponentIdPropExpression(expression: ts.Expression, node: ts.Node): boolean {
+  let current: ts.Node | undefined = node;
+  while (current?.parent) {
+    current = current.parent;
+    if (!(
+      ts.isFunctionDeclaration(current) ||
+      ts.isFunctionExpression(current) ||
+      ts.isArrowFunction(current) ||
+      ts.isMethodDeclaration(current)
+    )) continue;
+    if (
+      ts.isIdentifier(expression) &&
+      expression.text === 'id' &&
+      current.parameters.some((parameter) => objectBindingContainsName(parameter.name, 'id'))
+    ) return true;
+    if (
+      ts.isPropertyAccessExpression(expression) &&
+      expression.name.text === 'id' &&
+      ts.isIdentifier(expression.expression)
+    ) {
+      const objectName = expression.expression.text;
+      if (current.parameters.some(
+        (parameter) => ts.isIdentifier(parameter.name) && parameter.name.text === objectName,
+      )) return true;
+    }
+  }
+  return false;
+}
+
+function nearestLocalInitializer(
+  source: ts.SourceFile,
+  name: string,
+  before: number,
+): ts.Expression | undefined {
+  let bestPosition = -1;
+  let best: ts.Expression | undefined;
+  const visit = (node: ts.Node): void => {
+    if (node.getStart(source) >= before) return;
+    if (
+      ts.isVariableDeclaration(node) &&
+      ts.isIdentifier(node.name) &&
+      node.name.text === name &&
+      node.initializer &&
+      node.getStart(source) > bestPosition
+    ) {
+      bestPosition = node.getStart(source);
+      best = node.initializer;
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(source);
+  return best;
+}
+
+function resolveLocalIdExpression(
+  expression: ts.Expression,
+  source: ts.SourceFile,
+  node: ts.Node,
+  seen = new Set<string>(),
+): ts.Expression {
+  if (!ts.isIdentifier(expression) || isComponentIdPropExpression(expression, node)) return expression;
+  if (seen.has(expression.text)) return expression;
+  seen.add(expression.text);
+  const initializer = nearestLocalInitializer(source, expression.text, node.getStart(source));
+  if (!initializer) return expression;
+  if (ts.isIdentifier(initializer)) return resolveLocalIdExpression(initializer, source, node, seen);
+  return initializer;
+}
+
+function explicitPropInfo(
+  expression: ts.Expression,
+  node: ts.Node,
+): { id: string; semanticName: string } | undefined {
+  if (!isComponentIdPropExpression(expression, node)) return undefined;
+  return {
+    id: ts.isIdentifier(expression) ? '${id}' : '${props.id}',
+    semanticName: 'explicit-prop-root',
+  };
 }
 
 function expressionLooksLikeDynamicRecordIdentity(expression: ts.Expression): boolean {
@@ -238,8 +357,11 @@ function constantReferenceInfo(expression: ts.Expression): { id: string; semanti
 function conditionalStaticInfo(expression: ts.Expression): { id: string; semanticName: string } | undefined {
   if (!ts.isConditionalExpression(expression)) return undefined;
   const whenTrue = scopedTemplateInfo(expression.whenTrue);
-  const whenFalse = ts.isStringLiteral(expression.whenFalse) && STABLE_ID_PATTERN.test(expression.whenFalse.text);
-  if (!whenTrue || !whenFalse) return undefined;
+  const falseIsStableLiteral = ts.isStringLiteral(expression.whenFalse) && STABLE_ID_PATTERN.test(expression.whenFalse.text);
+  const falseIsAbsent =
+    (ts.isIdentifier(expression.whenFalse) && expression.whenFalse.text === 'undefined') ||
+    expression.whenFalse.kind === ts.SyntaxKind.NullKeyword;
+  if (!whenTrue || (!falseIsStableLiteral && !falseIsAbsent)) return undefined;
   return { id: expression.getText(), semanticName: whenTrue.semanticName };
 }
 
@@ -300,16 +422,36 @@ function classifyId(
   }
 
   const expression = initializer.expression;
-  if (expressionContainsUseId(expression)) {
+  const resolvedExpression = resolveLocalIdExpression(expression, source, node);
+  if (expressionContainsUseId(resolvedExpression)) {
     violations.push(violation('forbidden-use-id', `<${tag}> uses useId() as a static DOM identity.`));
     return { violations };
   }
-  if (expressionContainsRuntimeGenerator(expression)) {
+  if (expressionContainsRuntimeGenerator(resolvedExpression)) {
     violations.push(violation('runtime-generated-id', `<${tag}> uses a runtime-generated id.`));
     return { violations };
   }
 
-  const scoped = scopedTemplateInfo(expression);
+  if (resolvedExpression !== expression && ts.isStringLiteralLike(resolvedExpression)) {
+    const id = resolvedExpression.text.trim();
+    if (!STABLE_ID_PATTERN.test(id)) {
+      violations.push(violation('invalid-format', `<${tag}> local id "${id}" must match <scope>-<semantic-name>-<stable6>.`));
+      return { violations };
+    }
+    return {
+      entry: {
+        id,
+        source: rel,
+        line,
+        element: tag,
+        semanticName: semanticNameFromId(id),
+        kind: 'constant-reference',
+      },
+      violations,
+    };
+  }
+
+  const scoped = scopedTemplateInfo(resolvedExpression);
   if (scoped) {
     return {
       entry: {
@@ -324,7 +466,7 @@ function classifyId(
     };
   }
 
-  const explicitProp = explicitPropInfo(expression);
+  const explicitProp = explicitPropInfo(expression, node);
   if (explicitProp) {
     return {
       entry: {
@@ -339,7 +481,7 @@ function classifyId(
     };
   }
 
-  const constantReference = constantReferenceInfo(expression);
+  const constantReference = constantReferenceInfo(resolvedExpression);
   if (constantReference) {
     return {
       entry: {
@@ -354,7 +496,7 @@ function classifyId(
     };
   }
 
-  const conditionalStatic = conditionalStaticInfo(expression);
+  const conditionalStatic = conditionalStaticInfo(resolvedExpression);
   if (conditionalStatic) {
     return {
       entry: {
@@ -369,7 +511,7 @@ function classifyId(
     };
   }
 
-  if (dynamicRecordInfo(expression)) return { violations };
+  if (dynamicRecordInfo(resolvedExpression)) return { violations };
 
   violations.push(
     violation('invalid-format', `<${tag}> id expression must be an explicit id prop or static scope template.`),
@@ -450,11 +592,44 @@ function duplicateViolations(entries: readonly StaticDomIdentityEntry[]): Static
   return violations;
 }
 
+
+function capitalizedName(name: string | undefined): name is string {
+  return !!name && /^[A-Z]/.test(name);
+}
+
+function componentNameForFunctionLike(node: ts.FunctionLikeDeclaration): string | undefined {
+  if (ts.isFunctionDeclaration(node) && capitalizedName(node.name?.text)) return node.name!.text;
+  let current: ts.Node = node;
+  while (current.parent && (ts.isCallExpression(current.parent) || ts.isParenthesizedExpression(current.parent))) {
+    current = current.parent;
+  }
+  const parent = current.parent;
+  if (parent && ts.isVariableDeclaration(parent) && ts.isIdentifier(parent.name) && capitalizedName(parent.name.text)) {
+    return parent.name.text;
+  }
+  return undefined;
+}
+
+function enclosingComponentKey(node: ts.Node, rel: string): string | undefined {
+  let current: ts.Node | undefined = node;
+  while (current?.parent) {
+    current = current.parent;
+    if (ts.isFunctionDeclaration(current) || ts.isFunctionExpression(current) || ts.isArrowFunction(current)) {
+      const name = componentNameForFunctionLike(current);
+      if (name) return `${rel}#${name}`;
+    }
+  }
+  return undefined;
+}
+
 export function scanStaticDomIdentities(options: ScanOptions = {}): StaticDomIdentityResult {
   const root = options.root ?? ROOT;
   const files = options.files?.map((file) => join(root, file)) ?? collectFiles(root);
   const entries: StaticDomIdentityEntry[] = [];
   const violations: StaticDomIdentityViolation[] = [];
+  const dynamicOnlyComponents = new Set(
+    scanStaticDomComponentRepeatability({ root }).dynamicOnlyComponents,
+  );
 
   for (const file of files) {
     const rel = normalizePath(relative(root, file));
@@ -464,7 +639,21 @@ export function scanStaticDomIdentities(options: ScanOptions = {}): StaticDomIde
     function visit(node: ts.Node): void {
       if (ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) {
         const intrinsic = isIntrinsicTagName(node.tagName);
-        if (!isInsideDynamicCollection(node) && (intrinsic || idAttribute(node))) {
+        const componentKey = enclosingComponentKey(node, rel);
+        if (componentKey && dynamicOnlyComponents.has(componentKey)) {
+          // DOM inside a component rendered only from dynamic collections is excluded.
+        } else if (isInsideDynamicCollection(node)) {
+          const attribute = idAttribute(node);
+          if (intrinsic && attribute?.initializer && ts.isStringLiteral(attribute.initializer)) {
+            violations.push({
+              file: rel,
+              line: lineOf(source, node.getStart(source)),
+              element: intrinsic ? node.tagName.text : tagText(node.tagName),
+              type: 'dynamic-literal-id',
+              message: `Dynamic repeated <${intrinsic ? node.tagName.text : tagText(node.tagName)}> must not use literal id "${attribute.initializer.text}".`,
+            });
+          }
+        } else if (intrinsic) {
           const tag = intrinsic ? node.tagName.text : tagText(node.tagName);
           const result = classifyId(rel, source, node, tag);
           if (result.entry) entries.push(result.entry);

@@ -5,7 +5,7 @@ import { LoadingSpinner } from "@/shared/ui/LoadingSpinner";
 export function ProfileProductsTabsLoading({ id, size = "lg", }: { size?: "sm" | "lg"; } & { id?: string }) {
   return (
     <div id={id} className="flex justify-center py-8">
-      <LoadingSpinner size={size} />
+      <LoadingSpinner id={id ? `${id}-loading-spinner-84a918` : undefined} size={size} />
     </div>
   );
 }
@@ -22,7 +22,7 @@ export function ProfileProductsTabsEmpty({ id,
   return (
     <div id={id} className="rounded-lg border border-dashed border-outline-variant py-8 text-center">
       <Package className={`mx-auto mb-2 ${iconSize} text-on-surface-variant`} />
-      <p id="features-profile-products-presentation-profileproductstabsstates-text-3-s18itc" className={`${textSize} text-on-surface-variant`}>
+      <p id={id ? `${id}-text-3-s18itc` : undefined} className={`${textSize} text-on-surface-variant`}>
         {label}
       </p>
     </div>

@@ -32,7 +32,7 @@ export function DeployRunbookCollapsible(props: {
         props.className,
       )}
     >
-      <summary id="features-google-play-console-presentation-deployrunbookcollapsible-summary-2-0utrmb"
+      <summary id={props.id ? `${props.id}-summary-2-0utrmb` : undefined}
         className={SUMMARY_CLASS}
         onClick={(event) => {
           const target = event.target as HTMLElement;
@@ -41,9 +41,9 @@ export function DeployRunbookCollapsible(props: {
           }
         }}
       >
-        <div id="features-google-play-console-presentation-deployrunbookcollapsible-div-3-c1lhiw" className="min-w-0 flex-1 space-y-1">
-          <div id="features-google-play-console-presentation-deployrunbookcollapsible-div-4-ngezyy" className="flex flex-wrap items-center gap-2">
-            <span id="features-google-play-console-presentation-deployrunbookcollapsible-text-5-toigzi"
+        <div id={props.id ? `${props.id}-div-3-c1lhiw` : undefined} className="min-w-0 flex-1 space-y-1">
+          <div id={props.id ? `${props.id}-div-4-ngezyy` : undefined} className="flex flex-wrap items-center gap-2">
+            <span id={props.id ? `${props.id}-text-5-toigzi` : undefined}
               className={cn(
                 "font-semibold break-words",
                 props.nested ? "text-sm" : "text-base",
@@ -54,21 +54,21 @@ export function DeployRunbookCollapsible(props: {
             {props.badge}
           </div>
           {props.description ? (
-            <p id="features-google-play-console-presentation-deployrunbookcollapsible-text-6-wlivji" className="text-xs text-on-surface-variant break-words">
+            <p id={props.id ? `${props.id}-text-6-wlivji` : undefined} className="text-xs text-on-surface-variant break-words">
               {props.description}
             </p>
           ) : null}
         </div>
-        <div id="features-google-play-console-presentation-deployrunbookcollapsible-div-7-pb7crt" className="flex w-full shrink-0 items-center justify-between gap-2 sm:w-auto sm:justify-end">
+        <div id={props.id ? `${props.id}-div-7-pb7crt` : undefined} className="flex w-full shrink-0 items-center justify-between gap-2 sm:w-auto sm:justify-end">
           {props.actions ? (
-            <div id="features-google-play-console-presentation-deployrunbookcollapsible-div-8-xqdofo" className="flex flex-wrap items-center gap-2">{props.actions}</div>
+            <div id={props.id ? `${props.id}-div-8-xqdofo` : undefined} className="flex flex-wrap items-center gap-2">{props.actions}</div>
           ) : null}
           <ChevronDown
             className="h-4 w-4 shrink-0 text-on-surface-variant transition-transform group-open:rotate-180"
           />
         </div>
       </summary>
-      <div id="features-google-play-console-presentation-deployrunbookcollapsible-div-9-krof5m" className={cn(CONTENT_CLASS, props.contentClassName)}>{props.children}</div>
+      <div id={props.id ? `${props.id}-div-9-krof5m` : undefined} className={cn(CONTENT_CLASS, props.contentClassName)}>{props.children}</div>
     </details>
   );
 }

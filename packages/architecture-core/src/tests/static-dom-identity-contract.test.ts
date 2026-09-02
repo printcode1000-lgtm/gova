@@ -127,3 +127,41 @@ withFixture(
     );
   },
 );
+
+withFixture(
+  {
+    'src/app/page.tsx': `export default function Page({count}:{count:number}){return <section id="page-dots-root-a1b2c3">{Array.from({length:count},(_,i)=><button id="page-dot-button-d4e5f6" key={i}/>)}</section>}`,
+  },
+  (root) => {
+    const types = scanStaticDomIdentities({ root, validateManifest: false }).violations.map((v) => v.type);
+    assert.ok(types.includes('dynamic-literal-id'), 'literal ids inside Array.from mapper must fail');
+  },
+);
+
+
+assert.ok(
+  types('import { useId } from "react"; export default function Page() { const id = useId(); return <button id={id}>Save</button>; }').includes('forbidden-use-id'),
+  'useId assigned to a local variable fails',
+);
+
+assert.ok(
+  types('import * as React from "react"; export default function Page() { const id = React.useId(); return <button id={id}>Save</button>; }').includes('forbidden-use-id'),
+  'React.useId assigned to a local variable fails',
+);
+
+assert.ok(
+  types('export default function Page() { const id = "local"; return <button id={id}>Save</button>; }').includes('invalid-format'),
+  'invalid local id fails',
+);
+
+assert.deepEqual(
+  types('function Action({ id }: { id: string }) { return <button id="action-button-root-a1b2c3" />; } export default function Page(){ return <Action id={businessId} />; }'),
+  [],
+  'custom component business id is not treated as DOM identity',
+);
+
+assert.deepEqual(
+  types('function Shared({ elementScope }: { elementScope?: string }) { return <div id={elementScope ? `${elementScope}-root-a1b2c3` : undefined} />; }'),
+  [],
+  'optional caller scope is accepted',
+);

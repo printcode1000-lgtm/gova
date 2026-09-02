@@ -67,12 +67,12 @@ export function AndroidReleaseRunbookTree(props: {
         title={props.t("releaseConsole.androidPaths.bulkSelectTitle")}
         description={props.t("releaseConsole.androidPaths.bulkSelectHelp")}
         badge={
-          <span id="google-play-console-presentation-components-androidreleaserunbooktree-text-2-l0ot6b" className="rounded-full bg-muted px-2 py-0.5 text-xs text-on-surface-variant">
+          <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-on-surface-variant">
             {selectedInRunbook} / {allIds.length}
           </span>
         }
       >
-        <div id="google-play-console-presentation-components-androidreleaserunbooktree-div-3-nkf6qx" className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           <Button
             variant="outline"
             className={SELECT_BTN}
@@ -110,12 +110,12 @@ export function AndroidReleaseRunbookTree(props: {
         title={props.t("releaseConsole.androidPaths.treeTitle")}
         description={props.t("releaseConsole.androidPaths.treeHelp")}
         badge={
-          <span id="google-play-console-presentation-components-androidreleaserunbooktree-text-4-9j0ahi" className="rounded-full bg-muted px-2 py-0.5 text-xs text-on-surface-variant">
+          <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-on-surface-variant">
             {props.runbook.length} {props.t("releaseConsole.androidPaths.phaseCountLabel")}
           </span>
         }
       >
-        <div id="google-play-console-presentation-components-androidreleaserunbooktree-div-5-ajtsjd" className="space-y-3">
+        <div className="space-y-3">
           {props.runbook.map((phase) => (
             <PhaseBlock key={phase.id} phase={phase} {...context} />
           ))}

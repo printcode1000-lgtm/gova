@@ -51,7 +51,7 @@ export function RunbookPanel(
         <p id="features-google-play-console-presentation-deployrunbookcontrols-text-4-ajg7ss" className="mt-1 text-sm text-on-surface-variant break-words">{props.description}</p>
       </header>
 
-      <DeployRunbookCollapsible
+      <DeployRunbookCollapsible id="deploy-runbook-controls-runbook-panel-deploy-runbook-collapsible-5a95f3"
         title="وضع التشغيل"
         description={SCENARIO_HELP}
       >
@@ -63,7 +63,7 @@ export function RunbookPanel(
         />
       </DeployRunbookCollapsible>
 
-      <DeployRunbookCollapsible
+      <DeployRunbookCollapsible id="deploy-runbook-controls-runbook-panel-deploy-runbook-collapsible-cad13f"
         title="اختيار الفروع"
         description="تفعيل أو تجاوز الفروع دفعة واحدة قبل فتح شجرة المراحل."
         badge={
@@ -91,12 +91,12 @@ export function RunbookPanel(
       </DeployRunbookCollapsible>
 
       {props.extraOptions ? (
-        <DeployRunbookCollapsible title={RUN_OPTIONS_TITLE} description={RUN_OPTIONS_DESCRIPTION}>
+        <DeployRunbookCollapsible id="deploy-runbook-controls-runbook-panel-deploy-runbook-collapsible-357988" title={RUN_OPTIONS_TITLE} description={RUN_OPTIONS_DESCRIPTION}>
           <div id="features-google-play-console-presentation-deployrunbookcontrols-div-7-5bhmhk" className="grid grid-cols-1 gap-2 lg:grid-cols-2">{props.extraOptions}</div>
         </DeployRunbookCollapsible>
       ) : null}
 
-      <DeployRunbookCollapsible
+      <DeployRunbookCollapsible id="deploy-runbook-controls-runbook-panel-deploy-runbook-collapsible-cc7974"
         title="شجرة المراحل والفروع"
         description={PHASE_TREE_DESCRIPTION}
         badge={
@@ -125,16 +125,16 @@ export function Option(
 ) {
   return (
     <label id={props.id} className="block min-w-0 w-full rounded-md border bg-surface p-3 text-sm">
-      <span id="features-google-play-console-presentation-deployrunbookcontrols-text-11-exqq4b" className="flex items-start gap-2">
-        <input id="features-google-play-console-presentation-deployrunbookcontrols-input-12-qrac8u"
+      <span id={props.id ? `${props.id}-text-11-exqq4b` : undefined} className="flex items-start gap-2">
+        <input id={props.id ? `${props.id}-input-12-qrac8u` : undefined}
           type="checkbox"
           className="mt-0.5 shrink-0"
           checked={props.checked}
           onChange={(event) => props.onChange(event.target.checked)}
         />
-        <span id="features-google-play-console-presentation-deployrunbookcontrols-text-13-ikfjlc" className="min-w-0 font-medium break-words">{props.label}</span>
+        <span id={props.id ? `${props.id}-text-13-ikfjlc` : undefined} className="min-w-0 font-medium break-words">{props.label}</span>
       </span>
-      <span id="features-google-play-console-presentation-deployrunbookcontrols-text-14-gxltb6" className="mt-1 block text-xs text-on-surface-variant break-words">{props.help}</span>
+      <span id={props.id ? `${props.id}-text-14-gxltb6` : undefined} className="mt-1 block text-xs text-on-surface-variant break-words">{props.help}</span>
     </label>
   );
 }

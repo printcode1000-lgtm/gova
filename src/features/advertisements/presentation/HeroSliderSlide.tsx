@@ -67,7 +67,7 @@ export function HeroSliderSlide({
     });
 
   return (
-    <div id="features-advertisements-presentation-herosliderslide-div-1-1h0vcn"
+    <div
       style={slideStyle}
       className={slideClass}
       onClick={() => onSlideClick(slide.action)}
@@ -102,20 +102,20 @@ export function HeroSliderSlide({
           unoptimized={shouldUseUnoptimizedImage(slide.image)}
         />
       ) : (
-        <div id="features-advertisements-presentation-herosliderslide-div-2-3nzn3s" className="absolute inset-0 flex items-center justify-center bg-muted px-6 text-center text-sm text-muted-foreground">
+        <div className="absolute inset-0 flex items-center justify-center bg-muted px-6 text-center text-sm text-muted-foreground">
           {unavailableLabel}
         </div>
       )}
       {(slide.title || slide.subtitle) && (
-        <div id="features-advertisements-presentation-herosliderslide-div-3-jbirvp" className="absolute inset-0 z-10 flex items-center px-4 sm:px-6">
-          <div id="features-advertisements-presentation-herosliderslide-div-4-lpqwah" className="w-fit max-w-[88%] px-0 py-0 pe-0 text-white sm:max-w-[60%]">
+        <div className="absolute inset-0 z-10 flex items-center px-4 sm:px-6">
+          <div className="w-fit max-w-[88%] px-0 py-0 pe-0 text-white sm:max-w-[60%]">
             {slide.subtitle && (
-              <span id="features-advertisements-presentation-herosliderslide-text-5-wy7xru" className="mb-2 block w-fit rounded-full bg-black/45 px-2.5 py-0.5 text-xs font-semibold text-white backdrop-blur-xs">
+              <span className="mb-2 block w-fit rounded-full bg-black/45 px-2.5 py-0.5 text-xs font-semibold text-white backdrop-blur-xs">
                 {slide.subtitle}
               </span>
             )}
             {slide.title && (
-              <h2 id="features-advertisements-presentation-herosliderslide-heading-6-o3zcvf" className="text-2xl font-bold leading-tight drop-shadow-sm">
+              <h2 className="text-2xl font-bold leading-tight drop-shadow-sm">
                 {slide.title}
               </h2>
             )}

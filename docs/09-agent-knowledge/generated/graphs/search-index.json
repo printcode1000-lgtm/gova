@@ -1180,6 +1180,21 @@
       ]
     },
     {
+      "id": "command:deploy:push:fast",
+      "kind": "command",
+      "name": "npm run deploy:push:fast",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "deploy",
+        "deploy:push:fast",
+        "fast",
+        "npm",
+        "npm run deploy:push:fast",
+        "push",
+        "run"
+      ]
+    },
+    {
       "id": "command:deploy:push:main",
       "kind": "command",
       "name": "npm run deploy:push:main",
@@ -12208,6 +12223,55 @@
         "the `/super-admin/data-health` application module composes the sealed `@asol/data-health-core` capability with `data-core`, storage and system logging. the package owns shared policy, contracts and the image-source registry; the application owns presentation and orchestration.",
         "ts",
         "with"
+      ]
+    },
+    {
+      "id": "document:docs/06-super-admin-and-operations/local-agent-connection.md",
+      "kind": "document",
+      "name": "GOVA Local Agent Connection Guide",
+      "path": "docs/06-super-admin-and-operations/local-agent-connection.md",
+      "summary": "This file defines the **approved connection path for local-agent access in the GOVA project**. Any cloud agent or GitHub-driven agent must follow this model when it needs to reach the local machine and perform work against the real repository.",
+      "tags": [
+        "access",
+        "against",
+        "agent",
+        "and",
+        "any",
+        "approved",
+        "cloud",
+        "connection",
+        "defines",
+        "docs/06-super-admin-and-operations/local-agent-connection",
+        "docs/06-super-admin-and-operations/local-agent-connection.md",
+        "file",
+        "follow",
+        "for",
+        "github-driven",
+        "gova",
+        "gova local agent connection guide",
+        "guide",
+        "in",
+        "it",
+        "local",
+        "local-agent",
+        "machine",
+        "md",
+        "model",
+        "must",
+        "needs",
+        "or",
+        "path",
+        "perform",
+        "project",
+        "reach",
+        "real",
+        "repository",
+        "the",
+        "this",
+        "this file defines the **approved connection path for local-agent access in the gova project**. any cloud agent or github-driven agent must follow this model when it needs to reach the local machine and perform work against the real repository.",
+        "to",
+        "when",
+        "work"
       ]
     },
     {

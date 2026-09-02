@@ -2,7 +2,10 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
 import { formatInspectorOutput, isInspectableId, selectedElementId } from "../presentation/ui-attribute-inspector-model";
-import { pickInspectedElement } from "../presentation/ui-inspector-element-picker";
+import {
+  pickIdentifiedElement,
+  pickInspectedElement,
+} from "../presentation/ui-inspector-element-picker";
 
 /**
  * The DOM inspector, standing on its own.
@@ -43,25 +46,38 @@ assert.equal(pickInspectedElement(undefined), null);
 assert.equal(pickInspectedElement({}), null);
 
 // ── Which ids are worth reporting ──────────────────────────────────────────
-// A dotted, hierarchical id is one an author wrote to identify the element.
+// Every real HTML id is reported exactly as the DOM carries it.
 assert.equal(isInspectableId("auth.otp-input.div"), true);
 assert.equal(isInspectableId("shared.ui.progress.indicator"), true);
 assert.equal(isInspectableId("registration-store-name"), true);
-
-// A bare word is a local handle, not an identity; free text may carry user data
-// and must never reach the clipboard.
-assert.equal(isInspectableId("otp"), false);
-assert.equal(isInspectableId("Private Order 42"), false);
+assert.equal(isInspectableId("otp"), true);
+assert.equal(isInspectableId("Private Order 42"), true);
 assert.equal(isInspectableId(""), false);
+
+// Internal third-party DOM (for example an SVG path) resolves to the closest
+// repository element that owns a real id.
+const identifiedRoot = {
+  nodeType: ELEMENT_NODE,
+  getAttribute: (name: string) => name === "id" ? "toolbar-copy-button-a1b2c3" : null,
+  parentElement: null,
+};
+const internalSvg = {
+  nodeType: ELEMENT_NODE,
+  getAttribute: () => null,
+  parentElement: identifiedRoot,
+};
+assert.equal(pickIdentifiedElement(identifiedRoot), identifiedRoot);
+assert.equal(pickIdentifiedElement(internalSvg), identifiedRoot);
+assert.equal(pickIdentifiedElement({ ...internalSvg, parentElement: null }), null);
 
 // ── Inspector output ───────────────────────────────────────────────────────
 assert.equal(selectedElementId({ id: "auth.otp-input.div" }), "auth.otp-input.div");
-assert.equal(selectedElementId({ id: "Private Order 42" }), null);
+assert.equal(selectedElementId({ id: "Private Order 42" }), "Private Order 42");
 assert.equal(selectedElementId({}), null);
 assert.equal(selectedElementId(undefined), null);
 
 assert.equal(formatInspectorOutput({ id: "page-save.dialog.execute" }), "page-save.dialog.execute");
-assert.equal(formatInspectorOutput({ id: "Private Order 42" }), "مفقود");
+assert.equal(formatInspectorOutput({ id: "Private Order 42" }), "Private Order 42");
 assert.equal(formatInspectorOutput({}), "مفقود");
 assert.equal(formatInspectorOutput(undefined), "مفقود");
 
@@ -81,5 +97,12 @@ for (const [name, source] of [
 // The add/register control is gone, and with it any way to enqueue a UI entry.
 assert.doesNotMatch(inspectorSource, /Registration|Pending|registry/i, "no registration path may remain");
 assert.doesNotMatch(inspectorSource, /<Plus\b/, "the add button must be gone");
+assert.match(inspectorSource, /pickIdentifiedElement\(touched\)/, "internal DOM must resolve to the closest id owner");
+assert.match(inspectorSource, /event\.stopImmediatePropagation\(\)/, "selection must not trigger or dismiss touched UI");
+assert.match(
+  inspectorSource,
+  /NativeCore\.writeClipboard\(\{ string: text \}\)/,
+  "the displayed selected id must be the exact value sent to the clipboard gateway",
+);
 
 console.log("ui attribute inspector: all checks passed.");

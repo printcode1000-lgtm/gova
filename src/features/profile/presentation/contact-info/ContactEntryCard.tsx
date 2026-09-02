@@ -38,8 +38,8 @@ export function ContactEntryCard({
       className="space-y-2 rounded-lg border p-3"
       style={{ backgroundColor: `${color}10`, borderColor: `${color}44` }}
     >
-      <div id="profile-presentation-contact-info-contactentrycard-div-2-f5fw2l" className="flex items-center justify-between gap-2">
-        <span id="profile-presentation-contact-info-contactentrycard-text-3-zyo0kq"
+      <div className="flex items-center justify-between gap-2">
+        <span
           className="flex items-center gap-2 text-xs font-semibold"
           style={{ color }}
         >

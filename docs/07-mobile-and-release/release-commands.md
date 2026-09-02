@@ -139,7 +139,47 @@ runs the same transaction. Use it when the gates have already passed and you do
 not want to pay for them again; `deploy:all -- --skip-preflight` is the
 equivalent with the runbook's resume machinery.
 
-Flags: `--allow-empty`, `--allow-manifest-downgrade`, `--allow-scratch-files`.
+Flags: `--allow-empty`, `--allow-manifest-downgrade`, `--allow-scratch-files`,
+`--fast`.
+
+### `deploy:push:fast` — the commit, the push, and the Vercel wait
+
+```bash
+npm run deploy:push:fast
+```
+
+`--fast --vercel-target=all`. Everything between the commit and Vercel is
+dropped: the Vercel token round trip, the scratch-file, manifest-downgrade and
+non-empty refusals, `secrets:backup`, and the mirror builds below. What survives
+is only what costs nothing and cannot be recovered from afterwards — the branch
+check, the restore of absent release credentials (a no-op when they are present),
+and `VERCEL_TOKEN` plus `.vercel/project.json`, without which the run cannot
+deploy at all.
+
+The transaction itself is untouched: rollback baseline, control + six + main,
+the wait for `READY`, `smoke:deployed`, and automatic rollback on failure. So the
+result is still tracked and production still cannot stay broken.
+
+Two guards are not optional under `--fast`:
+
+- **`main` only.** A partial `--vercel-target=` is refused outright. That path is
+  a maintenance deploy, it writes no git and therefore never checks the branch —
+  the one way a publish flag could have reached Vercel from another branch.
+- **`HEAD` is advanced to `origin/main` before the commit.** The run fetches and
+  fast-forwards, so the deployment commit is written on top of the remote rather
+  than beside it. Only a fast-forward is automatic: `--ff-only` leaves the
+  uncommitted tree intact and stops if an incoming change would overwrite a
+  modified file, and a diverged local `main` is refused for the operator to
+  reconcile — a rebase over an uncommitted tree is how work disappears.
+
+The uncommitted tree is the point, not an accident: `git add -A` stages every
+modified and untracked file, so anything not yet on GitHub is published by the
+same commit.
+
+The trade is the mirror builds. `--fast` moves a mirror type error from two
+minutes locally to a failed publish cycle after `main` has already moved. Use it
+when the correctness gates have just run — which is what `deploy:push` assumes of
+its caller anyway.
 
 **It does prove the mirrors build.** `services:sync`, `services:build` and
 `control:build` run before the push. That is not a correctness gate sneaking

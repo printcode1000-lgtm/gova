@@ -37,16 +37,16 @@ export function FormField({ id,
 }: FormFieldProps & { id?: string }) {
   return (
     <div id={id} className={cn('space-y-2', className)}>
-      <div id="features-onboarding-presentation-form-components-div-2-4dh0en" className="flex items-center justify-between">
+      <div id={id ? `${id}-div-2-4dh0en` : undefined} className="flex items-center justify-between">
         <Label htmlFor={htmlFor} className="text-sm font-medium">
           {label}
-          {required && <span id="features-onboarding-presentation-form-components-text-3-qunafv" className="text-destructive ml-1">*</span>}
+          {required && <span id={id ? `${id}-text-3-qunafv` : undefined} className="text-destructive ml-1">*</span>}
         </Label>
-        {hint && <span id="features-onboarding-presentation-form-components-text-4-pwnh5f" className="text-xs text-muted-foreground">{hint}</span>}
+        {hint && <span id={id ? `${id}-text-4-pwnh5f` : undefined} className="text-xs text-muted-foreground">{hint}</span>}
       </div>
       {children}
       {error && (
-        <p id="features-onboarding-presentation-form-components-text-5-co2ywm" className="text-xs text-destructive flex items-center gap-1">
+        <p id={id ? `${id}-text-5-co2ywm` : undefined} className="text-xs text-destructive flex items-center gap-1">
           <AlertCircle className="h-3 w-3" />
           {error}
         </p>
@@ -61,7 +61,7 @@ interface FormInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 
 export function FormInput({ error, className, ...props }: FormInputProps & { id?: string }) {
   return (
-    <Input
+    <Input id={props.id ? `${props.id}-input-66c0c4` : undefined}
       className={cn(error && 'border-destructive focus-visible:ring-destructive', className)}
       {...props}
     />
@@ -74,7 +74,7 @@ interface FormTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaEle
 
 export function FormTextarea({ error, className, ...props }: FormTextareaProps & { id?: string }) {
   return (
-    <Textarea
+    <Textarea id={props.id ? `${props.id}-textarea-e0de65` : undefined}
       className={cn(error && 'border-destructive focus-visible:ring-destructive', className)}
       {...props}
     />
@@ -171,7 +171,7 @@ export function MultiSelect({ id,
 
       {(!max || value.length < max) && (
         <div id="features-onboarding-presentation-form-components-div-9-d4za8y" className="relative">
-          <Input
+          <Input id="form-components-multi-select-input-6036eb"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={resolvedPlaceholder}

@@ -201,7 +201,7 @@ export function SellerOrderCard({ id,
 
       <div id="orders-presentation-order-details-orderdetailspagecontent-seller-orders-div-15-pxndt7" className="mt-4 flex flex-wrap gap-2 border-t border-outline-variant pt-3">
         {isBuyer ? (
-          <OrderActionButton
+          <OrderActionButton elementScope="order-details-page-content-seller-orders-seller-order-card-order-action-button-401725"
             action="buyer_cancel_seller_order"
             busyAction={busyAction}
             id={String(sellerOrder.id)}
@@ -214,7 +214,7 @@ export function SellerOrderCard({ id,
           />
         ) : null}
         {isBuyer && canRejectSellerDelivery ? (
-          <OrderActionButton
+          <OrderActionButton elementScope="order-details-page-content-seller-orders-seller-order-card-order-action-button-979c71"
             action="buyer_reject_delivery_seller_order"
             busyAction={busyAction}
             id={String(sellerOrder.id)}
@@ -227,7 +227,7 @@ export function SellerOrderCard({ id,
           />
         ) : null}
         {admin && carrierId && !shipmentExists && !unifiedPlanActive ? (
-          <OrderActionButton
+          <OrderActionButton elementScope="order-details-page-content-seller-orders-seller-order-card-order-action-button-da730d"
             action="admin_create_seller_shipment"
             busyAction={busyAction}
             id={String(sellerOrder.id)}

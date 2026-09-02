@@ -190,3 +190,4 @@ console.log(
   `@asol/architecture-core contract: 1 door, ${files.length} rule and check modules, no import of the application; composition imports sealed.`,
 );
 import './static-dom-runtime-registry-contract.test';
+import './static-dom-component-repeatability-contract.test';

@@ -21,27 +21,27 @@ export function ExecutionIndicator(props: { log: string; tab: DeployTab; status:
   const snapshot = React.useMemo(() => parseDeployRunbookLogSnapshot(props.log, props.tab), [props.log, props.tab]);
   return (
     <div id={props.id} className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
-      <IndicatorCard
+      <IndicatorCard id="deploy-runbook-terminal-execution-indicator-indicator-card-3be353"
         label={TERMINAL_STATUS_LABEL}
         value={props.status}
         help={TERMINAL_STATUS_HELP}
       />
-      <IndicatorCard
+      <IndicatorCard id="deploy-runbook-terminal-execution-indicator-indicator-card-240a14"
         label="الأمر"
         value={snapshot.commandFamily}
         help="هل السجل الحالي من Deploy All أم Deploy Push."
       />
-      <IndicatorCard
+      <IndicatorCard id="deploy-runbook-terminal-execution-indicator-indicator-card-21904d"
         label={TERMINAL_PHASE_LABEL}
         value={snapshot.phase}
         help={TERMINAL_PHASE_HELP}
       />
-      <IndicatorCard
+      <IndicatorCard id="deploy-runbook-terminal-execution-indicator-indicator-card-02521f"
         label={TERMINAL_SECTION_LABEL}
         value={snapshot.section}
         help={TERMINAL_SECTION_HELP}
       />
-      <IndicatorCard
+      <IndicatorCard id="deploy-runbook-terminal-execution-indicator-indicator-card-152117"
         label="الفرع / الأمر"
         value={snapshot.branch}
         help="آخر branch أو npm script بدأ تنفيذه."
@@ -93,12 +93,12 @@ function IndicatorCard(
 ) {
   return (
     <div id={props.id} className={props.className ?? ""}>
-      <div id="features-google-play-console-presentation-deployrunbookterminal-div-6-gtyfsr" className="min-w-0 rounded-md border bg-surface p-3">
-        <div id="features-google-play-console-presentation-deployrunbookterminal-div-7-ffkqki" className="text-xs text-on-surface-variant">{props.label}</div>
-        <div id="features-google-play-console-presentation-deployrunbookterminal-div-8-6mqyet" className="mt-1 text-sm font-semibold break-words sm:text-base" dir="ltr">
+      <div id={props.id ? `${props.id}-div-6-gtyfsr` : undefined} className="min-w-0 rounded-md border bg-surface p-3">
+        <div id={props.id ? `${props.id}-div-7-ffkqki` : undefined} className="text-xs text-on-surface-variant">{props.label}</div>
+        <div id={props.id ? `${props.id}-div-8-6mqyet` : undefined} className="mt-1 text-sm font-semibold break-words sm:text-base" dir="ltr">
           {props.value || "—"}
         </div>
-        <p id="features-google-play-console-presentation-deployrunbookterminal-text-9-viuxns" className="mt-1 text-[11px] text-on-surface-variant break-words">{props.help}</p>
+        <p id={props.id ? `${props.id}-text-9-viuxns` : undefined} className="mt-1 text-[11px] text-on-surface-variant break-words">{props.help}</p>
       </div>
     </div>
   );

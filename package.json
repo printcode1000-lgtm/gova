@@ -167,6 +167,7 @@
     "deploy:revision": "npx tsx scripts/deploy-revision.ts",
     "deploy:push:main": "npx tsx scripts/deploy-push.ts --vercel-target=none",
     "deploy:push:all": "npx tsx scripts/deploy-push.ts --vercel-target=all",
+    "deploy:push:fast": "npx tsx scripts/deploy-push.ts --fast --vercel-target=all",
     "doctor:environment": "npx tsx scripts/check-environment-requirements.ts --scenario=all",
     "doctor:environment:production": "npx tsx scripts/check-environment-requirements.ts --scenario=production --skip-outdated",
     "dependencies:install": "node scripts/install-compatible-dependencies.mjs",

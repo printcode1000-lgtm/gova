@@ -135,7 +135,7 @@ export function ShareMenu({ id, content, locale, trigger }: ShareMenuProps & { i
         className="fixed inset-x-0 bottom-0 top-auto w-full max-w-none translate-x-0 translate-y-0 rounded-b-none rounded-t-[2rem] border-outline-variant/70 bg-surface/98 px-4 pb-[max(1.25rem,var(--asol-safe-area-bottom))] pt-5 shadow-2xl backdrop-blur-xl sm:inset-auto sm:left-1/2 sm:top-1/2 sm:max-w-md sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-3xl sm:p-6"
       >
         <div id="features-sharing-application-sharemenu-div-2-10r1wv" className="mx-auto mb-1 h-1.5 w-12 rounded-full bg-outline-variant sm:hidden" />
-        <DialogHeader className="text-start sm:text-start">
+        <DialogHeader id="share-menu-share-menu-dialog-header-748b20" className="text-start sm:text-start">
           <DialogTitle>{ar ? "مشاركة عبر" : "Share via"}</DialogTitle>
           <DialogDescription>
             {ar
@@ -171,28 +171,28 @@ export function ShareMenu({ id, content, locale, trigger }: ShareMenuProps & { i
         </div>
 
         <div id="features-sharing-application-sharemenu-div-9-gxljjt" className="mt-5 grid grid-cols-4 gap-2 sm:gap-3">
-          <DestinationButton
+          <DestinationButton id="share-menu-share-menu-destination-button-f48252"
             label="WhatsApp"
             destination="whatsapp"
             onClick={() => void run("whatsapp")}
           >
             <FontAwesomeIcon icon={faWhatsapp} />
           </DestinationButton>
-          <DestinationButton
+          <DestinationButton id="share-menu-share-menu-destination-button-0f1d42"
             label="Facebook"
             destination="facebook"
             onClick={() => void run("facebook")}
           >
             <FontAwesomeIcon icon={faFacebookF} />
           </DestinationButton>
-          <DestinationButton
+          <DestinationButton id="share-menu-share-menu-destination-button-f79edb"
             label="Instagram"
             destination="instagram"
             onClick={() => void run("instagram")}
           >
             <FontAwesomeIcon icon={faInstagram} />
           </DestinationButton>
-          <DestinationButton
+          <DestinationButton id="share-menu-share-menu-destination-button-fcf652"
             label={ar ? "مشاركة أخرى" : "More"}
             destination="system"
             onClick={() => void run("system")}
@@ -250,7 +250,7 @@ function DestinationButton({ id,
       className="group flex min-w-0 flex-col items-center gap-2 rounded-2xl p-1 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       aria-label={label}
     >
-      <span id="features-sharing-application-sharemenu-text-13-vjbhoh"
+      <span id={id ? `${id}-text-13-vjbhoh` : undefined}
         className={cn(
           "flex h-14 w-14 items-center justify-center rounded-2xl text-2xl shadow-sm transition group-active:scale-95 [&>svg]:h-6 [&>svg]:w-6",
           destinationStyles[destination],
@@ -258,7 +258,7 @@ function DestinationButton({ id,
       >
         {children}
       </span>
-      <span id="features-sharing-application-sharemenu-text-14-uxafxv" className="w-full truncate text-[11px] font-semibold text-on-surface-variant sm:text-xs">
+      <span id={id ? `${id}-text-14-uxafxv` : undefined} className="w-full truncate text-[11px] font-semibold text-on-surface-variant sm:text-xs">
         {label}
       </span>
     </button>

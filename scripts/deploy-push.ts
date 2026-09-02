@@ -45,6 +45,8 @@ interface DeployPushFlags {
   allowEmpty: boolean;
   allowManifestDowngrade: boolean;
   allowScratchFiles: boolean;
+  /** Publish with nothing between the commit and Vercel. See `--fast`. */
+  fast: boolean;
 }
 
 interface ParsedArgv {
@@ -56,6 +58,7 @@ const DEPLOY_PUSH_FLAG_NAMES = new Set([
   "--allow-empty",
   "--allow-manifest-downgrade",
   "--allow-scratch-files",
+  "--fast",
 ]);
 
 const SCRATCH_FILE_PATTERNS = [
@@ -140,6 +143,76 @@ function clearStaleGitIndexLock(): void {
   );
 }
 
+/**
+ * Bring `HEAD` up to `origin/main` before the deployment commit is written.
+ *
+ * Without this the run pays for the whole readiness sequence and then loses the
+ * push to a non-fast-forward, because `origin/main` moved while it worked. The
+ * fast-forward is deliberately the only automatic case: a dirty tree plus a
+ * rebase is how uncommitted work disappears, and a diverged local `main` is a
+ * decision for the operator, not for a deploy script.
+ *
+ * `--ff-only` keeps the uncommitted tree intact and refuses loudly when an
+ * incoming change would overwrite a modified file, which is exactly the moment
+ * the run must stop rather than commit a half-merged source.
+ */
+function advanceToOriginMain(): void {
+  try {
+    execFileSync("git", ["fetch", "origin", MAIN_BRANCH], { cwd: ROOT, stdio: "inherit" });
+  } catch {
+    console.log(
+      `[deploy:push] Could not fetch origin/${MAIN_BRANCH}; continuing with the local ref.`,
+    );
+    return;
+  }
+
+  let remoteHead = "";
+  try {
+    remoteHead = git(["rev-parse", `origin/${MAIN_BRANCH}`]);
+  } catch {
+    return; // No remote ref locally; let the push decide.
+  }
+
+  const localHead = git(["rev-parse", "HEAD"]);
+  if (localHead === remoteHead) return;
+
+  const behind = isAncestor(localHead, remoteHead);
+  if (!behind) {
+    if (isAncestor(remoteHead, localHead)) return; // Local is ahead: normal.
+    throw new Error(
+      `Local ${MAIN_BRANCH} and origin/${MAIN_BRANCH} have diverged. ` +
+        "Reconcile them yourself before publishing; deploy:push will not rebase over an uncommitted tree.",
+    );
+  }
+
+  console.log(
+    `[deploy:push] Fast-forwarding ${MAIN_BRANCH} to origin/${MAIN_BRANCH} (${remoteHead.slice(0, 12)})...`,
+  );
+  try {
+    execFileSync("git", ["merge", "--ff-only", `origin/${MAIN_BRANCH}`], {
+      cwd: ROOT,
+      stdio: "inherit",
+    });
+  } catch {
+    throw new Error(
+      `Could not fast-forward to origin/${MAIN_BRANCH}: an incoming change would overwrite an uncommitted file. ` +
+        "Commit or stash that file and run deploy:push again.",
+    );
+  }
+}
+
+function isAncestor(candidate: string, descendant: string): boolean {
+  try {
+    execFileSync("git", ["merge-base", "--is-ancestor", candidate, descendant], {
+      cwd: ROOT,
+      stdio: "ignore",
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function assertMainDeploymentCredentials(): void {
   if (!process.env.VERCEL_TOKEN?.trim()) {
     throw new Error(
@@ -169,6 +242,7 @@ function parseArgv(argv: readonly string[]): ParsedArgv {
       allowEmpty: argv.includes("--allow-empty"),
       allowManifestDowngrade: argv.includes("--allow-manifest-downgrade"),
       allowScratchFiles: argv.includes("--allow-scratch-files"),
+      fast: argv.includes("--fast"),
     },
     targetArgs: argv.filter((arg) => arg.startsWith("--vercel-target=")),
   };
@@ -283,6 +357,24 @@ async function assertVercelAccountsForTargets(targets: readonly DeployPushTarget
   );
 }
 
+/**
+ * What runs before the commit.
+ *
+ * `--fast` keeps only the checks that cost nothing and cannot be recovered from
+ * afterwards — the branch, and the credentials without which the run cannot
+ * deploy at all — and drops everything that costs wall-clock time: the Vercel
+ * token round trip, the scratch/manifest/non-empty refusals, the mirror builds
+ * and (in `main`) the secrets backup. What remains is the push and the Vercel
+ * wait, which is the whole point of the flag.
+ *
+ * The trade is explicit: a type error inside a service mirror is invisible to
+ * the root `typecheck`, so `--fast` moves that failure from two minutes locally
+ * to a failed deployment after `main` has already moved. The release
+ * transaction still rolls the accounts back, so production does not stay broken
+ * — the cost is a wasted publish cycle, not an outage. Use it when the
+ * correctness gates already ran, which is exactly what `deploy:push` assumes of
+ * its caller in the first place.
+ */
 async function assertFastPublishReadiness(
   targets: readonly DeployPushTarget[],
   flags: DeployPushFlags,
@@ -290,6 +382,12 @@ async function assertFastPublishReadiness(
   assertMainBranch();
   await ensureReleaseSecretsRestored("deploy:push");
   assertMainDeploymentCredentials();
+  if (flags.fast) {
+    console.log(
+      "[deploy:push] --fast: skipping Vercel account access, publish refusals, and mirror builds.",
+    );
+    return;
+  }
   await assertVercelAccountsForTargets(targets);
   assertNoScratchFiles(flags);
   assertReleaseManifestNotDowngraded(flags);
@@ -706,6 +804,19 @@ async function main(): Promise<void> {
   const { flags, targetArgs } = parseArgv(process.argv.slice(2));
   const isolatedTargets = await resolveServiceDeployTargets(targetArgs);
 
+  // A maintenance deploy diverts before any branch check, because it writes
+  // nothing to git. `--fast` is a publish flag, so a partial selection under it
+  // would silently deploy from whatever branch the caller happened to be on —
+  // the one path that could reach Vercel off `main`. It is refused instead.
+  if (flags.fast && isolatedTargets.length !== ALL_DEPLOY_PUSH_TARGETS.length) {
+    fail(
+      "--fast publishes the complete set (control + six workloads + main). " +
+        `Selected: ${isolatedTargets.join(", ") || "(none)"}. ` +
+        "Drop --fast for a targeted maintenance deploy.",
+    );
+    return;
+  }
+
   // Publishing is all-or-nothing: control and all six workloads, or no push.
   if (isolatedTargets.length !== ALL_DEPLOY_PUSH_TARGETS.length) {
     await runTargetedMaintenanceDeploy(isolatedTargets);
@@ -714,15 +825,26 @@ async function main(): Promise<void> {
 
   await assertFastPublishReadiness(isolatedTargets, flags);
 
-  try {
-    await runDeploymentNpmScript("secrets:backup", { logPrefix: "deploy:push" });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    fail(`secrets:backup did not complete: ${message}`);
-    return;
+  if (flags.fast) {
+    console.log("[deploy:push] --fast: skipping secrets:backup.");
+  } else {
+    try {
+      await runDeploymentNpmScript("secrets:backup", { logPrefix: "deploy:push" });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      fail(`secrets:backup did not complete: ${message}`);
+      return;
+    }
   }
 
   clearStaleGitIndexLock();
+
+  try {
+    advanceToOriginMain();
+  } catch (error) {
+    fail(error instanceof Error ? error.message : String(error));
+    return;
+  }
 
   const timestamp = new Date().toISOString();
   const mainComment = `deploy(push): ${timestamp}`;

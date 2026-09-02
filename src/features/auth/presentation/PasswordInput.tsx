@@ -28,9 +28,9 @@ export function PasswordInput({ id, name }: PasswordInputProps & { id?: string }
       control={control}
       render={({ field, fieldState }) => (
         <div id={id} className="space-y-2">
-          <span id="features-auth-presentation-passwordinput-text-2-xmpzv3" className="text-sm font-semibold text-on-surface">{label}</span>
-          <div id="features-auth-presentation-passwordinput-div-3-orbkso" className="relative">
-            <input id="features-auth-presentation-passwordinput-input-4-l4o5cf"
+          <span id={id ? `${id}-text-2-xmpzv3` : undefined} className="text-sm font-semibold text-on-surface">{label}</span>
+          <div id={id ? `${id}-div-3-orbkso` : undefined} className="relative">
+            <input id={id ? `${id}-input-4-l4o5cf` : undefined}
               name={name}
               autoComplete={name === 'password' ? 'new-password' : 'off'}
               type={show ? 'text' : 'password'}
@@ -41,7 +41,7 @@ export function PasswordInput({ id, name }: PasswordInputProps & { id?: string }
                 field.onChange(foldPasswordDigits(event.target.value))
               }
             />
-            <button id="features-auth-presentation-passwordinput-button-5-snw7nm"
+            <button id={id ? `${id}-button-5-snw7nm` : undefined}
               type="button"
               className="absolute end-0 top-0 h-full px-3 text-on-surface-variant"
               onClick={() => setShow((s) => !s)}
@@ -51,7 +51,7 @@ export function PasswordInput({ id, name }: PasswordInputProps & { id?: string }
               {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
           </div>
-          {fieldState.error && <p id="features-auth-presentation-passwordinput-text-6-bsem0s" className="text-xs text-error">{fieldState.error.message}</p>}
+          {fieldState.error && <p id={id ? `${id}-text-6-bsem0s` : undefined} className="text-xs text-error">{fieldState.error.message}</p>}
         </div>
       )}
     />

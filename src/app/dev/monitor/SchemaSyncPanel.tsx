@@ -121,8 +121,8 @@ export function SchemaSyncPanel() {
 function Stat({ id, label, value }: { label: string; value: string } & { id?: string }) {
   return (
     <div id={id} style={{ background: 'rgba(255,255,255,0.04)', padding: 12, borderRadius: 8 }}>
-      <div id="app-dev-monitor-schemasyncpanel-div-30-a4i6ph" style={{ fontSize: 11, opacity: 0.6, marginBottom: 4 }}>{label}</div>
-      <div id="app-dev-monitor-schemasyncpanel-div-31-ucvpjn" style={{ fontFamily: 'monospace', fontSize: 13 }}>{value}</div>
+      <div id={id ? `${id}-div-30-a4i6ph` : undefined} style={{ fontSize: 11, opacity: 0.6, marginBottom: 4 }}>{label}</div>
+      <div id={id ? `${id}-div-31-ucvpjn` : undefined} style={{ fontFamily: 'monospace', fontSize: 13 }}>{value}</div>
     </div>
   );
 }

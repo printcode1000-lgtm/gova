@@ -14,6 +14,7 @@ import { OverlayChromeBranch } from "@/shared/ui/overlay-chrome-branch";
 
 import { formatInspectorOutput } from "./ui-attribute-inspector-model";
 import {
+  pickIdentifiedElement,
   pickInspectedElement,
   type InspectedElement,
 } from "./ui-inspector-element-picker";
@@ -35,9 +36,9 @@ function attributesFor(element: InspectedElement): Record<string, string> {
 }
 
 /**
- * Super-admin-only touch inspector. While active, a pointer selects the exact
- * element it lands on — the way a browser element picker does — copies that
- * element's safe metadata, and never triggers the element itself.
+ * Super-admin-only touch inspector. While active, a pointer selects the DOM
+ * element it lands on, or its closest identified ancestor for unowned internal
+ * DOM, copies that id, and never triggers the touched element itself.
  */
 export function SuperAdminUiAttributeInspector() {
   const { session, isLoading } = useSession();
@@ -45,9 +46,9 @@ export function SuperAdminUiAttributeInspector() {
   const [enabled, setEnabled] = useState(false);
   const [copiedText, setCopiedText] = useState("");
   const [copyState, setCopyState] = useState<CopyState>("idle");
-  const [selectedAttributes, setSelectedAttributes] = useState<Record<string, string> | null>(null);
   const selectedRef = useRef<InspectedElement | null>(null);
   const selectedOutlineRef = useRef<{ outline: string; outlineOffset: string } | null>(null);
+  const copySequenceRef = useRef(0);
 
   const clearSelection = () => {
     if (selectedRef.current && selectedOutlineRef.current) {
@@ -62,7 +63,6 @@ export function SuperAdminUiAttributeInspector() {
     if (authorized) return;
     setEnabled(false);
     setCopiedText("");
-    setSelectedAttributes(null);
     clearSelection();
   }, [authorized]);
 
@@ -84,11 +84,19 @@ export function SuperAdminUiAttributeInspector() {
     }
 
     const onPointerDown = (event: PointerEvent) => {
-      const selected = pickInspectedElement(event.target);
-      if (!selected || isInspectorControl(selected)) return;
+      const touched = pickInspectedElement(event.target);
+      if (!touched || isInspectorControl(touched)) return;
 
       event.preventDefault();
       event.stopImmediatePropagation();
+      const selected = pickIdentifiedElement(touched);
+      if (!selected) {
+        setCopiedText(formatInspectorOutput(undefined));
+        setCopyState("idle");
+        clearSelection();
+        return;
+      }
+
       clearSelection();
       selectedRef.current = selected;
       selectedOutlineRef.current = {
@@ -99,10 +107,12 @@ export function SuperAdminUiAttributeInspector() {
       selected.style.outlineOffset = "2px";
 
       const ownAttributes = attributesFor(selected);
-      setSelectedAttributes(ownAttributes);
       const text = formatInspectorOutput(ownAttributes);
       setCopiedText(text);
+      setCopyState("idle");
+      const copySequence = ++copySequenceRef.current;
       void NativeCore.writeClipboard({ string: text }).then((result) => {
+        if (copySequence !== copySequenceRef.current) return;
         setCopyState(result.ok ? "copied" : "failed");
       });
     };
@@ -130,7 +140,7 @@ export function SuperAdminUiAttributeInspector() {
 
   const status = enabled
     ? copyState === "failed"
-      ? "تعذر النسخ"
+      ? `${copiedText} - تعذر النسخ`
       : copiedText || "المس أي عنصر لنسخ id"
     : "فحص Attributes";
   return (
@@ -149,7 +159,6 @@ export function SuperAdminUiAttributeInspector() {
           setEnabled((current) => !current);
           setCopyState("idle");
           setCopiedText("");
-          setSelectedAttributes(null);
         }}
         className="pointer-events-auto flex h-11 min-w-11 items-center justify-center rounded-full border border-primary/40 bg-primary text-on-primary shadow-lg active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
         aria-label={enabled ? "إيقاف فحص Attributes" : "تشغيل فحص Attributes"}

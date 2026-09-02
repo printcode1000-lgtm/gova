@@ -71,17 +71,17 @@ export function Summary(
 ) {
   return (
     <section id={props.id} className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      <InfoCard
+      <InfoCard id="deploy-runbook-page-sections-summary-info-card-43425a"
         title="الفروع المفعّلة"
         value={`${props.selectedCount} / ${props.totalCount}`}
         help={BRANCH_CHECKBOX_HELP}
       />
-      <InfoCard
+      <InfoCard id="deploy-runbook-page-sections-summary-info-card-2b8ea6"
         title={EXECUTION_STATE_TITLE}
         value={props.status}
         help={EXECUTION_STATE_HELP}
       />
-      <InfoCard
+      <InfoCard id="deploy-runbook-page-sections-summary-info-card-c68d8a"
         title="سلوك الخطأ"
         value={props.continueOnError ? "استمرار" : "توقف"}
         help={CONTINUE_ON_ERROR_HELP}
@@ -118,7 +118,7 @@ export function DeployAllPanel(
       scenarios={deployAllScenarios}
       extraOptions={
         <>
-          <Option
+          <Option id="deploy-runbook-page-sections-deploy-all-panel-option-878ab5"
             checked={props.continueOnError}
             onChange={props.setContinueOnError}
             label="الاستمرار بعد الخطأ"
@@ -127,7 +127,7 @@ export function DeployAllPanel(
               "الافتراضي أكثر أماناً: التوقف عند أول فشل."
             }
           />
-          <Option
+          <Option id="deploy-runbook-page-sections-deploy-all-panel-option-b87187"
             checked={props.skipPreflight}
             onChange={props.setSkipPreflight}
             label="تجاوز preflight"
@@ -149,10 +149,10 @@ function InfoCard(
 ) {
   return (
     <div id={props.id} className={props.className ?? ""}>
-      <div id="features-google-play-console-presentation-deployrunbookpagesections-div-9-yemsfm" className="min-w-0 rounded-md border bg-surface p-3">
-        <div id="features-google-play-console-presentation-deployrunbookpagesections-div-10-2ng6si" className="text-xs text-on-surface-variant">{props.title}</div>
-        <div id="features-google-play-console-presentation-deployrunbookpagesections-div-11-fndflv" className="mt-1 text-lg font-semibold break-words">{props.value}</div>
-        <p id="features-google-play-console-presentation-deployrunbookpagesections-text-12-afpxqg" className="mt-1 text-xs text-on-surface-variant break-words">{props.help}</p>
+      <div id={props.id ? `${props.id}-div-9-yemsfm` : undefined} className="min-w-0 rounded-md border bg-surface p-3">
+        <div id={props.id ? `${props.id}-div-10-2ng6si` : undefined} className="text-xs text-on-surface-variant">{props.title}</div>
+        <div id={props.id ? `${props.id}-div-11-fndflv` : undefined} className="mt-1 text-lg font-semibold break-words">{props.value}</div>
+        <p id={props.id ? `${props.id}-text-12-afpxqg` : undefined} className="mt-1 text-xs text-on-surface-variant break-words">{props.help}</p>
       </div>
     </div>
   );

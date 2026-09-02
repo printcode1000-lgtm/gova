@@ -132,22 +132,22 @@ export function DiscountEditor({ id,
       </div>
 
       <div id="seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-div-15-7daduj" className="mt-4 grid gap-3 md:grid-cols-2">
-        <Field label={ar ? "عنوان العرض" : "Title"} description={ar ? "اسم واضح وقصير يراه العميل." : "A clear, short name customers will see."}>
-          <Input
+        <Field id="seller-discounts-manager-form-controls-discount-editor-field-51f293" label={ar ? "عنوان العرض" : "Title"} description={ar ? "اسم واضح وقصير يراه العميل." : "A clear, short name customers will see."}>
+          <Input id="seller-discounts-manager-form-controls-discount-editor-input-ff5588"
             value={discount.title}
             onChange={(event) => set("title", event.target.value)}
             maxLength={90}
             placeholder={ar ? "مثال: خصم نهاية الأسبوع" : "Example: Weekend discount"}
           />
         </Field>
-        <Field label={ar ? "الأولوية" : "Priority"} description={ar ? "العرض ذو الرقم الأعلى يُفحص أولًا." : "Higher numbers are evaluated first."}>
+        <Field id="seller-discounts-manager-form-controls-discount-editor-field-509c98" label={ar ? "الأولوية" : "Priority"} description={ar ? "العرض ذو الرقم الأعلى يُفحص أولًا." : "Higher numbers are evaluated first."}>
           <NumberInput
             value={discount.priority}
             onChange={(value) => set("priority", value)}
             placeholder={ar ? "مثال: 100" : "Example: 100"}
           />
         </Field>
-        <Field label={ar ? "نوع القيمة" : "Value type"} description={ar ? "حدد كيف تُحسب فائدة العرض." : "Choose how the offer benefit is calculated."}>
+        <Field id="seller-discounts-manager-form-controls-discount-editor-field-73573e" label={ar ? "نوع القيمة" : "Value type"} description={ar ? "حدد كيف تُحسب فائدة العرض." : "Choose how the offer benefit is calculated."}>
           <select id="seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-select-16-uafsia"
             value={discount.valueType}
             onChange={(event) =>
@@ -162,7 +162,7 @@ export function DiscountEditor({ id,
             <option id="seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-option-21-if2ynr" value="free_gift">{ar ? "هدية مجانية" : "Free gift"}</option>
           </select>
         </Field>
-        <Field
+        <Field id="seller-discounts-manager-form-controls-discount-editor-field-3c45eb"
           description={ar ? "أدخل النسبة أو المبلغ بالجنيه حسب النوع المختار." : "Enter the percentage or EGP amount for the selected type."}
           label={
             discount.valueType === "percentage"
@@ -180,43 +180,43 @@ export function DiscountEditor({ id,
             <MinorCurrencyInput value={discount.value} onChange={(value) => set("value", value)} placeholder={ar ? "مثال: 50.00" : "Example: 50.00"} />
           )}
         </Field>
-        <Field label={ar ? "حد أدنى للمشتريات بالجنيهات" : "Minimum purchases in EGP"} description={ar ? "أقل إجمالي مشتريات مطلوب لتطبيق العرض؛ اتركه فارغًا لعدم التقييد." : "Minimum cart subtotal required; leave empty for no minimum."}>
+        <Field id="seller-discounts-manager-form-controls-discount-editor-field-f70f99" label={ar ? "حد أدنى للمشتريات بالجنيهات" : "Minimum purchases in EGP"} description={ar ? "أقل إجمالي مشتريات مطلوب لتطبيق العرض؛ اتركه فارغًا لعدم التقييد." : "Minimum cart subtotal required; leave empty for no minimum."}>
           <MinorCurrencyInput
             value={discount.conditions.minSubtotalMinor}
             onChange={(value) => setCondition("minSubtotalMinor", value)}
             placeholder={ar ? "مثال: 250.00" : "Example: 250.00"}
           />
         </Field>
-        <Field label={ar ? "حد أقصى للخصم بالجنيهات" : "Maximum discount in EGP"} description={ar ? "سقف قيمة الخصم؛ اتركه فارغًا لعدم وضع سقف." : "Discount ceiling; leave empty for no cap."}>
+        <Field id="seller-discounts-manager-form-controls-discount-editor-field-6f14b5" label={ar ? "حد أقصى للخصم بالجنيهات" : "Maximum discount in EGP"} description={ar ? "سقف قيمة الخصم؛ اتركه فارغًا لعدم وضع سقف." : "Discount ceiling; leave empty for no cap."}>
           <MinorCurrencyInput
             value={discount.maxDiscountMinor}
             onChange={(value) => set("maxDiscountMinor", value)}
             placeholder={ar ? "مثال: 100.00" : "Example: 100.00"}
           />
         </Field>
-        <Field label={ar ? "حد أدنى للكمية" : "Minimum quantity"} description={ar ? "عدد القطع اللازم حتى يصبح العرض مؤهلًا." : "Number of items required before the offer qualifies."}>
+        <Field id="seller-discounts-manager-form-controls-discount-editor-field-857b71" label={ar ? "حد أدنى للكمية" : "Minimum quantity"} description={ar ? "عدد القطع اللازم حتى يصبح العرض مؤهلًا." : "Number of items required before the offer qualifies."}>
           <NumberInput
             value={discount.conditions.minQuantity}
             onChange={(value) => setCondition("minQuantity", value)}
             placeholder={ar ? "مثال: 2" : "Example: 2"}
           />
         </Field>
-        <Field label={ar ? "كمية الشراء لخصم الكمية" : "Buy quantity"} description={ar ? "عدد القطع التي يبدأ عندها خصم الكمية." : "Item count at which the quantity discount starts."}>
+        <Field id="seller-discounts-manager-form-controls-discount-editor-field-3c1198" label={ar ? "كمية الشراء لخصم الكمية" : "Buy quantity"} description={ar ? "عدد القطع التي يبدأ عندها خصم الكمية." : "Item count at which the quantity discount starts."}>
           <NumberInput
             value={discount.conditions.buyQuantity}
             onChange={(value) => setCondition("buyQuantity", value)}
             placeholder={ar ? "مثال: 3" : "Example: 3"}
           />
         </Field>
-        <Field label={ar ? "كود الكوبون" : "Coupon code"} description={ar ? "الكود الذي يدخله العميل للاستفادة من العرض." : "Code customers enter to redeem the offer."}>
-          <Input
+        <Field id="seller-discounts-manager-form-controls-discount-editor-field-0701c2" label={ar ? "كود الكوبون" : "Coupon code"} description={ar ? "الكود الذي يدخله العميل للاستفادة من العرض." : "Code customers enter to redeem the offer."}>
+          <Input id="seller-discounts-manager-form-controls-discount-editor-input-5df686"
             value={discount.couponCode}
             onChange={(event) => set("couponCode", event.target.value)}
             placeholder={ar ? "مثال: WELCOME10" : "Example: WELCOME10"}
           />
         </Field>
-        <Field label={ar ? "منتج الهدية" : "Gift product ID"} description={ar ? "معرّف المنتج الذي سيُضاف مجانًا." : "ID of the product added as a free gift."}>
-          <Input
+        <Field id="seller-discounts-manager-form-controls-discount-editor-field-774e6b" label={ar ? "منتج الهدية" : "Gift product ID"} description={ar ? "معرّف المنتج الذي سيُضاف مجانًا." : "ID of the product added as a free gift."}>
+          <Input id="seller-discounts-manager-form-controls-discount-editor-input-033d55"
             value={discount.scope.giftProductId}
             onChange={(event) =>
               onChange((current) => ({
@@ -227,22 +227,22 @@ export function DiscountEditor({ id,
             placeholder={ar ? "أدخل معرّف منتج الهدية" : "Enter gift product ID"}
           />
         </Field>
-        <Field label={ar ? "منتجات محددة" : "Product IDs"} description={ar ? "معرّفات المنتجات المشمولة، مفصولة بفواصل." : "Included product IDs, separated by commas."}>
-          <Input
+        <Field id="seller-discounts-manager-form-controls-discount-editor-field-c477f2" label={ar ? "منتجات محددة" : "Product IDs"} description={ar ? "معرّفات المنتجات المشمولة، مفصولة بفواصل." : "Included product IDs, separated by commas."}>
+          <Input id="seller-discounts-manager-form-controls-discount-editor-input-0c629e"
             value={discount.scope.productIds.join(", ")}
             onChange={(event) => setScopeText("productIds", event.target.value)}
             placeholder={ar ? "مثال: product-1, product-2" : "Example: product-1, product-2"}
           />
         </Field>
-        <Field label={ar ? "تصنيفات محددة" : "Category IDs"} description={ar ? "معرّفات التصنيفات المشمولة، مفصولة بفواصل." : "Included category IDs, separated by commas."}>
-          <Input
+        <Field id="seller-discounts-manager-form-controls-discount-editor-field-8c0b6d" label={ar ? "تصنيفات محددة" : "Category IDs"} description={ar ? "معرّفات التصنيفات المشمولة، مفصولة بفواصل." : "Included category IDs, separated by commas."}>
+          <Input id="seller-discounts-manager-form-controls-discount-editor-input-2aeeac"
             value={discount.scope.categoryIds.join(", ")}
             onChange={(event) => setScopeText("categoryIds", event.target.value)}
             placeholder={ar ? "مثال: category-1, category-2" : "Example: category-1, category-2"}
           />
         </Field>
-        <Field label={ar ? "منتجات الباقة" : "Bundle product IDs"} description={ar ? "معرّفات المنتجات التي يجب شراؤها معًا." : "Product IDs that must be purchased together."}>
-          <Input
+        <Field id="seller-discounts-manager-form-controls-discount-editor-field-7d3b0e" label={ar ? "منتجات الباقة" : "Bundle product IDs"} description={ar ? "معرّفات المنتجات التي يجب شراؤها معًا." : "Product IDs that must be purchased together."}>
+          <Input id="seller-discounts-manager-form-controls-discount-editor-input-9d25b8"
             value={discount.scope.bundleProductIds.join(", ")}
             onChange={(event) =>
               setScopeText("bundleProductIds", event.target.value)
@@ -250,8 +250,8 @@ export function DiscountEditor({ id,
             placeholder={ar ? "مثال: product-1, product-2" : "Example: product-1, product-2"}
           />
         </Field>
-        <Field label={ar ? "منتجات مستثناة" : "Excluded product IDs"} description={ar ? "منتجات لا ينطبق عليها العرض، مفصولة بفواصل." : "Products excluded from the offer, separated by commas."}>
-          <Input
+        <Field id="seller-discounts-manager-form-controls-discount-editor-field-96539e" label={ar ? "منتجات مستثناة" : "Excluded product IDs"} description={ar ? "منتجات لا ينطبق عليها العرض، مفصولة بفواصل." : "Products excluded from the offer, separated by commas."}>
+          <Input id="seller-discounts-manager-form-controls-discount-editor-input-23e4aa"
             value={discount.scope.excludedProductIds.join(", ")}
             onChange={(event) =>
               setScopeText("excludedProductIds", event.target.value)
@@ -259,30 +259,30 @@ export function DiscountEditor({ id,
             placeholder={ar ? "مثال: product-3, product-4" : "Example: product-3, product-4"}
           />
         </Field>
-        <Field label={ar ? "بداية العرض" : "Starts at"} description={ar ? "التاريخ والوقت اللذان يبدأ عندهما العرض." : "Date and time when the offer begins."}>
-          <Input
+        <Field id="seller-discounts-manager-form-controls-discount-editor-field-4939a9" label={ar ? "بداية العرض" : "Starts at"} description={ar ? "التاريخ والوقت اللذان يبدأ عندهما العرض." : "Date and time when the offer begins."}>
+          <Input id="seller-discounts-manager-form-controls-discount-editor-input-9934a3"
             type="datetime-local"
             value={discount.startsAt.slice(0, 16)}
             onChange={(event) => set("startsAt", event.target.value)}
             placeholder={ar ? "اختر تاريخ ووقت البداية" : "Choose start date and time"}
           />
         </Field>
-        <Field label={ar ? "نهاية العرض" : "Ends at"} description={ar ? "التاريخ والوقت اللذان يتوقف عندهما العرض." : "Date and time when the offer ends."}>
-          <Input
+        <Field id="seller-discounts-manager-form-controls-discount-editor-field-9dd048" label={ar ? "نهاية العرض" : "Ends at"} description={ar ? "التاريخ والوقت اللذان يتوقف عندهما العرض." : "Date and time when the offer ends."}>
+          <Input id="seller-discounts-manager-form-controls-discount-editor-input-bc615e"
             type="datetime-local"
             value={discount.endsAt.slice(0, 16)}
             onChange={(event) => set("endsAt", event.target.value)}
             placeholder={ar ? "اختر تاريخ ووقت النهاية" : "Choose end date and time"}
           />
         </Field>
-        <Field label={ar ? "حد الاستخدام الكلي" : "Total usage limit"} description={ar ? "أقصى عدد مرات لاستخدام العرض من جميع العملاء." : "Maximum redemptions across all customers."}>
+        <Field id="seller-discounts-manager-form-controls-discount-editor-field-aefb0c" label={ar ? "حد الاستخدام الكلي" : "Total usage limit"} description={ar ? "أقصى عدد مرات لاستخدام العرض من جميع العملاء." : "Maximum redemptions across all customers."}>
           <NumberInput
             value={discount.usageLimits.total}
             onChange={(value) => setUsage("total", value)}
             placeholder={ar ? "مثال: 100" : "Example: 100"}
           />
         </Field>
-        <Field label={ar ? "حد الاستخدام لكل مشتري" : "Per-buyer limit"} description={ar ? "أقصى عدد مرات مسموح بها لكل عميل." : "Maximum redemptions allowed for each customer."}>
+        <Field id="seller-discounts-manager-form-controls-discount-editor-field-027a74" label={ar ? "حد الاستخدام لكل مشتري" : "Per-buyer limit"} description={ar ? "أقصى عدد مرات مسموح بها لكل عميل." : "Maximum redemptions allowed for each customer."}>
           <NumberInput
             value={discount.usageLimits.perBuyer}
             onChange={(value) => setUsage("perBuyer", value)}
@@ -349,8 +349,8 @@ export function Field({ id,
 } & { id?: string }) {
   return (
     <label id={id} className="space-y-1.5 text-xs font-semibold text-on-surface">
-      <span id="seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-text-25-m2nrhl" className="block">{label}</span>
-      <span id="seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-text-26-yj1gif" className="block font-normal leading-5 text-on-surface-variant">{description}</span>
+      <span id={id ? `${id}-text-25-m2nrhl` : undefined} className="block">{label}</span>
+      <span id={id ? `${id}-text-26-yj1gif` : undefined} className="block font-normal leading-5 text-on-surface-variant">{description}</span>
       {children}
     </label>
   );

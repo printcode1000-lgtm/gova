@@ -83,28 +83,28 @@ function OfferCard({ id,
             : Percent;
   return (
     <article id={id} className="min-w-0 rounded-2xl border border-outline-variant bg-surface-container-low/40 p-3 sm:p-4">
-      <div id="features-seller-discounts-presentation-sellerdiscountspreview-div-11-fxwwwz" className="flex min-w-0 items-start gap-3">
-        <span id="features-seller-discounts-presentation-sellerdiscountspreview-text-12-h2uh0i" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary/10 text-secondary">
+      <div className="flex min-w-0 items-start gap-3">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary/10 text-secondary">
           <Icon className="h-5 w-5" />
         </span>
-        <div id="features-seller-discounts-presentation-sellerdiscountspreview-div-13-tiwm0h" className="min-w-0 flex-1">
-          <h3 id="features-seller-discounts-presentation-sellerdiscountspreview-heading-14-kua4wg" className="break-words text-sm font-bold text-on-surface">
+        <div className="min-w-0 flex-1">
+          <h3 className="break-words text-sm font-bold text-on-surface">
             {discount.title || (ar ? "عرض متاح" : "Available offer")}
           </h3>
-          <p id="features-seller-discounts-presentation-sellerdiscountspreview-text-15-1oa8yg" className="mt-1 break-words text-xs leading-5 text-on-surface-variant">
+          <p className="mt-1 break-words text-xs leading-5 text-on-surface-variant">
             {describe(discount, locale)}
           </p>
           {discount.couponCode ? (
-            <code id="features-seller-discounts-presentation-sellerdiscountspreview-code-16-rjpn9m" className="mt-2 inline-flex max-w-full break-all rounded-lg border border-primary/30 bg-primary/10 px-2 py-1 text-xs font-bold text-primary">
+            <code className="mt-2 inline-flex max-w-full break-all rounded-lg border border-primary/30 bg-primary/10 px-2 py-1 text-xs font-bold text-primary">
               {discount.couponCode}
             </code>
           ) : null}
           {discount.description ? (
-            <p id="features-seller-discounts-presentation-sellerdiscountspreview-text-17-y48wyo" className="mt-2 break-words text-xs leading-5 text-on-surface-variant">
+            <p className="mt-2 break-words text-xs leading-5 text-on-surface-variant">
               {discount.description}
             </p>
           ) : null}
-          <div id="features-seller-discounts-presentation-sellerdiscountspreview-div-18-mglwhs" className="mt-3 grid min-w-0 gap-2 border-t border-outline-variant/70 pt-3 text-[11px] leading-5 text-on-surface-variant sm:grid-cols-2">
+          <div className="mt-3 grid min-w-0 gap-2 border-t border-outline-variant/70 pt-3 text-[11px] leading-5 text-on-surface-variant sm:grid-cols-2">
             <Detail icon={Users} text={describeAudience(discount, locale)} />
             <Detail icon={ShoppingBag} text={describeScope(discount, locale)} />
             <Detail icon={CalendarDays} text={describeValidity(discount, locale)} />
@@ -126,7 +126,7 @@ function Detail({ id,
   return (
     <span id={id} className="flex min-w-0 items-start gap-1.5 rounded-lg bg-surface px-2 py-1.5">
       <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
-      <span id="features-seller-discounts-presentation-sellerdiscountspreview-text-20-cw3wae" className="min-w-0 break-words">{text}</span>
+      <span className="min-w-0 break-words">{text}</span>
     </span>
   );
 }

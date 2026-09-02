@@ -16,12 +16,12 @@ function IndicatorCard(props: {
 } & { id?: string }) {
   return (
     <div id={props.id} className={props.className ?? ""}>
-      <div id="google-play-console-presentation-components-androidreleasepathsterminal-div-2-ese66d" className="min-w-0 rounded-md border bg-surface p-3">
-        <div id="google-play-console-presentation-components-androidreleasepathsterminal-div-3-7moolp" className="text-xs text-on-surface-variant">{props.label}</div>
-        <div id="google-play-console-presentation-components-androidreleasepathsterminal-div-4-soasvp" className="mt-1 text-sm font-semibold break-words sm:text-base" dir="ltr">
+      <div id={props.id ? `${props.id}-div-2-ese66d` : undefined} className="min-w-0 rounded-md border bg-surface p-3">
+        <div id={props.id ? `${props.id}-div-3-7moolp` : undefined} className="text-xs text-on-surface-variant">{props.label}</div>
+        <div id={props.id ? `${props.id}-div-4-soasvp` : undefined} className="mt-1 text-sm font-semibold break-words sm:text-base" dir="ltr">
           {props.value || "—"}
         </div>
-        <p id="google-play-console-presentation-components-androidreleasepathsterminal-text-5-pxhirv" className="mt-1 text-[11px] text-on-surface-variant break-words">{props.help}</p>
+        <p id={props.id ? `${props.id}-text-5-pxhirv` : undefined} className="mt-1 text-[11px] text-on-surface-variant break-words">{props.help}</p>
       </div>
     </div>
   );

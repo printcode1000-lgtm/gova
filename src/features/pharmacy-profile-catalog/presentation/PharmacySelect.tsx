@@ -24,7 +24,7 @@ export function PharmacySelect({ id,
 
   return (
     <label id={id} className="space-y-1.5 text-sm font-medium">
-      <span id="features-pharmacy-profile-catalog-presentation-pharmacyselect-text-2-62lro2">{label}</span>
+      <span id={id ? `${id}-text-2-62lro2` : undefined}>{label}</span>
       <Select value={value} disabled={disabled} onValueChange={onChange}>
         <SelectTrigger className="asol-control asol-field-surface w-full border border-input text-sm focus:outline-none focus:ring-2 focus:ring-ring">
           <SelectValue placeholder={placeholder} />

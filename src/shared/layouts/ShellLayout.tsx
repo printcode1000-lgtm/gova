@@ -11,8 +11,8 @@ export function ShellLayout({ id, children }: { children: React.ReactNode } & { 
   const pathname = usePathname();
 
   if (ROUTES_WITHOUT_SHELL.includes(pathname)) {
-    return <UiPageBoundary id={id}>{children}</UiPageBoundary>;
+    return <UiPageBoundary id={id ? `${id}-ui-page-boundary-a4c0f9` : undefined}>{children}</UiPageBoundary>;
   }
 
-  return <AppShell id={id}>{children}</AppShell>;
+  return <AppShell id={id ? `${id}-app-shell-7dd176` : undefined}>{children}</AppShell>;
 }

@@ -23,6 +23,7 @@ import { checkPackageCycleContract } from './checks/package-cycle-contract';
 import { checkPageSaveWriteGatewayContract } from './checks/page-save-write-gateway-contract';
 import { checkRepositorySweepContract } from './checks/repository-sweep-contract';
 import { checkStaticDomIdentityContract } from './checks/static-dom-identity-contract';
+import { checkStaticDomComponentRepeatabilityContract } from './checks/static-dom-component-repeatability-contract';
 import { checkStaticDomRuntimeRegistryContract } from './checks/static-dom-runtime-registry-contract';
 import { checkPackageAppImportContract } from './checks/package-app-import-contract';
 import { checkIsolatedDeploymentBackendContract } from './checks/isolated-deployment-backend-contract';
@@ -125,6 +126,7 @@ export function runArchitectureCheck(options: ArchitectureCheckOptions = {}): nu
   }
   checkTouchInteractionContract();
   checkStaticDomIdentityContract();
+  checkStaticDomComponentRepeatabilityContract();
   checkStaticDomRuntimeRegistryContract();
   checkMapLibreWorkerContract();
   checkGeneratedDataAccessArtifacts();

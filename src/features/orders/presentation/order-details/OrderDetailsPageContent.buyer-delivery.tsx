@@ -49,7 +49,7 @@ export function BuyerDeliveryAddressPanel({
           {text.editBuyerAddressInProfile}
         </Link>
         {hasProfileAddress ? (
-          <OrderActionButton
+          <OrderActionButton elementScope="order-details-page-content-buyer-delivery-buyer-delivery-address-panel-order-action-button-8f816f"
             id='orders-presentation-order-details-orderdetailspagecontent-buyer-delivery-orderactionbutton-7-qmj2dp'
             action="buyer_apply_delivery_address"
             busyAction={busyAction}

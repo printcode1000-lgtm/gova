@@ -62,7 +62,7 @@ export function OrderLevelActions({ id,
       <h2 id="orders-presentation-order-details-orderdetailspagecontent-shipments-heading-2-stivmh" className="font-bold">{text.orderActions}</h2>
       <div id="orders-presentation-order-details-orderdetailspagecontent-shipments-div-3-a89d4p" className="mt-3 space-y-2">
         {isBuyer && canCancelStatus(order.calculated_status) ? (
-          <OrderActionButton
+          <OrderActionButton elementScope="order-details-page-content-shipments-order-level-actions-order-action-button-e82367"
             action="buyer_cancel_order"
             busyAction={busyAction}
             id={String(order.id)}
@@ -72,7 +72,7 @@ export function OrderLevelActions({ id,
           />
         ) : null}
         {isBuyer && canRejectAnyDelivery ? (
-          <OrderActionButton
+          <OrderActionButton elementScope="order-details-page-content-shipments-order-level-actions-order-action-button-5dd272"
             action="buyer_reject_delivery_order"
             busyAction={busyAction}
             id={String(order.id)}
@@ -154,13 +154,13 @@ export function ShipmentCard({ id,
 
   return (
     <div id={id} className="rounded-lg border border-outline-variant p-3">
-      <p id="orders-presentation-order-details-orderdetailspagecontent-shipments-text-11-oo9zxb" className="text-sm font-semibold">{statusLabel(shipment.status)}</p>
-      <p id="orders-presentation-order-details-orderdetailspagecontent-shipments-text-12-tx6d0p" className="text-xs text-muted-foreground">
+      <p className="text-sm font-semibold">{statusLabel(shipment.status)}</p>
+      <p className="text-xs text-muted-foreground">
         {text.carrierCompany}:{" "}
         {profileName(details.profiles[carrierId], carrierId || text.unknown)}
       </p>
       {isCarrier ? (
-        <div id="orders-presentation-order-details-orderdetailspagecontent-shipments-div-13-dbhghe" className="mt-3 flex flex-wrap gap-2">
+        <div className="mt-3 flex flex-wrap gap-2">
           {canReceive ? (
             <OrderActionButton
               action="carrier_receive_shipment"
@@ -211,11 +211,11 @@ export function ShipmentCard({ id,
         </div>
       ) : null}
       {shipmentItems.length > 0 ? (
-        <div id="orders-presentation-order-details-orderdetailspagecontent-shipments-div-19-gceg0i" className="mt-3 border-t border-outline-variant pt-3">
-          <p id="orders-presentation-order-details-orderdetailspagecontent-shipments-text-20-7w4z9o" className="mb-2 text-xs font-semibold text-muted-foreground">
+        <div className="mt-3 border-t border-outline-variant pt-3">
+          <p className="mb-2 text-xs font-semibold text-muted-foreground">
             {text.shipmentItems}
           </p>
-          <div id="orders-presentation-order-details-orderdetailspagecontent-shipments-div-21-kr90vx" className="space-y-2">
+          <div className="space-y-2">
             {shipmentItems.map((shipmentItem) => (
               <ShipmentItemRow
                 key={String(shipmentItem.id)}
@@ -253,10 +253,10 @@ export function ShipmentItemRow({ id,
   const title = String(orderItem?.product_name_snapshot ?? text.product);
   return (
     <div id={id} className="rounded-lg bg-background p-2 text-sm">
-      <div id="orders-presentation-order-details-orderdetailspagecontent-shipments-div-23-0yedjp" className="flex flex-wrap items-center justify-between gap-2">
-        <div id="orders-presentation-order-details-orderdetailspagecontent-shipments-div-24-2m1ics">
-          <p id="orders-presentation-order-details-orderdetailspagecontent-shipments-text-25-v45l9r" className="font-semibold">{title}</p>
-          <p id="orders-presentation-order-details-orderdetailspagecontent-shipments-text-26-trqxhb" className="text-xs text-muted-foreground">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <p className="font-semibold">{title}</p>
+          <p className="text-xs text-muted-foreground">
             {text.quantity}: {String(shipmentItem.quantity ?? 1)} -{" "}
             {statusLabel(shipmentItem.status)}
           </p>

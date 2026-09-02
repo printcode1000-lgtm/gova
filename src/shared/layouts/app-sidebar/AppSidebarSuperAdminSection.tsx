@@ -32,7 +32,7 @@ function superAdminInnerSurface(variant: SuperAdminGroupKey) {
   }
 }
 
-export function AppSidebarSuperAdminSection({
+export function AppSidebarSuperAdminSection({ id,
   resolvedScheme,
   sidebarControlClass,
   sidebarIconClass,
@@ -58,7 +58,7 @@ export function AppSidebarSuperAdminSection({
   onClose: () => void;
   onToggle: () => void;
   onGroupToggle: (group: SuperAdminGroupKey) => void;
-}) {
+} & { id?: string }) {
   const itemClass = cn(
     "flex min-w-0 items-center gap-2 rounded-md px-3 py-2 text-sm leading-5 break-words",
     sidebarTone,
@@ -81,7 +81,7 @@ export function AppSidebarSuperAdminSection({
   );
 
   return (
-    <div id='shared-layouts-app-sidebar-appsidebarsuperadminsection-div-1-43jwkc'
+    <div id={id ? `${id}-div-1-43jwkc` : undefined}
       className={cn(
         "asol-control overflow-hidden rounded-2xl border",
         resolvedScheme === "dark"
@@ -90,14 +90,14 @@ export function AppSidebarSuperAdminSection({
         sidebarSurface,
       )}
     >
-      <button id='shared-layouts-app-sidebar-appsidebarsuperadminsection-button-2-o1wgsz'
+      <button id={id ? `${id}-button-2-o1wgsz` : undefined}
         type="button"
         onClick={onToggle}
         aria-expanded={superAdminOpen}
         className={cn(sidebarControlClass, "rounded-none")}
       >
         <ShieldCheck id='shared-layouts-app-sidebar-appsidebarsuperadminsection-shieldcheck-3-qp2gdt' className={sidebarIconClass} aria-hidden />
-        <span id='shared-layouts-app-sidebar-appsidebarsuperadminsection-text-4-8ur8tw' className="min-w-0 flex-1">لوحة تحكم السوبر أدمن</span>
+        <span id={id ? `${id}-text-4-8ur8tw` : undefined} className="min-w-0 flex-1">لوحة تحكم السوبر أدمن</span>
         <ChevronDown id='shared-layouts-app-sidebar-appsidebarsuperadminsection-chevrondown-5-ibquvl'
           aria-hidden
           className={cn(
@@ -107,8 +107,8 @@ export function AppSidebarSuperAdminSection({
         />
       </button>
       {superAdminOpen && (
-        <div id='shared-layouts-app-sidebar-appsidebarsuperadminsection-div-6-cmtnrx' className="space-y-2 px-2 pb-3 sm:px-3 sm:pe-3 sm:ps-11">
-          <SuperAdminGroup id='shared-layouts-app-sidebar-appsidebarsuperadminsection-superadmingroup-7-gzlaws'
+        <div id={id ? `${id}-div-6-cmtnrx` : undefined} className="space-y-2 px-2 pb-3 sm:px-3 sm:pe-3 sm:ps-11">
+          <SuperAdminGroup id={id ? `${id}-super-admin-group-0d9121` : undefined}
             icon={<Sliders id='shared-layouts-app-sidebar-appsidebarsuperadminsection-sliders-8-bokikg' className={sidebarSmallIconClass} />}
             label="واجهة المتجر والعروض"
             open={superAdminGroupsOpen.content}
@@ -122,7 +122,7 @@ export function AppSidebarSuperAdminSection({
             <SuperAdminLink id='shared-layouts-app-sidebar-appsidebarsuperadminsection-superadminlink-13-v5h8tk' href="/super-admin/trending-ribbon" icon={<TrendingUp id='shared-layouts-app-sidebar-appsidebarsuperadminsection-trendingup-14-aveimh' className={sidebarSmallIconClass} />} label="الشريط الإخباري المتحرك" className={itemClass} onClose={onClose} />
           </SuperAdminGroup>
 
-          <SuperAdminGroup id='shared-layouts-app-sidebar-appsidebarsuperadminsection-superadmingroup-15-wrjueq'
+          <SuperAdminGroup id={id ? `${id}-super-admin-group-3ed339` : undefined}
             icon={<Megaphone id='shared-layouts-app-sidebar-appsidebarsuperadminsection-megaphone-16-1cbw5p' className={sidebarSmallIconClass} />}
             label="الإشعارات والبث"
             open={superAdminGroupsOpen.notifications}
@@ -134,7 +134,7 @@ export function AppSidebarSuperAdminSection({
             <SuperAdminLink id='shared-layouts-app-sidebar-appsidebarsuperadminsection-superadminlink-17-iqwe7u' href="/super-admin/notifications-broadcast" icon={<Megaphone id='shared-layouts-app-sidebar-appsidebarsuperadminsection-megaphone-18-p3th3t' className={sidebarSmallIconClass} />} label="بث إشعار لكل المستخدمين" className={itemClass} onClose={onClose} />
           </SuperAdminGroup>
 
-          <SuperAdminGroup id='shared-layouts-app-sidebar-appsidebarsuperadminsection-superadmingroup-19-tql6r5'
+          <SuperAdminGroup id={id ? `${id}-super-admin-group-a551a0` : undefined}
             icon={<ShieldCheck id='shared-layouts-app-sidebar-appsidebarsuperadminsection-shieldcheck-20-jgkpfx' className={sidebarSmallIconClass} />}
             label="النظام وحسابات المستخدمين"
             open={superAdminGroupsOpen.system}
@@ -174,12 +174,12 @@ function SuperAdminGroup({ id,
 } & { id?: string }) {
   return (
     <div id={id} className={shellClass}>
-      <button id="shared-layouts-app-sidebar-appsidebarsuperadminsection-button-28-t8jqrv" type="button" onClick={onToggle} aria-expanded={open} className={buttonClass}>
+      <button id={id ? `${id}-button-28-t8jqrv` : undefined} type="button" onClick={onToggle} aria-expanded={open} className={buttonClass}>
         {icon}
         {label}
         <ChevronDown className={cn("ms-auto h-4 w-4 transition-transform", open && "rotate-180")} />
       </button>
-      {open && <div id="shared-layouts-app-sidebar-appsidebarsuperadminsection-div-29-adtxck" className={panelClass}>{children}</div>}
+      {open && <div id={id ? `${id}-div-29-adtxck` : undefined} className={panelClass}>{children}</div>}
     </div>
   );
 }

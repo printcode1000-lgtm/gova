@@ -11,7 +11,7 @@ import { useResolvedColorScheme } from '@/shared/preferences';
 import { useNotificationBadge } from '@/features/notifications/ui';
 import { useFavorites } from '@/features/favorites';
 
-export function BottomNavBar() {
+export function BottomNavBar({ id }: { id?: string }) {
   const navRef = useRef<HTMLElement>(null);
   const pathname = usePathname();
   const { t } = useTranslation();
@@ -50,7 +50,7 @@ export function BottomNavBar() {
   return (
     <nav
       ref={navRef}
-      id='shared-layouts-bottomnavbar-nav-1-ezyfqp'
+      id={id ? `${id}-nav-1-ezyfqp` : undefined}
       className={cn(
         "fixed inset-x-0 bottom-0 z-50 flex min-h-12 items-center justify-around rounded-t-2xl border-t border-outline-variant pt-0 pb-[calc(0.25rem+var(--asol-safe-area-bottom))] shadow-lg",
         resolvedScheme === 'dark' ? 'asol-surface-neutral' : 'bg-[#F8FBFF]'

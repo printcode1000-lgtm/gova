@@ -25,7 +25,7 @@ export function InlineLoadingSpinner({
   size?: "sm" | "md";
 }) {
   return (
-    <span id="storage-image-manager-core-src-components-storage-image-manager-ui-text-1-yqjcnr"
+    <span
       aria-hidden="true"
       className={cn(
         "inline-block animate-spin rounded-full border-2 border-current border-e-transparent",
@@ -44,7 +44,7 @@ export function ManagerButton({
   variant?: "primary" | "secondary" | "icon";
 }) {
   return (
-    <button id="storage-image-manager-core-src-components-storage-image-manager-ui-button-2-gpgvgr"
+    <button
       {...props}
       className={cn(
         "inline-flex items-center justify-center rounded-lg text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50",
@@ -78,8 +78,8 @@ export function StorageImageSlotFrame({
   id?: string;
 }) {
   return (
-    <div id="storage-image-manager-core-src-components-storage-image-manager-ui-div-3-wjc7q4" className="w-full min-w-0 overflow-hidden rounded-lg border-2 border-primary/20 bg-primary/5 p-0.5">
-      <div id="storage-image-manager-core-src-components-storage-image-manager-ui-div-4-aeh2ai"
+    <div className="w-full min-w-0 overflow-hidden rounded-lg border-2 border-primary/20 bg-primary/5 p-0.5">
+      <div
         className={cn(
           "relative w-full min-w-0 overflow-hidden",
           aspectClasses[aspectRatio],
@@ -122,21 +122,21 @@ export function StorageManagerDialog({
   if (!state) return null;
 
   return (
-    <div id="storage-image-manager-core-src-components-storage-image-manager-ui-div-5-7utmx6"
+    <div
       className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
       role="presentation"
     >
-      <div id="storage-image-manager-core-src-components-storage-image-manager-ui-div-6-hhmgas"
+      <div
         className="w-full max-w-sm rounded-xl border bg-background p-5 shadow-xl"
         role="dialog"
         aria-modal="true"
         aria-labelledby='storage-image-manager-core-src-components-storage-image-manager-ui-heading-7-2c95j8'
       >
-        <h2 id='storage-image-manager-core-src-components-storage-image-manager-ui-heading-7-2c95j8' className="text-lg font-semibold">
+        <h2 className="text-lg font-semibold">
           {state.title}
         </h2>
-        <p id="storage-image-manager-core-src-components-storage-image-manager-ui-text-8-jhz8ge" className="mt-2 text-sm text-muted-foreground">{state.message}</p>
-        <div id="storage-image-manager-core-src-components-storage-image-manager-ui-div-9-jiejna" className="mt-5 flex justify-end gap-2">
+        <p className="mt-2 text-sm text-muted-foreground">{state.message}</p>
+        <div className="mt-5 flex justify-end gap-2">
           {state.kind !== "error" ? (
             <>
               <ManagerButton type="button" variant="secondary" onClick={onClose}>

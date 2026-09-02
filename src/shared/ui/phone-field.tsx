@@ -84,27 +84,27 @@ export function PhoneField({
       id={id}
       className={cn("flex items-stretch gap-2", className)}
     >
-      <button id="shared-ui-phone-field-button-2-rkoscw"
+      <button id={id ? `${id}-button-2-rkoscw` : undefined}
         type="button"
         disabled={disabled}
         aria-label={labels.country}
         onClick={() => setIsPickerOpen(true)}
         className="asol-control inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-outline-variant bg-surface px-2.5 text-sm text-on-surface transition disabled:opacity-60"
       >
-        <span id="shared-ui-phone-field-text-3-ovlaem"
+        <span id={id ? `${id}-text-3-ovlaem` : undefined}
           aria-hidden="true"
           className="text-base leading-none"
         >
           {selectedChoice?.flag ?? ""}
         </span>
-        <span id="shared-ui-phone-field-text-4-bcbt9n"
+        <span id={id ? `${id}-text-4-bcbt9n` : undefined}
           dir="ltr"
           className="text-xs font-semibold"
         >
           +{callingCode}
         </span>
       </button>
-      <input id="shared-ui-phone-field-input-5-pighzm"
+      <input id={id ? `${id}-input-5-pighzm` : undefined}
         type="tel"
         inputMode="tel"
         dir="ltr"
@@ -127,7 +127,7 @@ export function PhoneField({
           inputClassName,
         )}
       />
-      <PhoneCountryDialog
+      <PhoneCountryDialog id={id ? `${id}-phone-country-dialog-1b6880` : undefined}
         open={isPickerOpen}
         choices={choices}
         selected={country}

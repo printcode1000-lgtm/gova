@@ -50,10 +50,10 @@ export function ConfirmDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        id={id}
+        id={id ? `${id}-dialog-content-ab4845` : undefined}
         className="max-w-sm"
       >
-        <DialogHeader
+        <DialogHeader id={id ? `${id}-dialog-header-3dd80d` : undefined}
         >
           <DialogTitle
             className="flex items-center gap-2 text-base"
@@ -69,7 +69,7 @@ export function ConfirmDialog({
             {message}
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter
+        <DialogFooter id={id ? `${id}-dialog-footer-2b8d4c` : undefined}
           className="gap-2"
         >
           <Button

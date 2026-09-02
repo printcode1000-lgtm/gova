@@ -51,18 +51,18 @@ function CompletionScreen({ id,
 
   return (
     <div id={id} className="flex flex-col items-center justify-center py-16 text-center space-y-6 animate-in fade-in duration-500">
-      <div id="features-onboarding-presentation-onboarding-page-div-2-fduvzq" className="rounded-full asol-ring-secondary p-4">
+      <div id={id ? `${id}-div-2-fduvzq` : undefined} className="rounded-full asol-ring-secondary p-4">
         <PartyPopper className="h-12 w-12 text-secondary" />
       </div>
 
-      <div id="features-onboarding-presentation-onboarding-page-div-3-ve2qbt" className="space-y-2">
-        <h1 id="features-onboarding-presentation-onboarding-page-heading-4-tuxqfe" className="text-3xl font-bold">{t('onboarding.completion.title')}</h1>
-        <p id="features-onboarding-presentation-onboarding-page-text-5-xy9zhb" className="text-lg text-muted-foreground max-w-md">
+      <div id={id ? `${id}-div-3-ve2qbt` : undefined} className="space-y-2">
+        <h1 id={id ? `${id}-heading-4-tuxqfe` : undefined} className="text-3xl font-bold">{t('onboarding.completion.title')}</h1>
+        <p id={id ? `${id}-text-5-xy9zhb` : undefined} className="text-lg text-muted-foreground max-w-md">
           {t('onboarding.completion.message', { storeName })}
         </p>
       </div>
 
-      <div id="features-onboarding-presentation-onboarding-page-div-6-u4dbdu" className="flex flex-col sm:flex-row gap-3">
+      <div id={id ? `${id}-div-6-u4dbdu` : undefined} className="flex flex-col sm:flex-row gap-3">
         <Button variant="outline" size="lg" onClick={onEdit}>
           {t('onboarding.completion.editSetup')}
         </Button>
@@ -71,25 +71,25 @@ function CompletionScreen({ id,
         </Button>
       </div>
 
-      <Card className="w-full max-w-lg mt-8">
-        <CardContent className="p-6">
-          <h3 id="features-onboarding-presentation-onboarding-page-heading-7-gbhvmg" className="font-semibold mb-4">{t('onboarding.completion.summaryTitle')}</h3>
-          <div id="features-onboarding-presentation-onboarding-page-div-8-yvjfsz" className="space-y-3 text-sm">
-            <div id="features-onboarding-presentation-onboarding-page-div-9-w13lxz" className="flex justify-between">
-              <span id="features-onboarding-presentation-onboarding-page-text-10-iekcty" className="text-muted-foreground">{t('onboarding.completion.productsAdded')}</span>
-              <span id="features-onboarding-presentation-onboarding-page-text-11-o86txg" className="font-medium">{data.products.products.length}</span>
+      <Card id={id ? `${id}-card-cb7c00` : undefined} className="w-full max-w-lg mt-8">
+        <CardContent id={id ? `${id}-card-content-8ecc79` : undefined} className="p-6">
+          <h3 id={id ? `${id}-heading-7-gbhvmg` : undefined} className="font-semibold mb-4">{t('onboarding.completion.summaryTitle')}</h3>
+          <div id={id ? `${id}-div-8-yvjfsz` : undefined} className="space-y-3 text-sm">
+            <div id={id ? `${id}-div-9-w13lxz` : undefined} className="flex justify-between">
+              <span id={id ? `${id}-text-10-iekcty` : undefined} className="text-muted-foreground">{t('onboarding.completion.productsAdded')}</span>
+              <span id={id ? `${id}-text-11-o86txg` : undefined} className="font-medium">{data.products.products.length}</span>
             </div>
-            <div id="features-onboarding-presentation-onboarding-page-div-12-9zxbjx" className="flex justify-between">
-              <span id="features-onboarding-presentation-onboarding-page-text-13-inrupn" className="text-muted-foreground">{t('onboarding.completion.collections')}</span>
-              <span id="features-onboarding-presentation-onboarding-page-text-14-llkbdb" className="font-medium">{data.collections.collections.length}</span>
+            <div id={id ? `${id}-div-12-9zxbjx` : undefined} className="flex justify-between">
+              <span id={id ? `${id}-text-13-inrupn` : undefined} className="text-muted-foreground">{t('onboarding.completion.collections')}</span>
+              <span id={id ? `${id}-text-14-llkbdb` : undefined} className="font-medium">{data.collections.collections.length}</span>
             </div>
-            <div id="features-onboarding-presentation-onboarding-page-div-15-qnvkfk" className="flex justify-between">
-              <span id="features-onboarding-presentation-onboarding-page-text-16-8awwoc" className="text-muted-foreground">{t('onboarding.completion.shippingMethods')}</span>
-              <span id="features-onboarding-presentation-onboarding-page-text-17-6rw3iy" className="font-medium">{data.shipping.methods.length}</span>
+            <div id={id ? `${id}-div-15-qnvkfk` : undefined} className="flex justify-between">
+              <span id={id ? `${id}-text-16-8awwoc` : undefined} className="text-muted-foreground">{t('onboarding.completion.shippingMethods')}</span>
+              <span id={id ? `${id}-text-17-6rw3iy` : undefined} className="font-medium">{data.shipping.methods.length}</span>
             </div>
-            <div id="features-onboarding-presentation-onboarding-page-div-18-5uwcin" className="flex justify-between">
-              <span id="features-onboarding-presentation-onboarding-page-text-19-eolczt" className="text-muted-foreground">{t('onboarding.completion.categories')}</span>
-              <span id="features-onboarding-presentation-onboarding-page-text-20-tnfvyp" className="font-medium">
+            <div id={id ? `${id}-div-18-5uwcin` : undefined} className="flex justify-between">
+              <span id={id ? `${id}-text-19-eolczt` : undefined} className="text-muted-foreground">{t('onboarding.completion.categories')}</span>
+              <span id={id ? `${id}-text-20-tnfvyp` : undefined} className="font-medium">
                 {data.categories.selectedCategories.filter((c) => c.isSelected).length}
               </span>
             </div>

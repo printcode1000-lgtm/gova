@@ -41,7 +41,7 @@ export function HeroSliderNavigation({
           aria-label="Slideshow control indicators"
         >
           {Array.from({ length: count }, (_, i) => (
-            <button id='features-advertisements-presentation-heroslidernavigation-button-8-ocflp1'
+            <button
               key={i}
               type="button"
               onClick={() => onSelectSlide(i)}

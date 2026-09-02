@@ -29,12 +29,12 @@ export function PhaseBlock(
       title={`${props.phase.id} — ${props.phase.label}`}
       description={PHASE_DESCRIPTION}
       badge={
-        <span id="features-google-play-console-presentation-deployrunbookphasetree-text-2-ev0sap" className="rounded-full bg-muted px-2 py-0.5 text-xs text-on-surface-variant">
+        <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-on-surface-variant">
           {activeCount} / {branchIds.length}
         </span>
       }
     >
-      <div id="features-google-play-console-presentation-deployrunbookphasetree-div-3-pokpjg" className="space-y-3">
+      <div className="space-y-3">
         {props.phase.sections.map((section) => (
           <SectionBlock
             key={section.id}
@@ -66,12 +66,12 @@ function SectionBlock(
       title={`${props.section.id} — ${props.section.label}`}
       description={SECTION_DESCRIPTION}
       badge={
-        <span id="features-google-play-console-presentation-deployrunbookphasetree-text-5-mdicdu" className="rounded-full bg-muted px-2 py-0.5 text-xs text-on-surface-variant">
+        <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-on-surface-variant">
           {activeCount} / {props.section.branches.length}
         </span>
       }
     >
-      <div id="features-google-play-console-presentation-deployrunbookphasetree-div-6-vaffb6" className="grid grid-cols-1 gap-2 sm:grid-cols-2 2xl:grid-cols-3">
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 2xl:grid-cols-3">
         {props.section.branches.map((item) => (
           <BranchCheckbox
             key={item.id}
@@ -99,24 +99,24 @@ function BranchCheckbox(
 
   return (
     <label id={props.id} className="min-w-0 w-full rounded-md border bg-surface p-3 text-sm">
-      <span id="features-google-play-console-presentation-deployrunbookphasetree-text-8-nxw27e" className="flex flex-wrap items-start gap-2">
-        <input id="features-google-play-console-presentation-deployrunbookphasetree-input-9-t9vysn"
+      <span className="flex flex-wrap items-start gap-2">
+        <input
           type="checkbox"
           className="mt-0.5 shrink-0"
           checked={props.selected}
           onChange={() => props.onToggle(props.item.id)}
         />
-        <span id="features-google-play-console-presentation-deployrunbookphasetree-text-10-gkrrqa" className="min-w-0 font-medium break-words">{props.item.id}</span>
+        <span className="min-w-0 font-medium break-words">{props.item.id}</span>
         {props.item.dangerous ? (
-          <span id="features-google-play-console-presentation-deployrunbookphasetree-text-11-yvrsvo" className="shrink-0 rounded-full bg-error-container px-2 py-0.5 text-xs text-on-error-container">
+          <span className="shrink-0 rounded-full bg-error-container px-2 py-0.5 text-xs text-on-error-container">
             حساس
           </span>
         ) : null}
       </span>
-      <code id="features-google-play-console-presentation-deployrunbookphasetree-code-12-go0ktc" className="mt-2 block w-full min-w-0 overflow-x-auto whitespace-pre-wrap break-all text-xs" dir="ltr">
+      <code className="mt-2 block w-full min-w-0 overflow-x-auto whitespace-pre-wrap break-all text-xs" dir="ltr">
         {props.item.command}
       </code>
-      <span id="features-google-play-console-presentation-deployrunbookphasetree-text-13-oz2fnz" className="mt-2 block text-xs text-on-surface-variant break-words">{props.help ?? defaultHelp}</span>
+      <span className="mt-2 block text-xs text-on-surface-variant break-words">{props.help ?? defaultHelp}</span>
     </label>
   );
 }

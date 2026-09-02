@@ -9,14 +9,9 @@
 
 const MISSING_SELECTED_ID = "مفقود";
 
-/**
- * A dotted, hierarchical id — `auth.otp-input.div` — is one an author wrote to
- * identify the element. Anything else on `id` tends to be a resource value or a
- * label, which is not useful to copy and may carry user data, so it is left off
- * the clipboard.
- */
+/** Any non-empty HTML id is inspectable; the DOM attribute is authoritative. */
 export function isInspectableId(value: string): boolean {
-  return /^[a-z0-9]+(?:[-.][a-z0-9]+)+$/i.test(value);
+  return value.length > 0;
 }
 
 /** The selected element's id, or null when it carries none worth reporting. */

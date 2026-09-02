@@ -7,8 +7,8 @@ export function Field({ id, label, value, onChange, }: {
 } & { id?: string }) {
   return (
     <label id={id} className="block">
-      <span id="google-play-console-presentation-components-field-text-2-fmkjup" className="text-xs text-on-surface-variant">{label}</span>
-      <Input className="mt-1" value={value} onChange={(event) => onChange(event.target.value)} />
+      <span id={id ? `${id}-text-2-fmkjup` : undefined} className="text-xs text-on-surface-variant">{label}</span>
+      <Input id={id ? `${id}-input-118712` : undefined} className="mt-1" value={value} onChange={(event) => onChange(event.target.value)} />
     </label>
   );
 }

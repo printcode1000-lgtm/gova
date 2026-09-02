@@ -48,7 +48,7 @@ function TableWrap({ id, children }: { children: React.ReactNode } & { id?: stri
     // the only way to read any of it. Wrapping them brings each table back to its
     // declared width, and the scroll back to the short nudge it was meant to be.
     <div id={id} className="mt-3 overflow-x-auto rounded-lg border bg-surface">
-      <table id="features-super-admin-presentation-superadmincloudaccountscontent-table-5-tycyuj" className="w-full min-w-[520px] text-xs [&_td]:break-words [&_th]:break-words sm:min-w-[640px] sm:text-sm">
+      <table id={id ? `${id}-table-5-tycyuj` : undefined} className="w-full min-w-[520px] text-xs [&_td]:break-words [&_th]:break-words sm:min-w-[640px] sm:text-sm">
         {children}
       </table>
     </div>

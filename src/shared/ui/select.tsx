@@ -127,7 +127,7 @@ const SelectItem = React.forwardRef<
     )}
     {...props}
   >
-    <span id="shared-ui-select-text-1-z6dbrq"
+    <span id={props.id ? `${props.id}-text-1-z6dbrq` : undefined}
       className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center"
     >
       <SelectPrimitive.ItemIndicator>

@@ -508,9 +508,9 @@ export function SuperAdminNotificationTestsPage() {
 }
 
 function StatusCard({ id, label, value, ok }: { label: string; value: string; ok: boolean } & { id?: string }) {
-  return <div id={id} className="rounded-lg border p-3"><p id="features-super-admin-presentation-superadminnotificationtestspage-text-100-qp0flo" className="text-xs text-muted-foreground">{label}</p><p id="features-super-admin-presentation-superadminnotificationtestspage-text-101-meh43s" className={`mt-1 font-semibold ${ok ? "text-emerald-600" : "text-amber-600"}`}>{value}</p></div>;
+  return <div id={id} className="rounded-lg border p-3"><p id={id ? `${id}-text-100-qp0flo` : undefined} className="text-xs text-muted-foreground">{label}</p><p id={id ? `${id}-text-101-meh43s` : undefined} className={`mt-1 font-semibold ${ok ? "text-emerald-600" : "text-amber-600"}`}>{value}</p></div>;
 }
 
 function Detail({ id, label, value, mono = false }: { label: string; value: string; mono?: boolean } & { id?: string }) {
-  return <div id={id} className="flex items-start justify-between gap-3 border-b pb-2"><dt id="features-super-admin-presentation-superadminnotificationtestspage-dt-103-hbf6jf" className="text-muted-foreground">{label}</dt><dd id="features-super-admin-presentation-superadminnotificationtestspage-dd-104-nnabpm" className={mono ? "font-mono text-xs" : "font-medium"} dir={mono ? "ltr" : undefined}>{value}</dd></div>;
+  return <div id={id} className="flex items-start justify-between gap-3 border-b pb-2"><dt id={id ? `${id}-dt-103-hbf6jf` : undefined} className="text-muted-foreground">{label}</dt><dd id={id ? `${id}-dd-104-nnabpm` : undefined} className={mono ? "font-mono text-xs" : "font-medium"} dir={mono ? "ltr" : undefined}>{value}</dd></div>;
 }

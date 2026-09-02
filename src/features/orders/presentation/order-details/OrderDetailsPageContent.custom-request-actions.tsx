@@ -38,7 +38,7 @@ export function CustomRequestActions({
     <div id='orders-presentation-order-details-orderdetailspagecontent-custom-request-actions-div-1-adduyg' className="mt-3 flex flex-wrap gap-2">
       {isSeller && isPendingSellerResponse(item.status) ? (
         <>
-          <OrderActionButton
+          <OrderActionButton elementScope="order-details-page-content-custom-request-actions-custom-request-actions-order-action-button-284a62"
             action="seller_accept_custom_request"
             busyAction={busyAction}
             id={itemId}
@@ -48,7 +48,7 @@ export function CustomRequestActions({
               })
             }
           />
-          <OrderActionButton
+          <OrderActionButton elementScope="order-details-page-content-custom-request-actions-custom-request-actions-order-action-button-7050b0"
             action="seller_reject_custom_request"
             busyAction={busyAction}
             id={itemId}
@@ -62,7 +62,7 @@ export function CustomRequestActions({
         </>
       ) : null}
       {isSeller && item.status === "waiting_for_pricing" ? (
-        <OrderActionButton
+        <OrderActionButton elementScope="order-details-page-content-custom-request-actions-custom-request-actions-order-action-button-5d3721"
           action="seller_send_custom_price_offer"
           busyAction={busyAction}
           id={itemId}
@@ -71,7 +71,7 @@ export function CustomRequestActions({
       ) : null}
       {isBuyer && item.status === "price_offer_sent" ? (
         <>
-          <OrderActionButton
+          <OrderActionButton elementScope="order-details-page-content-custom-request-actions-custom-request-actions-order-action-button-4d96af"
             action="buyer_accept_custom_price"
             busyAction={busyAction}
             id={itemId}
@@ -79,7 +79,7 @@ export function CustomRequestActions({
               runAction("buyer_accept_custom_price", { customItemId: itemId })
             }
           />
-          <OrderActionButton
+          <OrderActionButton elementScope="order-details-page-content-custom-request-actions-custom-request-actions-order-action-button-3da56d"
             action="buyer_reject_custom_price"
             busyAction={busyAction}
             id={itemId}
@@ -91,7 +91,7 @@ export function CustomRequestActions({
         </>
       ) : null}
       {isBuyer && canCancelStatus(item.status) ? (
-        <OrderActionButton
+        <OrderActionButton elementScope="order-details-page-content-custom-request-actions-custom-request-actions-order-action-button-7cb7ed"
           action="buyer_cancel_custom_request"
           busyAction={busyAction}
           id={itemId}
