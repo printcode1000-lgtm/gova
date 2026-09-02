@@ -98,11 +98,23 @@ If passwordless system service installation is unavailable, the installer falls 
 
 `tools/local-agent/install.sh` installs the committed runtime without dependency installation. The legacy GitHub request/workflow transport is not part of normal operation after migration. The committed bootstrap workflow is manual-only (`workflow_dispatch`) and exists only to install or refresh the persistent runtime; it is not the per-command transport.
 
+## Disaster-recovery bundle
+
+Use the self-contained recovery command when the machine, canonical checkout, runtime database, or agent worktrees must be reconstructed:
+
+```bash
+gova-agent recovery create /path/to/gova-agent-recovery.tar.gz
+gova-agent recovery verify /path/to/gova-agent-recovery.tar.gz
+gova-agent recovery restore /path/to/gova-agent-recovery.tar.gz /empty/restore-root
+```
+
+The archive preserves the complete committed Local Agent source, all local refs and local-only agent commits, a consistent SQLite backup, and recoverable staged/unstaged/safe-untracked worktree state. Credentials are intentionally excluded and regenerated or reconnected after recovery. The exact archive contract, exclusions, verification procedure, and isolated restore sequence are defined in `docs/06-super-admin-and-operations/local-agent-recovery.md`.
+
 ## Failure recovery
 
 - Agent/client disconnect: command continues and logs remain queryable.
 - Gateway crash: systemd restarts it; SQLite/task state remains.
 - Stale lock: lease recovery removes it.
 - Integration conflict: cherry-pick is aborted and the integration worktree is reset cleanly to `origin/integration`; the task records the conflict.
-- Uncommitted agent worktree: removal refuses unless explicitly forced.
+- Uncommitted agent worktree: removal refuses unless explicitly forced; disaster-recovery archives preserve its staged, unstaged, and safe untracked state.
 - Handoff: task ownership and notes are persisted and another agent can continue from the same worktree/branch.
