@@ -135,15 +135,16 @@ def main():
     result = {"tag": tag, "codex_version": version, "authenticated": True}
 
     try:
-        cw = register(codex_agent, codex_task, "Real Codex review and safe improvement of persistent local-agent tooling")
+        cw = register(codex_agent, codex_task, "Real Codex cleanup improvement for persistent local-agent self-test records")
         rw = register(reviewer, review_task, "Review Codex local-agent change before integration")
         cloudw = register(cloud_agent, cloud_task, "Cloud-agent monitor visibility probe")
         workspaces += [(codex_agent, codex_task), (reviewer, review_task), (cloud_agent, cloud_task)]
         baseline = git(cw, "rev-parse", "HEAD")
 
         prompt = """You are a real local validation worker inside an isolated Gova Git worktree.
-Read the relevant docs before editing. Inspect only tools/local-agent/monitor.py, tools/local-agent/selftest.py, tools/local-agent/install.sh and their direct behavior. Find one concrete robustness/usability issue in the new persistent local-agent monitor or self-test and implement the SMALLEST safe improvement.
-Constraints: do not modify anything outside tools/local-agent/; do not push, fetch, merge, rebase, create remote branches, edit workflows, or touch main/integration refs. Do not install dependencies. Do not delete the gateway runtime or user data. Run python3 -m py_compile on Python files you changed and run `python3 tools/local-agent/monitor.py --once`. Then git add only your changed tools/local-agent files and create one local commit with message `test(local-agent): Codex real-worker improvement`. End by printing `CODEX_REAL_WORKER_DONE` followed by the commit SHA and a one-line summary."""
+Read the relevant local-agent runtime documentation before editing. There is a concrete usability defect to fix: tools/local-agent/selftest.py leaves its generated sim-* agents/tasks/messages/events in the persistent SQLite runtime after a successful run, so the new monitor accumulates stale test agents. Implement the SMALLEST safe fix so a successful self-test removes only records created by that self-test tag while preserving unrelated runtime records and preserving the printed JSON result.
+You may inspect tools/local-agent/selftest.py, tools/local-agent/codex_test.py, tools/local-agent/gateway.py, tools/local-agent/monitor.py and the relevant docs. Modify ONLY tools/local-agent/selftest.py.
+Constraints: do not push, fetch, merge, rebase, create remote branches, edit workflows, or touch main/integration refs. Do not install dependencies. Do not delete unrelated gateway runtime or user data. Do not git add or commit; leave your source change in the worktree for the harness to review and commit safely. Run `python3 -m py_compile tools/local-agent/selftest.py` and `python3 tools/local-agent/monitor.py --once`. End by printing `CODEX_REAL_WORKER_DONE` and a one-line summary of the exact cleanup you implemented."""
         cmd = " ".join([
             shlex.quote(str(codex)), "--ask-for-approval", "never", "exec",
             "-C", shlex.quote(str(cw)), "--sandbox", "workspace-write",
@@ -166,33 +167,43 @@ Constraints: do not modify anything outside tools/local-agent/; do not push, fet
 
         final = wait_command(cid)
         _, logs = call("GET", f"/v1/commands/{urllib.parse.quote(cid)}/logs?tail=30000")
-        if final.get("exit_code") != 0 or "CODEX_REAL_WORKER_DONE" not in logs.get("stdout", "") + logs.get("stderr", ""):
+        combined_logs = logs.get("stdout", "") + logs.get("stderr", "")
+        if final.get("exit_code") != 0 or "CODEX_REAL_WORKER_DONE" not in combined_logs:
             raise RuntimeError(f"real Codex worker failed: {final}\n{logs.get('stdout','')}\n{logs.get('stderr','')}")
+
+        changed = [x for x in git(cw, "diff", "--name-only").splitlines() if x]
+        if changed != ["tools/local-agent/selftest.py"]:
+            raise RuntimeError(f"Codex must change only tools/local-agent/selftest.py, got: {changed}")
+        if git(cw, "status", "--porcelain").strip() == "":
+            raise RuntimeError("Codex reported completion without a working-tree change")
+
+        # Validate the real Codex edit first; the trusted harness creates the
+        # local branch commit outside Codex's workspace sandbox so shared Git
+        # metadata never has to be writable by the model process itself.
+        subprocess.run(["python3", "-m", "py_compile", str(cw / "tools/local-agent/selftest.py")], check=True)
+        subprocess.run(["python3", str(cw / "tools/local-agent/monitor.py"), "--once"], check=True, stdout=subprocess.DEVNULL)
+        git(cw, "config", "user.name", "gova-codex-real-worker")
+        git(cw, "config", "user.email", "gova-codex-real-worker@users.noreply.github.com")
+        git(cw, "add", "--", "tools/local-agent/selftest.py")
+        git(cw, "commit", "-m", "test(local-agent): Codex real-worker improvement")
         head = git(cw, "rev-parse", "HEAD")
         if head == baseline:
-            raise RuntimeError("Codex completed without creating the required local commit")
-        changed = [x for x in git(cw, "diff", "--name-only", f"{baseline}..{head}").splitlines() if x]
-        if not changed or any(not x.startswith("tools/local-agent/") for x in changed):
-            raise RuntimeError(f"Codex changed paths outside allowed scope: {changed}")
-        stat = git(cw, "diff", "--stat", f"{baseline}..{head}")
+            raise RuntimeError("trusted harness failed to create the local Codex branch commit")
+        changed_committed = [x for x in git(cw, "diff", "--name-only", f"{baseline}..{head}").splitlines() if x]
+        if changed_committed != ["tools/local-agent/selftest.py"]:
+            raise RuntimeError(f"committed Codex scope changed unexpectedly: {changed_committed}")
         result["codex_commit"] = head
-        result["codex_changed_paths"] = changed
-        result["codex_diff_stat"] = stat
+        result["codex_changed_paths"] = changed_committed
+        result["codex_diff_stat"] = git(cw, "diff", "--stat", f"{baseline}..{head}")
 
         # Real peer communication + handoff before integration.
         call("POST", "/v1/message/send", {"sender": codex_agent, "recipient": reviewer, "kind": "review", "body": f"Review commit {head}"})
-        call("POST", "/v1/task/checkpoint", {"agent_id": codex_agent, "task_id": codex_task, "fields": {"completed": ["real-codex-run", "local-commit"], "tests": ["py_compile", "monitor --once"], "next_action": "peer review"}})
+        call("POST", "/v1/task/checkpoint", {"agent_id": codex_agent, "task_id": codex_task, "fields": {"completed": ["real-codex-run", "local-change", "trusted-local-commit"], "tests": ["py_compile", "monitor --once"], "next_action": "peer review"}})
         call("POST", "/v1/task/handoff", {"task_id": codex_task, "from_agent": codex_agent, "to_agent": reviewer, "notes": f"Review real Codex commit {head}"})
         _, handed = call("GET", "/v1/tasks/" + urllib.parse.quote(codex_task))
         if handed["task"]["current_agent"] != reviewer:
             raise RuntimeError("Codex -> reviewer handoff failed")
         result["codex_peer_handoff"] = "pass"
-
-        # Independent deterministic review in the Codex worktree.
-        subprocess.run(["python3", "-m", "py_compile", *[str(cw / p) for p in changed if p.endswith(".py")]], check=True)
-        subprocess.run(["python3", str(cw / "tools/local-agent/monitor.py"), "--once"], check=True, stdout=subprocess.DEVNULL)
-        if len(changed) > 5:
-            raise RuntimeError(f"Codex change too broad for automatic integration: {changed}")
 
         if args.integrate_safe:
             _, integrated = call("POST", "/v1/integration/submit", {
