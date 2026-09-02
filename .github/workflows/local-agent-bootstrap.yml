@@ -26,4 +26,5 @@ jobs:
           python3 /home/hesham/gova-agents/integration/.agent-bootstrap/fix-finalizer.py
           python3 /home/hesham/gova-agents/integration/.agent-bootstrap/fix-encoding.py
           python3 /home/hesham/gova-agents/integration/.agent-bootstrap/fix-docs-auth.py
+          python3 /home/hesham/gova-agents/integration/.agent-bootstrap/fix-legacy-sources.py
           python3 /home/hesham/gova-agents/integration/.agent-bootstrap/finalize-runtime.py
