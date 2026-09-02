@@ -1,1 +1,1 @@
-locate actual codex binary and inspect old monitor launcher
+deep locate codex installation
