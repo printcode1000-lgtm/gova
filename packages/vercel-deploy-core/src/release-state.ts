@@ -130,8 +130,16 @@ function deriveStatus(state: DurableReleaseState): DurableReleaseStatus {
   if (state.control.status === "failed") return "failed";
   if (RELEASE_WORKLOADS.some((workload) => state.workloads[workload].status === "failed")) return "failed";
   if (state.rollback?.status === "failed") return "failed";
+  // An explicit failure outranks a derived readiness, and it is permanent for
+  // this revision. A release can fail *after* every component passed — the
+  // frontend deployment never appears, the final smoke fails — and the state
+  // must then stop unblocking the gova build. Deriving `ready` from the
+  // components alone made that retraction a no-op: the components were still
+  // passed, so `ready` came straight back and a late build could publish over
+  // backends the rollback had already reverted.
+  if (state.status === "failed") return "failed";
   if (releaseStateIsReady(state)) return "ready";
-  return state.status === "failed" ? "failed" : "running";
+  return "running";
 }
 
 export async function applyReleaseStateMutation(

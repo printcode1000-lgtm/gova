@@ -47,6 +47,14 @@ That is not hypothetical. A `deploy:push` whose gova deployment never appeared o
 Vercel left `ready` standing, and the topology had to be realigned by hand with
 an extra release.
 
+The retraction needed two halves, and the first one alone was worthless. Sending
+the failure to the callback logged "readiness withdrawn" while the barrier kept
+answering `ready`: the durable status was *derived* from the components, and all
+of them had passed, so a derived `ready` came straight back. An explicit failure
+now outranks a derived readiness and is permanent for that revision — a later
+passing component cannot revive it. `test:vercel-deploy-core` asserts both, by
+reading the barrier back rather than trusting the write.
+
 **The baseline is captured before the first mutation.** A failure after step 2
 has already changed production. Capturing names and deployment ids up front is
 what lets the failure path re-promote the previous deployments automatically

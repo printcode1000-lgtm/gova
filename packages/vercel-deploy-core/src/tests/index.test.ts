@@ -286,6 +286,35 @@ async function runTests(): Promise<void> {
   });
   assert(duplicate.version === releaseState.version, 'Duplicate callback/write is idempotent');
 
+  // A release can fail after every component passed: the frontend deployment
+  // never appears, or the final smoke fails. Retracting must actually stop the
+  // gova build — deriving `ready` from the components alone made the retraction
+  // a no-op, and a late build could then publish over rolled-back backends.
+  const retracted = await applyReleaseStateMutation(releaseStore, {
+    revision,
+    runId: 'sandbox-release',
+    operationId: 'sandbox-retract',
+    source: 'cli',
+    status: 'failed',
+    failureDetails: ['main deployment never appeared'],
+  });
+  assert(retracted.status === 'failed', 'An explicit failure outranks a derived readiness');
+  assert(
+    await releaseReadinessStatusFromStore(releaseStore, revision) === 'failed',
+    'A retracted revision reads as failed, so the gova build fails closed',
+  );
+  const afterRetraction = await applyReleaseStateMutation(releaseStore, {
+    revision,
+    runId: 'sandbox-release',
+    operationId: 'sandbox-late-pass',
+    source: 'sandbox',
+    workloads: fullWorkloads,
+  });
+  assert(
+    afterRetraction.status === 'failed',
+    'A retraction is permanent for that revision: passing components cannot revive it',
+  );
+
   const staleRevision = 'c'.repeat(40);
   assert(await releaseReadinessStatusFromStore(releaseStore, staleRevision) === 'pending', 'Stale SHA cannot satisfy another revision');
 
