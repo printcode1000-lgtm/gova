@@ -291,6 +291,29 @@ async function assertFastPublishReadiness(
   assertNoScratchFiles(flags);
   assertReleaseManifestNotDowngraded(flags);
   assertSomethingToPush(flags);
+  await assertServiceMirrorsBuild();
+}
+
+/**
+ * The mirrors must compile before they are uploaded.
+ *
+ * `deploy:push` skips the correctness gates on purpose — they are the caller's
+ * job — but a mirror that does not build is not a correctness question, it is a
+ * deployment that will fail after the push. And it fails *remotely*: the root
+ * `typecheck` covers `src/` and the packages, not the service trees, so a type
+ * error inside a mirror is invisible locally and surfaces as
+ * `Command "npm run build" exited with 1` on Vercel, after `main` already moved.
+ *
+ * That is exactly what happened to `ActionInput`: exported from one module,
+ * imported from another, green everywhere except the deployment.
+ *
+ * `services:sync` first, because a mirror built from stale sources proves
+ * nothing about the sources being pushed.
+ */
+async function assertServiceMirrorsBuild(): Promise<void> {
+  await runDeploymentNpmScript("services:sync", { logPrefix: "deploy:push" });
+  await runDeploymentNpmScript("services:build", { logPrefix: "deploy:push" });
+  await runDeploymentNpmScript("control:build", { logPrefix: "deploy:push" });
 }
 
 function printFinalSummary(reports: VercelDeploymentReport[]): void {

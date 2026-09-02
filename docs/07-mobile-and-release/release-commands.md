@@ -122,6 +122,14 @@ equivalent with the runbook's resume machinery.
 
 Flags: `--allow-empty`, `--allow-manifest-downgrade`, `--allow-scratch-files`.
 
+**It does prove the mirrors build.** `services:sync`, `services:build` and
+`control:build` run before the push. That is not a correctness gate sneaking
+back in — the root `typecheck` covers `src/` and the packages but not the
+service trees, so a type error inside a mirror is invisible locally and surfaces
+as `Command "npm run build" exited with 1` on Vercel, after `main` has already
+moved. Syncing first matters for the same reason: a mirror built from stale
+sources proves nothing about the sources being pushed.
+
 ### Targeted maintenance deploys
 
 `--vercel-target=` selects accounts. A selection that is **not** the complete

@@ -64,6 +64,7 @@ export const COMPOSITION_FEATURE_SEAMS = {
     '@/features/super-admin/server/services/super-admin-auth.server',
     '@/features/orders/application/order-detail-loader.server',
     '@/features/orders/application/order-actions.server',
+    '@/features/orders/application/order-action-grants.server',
     '@/features/product-search/server/services/product-search-service.server',
     '@/features/product-search/server/services/product-search-fields.server',
     '@/features/auth/domain/super-admin',

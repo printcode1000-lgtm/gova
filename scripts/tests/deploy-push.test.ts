@@ -140,6 +140,30 @@ assert.ok(
   "Readiness must be published before main verification waits for the gova deployment.",
 );
 
+/**
+ * A mirror that does not build is a deployment that fails after the push. The
+ * root typecheck does not cover the service trees, so this is the only place a
+ * `deploy:push` learns it before `main` moves.
+ */
+assert.match(
+  deployPushSource,
+  /await assertServiceMirrorsBuild\(\);/,
+  "deploy:push must prove the service mirrors build before it pushes main.",
+);
+const mirrorGate = deployPushSource.slice(
+  deployPushSource.indexOf("async function assertServiceMirrorsBuild("),
+);
+for (const command of ["services:sync", "services:build", "control:build"]) {
+  assert.ok(
+    mirrorGate.includes(`"${command}"`),
+    `The mirror gate must run ${command}: a mirror built from stale sources proves nothing.`,
+  );
+}
+assert.ok(
+  mirrorGate.indexOf('"services:sync"') < mirrorGate.indexOf('"services:build"'),
+  "The mirrors must be synced before they are built.",
+);
+
 for (const entry of ["debug.log", "notes.tmp", "src/__probe__.ts", "scratchpad/out.txt"]) {
   assert.ok(
     SCRATCH_FILE_PATTERNS.some((pattern) => pattern.test(entry)),

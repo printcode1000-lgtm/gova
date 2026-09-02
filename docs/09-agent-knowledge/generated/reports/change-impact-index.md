@@ -31,7 +31,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `network` | feature | 1 | 0 | 0 | 0 | 0 | 3 |
 | `notifications` | feature | 9 | 30 | 43 | 0 | 10 | 11 |
 | `onboarding` | feature | 1 | 0 | 0 | 0 | 1 | 10 |
-| `orders` | feature | 1 | 1 | 9 | 0 | 2 | 13 |
+| `orders` | feature | 1 | 1 | 9 | 0 | 1 | 13 |
 | `ota` | feature | 8 | 0 | 5 | 0 | 0 | 7 |
 | `page-save` | feature | 3 | 2 | 25 | 0 | 12 | 7 |
 | `page-snapshot` | feature | 1 | 0 | 5 | 0 | 2 | 5 |
@@ -106,4 +106,4 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `products` | service | 4 | 0 | 0 | 0 | 0 | 3 |
 | `profiles` | service | 4 | 0 | 0 | 0 | 0 | 4 |
 | `sub2main` | service | 2 | 0 | 0 | 0 | 0 | 5 |
-| `submain` | service | 2 | 2 | 0 | 0 | 0 | 15 |
+| `submain` | service | 2 | 2 | 0 | 0 | 0 | 14 |

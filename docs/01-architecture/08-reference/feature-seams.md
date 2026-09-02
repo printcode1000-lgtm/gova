@@ -9,7 +9,7 @@ The only exact application paths listed here belong to composition/service-mirro
 
 - `packages/architecture-core/src/registry/composition-feature-seams-registry.ts`
 
-Current inventory: **50** exact composition seam path(s).
+Current inventory: **51** exact composition seam path(s).
 
 | Composition package | Exact application module |
 | --- | --- |
@@ -48,6 +48,7 @@ Current inventory: **50** exact composition seam path(s).
 | `submain-composition` | `@/features/super-admin/server/services/super-admin-auth.server` |
 | `submain-composition` | `@/features/orders/application/order-detail-loader.server` |
 | `submain-composition` | `@/features/orders/application/order-actions.server` |
+| `submain-composition` | `@/features/orders/application/order-action-grants.server` |
 | `submain-composition` | `@/features/product-search/server/services/product-search-service.server` |
 | `submain-composition` | `@/features/product-search/server/services/product-search-fields.server` |
 | `submain-composition` | `@/features/auth/domain/super-admin` |

@@ -35,6 +35,9 @@ export type {
   SellerSearchRequest,
 } from '@/features/product-search/domain/product-search.types';
 
+/** The order action's input shape, re-exported so a route needs one door. */
+export type { ActionInput } from '@/features/orders/application/order-action-grants.server';
+
 export interface SubmainRuntimeConfig {
   env?: NodeJS.ProcessEnv;
 }

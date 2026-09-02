@@ -1,5 +1,8 @@
-import { assertSubmainEnv, createSubmainRuntime } from '@asol/submain-composition';
-import type { ActionInput } from '@/features/orders/application/order-actions.server';
+import {
+  assertSubmainEnv,
+  createSubmainRuntime,
+  type ActionInput,
+} from '@asol/submain-composition';
 
 import { corsHeaders, orderDetailErrorResponse, preflight } from '../../../../lib/http';
 

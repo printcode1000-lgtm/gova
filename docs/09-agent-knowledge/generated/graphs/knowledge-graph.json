@@ -138100,11 +138100,6 @@
     },
     {
       "from": "service:submain",
-      "to": "feature:orders",
-      "kind": "imports"
-    },
-    {
-      "from": "service:submain",
       "to": "feature:password-recovery",
       "kind": "imports"
     },
@@ -176232,6 +176227,12 @@
     },
     {
       "from": "source:packages/submain-composition/src/index.ts",
+      "to": "source:src/features/orders/application/order-action-grants.server.ts",
+      "kind": "imports",
+      "detail": "@/features/orders/application/order-action-grants.server"
+    },
+    {
+      "from": "source:packages/submain-composition/src/index.ts",
       "to": "source:src/features/orders/application/order-actions.server.ts",
       "kind": "imports",
       "detail": "@/features/orders/application/order-actions.server"
@@ -180472,12 +180473,6 @@
       "to": "source:services/submain/src/app/lib/http.ts",
       "kind": "imports",
       "detail": "../../../../lib/http"
-    },
-    {
-      "from": "source:services/submain/src/app/api/orders/[orderId]/actions/route.ts",
-      "to": "source:src/features/orders/application/order-actions.server.ts",
-      "kind": "imports",
-      "detail": "@/features/orders/application/order-actions.server"
     },
     {
       "from": "source:services/submain/src/app/api/orders/[orderId]/route.ts",

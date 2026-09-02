@@ -179,6 +179,25 @@ lesson is the one this whole document is about, in the other direction: when a
 guard refuses a move, the answer is to separate the capability, never to widen
 the account until the guard goes quiet.
 
+## The local gates do not cover the service trees
+
+`npm run typecheck` compiles `src/` and the packages. Each service has its own
+`tsconfig.json` and its own tree, and neither is in that project — so a type
+error that exists only inside a mirror passes every local gate and fails the
+remote build.
+
+`ActionInput` did exactly that: declared in `order-action-grants.server`,
+re-exported by the orders door, imported by the mirror from
+`order-actions.server` where it is only used. Root typecheck green, `lint` green,
+the full suite green, and `Failed to type check` on Vercel after `main` had
+moved.
+
+`services:build` compiles each mirror the way Vercel does, so it catches this —
+but `deploy:push` skipped it, being the no-gates path. It no longer does:
+`services:sync`, `services:build` and `control:build` now run before the push.
+The rule that came out of it is narrow and worth keeping: a check may be skipped
+when it proves *correctness*, never when it proves the artifact can be built.
+
 ## Working the backlog down
 
 For each pair, decide which of the two facts is wrong:
