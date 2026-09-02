@@ -73,8 +73,6 @@ export interface OwnedRoute {
 export const KNOWN_UNSHIPPED: readonly string[] = [
   "GET /api/notifications/broadcast/recipients",
   "POST /api/notifications/broadcast/send",
-  "DELETE /api/notifications/device-token",
-  "POST /api/notifications/device-token",
   "POST /api/notifications/mobile-push/unlock",
   "GET /api/notifications/preferences",
   "POST /api/notifications/preferences",

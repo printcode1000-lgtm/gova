@@ -22,12 +22,12 @@ is listed as `gova/dev` and answered wherever the request lands.
 | --- | --- | --- | ---: | ---: | ---: |
 | `control` | `asol-control` | `NEXT_PUBLIC_ASOL_CONTROL_URL` | 59 | 59 | 0 |
 | `gova/dev` | — | — | 8 | 8 | 0 |
-| `notifications` | `asol-notifications` | `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | 9 | 1 | 8 |
+| `notifications` | `asol-notifications` | `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | 5 | 1 | 4 |
 | `orders` | `asol-orders` | `NEXT_PUBLIC_ASOL_ORDERS_URL` | 1 | 1 | 0 |
 | `products` | `asol-products` | `NEXT_PUBLIC_ASOL_PRODUCTS_URL` | 3 | 3 | 0 |
 | `profiles` | `asol-profiles` | `NEXT_PUBLIC_ASOL_PROFILES_URL` | 8 | 8 | 0 |
 | `sub2main` | `asol-sub2main` | `NEXT_PUBLIC_ASOL_SUB2MAIN_URL` | 27 | 27 | 0 |
-| `submain` | `asol-submain` | `NEXT_PUBLIC_ASOL_SUBMAIN_URL` | 43 | 42 | 1 |
+| `submain` | `asol-submain` | `NEXT_PUBLIC_ASOL_SUBMAIN_URL` | 47 | 44 | 3 |
 
 ## `control`
 
@@ -115,11 +115,7 @@ routes, which are omitted from the production artifact entirely.
 | --- | --- | --- |
 | `GET` | `/api/notifications/broadcast/recipients` | **unshipped (tracked)** |
 | `POST` | `/api/notifications/broadcast/send` | **unshipped (tracked)** |
-| `DELETE` | `/api/notifications/device-token` | **unshipped (tracked)** |
-| `POST` | `/api/notifications/device-token` | **unshipped (tracked)** |
 | `POST` | `/api/notifications/mobile-push/unlock` | **unshipped (tracked)** |
-| `GET` | `/api/notifications/preferences` | **unshipped (tracked)** |
-| `POST` | `/api/notifications/preferences` | **unshipped (tracked)** |
 | `POST` | `/api/notifications/recipient-tokens` | **unshipped (tracked)** |
 | `POST` | `/api/notifications/send` | shipped |
 
@@ -211,8 +207,12 @@ routes, which are omitted from the production artifact entirely.
 | `POST` | `/api/follow` | shipped |
 | `POST` | `/api/follow/notifications` | shipped |
 | `GET` | `/api/follow/status` | shipped |
+| `DELETE` | `/api/notifications/device-token` | shipped |
+| `POST` | `/api/notifications/device-token` | shipped |
 | `DELETE` | `/api/notifications/devices` | shipped |
 | `GET` | `/api/notifications/devices` | shipped |
+| `GET` | `/api/notifications/preferences` | **unshipped (tracked)** |
+| `POST` | `/api/notifications/preferences` | **unshipped (tracked)** |
 | `POST` | `/api/notifications/test/self` | shipped |
 | `POST` | `/api/notifications/test/send` | shipped |
 | `GET` | `/api/orders/[orderId]` | shipped |

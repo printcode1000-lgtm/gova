@@ -1,4 +1,4 @@
-import { controlError } from '@/control/operational-route';
+import { controlError, controlPreflight } from '@/control/operational-route';
 import { assertControlSystemLogAccess, createSseStream } from '@/control/system-logs';
 export async function GET(request: Request): Promise<Response> {
   try {
@@ -13,4 +13,6 @@ export async function GET(request: Request): Promise<Response> {
     return controlError(error);
   }
 }
-export async function OPTIONS() { return new Response(null, { status: 204 }); }
+export function OPTIONS(request: Request): Response {
+  return controlPreflight(request);
+}

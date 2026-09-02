@@ -36,6 +36,25 @@ backends were still deploying. Under the barrier that ordering cannot work: main
 cannot become READY until readiness is published, and readiness cannot be
 published until the backends are done.
 
+**A failed release withdraws its readiness.** Readiness is the only thing that
+unblocks the gova build, so leaving it `ready` for a revision whose release then
+failed lets a late frontend build publish over backends the rollback has already
+reverted — a frontend on one SHA above backends on another, the one state the
+barrier exists to prevent. The transaction marks the revision `failed` before it
+rolls anything back, which makes `build:vercel` fail closed for that SHA forever.
+
+That is not hypothetical. A `deploy:push` whose gova deployment never appeared on
+Vercel left `ready` standing, and the topology had to be realigned by hand with
+an extra release.
+
+The retraction needed two halves, and the first one alone was worthless. Sending
+the failure to the callback logged "readiness withdrawn" while the barrier kept
+answering `ready`: the durable status was *derived* from the components, and all
+of them had passed, so a derived `ready` came straight back. An explicit failure
+now outranks a derived readiness and is permanent for that revision — a later
+passing component cannot revive it. `test:vercel-deploy-core` asserts both, by
+reading the barrier back rather than trusting the write.
+
 **The baseline is captured before the first mutation.** A failure after step 2
 has already changed production. Capturing names and deployment ids up front is
 what lets the failure path re-promote the previous deployments automatically
@@ -211,5 +230,6 @@ for what happens when it does not.
 | `control:smoke` | control's auth boundary, plus a release-barrier read of its own shard, plus a scan of the server log for unregistered ports |
 | `smoke:deployed` | the deployed origins: gova health, a legacy `307` redirect that must not be followed, control's auth boundary, and each workload's data route |
 | `smoke:owned-reads` | **every** owned GET route on every account, against production. A `4xx` passes — the handler ran and refused; a `5xx`, or an unconfigured-port body behind a `200`, fails. Runs as part of `smoke:deployed`. |
+| `test:service-cors` | every deployment installs the shared CORS boundary (`createServiceProxy`) at `/api/:path*`, and a preflight for a path **no route implements** answers with a real `Access-Control-Allow-Origin`, `DELETE` among the allowed methods, and the shared `BROWSER_REQUEST_HEADERS`. A bare `204` fails: without the header the browser never sends the request, and the caller sees a network outage from a healthy server. Runs inside `test:deployment-tools`. |
 | `test:route-ownership` | every owned route+method is shipped by its owner, and the known-unshipped backlog only shrinks |
 | `test:mirror-status-parity` | a canonical route that maps statuses itself is never mirrored by one using only a generic responder |

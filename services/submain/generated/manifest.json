@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-02T05:51:38.260Z",
+  "generatedAt": "2026-09-02T11:24:50.584Z",
   "entryPoints": [
     "features/product-search/server/services/product-search-service.server.ts",
     "features/product-search/server/services/product-search-products.server.ts",
@@ -10,7 +10,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 473,
+  "fileCount": 474,
   "files": [
     "packages/account-declarations/src/accounts/gova-runtime-env-keys.ts",
     "packages/account-declarations/src/accounts/submain-runtime-env-keys.ts",
@@ -294,6 +294,7 @@
     "packages/service-runtime-core/src/domain/error-status.ts",
     "packages/service-runtime-core/src/domain/health.ts",
     "packages/service-runtime-core/src/domain/service-http.ts",
+    "packages/service-runtime-core/src/domain/service-proxy.ts",
     "packages/service-runtime-core/src/index.ts",
     "packages/signed-token-core/src/domain/signed-envelope.ts",
     "packages/signed-token-core/src/index.ts",

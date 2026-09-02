@@ -1,1 +1,0 @@
-rerun reconciliation with architecture docs regeneration

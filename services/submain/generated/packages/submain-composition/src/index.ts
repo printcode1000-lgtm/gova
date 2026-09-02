@@ -37,6 +37,10 @@ export type {
 
 /** The order action's input shape, re-exported so a route needs one door. */
 export type { ActionInput } from '@/features/orders/application/order-action-grants.server';
+export type {
+  DeleteNotificationTokenInput,
+  RegisterNotificationTokenInput,
+} from '@asol/notifications-core';
 
 export interface SubmainRuntimeConfig {
   env?: NodeJS.ProcessEnv;
@@ -108,6 +112,7 @@ export interface SubmainAdvertisementsTask {
  * secret every authenticated request depends on.
  */
 export interface SubmainDeviceTask {
+  registerDeviceToken: typeof notificationTokenService.register;
   listAccountDevices: typeof notificationTokenService.listForAccount;
   removeDeviceToken: typeof notificationTokenService.remove;
   sendSelfTest: typeof notificationSelfTestService.send;
@@ -226,6 +231,7 @@ export function createSubmainRuntime(_config?: SubmainRuntimeConfig): SubmainRun
       trendingRibbon: featuredTrendingRibbonService,
     },
     devices: {
+      registerDeviceToken: (input) => notificationTokenService.register(input),
       listAccountDevices: (identity) => notificationTokenService.listForAccount(identity),
       removeDeviceToken: (input) => notificationTokenService.remove(input),
       sendSelfTest: (input) => notificationSelfTestService.send(input),

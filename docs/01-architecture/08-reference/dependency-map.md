@@ -328,6 +328,9 @@ ALLOWED_TO_IMPORT → `@asol/account-declarations/sub2main`
 ALLOWED_TO_IMPORT → `@asol/account-declarations/submain`
 
 `@asol/submain-composition`
+ALLOWED_TO_IMPORT → `@asol/notifications-core`
+
+`@asol/submain-composition`
 ALLOWED_TO_IMPORT → `@asol/orders-core`
 
 ### @asol/system-logs-core
@@ -348,4 +351,4 @@ ALLOWED_TO_IMPORT → `@asol/account-declarations`
 | Metric | Value |
 |---|---|
 | Packages | 43 |
-| Import edges | 56 |
+| Import edges | 57 |

@@ -10,9 +10,9 @@
 | Kind | Count |
 |---|---:|
 | artifact | 4 |
-| command | 274 |
+| command | 275 |
 | config | 12 |
-| document | 261 |
+| document | 264 |
 | domain | 10 |
 | environment-key | 241 |
 | external-dependency | 108 |
@@ -22,8 +22,8 @@
 | runtime | 7 |
 | script | 150 |
 | service | 7 |
-| source | 2207 |
-| test | 233 |
+| source | 2216 |
+| test | 234 |
 
 ## Domains
 

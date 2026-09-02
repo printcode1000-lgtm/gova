@@ -131,3 +131,82 @@ export async function publishReleaseReadiness(input: {
     `${input.logPrefix} Durable exact-SHA release readiness published for ${input.revision}.`,
   );
 }
+
+/**
+ * Withdraw a published readiness when the release did not finish.
+ *
+ * Readiness is what unblocks the gova build. If it stays `ready` for a revision
+ * whose release then failed, the frontend build can arrive late and publish
+ * against backends the failure path has already rolled back — a frontend on one
+ * SHA over backends on another, which is the one state the barrier exists to
+ * prevent.
+ *
+ * That is not hypothetical: a `deploy:push` whose gova deployment never appeared
+ * left `ready` standing, and the topology had to be realigned by hand.
+ *
+ * Marking the revision `failed` makes `build:vercel` fail closed for it forever,
+ * so a late build leaves the previous production deployment serving. Best effort
+ * on purpose: the release has already failed, and a failure to retract must not
+ * replace the real error with this one.
+ */
+export async function retractReleaseReadiness(input: {
+  readonly revision: string;
+  readonly runId: string;
+  readonly reason: string;
+  readonly logPrefix: string;
+}): Promise<void> {
+  const callbackSecret = process.env.ASOL_DEPLOY_CALLBACK_SECRET?.trim();
+  if (!callbackSecret) return;
+
+  try {
+    const now = new Date().toISOString();
+    const response = await fetch(
+      `${controlReleaseOrigin()}/api/super-admin/production-deploy/callback`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${callbackSecret}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          snapshot: {
+            version: 1,
+            requestId: input.runId,
+            status: "failed",
+            stage: "complete",
+            sandboxName: "release-retraction",
+            initiatedByUid: "release",
+            command: "deploy:push",
+            revision: input.revision,
+            target: "all",
+            startedAt: now,
+            updatedAt: now,
+            finishedAt: now,
+            exitCode: 1,
+            emailStatus: "sent",
+            inAppNotified: true,
+          },
+          logTail: `Release readiness withdrawn: ${input.reason}`,
+          releaseStateMutation: {
+            revision: input.revision,
+            runId: input.runId,
+            operationId: `${input.runId}:retract`,
+            source: "cli",
+            status: "failed",
+            failureDetails: [input.reason],
+          },
+        }),
+      },
+    );
+    console.error(
+      response.ok
+        ? `${input.logPrefix} Release readiness withdrawn for ${input.revision}.`
+        : `${input.logPrefix} Could not withdraw readiness: HTTP ${response.status}.`,
+    );
+  } catch (error) {
+    console.error(
+      `${input.logPrefix} Could not withdraw readiness: ${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
+}

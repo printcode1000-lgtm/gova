@@ -3625,6 +3625,20 @@
       ]
     },
     {
+      "id": "command:test:service-cors",
+      "kind": "command",
+      "name": "npm run test:service-cors",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run test:service-cors",
+        "run",
+        "service-cors",
+        "test",
+        "test:service-cors"
+      ]
+    },
+    {
       "id": "command:test:service-mirror-core",
       "kind": "command",
       "name": "npm run test:service-mirror-core",
@@ -12107,6 +12121,55 @@
       ]
     },
     {
+      "id": "document:docs/06-super-admin-and-operations/local-agent-recovery.md",
+      "kind": "document",
+      "name": "Local Agent Disaster Recovery",
+      "path": "docs/06-super-admin-and-operations/local-agent-recovery.md",
+      "summary": "The persistent local-agent runtime has a self-contained recovery command. It is intended to rebuild the execution control plane after repository loss, runtime-database damage, machine replacement, or accidental worktree deletion without using `main` as a recovery channel.",
+      "tags": [
+        "accidental",
+        "after",
+        "agent",
+        "as",
+        "channel",
+        "command",
+        "control",
+        "damage",
+        "deletion",
+        "disaster",
+        "docs/06-super-admin-and-operations/local-agent-recovery",
+        "docs/06-super-admin-and-operations/local-agent-recovery.md",
+        "execution",
+        "has",
+        "intended",
+        "is",
+        "it",
+        "local",
+        "local agent disaster recovery",
+        "local-agent",
+        "loss",
+        "machine",
+        "main",
+        "md",
+        "or",
+        "persistent",
+        "plane",
+        "rebuild",
+        "recovery",
+        "replacement",
+        "repository",
+        "runtime",
+        "runtime-database",
+        "self-contained",
+        "the",
+        "the persistent local-agent runtime has a self-contained recovery command. it is intended to rebuild the execution control plane after repository loss, runtime-database damage, machine replacement, or accidental worktree deletion without using `main` as a recovery channel.",
+        "to",
+        "using",
+        "without",
+        "worktree"
+      ]
+    },
+    {
       "id": "document:docs/06-super-admin-and-operations/local-agent-runtime.md",
       "kind": "document",
       "name": "Persistent Local Agent Runtime",
@@ -12117,6 +12180,8 @@
         "agent",
         "bootstrap/release",
         "command",
+        "docs/06-super-admin-and-operations/local-agent-recovery",
+        "docs/06-super-admin-and-operations/local-agent-recovery.md",
         "docs/06-super-admin-and-operations/local-agent-runtime",
         "docs/06-super-admin-and-operations/local-agent-runtime.md",
         "environment",
@@ -14270,6 +14335,39 @@
       ]
     },
     {
+      "id": "document:docs/08-troubleshooting/problems/main-push-without-vercel-deployment.md",
+      "kind": "document",
+      "name": "A push to `main` produces no Vercel deployment",
+      "path": "docs/08-troubleshooting/problems/main-push-without-vercel-deployment.md",
+      "summary": "`deploy:push` deploys control and all six workloads, publishes exact-SHA readiness, then fails:",
+      "tags": [
+        "`deploy:push` deploys control and all six workloads, publishes exact-sha readiness, then fails:",
+        "a push to `main` produces no vercel deployment",
+        "all",
+        "and",
+        "control",
+        "deploy",
+        "deployment",
+        "deploys",
+        "docs/08-troubleshooting/problems/main-push-without-vercel-deployment",
+        "docs/08-troubleshooting/problems/main-push-without-vercel-deployment.md",
+        "exact-sha",
+        "fails",
+        "main",
+        "md",
+        "no",
+        "produces",
+        "publishes",
+        "push",
+        "readiness",
+        "six",
+        "then",
+        "to",
+        "vercel",
+        "workloads"
+      ]
+    },
+    {
       "id": "document:docs/08-troubleshooting/problems/notification-preference-incomplete-identity.md",
       "kind": "document",
       "name": "Notification Preference Forbidden from Incomplete Identity",
@@ -14523,6 +14621,41 @@
         "test",
         "ts",
         "with"
+      ]
+    },
+    {
+      "id": "document:docs/08-troubleshooting/problems/preflight-answered-without-cors-headers.md",
+      "kind": "document",
+      "name": "A route reports `Unable to reach the server` while the server is up",
+      "path": "docs/08-troubleshooting/problems/preflight-answered-without-cors-headers.md",
+      "summary": "The browser reports a network failure for a route whose origin is healthy:",
+      "tags": [
+        "@asol/service-runtime-core",
+        "a route reports `unable to reach the server` while the server is up",
+        "browser",
+        "docs/08-troubleshooting/problems/preflight-answered-without-cors-headers",
+        "docs/08-troubleshooting/problems/preflight-answered-without-cors-headers.md",
+        "failure",
+        "for",
+        "healthy",
+        "is",
+        "md",
+        "network",
+        "origin",
+        "reach",
+        "reports",
+        "route",
+        "server",
+        "services/control/src/proxy",
+        "services/control/src/proxy.ts",
+        "the",
+        "the browser reports a network failure for a route whose origin is healthy:",
+        "to",
+        "ts",
+        "unable",
+        "up",
+        "while",
+        "whose"
       ]
     },
     {
@@ -15675,16 +15808,39 @@
       "kind": "document",
       "name": "Persistent Local Agent Runtime",
       "path": "docs/09-agent-knowledge/local-agent-runtime.md",
+      "summary": "`gova-agent-monitor` is the single supported local monitor. Installation replaces the legacy `@asol/local-agent-core` desktop launcher in place and terminates any stale `scripts/local-agent-watch.ts` process.",
       "tags": [
         "@asol/local-agent-core",
+        "`gova-agent-monitor` is the single supported local monitor. installation replaces the legacy `@asol/local-agent-core` desktop launcher in place and terminates any stale `scripts/local-agent-watch.ts` process.",
         "agent",
+        "and",
+        "any",
+        "desktop",
         "docs/09-agent-knowledge/local-agent-runtime",
         "docs/09-agent-knowledge/local-agent-runtime.md",
+        "gova-agent-monitor",
+        "in",
+        "installation",
+        "is",
+        "launcher",
+        "legacy",
         "local",
         "md",
+        "monitor",
         "persistent",
         "persistent local agent runtime",
-        "runtime"
+        "place",
+        "process",
+        "replaces",
+        "runtime",
+        "scripts/local-agent-watch",
+        "scripts/local-agent-watch.ts",
+        "single",
+        "stale",
+        "supported",
+        "terminates",
+        "the",
+        "ts"
       ]
     },
     {
@@ -36382,6 +36538,17 @@
       ]
     },
     {
+      "id": "source:packages/service-runtime-core/src/domain/service-proxy.ts",
+      "kind": "source",
+      "name": "service-proxy.ts",
+      "path": "packages/service-runtime-core/src/domain/service-proxy.ts",
+      "tags": [
+        "packages/service-runtime-core/src/domain/service-proxy",
+        "packages/service-runtime-core/src/domain/service-proxy.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/service-runtime-core/src/index.ts",
       "kind": "source",
       "name": "index.ts",
@@ -38108,6 +38275,17 @@
       ]
     },
     {
+      "id": "source:services/control/src/proxy.ts",
+      "kind": "source",
+      "name": "proxy.ts",
+      "path": "services/control/src/proxy.ts",
+      "tags": [
+        "services/control/src/proxy",
+        "services/control/src/proxy.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:services/notifications/next-env.d.ts",
       "kind": "source",
       "name": "next-env.d.ts",
@@ -38161,6 +38339,17 @@
         "services/notifications/src/app/layout",
         "services/notifications/src/app/layout.tsx",
         "tsx"
+      ]
+    },
+    {
+      "id": "source:services/notifications/src/proxy.ts",
+      "kind": "source",
+      "name": "proxy.ts",
+      "path": "services/notifications/src/proxy.ts",
+      "tags": [
+        "services/notifications/src/proxy",
+        "services/notifications/src/proxy.ts",
+        "ts"
       ]
     },
     {
@@ -38238,6 +38427,17 @@
       "tags": [
         "services/orders/src/app/lib/http",
         "services/orders/src/app/lib/http.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/orders/src/proxy.ts",
+      "kind": "source",
+      "name": "proxy.ts",
+      "path": "services/orders/src/proxy.ts",
+      "tags": [
+        "services/orders/src/proxy",
+        "services/orders/src/proxy.ts",
         "ts"
       ]
     },
@@ -38338,6 +38538,17 @@
       "tags": [
         "services/products/src/app/lib/http",
         "services/products/src/app/lib/http.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/products/src/proxy.ts",
+      "kind": "source",
+      "name": "proxy.ts",
+      "path": "services/products/src/proxy.ts",
+      "tags": [
+        "services/products/src/proxy",
+        "services/products/src/proxy.ts",
         "ts"
       ]
     },
@@ -38495,6 +38706,17 @@
       "tags": [
         "services/profiles/src/app/lib/http",
         "services/profiles/src/app/lib/http.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/profiles/src/proxy.ts",
+      "kind": "source",
+      "name": "proxy.ts",
+      "path": "services/profiles/src/proxy.ts",
+      "tags": [
+        "services/profiles/src/proxy",
+        "services/profiles/src/proxy.ts",
         "ts"
       ]
     },
@@ -38777,6 +38999,17 @@
       ]
     },
     {
+      "id": "source:services/sub2main/src/proxy.ts",
+      "kind": "source",
+      "name": "proxy.ts",
+      "path": "services/sub2main/src/proxy.ts",
+      "tags": [
+        "services/sub2main/src/proxy",
+        "services/sub2main/src/proxy.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:services/sub2main/stubs/better-sqlite3.js",
       "kind": "source",
       "name": "better-sqlite3.js",
@@ -39042,6 +39275,17 @@
       ]
     },
     {
+      "id": "source:services/submain/src/app/api/notifications/device-token/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/notifications/device-token/route.ts",
+      "tags": [
+        "services/submain/src/app/api/notifications/device-token/route",
+        "services/submain/src/app/api/notifications/device-token/route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:services/submain/src/app/api/notifications/devices/route.ts",
       "kind": "source",
       "name": "route.ts",
@@ -39229,6 +39473,17 @@
       "tags": [
         "services/submain/src/instrumentation",
         "services/submain/src/instrumentation.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/proxy.ts",
+      "kind": "source",
+      "name": "proxy.ts",
+      "path": "services/submain/src/proxy.ts",
+      "tags": [
+        "services/submain/src/proxy",
+        "services/submain/src/proxy.ts",
         "ts"
       ]
     },
@@ -54033,6 +54288,18 @@
       ]
     },
     {
+      "id": "test:scripts/tests/service-cors-boundary.test.ts",
+      "kind": "test",
+      "name": "service-cors-boundary.test.ts",
+      "path": "scripts/tests/service-cors-boundary.test.ts",
+      "tags": [
+        "scripts/tests/service-cors-boundary",
+        "scripts/tests/service-cors-boundary.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:scripts/tests/vercel-deployment-guards.test.ts",
       "kind": "test",
       "name": "vercel-deployment-guards.test.ts",
@@ -57846,6 +58113,11 @@
     },
     {
       "from": "command:test:deployment-tools",
+      "to": "test:scripts/tests/service-cors-boundary.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:deployment-tools",
       "to": "test:scripts/tests/vercel-deployment-guards.test.ts",
       "kind": "invokes"
     },
@@ -58676,6 +58948,16 @@
     },
     {
       "from": "command:test:service-bridge",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:test:service-cors",
+      "to": "test:scripts/tests/service-cors-boundary.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:service-cors",
       "to": "runtime:tooling",
       "kind": "targets-runtime"
     },
@@ -71555,9 +71837,20 @@
       "detail": "src/app"
     },
     {
+      "from": "document:docs/06-super-admin-and-operations/local-agent-recovery.md",
+      "to": "domain:super-admin-and-operations",
+      "kind": "belongs-to"
+    },
+    {
       "from": "document:docs/06-super-admin-and-operations/local-agent-runtime.md",
       "to": "domain:super-admin-and-operations",
       "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/06-super-admin-and-operations/local-agent-runtime.md",
+      "to": "document:docs/06-super-admin-and-operations/local-agent-recovery.md",
+      "kind": "references",
+      "detail": "docs/06-super-admin-and-operations/local-agent-recovery.md"
     },
     {
       "from": "document:docs/06-super-admin-and-operations/notification-tests.md",
@@ -73589,6 +73882,11 @@
       "detail": "packages/native-core/scripts/android-build-preflight.ts"
     },
     {
+      "from": "document:docs/08-troubleshooting/problems/main-push-without-vercel-deployment.md",
+      "to": "domain:troubleshooting",
+      "kind": "belongs-to"
+    },
+    {
       "from": "document:docs/08-troubleshooting/problems/notification-preference-incomplete-identity.md",
       "to": "domain:troubleshooting",
       "kind": "belongs-to"
@@ -73763,6 +74061,35 @@
       "detail": "src/features/product/tests/pharmacy-product-lookup-port-registry.test.ts"
     },
     {
+      "from": "document:docs/08-troubleshooting/problems/preflight-answered-without-cors-headers.md",
+      "to": "domain:troubleshooting",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/preflight-answered-without-cors-headers.md",
+      "to": "document:docs/08-troubleshooting/problems/main-push-without-vercel-deployment.md",
+      "kind": "references",
+      "detail": "main-push-without-vercel-deployment.md"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/preflight-answered-without-cors-headers.md",
+      "to": "document:docs/08-troubleshooting/problems/owned-route-not-shipped.md",
+      "kind": "references",
+      "detail": "owned-route-not-shipped.md"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/preflight-answered-without-cors-headers.md",
+      "to": "package:@asol/service-runtime-core",
+      "kind": "references",
+      "detail": "@asol/service-runtime-core"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/preflight-answered-without-cors-headers.md",
+      "to": "source:services/control/src/proxy.ts",
+      "kind": "references",
+      "detail": "services/control/src/proxy.ts"
+    },
+    {
       "from": "document:docs/08-troubleshooting/problems/profile-prerender-useSearchParams-suspense.md",
       "to": "domain:troubleshooting",
       "kind": "belongs-to"
@@ -73864,6 +74191,12 @@
     },
     {
       "from": "document:docs/08-troubleshooting/problems/README.md",
+      "to": "document:docs/08-troubleshooting/problems/main-push-without-vercel-deployment.md",
+      "kind": "references",
+      "detail": "./main-push-without-vercel-deployment.md"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/README.md",
       "to": "document:docs/08-troubleshooting/problems/npm-ci-better-sqlite3-python-windows.md",
       "kind": "references",
       "detail": "./npm-ci-better-sqlite3-python-windows.md"
@@ -73885,6 +74218,12 @@
       "to": "document:docs/08-troubleshooting/problems/page-save-read-marker-crlf-windows.md",
       "kind": "references",
       "detail": "./page-save-read-marker-crlf-windows.md"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/README.md",
+      "to": "document:docs/08-troubleshooting/problems/preflight-answered-without-cors-headers.md",
+      "kind": "references",
+      "detail": "./preflight-answered-without-cors-headers.md"
     },
     {
       "from": "document:docs/08-troubleshooting/problems/README.md",
@@ -80742,6 +81081,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/service-runtime-core/src/domain/service-proxy.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:packages/service-runtime-core/src/index.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -87234,6 +87579,12 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "source:services/control/src/proxy.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "source:services/notifications/next-env.d.ts",
       "kind": "documents",
       "detail": "services/"
@@ -87259,6 +87610,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "source:services/notifications/src/app/layout.tsx",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/notifications/src/proxy.ts",
       "kind": "documents",
       "detail": "services/"
     },
@@ -87301,6 +87658,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "source:services/orders/src/app/lib/http.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/orders/src/proxy.ts",
       "kind": "documents",
       "detail": "services/"
     },
@@ -87355,6 +87718,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "source:services/products/src/app/lib/http.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/products/src/proxy.ts",
       "kind": "documents",
       "detail": "services/"
     },
@@ -87439,6 +87808,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "source:services/profiles/src/app/lib/http.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/profiles/src/proxy.ts",
       "kind": "documents",
       "detail": "services/"
     },
@@ -87594,6 +87969,12 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "source:services/sub2main/src/proxy.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "source:services/sub2main/stubs/better-sqlite3.js",
       "kind": "documents",
       "detail": "services/"
@@ -87738,6 +88119,12 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/notifications/device-token/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "source:services/submain/src/app/api/notifications/devices/route.ts",
       "kind": "documents",
       "detail": "services/"
@@ -87835,6 +88222,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "source:services/submain/src/instrumentation.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/proxy.ts",
       "kind": "documents",
       "detail": "services/"
     },
@@ -88207,6 +88600,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "test:scripts/tests/secret-presence-status.test.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "test:scripts/tests/service-cors-boundary.test.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -108554,6 +108953,11 @@
     {
       "from": "package:@asol/submain-composition",
       "to": "package:@asol/account-declarations",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/submain-composition",
+      "to": "package:@asol/notifications-core",
       "kind": "imports"
     },
     {
@@ -170717,6 +171121,42 @@
       "detail": "./error-status"
     },
     {
+      "from": "source:packages/service-runtime-core/src/domain/service-proxy.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/service-runtime-core/src/domain/service-proxy.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/service-runtime-core/src/domain/service-proxy.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/service-runtime-core/src/domain/service-proxy.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/service-runtime-core/src/domain/service-proxy.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/service-runtime-core/src/domain/service-proxy.ts",
+      "to": "package:@asol/service-runtime-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/service-runtime-core/src/domain/service-proxy.ts",
+      "to": "source:packages/service-runtime-core/src/domain/cors.ts",
+      "kind": "imports",
+      "detail": "./cors"
+    },
+    {
       "from": "source:packages/service-runtime-core/src/index.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -170769,6 +171209,12 @@
       "to": "source:packages/service-runtime-core/src/domain/service-http.ts",
       "kind": "imports",
       "detail": "./domain/service-http"
+    },
+    {
+      "from": "source:packages/service-runtime-core/src/index.ts",
+      "to": "source:packages/service-runtime-core/src/domain/service-proxy.ts",
+      "kind": "imports",
+      "detail": "./domain/service-proxy"
     },
     {
       "from": "source:packages/signed-token-core/src/domain/signed-envelope.ts",
@@ -173096,6 +173542,12 @@
     },
     {
       "from": "source:packages/submain-composition/src/index.ts",
+      "to": "package:@asol/notifications-core",
+      "kind": "imports",
+      "detail": "@asol/notifications-core"
+    },
+    {
+      "from": "source:packages/submain-composition/src/index.ts",
       "to": "package:@asol/orders-core",
       "kind": "imports",
       "detail": "@asol/orders-core"
@@ -175378,6 +175830,12 @@
     },
     {
       "from": "source:services/control/src/control/operational-route.ts",
+      "to": "package:@asol/service-runtime-core",
+      "kind": "imports",
+      "detail": "@asol/service-runtime-core"
+    },
+    {
+      "from": "source:services/control/src/control/operational-route.ts",
       "to": "source:src/core/api/business-api-error-status.ts",
       "kind": "imports",
       "detail": "@/core/api/business-api-error-status"
@@ -175528,6 +175986,12 @@
     },
     {
       "from": "source:services/control/src/control/super-admin-route.ts",
+      "to": "source:services/control/src/control/operational-route.ts",
+      "kind": "imports",
+      "detail": "./operational-route"
+    },
+    {
+      "from": "source:services/control/src/control/super-admin-route.ts",
       "to": "source:src/core/api/business-api-error-status.ts",
       "kind": "imports",
       "detail": "@/core/api/business-api-error-status"
@@ -175640,6 +176104,28 @@
       "to": "package:@asol/control-composition",
       "kind": "imports",
       "detail": "@asol/control-composition"
+    },
+    {
+      "from": "source:services/control/src/proxy.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/control/src/proxy.ts",
+      "to": "service:control",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/control/src/proxy.ts",
+      "to": "external-dependency:next",
+      "kind": "imports",
+      "detail": "next/server"
+    },
+    {
+      "from": "source:services/control/src/proxy.ts",
+      "to": "package:@asol/service-runtime-core",
+      "kind": "imports",
+      "detail": "@asol/service-runtime-core"
     },
     {
       "from": "source:services/notifications/next-env.d.ts",
@@ -175755,6 +176241,28 @@
       "kind": "belongs-to"
     },
     {
+      "from": "source:services/notifications/src/proxy.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/notifications/src/proxy.ts",
+      "to": "service:notifications",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/notifications/src/proxy.ts",
+      "to": "external-dependency:next",
+      "kind": "imports",
+      "detail": "next/server"
+    },
+    {
+      "from": "source:services/notifications/src/proxy.ts",
+      "to": "package:@asol/service-runtime-core",
+      "kind": "imports",
+      "detail": "@asol/service-runtime-core"
+    },
+    {
       "from": "source:services/notifications/stubs/better-sqlite3.js",
       "to": "runtime:services",
       "kind": "affects-runtime"
@@ -175856,6 +176364,28 @@
     },
     {
       "from": "source:services/orders/src/app/lib/http.ts",
+      "to": "package:@asol/service-runtime-core",
+      "kind": "imports",
+      "detail": "@asol/service-runtime-core"
+    },
+    {
+      "from": "source:services/orders/src/proxy.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/orders/src/proxy.ts",
+      "to": "service:orders",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/orders/src/proxy.ts",
+      "to": "external-dependency:next",
+      "kind": "imports",
+      "detail": "next/server"
+    },
+    {
+      "from": "source:services/orders/src/proxy.ts",
       "to": "package:@asol/service-runtime-core",
       "kind": "imports",
       "detail": "@asol/service-runtime-core"
@@ -176005,6 +176535,28 @@
     },
     {
       "from": "source:services/products/src/app/lib/http.ts",
+      "to": "package:@asol/service-runtime-core",
+      "kind": "imports",
+      "detail": "@asol/service-runtime-core"
+    },
+    {
+      "from": "source:services/products/src/proxy.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/products/src/proxy.ts",
+      "to": "service:products",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/products/src/proxy.ts",
+      "to": "external-dependency:next",
+      "kind": "imports",
+      "detail": "next/server"
+    },
+    {
+      "from": "source:services/products/src/proxy.ts",
       "to": "package:@asol/service-runtime-core",
       "kind": "imports",
       "detail": "@asol/service-runtime-core"
@@ -176265,6 +176817,28 @@
     },
     {
       "from": "source:services/profiles/src/app/lib/http.ts",
+      "to": "package:@asol/service-runtime-core",
+      "kind": "imports",
+      "detail": "@asol/service-runtime-core"
+    },
+    {
+      "from": "source:services/profiles/src/proxy.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/profiles/src/proxy.ts",
+      "to": "service:profiles",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/profiles/src/proxy.ts",
+      "to": "external-dependency:next",
+      "kind": "imports",
+      "detail": "next/server"
+    },
+    {
+      "from": "source:services/profiles/src/proxy.ts",
       "to": "package:@asol/service-runtime-core",
       "kind": "imports",
       "detail": "@asol/service-runtime-core"
@@ -176796,6 +177370,28 @@
       "from": "source:services/sub2main/src/instrumentation.ts",
       "to": "environment-key:NEXT_RUNTIME",
       "kind": "uses-environment"
+    },
+    {
+      "from": "source:services/sub2main/src/proxy.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/sub2main/src/proxy.ts",
+      "to": "service:sub2main",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/sub2main/src/proxy.ts",
+      "to": "external-dependency:next",
+      "kind": "imports",
+      "detail": "next/server"
+    },
+    {
+      "from": "source:services/sub2main/src/proxy.ts",
+      "to": "package:@asol/service-runtime-core",
+      "kind": "imports",
+      "detail": "@asol/service-runtime-core"
     },
     {
       "from": "source:services/sub2main/stubs/better-sqlite3.js",
@@ -177402,6 +177998,28 @@
       "kind": "uses-environment"
     },
     {
+      "from": "source:services/submain/src/app/api/notifications/device-token/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/notifications/device-token/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/notifications/device-token/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/notifications/device-token/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../lib/http"
+    },
+    {
       "from": "source:services/submain/src/app/api/notifications/devices/route.ts",
       "to": "runtime:services",
       "kind": "affects-runtime"
@@ -177815,6 +178433,28 @@
       "from": "source:services/submain/src/instrumentation.ts",
       "to": "environment-key:NEXT_RUNTIME",
       "kind": "uses-environment"
+    },
+    {
+      "from": "source:services/submain/src/proxy.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/proxy.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/proxy.ts",
+      "to": "external-dependency:next",
+      "kind": "imports",
+      "detail": "next/server"
+    },
+    {
+      "from": "source:services/submain/src/proxy.ts",
+      "to": "package:@asol/service-runtime-core",
+      "kind": "imports",
+      "detail": "@asol/service-runtime-core"
     },
     {
       "from": "source:services/submain/stubs/better-sqlite3.js",
@@ -242879,6 +243519,22 @@
     {
       "from": "test:scripts/tests/secret-presence-status.test.ts",
       "to": "script:scripts/secret-presence-status.ts",
+      "kind": "tests"
+    },
+    {
+      "from": "test:scripts/tests/service-cors-boundary.test.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:scripts/tests/service-cors-boundary.test.ts",
+      "to": "package:@asol/service-runtime-core",
+      "kind": "imports",
+      "detail": "@asol/service-runtime-core"
+    },
+    {
+      "from": "test:scripts/tests/service-cors-boundary.test.ts",
+      "to": "package:@asol/service-runtime-core",
       "kind": "tests"
     },
     {

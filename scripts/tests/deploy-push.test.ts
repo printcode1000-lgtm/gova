@@ -134,6 +134,27 @@ for (const [needle, why] of [
 ] as const) {
   assert.ok(transactionBody.includes(needle), `The release transaction must ${why}.`);
 }
+/**
+ * Readiness is what unblocks the gova build, so a failed release must withdraw
+ * it before rolling anything back. Leaving `ready` standing let a late frontend
+ * build publish over backends the rollback had already reverted.
+ */
+assert.match(
+  transactionBody,
+  /retractReleaseReadiness\(\{/,
+  "A failed release must withdraw the readiness it published.",
+);
+assert.ok(
+  transactionBody.indexOf("retractReleaseReadiness(") <
+    transactionBody.indexOf("rollbackReleaseBaseline("),
+  "Readiness must be withdrawn before the rollback re-promotes the previous deployments.",
+);
+assert.match(
+  transactionBody,
+  /if \(readinessPublished\) \{/,
+  "Only a readiness that was actually published may be withdrawn.",
+);
+
 assert.ok(
   transactionBody.indexOf("publishReleaseReadiness(") <
     transactionBody.indexOf("await verifyMainDeployment("),

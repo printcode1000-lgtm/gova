@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-02T05:52:04.462Z",
+  "generatedAt": "2026-09-02T11:29:14.687Z",
   "entryPoints": [
     "features/product/server/services/product-service.server.ts",
     "features/profile/server/services/profile-service.bootstrap.server.ts",
@@ -19,7 +19,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 429,
+  "fileCount": 430,
   "files": [
     "packages/account-declarations/src/accounts/products.ts",
     "packages/account-declarations/src/accounts/profiles.ts",
@@ -265,6 +265,7 @@
     "packages/service-runtime-core/src/domain/error-status.ts",
     "packages/service-runtime-core/src/domain/health.ts",
     "packages/service-runtime-core/src/domain/service-http.ts",
+    "packages/service-runtime-core/src/domain/service-proxy.ts",
     "packages/service-runtime-core/src/index.ts",
     "packages/signed-token-core/src/domain/signed-envelope.ts",
     "packages/signed-token-core/src/index.ts",

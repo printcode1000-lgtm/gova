@@ -1,3 +1,4 @@
+import { controlPreflight } from '@/control/operational-route';
 import { assertControlSystemLogAccess, persistentSystemLogService, systemLogError } from '@/control/system-logs';
 
 function options(params: URLSearchParams) {
@@ -26,4 +27,6 @@ export async function DELETE(request: Request): Promise<Response> {
   } catch (error) { return systemLogError(error); }
 }
 
-export async function OPTIONS() { return new Response(null, { status: 204 }); }
+export function OPTIONS(request: Request): Response {
+  return controlPreflight(request);
+}
