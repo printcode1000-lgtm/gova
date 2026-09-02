@@ -33,6 +33,9 @@ jobs:
           test "$(git -C "$TREE" rev-parse HEAD)" = "$EXPECTED_MAIN"
           git -C "$TREE" config user.name gova-local-agent
           git -C "$TREE" config user.email gova-local-agent@users.noreply.github.com
+          if [ -d "$REPO/node_modules" ] && [ ! -e "$TREE/node_modules" ]; then
+            ln -s "$REPO/node_modules" "$TREE/node_modules"
+          fi
 
           set +e
           git -C "$TREE" merge --no-commit --no-ff origin/integration
@@ -72,7 +75,6 @@ jobs:
             test -z "$(git -C "$TREE" diff --name-only --diff-filter=U)"
           fi
 
-          # Remove migration-only trigger/control artifacts; keep the actual runtime.
           rm -rf "$TREE/.local-agent-main-promotion-trigger" "$TREE/.local-agent-main-selective-trigger" "$TREE/.local-agent-local-tree-trigger" "$TREE/.local-agent-discovery-trigger"
           rm -rf "$TREE/tools/local-agent/__pycache__"
           cat > "$TREE/.github/workflows/local-agent-bootstrap.yml" <<'YAML'
@@ -109,7 +111,6 @@ jobs:
           rm -rf /tmp/gova-local-agent-tree-pyc
           PYTHONPYCACHEPREFIX=/tmp/gova-local-agent-tree-pyc python3 -m py_compile tools/local-agent/*.py
 
-          # Install the exact consolidated runtime locally, then prove it starts.
           GOVA_AGENT_REPO="$TREE" bash tools/local-agent/install.sh
           /home/hesham/.local/bin/gova-agent health >/tmp/gova-local-runner-tree-health.json
           /home/hesham/.local/bin/gova-agent diagnostics >/tmp/gova-local-runner-tree-diagnostics.json
