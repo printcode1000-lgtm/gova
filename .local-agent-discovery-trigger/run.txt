@@ -1,1 +1,1 @@
-final deterministic real codex cleanup verification
+real codex diagnostic with refusal output
