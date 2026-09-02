@@ -5,49 +5,51 @@ on:
     branches:
       - integration
     paths:
-      - ".local-agent-main-promotion-trigger/**"
+      - ".local-agent-local-tree-trigger/**"
 permissions:
-  contents: write
+  contents: read
 jobs:
   bootstrap:
     runs-on: [self-hosted, Linux, X64, gova]
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
-      - name: Reconcile main into integration for Local Runner promotion
+      - name: Build complete Local Runner worktree locally
         shell: bash
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           REPO=/home/hesham/gova
-          IW=/home/hesham/gova-agents/integration
+          TREE=/home/hesham/gova-agents/local-runner-complete
+          BRANCH=local/local-runner-complete
+          EXPECTED_MAIN=4ddc6b9ade9038ca8669a72ebdf4e1b341f852f7
+          REPORT=/home/hesham/.local/state/gova-agent-bootstrap/local-runner-tree-report.json
           export PYTHONDONTWRITEBYTECODE=1
 
-          BASIC=$(printf 'x-access-token:%s' "$GITHUB_TOKEN" | base64 -w0)
-          git -C "$REPO" -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $BASIC" fetch --quiet origin main integration
-          MAIN_BEFORE=$(git -C "$REPO" rev-parse origin/main)
-          git -C "$IW" merge --abort 2>/dev/null || true
-          git -C "$IW" checkout integration
-          git -C "$IW" reset --hard origin/integration
-          git -C "$IW" config user.name gova-local-agent
-          git -C "$IW" config user.email gova-local-agent@users.noreply.github.com
+          git -C "$REPO" fetch --quiet origin main integration
+          test "$(git -C "$REPO" rev-parse origin/main)" = "$EXPECTED_MAIN"
+
+          git -C "$REPO" worktree remove --force "$TREE" 2>/dev/null || true
+          git -C "$REPO" branch -D "$BRANCH" 2>/dev/null || true
+          git -C "$REPO" worktree add -b "$BRANCH" "$TREE" "$EXPECTED_MAIN"
+          test "$(git -C "$TREE" rev-parse HEAD)" = "$EXPECTED_MAIN"
+          git -C "$TREE" config user.name gova-local-agent
+          git -C "$TREE" config user.email gova-local-agent@users.noreply.github.com
 
           set +e
-          git -C "$IW" merge --no-commit --no-ff origin/main
+          git -C "$TREE" merge --no-commit --no-ff origin/integration
           MERGE_RC=$?
           set -e
           if [ "$MERGE_RC" -ne 0 ]; then
-            mapfile -t CONFLICTS < <(git -C "$IW" diff --name-only --diff-filter=U)
+            mapfile -t CONFLICTS < <(git -C "$TREE" diff --name-only --diff-filter=U)
             printf 'merge-conflicts:\n'
             printf ' - %s\n' "${CONFLICTS[@]}"
             for f in "${CONFLICTS[@]}"; do
               case "$f" in
                 package.json)
-                  git -C "$IW" checkout --theirs -- "$f"
+                  git -C "$TREE" checkout --ours -- "$f"
                   python3 - <<'PY'
           import json
           from pathlib import Path
-          p=Path('/home/hesham/gova-agents/integration/package.json')
+          p=Path('/home/hesham/gova-agents/local-runner-complete/package.json')
           data=json.loads(p.read_text())
           scripts=data.get('scripts',{})
           for key in list(scripts):
@@ -55,24 +57,25 @@ jobs:
                   scripts.pop(key,None)
           p.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n')
           PY
-                  git -C "$IW" add "$f"
+                  git -C "$TREE" add "$f"
                   ;;
-                docs/09-agent-knowledge/generated/*|docs/01-architecture/08-reference/dependency-map.md)
-                  git -C "$IW" checkout --ours -- "$f"
-                  git -C "$IW" add "$f"
+                docs/09-agent-knowledge/generated/*|docs/01-architecture/08-reference/*)
+                  git -C "$TREE" checkout --ours -- "$f"
+                  git -C "$TREE" add "$f"
                   ;;
                 *)
                   echo "unexpected merge conflict: $f" >&2
-                  git -C "$IW" merge --abort
                   exit 2
                   ;;
               esac
             done
-            test -z "$(git -C "$IW" diff --name-only --diff-filter=U)"
+            test -z "$(git -C "$TREE" diff --name-only --diff-filter=U)"
           fi
 
-          rm -rf "$IW/.local-agent-main-promotion-trigger"
-          cat > "$IW/.github/workflows/local-agent-bootstrap.yml" <<'YAML'
+          # Remove migration-only trigger/control artifacts; keep the actual runtime.
+          rm -rf "$TREE/.local-agent-main-promotion-trigger" "$TREE/.local-agent-main-selective-trigger" "$TREE/.local-agent-local-tree-trigger" "$TREE/.local-agent-discovery-trigger"
+          rm -rf "$TREE/tools/local-agent/__pycache__"
+          cat > "$TREE/.github/workflows/local-agent-bootstrap.yml" <<'YAML'
           name: local-agent-bootstrap
           on:
             workflow_dispatch:
@@ -97,25 +100,50 @@ jobs:
                     GOVA_AGENT_REPO=/home/hesham/gova-agents/integration bash /home/hesham/gova-agents/integration/tools/local-agent/install.sh
           YAML
 
-          cd "$IW"
+          cd "$TREE"
           npm run docs:generate
           npm run architecture:docs
           npm run github:ci-policy
           npm run architecture:check
           DOCS_CONTRACT_CHANGE=1 npm run docs:ci
-          rm -rf /tmp/gova-local-agent-pyc
-          PYTHONPYCACHEPREFIX=/tmp/gova-local-agent-pyc python3 -m py_compile tools/local-agent/*.py
+          rm -rf /tmp/gova-local-agent-tree-pyc
+          PYTHONPYCACHEPREFIX=/tmp/gova-local-agent-tree-pyc python3 -m py_compile tools/local-agent/*.py
+
+          # Install the exact consolidated runtime locally, then prove it starts.
+          GOVA_AGENT_REPO="$TREE" bash tools/local-agent/install.sh
+          /home/hesham/.local/bin/gova-agent health >/tmp/gova-local-runner-tree-health.json
+          /home/hesham/.local/bin/gova-agent diagnostics >/tmp/gova-local-runner-tree-diagnostics.json
+          /home/hesham/.local/bin/gova-agent-monitor --once >/tmp/gova-local-runner-tree-monitor.txt
+
           git add -A
-          git commit -m 'merge(main): preserve current main while promoting Local Runner [docs-contract-change]'
-          MERGED_SHA=$(git rev-parse HEAD)
-          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $BASIC" push origin HEAD:integration
-          git -C "$REPO" -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $BASIC" fetch --quiet origin main integration
-          MAIN_AFTER=$(git -C "$REPO" rev-parse origin/main)
-          INTEGRATION_AFTER=$(git -C "$REPO" rev-parse origin/integration)
-          test "$MAIN_BEFORE" = "$MAIN_AFTER"
-          test "$MERGED_SHA" = "$INTEGRATION_AFTER"
-          BRANCHES=$(git -C "$REPO" -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $BASIC" ls-remote --heads origin | sed 's#.*refs/heads/##' | sort | tr '\n' ' ')
-          test "$BRANCHES" = 'integration main '
-          echo "RECONCILED_INTEGRATION=$INTEGRATION_AFTER"
-          echo "MAIN_PRESERVED=$MAIN_AFTER"
-          echo 'LOCAL_RUNNER_MAIN_RECONCILIATION=PASS'
+          git commit -m 'local(local-runner): consolidate complete conversation development [docs-contract-change]'
+          FINAL=$(git rev-parse HEAD)
+          test -z "$(git status --porcelain)"
+          test "$(git -C "$REPO" rev-parse origin/main)" = "$EXPECTED_MAIN"
+          test -z "$(git -C "$REPO" ls-remote --heads origin "refs/heads/$BRANCH")"
+
+          mkdir -p "$(dirname "$REPORT")"
+          python3 - <<PY
+          import json, subprocess
+          tree='$TREE'; base='$EXPECTED_MAIN'; final='$FINAL'; branch='$BRANCH'
+          def run(*a): return subprocess.check_output(a,text=True).strip()
+          changed=run('git','-C',tree,'diff','--name-only',base+'..'+final).splitlines()
+          payload={
+            'ok': True,
+            'path': tree,
+            'branch': branch,
+            'base_main_sha': base,
+            'local_head_sha': final,
+            'remote_main_unchanged': True,
+            'remote_branch_created': False,
+            'changed_files': len(changed),
+            'tests': {
+              'docs_generate':'pass','architecture_docs':'pass','github_ci_policy':'pass',
+              'architecture_check':'pass','docs_ci':'pass','python_compile':'pass',
+              'gateway_health':'pass','gateway_diagnostics':'pass','monitor_once':'pass'
+            }
+          }
+          open('$REPORT','w').write(json.dumps(payload,indent=2)+'\n')
+          print(json.dumps(payload,indent=2))
+          PY
+          echo 'LOCAL_RUNNER_COMPLETE_TREE=PASS'
