@@ -1,1 +1,1 @@
-run final real codex monitor verification
+rerun final real codex monitor verification after credential fix
