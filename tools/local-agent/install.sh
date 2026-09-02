@@ -10,11 +10,16 @@ install -m 0755 "$runtime_src/git_credential.py" /home/hesham/.local/lib/gova-ag
 ln -sfn /home/hesham/.local/lib/gova-agent/cli.py /home/hesham/.local/bin/gova-agent
 ln -sfn /home/hesham/.local/lib/gova-agent/monitor.py /home/hesham/.local/bin/gova-agent-monitor
 # Git reads must not depend on stale desktop credentials. Publishing remains on
-# the gateway's GitHub API path; this helper resolves the local runtime token at
-# request time and never writes the token to Git config or disk.
+# the gateway's GitHub API path. Empty helper entries intentionally reset any
+# inherited/global helpers, then the runtime helper resolves the local token at
+# request time without persisting the token itself.
 git -C "$repo" remote set-url origin https://github.com/printcode1000-lgtm/gova.git
 git -C "$repo" config --local --unset-all credential.helper 2>/dev/null || true
-git -C "$repo" config --local credential.helper /home/hesham/.local/lib/gova-agent/git_credential.py
+git -C "$repo" config --local --unset-all credential.https://github.com.helper 2>/dev/null || true
+git -C "$repo" config --local credential.helper ''
+git -C "$repo" config --local --add credential.helper /home/hesham/.local/lib/gova-agent/git_credential.py
+git -C "$repo" config --local credential.https://github.com.helper ''
+git -C "$repo" config --local --add credential.https://github.com.helper /home/hesham/.local/lib/gova-agent/git_credential.py
 # Retire the old @asol/local-agent-core watch process and replace its desktop
 # launcher in-place. The new monitor is a read-only view of the persistent DB.
 pkill -f 'scripts/local-agent-watch.ts' 2>/dev/null || true
