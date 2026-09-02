@@ -12273,6 +12273,38 @@
       ]
     },
     {
+      "id": "document:docs/06-super-admin-and-operations/local-agent-runtime.md",
+      "kind": "document",
+      "name": "Persistent Local Agent Runtime",
+      "path": "docs/06-super-admin-and-operations/local-agent-runtime.md",
+      "summary": "The Local Runner is a persistent multi-agent execution environment. GitHub Actions is bootstrap/release infrastructure, not the normal command transport.",
+      "tags": [
+        "actions",
+        "agent",
+        "bootstrap/release",
+        "command",
+        "docs/06-super-admin-and-operations/local-agent-runtime",
+        "docs/06-super-admin-and-operations/local-agent-runtime.md",
+        "environment",
+        "execution",
+        "github",
+        "infrastructure",
+        "is",
+        "local",
+        "md",
+        "multi-agent",
+        "normal",
+        "not",
+        "persistent",
+        "persistent local agent runtime",
+        "runner",
+        "runtime",
+        "the",
+        "the local runner is a persistent multi-agent execution environment. github actions is bootstrap/release infrastructure, not the normal command transport.",
+        "transport"
+      ]
+    },
+    {
       "id": "document:docs/06-super-admin-and-operations/notification-tests.md",
       "kind": "document",
       "name": "Super Admin Notification Tests",

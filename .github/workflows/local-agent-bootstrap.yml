@@ -1,0 +1,13 @@
+name: local-agent-bootstrap
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  bootstrap:
+    runs-on: [self-hosted, Linux, X64, gova]
+    timeout-minutes: 15
+    steps:
+      - name: Install persistent local-agent gateway
+        working-directory: /home/hesham/gova
+        run: bash tools/local-agent/install.sh

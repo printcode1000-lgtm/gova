@@ -12,7 +12,7 @@
 | artifact | 4 |
 | command | 285 |
 | config | 12 |
-| document | 259 |
+| document | 260 |
 | domain | 10 |
 | environment-key | 271 |
 | external-dependency | 108 |
