@@ -169,3 +169,7 @@ public/sync_data/sync_sqlite/system-ops.db
 # Binaries, runner credentials, workspaces, and runtime state never get
 # committed; only the scripts and workflows that drive them do.
 .local/
+
+# Python bytecode from tools/local-agent
+__pycache__/
+*.pyc
