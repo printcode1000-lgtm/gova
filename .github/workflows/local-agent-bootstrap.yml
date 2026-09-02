@@ -13,20 +13,18 @@ jobs:
     runs-on: [self-hosted, Linux, X64, gova]
     timeout-minutes: 10
     steps:
-      - name: Locate actual Codex and old monitor launcher
+      - name: Deep-locate Codex installation
         shell: bash
         run: |
           set -euo pipefail
-          echo '=== desktop launcher ==='
-          cat /home/hesham/.local/share/applications/gova-agent-monitor.desktop 2>/dev/null || true
-          echo '=== login-shell path ==='
-          bash -lic 'printf "PATH=%s\n" "$PATH"; type -a codex || true; command -v codex || true' 2>/dev/null || true
-          echo '=== vscode/openai extensions ==='
-          find /home/hesham/.vscode /home/hesham/.vscode-server /home/hesham/.config/Code /home/hesham/.local /opt -maxdepth 7 -type f \( -name codex -o -name 'codex-*' \) -perm -u+x -print 2>/dev/null | head -n 100 || true
-          find /home/hesham/.vscode /home/hesham/.vscode-server /home/hesham/.config/Code -maxdepth 5 -type d -iname '*openai*' -print 2>/dev/null | head -n 100 || true
-          echo '=== npm/global candidates ==='
-          find /home/hesham/.npm /home/hesham/.local /opt/node-v24.20.0-linux-x64 -maxdepth 7 \( -type f -o -type l \) -name codex -print 2>/dev/null | head -n 100 || true
-          echo '=== old watch source/head ==='
-          sed -n '1,260p' /home/hesham/gova/scripts/local-agent-watch.ts 2>/dev/null || true
-          echo '=== shell profiles codex/path references ==='
-          grep -nEi 'codex|PATH=' /home/hesham/.bashrc /home/hesham/.profile /home/hesham/.bash_profile /home/hesham/.zshrc 2>/dev/null | head -n 150 || true
+          echo '=== IDE extensions ==='
+          command -v code || true
+          code --list-extensions --show-versions 2>/dev/null | grep -Ei 'openai|codex|chatgpt' || true
+          find /home/hesham/.vscode /home/hesham/.antigravity /home/hesham/.cursor /home/hesham/.config /home/hesham/.cache /snap/code /usr/local/lib/node_modules /usr/lib/node_modules /opt -maxdepth 9 -type f \( -iname 'codex' -o -iname 'codex-*' -o -iname '*codex*.js' \) -print 2>/dev/null | head -n 300 || true
+          echo '=== executable names containing codex ==='
+          find /home/hesham /opt /usr/local /snap/code -maxdepth 9 -type f -perm -u+x -iname '*codex*' -print 2>/dev/null | head -n 300 || true
+          echo '=== npm global ==='
+          npm root -g 2>/dev/null || true
+          npm list -g --depth=0 2>/dev/null | grep -Ei 'openai|codex' || true
+          echo '=== package caches ==='
+          find /home/hesham/.npm -maxdepth 8 -type f -iname '*codex*' -print 2>/dev/null | head -n 200 || true
