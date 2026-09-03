@@ -9,33 +9,21 @@ permissions:
 jobs:
   probe:
     runs-on: [self-hosted, Linux, X64, gova]
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
-      - name: Inspect deploy process tree
+      - name: Diagnose failed service smoke at current release checkpoint
         shell: bash
         run: |
           set -euo pipefail
           cd /home/hesham/gova
-          echo '=== DEPLOY TREE ==='
-          deploy_pid=$(pgrep -f 'scripts/deploy-all.ts --from-branch=tests' | tail -1 || true)
-          if [ -n "$deploy_pid" ]; then
-            pstree -ap "$deploy_pid" || true
-          fi
-          echo '=== STATE ==='
-          python3 - <<'PY'
-          import json, pathlib
-          root=pathlib.Path('.deploy-all')
-          for name in ('run-state.json','gate-steps.json'):
-              p=root/name
-              if not p.exists(): continue
-              d=json.loads(p.read_text())
-              if name=='run-state.json': print('RUN_STATE',d)
-              else:
-                  print('GATE_COUNT',len(d.get('steps',{})))
-                  print('LAST_GATE',max((v.get('finishedAt','')+':'+k for k,v in d.get('steps',{}).items()),default=''))
-          p=root/'branch-checkpoints.json'
-          if p.exists():
-              d=json.loads(p.read_text())
-              current=[x for x in d.get('checkpoints',[]) if x.get('revision')=='9d855c5fa43ca9215af5b9bf4af6b71f5f304acb']
-              for x in current: print('CHECKPOINT',x.get('branchId'),x.get('status'),x.get('finishedAt'),x.get('errorSummary',''))
-          PY
+          echo '=== MACHINE ==='
+          hostname
+          git status --short --branch
+          git rev-parse HEAD
+          echo '=== GATEWAY ==='
+          curl -fsS http://127.0.0.1:8765/health || true
+          echo
+          echo '=== CONTEXT ==='
+          npx tsx scripts/docs/context.ts scripts/check-service-smoke.ts
+          echo '=== TARGETED CHECKPOINT ==='
+          npm run smoke:services
