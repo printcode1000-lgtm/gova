@@ -9,34 +9,162 @@ permissions:
 jobs:
   probe:
     runs-on: [self-hosted, Linux, X64, gova]
-    timeout-minutes: 10
+    timeout-minutes: 60
     steps:
-      - name: Create isolated Gateway task workspace
+      - name: Repair and verify service smoke through Gateway
         shell: bash
         run: |
           set -euo pipefail
-          python3 - <<'PY'
-          import json, urllib.request
+          python3 - <<'PY_GATEWAY'
+          import json, time, urllib.request
           from pathlib import Path
 
           base='http://127.0.0.1:8765'
           key=Path('/home/hesham/.config/gova-agent/auth').read_text().strip()
           headers={'X-Gova-Agent-Key':key,'Content-Type':'application/json'}
+          agent='chatgpt-service-smoke-fix'
+          task_id='task-6da808b04d6f'
+          worktree='/home/hesham/gova-agents/chatgpt-service-smoke-fix/task-6da808b04d6f'
 
           def req(method,path,payload=None):
               data=None if payload is None else json.dumps(payload).encode()
               r=urllib.request.Request(base+path,data=data,headers=headers,method=method)
-              with urllib.request.urlopen(r,timeout=30) as resp:
+              with urllib.request.urlopen(r,timeout=60) as resp:
                   body=resp.read().decode()
               return json.loads(body) if body else {}
 
-          agent='chatgpt-service-smoke-fix'
-          print('REGISTER', req('POST','/v1/agent/register',{'agent_id':agent}))
-          task=req('POST','/v1/task/create',{'agent_id':agent,'goal':'Fix the service smoke release-environment gate from the nearest safe checkpoint and verify services build/smoke.'})
-          print('TASK', task)
-          task_id=task.get('task_id') or task.get('id') or (task.get('task') or {}).get('task_id') or (task.get('task') or {}).get('id')
-          if not task_id:
-              raise SystemExit('task id not found')
-          workspace=req('POST','/v1/workspace/create',{'agent_id':agent,'task_id':task_id})
-          print('WORKSPACE', workspace)
-          PY
+          req('POST','/v1/agent/register',{'agent_id':agent})
+          command=r'''set -euo pipefail
+          cd "$PWD"
+          echo '=== BASE STATE ==='
+          git status --short --branch
+          git rev-parse HEAD
+          echo '=== CONTEXT PACK ==='
+          npx tsx scripts/docs/context.ts scripts/build-all-services.ts scripts/check-service-smoke.ts packages/env-core/src/domain/load-release-environment.ts docs/08-troubleshooting/problems/README.md
+          echo '=== APPLY PATCH ==='
+          python3 - <<'PY_PATCH'
+          from pathlib import Path
+
+          root=Path('.')
+          helper=root/'scripts/service-release-environment.ts'
+          helper.write_text('''import { loadReleaseToolEnvironment } from "@asol/env-core/process";\n\n/**\n * Build a server-service environment that mirrors the release tool sources while\n * explicitly clearing static-export mode. The caller environment is never mutated.\n */\nexport function createServiceReleaseEnvironment(\n  cwd: string,\n  baseEnv: NodeJS.ProcessEnv = process.env,\n): NodeJS.ProcessEnv {\n  const env: NodeJS.ProcessEnv = { ...baseEnv };\n  loadReleaseToolEnvironment({ cwd, env });\n  delete env.ASOL_MODE;\n  delete env.NEXT_PUBLIC_ASOL_MODE;\n  return env;\n}\n''')
+
+          p=root/'scripts/build-all-services.ts'
+          s=p.read_text()
+          old="import { RELEASE_WORKLOADS } from '@asol/vercel-deploy-core';\n"
+          new=old+"import { createServiceReleaseEnvironment } from './service-release-environment';\n"
+          if old not in s or "createServiceReleaseEnvironment" in s:
+              raise SystemExit('unexpected build-all-services import state')
+          s=s.replace(old,new,1)
+          old="const ROOT = process.cwd();\n\nfunction run(command: string, args: string[], cwd: string): void {\n  execFileSync(command, args, { stdio: 'inherit', shell: process.platform === 'win32', cwd });\n}\n"
+          new="const ROOT = process.cwd();\nconst SERVICE_ENV = createServiceReleaseEnvironment(ROOT);\n\nfunction run(command: string, args: string[], cwd: string): void {\n  execFileSync(command, args, {\n    stdio: 'inherit',\n    shell: process.platform === 'win32',\n    cwd,\n    env: SERVICE_ENV,\n  });\n}\n"
+          if old not in s:
+              raise SystemExit('unexpected build-all-services run state')
+          p.write_text(s.replace(old,new,1))
+
+          p=root/'scripts/check-service-smoke.ts'
+          s=p.read_text()
+          old='import {\n  restoreServiceBuild,\n  returnServiceBuild,\n  serviceInputHash,\n  serviceSmokeRebuildRequested,\n} from "@asol/release-core";\n'
+          new=old+'import { createServiceReleaseEnvironment } from "./service-release-environment";\n'
+          if old not in s or "createServiceReleaseEnvironment" in s:
+              raise SystemExit('unexpected check-service-smoke import state')
+          s=s.replace(old,new,1)
+          old='const STARTUP_TIMEOUT_MS = 90_000;\n'
+          new='const STARTUP_TIMEOUT_MS = 90_000;\nconst SERVICE_ENV = createServiceReleaseEnvironment(process.cwd());\n'
+          if old not in s:
+              raise SystemExit('unexpected smoke constants state')
+          s=s.replace(old,new,1)
+          old='      cwd: serviceDir,\n    });\n'
+          new='      cwd: serviceDir,\n      env: SERVICE_ENV,\n    });\n'
+          if old not in s:
+              raise SystemExit('unexpected smoke build env state')
+          s=s.replace(old,new,1)
+          old='    env: { ...process.env, NODE_ENV: "production" },\n'
+          new='    env: { ...SERVICE_ENV, NODE_ENV: "production" },\n'
+          if old not in s:
+              raise SystemExit('unexpected smoke start env state')
+          p.write_text(s.replace(old,new,1))
+
+          test=root/'scripts/tests/service-release-environment.test.ts'
+          test.parent.mkdir(parents=True,exist_ok=True)
+          test.write_text('''import assert from "node:assert/strict";\nimport { mkdtempSync, rmSync, writeFileSync } from "node:fs";\nimport os from "node:os";\nimport path from "node:path";\n\nimport { createServiceReleaseEnvironment } from "../service-release-environment";\n\nconst cwd = mkdtempSync(path.join(os.tmpdir(), "gova-service-release-env-"));\ntry {\n  writeFileSync(\n    path.join(cwd, ".env.local"),\n    [\n      "TURSO_PRODUCT_DATABASE_URL=from-file",\n      "TURSO_PRODUCT_AUTH_TOKEN=file-token",\n      "ASOL_MODE=static",\n      "NEXT_PUBLIC_ASOL_MODE=static",\n      "",\n    ].join("\\n"),\n  );\n\n  const baseEnv: NodeJS.ProcessEnv = {\n    TURSO_PRODUCT_AUTH_TOKEN: "process-token",\n    ASOL_MODE: "static",\n    NEXT_PUBLIC_ASOL_MODE: "static",\n  };\n  const env = createServiceReleaseEnvironment(cwd, baseEnv);\n\n  assert.equal(env.TURSO_PRODUCT_DATABASE_URL, "from-file");\n  assert.equal(env.TURSO_PRODUCT_AUTH_TOKEN, "process-token");\n  assert.equal(env.ASOL_MODE, undefined);\n  assert.equal(env.NEXT_PUBLIC_ASOL_MODE, undefined);\n  assert.equal(baseEnv.ASOL_MODE, "static");\n  assert.equal(baseEnv.NEXT_PUBLIC_ASOL_MODE, "static");\n  assert.equal(baseEnv.TURSO_PRODUCT_DATABASE_URL, undefined);\n  console.log("service release environment: PASS");\n} finally {\n  rmSync(cwd, { recursive: true, force: true });\n}\n''')
+
+          doc=root/'docs/08-troubleshooting/problems/service-smoke-release-environment.md'
+          doc.write_text('''# Service smoke fails after successful service builds\n\n## Symptom\n\n`services:build` succeeds, but `smoke:services` fails when a service starts with missing Turso configuration, or a server service reports that database access is unavailable during static export.\n\n## Cause\n\nThe service build and smoke scripts inherited only the ambient shell environment. The release credentials are normally sourced by release tooling from `.env.local`, `.env`, and `fastlane/.env`, so an otherwise valid release could reach service smoke without those values. A preceding static build could also leave `ASOL_MODE` / `NEXT_PUBLIC_ASOL_MODE` in the inherited environment and make a server service build as a static target.\n\n## Fix\n\nServer-service build and smoke commands use `createServiceReleaseEnvironment()`. It clones the caller environment, fills missing release values through `@asol/env-core/process`, then removes both static-mode markers before any service build or start. Existing process values keep precedence, matching the release-tool environment contract.\n\n`NODE_ENV=production` is added only when `next start` runs, not during dependency installation, so `npm ci` keeps the build dependencies required by an isolated Vercel service.\n\n## Verification\n\nRun the focused environment test, rebuild the isolated service outputs, then run the service smoke gate:\n\n```bash\nnpx tsx scripts/tests/service-release-environment.test.ts\nnpm run services:build\nnpm run smoke:services\n```\n\nDo not fix this failure by hard-coding secrets, copying credentials into service folders, or weakening the data-reaching smoke probes.\n''')
+
+          p=root/'docs/08-troubleshooting/problems/README.md'
+          s=p.read_text()
+          entry='| 26 | Service smoke fails after successful builds: release env missing or static mode leaked | [service-smoke-release-environment.md](./service-smoke-release-environment.md) |\n'
+          if 'service-smoke-release-environment.md' not in s:
+              if not s.endswith('\n'):
+                  s+='\n'
+              s+=entry
+              p.write_text(s)
+          PY_PATCH
+
+          echo '=== PATCH DIFF ==='
+          git diff -- scripts/build-all-services.ts scripts/check-service-smoke.ts scripts/service-release-environment.ts scripts/tests/service-release-environment.test.ts docs/08-troubleshooting/problems/README.md docs/08-troubleshooting/problems/service-smoke-release-environment.md
+          echo '=== FOCUSED TEST ==='
+          npx tsx scripts/tests/service-release-environment.test.ts
+          echo '=== DIFF CHECK ==='
+          git diff --check
+          echo '=== TEMP LOCAL RUNTIME LINKS ==='
+          created=()
+          cleanup() {
+            for x in "${created[@]}"; do rm -f "$x"; done
+          }
+          trap cleanup EXIT
+          for rel in node_modules .env.local .env fastlane/.env; do
+            src="/home/hesham/gova/$rel"
+            dst="$PWD/$rel"
+            if [ -e "$src" ] && [ ! -e "$dst" ]; then
+              mkdir -p "$(dirname "$dst")"
+              ln -s "$src" "$dst"
+              created+=("$dst")
+            fi
+          done
+          for svc in notifications products orders profiles submain sub2main; do
+            src="/home/hesham/gova/services/$svc/node_modules"
+            dst="$PWD/services/$svc/node_modules"
+            if [ -d "$src" ] && [ ! -e "$dst" ]; then
+              ln -s "$src" "$dst"
+              created+=("$dst")
+            fi
+          done
+          echo '=== NEAREST CHECKPOINT: SERVICES BUILD ==='
+          npm run services:build
+          echo '=== NEAREST CHECKPOINT: SERVICE SMOKE ==='
+          npm run smoke:services
+          cleanup
+          trap - EXIT
+          echo '=== FINAL WORKTREE STATUS ==='
+          git status --short
+          git diff --check
+          git add scripts/build-all-services.ts scripts/check-service-smoke.ts scripts/service-release-environment.ts scripts/tests/service-release-environment.test.ts docs/08-troubleshooting/problems/README.md docs/08-troubleshooting/problems/service-smoke-release-environment.md
+          git diff --cached --check
+          git commit -m 'fix(release): load server service environment for smoke gate'
+          echo '=== COMMIT ==='
+          git rev-parse HEAD
+          git status --short
+          '''
+          started=req('POST','/v1/exec/start',{'agent_id':agent,'command':command,'cwd':worktree})
+          print('STARTED', started)
+          cid=started.get('command_id') or (started.get('command') or {}).get('id')
+          if not cid:
+              raise SystemExit('command id not found')
+          while True:
+              state=req('GET','/v1/commands/'+cid)
+              command_state=state.get('command') or state
+              status=command_state.get('status')
+              print('STATUS', status)
+              if status in {'completed','failed','cancelled','canceled'}:
+                  break
+              time.sleep(5)
+          logs=req('GET','/v1/commands/'+cid+'/logs?tail=260000')
+          print('=== GATEWAY LOGS ===')
+          print(logs.get('logs') or logs.get('output') or logs)
+          exit_code=command_state.get('exit_code')
+          print('EXIT_CODE', exit_code)
+          if status != 'completed' or exit_code not in (0, None):
+              raise SystemExit(exit_code or 1)
+          PY_GATEWAY
