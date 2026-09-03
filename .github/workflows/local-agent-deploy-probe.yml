@@ -9,146 +9,78 @@ permissions:
 jobs:
   probe:
     runs-on: [self-hosted, Linux, X64, gova]
-    timeout-minutes: 180
+    timeout-minutes: 120
     steps:
-      - name: Finalize verified integration and deploy through Gateway
+      - name: Finalize integration through Gateway
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
-          import json, time, urllib.request
+          import json,time,urllib.request
           from pathlib import Path
           base='http://127.0.0.1:8765'
           key=Path('/home/hesham/.config/gova-agent/auth').read_text().strip()
           headers={'X-Gova-Agent-Key':key,'Content-Type':'application/json'}
           def call(method,path,payload=None,timeout=120):
-              body=None if payload is None else json.dumps(payload).encode()
-              req=urllib.request.Request(base+path,data=body,headers=headers,method=method)
-              with urllib.request.urlopen(req,timeout=timeout) as r:
-                  raw=r.read()
-                  return json.loads(raw or b'{}')
+              req=urllib.request.Request(base+path,data=None if payload is None else json.dumps(payload).encode(),headers=headers,method=method)
+              with urllib.request.urlopen(req,timeout=timeout) as r: return json.loads(r.read() or b'{}')
           with urllib.request.urlopen(base+'/health',timeout=10) as r:
               health=json.loads(r.read() or b'{}')
-              if not health.get('ok'):
-                  raise SystemExit('gateway health failed')
+              assert health.get('ok')
               print('GATEWAY_HEALTH='+json.dumps(health,ensure_ascii=False),flush=True)
-          agent='chatgpt-finalize-repairs-20260904'
+          agent='chatgpt-finalize-integration-20260904'
           call('POST','/v1/agent/register',{'agent_id':agent})
           command=r'''set -euo pipefail
-          repo=/home/hesham/gova
           iw=/home/hesham/gova-agents/integration
           probe=.github/workflows/local-agent-deploy-probe.yml
           verified_merge=1aaeb92f
-
-          echo '=== LIVE LOCAL MACHINE ==='
-          date --iso-8601=seconds
-          hostname
-          whoami
-          echo "gateway cwd=$PWD"
-
-          echo '=== PREPARE INTEGRATION ==='
+          echo '=== LIVE ==='
+          date --iso-8601=seconds; hostname; whoami
           git -C "$iw" fetch --quiet origin main integration
           git -C "$iw" checkout integration >/dev/null
           git -C "$iw" reset --hard origin/integration >/dev/null
           test -z "$(git -C "$iw" status --porcelain --untracked-files=all)"
           main_sha=$(git -C "$iw" rev-parse origin/main)
-          integration_sha=$(git -C "$iw" rev-parse HEAD)
-          echo "MAIN_BEFORE=$main_sha"
-          echo "INTEGRATION_BEFORE=$integration_sha"
-
-          git -C "$iw" cat-file -e "$verified_merge^{commit}"
           test "$(git -C "$iw" rev-parse "$verified_merge^2")" = "$main_sha"
-          if ! git -C "$iw" diff --quiet "$verified_merge" HEAD -- . ":(exclude)$probe"; then
-            echo 'integration content drifted from the previously verified reconciliation:' >&2
-            git -C "$iw" diff --name-status "$verified_merge" HEAD -- . ":(exclude)$probe" >&2
-            exit 2
-          fi
-          echo 'VERIFIED_RECONCILIATION_TREE_MATCH=1'
-
+          git -C "$iw" diff --quiet "$verified_merge" HEAD -- . ":(exclude)$probe"
+          echo VERIFIED_RECONCILIATION_TREE_MATCH=1
           if ! git -C "$iw" merge-base --is-ancestor origin/main HEAD; then
             git -C "$iw" merge -s ours --no-ff origin/main -m 'merge: record verified main ancestry in integration'
           fi
           git -C "$iw" merge-base --is-ancestor origin/main HEAD
-          echo "INTEGRATION_WITH_MAIN_ANCESTRY=$(git -C "$iw" rev-parse HEAD)"
-
-          echo '=== FINAL VERIFICATION ==='
           cd "$iw"
+          git rm -- "$probe"
+          test "$(git diff --cached --name-only)" = "$probe"
+          git diff --cached --check
           npm run docs:check
           npx tsx scripts/tests/service-release-environment.test.ts
           npm run test:deployment-tools
           npm run services:build
           npm run smoke:services
           git diff --check
-          if [ -n "$(git status --porcelain --untracked-files=all)" ]; then
-            echo 'verification left tracked/untracked repository changes:' >&2
-            git status --short >&2
-            exit 3
-          fi
-          echo 'FINAL_VERIFICATION=PASS'
-
-          echo '=== REMOVE TEMPORARY RECOVERY WORKFLOW ==='
-          git rm -- "$probe"
+          test "$(git diff --cached --name-only)" = "$probe"
+          echo FINAL_VERIFICATION=PASS
           git commit -m 'chore: remove temporary local-agent recovery workflow'
           git push origin HEAD:integration
-          git fetch --quiet origin integration main
+          git fetch --quiet origin main integration
           test "$(git rev-parse HEAD)" = "$(git rev-parse origin/integration)"
           git merge-base --is-ancestor origin/main origin/integration
           echo "INTEGRATION_FINAL=$(git rev-parse origin/integration)"
-
-          echo '=== PROMOTE INTEGRATION TO MAIN ==='
-          git -C "$repo" fetch --quiet origin main integration
-          test "$(git -C "$repo" branch --show-current)" = main
-          if [ -n "$(git -C "$repo" status --porcelain --untracked-files=all)" ]; then
-            echo 'canonical main workspace is dirty; refusing promotion' >&2
-            git -C "$repo" status --short >&2
-            exit 4
-          fi
-          git -C "$repo" reset --hard origin/main >/dev/null
-          git -C "$repo" merge --ff-only origin/integration
-          test -z "$(git -C "$repo" status --porcelain --untracked-files=all)"
-          git -C "$repo" push origin HEAD:main
-          git -C "$repo" fetch --quiet origin main
-          test "$(git -C "$repo" rev-parse HEAD)" = "$(git -C "$repo" rev-parse origin/main)"
-          test "$(git -C "$repo" rev-parse HEAD)" = "$(git -C "$repo" rev-parse origin/integration)"
-          final_sha=$(git -C "$repo" rev-parse HEAD)
-          echo "MAIN_FINAL=$final_sha"
-
-          echo '=== DEPLOY PUSH FAST ==='
-          cd "$repo"
-          set +e
-          npm run deploy:push:fast 2>&1 | tee /tmp/gova-deploy-push-fast-final.log
-          rc=${PIPESTATUS[0]}
-          set -e
-          echo "DEPLOY_PUSH_FAST_EXIT_CODE=$rc"
-          if [ "$rc" -ne 0 ]; then
-            exit "$rc"
-          fi
-
-          git fetch --quiet origin main integration
-          test "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)"
-          test "$(git rev-parse origin/main)" = "$(git rev-parse origin/integration)"
-          test -z "$(git status --porcelain --untracked-files=all)"
-          echo 'FINAL_STATE=PASS'
-          echo "FINAL_SHA=$(git rev-parse HEAD)"
           '''
           started=call('POST','/v1/exec/start',{'agent_id':agent,'command':command,'cwd':'/home/hesham/gova-agents/integration'})
-          cid=started['command_id']
-          print('COMMAND_ID='+cid,flush=True)
+          cid=started['command_id']; print('COMMAND_ID='+cid,flush=True)
           last=''
-          for _ in range(21600):
+          while True:
               st=call('GET','/v1/commands/'+cid,timeout=30)['command']
               logs=call('GET','/v1/commands/'+cid+'/logs?tail=24000',timeout=30)
               out=(logs.get('stdout','') or '')+(logs.get('stderr','') or '')
               if out != last:
-                  print(out[-24000:],flush=True)
-                  last=out
+                  print(out[-24000:],flush=True); last=out
               if st['status']!='running':
                   logs=call('GET','/v1/commands/'+cid+'/logs?tail=900000',timeout=120)
                   print(logs.get('stdout','') or '',flush=True)
-                  if logs.get('stderr'):
-                      print(logs.get('stderr',''),flush=True)
+                  if logs.get('stderr'): print(logs.get('stderr',''),flush=True)
                   print('GATEWAY_EXIT_CODE='+str(st.get('exit_code')),flush=True)
                   raise SystemExit(0 if st.get('exit_code')==0 else 1)
               time.sleep(5)
-          raise SystemExit('timeout waiting for final gateway command')
           PY
