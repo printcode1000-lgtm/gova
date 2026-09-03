@@ -7,34 +7,22 @@ on:
 permissions:
   contents: read
 jobs:
-  deploy:
+  inspect:
     runs-on: [self-hosted, Linux, X64, gova]
-    timeout-minutes: 120
+    timeout-minutes: 10
     steps:
-      - name: Repair main and resume deploy
+      - name: Inspect remaining local formatting failures
         shell: bash
         run: |
           set -euo pipefail
-          repo=/home/hesham/gova
-          cd "$repo"
-          git fetch --quiet origin main
-          unexpected="$(git status --porcelain | awk '$2 !~ /^public\/sync_data\/.*schema-sync-report\.json$/ {print}')"
-          if [ -n "$unexpected" ]; then
-            echo "Unexpected local changes:" >&2
-            echo "$unexpected" >&2
-            exit 2
-          fi
-          git restore -- public/sync_data/*schema-sync-report.json 2>/dev/null || true
-          if [ "$(git branch --show-current)" != main ]; then
-            echo "Canonical workspace is not on main" >&2
-            exit 2
-          fi
-          git pull --ff-only origin main
-          node_modules/.bin/prettier --write "src/features/google-play-console/presentation/**/*.tsx" --print-width 120
-          npm run test:release-commands
-          if [ -n "$(git status --porcelain)" ]; then
-            git add src/features/google-play-console/presentation
-            git commit -m "style(release): format Google Play presentation" >/dev/null
-            git push origin HEAD:main
-          fi
-          npm run deploy:all -- --from-branch=tests
+          cd /home/hesham/gova
+          echo '=== LONG TSX AFTER PRETTIER ==='
+          find src/features/google-play-console/presentation -type f -name '*.tsx' -print0 | \
+            xargs -0 awk 'length($0)>120 {print FILENAME ":" FNR ":" length($0) ":" $0}'
+          echo '=== LINE COUNTS OVER 200 ==='
+          find src/features/google-play-console/presentation -type f \( -name '*.ts' -o -name '*.tsx' \) -print0 | \
+            xargs -0 wc -l | awk '$1>200 && $2!="total" {print}'
+          echo '=== DOM WRITER LOCATIONS ==='
+          grep -R -n "function writeStaticDomIdentityManifest\|const writeStaticDomIdentityManifest\|writeStaticDomIdentityManifest" packages/architecture-core | head -30 || true
+          echo '=== STATUS ==='
+          git status --short
