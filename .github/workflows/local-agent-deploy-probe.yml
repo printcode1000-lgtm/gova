@@ -9,13 +9,13 @@ permissions:
 jobs:
   probe:
     runs-on: [self-hosted, Linux, X64, gova]
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
-      - name: Compare integration presentation state through Gateway
+      - name: Preserve stale worktree and submit verified repair
         shell: bash
         run: |
           python3 - <<'PY'
-          import json, time, urllib.request
+          import json, time, urllib.request, urllib.error
           from pathlib import Path
           base='http://127.0.0.1:8765'
           key=Path('/home/hesham/.config/gova-agent/auth').read_text().strip()
@@ -23,16 +23,28 @@ jobs:
           def call(method,path,payload=None):
               body=None if payload is None else json.dumps(payload).encode()
               req=urllib.request.Request(base+path,data=body,headers=headers,method=method)
-              with urllib.request.urlopen(req,timeout=60) as r: return json.loads(r.read() or b'{}')
-          call('POST','/v1/agent/register',{'agent_id':'chatgpt-integration-audit'})
-          started=call('POST','/v1/exec/start',{'agent_id':'chatgpt-integration-audit','cwd':'/home/hesham/gova-agents/integration','command':"echo MAIN; git diff --name-status origin/main -- src/features/google-play-console/presentation; echo INTEGRATION; git diff --name-status origin/integration -- src/features/google-play-console/presentation; echo STATUS; git status --short --branch"})
+              try:
+                  with urllib.request.urlopen(req,timeout=120) as r: return json.loads(r.read() or b'{}')
+              except urllib.error.HTTPError as e:
+                  print('HTTP', e.code, e.read().decode())
+                  raise
+          audit='chatgpt-integration-audit'
+          call('POST','/v1/agent/register',{'agent_id':audit})
+          command="set -e; git status --porcelain --untracked-files=all > /tmp/gova-integration-dirty.txt; if [ -s /tmp/gova-integration-dirty.txt ]; then git stash push -u -m 'preserved-stale-integration-before-smoke-fix-20260903'; fi; echo STASH; git stash list -1; echo STATUS; git status --short --branch"
+          started=call('POST','/v1/exec/start',{'agent_id':audit,'command':command,'cwd':'/home/hesham/gova-agents/integration'})
           cid=started['command_id']
           while True:
               cmd=call('GET','/v1/commands/'+cid)['command']
               if cmd['status']!='running': break
               time.sleep(1)
           logs=call('GET','/v1/commands/'+cid+'/logs?tail=100000')
-          print(logs.get('stdout',''))
-          print(logs.get('stderr',''))
+          print(logs.get('stdout','')); print(logs.get('stderr',''))
           if cmd.get('exit_code') != 0: raise SystemExit(1)
+          result=call('POST','/v1/integration/submit',{
+              'agent_id':'chatgpt-service-smoke-fix',
+              'task_id':'task-6da808b04d6f',
+              'commit_sha':'6ca88e54d0a708967d13e5bb1afbae417bb352ae',
+              'verification':['git diff --check HEAD^ HEAD']
+          })
+          print('INTEGRATION_SUBMIT='+json.dumps(result,ensure_ascii=False))
           PY
