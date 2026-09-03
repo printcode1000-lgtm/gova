@@ -10,7 +10,7 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
-CONFIG = Path(os.environ.get('GOVA_AGENT_R2_ENV', '/home/hesham/.config/gova-agent/r2.env'))
+CONFIG = Path(os.environ.get('GOVA_AGENT_R2_ENV', '/home/hesham/gova/.env.local'))
 URL_FILE = Path(os.environ.get('GOVA_AGENT_TUNNEL_URL_FILE', '/home/hesham/.local/state/gova-agent-tunnel/public-url'))
 
 
@@ -33,8 +33,17 @@ def sign(key, msg):
 
 def main():
     cfg = load_env(CONFIG)
-    required = ['R2_ACCOUNT_ID', 'R2_ACCESS_KEY_ID', 'R2_SECRET_ACCESS_KEY', 'R2_BUCKET']
-    missing = [k for k in required if not cfg.get(k)]
+    account_id = cfg.get('R2_ACCOUNT_ID', '')
+    access_key = cfg.get('R2_ACCESS_KEY_ID', '')
+    secret_key = cfg.get('R2_SECRET_ACCESS_KEY', '')
+    bucket = cfg.get('R2_BUCKET') or cfg.get('R2_BUCKET_NAME', '')
+    required = {
+        'R2_ACCOUNT_ID': account_id,
+        'R2_ACCESS_KEY_ID': access_key,
+        'R2_SECRET_ACCESS_KEY': secret_key,
+        'R2_BUCKET_NAME': bucket,
+    }
+    missing = [k for k, value in required.items() if not value]
     if missing:
         print('R2 publishing skipped: missing ' + ','.join(missing), file=sys.stderr)
         return 2
@@ -47,10 +56,10 @@ def main():
         print('R2 publishing skipped: invalid tunnel URL', file=sys.stderr)
         return 4
 
-    object_key = cfg.get('R2_OBJECT_KEY', 'gova-agent/public.json').lstrip('/')
-    endpoint = cfg.get('R2_ENDPOINT') or f"https://{cfg['R2_ACCOUNT_ID']}.r2.cloudflarestorage.com"
+    object_key = cfg.get('GOVA_AGENT_R2_OBJECT_KEY') or cfg.get('R2_OBJECT_KEY') or 'gova-agent/public.json'
+    object_key = object_key.lstrip('/')
+    endpoint = cfg.get('R2_ENDPOINT') or f"https://{account_id}.r2.cloudflarestorage.com"
     endpoint = endpoint.rstrip('/')
-    bucket = cfg['R2_BUCKET']
     encoded_key = '/'.join(urllib.parse.quote(part, safe='~') for part in object_key.split('/'))
     url = f"{endpoint}/{urllib.parse.quote(bucket, safe='~')}/{encoded_key}"
 
@@ -80,13 +89,13 @@ def main():
         credential_scope,
         hashlib.sha256(canonical_request.encode()).hexdigest(),
     ])
-    k_date = sign(('AWS4' + cfg['R2_SECRET_ACCESS_KEY']).encode(), date_stamp)
+    k_date = sign(('AWS4' + secret_key).encode(), date_stamp)
     k_region = hmac.new(k_date, b'auto', hashlib.sha256).digest()
     k_service = hmac.new(k_region, b's3', hashlib.sha256).digest()
     k_signing = hmac.new(k_service, b'aws4_request', hashlib.sha256).digest()
     signature = hmac.new(k_signing, string_to_sign.encode(), hashlib.sha256).hexdigest()
     authorization = (
-        f"{algorithm} Credential={cfg['R2_ACCESS_KEY_ID']}/{credential_scope}, "
+        f"{algorithm} Credential={access_key}/{credential_scope}, "
         f"SignedHeaders={signed_headers}, Signature={signature}"
     )
 
@@ -101,7 +110,7 @@ def main():
         if resp.status not in (200, 201, 204):
             raise RuntimeError(f'R2 PUT failed: HTTP {resp.status}')
 
-    public_base = cfg.get('R2_PUBLIC_BASE_URL', '').rstrip('/')
+    public_base = (cfg.get('R2_PUBLIC_BASE_URL') or cfg.get('R2_PUBLIC_URL') or cfg.get('NEXT_PUBLIC_R2_PUBLIC_URL') or '').rstrip('/')
     print((public_base + '/' + object_key) if public_base else object_key)
     return 0
 
