@@ -36,7 +36,7 @@ gova-agent-public r2-logs
 
 `status` shows the service state, current public URL, and whether the existing Gova R2 credentials are complete.
 
-`health` verifies the public path by requesting `/health` through the Cloudflare URL.
+`health` verifies the public path by requesting `/health` through the Cloudflare URL. It retries while a newly issued Quick Tunnel hostname is propagating in DNS, so a service restart does not fail merely because the hostname is not immediately resolvable.
 
 `publish` writes the current tunnel discovery document to R2. The tunnel launcher also republishes automatically whenever the generated `trycloudflare.com` URL changes.
 
