@@ -1,6 +1,7 @@
 import { execFileSync } from 'child_process';
 import { existsSync, rmSync } from 'fs';
 import path from 'path';
+import { createServiceReleaseEnvironment } from "./service-release-environment";
 
 import {
   discardServiceBuild,
@@ -28,9 +29,15 @@ import {
 const SERVICES = ['notifications', 'products', 'orders', 'profiles', 'submain', 'sub2main'] as const;
 
 const ROOT = process.cwd();
+const SERVICE_ENV = createServiceReleaseEnvironment(ROOT);
 
 function run(command: string, args: string[], cwd: string): void {
-  execFileSync(command, args, { stdio: 'inherit', shell: process.platform === 'win32', cwd });
+  execFileSync(command, args, {
+    stdio: 'inherit',
+    shell: process.platform === 'win32',
+    cwd,
+    env: SERVICE_ENV,
+  });
 }
 
 function main(): void {

@@ -2,6 +2,7 @@
 import { execFileSync, spawn, type ChildProcess } from "node:child_process";
 import { existsSync, rmSync } from "node:fs";
 import path from "node:path";
+import { createServiceReleaseEnvironment } from "./service-release-environment";
 
 import {
   bodyReportsUnconfiguredPort,
@@ -55,6 +56,7 @@ const PROBES: readonly ServiceProbe[] = SERVICE_SMOKE_PROBES;
 
 const BASE_PORT = Number(process.env.ASOL_SERVICE_SMOKE_PORT ?? 3310);
 const STARTUP_TIMEOUT_MS = 90_000;
+const SERVICE_ENV = createServiceReleaseEnvironment(process.cwd());
 
 function buildService(service: string, serviceDir: string): void {
   const run = (command: string, args: string[]): void => {
@@ -62,6 +64,7 @@ function buildService(service: string, serviceDir: string): void {
       stdio: "inherit",
       shell: process.platform === "win32",
       cwd: serviceDir,
+      env: SERVICE_ENV,
     });
   };
 
@@ -80,7 +83,7 @@ function startService(service: string, port: number): ChildProcess {
   const next = path.join(process.cwd(), "node_modules", "next", "dist", "bin", "next");
   return spawn(process.execPath, [next, "start", "-p", String(port)], {
     cwd: path.join(process.cwd(), "services", service),
-    env: { ...process.env, NODE_ENV: "production" },
+    env: { ...SERVICE_ENV, NODE_ENV: "production" },
     stdio: ["ignore", "pipe", "pipe"],
   });
 }
