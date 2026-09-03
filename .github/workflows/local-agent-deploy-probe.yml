@@ -11,14 +11,43 @@ jobs:
     runs-on: [self-hosted, Linux, X64, gova]
     timeout-minutes: 10
     steps:
-      - name: Measure human-authored line lengths on main HEAD
+      - name: Verify id-aware line measurement
         shell: bash
         run: |
           set -euo pipefail
           cd /home/hesham/gova
           python3 - <<'PY'
-          import re, subprocess
+          import subprocess
           from pathlib import Path
+          def strip_id(line):
+              start=line.find(' id=')
+              if start < 0: return line
+              value=start+4
+              if value >= len(line): return line
+              ch=line[value]
+              if ch in ('"', "'"):
+                  q=ch; i=value+1
+                  while i < len(line):
+                      if line[i]==q and line[i-1] != '\\':
+                          return line[:start]+line[i+1:]
+                      i+=1
+                  return line
+              if ch=='{':
+                  depth=0; quote=None; escaped=False; i=value
+                  while i < len(line):
+                      c=line[i]
+                      if quote:
+                          if escaped: escaped=False
+                          elif c=='\\': escaped=True
+                          elif c==quote: quote=None
+                      else:
+                          if c in ('"', "'", '`'): quote=c
+                          elif c=='{': depth+=1
+                          elif c=='}':
+                              depth-=1
+                              if depth==0: return line[:start]+line[i+1:]
+                      i+=1
+              return line
           root=Path('src/features/google-play-console/presentation')
           files=subprocess.check_output(['git','ls-tree','-r','--name-only','HEAD',str(root)],text=True).splitlines()
           bad=[]
@@ -26,10 +55,8 @@ jobs:
               if not f.endswith('.tsx'): continue
               src=subprocess.check_output(['git','show',f'HEAD:{f}'],text=True)
               for i,line in enumerate(src.splitlines(),1):
-                  normalized=re.sub(r'\s+id=(?:"[^"]*"|\'[^\']*\'|\{[^{}]*\})','',line)
-                  if len(normalized)>120:
-                      bad.append((f,i,len(line),len(normalized),line))
+                  normalized=strip_id(line)
+                  if len(normalized)>120: bad.append((f,i,len(line),len(normalized),line))
           print('REMAINING',len(bad))
-          for row in bad:
-              print(f'{row[0]}:{row[1]} raw={row[2]} normalized={row[3]}:{row[4]}')
+          for row in bad: print(f'{row[0]}:{row[1]} raw={row[2]} normalized={row[3]}:{row[4]}')
           PY
