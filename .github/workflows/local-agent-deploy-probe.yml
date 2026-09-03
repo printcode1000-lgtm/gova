@@ -7,51 +7,32 @@ on:
 permissions:
   contents: read
 jobs:
-  repair:
+  probe:
     runs-on: [self-hosted, Linux, X64, gova]
-    timeout-minutes: 20
+    timeout-minutes: 10
     steps:
-      - name: Remove retired broken symlink and verify production doctor
+      - name: Probe running deploy through gateway
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
-          import json,time,urllib.request
+          import json,urllib.request
           from pathlib import Path
           base='http://127.0.0.1:8765'
           key=Path('/home/hesham/.config/gova-agent/auth').read_text().strip()
           headers={'X-Gova-Agent-Key':key,'Content-Type':'application/json'}
-          def req(method,path,body=None,timeout=60):
-              r=urllib.request.Request(base+path,data=None if body is None else json.dumps(body).encode(),method=method,headers=headers)
+          def req(path,timeout=60):
+              r=urllib.request.Request(base+path,headers=headers)
               with urllib.request.urlopen(r,timeout=timeout) as x:
                   return json.loads(x.read() or b'{}')
-          agent='cloud-deploy-repair3-20260903'
-          req('POST','/v1/agent/register',{'agent_id':agent})
-          command="""cd /home/hesham/gova
-          python3 - <<'INNER'
-          from pathlib import Path
-          p=Path('node_modules/@asol/local-agent-core')
-          if not p.is_symlink():
-              raise SystemExit('expected retired path to be a symlink')
-          target=str(p.readlink())
-          if target != '../../packages/local-agent-core':
-              raise SystemExit('unexpected symlink target: '+target)
-          p.unlink()
-          print('removed retired broken symlink')
-          INNER
-          npm run doctor:environment:production
-          """
-          started=req('POST','/v1/exec/start',{'agent_id':agent,'command':command,'cwd':'/home/hesham/gova'})
-          cid=started['command_id']
-          print('COMMAND_ID='+cid,flush=True)
-          for _ in range(2400):
-              st=req('GET','/v1/commands/'+cid)['command']
-              if st['status']!='running':
-                  logs=req('GET','/v1/commands/'+cid+'/logs?tail=200000',timeout=120)
-                  print(logs.get('stdout',''))
-                  if logs.get('stderr'): print(logs.get('stderr',''))
-                  print('GATEWAY_EXIT_CODE='+str(st.get('exit_code')))
-                  raise SystemExit(0 if st.get('exit_code')==0 else 1)
-              time.sleep(1)
-          raise SystemExit('timeout waiting for repair verification')
+          commands=req('/v1/commands').get('commands',[])
+          matches=[c for c in commands if c.get('agent_id')=='cloud-deploy-all-resume-20260903']
+          if not matches:
+              print(json.dumps({'found':False}))
+              raise SystemExit(0)
+          c=matches[0]
+          logs=req('/v1/commands/'+c['id']+'/logs?tail=120000',120)
+          print(json.dumps({'found':True,'id':c['id'],'status':c.get('status'),'exit_code':c.get('exit_code')}))
+          print(logs.get('stdout',''))
+          if logs.get('stderr'): print(logs.get('stderr',''))
           PY
