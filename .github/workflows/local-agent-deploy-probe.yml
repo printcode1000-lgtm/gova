@@ -7,11 +7,11 @@ on:
 permissions:
   contents: read
 jobs:
-  scan:
+  inspect:
     runs-on: [self-hosted, Linux, X64, gova]
     timeout-minutes: 10
     steps:
-      - name: Scan presentation line lengths
+      - name: Inspect local formatter availability
         shell: bash
         run: |
           set -euo pipefail
@@ -19,5 +19,11 @@ jobs:
           git fetch --quiet origin main
           git restore -- public/sync_data/*schema-sync-report.json 2>/dev/null || true
           git pull --ff-only origin main
-          find src/features/google-play-console/presentation -type f \( -name '*.ts' -o -name '*.tsx' \) -print0 | \
-            xargs -0 awk 'length($0)>120 {print FILENAME ":" FNR ":" length($0) ":" $0}'
+          node - <<'NODE'
+          for (const pkg of ['prettier','@biomejs/biome','typescript']) {
+            try { console.log(pkg + '=' + require.resolve(pkg)); }
+            catch { console.log(pkg + '=missing'); }
+          }
+          NODE
+          if [ -x node_modules/.bin/prettier ]; then node_modules/.bin/prettier --version; fi
+          if [ -x node_modules/.bin/biome ]; then node_modules/.bin/biome --version; fi
