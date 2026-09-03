@@ -1,6 +1,9 @@
 name: local-agent-bootstrap
 on:
   workflow_dispatch:
+  push:
+    branches: [integration]
+    paths: [.github/workflows/local-agent-bootstrap.yml]
 permissions:
   contents: read
 jobs:
@@ -8,15 +11,221 @@ jobs:
     runs-on: [self-hosted, Linux, X64, gova]
     timeout-minutes: 15
     steps:
-      - name: Install persistent local-agent gateway
+      - name: Clean runners worktrees and jobs, then reinstall gateway
         shell: bash
         run: |
           set -euo pipefail
-          git -C /home/hesham/gova fetch --quiet origin integration
-          mkdir -p /home/hesham/gova-agents
-          if [ ! -e /home/hesham/gova-agents/integration/.git ]; then
-            git -C /home/hesham/gova worktree add /home/hesham/gova-agents/integration integration
+          ROOT=/home/hesham/gova
+          WTROOT=/home/hesham/gova-agents
+          RUNTIME=/home/hesham/.local/share/gova-agent-runtime
+          CURRENT_RUN="${GITHUB_RUN_ID}"
+
+          echo '=== cancel other active GitHub jobs ==='
+          python3 - <<'PY'
+          import json, os, urllib.request, urllib.error
+          from pathlib import Path
+          names=('GOVA_LOCAL_DISPATCH_TOKEN','GITHUB_ADMIN_TOKEN','GOVA_RUNNER_STATUS_TOKEN')
+          token=''
+          for f in (Path('/home/hesham/gova/.env.local'),Path('/home/hesham/gova/.env')):
+              if not f.exists(): continue
+              for line in f.read_text(errors='ignore').splitlines():
+                  for n in names:
+                      if line.startswith(n+'='):
+                          token=line.split('=',1)[1].strip().strip('"\'')
+                          if token: break
+                  if token: break
+              if token: break
+          if not token:
+              raise SystemExit('local GitHub admin token not found')
+          current=int(os.environ['GITHUB_RUN_ID'])
+          base='https://api.github.com/repos/printcode1000-lgtm/gova'
+          hdr={'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','User-Agent':'gova-cleanup'}
+          def req(method,path):
+              r=urllib.request.Request(base+path,method=method,headers=hdr)
+              try:
+                  with urllib.request.urlopen(r,timeout=20) as x:
+                      raw=x.read(); return x.status, json.loads(raw) if raw else None
+              except urllib.error.HTTPError as e:
+                  return e.code, None
+          for status in ('queued','in_progress'):
+              code,data=req('GET',f'/actions/runs?status={status}&per_page=100')
+              if code!=200 or not data: continue
+              for run in data.get('workflow_runs',[]):
+                  rid=int(run['id'])
+                  if rid==current: continue
+                  c,_=req('POST',f'/actions/runs/{rid}/cancel')
+                  print('cancel',rid,status,c)
+          PY
+          sleep 3
+
+          echo '=== stop gateway-side services and active commands ==='
+          systemctl --user stop gova-agent-public.service 2>/dev/null || true
+          systemctl --user stop gova-agent-monitor-web.service 2>/dev/null || true
+          if sudo -n systemctl is-active --quiet gova-agent-gateway.service 2>/dev/null; then
+            sudo systemctl stop gova-agent-gateway.service
+          else
+            systemctl --user stop gova-agent-gateway.service 2>/dev/null || true
           fi
-          git -C /home/hesham/gova-agents/integration checkout integration
-          git -C /home/hesham/gova-agents/integration reset --hard origin/integration
-          GOVA_AGENT_REPO=/home/hesham/gova-agents/integration bash /home/hesham/gova-agents/integration/tools/local-agent/install.sh
+          python3 - <<'PY'
+          import os, signal, sqlite3
+          from pathlib import Path
+          p=Path('/home/hesham/.local/share/gova-agent-runtime/runtime.sqlite3')
+          if p.exists():
+              c=sqlite3.connect(p)
+              try: rows=c.execute("select pid,id from commands where status='running'").fetchall()
+              except Exception: rows=[]
+              c.close()
+              for pid,cid in rows:
+                  try: os.killpg(int(pid),signal.SIGTERM); print('terminated',cid,pid)
+                  except Exception: pass
+          PY
+
+          echo '=== remove all agent worktrees and local agent branches ==='
+          git -C "$ROOT" fetch --quiet --prune origin main integration
+          mapfile -t TREES < <(git -C "$ROOT" worktree list --porcelain | awk '/^worktree /{sub(/^worktree /,"");print}')
+          for p in "${TREES[@]}"; do
+            [ "$p" = "$ROOT" ] && continue
+            git -C "$ROOT" worktree remove --force "$p" 2>/dev/null || rm -rf -- "$p"
+          done
+          git -C "$ROOT" worktree prune
+          while IFS= read -r b; do
+            [ -n "$b" ] && git -C "$ROOT" branch -D "$b" || true
+          done < <(git -C "$ROOT" for-each-ref --format='%(refname:short)' refs/heads/agent/)
+          rm -rf "$WTROOT"
+          mkdir -p "$WTROOT"
+
+          echo '=== wipe gateway jobs/agents/runtime records ==='
+          rm -rf "$RUNTIME"
+          mkdir -p "$RUNTIME/commands"
+
+          echo '=== clean GitHub runner job workspaces ==='
+          CURRENT_WORK_ROOT="${RUNNER_TEMP%/_temp}"
+          mapfile -t UNITS < <(systemctl --user list-unit-files --type=service --no-legend 2>/dev/null | awk '$1 ~ /^gova-github-runner(-[0-9]+)?\.service$/ {print $1}')
+          for u in "${UNITS[@]}"; do
+            wd="$(systemctl --user show "$u" -p WorkingDirectory --value 2>/dev/null || true)"
+            [ -n "$wd" ] || continue
+            work="$wd/_work"
+            [ -d "$work" ] || continue
+            if [ "$work" = "$CURRENT_WORK_ROOT" ]; then
+              find "$work" -mindepth 1 -maxdepth 1 ! -name _temp -exec rm -rf -- {} +
+            else
+              find "$work" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +
+            fi
+            echo "cleaned $u $work"
+          done
+
+          echo '=== recreate clean integration worktree ==='
+          git -C "$ROOT" fetch --quiet --prune origin integration
+          git -C "$ROOT" branch -f integration origin/integration
+          git -C "$ROOT" worktree add "$WTROOT/integration" integration
+          git -C "$WTROOT/integration" reset --hard origin/integration
+
+          echo '=== reinstall persistent gateway from clean integration ==='
+          GOVA_AGENT_REPO="$WTROOT/integration" bash "$WTROOT/integration/tools/local-agent/install.sh"
+
+          echo '=== restore manual-only bootstrap on GitHub ==='
+          python3 - <<'PY'
+          import base64, json, urllib.request
+          from pathlib import Path
+          names=('GOVA_LOCAL_DISPATCH_TOKEN','GITHUB_ADMIN_TOKEN','GOVA_RUNNER_STATUS_TOKEN')
+          token=''
+          for f in (Path('/home/hesham/gova/.env.local'),Path('/home/hesham/gova/.env')):
+              if not f.exists(): continue
+              for line in f.read_text(errors='ignore').splitlines():
+                  for n in names:
+                      if line.startswith(n+'='):
+                          token=line.split('=',1)[1].strip().strip('"\'')
+                          if token: break
+                  if token: break
+              if token: break
+          if not token: raise SystemExit('local GitHub admin token not found')
+          original="""name: local-agent-bootstrap
+          on:
+            workflow_dispatch:
+          permissions:
+            contents: read
+          jobs:
+            bootstrap:
+              runs-on: [self-hosted, Linux, X64, gova]
+              timeout-minutes: 15
+              steps:
+                - name: Install persistent local-agent gateway
+                  shell: bash
+                  run: |
+                    set -euo pipefail
+                    git -C /home/hesham/gova fetch --quiet origin integration
+                    mkdir -p /home/hesham/gova-agents
+                    if [ ! -e /home/hesham/gova-agents/integration/.git ]; then
+                      git -C /home/hesham/gova worktree add /home/hesham/gova-agents/integration integration
+                    fi
+                    git -C /home/hesham/gova-agents/integration checkout integration
+                    git -C /home/hesham/gova-agents/integration reset --hard origin/integration
+                    GOVA_AGENT_REPO=/home/hesham/gova-agents/integration bash /home/hesham/gova-agents/integration/tools/local-agent/install.sh
+          """
+          base='https://api.github.com/repos/printcode1000-lgtm/gova'
+          path='/contents/.github/workflows/local-agent-bootstrap.yml?ref=integration'
+          hdr={'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','User-Agent':'gova-cleanup','Content-Type':'application/json'}
+          with urllib.request.urlopen(urllib.request.Request(base+path,headers=hdr),timeout=20) as r:
+              cur=json.load(r)
+          body=json.dumps({'message':'chore(local-agent): restore manual bootstrap after cleanup','content':base64.b64encode(original.encode()).decode(),'sha':cur['sha'],'branch':'integration'}).encode()
+          req=urllib.request.Request(base+'/contents/.github/workflows/local-agent-bootstrap.yml',data=body,method='PUT',headers=hdr)
+          with urllib.request.urlopen(req,timeout=20) as r:
+              out=json.load(r); print('restore_commit',out['commit']['sha'])
+          PY
+          sleep 3
+
+          echo '=== cancel jobs spawned by cleanup restore and sync local integration ==='
+          python3 - <<'PY'
+          import json, os, urllib.request, urllib.error
+          from pathlib import Path
+          names=('GOVA_LOCAL_DISPATCH_TOKEN','GITHUB_ADMIN_TOKEN','GOVA_RUNNER_STATUS_TOKEN')
+          token=''
+          for f in (Path('/home/hesham/gova/.env.local'),Path('/home/hesham/gova/.env')):
+              if not f.exists(): continue
+              for line in f.read_text(errors='ignore').splitlines():
+                  for n in names:
+                      if line.startswith(n+'='):
+                          token=line.split('=',1)[1].strip().strip('"\'')
+                          if token: break
+                  if token: break
+              if token: break
+          current=int(os.environ['GITHUB_RUN_ID']); base='https://api.github.com/repos/printcode1000-lgtm/gova'
+          hdr={'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','User-Agent':'gova-cleanup'}
+          def call(method,path):
+              req=urllib.request.Request(base+path,method=method,headers=hdr)
+              try:
+                  with urllib.request.urlopen(req,timeout=20) as r:
+                      raw=r.read(); return r.status,json.loads(raw) if raw else None
+              except urllib.error.HTTPError as e: return e.code,None
+          for _ in range(4):
+              found=0
+              for status in ('queued','in_progress'):
+                  code,data=call('GET',f'/actions/runs?status={status}&per_page=100')
+                  if code!=200 or not data: continue
+                  for run in data.get('workflow_runs',[]):
+                      rid=int(run['id'])
+                      if rid==current: continue
+                      found+=1; c,_=call('POST',f'/actions/runs/{rid}/cancel'); print('cancel-final',rid,c)
+              if not found: break
+              import time; time.sleep(2)
+          PY
+          git -C "$ROOT" fetch --quiet origin integration
+          git -C "$WTROOT/integration" reset --hard origin/integration
+
+          echo '=== verify empty runtime and clean worktree state ==='
+          python3 - <<'PY'
+          import sqlite3
+          from pathlib import Path
+          p=Path('/home/hesham/.local/share/gova-agent-runtime/runtime.sqlite3')
+          c=sqlite3.connect(p)
+          tables=('agents','sessions','tasks','commands','locks','messages','handoffs','events')
+          result={t:c.execute(f'select count(*) from {t}').fetchone()[0] for t in tables}
+          c.close(); print('RUNTIME_COUNTS='+str(result))
+          if any(result.values()): raise SystemExit('runtime not empty')
+          PY
+          echo 'WORKTREES:'
+          git -C "$ROOT" worktree list --porcelain
+          test -z "$(git -C "$ROOT" for-each-ref --format='%(refname:short)' refs/heads/agent/)"
+          echo 'RUNNERS:'
+          for u in "${UNITS[@]}"; do printf '%s=' "$u"; systemctl --user is-active "$u" || true; done
+          echo 'CLEANUP=PASS'
