@@ -11,16 +11,28 @@ jobs:
     runs-on: [self-hosted, Linux, X64, gova]
     timeout-minutes: 10
     steps:
-      - name: Inspect recent Gateway commands
+      - name: Compare integration presentation state through Gateway
         shell: bash
         run: |
           python3 - <<'PY'
-          import json, urllib.request
+          import json, time, urllib.request
           from pathlib import Path
           base='http://127.0.0.1:8765'
           key=Path('/home/hesham/.config/gova-agent/auth').read_text().strip()
-          req=urllib.request.Request(base+'/v1/commands',headers={'X-Gova-Agent-Key':key})
-          with urllib.request.urlopen(req,timeout=30) as r:
-              data=json.loads(r.read())
-          print(json.dumps(data,ensure_ascii=False))
+          headers={'X-Gova-Agent-Key':key,'Content-Type':'application/json'}
+          def call(method,path,payload=None):
+              body=None if payload is None else json.dumps(payload).encode()
+              req=urllib.request.Request(base+path,data=body,headers=headers,method=method)
+              with urllib.request.urlopen(req,timeout=60) as r: return json.loads(r.read() or b'{}')
+          call('POST','/v1/agent/register',{'agent_id':'chatgpt-integration-audit'})
+          started=call('POST','/v1/exec/start',{'agent_id':'chatgpt-integration-audit','cwd':'/home/hesham/gova-agents/integration','command':"echo MAIN; git diff --name-status origin/main -- src/features/google-play-console/presentation; echo INTEGRATION; git diff --name-status origin/integration -- src/features/google-play-console/presentation; echo STATUS; git status --short --branch"})
+          cid=started['command_id']
+          while True:
+              cmd=call('GET','/v1/commands/'+cid)['command']
+              if cmd['status']!='running': break
+              time.sleep(1)
+          logs=call('GET','/v1/commands/'+cid+'/logs?tail=100000')
+          print(logs.get('stdout',''))
+          print(logs.get('stderr',''))
+          if cmd.get('exit_code') != 0: raise SystemExit(1)
           PY
