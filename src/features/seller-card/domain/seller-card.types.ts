@@ -28,6 +28,7 @@ export interface SellerCardBadge {
 export interface SellerCardViewModel {
   uid: string;
   title: string;
+  identityLabel: string;
   subtitle: string;
   description: string;
   avatarUrl: string;

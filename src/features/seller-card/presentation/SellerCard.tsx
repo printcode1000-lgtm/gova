@@ -123,8 +123,9 @@ export function SellerCard({ id,
           {card.ratingText ? (
             <p id="features-seller-card-presentation-sellercard-text-9-yxq7sa" className="mt-1 text-[11px] font-medium text-tertiary">{card.ratingText}</p>
           ) : null}
-          {card.badges.length > 0 ? (
-            <div id="features-seller-card-presentation-sellercard-div-10-cduns8" className="mt-2 flex flex-wrap justify-center gap-1">
+          {card.identityLabel || card.badges.length > 0 ? (
+            <div id="features-seller-card-presentation-sellercard-div-10-cduns8" className="mt-2 flex flex-wrap justify-center gap-1 text-[10px] text-on-surface-variant">
+              {card.identityLabel || null}
               {card.badges.map((badge, badgeIndex) => (
                 <span
                   key={badge.label}
@@ -134,9 +135,6 @@ export function SellerCard({ id,
                 </span>
               ))}
             </div>
-          ) : null}
-          {!horizontal ? (
-            <p id="features-seller-card-presentation-sellercard-text-11-fko8lv" className="mt-1 truncate text-[10px] text-on-surface-variant">{card.uid}</p>
           ) : null}
         </div>
       </button>

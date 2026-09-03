@@ -57,6 +57,7 @@ export function sellerCardFromFavorite(item: FavoriteItem): SellerCardViewModel 
   return {
     uid: item.targetId,
     title: item.title,
+    identityLabel: item.title,
     subtitle: item.subtitle,
     description: "",
     avatarUrl: item.imageUrl,

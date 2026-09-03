@@ -75,6 +75,7 @@ The shared card receives a `SellerCardViewModel`:
 interface SellerCardViewModel {
   uid: string;
   title: string;
+  identityLabel: string;
   subtitle: string;
   description: string;
   avatarUrl: string;
@@ -93,6 +94,8 @@ The presenter safely derives:
 
 - `title` from the structured `storeName` field. A UID is never presented as a
   store name; cards omit the title when the profile has no store name.
+- `identityLabel` from `storeName`, falling back to `primaryPhone` when the store
+  name is empty. The UID is never used as visible fallback identity text.
 - `description` from store description or story.
 - `avatarUrl` from available avatar URL fields when present.
 - `initials` from the display name when no image exists.
@@ -137,7 +140,7 @@ The system is currently used by:
 The seller-card feature module is responsible for:
 
 - Safe JSON parsing.
-- Store/provider name presentation without exposing UID as display text.
+- Store/provider identity presentation using store name with primary-phone fallback, without exposing UID as display text.
 - Avatar fallback.
 - Canonical profile URL.
 - Optional badges.

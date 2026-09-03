@@ -13429,7 +13429,7 @@
     {
       "id": "features-seller-card-presentation-sellercard-div-12-4ndc3q",
       "source": "src/features/seller-card/presentation/SellerCard.tsx",
-      "line": 144,
+      "line": 142,
       "element": "div",
       "semanticName": "seller-card-presentation-sellercard-div-12",
       "kind": "literal"
@@ -13456,14 +13456,6 @@
       "line": 113,
       "element": "div",
       "semanticName": "seller-card-presentation-sellercard-div-5",
-      "kind": "literal"
-    },
-    {
-      "id": "features-seller-card-presentation-sellercard-text-11-fko8lv",
-      "source": "src/features/seller-card/presentation/SellerCard.tsx",
-      "line": 139,
-      "element": "p",
-      "semanticName": "seller-card-presentation-sellercard-text-11",
       "kind": "literal"
     },
     {
