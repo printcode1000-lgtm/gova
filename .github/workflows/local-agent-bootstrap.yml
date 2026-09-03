@@ -1,11 +1,6 @@
 name: local-agent-bootstrap
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - integration
-    paths:
-      - ".github/workflows/local-agent-bootstrap.yml"
 permissions:
   contents: read
 jobs:
@@ -25,12 +20,3 @@ jobs:
           git -C /home/hesham/gova-agents/integration checkout integration
           git -C /home/hesham/gova-agents/integration reset --hard origin/integration
           GOVA_AGENT_REPO=/home/hesham/gova-agents/integration bash /home/hesham/gova-agents/integration/tools/local-agent/install.sh
-          for _ in $(seq 1 60); do
-            git -C /home/hesham/gova fetch --quiet origin integration || true
-            if ! git -C /home/hesham/gova show origin/integration:.github/workflows/local-agent-bootstrap.yml | grep -q '^  push:'; then
-              git -C /home/hesham/gova-agents/integration reset --hard origin/integration
-              exit 0
-            fi
-            sleep 1
-          done
-          exit 1
