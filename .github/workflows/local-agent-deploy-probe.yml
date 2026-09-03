@@ -9,99 +9,34 @@ permissions:
 jobs:
   probe:
     runs-on: [self-hosted, Linux, X64, gova]
-    timeout-minutes: 60
+    timeout-minutes: 20
     steps:
-      - name: Verify repaired smoke gate through Gateway
+      - name: Integrate verified repair through Gateway
         shell: bash
         run: |
           set -euo pipefail
-          cat > /tmp/gova-service-smoke-verify.sh <<'SH_VERIFY'
-          set -euo pipefail
-          echo '=== REPAIR STATE ==='
-          git status --short --branch
-          grep -n 'createServiceReleaseEnvironment' scripts/build-all-services.ts scripts/check-service-smoke.ts scripts/service-release-environment.ts
-          npx tsx scripts/tests/service-release-environment.test.ts
-          git diff --check
-
-          created_paths=()
-          cleanup_runtime() {
-            for x in "${created_paths[@]}"; do rm -rf "$x"; done
-          }
-          trap cleanup_runtime EXIT
-
-          if [ ! -e node_modules ]; then
-            cp -al /home/hesham/gova/node_modules ./node_modules
-            created_paths+=("$PWD/node_modules")
-          fi
-          for rel in .env.local .env fastlane/.env; do
-            src="/home/hesham/gova/$rel"; dst="$PWD/$rel"
-            if [ -f "$src" ] && [ ! -e "$dst" ]; then
-              mkdir -p "$(dirname "$dst")"
-              cp -p "$src" "$dst"
-              created_paths+=("$dst")
-            fi
-          done
-          for svc in notifications products orders profiles submain sub2main; do
-            src="/home/hesham/gova/services/$svc/node_modules"; dst="$PWD/services/$svc/node_modules"
-            if [ -d "$src" ] && [ ! -e "$dst" ]; then
-              cp -al "$src" "$dst"
-              created_paths+=("$dst")
-            fi
-          done
-
-          echo '=== CHECKPOINT services:build ==='
-          npm run services:build
-          echo '=== CHECKPOINT smoke:services ==='
-          npm run smoke:services
-
-          cleanup_runtime
-          trap - EXIT
-
-          # Mirror sync is a verification side effect, not part of this repair.
-          git restore --worktree -- services || true
-
-          echo '=== COMMIT REPAIR ==='
-          git status --short
-          git diff --check
-          git add scripts/build-all-services.ts scripts/check-service-smoke.ts scripts/service-release-environment.ts scripts/tests/service-release-environment.test.ts docs/08-troubleshooting/problems/README.md docs/08-troubleshooting/problems/service-smoke-release-environment.md
-          git diff --cached --check
-          git commit -m 'fix(release): load server service environment for smoke gate'
-          echo COMMIT=$(git rev-parse HEAD)
-          git status --short
-          SH_VERIFY
-
           python3 - <<'PY_GATEWAY'
-          import json, time, urllib.request
+          import json, urllib.request
           from pathlib import Path
           base='http://127.0.0.1:8765'
           key=Path('/home/hesham/.config/gova-agent/auth').read_text().strip()
           headers={'X-Gova-Agent-Key':key,'Content-Type':'application/json'}
-          agent='chatgpt-service-smoke-fix'
-          worktree='/home/hesham/gova-agents/chatgpt-service-smoke-fix/task-6da808b04d6f'
           def req(method,path,payload=None):
               data=None if payload is None else json.dumps(payload).encode()
               r=urllib.request.Request(base+path,data=data,headers=headers,method=method)
-              with urllib.request.urlopen(r,timeout=60) as resp:
+              with urllib.request.urlopen(r,timeout=600) as resp:
                   body=resp.read().decode()
               return json.loads(body) if body else {}
+          agent='chatgpt-service-smoke-fix'
+          task='task-6da808b04d6f'
           req('POST','/v1/agent/register',{'agent_id':agent})
-          started=req('POST','/v1/exec/start',{'agent_id':agent,'command':Path('/tmp/gova-service-smoke-verify.sh').read_text(),'cwd':worktree})
-          print('STARTED',started)
-          cid=started.get('command_id')
-          if not cid: raise SystemExit('command id not found')
-          while True:
-              state=req('GET','/v1/commands/'+cid)
-              c=state.get('command') or state
-              status=c.get('status')
-              print('STATUS',status)
-              if status in {'completed','failed','cancelled','canceled'}: break
-              time.sleep(5)
-          logs=req('GET','/v1/commands/'+cid+'/logs?tail=260000')
-          print('=== GATEWAY STDOUT ===')
-          print(logs.get('stdout','') or logs.get('logs') or logs)
-          print('=== GATEWAY STDERR ===')
-          print(logs.get('stderr',''))
-          code=c.get('exit_code')
-          print('EXIT_CODE',code)
-          if status!='completed' or code not in (0,None): raise SystemExit(code or 1)
+          result=req('POST','/v1/integration/submit',{
+              'agent_id':agent,
+              'task_id':task,
+              'commit_sha':'6ca88e54d0a708967d13e5bb1afbae417bb352ae',
+              'verification':['git diff --check HEAD^ HEAD']
+          })
+          print(result)
+          if not result.get('ok'):
+              raise SystemExit(1)
           PY_GATEWAY
