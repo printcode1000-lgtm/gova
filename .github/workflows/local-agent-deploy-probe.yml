@@ -11,14 +11,21 @@ jobs:
     runs-on: [self-hosted, Linux, X64, gova]
     timeout-minutes: 10
     steps:
-      - name: Inspect live deploy progress
+      - name: Inspect deploy checkpoints
         shell: bash
         run: |
           set -euo pipefail
           cd /home/hesham/gova
           echo '=== PROCESSES ==='
           ps -eo pid,etimes,cmd | grep -E 'deploy-all|run-generated-gate|next build|services:build|smoke:|vercel' | grep -v grep || true
-          echo '=== RECENT STATE FILES ==='
-          find . -maxdepth 5 -type f -mmin -15 \( -iname '*deploy*state*' -o -iname '*checkpoint*' -o -iname '*release*state*' \) -print 2>/dev/null | head -50
-          echo '=== RELEASE STATE CONSTANTS ==='
-          grep -R -n "deploy.*state\|branch.*checkpoint" packages/release-core/src 2>/dev/null | head -80 || true
+          echo '=== DEPLOY DIR ==='
+          ls -la .deploy-all 2>/dev/null || true
+          echo '=== CHECKPOINTS ==='
+          cat .deploy-all/branch-checkpoints.json 2>/dev/null || true
+          echo '=== OTHER JSON STATE ==='
+          for f in .deploy-all/*.json; do
+            [ -f "$f" ] || continue
+            [ "$f" = .deploy-all/branch-checkpoints.json ] && continue
+            echo "--- $f ---"
+            cat "$f"
+          done
