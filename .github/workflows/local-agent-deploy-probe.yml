@@ -7,11 +7,11 @@ on:
 permissions:
   contents: read
 jobs:
-  repair:
+  probe:
     runs-on: [self-hosted, Linux, X64, gova]
-    timeout-minutes: 20
+    timeout-minutes: 10
     steps:
-      - name: Repair stale local dependency and verify production doctor
+      - name: Inspect retired local-agent package path through gateway
         shell: bash
         run: |
           set -euo pipefail
@@ -25,26 +25,30 @@ jobs:
               r=urllib.request.Request(base+path,data=None if body is None else json.dumps(body).encode(),method=method,headers=headers)
               with urllib.request.urlopen(r,timeout=timeout) as x:
                   return json.loads(x.read() or b'{}')
-          agent='cloud-deploy-repair-20260903'
+          agent='cloud-deploy-inspect2-20260903'
           req('POST','/v1/agent/register',{'agent_id':agent})
-          command=r'''cd /home/hesham/gova
-          set -euo pipefail
-          if [ -e node_modules/@asol/local-agent-core ]; then
-            rm -rf node_modules/@asol/local-agent-core
-          fi
-          npm run doctor:environment:production
-          '''
+          command="""cd /home/hesham/gova
+          python3 - <<'INNER'
+          from pathlib import Path
+          p=Path('node_modules/@asol/local-agent-core')
+          print('exists=',p.exists())
+          print('is_symlink=',p.is_symlink())
+          if p.is_symlink(): print('target=',p.readlink())
+          if p.exists() and p.is_dir():
+              print('children=',[x.name for x in p.iterdir()][:20])
+          INNER
+          npm ls @asol/local-agent-core --all || true
+          """
           started=req('POST','/v1/exec/start',{'agent_id':agent,'command':command,'cwd':'/home/hesham/gova'})
           cid=started['command_id']
           print('COMMAND_ID='+cid,flush=True)
-          for _ in range(2400):
+          for _ in range(600):
               st=req('GET','/v1/commands/'+cid)['command']
               if st['status']!='running':
-                  logs=req('GET','/v1/commands/'+cid+'/logs?tail=200000',timeout=120)
+                  logs=req('GET','/v1/commands/'+cid+'/logs?tail=100000')
                   print(logs.get('stdout',''))
                   if logs.get('stderr'): print(logs.get('stderr',''))
-                  print('GATEWAY_EXIT_CODE='+str(st.get('exit_code')))
                   raise SystemExit(0 if st.get('exit_code')==0 else 1)
               time.sleep(1)
-          raise SystemExit('timeout waiting for repair verification')
+          raise SystemExit('timeout')
           PY
