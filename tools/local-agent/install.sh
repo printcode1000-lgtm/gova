@@ -22,6 +22,7 @@ install -m 0755 "$runtime_src/monitor-public.sh" /home/hesham/.local/lib/gova-ag
 install -m 0755 "$runtime_src/monitor-cloudflare-tunnel.sh" /home/hesham/.local/lib/gova-agent/monitor-cloudflare-tunnel.sh
 install -m 0755 "$runtime_src/gateway-quick-tunnel.sh" /home/hesham/.local/lib/gova-agent/gateway-quick-tunnel.sh
 install -m 0755 "$runtime_src/gova-agent-public.sh" /home/hesham/.local/lib/gova-agent/gova-agent-public.sh
+install -m 0755 "$runtime_src/publish-public-url-r2.py" /home/hesham/.local/lib/gova-agent/publish-public-url-r2.py
 install -m 0644 "$runtime_src/web/index.html" /home/hesham/.local/lib/gova-agent/web/index.html
 install -m 0755 "$runtime_src/recovery.py" /home/hesham/.local/lib/gova-agent/recovery.py
 install -m 0755 "$runtime_src/git_credential.py" /home/hesham/.local/lib/gova-agent/git_credential.py
@@ -93,8 +94,7 @@ systemctl --user daemon-reload
 systemctl --user enable gova-agent-monitor-web.service
 systemctl --user restart gova-agent-monitor-web.service
 
-# Keep the old public monitor tunnel available, but do not use it for the agent
-# control path. The dedicated agent tunnel targets the gateway on port 8765.
+# The dedicated agent tunnel targets the gateway on port 8765.
 systemctl --user enable gova-agent-public.service >/dev/null 2>&1 || true
 systemctl --user restart gova-agent-public.service >/dev/null 2>&1 || true
 
