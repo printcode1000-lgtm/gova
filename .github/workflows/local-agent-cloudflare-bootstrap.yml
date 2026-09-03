@@ -7,33 +7,30 @@ on:
 permissions:
   contents: read
 jobs:
-  inspect-and-configure:
+  bootstrap-and-verify:
     runs-on: [self-hosted, Linux, X64, gova]
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
-      - name: Discover existing Gova R2 configuration safely
+      - name: Install current integration runtime and verify public discovery
         shell: bash
         run: |
           set -euo pipefail
-          echo '=== GOVA_R2_DISCOVERY_BEGIN ==='
-          /home/hesham/.local/bin/gova-agent-public status || true
-          echo '--- candidate-files ---'
-          timeout 10s find /home/hesham/gova -maxdepth 6 -xdev -type f \( -name '.env' -o -name '.env.*' -o -name 'r2.env' -o -name '*r2*.env' \) \
-            -not -path '*/node_modules/*' -not -path '*/.git/*' -not -path '*/.next/*' -print 2>/dev/null | sort | head -100 || true
-          echo '--- matching-files ---'
-          while IFS= read -r f; do
-            [ -f "$f" ] || continue
-            if grep -Eq '^(R2_ACCOUNT_ID|R2_ACCESS_KEY_ID|R2_SECRET_ACCESS_KEY|R2_BUCKET|CLOUDFLARE_R2_)=' "$f" 2>/dev/null; then
-              echo "$f"
-            fi
-          done < <(timeout 10s find /home/hesham/gova -maxdepth 6 -xdev -type f \( -name '.env' -o -name '.env.*' -o -name 'r2.env' -o -name '*r2*.env' \) -not -path '*/node_modules/*' -not -path '*/.git/*' -not -path '*/.next/*' -print 2>/dev/null || true)
-          echo '--- config-status ---'
-          if [ -s /home/hesham/.config/gova-agent/r2.env ]; then
-            echo 'gova_agent_r2_env=present'
-            for key in R2_ACCOUNT_ID R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY R2_BUCKET R2_PUBLIC_BASE_URL; do
-              grep -q "^${key}=" /home/hesham/.config/gova-agent/r2.env && echo "${key}=present" || echo "${key}=missing"
-            done
-          else
-            echo 'gova_agent_r2_env=missing'
+          git -C /home/hesham/gova fetch --quiet origin integration
+          mkdir -p /home/hesham/gova-agents
+          if [ ! -e /home/hesham/gova-agents/integration/.git ]; then
+            git -C /home/hesham/gova worktree add /home/hesham/gova-agents/integration integration
           fi
-          echo '=== GOVA_R2_DISCOVERY_END ==='
+          git -C /home/hesham/gova-agents/integration checkout integration >/dev/null 2>&1
+          git -C /home/hesham/gova-agents/integration reset --hard origin/integration
+          GOVA_AGENT_REPO=/home/hesham/gova-agents/integration bash /home/hesham/gova-agents/integration/tools/local-agent/install.sh
+          echo '--- local public status ---'
+          /home/hesham/.local/bin/gova-agent-public status
+          echo '--- tunnel health ---'
+          /home/hesham/.local/bin/gova-agent-public health
+          echo '--- publish discovery ---'
+          discovery_url="$(/home/hesham/.local/bin/gova-agent-public publish)"
+          printf 'discovery_url=%s\n' "$discovery_url"
+          case "$discovery_url" in
+            https://*) curl -fsS --max-time 15 "$discovery_url" ; printf '\n' ;;
+            *) echo 'publisher did not return a public discovery URL' >&2; exit 1 ;;
+          esac
