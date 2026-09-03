@@ -11,21 +11,32 @@ jobs:
     runs-on: [self-hosted, Linux, X64, gova]
     timeout-minutes: 10
     steps:
-      - name: Inspect deploy checkpoints
+      - name: Inspect deploy progress
         shell: bash
         run: |
           set -euo pipefail
           cd /home/hesham/gova
-          echo '=== PROCESSES ==='
-          ps -eo pid,etimes,cmd | grep -E 'deploy-all|run-generated-gate|next build|services:build|smoke:|vercel' | grep -v grep || true
-          echo '=== DEPLOY DIR ==='
-          ls -la .deploy-all 2>/dev/null || true
-          echo '=== CHECKPOINTS ==='
-          cat .deploy-all/branch-checkpoints.json 2>/dev/null || true
-          echo '=== OTHER JSON STATE ==='
-          for f in .deploy-all/*.json; do
-            [ -f "$f" ] || continue
-            [ "$f" = .deploy-all/branch-checkpoints.json ] && continue
-            echo "--- $f ---"
-            cat "$f"
-          done
+          python3 - <<'PY'
+          import json, pathlib, subprocess
+          root=pathlib.Path('.deploy-all')
+          gate=root/'gate-steps.json'
+          state=root/'run-state.json'
+          checkpoints=root/'branch-checkpoints.json'
+          if gate.exists():
+              g=json.loads(gate.read_text())
+              print('GATE_RUN',g.get('runId'))
+              print('GATE_STEPS',len(g.get('steps',{})))
+              print('LAST_GATE',max((v.get('finishedAt','')+':'+k for k,v in g.get('steps',{}).items()), default=''))
+          if state.exists():
+              s=json.loads(state.read_text())
+              print('REVISION',s.get('revision'))
+              print('COMPLETED_PHASES',','.join(s.get('completedPhases',[])))
+              print('LAST_UPDATED',s.get('lastUpdated'))
+          if checkpoints.exists():
+              c=json.loads(checkpoints.read_text())
+              current=[x for x in c.get('checkpoints',[]) if x.get('revision')=='9d855c5fa43ca9215af5b9bf4af6b71f5f304acb']
+              print('CURRENT_CHECKPOINTS',','.join(f"{x.get('branchId')}={x.get('status')}" for x in current))
+          out=subprocess.check_output("ps -eo cmd | grep -E 'scripts/deploy-all.ts|run-generated-gate.ts|next build|deploy-service|vercel deploy|smoke:|services:build' | grep -v grep || true", shell=True, text=True)
+          print('PROCESSES')
+          print(out.strip())
+          PY
