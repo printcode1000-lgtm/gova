@@ -1,0 +1,33 @@
+name: local-device-sync-inspect
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/local-agent/.device-sync-inspect-trigger'
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: [self-hosted, Linux, X64, gova]
+    timeout-minutes: 5
+    steps:
+      - name: Inspect canonical local repository
+        shell: bash
+        run: |
+          set -euo pipefail
+          repo=/home/hesham/gova
+          git -C "$repo" fetch --quiet origin main integration
+          echo "branch=$(git -C "$repo" branch --show-current)"
+          echo "head=$(git -C "$repo" rev-parse HEAD)"
+          echo "origin_main=$(git -C "$repo" rev-parse origin/main)"
+          echo "origin_integration=$(git -C "$repo" rev-parse origin/integration)"
+          echo "--- status ---"
+          git -C "$repo" status --short --untracked-files=all
+          echo "--- ahead-behind main ---"
+          git -C "$repo" rev-list --left-right --count origin/main...HEAD
+          echo "--- ahead-behind integration ---"
+          git -C "$repo" rev-list --left-right --count origin/integration...HEAD
+          echo "--- changed vs main ---"
+          git -C "$repo" diff --name-status origin/main --
+          echo "--- changed vs integration ---"
+          git -C "$repo" diff --name-status origin/integration --
