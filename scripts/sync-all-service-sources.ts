@@ -1,20 +1,15 @@
-import { execSync } from 'child_process';
+import { execFileSync } from 'node:child_process';
+import { RELEASE_WORKLOADS } from '@asol/vercel-deploy-core';
 
 console.log('🔄 Synchronizing generated service mirrors...');
 
-const scripts = [
-  'scripts/sync-control-service-sources.ts',
-  'scripts/sync-notifications-service-sources.ts',
-  'scripts/sync-products-service-sources.ts',
-  'scripts/sync-orders-service-sources.ts',
-  'scripts/sync-profiles-service-sources.ts',
-  'scripts/sync-submain-service-sources.ts',
-  'scripts/sync-sub2main-service-sources.ts',
-];
+const scripts = ['scripts/sync-control-service-sources.ts', ...RELEASE_WORKLOADS.map((service) => 'scripts/sync-service-sources.ts')];
 
-for (const script of scripts) {
+for (const [index, script] of scripts.entries()) {
   console.log(`Running ${script}...`);
-  execSync(`npx tsx ${script}`, { stdio: 'inherit' });
+  const args = ['tsx', script];
+  if (index > 0) args.push(RELEASE_WORKLOADS[index - 1]!);
+  execFileSync('npx', args, { stdio: 'inherit', shell: process.platform === 'win32' });
 }
 
 console.log('✅ All service mirrors synchronized successfully.');

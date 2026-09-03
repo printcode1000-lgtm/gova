@@ -1,5 +1,5 @@
 import { createPublicKey } from "node:crypto";
-import { readListEnv, readOptionalEnv, requireEnv } from "@asol/env-core";
+import { readOptionalEnv, requireEnv } from "@asol/env-core";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 
@@ -22,20 +22,6 @@ export function getTursoPlatformCredentials(): {
     apiToken: requireEnv("TURSO_API_TOKEN"),
     organization: requireEnv("TURSO_ORGANIZATION"),
   };
-}
-
-export function getCorsOrigins(): string[] {
-  const fromEnv = readListEnv("ASOL_CORS_ORIGINS");
-  if (fromEnv.length) return fromEnv;
-
-  return [
-    "http://localhost:3001",
-    "http://127.0.0.1:3001",
-    "capacitor://localhost",
-    "https://localhost",
-    "http://localhost",
-    "ionic://localhost",
-  ];
 }
 
 export { readOptionalEnv };

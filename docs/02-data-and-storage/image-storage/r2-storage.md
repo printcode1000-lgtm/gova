@@ -19,7 +19,7 @@ Local secrets live in `.env.local` (gitignored). Template in `.env.example`.
 | `packages/storage-core/src/adapters/s3-client.adapter.ts` | Exclusive S3 adapter for `@asol/storage-core` (`@aws-sdk/client-s3`) |
 | `packages/storage-core/src/server/transport/r2-platform-api.ts` | Cloudflare REST API client — CORS get/put/delete, token verify |
 | `packages/storage-core/src/server/transport/r2-object-store.ts` | Account-parameterized R2 object store (upload, delete, list, download) |
-| `packages/storage-core/src/server/transport/r2-cors-policy.ts` | Default CORS rules from `ASOL_CORS_ORIGINS` |
+| `packages/storage-core/src/server/transport/r2-cors-policy.ts` | Cloudflare bucket rule shape; origins read through `@asol/cors` |
 | `packages/storage-core/src/domain/accounts/account-registry.ts` | Registry holding `general`, `products`, and `products-apparel-pets` accounts (single source of truth) |
 | `packages/storage-core/scripts/sync-cors.ts` | Apply full browser CORS to every `@asol/storage-core` registered bucket (`r2:sync:cors`) |
 | `packages/ota-core/scripts/sync-cors.ts` | Apply full browser CORS to dedicated OTA bucket (`ota:sync:cors`) |
@@ -33,7 +33,12 @@ npm run r2:sync:cors       # General, Products, and Apparel/Pets buckets (via @a
 npm run ota:sync:cors      # Dedicated OTA bucket (via @asol/ota-core)
 ```
 
-Applies `GET`, `PUT`, `POST`, `DELETE`, `HEAD` for all origins in `ASOL_CORS_ORIGINS` (defaults include `localhost:3000`).
+Applies `GET`, `PUT`, `POST`, `DELETE`, `HEAD` for all origins in `ASOL_CORS_ORIGINS`, read and
+parsed through [`@asol/cors`](../../05-platform-features/sealed-packages/cors-module.md). These are
+**bucket** rules that Cloudflare enforces, not HTTP response headers — only the allowed-origin
+configuration is shared with the application's own CORS surfaces. When the variable is unset the
+rules allow any origin: a bucket with no CORS rules cannot be reached by a browser at all, and the
+bytes are public either way.
 
 ## Public URLs
 

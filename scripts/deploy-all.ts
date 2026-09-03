@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { existsSync, readFileSync, statSync, unlinkSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -12,6 +12,11 @@ import {
   phasesFrom,
   phasePrerequisites,
   SERVICE_PHASE_IDS,
+  assertNoReleaseScratchFiles,
+  assertReleaseMainBranch,
+  clearStaleReleaseGitIndexLock,
+  RELEASE_SCRATCH_FILE_PATTERNS,
+  releaseGit,
 } from "@asol/release-core";
 import {
   assertPhasePrerequisites,
@@ -85,9 +90,7 @@ loadReleaseEnvironment();
 
 const ROOT = process.cwd();
 const MAIN_BRANCH = "main";
-const GIT_INDEX_LOCK = path.join(ROOT, ".git", "index.lock");
 const ROOT_VERCEL_LINK = path.join(ROOT, ".vercel", "project.json");
-const STALE_GIT_LOCK_AGE_MS = 2 * 60 * 1000;
 const FAIL_PREFIX = "[deploy:all] FAILED —";
 const SERVICES_PHASE_ALIAS = "services";
 
@@ -104,57 +107,7 @@ const SERVICE_DEPLOYS: Readonly<
 
 const CONTROL_DEPLOY = { target: "control", script: "control:deploy" } as const;
 
-function git(args: string[]): string {
-  return execFileSync("git", args, {
-    cwd: ROOT,
-    encoding: "utf8",
-    stdio: ["ignore", "pipe", "inherit"],
-  }).trim();
-}
-
-function assertMainBranch(): void {
-  const branch = git(["branch", "--show-current"]);
-  if (branch !== MAIN_BRANCH) {
-    throw new Error(
-      `deploy:all must run from ${MAIN_BRANCH}; current branch is ${branch || "detached HEAD"}.`,
-    );
-  }
-}
-
-function hasRunningGitProcess(): boolean {
-  try {
-    if (process.platform === "win32") {
-      const output = execFileSync(
-        "tasklist",
-        ["/FI", "IMAGENAME eq git.exe", "/FO", "CSV", "/NH"],
-        { encoding: "utf8", windowsHide: true },
-      );
-      return /"git\.exe"/i.test(output);
-    }
-    const output = execFileSync("pgrep", ["-x", "git"], {
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "ignore"],
-    });
-    return output.trim().length > 0;
-  } catch {
-    return false;
-  }
-}
-
-/** Remove only an abandoned Git lock; a fresh or actively owned lock stops deployment. */
-function clearStaleGitIndexLock(): void {
-  if (!existsSync(GIT_INDEX_LOCK)) return;
-  const ageMs = Date.now() - statSync(GIT_INDEX_LOCK).mtimeMs;
-  if (ageMs < STALE_GIT_LOCK_AGE_MS || hasRunningGitProcess()) {
-    throw new Error(
-      "Git index.lock is active. Close the other Git operation and run deploy:all again.",
-    );
-  }
-  unlinkSync(GIT_INDEX_LOCK);
-  console.log(
-    `[deploy:all] Removed abandoned .git/index.lock (${Math.round(ageMs / 1000)} seconds old).`,
-  );
-}
+const git = (args: string[]): string => releaseGit(ROOT, args);
 
 function printFinalSummary(reports: VercelDeploymentReport[]): void {
   if (reports.length === 0) return;
@@ -975,36 +928,13 @@ async function rollbackCapturedBaseline(
   return rollbackReleaseBaseline(baselines, "[deploy:all]");
 }
 
-const SCRATCH_FILE_PATTERNS = [
-  /(^|\/)__probe/i,
-  /\.(log|tmp|bak|orig|rej)$/i,
-  /(^|\/)scratchpad\//i,
-  /(^|\/)\.DS_Store$/,
-];
-
 /**
  * `git add -A` stages whatever is in the tree, so the tree is reviewed first.
  * A stray probe or log file would otherwise be published to `main`.
  */
 function assertNoScratchFiles(flags: DeployFlags): void {
-  const status = git(["status", "--porcelain"]);
-  const paths = status
-    .split(/\r?\n/)
-    .filter(Boolean)
-    .map((line) => line.slice(3).trim());
-
+  const paths = assertNoReleaseScratchFiles({ cwd: ROOT, allowScratchFiles: flags.allowScratchFiles });
   console.log(`[deploy:all] ${paths.length} path(s) will be included in the deployment commit.`);
-
-  const scratch = paths.filter((entry) =>
-    SCRATCH_FILE_PATTERNS.some((pattern) => pattern.test(entry)),
-  );
-  if (scratch.length > 0 && !flags.allowScratchFiles) {
-    throw new Error(
-      "Refusing to publish scratch files:\n" +
-        scratch.map((entry) => `  - ${entry}`).join("\n") +
-        "\nRemove them, or pass --allow-scratch-files if they are intentional.",
-    );
-  }
 }
 
 const RELEASE_MANIFEST = "public/asol-web-manifest.json";
@@ -1228,7 +1158,7 @@ async function runPublishPhase(
   context: RunContext,
   rollbackBaselines: { current: ProjectDeploymentBaseline[] },
 ): Promise<PublishContext> {
-  await runSelectedPublishBranch(selection, "main-branch", assertMainBranch, context);
+  await runSelectedPublishBranch(selection, "main-branch", () => assertReleaseMainBranch(ROOT, "deploy:all"), context);
   await runSelectedPublishBranch(selection, "deployment-credentials", assertDeploymentCredentials, context);
   await runSelectedPublishBranch(selection, "scratch-files", () => assertNoScratchFiles(flags), context);
   await runSelectedPublishBranch(selection, "release-manifest", () => assertReleaseManifestNotDowngraded(flags), context);
@@ -1245,7 +1175,7 @@ async function runPublishPhase(
     context,
   );
 
-  await runSelectedPublishBranch(selection, "clear-git-lock", clearStaleGitIndexLock, context);
+  await runSelectedPublishBranch(selection, "clear-git-lock", () => clearStaleReleaseGitIndexLock({ cwd: ROOT, command: "deploy:all", onRemoved: (ageSeconds) => console.log(`[deploy:all] Removed abandoned .git/index.lock (${ageSeconds} seconds old).`) }), context);
   await runSelectedPublishBranch(
     selection,
     "rollback-baseline",
@@ -1612,7 +1542,7 @@ async function main(): Promise<void> {
     console.log(`\n[deploy:all] ── phase: ${phaseId} ──`);
     try {
       if (phaseId === "preflight") {
-        assertMainBranch();
+        assertReleaseMainBranch(ROOT, "deploy:all");
         assertDeploymentCredentials();
         await runPreflightPhase(flags, phase, runContext);
         if (flags.skipPreflight || phaseFullyCovered(runContext, "preflight")) {
@@ -1901,7 +1831,6 @@ export const __testables = {
   expandUnsafeResumeToFullValidation,
   resolvePhasesToRun,
   compareVersions,
-  SCRATCH_FILE_PATTERNS,
   PREFLIGHT_SECTIONS: DEPLOY_ALL_PREFLIGHT_SECTIONS,
   PREFLIGHT_STEPS,
   DEPLOY_ALL_RUNBOOK,
@@ -1912,6 +1841,7 @@ export const __testables = {
   DEPLOY_ALL_PHASE_ORDER,
   SERVICES_PHASE_ALIAS,
   DEPLOY_FLAG_NAMES,
+  SCRATCH_FILE_PATTERNS: RELEASE_SCRATCH_FILE_PATTERNS,
   VALUE_FLAG_PREFIXES,
   buildPreflightGraph,
   planPreflightWaves,

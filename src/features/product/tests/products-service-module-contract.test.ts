@@ -132,21 +132,21 @@ const committed = fingerprint(generatedRoot);
 assert.notEqual(
   committed,
   createHash("sha256").digest("hex"),
-  "generated/src is empty — run `npx tsx scripts/sync-products-service-sources.ts` first.",
+  "generated/src is empty — run `npx tsx scripts/sync-service-sources.ts products` first.",
 );
 
 const probe = mkdtempSync(path.join(tmpdir(), "asol-products-sync-"));
 try {
   execFileSync(
     process.execPath,
-    [path.join(root, "node_modules", "tsx", "dist", "cli.mjs"), "scripts/sync-products-service-sources.ts", "--out", probe],
+    [path.join(root, "node_modules", "tsx", "dist", "cli.mjs"), "scripts/sync-service-sources.ts", "products", "--out", probe],
     { cwd: root, stdio: "pipe", shell: false },
   );
   assert.equal(
     committed,
     fingerprint(path.join(probe, "src")),
     "services/products/generated is stale. Run " +
-      "`npx tsx scripts/sync-products-service-sources.ts` and redeploy.",
+      "`npx tsx scripts/sync-service-sources.ts products` and redeploy.",
   );
 } finally {
   rmSync(probe, { recursive: true, force: true });

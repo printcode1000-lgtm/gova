@@ -86,6 +86,10 @@ ALLOWED_TO_IMPORT → `@asol/storage-core/server`
 
 `@asol/control-composition` has no production `@asol/*` imports.
 
+### @asol/cors
+
+`@asol/cors` has no production `@asol/*` imports.
+
 ### @asol/data-core
 
 `@asol/data-core`
@@ -292,13 +296,17 @@ ALLOWED_TO_IMPORT → `@asol/vercel-deploy-core`
 
 ### @asol/service-runtime-core
 
-`@asol/service-runtime-core` has no production `@asol/*` imports.
+`@asol/service-runtime-core`
+ALLOWED_TO_IMPORT → `@asol/cors`
 
 ### @asol/signed-token-core
 
 `@asol/signed-token-core` has no production `@asol/*` imports.
 
 ### @asol/storage-core
+
+`@asol/storage-core`
+ALLOWED_TO_IMPORT → `@asol/cors`
 
 `@asol/storage-core`
 ALLOWED_TO_IMPORT → `@asol/dev-core/server`
@@ -350,5 +358,5 @@ ALLOWED_TO_IMPORT → `@asol/account-declarations`
 
 | Metric | Value |
 |---|---|
-| Packages | 43 |
-| Import edges | 57 |
+| Packages | 44 |
+| Import edges | 59 |

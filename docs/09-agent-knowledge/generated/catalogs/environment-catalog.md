@@ -42,7 +42,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `ASOL_CATALOG_PUBLIC_ROOT` | server/tooling | 1 | `packages/catalog-core/src/server/validate-catalog-v3.ts` |
 | `ASOL_CATALOG_ROOT` | server/tooling | 1 | `packages/catalog-core/src/server/validate-catalog-v3.ts` |
 | `ASOL_CONTROL_SMOKE_PORT` | server/tooling | 1 | `scripts/smoke-control-service.ts` |
-| `ASOL_CORS_ORIGINS` | server/tooling | 4 | `packages/ota-core/scripts/sync-cors.ts`, `packages/storage-core/src/server/transport/r2-cors-policy.ts`, `src/core/config/cors-origins.ts`, `src/core/api/tests/compatibility-boundary.test.ts` |
+| `ASOL_CORS_ORIGINS` | server/tooling | 1 | `src/core/api/tests/compatibility-boundary.test.ts` |
 | `ASOL_DATA_SOURCE` | server/tooling | 2 | `src/core/config/runtime-context.server.ts`, `src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` |
 | `ASOL_DEPLOY_CALLBACK_SECRET` | server/tooling | 2 | `scripts/release-readiness-publish.ts`, `scripts/run-remote-deploy-all.mjs` |
 | `ASOL_DEPLOY_CALLBACK_URL` | server/tooling | 1 | `scripts/run-remote-deploy-all.mjs` |
@@ -83,7 +83,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `ASOL_SCHEMA_SYNC_REQUIRED` | server/tooling | 2 | `npm run db:schema:sync:release`, `scripts/schema-sync.ts` |
 | `ASOL_SERVICE_SMOKE_ONLY` | server/tooling | 1 | `scripts/check-service-smoke.ts` |
 | `ASOL_SERVICE_SMOKE_PORT` | server/tooling | 1 | `scripts/check-service-smoke.ts` |
-| `ASOL_SERVICE_SMOKE_REBUILD` | server/tooling | 3 | `scripts/deploy-all.ts`, `scripts/service-build-cache.ts`, `scripts/tests/deploy-all-resume.test.ts` |
+| `ASOL_SERVICE_SMOKE_REBUILD` | server/tooling | 3 | `scripts/deploy-all.ts`, `packages/release-core/src/pipeline/service-build-cache.ts`, `scripts/tests/deploy-all-resume.test.ts` |
 | `ASOL_SESSION_SIGNING_SECRET` | server/tooling | 8 | `npm run test:follow`, `npm run test:notifications`, `scripts/probe-notifications-service.ts`, `packages/auth-core/src/ports/session-signing-secret.port.ts`, `services/control/src/app/api/health/route.ts`, `services/control/src/control/super-admin-route.ts` |
 | `ASOL_SMOKE_PORT` | server/tooling | 1 | `scripts/check-production-smoke.ts` |
 | `ASOL_STATIC_PREVIEW_API_BASE_URL` | server/tooling | 1 | `packages/ota-core/scripts/serve-static.ts` |
@@ -248,5 +248,5 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `VERCEL_SUBMAIN_ORG_ID` | server/tooling | 0 |  |
 | `VERCEL_SUBMAIN_TOKEN` | server/tooling | 1 | `scripts/recreate-submain-vercel-project.ts` |
 | `VERCEL_TEAM_ID` | server/tooling | 3 | `scripts/push-production-deploy-env.ts`, `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` |
-| `VERCEL_TOKEN` | server/tooling | 5 | `scripts/deploy-all.ts`, `scripts/deploy-push.ts`, `scripts/push-production-deploy-env.ts`, `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` |
+| `VERCEL_TOKEN` | server/tooling | 6 | `scripts/deploy-all.ts`, `scripts/deploy-push.ts`, `scripts/push-gova-cors-origins.ts`, `scripts/push-production-deploy-env.ts`, `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` |
 | `WEB_PUSH_VAPID_PRIVATE_KEY` | server/tooling | 2 | `services/notifications/src/app/api/health/route.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` |

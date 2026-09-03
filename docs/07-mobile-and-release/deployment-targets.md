@@ -692,7 +692,7 @@ not just notifications: `db:schema:sync` runs before `next build`. Run
 ## Build pipeline (notifications service)
 
 ```
-npx tsx scripts/sync-notifications-service-sources.ts   # mirror src/ into generated/
+npx tsx scripts/sync-service-sources.ts notifications   # mirror src/ into generated/
 vercel deploy --prod                                    # upload services/notifications, build remotely
 ```
 

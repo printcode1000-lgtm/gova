@@ -7,7 +7,8 @@ import {
   discardServiceBuild,
   serviceInputHash,
   storeServiceBuild,
-} from './service-build-cache';
+} from '@asol/release-core';
+import { RELEASE_WORKLOADS } from '@asol/vercel-deploy-core';
 
 /**
  * Builds all four service deployments exactly as Vercel builds them.
@@ -26,7 +27,7 @@ import {
  * about what would actually be uploaded.
  */
 
-const SERVICES = ['notifications', 'products', 'orders', 'profiles', 'submain', 'sub2main'] as const;
+const SERVICES = RELEASE_WORKLOADS;
 
 const ROOT = process.cwd();
 const SERVICE_ENV = createServiceReleaseEnvironment(ROOT);

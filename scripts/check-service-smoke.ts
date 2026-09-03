@@ -14,7 +14,7 @@ import {
   returnServiceBuild,
   serviceInputHash,
   serviceSmokeRebuildRequested,
-} from "./service-build-cache";
+} from "@asol/release-core";
 
 /**
  * Start each isolated service's build and ask it a real question.

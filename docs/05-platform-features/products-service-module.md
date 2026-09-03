@@ -97,7 +97,7 @@ changes nothing here.
 ## The `generated/` mirror
 
 The service cannot import from `../../src`: only its own folder is uploaded.
-`scripts/sync-products-service-sources.ts` walks the real import graph from the
+`scripts/sync-service-sources.ts products` walks the real import graph from the
 route entry points and mirrors exactly the files it reaches.
 
 Two things the notifications mirror did not need:

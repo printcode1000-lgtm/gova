@@ -95,6 +95,14 @@ export const CAPABILITY_PACKAGES: readonly CapabilityPackage[] = [
     mayImportApp: false,
   },
   {
+    folder: 'cors',
+    name: '@asol/cors',
+    owns: 'Cross-origin (CORS) policy, headers, and preflight',
+    layer: 'capability',
+    vendorModules: [],
+    mayImportApp: false,
+  },
+  {
     folder: 'catalog-core',
     name: '@asol/catalog-core',
     owns: 'Category catalog domain',

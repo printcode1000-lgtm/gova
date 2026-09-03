@@ -1,4 +1,5 @@
 import { businessApiErrorStatus } from '@/core/api/business-api-error-status';
+import { createCorsPolicy, reflectRequestOrigin } from '@asol/cors';
 import { createServiceHttp, type ErrorStatusRule } from '@asol/service-runtime-core';
 
 /**
@@ -12,8 +13,11 @@ const SELLER_ERROR_RULES: readonly ErrorStatusRule[] = [
 ];
 
 const http = createServiceHttp({
-  methods: 'GET, POST, PUT, DELETE, OPTIONS',
-  headers: 'Content-Type, Accept, X-Asol-Trace-Id',
+  cors: createCorsPolicy({
+    origins: reflectRequestOrigin(),
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    headers: ['Content-Type', 'Accept', 'X-Asol-Trace-Id'],
+  }),
   defaultRules: SELLER_ERROR_RULES,
 });
 

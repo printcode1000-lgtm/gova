@@ -1,3 +1,4 @@
+import { createCorsPolicy, reflectRequestOrigin, resolveCorsHeaders } from '@asol/cors';
 import { assertNotificationsEnv, createNotificationsRuntime } from '@asol/notifications-composition';
 
 export const runtime = 'nodejs';
@@ -27,18 +28,23 @@ export const dynamic = 'force-dynamic';
  * to send push.
  */
 
+/**
+ * The browser is the only caller, and the grant — not the origin — is the
+ * authority. Credentials are never accepted, so a permissive origin cannot be
+ * used to ride on someone's session; `@asol/cors` refuses to combine the two.
+ *
+ * The accepted request-header list is this route's own and deliberately narrow:
+ * a grant travels in the body, so no client needs to send anything but a
+ * content type here.
+ */
+const SEND_CORS = createCorsPolicy({
+  origins: reflectRequestOrigin(),
+  methods: ['POST', 'OPTIONS'],
+  headers: ['Content-Type'],
+});
+
 function corsHeaders(request: Request): Record<string, string> {
-  // The browser is the only caller, and the grant — not the origin — is the
-  // authority. Credentials are never accepted, so a permissive origin cannot be
-  // used to ride on someone's session.
-  const origin = request.headers.get('origin');
-  return {
-    'Access-Control-Allow-Origin': origin ?? '*',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Max-Age': '86400',
-    Vary: 'Origin',
-  };
+  return resolveCorsHeaders(SEND_CORS, request);
 }
 
 export async function POST(request: Request): Promise<Response> {

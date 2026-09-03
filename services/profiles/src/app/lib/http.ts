@@ -1,8 +1,5 @@
-import {
-  BROWSER_REQUEST_HEADERS,
-  createServiceHttp,
-  type ErrorStatusRule,
-} from '@asol/service-runtime-core';
+import { BROWSER_REQUEST_HEADERS, createCorsPolicy, reflectRequestOrigin } from '@asol/cors';
+import { createServiceHttp, type ErrorStatusRule } from '@asol/service-runtime-core';
 
 /**
  * The profiles deployment's HTTP policy. Mirrors `mapServiceError` for the branches a read path
@@ -19,8 +16,11 @@ const PROFILE_ERROR_RULES: readonly ErrorStatusRule[] = [
 ];
 
 const http = createServiceHttp({
-  methods: 'GET, OPTIONS',
-  headers: BROWSER_REQUEST_HEADERS,
+  cors: createCorsPolicy({
+    origins: reflectRequestOrigin(),
+    methods: ['GET', 'OPTIONS'],
+    headers: BROWSER_REQUEST_HEADERS,
+  }),
   defaultRules: PROFILE_ERROR_RULES,
 });
 

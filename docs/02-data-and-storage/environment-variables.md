@@ -35,7 +35,7 @@ TURSO_ORGANIZATION=
 TURSO_NOTIFICATIONS_API_TOKEN=     # notifications account only
 TURSO_NOTIFICATIONS_ORGANIZATION=
 
-# ── Server CORS ──
+# ── Server CORS (read only through @asol/cors) ──
 ASOL_CORS_ORIGINS=
 ASOL_SESSION_SIGNING_SECRET=        # Server-only, at least 32 random characters
 
@@ -113,6 +113,12 @@ These never fall back to `PRODUCT_R2_*`, `APPAREL_PETS_R2_*`, or `R2_*`. **A fal
 
 `R2_API_TOKEN`, `PRODUCT_R2_API_TOKEN`, `APPAREL_PETS_R2_API_TOKEN`, and `ASOL_OTA_R2_API_TOKEN` are Cloudflare **account** credentials — they create buckets and manage CORS policy. Reading an image needs none of that, so read paths take the S3 pair and the public URL only.
 See [R2 Storage Accounts](../05-platform-features/r2-storage-accounts.md).
+
+`ASOL_CORS_ORIGINS` is a comma-separated origin list, parsed only by
+[`@asol/cors`](../05-platform-features/sealed-packages/cors-module.md) — the single source of truth
+for every CORS decision in the repository. Each caller states what an unset value means for it: the
+application's `/api/*` boundary allows nothing, while the R2 and OTA bucket policies allow any
+origin because the bytes they serve are public. Nothing else may read or parse this variable.
 
 Sync full browser-upload CORS (GET/PUT/POST/DELETE/HEAD) from `ASOL_CORS_ORIGINS`:
 

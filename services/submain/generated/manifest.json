@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-02T11:24:50.584Z",
+  "generatedAt": "2026-09-03T15:52:27.544Z",
   "entryPoints": [
     "features/product-search/server/services/product-search-service.server.ts",
     "features/product-search/server/services/product-search-products.server.ts",
@@ -10,7 +10,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 474,
+  "fileCount": 481,
   "files": [
     "packages/account-declarations/src/accounts/gova-runtime-env-keys.ts",
     "packages/account-declarations/src/accounts/submain-runtime-env-keys.ts",
@@ -44,6 +44,14 @@
     "packages/catalog-core/src/index.ts",
     "packages/catalog-core/src/validation/catalog-display.ts",
     "packages/catalog-core/src/validation/catalog-v3.contract.ts",
+    "packages/cors/src/apply.ts",
+    "packages/cors/src/env.ts",
+    "packages/cors/src/headers.ts",
+    "packages/cors/src/index.ts",
+    "packages/cors/src/origins.ts",
+    "packages/cors/src/policy.ts",
+    "packages/cors/src/preflight.ts",
+    "packages/cors/src/types.ts",
     "packages/data-core/src/control-system-logs.ts",
     "packages/data-core/src/core/data-source-registry.ts",
     "packages/data-core/src/core/database-runtime-policy.ts",
@@ -290,7 +298,6 @@
     "packages/product-style-core/src/server/paths.ts",
     "packages/product-style-core/src/server/search-fields.ts",
     "packages/product-style-core/src/server/style-store.ts",
-    "packages/service-runtime-core/src/domain/cors.ts",
     "packages/service-runtime-core/src/domain/error-status.ts",
     "packages/service-runtime-core/src/domain/health.ts",
     "packages/service-runtime-core/src/domain/service-http.ts",

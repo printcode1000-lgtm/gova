@@ -3,7 +3,7 @@
  *
  * Imported by `services/notifications` and by nothing else. That deployment is
  * built by mirroring the files reachable from a small set of entry points
- * (`scripts/sync-notifications-service-sources.ts`), so its import surface is
+ * (`scripts/sync-service-sources.ts notifications`), so its import surface is
  * also its *deployment* surface: a path that reaches the users repository puts
  * the users repository on an account that must never hold it.
  *

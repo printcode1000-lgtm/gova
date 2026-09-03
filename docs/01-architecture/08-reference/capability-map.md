@@ -11,7 +11,7 @@ Machine-readable capability ownership reference. Each capability has exactly one
 
 ## Scope
 
-All 43 sealed `@asol/*` packages. Application-layer orchestration lives under `src/features/*` — see [application-feature-catalog.md](./application-feature-catalog.md).
+All 44 sealed `@asol/*` packages. Application-layer orchestration lives under `src/features/*` — see [application-feature-catalog.md](./application-feature-catalog.md).
 
 ## Source of Truth
 
@@ -125,6 +125,24 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 | **Canonical Documents** | [package-catalog.md](./package-catalog.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 **Source Map:** `packages/branding-core/` · registry: `packages/architecture-core/src/registry/capability-registry.ts`
+
+---
+
+## Cross-origin (CORS) policy, headers, and preflight
+
+| Field | Value |
+|---|---|
+| **Capability** | Cross-origin (CORS) policy, headers, and preflight |
+| **Owner Package** | `@asol/cors` |
+| **Architectural Layer** | capability |
+| **Public Gateway** | `@asol/cors` |
+| **Allowed Consumers** | Application via declared doors; composition packages wire ports |
+| **Composition Root** | `N/A` (capability must not import `@/`) |
+| **Infrastructure Owner** | none (pure logic or ports) |
+| **Status** | CLOSED (sealed package with registry entry) |
+| **Canonical Documents** | [package-catalog.md](./package-catalog.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+
+**Source Map:** `packages/cors/` · registry: `packages/architecture-core/src/registry/capability-registry.ts`
 
 ---
 
@@ -798,9 +816,9 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 
 | Metric | Value |
 |---|---|
-| Sealed packages | 43 |
+| Sealed packages | 44 |
 | Layer `bridge` | 1 |
-| Layer `capability` | 33 |
+| Layer `capability` | 34 |
 | Layer `composition` | 7 |
 | Layer `declarations` | 1 |
 | Layer `enforcement` | 1 |

@@ -123,6 +123,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run github:ci-policy` | `Tooling` | 1 |  | 0 |
 | `npm run github:protect` | `Tooling` | 1 |  | 0 |
 | `npm run gova:artifact:verify` | `Tooling` | 1 |  | 0 |
+| `npm run gova:cors:push` | `Tooling` | 1 |  | 0 |
 | `npm run gova:tree` | `Tooling` | 1 |  | 0 |
 | `npm run gova:tree:check` | `Tooling` | 1 |  | 0 |
 | `npm run intelligence:retrain` | `Tooling` | 1 |  | 0 |
@@ -200,13 +201,14 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:compositions` | `Tooling` | 6 |  | 0 |
 | `npm run test:console-command-parity` | `Tooling` | 1 |  | 0 |
 | `npm run test:control` | `Tooling` | 1 |  | 0 |
+| `npm run test:cors-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:data-core` | `Tooling` | 5 |  | 0 |
 | `npm run test:data-health` | `Tooling` | 4 |  | 1 |
 | `npm run test:data-health-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:delivery-planner` | `Tooling` | 1 |  | 0 |
 | `npm run test:deploy-all-resume` | `Tooling` | 1 |  | 0 |
 | `npm run test:deploy-runbook-execution` | `Tooling` | 1 |  | 0 |
-| `npm run test:deployment-tools` | `Tooling` | 18 |  | 0 |
+| `npm run test:deployment-tools` | `Tooling` | 19 |  | 0 |
 | `npm run test:dev-cloud-backup` | `Tooling` | 1 |  | 1 |
 | `npm run test:dev-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:env-core` | `Tooling` | 1 |  | 0 |
@@ -250,7 +252,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:r2-storage` | `Tooling` | 1 |  | 0 |
 | `npm run test:registration-success-flow` | `Tooling` | 1 |  | 0 |
 | `npm run test:release-commands` | `Tooling` | 2 |  | 2 |
-| `npm run test:release-core` | `Tooling` | 1 |  | 0 |
+| `npm run test:release-core` | `Tooling` | 3 |  | 0 |
 | `npm run test:route-ownership` | `Tooling` | 1 |  | 0 |
 | `npm run test:runtime-compatibility` | `Tooling` | 2 |  | 0 |
 | `npm run test:runtime-context` | `Tooling` | 2 |  | 0 |

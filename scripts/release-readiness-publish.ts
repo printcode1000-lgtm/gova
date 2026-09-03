@@ -4,6 +4,10 @@ import {
   type VercelDeploymentReport,
   RELEASE_WORKLOADS,
 } from "@asol/vercel-deploy-core";
+import {
+  releaseReadinessComponentFromDeployment,
+  requiredReadyComponents,
+} from "@asol/release-core";
 
 /**
  * Publishing exact-SHA release readiness to the control plane.
@@ -21,23 +25,7 @@ export type ReleaseReadinessCommand = "deploy:all" | "deploy:revision" | "deploy
 export function releaseComponentFromReport(
   report: VercelDeploymentReport,
 ): ReleaseComponentResult {
-  if (report.state !== "READY") {
-    return {
-      status: "failed",
-      smokeStatus: "failed",
-      deploymentId: report.deploymentId,
-      url: report.url,
-      failure: report.message,
-      evidence: `${report.target} deployment was ${report.state}`,
-    };
-  }
-  return {
-    status: "passed",
-    smokeStatus: "passed",
-    deploymentId: report.deploymentId,
-    url: report.url,
-    evidence: `${report.target} deployment READY: ${report.message}`,
-  };
+  return releaseReadinessComponentFromDeployment(report);
 }
 
 export function controlReleaseOrigin(): string {
@@ -46,16 +34,6 @@ export function controlReleaseOrigin(): string {
     throw new Error("NEXT_PUBLIC_ASOL_CONTROL_URL is required to publish release readiness.");
   }
   return value;
-}
-
-function componentByTarget(
-  reports: readonly VercelDeploymentReport[],
-  target: string,
-): ReleaseComponentResult {
-  const report = reports.find((candidate) => candidate.target === target);
-  if (!report) throw new Error(`Missing Vercel deployment report for ${target}.`);
-  if (report.state !== "READY") throw new Error(`${target} is ${report.state}: ${report.message}`);
-  return releaseComponentFromReport(report);
 }
 
 export async function publishReleaseReadiness(input: {
@@ -75,10 +53,9 @@ export async function publishReleaseReadiness(input: {
     throw new Error("ASOL_DEPLOY_CALLBACK_SECRET is required to publish release readiness.");
   }
 
-  const control = componentByTarget(input.reports, "control");
-  const workloads = Object.fromEntries(
-    RELEASE_WORKLOADS.map((workload) => [workload, componentByTarget(input.reports, workload)]),
-  ) as Record<ReleaseWorkload, ReleaseComponentResult>;
+  const components = requiredReadyComponents({ reports: input.reports, targets: ["control", ...RELEASE_WORKLOADS] });
+  const control = components.control! as ReleaseComponentResult;
+  const workloads = Object.fromEntries(RELEASE_WORKLOADS.map((workload) => [workload, components[workload]!])) as Record<ReleaseWorkload, ReleaseComponentResult>;
 
   const now = new Date().toISOString();
   const response = await fetch(

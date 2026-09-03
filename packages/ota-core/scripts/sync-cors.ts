@@ -1,3 +1,4 @@
+import { ANY_ORIGIN, corsOriginsFromEnv } from '@asol/cors';
 import { loadReleaseToolEnvironment } from '@asol/env-core/process';
 import { getOtaR2CloudflareCredentials, getOtaR2S3Credentials } from '../src/publishing/config/ota-r2-target';
 
@@ -16,9 +17,14 @@ interface R2CorsRule {
   maxAgeSeconds?: number;
 }
 
+/**
+ * The OTA bucket's rules, from the same allowed-origin configuration every other surface reads.
+ *
+ * An unconfigured bucket allows any origin: the update manifest is public bytes, and a bucket with
+ * no CORS rules cannot be fetched by a WebView at all.
+ */
 function buildDefaultOtaCorsRules(): R2CorsRule[] {
-  const rawOrigins = process.env.ASOL_CORS_ORIGINS;
-  const origins = rawOrigins ? rawOrigins.split(',').map((s) => s.trim()).filter(Boolean) : ['*'];
+  const origins = corsOriginsFromEnv(process.env, [ANY_ORIGIN]);
   return [
     {
       id: 'asol-ota-browser-upload',

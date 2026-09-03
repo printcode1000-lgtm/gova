@@ -21,7 +21,8 @@ The **only** place allowed to read `process.env` (enforced by Architecture Contr
 | `runtime-context.client.ts` | Browser and Capacitor runtime resolver (`getClientRuntimeContext()`) |
 | `public-env.ts` | `NEXT_PUBLIC_*` values for client bundle |
 | `server-env.ts` | Server-only re-export (`import 'server-only'`) |
-| `server-env.values.ts` | Turso credentials, CORS — scripts + server |
+| `server-env.values.ts` | Turso credentials, push and recovery secrets — scripts + server |
+| `cors-origins.ts` | Reads `ASOL_CORS_ORIGINS` and hands it to `@asol/cors`; parsing and policy belong to that package |
 
 ## Usage
 
@@ -35,3 +36,4 @@ No `process.env` in features, components, hooks, or repositories.
 
 See [environment-variables.md](../../02-data-and-storage/environment-variables.md) for the full variable list.
 See [runtime-context.md](../06-runtime-boundaries/runtime-context.md) for the environment model and usage rules.
+See [`@asol/cors`](../../05-platform-features/sealed-packages/cors-module.md) for the CORS allowed-origin contract: this layer reads the variable, the package parses it, and no other file may do either.

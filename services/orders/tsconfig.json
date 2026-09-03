@@ -68,6 +68,9 @@
       "@asol/auth-core/super-admin": [
         "./generated/packages/auth-core/src/super-admin.ts"
       ],
+      "@asol/cors": [
+        "./generated/packages/cors/src/index.ts"
+      ],
       "@asol/data-core": [
         "./generated/packages/data-core/src/index.ts"
       ],

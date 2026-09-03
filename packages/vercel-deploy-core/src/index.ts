@@ -1,7 +1,14 @@
 import { execFileSync } from 'child_process';
 import { existsSync, readFileSync, rmSync } from 'node:fs';
 import path from 'path';
-import type { AccountDeclaration } from '@asol/account-declarations';
+import { ACCOUNT_DECLARATIONS, type AccountDeclaration } from '@asol/account-declarations';
+import { RELEASE_WORKLOADS } from './release-state';
+import {
+  type ProjectDeploymentBaseline,
+  type RollbackOutcome,
+  captureProductionBaseline,
+  rollbackToBaseline,
+} from './release-rollback';
 import {
   printDeploymentReport,
   vercelDeploymentMetadata,
@@ -15,6 +22,30 @@ export * from './vercel-deployment-monitor';
 export * from './release-state';
 export * from './release-rollback';
 export { deleteProjectEnv } from './project-env';
+
+export const RELEASE_ROLLBACK_ACCOUNTS = ["gova", "control", ...RELEASE_WORKLOADS] as const;
+
+export function vercelAccessForReleaseAccount(account: string): { token: string; teamId?: string } {
+  const declaration = ACCOUNT_DECLARATIONS[account];
+  if (!declaration) throw new Error(`Unknown deployment account "${account}".`);
+  const token = process.env[declaration.tokenEnvVar]?.trim();
+  if (!token) throw new Error(`${declaration.tokenEnvVar} is required for ${account}.`);
+  const teamId = declaration.teamIdEnvVar ? process.env[declaration.teamIdEnvVar]?.trim() : undefined;
+  return { token, teamId: teamId || undefined };
+}
+
+export async function captureReleaseRollbackBaseline(): Promise<ProjectDeploymentBaseline[]> {
+  const baselines: ProjectDeploymentBaseline[] = [];
+  for (const account of RELEASE_ROLLBACK_ACCOUNTS) {
+    const declaration = ACCOUNT_DECLARATIONS[account]!;
+    baselines.push(await captureProductionBaseline({ account, project: declaration.project, ...vercelAccessForReleaseAccount(account) }));
+  }
+  return baselines;
+}
+
+export async function rollbackReleaseBaseline(baselines: readonly ProjectDeploymentBaseline[]): Promise<RollbackOutcome[]> {
+  return rollbackToBaseline(baselines, vercelAccessForReleaseAccount);
+}
 
 export interface VercelHeaders {
   Authorization: string;

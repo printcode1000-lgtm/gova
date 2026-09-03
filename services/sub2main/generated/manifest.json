@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-02T11:29:14.687Z",
+  "generatedAt": "2026-09-03T15:52:28.546Z",
   "entryPoints": [
     "features/product/server/services/product-service.server.ts",
     "features/profile/server/services/profile-service.bootstrap.server.ts",
@@ -19,7 +19,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 430,
+  "fileCount": 437,
   "files": [
     "packages/account-declarations/src/accounts/products.ts",
     "packages/account-declarations/src/accounts/profiles.ts",
@@ -54,6 +54,14 @@
     "packages/catalog-core/src/index.ts",
     "packages/catalog-core/src/validation/catalog-display.ts",
     "packages/catalog-core/src/validation/catalog-v3.contract.ts",
+    "packages/cors/src/apply.ts",
+    "packages/cors/src/env.ts",
+    "packages/cors/src/headers.ts",
+    "packages/cors/src/index.ts",
+    "packages/cors/src/origins.ts",
+    "packages/cors/src/policy.ts",
+    "packages/cors/src/preflight.ts",
+    "packages/cors/src/types.ts",
     "packages/data-core/src/control-system-logs.ts",
     "packages/data-core/src/core/data-source-registry.ts",
     "packages/data-core/src/core/database-runtime-policy.ts",
@@ -261,7 +269,6 @@
     "packages/product-core/src/index.ts",
     "packages/product-core/src/server.ts",
     "packages/product-core/src/server/product-row.ts",
-    "packages/service-runtime-core/src/domain/cors.ts",
     "packages/service-runtime-core/src/domain/error-status.ts",
     "packages/service-runtime-core/src/domain/health.ts",
     "packages/service-runtime-core/src/domain/service-http.ts",
