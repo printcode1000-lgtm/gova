@@ -15074,6 +15074,51 @@
       ]
     },
     {
+      "id": "document:docs/08-troubleshooting/problems/service-smoke-release-environment.md",
+      "kind": "document",
+      "name": "Service smoke fails after successful service builds",
+      "path": "docs/08-troubleshooting/problems/service-smoke-release-environment.md",
+      "summary": "`services:build` succeeds, but `smoke:services` fails when a service starts with missing Turso configuration, or a server service reports that database access is unavailable during static export.",
+      "tags": [
+        "@asol/env-core/process",
+        "`services:build` succeeds, but `smoke:services` fails when a service starts with missing turso configuration, or a server service reports that database access is unavailable during static export.",
+        "access",
+        "after",
+        "build",
+        "builds",
+        "but",
+        "configuration",
+        "database",
+        "docs/08-troubleshooting/problems/service-smoke-release-environment",
+        "docs/08-troubleshooting/problems/service-smoke-release-environment.md",
+        "during",
+        "env",
+        "export",
+        "fails",
+        "fastlane/",
+        "fastlane/.env",
+        "is",
+        "md",
+        "missing",
+        "or",
+        "reports",
+        "server",
+        "service",
+        "service smoke fails after successful service builds",
+        "services",
+        "smoke",
+        "starts",
+        "static",
+        "succeeds",
+        "successful",
+        "that",
+        "turso",
+        "unavailable",
+        "when",
+        "with"
+      ]
+    },
+    {
       "id": "document:docs/08-troubleshooting/problems/splash-marquee-hydration-mismatch.md",
       "kind": "document",
       "name": "Hydration Mismatch in Splash Page Marquee",
@@ -27539,6 +27584,17 @@
       "tags": [
         "scripts/send-migration-completion-email",
         "scripts/send-migration-completion-email.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/service-release-environment.ts",
+      "kind": "script",
+      "name": "service-release-environment.ts",
+      "path": "scripts/service-release-environment.ts",
+      "tags": [
+        "scripts/service-release-environment",
+        "scripts/service-release-environment.ts",
         "ts"
       ]
     },
@@ -54874,6 +54930,18 @@
       ]
     },
     {
+      "id": "test:scripts/tests/service-release-environment.test.ts",
+      "kind": "test",
+      "name": "service-release-environment.test.ts",
+      "path": "scripts/tests/service-release-environment.test.ts",
+      "tags": [
+        "scripts/tests/service-release-environment",
+        "scripts/tests/service-release-environment.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:scripts/tests/vercel-deployment-guards.test.ts",
       "kind": "test",
       "name": "vercel-deployment-guards.test.ts",
@@ -75245,6 +75313,12 @@
     },
     {
       "from": "document:docs/08-troubleshooting/problems/README.md",
+      "to": "document:docs/08-troubleshooting/problems/service-smoke-release-environment.md",
+      "kind": "references",
+      "detail": "./service-smoke-release-environment.md"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/README.md",
       "to": "document:docs/08-troubleshooting/problems/splash-marquee-hydration-mismatch.md",
       "kind": "references",
       "detail": "./splash-marquee-hydration-mismatch.md"
@@ -75272,6 +75346,17 @@
       "to": "document:docs/08-troubleshooting/problems/vercelignore-contract-wildcard-directory-descendants.md",
       "kind": "references",
       "detail": "./vercelignore-contract-wildcard-directory-descendants.md"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/service-smoke-release-environment.md",
+      "to": "domain:troubleshooting",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/service-smoke-release-environment.md",
+      "to": "package:@asol/env-core",
+      "kind": "references",
+      "detail": "@asol/env-core/process"
     },
     {
       "from": "document:docs/08-troubleshooting/problems/splash-marquee-hydration-mismatch.md",
@@ -86490,6 +86575,12 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "script:scripts/service-release-environment.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "script:scripts/setup-turso-db.ts",
       "kind": "documents",
       "detail": "scripts/"
@@ -89755,6 +89846,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "test:scripts/tests/service-cors-boundary.test.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "test:scripts/tests/service-release-environment.test.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -135323,6 +135420,12 @@
       "detail": "@asol/vercel-deploy-core"
     },
     {
+      "from": "script:scripts/build-all-services.ts",
+      "to": "script:scripts/service-release-environment.ts",
+      "kind": "imports",
+      "detail": "./service-release-environment"
+    },
+    {
       "from": "script:scripts/build-android-debug.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
@@ -135748,6 +135851,12 @@
       "to": "script:scripts/release-service-smoke-probes.ts",
       "kind": "imports",
       "detail": "./release-service-smoke-probes"
+    },
+    {
+      "from": "script:scripts/check-service-smoke.ts",
+      "to": "script:scripts/service-release-environment.ts",
+      "kind": "imports",
+      "detail": "./service-release-environment"
     },
     {
       "from": "script:scripts/check-service-smoke.ts",
@@ -137655,6 +137764,17 @@
       "from": "script:scripts/send-migration-completion-email.ts",
       "to": "environment-key:PASSWORD_RECOVERY_GMAIL_USER",
       "kind": "uses-environment"
+    },
+    {
+      "from": "script:scripts/service-release-environment.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/service-release-environment.ts",
+      "to": "package:@asol/env-core",
+      "kind": "imports",
+      "detail": "@asol/env-core/process"
     },
     {
       "from": "script:scripts/setup-turso-db.ts",
@@ -246164,6 +246284,22 @@
     {
       "from": "test:scripts/tests/service-cors-boundary.test.ts",
       "to": "package:@asol/service-runtime-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:scripts/tests/service-release-environment.test.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:scripts/tests/service-release-environment.test.ts",
+      "to": "script:scripts/service-release-environment.ts",
+      "kind": "imports",
+      "detail": "../service-release-environment"
+    },
+    {
+      "from": "test:scripts/tests/service-release-environment.test.ts",
+      "to": "script:scripts/service-release-environment.ts",
       "kind": "tests"
     },
     {

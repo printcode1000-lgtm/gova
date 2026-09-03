@@ -14,7 +14,7 @@ The project has five mandatory application surfaces — Development, Web, Static
 | iOS | Capacitor iOS shell. Production consumes out/ as webDir and adds iOS-native plugins, entitlements, signing, archive and TestFlight/App Store behavior. | 13 | 3 | 2 | 1659 |
 | Independent services | Separately deployed service runtimes under services/*; they are not exercised by the root next start process. | 6 | 0 | 0 | 180 |
 | Static out | Static Next.js export in out/. It has no bundled src/app/api handlers and must use a remote API base URL; it is the web payload copied into native shells. | 25 | 2 | 1 | 1648 |
-| Tooling | Repository scripts, generators, validation, deployment orchestration and release tooling executed by Node/npm. | 280 | 3 | 0 | 165 |
+| Tooling | Repository scripts, generators, validation, deployment orchestration and release tooling executed by Node/npm. | 280 | 3 | 0 | 166 |
 | Web | Server-capable Next.js web application. Production builds produce .next and deployment may run on Vercel/serverless infrastructure. | 21 | 3 | 1 | 2202 |
 
 ## Artifact Topology

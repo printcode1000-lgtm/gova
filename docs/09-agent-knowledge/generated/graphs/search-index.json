@@ -15074,6 +15074,51 @@
       ]
     },
     {
+      "id": "document:docs/08-troubleshooting/problems/service-smoke-release-environment.md",
+      "kind": "document",
+      "name": "Service smoke fails after successful service builds",
+      "path": "docs/08-troubleshooting/problems/service-smoke-release-environment.md",
+      "summary": "`services:build` succeeds, but `smoke:services` fails when a service starts with missing Turso configuration, or a server service reports that database access is unavailable during static export.",
+      "tags": [
+        "@asol/env-core/process",
+        "`services:build` succeeds, but `smoke:services` fails when a service starts with missing turso configuration, or a server service reports that database access is unavailable during static export.",
+        "access",
+        "after",
+        "build",
+        "builds",
+        "but",
+        "configuration",
+        "database",
+        "docs/08-troubleshooting/problems/service-smoke-release-environment",
+        "docs/08-troubleshooting/problems/service-smoke-release-environment.md",
+        "during",
+        "env",
+        "export",
+        "fails",
+        "fastlane/",
+        "fastlane/.env",
+        "is",
+        "md",
+        "missing",
+        "or",
+        "reports",
+        "server",
+        "service",
+        "service smoke fails after successful service builds",
+        "services",
+        "smoke",
+        "starts",
+        "static",
+        "succeeds",
+        "successful",
+        "that",
+        "turso",
+        "unavailable",
+        "when",
+        "with"
+      ]
+    },
+    {
       "id": "document:docs/08-troubleshooting/problems/splash-marquee-hydration-mismatch.md",
       "kind": "document",
       "name": "Hydration Mismatch in Splash Page Marquee",
@@ -27539,6 +27584,17 @@
       "tags": [
         "scripts/send-migration-completion-email",
         "scripts/send-migration-completion-email.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/service-release-environment.ts",
+      "kind": "script",
+      "name": "service-release-environment.ts",
+      "path": "scripts/service-release-environment.ts",
+      "tags": [
+        "scripts/service-release-environment",
+        "scripts/service-release-environment.ts",
         "ts"
       ]
     },
@@ -54869,6 +54925,18 @@
       "tags": [
         "scripts/tests/service-cors-boundary",
         "scripts/tests/service-cors-boundary.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:scripts/tests/service-release-environment.test.ts",
+      "kind": "test",
+      "name": "service-release-environment.test.ts",
+      "path": "scripts/tests/service-release-environment.test.ts",
+      "tags": [
+        "scripts/tests/service-release-environment",
+        "scripts/tests/service-release-environment.test.ts",
         "test",
         "ts"
       ]
