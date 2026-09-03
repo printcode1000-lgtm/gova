@@ -11,32 +11,31 @@ jobs:
     runs-on: [self-hosted, Linux, X64, gova]
     timeout-minutes: 10
     steps:
-      - name: Inspect deploy progress
+      - name: Inspect deploy process tree
         shell: bash
         run: |
           set -euo pipefail
           cd /home/hesham/gova
+          echo '=== DEPLOY TREE ==='
+          deploy_pid=$(pgrep -f 'scripts/deploy-all.ts --from-branch=tests' | tail -1 || true)
+          if [ -n "$deploy_pid" ]; then
+            pstree -ap "$deploy_pid" || true
+          fi
+          echo '=== STATE ==='
           python3 - <<'PY'
-          import json, pathlib, subprocess
+          import json, pathlib
           root=pathlib.Path('.deploy-all')
-          gate=root/'gate-steps.json'
-          state=root/'run-state.json'
-          checkpoints=root/'branch-checkpoints.json'
-          if gate.exists():
-              g=json.loads(gate.read_text())
-              print('GATE_RUN',g.get('runId'))
-              print('GATE_STEPS',len(g.get('steps',{})))
-              print('LAST_GATE',max((v.get('finishedAt','')+':'+k for k,v in g.get('steps',{}).items()), default=''))
-          if state.exists():
-              s=json.loads(state.read_text())
-              print('REVISION',s.get('revision'))
-              print('COMPLETED_PHASES',','.join(s.get('completedPhases',[])))
-              print('LAST_UPDATED',s.get('lastUpdated'))
-          if checkpoints.exists():
-              c=json.loads(checkpoints.read_text())
-              current=[x for x in c.get('checkpoints',[]) if x.get('revision')=='9d855c5fa43ca9215af5b9bf4af6b71f5f304acb']
-              print('CURRENT_CHECKPOINTS',','.join(f"{x.get('branchId')}={x.get('status')}" for x in current))
-          out=subprocess.check_output("ps -eo cmd | grep -E 'scripts/deploy-all.ts|run-generated-gate.ts|next build|deploy-service|vercel deploy|smoke:|services:build' | grep -v grep || true", shell=True, text=True)
-          print('PROCESSES')
-          print(out.strip())
+          for name in ('run-state.json','gate-steps.json'):
+              p=root/name
+              if not p.exists(): continue
+              d=json.loads(p.read_text())
+              if name=='run-state.json': print('RUN_STATE',d)
+              else:
+                  print('GATE_COUNT',len(d.get('steps',{})))
+                  print('LAST_GATE',max((v.get('finishedAt','')+':'+k for k,v in d.get('steps',{}).items()),default=''))
+          p=root/'branch-checkpoints.json'
+          if p.exists():
+              d=json.loads(p.read_text())
+              current=[x for x in d.get('checkpoints',[]) if x.get('revision')=='9d855c5fa43ca9215af5b9bf4af6b71f5f304acb']
+              for x in current: print('CHECKPOINT',x.get('branchId'),x.get('status'),x.get('finishedAt'),x.get('errorSummary',''))
           PY
