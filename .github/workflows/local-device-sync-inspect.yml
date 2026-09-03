@@ -7,27 +7,42 @@ on:
 permissions:
   contents: read
 jobs:
-  inspect:
+  sync:
     runs-on: [self-hosted, Linux, X64, gova]
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
-      - name: Inspect canonical local repository
+      - name: Synchronize device and GitHub trees
         shell: bash
         run: |
           set -euo pipefail
           repo=/home/hesham/gova
+          integration=/home/hesham/gova-agents/integration
+
           git -C "$repo" fetch --quiet origin main integration
-          echo "branch=$(git -C "$repo" branch --show-current)"
-          echo "head=$(git -C "$repo" rev-parse HEAD)"
-          echo "origin_main=$(git -C "$repo" rev-parse origin/main)"
-          echo "origin_integration=$(git -C "$repo" rev-parse origin/integration)"
-          echo "--- status ---"
-          git -C "$repo" status --short --untracked-files=all
-          echo "--- ahead-behind main ---"
-          git -C "$repo" rev-list --left-right --count origin/main...HEAD
-          echo "--- ahead-behind integration ---"
-          git -C "$repo" rev-list --left-right --count origin/integration...HEAD
-          echo "--- changed vs main ---"
-          git -C "$repo" diff --name-status origin/main --
-          echo "--- changed vs integration ---"
-          git -C "$repo" diff --name-status origin/integration --
+          test -z "$(git -C "$repo" status --porcelain --untracked-files=all)"
+          test -z "$(git -C "$integration" status --porcelain --untracked-files=all)"
+          test "$(git -C "$integration" rev-parse HEAD)" = "$(git -C "$repo" rev-parse origin/integration)"
+
+          git -C "$repo" checkout main >/dev/null 2>&1
+          git -C "$repo" reset --hard origin/main
+
+          # Make the canonical device tree exactly equal to the verified
+          # integration tree while keeping main history intact.
+          git -C "$repo" read-tree --reset -u origin/integration
+
+          if ! git -C "$repo" diff --cached --quiet; then
+            git -C "$repo" commit -m 'chore: synchronize device and GitHub trees'
+          fi
+
+          git -C "$repo" push origin HEAD:main
+          git -C "$repo" fetch --quiet origin main integration
+
+          test -z "$(git -C "$repo" status --porcelain --untracked-files=all)"
+          test "$(git -C "$repo" rev-parse HEAD^{tree})" = "$(git -C "$repo" rev-parse origin/main^{tree})"
+          test "$(git -C "$repo" rev-parse origin/main^{tree})" = "$(git -C "$repo" rev-parse origin/integration^{tree})"
+          git -C "$repo" diff --quiet origin/main origin/integration
+
+          echo "main=$(git -C "$repo" rev-parse origin/main)"
+          echo "integration=$(git -C "$repo" rev-parse origin/integration)"
+          echo "tree=$(git -C "$repo" rev-parse origin/main^{tree})"
+          echo 'files=identical'
