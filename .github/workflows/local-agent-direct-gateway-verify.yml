@@ -11,31 +11,30 @@ jobs:
     runs-on: [self-hosted, Linux, X64, gova]
     timeout-minutes: 10
     steps:
-      - name: Install and verify direct gateway tunnel
+      - name: Verify persistent direct gateway tunnel
         shell: bash
         run: |
           set -euo pipefail
           git -C /home/hesham/gova fetch --quiet origin integration
-          mkdir -p /home/hesham/gova-agents
-          if [ ! -e /home/hesham/gova-agents/integration/.git ]; then
-            git -C /home/hesham/gova worktree add /home/hesham/gova-agents/integration integration
-          fi
-          git -C /home/hesham/gova-agents/integration checkout integration >/dev/null 2>&1
           git -C /home/hesham/gova-agents/integration reset --hard origin/integration
           test ! -e /home/hesham/gova-agents/integration/tools/local-agent/mcp_bridge.py
-          bash -n /home/hesham/gova-agents/integration/tools/local-agent/gateway-quick-tunnel.sh
-          bash -n /home/hesham/gova-agents/integration/tools/local-agent/install.sh
-          python3 -m py_compile /home/hesham/gova-agents/integration/tools/local-agent/gateway.py
-          python3 -m py_compile /home/hesham/gova-agents/integration/tools/local-agent/publish-public-url-r2.py
-          GOVA_AGENT_REPO=/home/hesham/gova-agents/integration bash /home/hesham/gova-agents/integration/tools/local-agent/install.sh
-          curl -fsS http://127.0.0.1:8765/health >/dev/null
           test ! -e /home/hesham/.local/lib/gova-agent/mcp_bridge.py
+          curl -fsS http://127.0.0.1:8765/health >/dev/null
           if ss -ltn | awk '{print $4}' | grep -Eq '(^|:)8767$'; then exit 1; fi
-          URL="$(/home/hesham/.local/bin/gova-agent-public url)"
-          echo "url=$URL"
-          curl -fsS --retry 20 --retry-all-errors --retry-delay 1 --max-time 10 "$URL/health" >/dev/null
-          DISCOVERY="$(/home/hesham/.local/bin/gova-agent-public publish)"
-          DJ="$(curl -fsS --retry 5 --retry-all-errors --retry-delay 1 --max-time 15 "$DISCOVERY")"
-          DJ="$DJ" URL="$URL" python3 -c "import json,os; x=json.loads(os.environ['DJ']); assert x['url']==os.environ['URL']; assert not any(k.startswith('mcp') for k in x); print('direct_gateway=ok')"
+          pgrep -af cloudflared | grep -F -- '--url http://127.0.0.1:8765' >/dev/null
           systemctl --user is-active --quiet gova-agent-public.service
-          if sudo -n systemctl is-active --quiet gova-agent-gateway.service; then echo 'gateway=active(system)'; else systemctl --user is-active --quiet gova-agent-gateway.service && echo 'gateway=active(user)'; fi
+          systemctl --user is-enabled --quiet gova-agent-public.service
+          if sudo -n systemctl is-active --quiet gova-agent-gateway.service; then
+            sudo -n systemctl is-enabled --quiet gova-agent-gateway.service
+            echo 'gateway=active-enabled(system)'
+          else
+            systemctl --user is-active --quiet gova-agent-gateway.service
+            systemctl --user is-enabled --quiet gova-agent-gateway.service
+            echo 'gateway=active-enabled(user)'
+          fi
+          URL="$(/home/hesham/.local/bin/gova-agent-public url)"
+          test -n "$URL"
+          DISCOVERY="$(/home/hesham/.local/bin/gova-agent-public publish)"
+          echo "discovery=$DISCOVERY"
+          DJ="$(curl -fsS --retry 5 --retry-all-errors --retry-delay 1 --max-time 15 "$DISCOVERY")"
+          DJ="$DJ" URL="$URL" python3 -c "import json,os; x=json.loads(os.environ['DJ']); assert x['url']==os.environ['URL']; assert x['health']==os.environ['URL'].rstrip('/')+'/health'; assert not any(k.startswith('mcp') for k in x); print('direct_gateway=ok')"
