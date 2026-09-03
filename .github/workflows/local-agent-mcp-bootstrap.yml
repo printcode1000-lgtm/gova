@@ -1,0 +1,71 @@
+name: local-agent-mcp-bootstrap
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/local-agent/.mcp-bootstrap-trigger'
+permissions:
+  contents: read
+jobs:
+  install-and-verify:
+    runs-on: [self-hosted, Linux, X64, gova]
+    timeout-minutes: 10
+    steps:
+      - name: Install and verify MCP bridge
+        shell: bash
+        run: |
+          set -euo pipefail
+          git -C /home/hesham/gova fetch --quiet origin integration
+          mkdir -p /home/hesham/gova-agents
+          if [ ! -e /home/hesham/gova-agents/integration/.git ]; then
+            git -C /home/hesham/gova worktree add /home/hesham/gova-agents/integration integration
+          fi
+          git -C /home/hesham/gova-agents/integration checkout integration >/dev/null 2>&1
+          git -C /home/hesham/gova-agents/integration reset --hard origin/integration
+          python3 -m py_compile /home/hesham/gova-agents/integration/tools/local-agent/mcp_bridge.py
+          bash -n /home/hesham/gova-agents/integration/tools/local-agent/gateway-quick-tunnel.sh
+          bash -n /home/hesham/gova-agents/integration/tools/local-agent/install.sh
+          GOVA_AGENT_REPO=/home/hesham/gova-agents/integration bash /home/hesham/gova-agents/integration/tools/local-agent/install.sh
+          AUTH="$(cat /home/hesham/.config/gova-agent/auth)"
+          MCP=http://127.0.0.1:8767/mcp
+          echo '--- service status ---'
+          /home/hesham/.local/bin/gova-agent-public status
+          curl -fsS http://127.0.0.1:8767/health >/dev/null
+          echo '--- unauthorized MCP guard ---'
+          code="$(curl -sS -o /tmp/gova-mcp-unauth.json -w '%{http_code}' -X POST "$MCP" -H 'Content-Type: application/json' --data '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"verify","version":"1"}}}')"
+          test "$code" = 401
+          echo 'unauthorized=blocked'
+          echo '--- initialize ---'
+          INIT="$(curl -fsS -X POST "$MCP" -H "Authorization: Bearer $AUTH" -H 'Content-Type: application/json' -H 'Accept: application/json, text/event-stream' --data '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"gova-bootstrap","version":"1"}}}')"
+          INIT="$INIT" python3 -c "import json,os; x=json.loads(os.environ['INIT']); assert x['result']['protocolVersion']=='2025-06-18'; assert x['result']['serverInfo']['name']=='gova-local-agent'; print('initialize=ok')"
+          echo '--- tools list ---'
+          TOOLS="$(curl -fsS -X POST "$MCP" -H "Authorization: Bearer $AUTH" -H 'Content-Type: application/json' --data '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}')"
+          TOOLS="$TOOLS" python3 -c "import json,os; x=json.loads(os.environ['TOOLS']); names={t['name'] for t in x['result']['tools']}; required={'gova_health','gova_diagnostics','gova_command_start','gova_command_status','gova_command_logs','gova_command_cancel'}; assert required<=names,names; print('tools=ok:'+','.join(sorted(names)))"
+          echo '--- safe command tool call ---'
+          START="$(curl -fsS -X POST "$MCP" -H "Authorization: Bearer $AUTH" -H 'Content-Type: application/json' --data '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"gova_command_start","arguments":{"command":"printf mcp-bridge-ok","cwd":"/home/hesham/gova"}}}')"
+          CID="$(START="$START" python3 -c "import json,os; x=json.loads(os.environ['START']); print(x['result']['structuredContent']['command_id'])")"
+          test -n "$CID"
+          for _ in $(seq 1 40); do
+            STATUS="$(curl -fsS -X POST "$MCP" -H "Authorization: Bearer $AUTH" -H 'Content-Type: application/json' --data "{\"jsonrpc\":\"2.0\",\"id\":4,\"method\":\"tools/call\",\"params\":{\"name\":\"gova_command_status\",\"arguments\":{\"command_id\":\"$CID\"}}}")"
+            state="$(STATUS="$STATUS" python3 -c "import json,os; x=json.loads(os.environ['STATUS']); print(x['result']['structuredContent']['command']['status'])")"
+            [ "$state" = completed ] && break
+            sleep .1
+          done
+          test "$state" = completed
+          LOGS="$(curl -fsS -X POST "$MCP" -H "Authorization: Bearer $AUTH" -H 'Content-Type: application/json' --data "{\"jsonrpc\":\"2.0\",\"id\":5,\"method\":\"tools/call\",\"params\":{\"name\":\"gova_command_logs\",\"arguments\":{\"command_id\":\"$CID\"}}}")"
+          LOGS="$LOGS" python3 -c "import json,os; x=json.loads(os.environ['LOGS']); assert x['result']['structuredContent']['stdout']=='mcp-bridge-ok'; print('command=ok')"
+          echo '--- R2 discovery ---'
+          DISCOVERY="$(/home/hesham/.local/bin/gova-agent-public publish)"
+          DJ="$(curl -fsS --retry 5 --retry-delay 1 --max-time 15 "$DISCOVERY")"
+          DJ="$DJ" python3 -c "import json,os; x=json.loads(os.environ['DJ']); assert x['mcp']==x['url'].rstrip('/')+'/mcp'; assert x['mcpTransport']=='streamable-http'; print('r2_mcp=ok:'+x['mcp'])"
+          echo '--- public MCP ---'
+          PUBLIC="$(DJ="$DJ" python3 -c "import json,os; print(json.loads(os.environ['DJ'])['mcp'])")"
+          ok=0
+          for _ in $(seq 1 40); do
+            if P="$(curl -fsS --max-time 10 -X POST "$PUBLIC" -H "Authorization: Bearer $AUTH" -H 'Content-Type: application/json' --data '{"jsonrpc":"2.0","id":6,"method":"ping","params":{}}' 2>/dev/null)"; then
+              P="$P" python3 -c "import json,os; x=json.loads(os.environ['P']); assert x['result']=={}" && ok=1 && break
+            fi
+            sleep 1
+          done
+          test "$ok" = 1
+          echo 'public_mcp=ok'
