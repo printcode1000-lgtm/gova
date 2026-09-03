@@ -5274,8 +5274,8 @@
       "tags": [
         "-composition",
         "@asol/notifications-composition",
-        "@asol/notifications-core",
         "@asol/service-mirror-core",
+        "@asol/submain-composition",
         "accounts",
         "and",
         "assemble",

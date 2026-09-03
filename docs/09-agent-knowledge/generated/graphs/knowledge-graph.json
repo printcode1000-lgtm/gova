@@ -5274,8 +5274,8 @@
       "tags": [
         "-composition",
         "@asol/notifications-composition",
-        "@asol/notifications-core",
         "@asol/service-mirror-core",
+        "@asol/submain-composition",
         "accounts",
         "and",
         "assemble",
@@ -62642,12 +62642,6 @@
     },
     {
       "from": "document:docs/01-architecture/04-composition/service-composition.md",
-      "to": "package:@asol/notifications-core",
-      "kind": "references",
-      "detail": "@asol/notifications-core"
-    },
-    {
-      "from": "document:docs/01-architecture/04-composition/service-composition.md",
       "to": "package:@asol/service-mirror-core",
       "kind": "references",
       "detail": "@asol/service-mirror-core"
@@ -62657,6 +62651,12 @@
       "to": "package:@asol/service-mirror-core",
       "kind": "references",
       "detail": "packages/service-mirror-core/"
+    },
+    {
+      "from": "document:docs/01-architecture/04-composition/service-composition.md",
+      "to": "package:@asol/submain-composition",
+      "kind": "references",
+      "detail": "@asol/submain-composition"
     },
     {
       "from": "document:docs/01-architecture/04-composition/service-composition.md",
@@ -174286,6 +174286,12 @@
     },
     {
       "from": "source:packages/submain-composition/src/index.ts",
+      "to": "source:src/features/notifications/ports/notifications-core-ports.ts",
+      "kind": "imports",
+      "detail": "@/features/notifications/ports/notifications-core-ports"
+    },
+    {
+      "from": "source:packages/submain-composition/src/index.ts",
       "to": "source:src/features/notifications/server/services/notification-service.bootstrap.server.ts",
       "kind": "imports",
       "detail": "@/features/notifications/server/services/notification-service.bootstrap.server"
@@ -243732,6 +243738,17 @@
       "to": "source:packages/submain-composition/src/index.ts",
       "kind": "imports",
       "detail": "../index"
+    },
+    {
+      "from": "test:packages/submain-composition/src/tests/index.test.ts",
+      "to": "source:src/features/notifications/ports/notifications-core-ports.ts",
+      "kind": "imports",
+      "detail": "@/features/notifications/ports/notifications-core-ports"
+    },
+    {
+      "from": "test:packages/submain-composition/src/tests/index.test.ts",
+      "to": "feature:notifications",
+      "kind": "tests"
     },
     {
       "from": "test:packages/submain-composition/src/tests/index.test.ts",

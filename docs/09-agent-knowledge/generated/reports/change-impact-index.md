@@ -29,7 +29,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `location` | feature | 1 | 0 | 3 | 0 | 2 | 0 |
 | `navigation` | feature | 1 | 0 | 0 | 0 | 0 | 4 |
 | `network` | feature | 1 | 0 | 0 | 0 | 0 | 3 |
-| `notifications` | feature | 9 | 30 | 43 | 0 | 10 | 11 |
+| `notifications` | feature | 9 | 31 | 43 | 0 | 10 | 11 |
 | `onboarding` | feature | 1 | 0 | 0 | 0 | 1 | 10 |
 | `orders` | feature | 1 | 1 | 9 | 0 | 1 | 13 |
 | `ota` | feature | 9 | 0 | 5 | 0 | 0 | 7 |
@@ -76,7 +76,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/map-core` | package | 10 | 1 | 2 | 0 | 9 | 7 |
 | `@asol/native-core` | package | 33 | 20 | 48 | 0 | 84 | 27 |
 | `@asol/notifications-composition` | package | 11 | 1 | 0 | 0 | 2 | 4 |
-| `@asol/notifications-core` | package | 20 | 15 | 145 | 0 | 99 | 5 |
+| `@asol/notifications-core` | package | 19 | 15 | 145 | 0 | 99 | 5 |
 | `@asol/observability-core` | package | 8 | 1 | 138 | 0 | 23 | 5 |
 | `@asol/orders-composition` | package | 12 | 1 | 0 | 0 | 2 | 5 |
 | `@asol/orders-core` | package | 17 | 6 | 139 | 0 | 41 | 1 |
@@ -95,7 +95,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/storage-core` | package | 34 | 22 | 141 | 0 | 97 | 5 |
 | `@asol/storage-image-manager-core` | package | 9 | 2 | 0 | 0 | 12 | 8 |
 | `@asol/sub2main-composition` | package | 7 | 1 | 0 | 0 | 9 | 7 |
-| `@asol/submain-composition` | package | 8 | 3 | 0 | 0 | 38 | 18 |
+| `@asol/submain-composition` | package | 9 | 3 | 0 | 0 | 38 | 18 |
 | `@asol/system-logs-core` | package | 9 | 4 | 139 | 0 | 58 | 0 |
 | `@asol/trending-ribbon-core` | package | 6 | 1 | 136 | 0 | 13 | 1 |
 | `@asol/vercel-deploy-core` | package | 9 | 6 | 26 | 0 | 48 | 3 |

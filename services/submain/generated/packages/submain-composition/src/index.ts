@@ -28,6 +28,7 @@ import { isSuperAdminIdentity } from '@/features/auth/domain/super-admin';
 import { registerDataCoreRuntimeConfigPorts } from '@/features/data/ports/data-core-runtime-config-ports';
 import { registerDataCoreSpecialtyCatalogPort } from '@/features/data/ports/data-core-specialty-catalog-port';
 import { registerStorageCorePorts } from '@/features/storage/ports/storage-core-ports';
+import { registerNotificationsCorePorts } from '@/features/notifications/ports/notifications-core-ports';
 
 export type {
   ProductSearchFilters,
@@ -208,6 +209,10 @@ registerDataCoreSpecialtyCatalogPort();
 // its HTTP gateway is a port. Without it every advertisements read answered 500
 // while /api/health stayed 200 — the same shape as an unregistered data port.
 registerStorageCorePorts();
+// Session-bound notification routes on this account issue grants and persist device
+// metadata through @asol/notifications-core. The application owns the concrete env/data
+// adapters, so this isolated composition root must register that seam too.
+registerNotificationsCorePorts();
 
 export function createSubmainRuntime(_config?: SubmainRuntimeConfig): SubmainRuntime {
   configureOrdersCore({ identity: { isSuperAdminIdentity } });

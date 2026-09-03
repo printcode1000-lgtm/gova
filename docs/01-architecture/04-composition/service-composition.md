@@ -51,7 +51,15 @@ Each composition:
 
 ## Notifications special case
 
-`@asol/notifications-composition` is the only composition with a direct `@asol/notifications-core` edge. Other accounts reach DB/storage through application data-access layers rather than sealed read packages.
+`@asol/notifications-composition` owns push fan-out itself. `@asol/submain-composition`
+also registers the application's `registerNotificationsCorePorts()` seam because the
+session-bound notification routes it owns (`devices`, `device-token`, `preferences`,
+`test/self`, and `test/send`) issue grants or use notification metadata. This does not
+grant the isolated push runtime the session secret: the wiring stays on `submain`, whose
+route ownership already requires both session identity and notification data.
+
+Other account compositions reach DB/storage through application data-access layers
+rather than widening their capability credentials.
 
 ## Verification gates
 
@@ -109,6 +117,9 @@ New service account touches declarations, composition, service folder, sync grap
 4. Every deployment is a composition root. An account service has no
    `src/instrumentation.ts` from the application, so its own composition MUST
    register every port its routes reach.
+   For `submain`, this explicitly includes `registerNotificationsCorePorts()`;
+   otherwise grant issuance falls back to the unconfigured notifications-core
+   default and `/api/notifications/test/self` returns `notificationGrantNotIssued`.
 5. An account composition root MUST pin a runtime choice its deployment cannot
    serve both sides of.
 

@@ -9,7 +9,7 @@ The only exact application paths listed here belong to composition/service-mirro
 
 - `packages/architecture-core/src/registry/composition-feature-seams-registry.ts`
 
-Current inventory: **51** exact composition seam path(s).
+Current inventory: **52** exact composition seam path(s).
 
 | Composition package | Exact application module |
 | --- | --- |
@@ -44,6 +44,7 @@ Current inventory: **51** exact composition seam path(s).
 | `submain-composition` | `@/features/advertisements/server/services/trending-ribbon-service.server` |
 | `submain-composition` | `@/features/specialty-chat/server/services/specialty-chat-service.server` |
 | `submain-composition` | `@/features/notifications/server/services/notification-service.bootstrap.server` |
+| `submain-composition` | `@/features/notifications/ports/notifications-core-ports` |
 | `submain-composition` | `@/features/storage/ports/storage-core-ports` |
 | `submain-composition` | `@/features/super-admin/server/services/super-admin-auth.server` |
 | `submain-composition` | `@/features/orders/application/order-detail-loader.server` |

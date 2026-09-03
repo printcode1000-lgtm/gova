@@ -17,6 +17,18 @@ function runTests(): void {
   );
   console.log('  ✔ Layer 3 door only: no deploy-engine import.');
 
+  assert(
+    compositionSource.includes(
+      "import { registerNotificationsCorePorts } from '@/features/notifications/ports/notifications-core-ports';",
+    ),
+    'submain composition imports the application notifications-core registrar',
+  );
+  assert(
+    compositionSource.includes('registerNotificationsCorePorts();'),
+    'submain composition invokes the notifications-core registrar at composition startup',
+  );
+  console.log('  ✔ notification-core ports are registered by the isolated submain root.');
+
   const runtime = createSubmainRuntime();
   assert(runtime.accountName === SUBMAIN_DECLARATION.project, 'account name matches declaration');
   assert(typeof runtime.search.products === 'function', 'search.products bound');

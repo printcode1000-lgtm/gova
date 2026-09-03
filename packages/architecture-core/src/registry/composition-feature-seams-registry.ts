@@ -60,6 +60,9 @@ export const COMPOSITION_FEATURE_SEAMS = {
     '@/features/advertisements/server/services/trending-ribbon-service.server',
     '@/features/specialty-chat/server/services/specialty-chat-service.server',
     '@/features/notifications/server/services/notification-service.bootstrap.server',
+    // submain owns session-bound notification routes; this exact registrar wires
+    // notifications-core without importing the broad feature barrel into the mirror.
+    '@/features/notifications/ports/notifications-core-ports',
     '@/features/storage/ports/storage-core-ports',
     '@/features/super-admin/server/services/super-admin-auth.server',
     '@/features/orders/application/order-detail-loader.server',
