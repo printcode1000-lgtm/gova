@@ -1,0 +1,67 @@
+name: local-agent-deploy-bridge
+on:
+  push:
+    branches: [integration]
+    paths:
+      - .github/workflows/local-agent-deploy-bridge.yml
+permissions:
+  contents: read
+jobs:
+  deploy:
+    runs-on: [self-hosted, Linux, X64, gova]
+    timeout-minutes: 180
+    steps:
+      - name: Run deploy all through persistent gateway
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,time,urllib.request,urllib.error
+          from pathlib import Path
+          base='http://127.0.0.1:8765'
+          key=Path('/home/hesham/.config/gova-agent/auth').read_text().strip()
+          headers={'X-Gova-Agent-Key':key,'Content-Type':'application/json'}
+          def req(method,path,body=None,timeout=60):
+              r=urllib.request.Request(base+path,data=None if body is None else json.dumps(body).encode(),method=method,headers=headers)
+              with urllib.request.urlopen(r,timeout=timeout) as x:
+                  raw=x.read()
+                  return json.loads(raw or b'{}')
+          with urllib.request.urlopen(base+'/health',timeout=5) as r:
+              if r.status != 200:
+                  raise SystemExit('gateway health failed')
+          agent='cloud-deploy-all-20260903'
+          req('POST','/v1/agent/register',{'agent_id':agent})
+          command=r'''cd /home/hesham/gova
+          set -o pipefail
+          echo '=== PRECHECK ==='
+          echo "HOST=$(hostname)"
+          echo "BRANCH=$(git branch --show-current)"
+          echo "HEAD=$(git rev-parse HEAD)"
+          git status --short --branch
+          echo '=== DEPLOY ALL ==='
+          npm run deploy:all 2>&1 | tee /tmp/gova-deploy-all.log
+          rc=${PIPESTATUS[0]}
+          echo "DEPLOY_EXIT_CODE=$rc"
+          exit "$rc"
+          '''
+          started=req('POST','/v1/exec/start',{'agent_id':agent,'command':command,'cwd':'/home/hesham/gova'})
+          cid=started['command_id']
+          print('COMMAND_ID='+cid,flush=True)
+          last=''
+          for _ in range(10800):
+              st=req('GET','/v1/commands/'+cid)['command']
+              logs=req('GET','/v1/commands/'+cid+'/logs?tail=12000',timeout=30)
+              out=logs.get('stdout','')
+              if out != last:
+                  print(out[-12000:],flush=True)
+                  last=out
+              if st['status']!='running':
+                  logs=req('GET','/v1/commands/'+cid+'/logs?tail=500000',timeout=120)
+                  print(logs.get('stdout',''))
+                  if logs.get('stderr'):
+                      print(logs.get('stderr',''))
+                  print('GATEWAY_EXIT_CODE='+str(st.get('exit_code')))
+                  raise SystemExit(0 if st.get('exit_code')==0 else 1)
+              time.sleep(5)
+          raise SystemExit('timeout waiting for gateway deploy')
+          PY
