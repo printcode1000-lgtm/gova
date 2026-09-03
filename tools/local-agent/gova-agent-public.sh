@@ -7,7 +7,7 @@ URL_FILE="$STATE_DIR/public-url"
 LOG_FILE="$STATE_DIR/cloudflared.log"
 R2_LOG="$STATE_DIR/r2-publish.log"
 PUBLISHER="${GOVA_AGENT_R2_PUBLISHER:-/home/hesham/.local/lib/gova-agent/publish-public-url-r2.py}"
-R2_ENV="${GOVA_AGENT_R2_ENV:-/home/hesham/.config/gova-agent/r2.env}"
+R2_ENV="${GOVA_AGENT_R2_ENV:-/home/hesham/gova/.env.local}"
 
 wait_url() {
   mkdir -p "$STATE_DIR"
@@ -44,7 +44,11 @@ case "${1:-start}" in
     else
       printf 'url=unavailable\n'
     fi
-    if [ -s "$R2_ENV" ]; then printf 'r2=configured\n'; else printf 'r2=not-configured\n'; fi
+    if [ -s "$R2_ENV" ] && grep -q '^R2_ACCOUNT_ID=' "$R2_ENV" && grep -q '^R2_ACCESS_KEY_ID=' "$R2_ENV" && grep -q '^R2_SECRET_ACCESS_KEY=' "$R2_ENV" && grep -Eq '^R2_(BUCKET|BUCKET_NAME)=' "$R2_ENV"; then
+      printf 'r2=configured\n'
+    else
+      printf 'r2=not-configured\n'
+    fi
     ;;
   url)
     if [ -s "$URL_FILE" ]; then cat "$URL_FILE"; else echo "URL not available" >&2; exit 1; fi
