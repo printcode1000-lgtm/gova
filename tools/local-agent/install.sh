@@ -13,6 +13,7 @@ mkdir -p \
   /home/hesham/.local/share/applications \
   /home/hesham/gova-agents
 install -m 0755 "$runtime_src/gateway.py" /home/hesham/.local/lib/gova-agent/gateway.py
+install -m 0755 "$runtime_src/mcp_bridge.py" /home/hesham/.local/lib/gova-agent/mcp_bridge.py
 install -m 0755 "$runtime_src/cli.py" /home/hesham/.local/lib/gova-agent/cli.py
 install -m 0755 "$runtime_src/monitor.py" /home/hesham/.local/lib/gova-agent/monitor.py
 install -m 0755 "$runtime_src/monitor-launcher.sh" /home/hesham/.local/lib/gova-agent/monitor-launcher.sh
@@ -87,23 +88,22 @@ else
   systemctl --user restart gova-agent-gateway.service
 fi
 
-# User-scoped monitor and public tunnel services.
+# User-scoped monitor and public tunnel services. The public tunnel launcher
+# owns the loopback MCP bridge on port 8767 and routes Cloudflare through it.
 install -m 0644 "$runtime_src/gova-agent-monitor-web.service" /home/hesham/.config/systemd/user/gova-agent-monitor-web.service
 install -m 0644 "$runtime_src/gova-agent-public.service" /home/hesham/.config/systemd/user/gova-agent-public.service
 systemctl --user daemon-reload
 systemctl --user enable gova-agent-monitor-web.service
 systemctl --user restart gova-agent-monitor-web.service
-
-# The dedicated agent tunnel targets the gateway on port 8765.
 systemctl --user enable gova-agent-public.service >/dev/null 2>&1 || true
 systemctl --user restart gova-agent-public.service >/dev/null 2>&1 || true
 
-# Installation completes only when the local services accept requests and the
-# dedicated public tunnel has produced a URL.
-for _ in $(seq 1 120); do
+# Installation completes only when the gateway, monitor, MCP bridge and public
+# tunnel are all ready.
+for _ in $(seq 1 160); do
   if python3 - <<'HEALTH' >/dev/null 2>&1
 import urllib.request
-for url in ('http://127.0.0.1:8765/health', 'http://127.0.0.1:8766/health'):
+for url in ('http://127.0.0.1:8765/health', 'http://127.0.0.1:8766/health', 'http://127.0.0.1:8767/health'):
     with urllib.request.urlopen(url, timeout=0.5) as r:
         if r.status != 200:
             raise SystemExit(1)
@@ -116,7 +116,7 @@ HEALTH
   sleep 0.25
 done
 
-echo 'gova-agent services or public tunnel did not become ready after restart' >&2
+echo 'gova-agent services, MCP bridge or public tunnel did not become ready after restart' >&2
 if sudo -n true 2>/dev/null; then
   sudo systemctl status gova-agent-gateway.service --no-pager || true
 else
@@ -124,4 +124,5 @@ else
 fi
 systemctl --user status gova-agent-monitor-web.service --no-pager || true
 systemctl --user status gova-agent-public.service --no-pager || true
+tail -n 100 /home/hesham/.local/state/gova-agent-tunnel/mcp-bridge.log 2>/dev/null || true
 exit 1
