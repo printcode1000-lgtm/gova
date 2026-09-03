@@ -42,7 +42,7 @@ const {
   serviceInputHash,
   serviceSmokeRebuildRequested,
   storeServiceBuild,
-} = await import("../service-build-cache");
+} = await import("@asol/release-core");
 const { gateStepAlreadyProven, isReusableGateStep, recordGateStep } = await import(
   "../gate-step-checkpoints"
 );

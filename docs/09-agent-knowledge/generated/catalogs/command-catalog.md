@@ -208,7 +208,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:delivery-planner` | `Tooling` | 1 |  | 0 |
 | `npm run test:deploy-all-resume` | `Tooling` | 1 |  | 0 |
 | `npm run test:deploy-runbook-execution` | `Tooling` | 1 |  | 0 |
-| `npm run test:deployment-tools` | `Tooling` | 18 |  | 0 |
+| `npm run test:deployment-tools` | `Tooling` | 19 |  | 0 |
 | `npm run test:dev-cloud-backup` | `Tooling` | 1 |  | 1 |
 | `npm run test:dev-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:env-core` | `Tooling` | 1 |  | 0 |
@@ -252,7 +252,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:r2-storage` | `Tooling` | 1 |  | 0 |
 | `npm run test:registration-success-flow` | `Tooling` | 1 |  | 0 |
 | `npm run test:release-commands` | `Tooling` | 2 |  | 2 |
-| `npm run test:release-core` | `Tooling` | 1 |  | 0 |
+| `npm run test:release-core` | `Tooling` | 3 |  | 0 |
 | `npm run test:route-ownership` | `Tooling` | 1 |  | 0 |
 | `npm run test:runtime-compatibility` | `Tooling` | 2 |  | 0 |
 | `npm run test:runtime-context` | `Tooling` | 2 |  | 0 |

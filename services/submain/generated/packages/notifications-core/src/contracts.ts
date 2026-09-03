@@ -13,7 +13,7 @@
  *
  * Why it exists rather than routing those imports through `server.ts`: the
  * notifications microservice is built by walking the import graph from its
- * route entry points (`scripts/sync-notifications-service-sources.ts`), and a
+ * route entry points (`scripts/sync-service-sources.ts notifications`), and a
  * data-access file that reaches `server.ts` drags the broadcast service, the
  * token service, and the whole users repository into a deployment that must not
  * contain them. Types cost nothing to reach; services cost correctness.

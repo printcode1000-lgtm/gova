@@ -146,9 +146,9 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run lint` | `eslint .` |
 | `npm run maplibre:sync` | `npx tsx scripts/sync-maplibre-worker.ts` |
 | `npm run notifications:check:local` | `npx tsx scripts/check-localhost-notifications.ts` |
-| `npm run notifications:deploy` | `npx tsx scripts/deploy-notifications-service.ts` |
+| `npm run notifications:deploy` | `npx tsx scripts/deploy-service.ts notifications` |
 | `npm run notifications:tokens:dedupe` | `npx tsx packages/data-core/src/tooling/enforce-notification-token-cardinality.ts` |
-| `npm run orders:deploy` | `npx tsx scripts/deploy-orders-service.ts` |
+| `npm run orders:deploy` | `npx tsx scripts/deploy-service.ts orders` |
 | `npm run ota:check` | `npx tsx scripts/ensure-release-command-secrets.ts google-play ota && npx tsx packages/ota-core/scripts/ota-publish.ts --dry-run` |
 | `npm run ota:keygen` | `npx tsx packages/ota-core/scripts/ota-keygen.ts` |
 | `npm run ota:publish` | `npx tsx scripts/ensure-release-command-secrets.ts google-play ota && npx tsx packages/ota-core/scripts/ota-publish.ts` |
@@ -159,8 +159,8 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run ota:sync:cors` | `npx tsx scripts/ensure-release-command-secrets.ts ota-cloudflare && npx tsx packages/ota-core/scripts/sync-cors.ts` |
 | `npm run prepare` | `git config core.hooksPath .githooks \|\| exit 0` |
 | `npm run preview:static` | `npx tsx packages/ota-core/scripts/serve-static.ts` |
-| `npm run products:deploy` | `npx tsx scripts/deploy-products-service.ts` |
-| `npm run profiles:deploy` | `npx tsx scripts/deploy-profiles-service.ts` |
+| `npm run products:deploy` | `npx tsx scripts/deploy-service.ts products` |
+| `npm run profiles:deploy` | `npx tsx scripts/deploy-service.ts profiles` |
 | `npm run provision:mobile-push` | `npx tsx scripts/provision-mobile-push-credentials.ts` |
 | `npm run r2:migrate:folders` | `npx tsx packages/data-core/src/tooling/migrate-r2-cloud-folders.ts` |
 | `npm run r2:migrate:images` | `npx tsx packages/data-core/src/tooling/migrate-r2-image-public-url.ts` |
@@ -190,9 +190,9 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run smoke:production` | `npx tsx scripts/check-production-smoke.ts` |
 | `npm run smoke:services` | `npx tsx scripts/check-service-smoke.ts` |
 | `npm run start` | `next start` |
-| `npm run sub2main:deploy` | `npx tsx scripts/deploy-sub2main.ts` |
+| `npm run sub2main:deploy` | `npx tsx scripts/deploy-service.ts sub2main` |
 | `npm run sub2main:recreate-vercel-project` | `npx tsx scripts/recreate-sub2main-vercel-project.ts` |
-| `npm run submain:deploy` | `npx tsx scripts/deploy-submain.ts` |
+| `npm run submain:deploy` | `npx tsx scripts/deploy-service.ts submain` |
 | `npm run submain:recreate-vercel-project` | `npx tsx scripts/recreate-submain-vercel-project.ts` |
 | `npm run test` | `npx tsx scripts/run-generated-gate.ts test` |
 | `npm run test:account-bridge` | `npx tsx packages/account-bridge/src/tests/index.test.ts && npx tsx packages/account-bridge/src/tests/mobile-push.test.ts && npx tsx packages/account-bridge/src/tests/mobile-push-channel-parity.test.ts` |
@@ -222,7 +222,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:delivery-planner` | `npx tsx src/features/cart/tests/multi-seller-delivery-planner.test.ts` |
 | `npm run test:deploy-all-resume` | `npx tsx scripts/tests/deploy-all-resume.test.ts` |
 | `npm run test:deploy-runbook-execution` | `npx tsx scripts/architecture/deploy-runbook-execution.test.ts` |
-| `npm run test:deployment-tools` | `npx tsx scripts/tests/vercel-deployment-monitor.test.ts && npx tsx scripts/tests/run-deployment-npm-script.test.ts && npx tsx scripts/tests/deploy-all.test.ts && npx tsx scripts/tests/deploy-state-revision.test.ts && npm run test:deploy-all-resume && npx tsx scripts/tests/deploy-push.test.ts && npx tsx scripts/tests/route-ownership-coverage.test.ts && npx tsx scripts/tests/mirror-status-parity.test.ts && npx tsx scripts/tests/service-cors-boundary.test.ts && npx tsx scripts/tests/vercelignore-contract.test.ts && npx tsx scripts/tests/pipeline-coverage.test.ts && npx tsx scripts/tests/github-ci-policy.test.ts && npx tsx scripts/tests/vercel-deployment-guards.test.ts && npx tsx scripts/tests/secret-presence-status.test.ts && npx tsx scripts/tests/fastlane-secret-policy.test.ts && npx tsx scripts/tests/release-secret-wiring.test.ts && npx tsx scripts/tests/expected-deployed-release-marker.test.ts && npm run github:ci-policy` |
+| `npm run test:deployment-tools` | `npx tsx scripts/tests/vercel-deployment-monitor.test.ts && npx tsx scripts/tests/run-deployment-npm-script.test.ts && npx tsx scripts/tests/deploy-all.test.ts && npx tsx scripts/tests/deploy-state-revision.test.ts && npm run test:deploy-all-resume && npx tsx scripts/tests/deploy-push.test.ts && npx tsx scripts/tests/generic-service-tooling.test.ts && npx tsx scripts/tests/route-ownership-coverage.test.ts && npx tsx scripts/tests/mirror-status-parity.test.ts && npx tsx scripts/tests/service-cors-boundary.test.ts && npx tsx scripts/tests/vercelignore-contract.test.ts && npx tsx scripts/tests/pipeline-coverage.test.ts && npx tsx scripts/tests/github-ci-policy.test.ts && npx tsx scripts/tests/vercel-deployment-guards.test.ts && npx tsx scripts/tests/secret-presence-status.test.ts && npx tsx scripts/tests/fastlane-secret-policy.test.ts && npx tsx scripts/tests/release-secret-wiring.test.ts && npx tsx scripts/tests/expected-deployed-release-marker.test.ts && npm run github:ci-policy` |
 | `npm run test:dev-cloud-backup` | `cross-env NODE_OPTIONS=<redacted> npx tsx src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` |
 | `npm run test:dev-core` | `npx tsx packages/dev-core/src/tests/index.test.ts` |
 | `npm run test:env-core` | `npx tsx packages/env-core/src/tests/index.test.ts` |
@@ -266,7 +266,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:r2-storage` | `npx tsx packages/storage-core/scripts/validate-topology.ts` |
 | `npm run test:registration-success-flow` | `npx tsx src/features/auth/tests/registration-success-flow.test.ts` |
 | `npm run test:release-commands` | `cross-env NODE_ENV=<redacted> NODE_OPTIONS=<redacted> npx tsx src/features/release-commands/tests/release-commands.test.ts && npx tsx src/features/release-commands/tests/production-deploy-callback.test.ts` |
-| `npm run test:release-core` | `npx tsx packages/release-core/src/tests/index.test.ts` |
+| `npm run test:release-core` | `npx tsx packages/release-core/src/tests/index.test.ts && npx tsx packages/release-core/src/tests/git-release-guards.test.ts && npx tsx packages/release-core/src/tests/readiness.test.ts` |
 | `npm run test:route-ownership` | `npx tsx scripts/tests/route-ownership-coverage.test.ts` |
 | `npm run test:runtime-compatibility` | `npx tsx scripts/tests/runtime-compatibility-reference.test.ts && npx tsx scripts/tests/runtime-compatibility-policy.test.ts` |
 | `npm run test:runtime-context` | `npx tsx scripts/test-runtime-context.ts && npx tsx packages/data-core/src/core/database-runtime-policy.test.ts` |

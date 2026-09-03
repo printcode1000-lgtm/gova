@@ -232,7 +232,7 @@ function fingerprint(directory: string): string {
 function generateMirror(out: string): void {
   execFileSync(
     process.execPath,
-    [path.join(root, "node_modules", "tsx", "dist", "cli.mjs"), "scripts/sync-notifications-service-sources.ts", "--out", out],
+    [path.join(root, "node_modules", "tsx", "dist", "cli.mjs"), "scripts/sync-service-sources.ts", "notifications", "--out", out],
     { cwd: root, stdio: "pipe", shell: false },
   );
 }

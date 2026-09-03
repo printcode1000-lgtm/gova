@@ -95,7 +95,7 @@ export const NOTIFICATION_INTERNAL_SEGMENTS = [
  * generator has to name the microservice's entry point explicitly.
  */
 export const NOTIFICATION_INTERNAL_IMPORT_EXEMPT = new Set<string>([
-  "scripts/sync-notifications-service-sources.ts",
+  "scripts/sync-service-sources.ts",
   "scripts/validate-ios-push-policy.ts",
   "packages/native-core/scripts/validate-ios-push-policy.ts",
   "scripts/test-ota-native-compatibility.ts",

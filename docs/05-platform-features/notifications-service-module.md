@@ -93,7 +93,7 @@ Three rules keep the boundary honest, all enforced by
 
 The service cannot import from `../../src`: only its own folder is uploaded.
 Rather than maintain a second copy of the send logic by hand,
-`scripts/sync-notifications-service-sources.ts` walks the real import graph from
+`scripts/sync-service-sources.ts notifications` walks the real import graph from
 one entry point and mirrors exactly the files it reaches.
 
 **That entry point is `src/features/notifications/service-runtime.ts`, and it is
@@ -123,7 +123,7 @@ This mirrors the existing `data-access:sync-public` pattern for
 If the test reports a stale mirror:
 
 ```bash
-npx tsx scripts/sync-notifications-service-sources.ts
+npx tsx scripts/sync-service-sources.ts notifications
 ```
 
 ## The `better-sqlite3` stub

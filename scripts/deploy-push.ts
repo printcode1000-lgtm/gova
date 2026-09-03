@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { existsSync, readFileSync, statSync, unlinkSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -12,7 +12,15 @@ import {
   DeploymentNpmScriptError,
   runDeploymentNpmScript,
 } from "@asol/release-core";
-import { pushMainBranch } from "@asol/release-core";
+import {
+  assertNoReleaseScratchFiles,
+  assertReleaseMainBranch,
+  clearStaleReleaseGitIndexLock,
+  pushMainBranch,
+  RELEASE_SCRATCH_FILE_PATTERNS,
+  releaseChangedPaths,
+  releaseGit,
+} from "@asol/release-core";
 import {
   type VercelDeploymentReport,
   verifyAccountTokenAccess,
@@ -35,9 +43,7 @@ loadReleaseEnvironment();
 
 const ROOT = process.cwd();
 const MAIN_BRANCH = "main";
-const GIT_INDEX_LOCK = path.join(ROOT, ".git", "index.lock");
 const ROOT_VERCEL_LINK = path.join(ROOT, ".vercel", "project.json");
-const STALE_GIT_LOCK_AGE_MS = 2 * 60 * 1000;
 const FAIL_PREFIX = "[deploy:push] FAILED —";
 const RELEASE_MANIFEST = "public/asol-web-manifest.json";
 
@@ -61,12 +67,7 @@ const DEPLOY_PUSH_FLAG_NAMES = new Set([
   "--fast",
 ]);
 
-const SCRATCH_FILE_PATTERNS = [
-  /(^|\/)__probe/i,
-  /\.(log|tmp|bak|orig|rej)$/i,
-  /(^|\/)scratchpad\//i,
-  /(^|\/)\.DS_Store$/,
-];
+const SCRATCH_FILE_PATTERNS = RELEASE_SCRATCH_FILE_PATTERNS;
 
 const ISOLATED_DEPLOYS: Record<
   DeployPushTarget,
@@ -80,13 +81,7 @@ const ISOLATED_DEPLOYS: Record<
   sub2main: { target: "sub2main", script: "sub2main:deploy" },
 };
 
-function git(args: string[]): string {
-  return execFileSync("git", args, {
-    cwd: ROOT,
-    encoding: "utf8",
-    stdio: ["ignore", "pipe", "inherit"],
-  }).trim();
-}
+const git = (args: string[]): string => releaseGit(ROOT, args);
 
 function githubRepositoryFromRemote(remoteUrl: string): string | null {
   const match = /github\.com(?::|\/)([^/:\s]+)\/([^/\s]+?)(?:\.git)?$/i.exec(remoteUrl.trim());
@@ -193,48 +188,6 @@ function hasStagedChanges(): boolean {
   }
 }
 
-function assertMainBranch(): void {
-  const branch = git(["branch", "--show-current"]);
-  if (branch !== MAIN_BRANCH) {
-    throw new Error(
-      `deploy:push must run from ${MAIN_BRANCH}; current branch is ${branch || "detached HEAD"}.`,
-    );
-  }
-}
-
-function hasRunningGitProcess(): boolean {
-  try {
-    if (process.platform === "win32") {
-      const output = execFileSync(
-        "tasklist",
-        ["/FI", "IMAGENAME eq git.exe", "/FO", "CSV", "/NH"],
-        { encoding: "utf8", windowsHide: true },
-      );
-      return /"git\.exe"/i.test(output);
-    }
-    const output = execFileSync("pgrep", ["-x", "git"], {
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "ignore"],
-    });
-    return output.trim().length > 0;
-  } catch {
-    return false;
-  }
-}
-
-function clearStaleGitIndexLock(): void {
-  if (!existsSync(GIT_INDEX_LOCK)) return;
-  const ageMs = Date.now() - statSync(GIT_INDEX_LOCK).mtimeMs;
-  if (ageMs < STALE_GIT_LOCK_AGE_MS || hasRunningGitProcess()) {
-    throw new Error(
-      "Git index.lock is active. Close the other Git operation and run deploy:push again.",
-    );
-  }
-  unlinkSync(GIT_INDEX_LOCK);
-  console.log(
-    `[deploy:push] Removed abandoned .git/index.lock (${Math.round(ageMs / 1000)} seconds old).`,
-  );
-}
 
 /**
  * Bring `HEAD` up to `origin/main` before the deployment commit is written.
@@ -342,23 +295,11 @@ function parseArgv(argv: readonly string[]): ParsedArgv {
 }
 
 function changedPaths(): string[] {
-  return git(["status", "--porcelain"])
-    .split(/\r?\n/)
-    .filter(Boolean)
-    .map((line) => line.slice(3).trim());
+  return releaseChangedPaths(ROOT);
 }
 
 function assertNoScratchFiles(flags: DeployPushFlags): void {
-  const scratch = changedPaths().filter((entry) =>
-    SCRATCH_FILE_PATTERNS.some((pattern) => pattern.test(entry)),
-  );
-  if (scratch.length > 0 && !flags.allowScratchFiles) {
-    throw new Error(
-      "Refusing to publish scratch files:\n" +
-        scratch.map((entry) => `  - ${entry}`).join("\n") +
-        "\nRemove them, or pass --allow-scratch-files if they are intentional.",
-    );
-  }
+  assertNoReleaseScratchFiles({ cwd: ROOT, allowScratchFiles: flags.allowScratchFiles });
 }
 
 function compareVersions(left: string, right: string): number {
@@ -472,7 +413,7 @@ async function assertFastPublishReadiness(
   targets: readonly DeployPushTarget[],
   flags: DeployPushFlags,
 ): Promise<void> {
-  assertMainBranch();
+  assertReleaseMainBranch(ROOT, "deploy:push");
   await ensureReleaseSecretsRestored("deploy:push");
   assertMainDeploymentCredentials();
   if (flags.fast) {
@@ -933,7 +874,7 @@ async function main(): Promise<void> {
     }
   }
 
-  clearStaleGitIndexLock();
+  clearStaleReleaseGitIndexLock({ cwd: ROOT, command: "deploy:push", onRemoved: (ageSeconds) => console.log(`[deploy:push] Removed abandoned .git/index.lock (${ageSeconds} seconds old).`) });
 
   try {
     advanceToOriginMain();

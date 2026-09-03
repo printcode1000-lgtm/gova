@@ -83,7 +83,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `ASOL_SCHEMA_SYNC_REQUIRED` | server/tooling | 2 | `npm run db:schema:sync:release`, `scripts/schema-sync.ts` |
 | `ASOL_SERVICE_SMOKE_ONLY` | server/tooling | 1 | `scripts/check-service-smoke.ts` |
 | `ASOL_SERVICE_SMOKE_PORT` | server/tooling | 1 | `scripts/check-service-smoke.ts` |
-| `ASOL_SERVICE_SMOKE_REBUILD` | server/tooling | 3 | `scripts/deploy-all.ts`, `scripts/service-build-cache.ts`, `scripts/tests/deploy-all-resume.test.ts` |
+| `ASOL_SERVICE_SMOKE_REBUILD` | server/tooling | 3 | `scripts/deploy-all.ts`, `packages/release-core/src/pipeline/service-build-cache.ts`, `scripts/tests/deploy-all-resume.test.ts` |
 | `ASOL_SESSION_SIGNING_SECRET` | server/tooling | 8 | `npm run test:follow`, `npm run test:notifications`, `scripts/probe-notifications-service.ts`, `packages/auth-core/src/ports/session-signing-secret.port.ts`, `services/control/src/app/api/health/route.ts`, `services/control/src/control/super-admin-route.ts` |
 | `ASOL_SMOKE_PORT` | server/tooling | 1 | `scripts/check-production-smoke.ts` |
 | `ASOL_STATIC_PREVIEW_API_BASE_URL` | server/tooling | 1 | `packages/ota-core/scripts/serve-static.ts` |

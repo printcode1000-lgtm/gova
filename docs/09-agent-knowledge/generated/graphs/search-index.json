@@ -10774,8 +10774,6 @@
         "push",
         "reads",
         "runs",
-        "scripts/sync-notifications-service-sources",
-        "scripts/sync-notifications-service-sources.ts",
         "service",
         "services/notifications",
         "services/notifications/",
@@ -10994,14 +10992,11 @@
         "products service module",
         "reads",
         "runs",
-        "scripts/sync-products-service-sources",
-        "scripts/sync-products-service-sources.ts",
         "serves",
         "service",
         "services/products/",
         "that",
         "the",
-        "ts",
         "turso",
         "vercel"
       ]
@@ -14176,7 +14171,11 @@
         "/01-architecture/readme",
         "2026-08",
         "> **note:** operational detail relocated here during the 2026-08 architecture reconstruction. architectural relationships: [docs/01-architecture/](../01-architecture/readme.md).",
+        "@asol/account-declarations",
         "@asol/data-core",
+        "@asol/release-core",
+        "@asol/service-mirror-core",
+        "@asol/vercel-deploy-core",
         "architectural",
         "architecture",
         "detail",
@@ -26565,50 +26564,6 @@
       ]
     },
     {
-      "id": "script:scripts/deploy-notifications-service.ts",
-      "kind": "script",
-      "name": "deploy-notifications-service.ts",
-      "path": "scripts/deploy-notifications-service.ts",
-      "tags": [
-        "scripts/deploy-notifications-service",
-        "scripts/deploy-notifications-service.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/deploy-orders-service.ts",
-      "kind": "script",
-      "name": "deploy-orders-service.ts",
-      "path": "scripts/deploy-orders-service.ts",
-      "tags": [
-        "scripts/deploy-orders-service",
-        "scripts/deploy-orders-service.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/deploy-products-service.ts",
-      "kind": "script",
-      "name": "deploy-products-service.ts",
-      "path": "scripts/deploy-products-service.ts",
-      "tags": [
-        "scripts/deploy-products-service",
-        "scripts/deploy-products-service.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/deploy-profiles-service.ts",
-      "kind": "script",
-      "name": "deploy-profiles-service.ts",
-      "path": "scripts/deploy-profiles-service.ts",
-      "tags": [
-        "scripts/deploy-profiles-service",
-        "scripts/deploy-profiles-service.ts",
-        "ts"
-      ]
-    },
-    {
       "id": "script:scripts/deploy-push-target-choice.ts",
       "kind": "script",
       "name": "deploy-push-target-choice.ts",
@@ -26642,24 +26597,13 @@
       ]
     },
     {
-      "id": "script:scripts/deploy-sub2main.ts",
+      "id": "script:scripts/deploy-service.ts",
       "kind": "script",
-      "name": "deploy-sub2main.ts",
-      "path": "scripts/deploy-sub2main.ts",
+      "name": "deploy-service.ts",
+      "path": "scripts/deploy-service.ts",
       "tags": [
-        "scripts/deploy-sub2main",
-        "scripts/deploy-sub2main.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/deploy-submain.ts",
-      "kind": "script",
-      "name": "deploy-submain.ts",
-      "path": "scripts/deploy-submain.ts",
-      "tags": [
-        "scripts/deploy-submain",
-        "scripts/deploy-submain.ts",
+        "scripts/deploy-service",
+        "scripts/deploy-service.ts",
         "ts"
       ]
     },
@@ -27599,17 +27543,6 @@
       ]
     },
     {
-      "id": "script:scripts/service-build-cache.ts",
-      "kind": "script",
-      "name": "service-build-cache.ts",
-      "path": "scripts/service-build-cache.ts",
-      "tags": [
-        "scripts/service-build-cache",
-        "scripts/service-build-cache.ts",
-        "ts"
-      ]
-    },
-    {
       "id": "script:scripts/setup-turso-db.ts",
       "kind": "script",
       "name": "setup-turso-db.ts",
@@ -27687,68 +27620,13 @@
       ]
     },
     {
-      "id": "script:scripts/sync-notifications-service-sources.ts",
+      "id": "script:scripts/sync-service-sources.ts",
       "kind": "script",
-      "name": "sync-notifications-service-sources.ts",
-      "path": "scripts/sync-notifications-service-sources.ts",
+      "name": "sync-service-sources.ts",
+      "path": "scripts/sync-service-sources.ts",
       "tags": [
-        "scripts/sync-notifications-service-sources",
-        "scripts/sync-notifications-service-sources.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/sync-orders-service-sources.ts",
-      "kind": "script",
-      "name": "sync-orders-service-sources.ts",
-      "path": "scripts/sync-orders-service-sources.ts",
-      "tags": [
-        "scripts/sync-orders-service-sources",
-        "scripts/sync-orders-service-sources.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/sync-products-service-sources.ts",
-      "kind": "script",
-      "name": "sync-products-service-sources.ts",
-      "path": "scripts/sync-products-service-sources.ts",
-      "tags": [
-        "scripts/sync-products-service-sources",
-        "scripts/sync-products-service-sources.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/sync-profiles-service-sources.ts",
-      "kind": "script",
-      "name": "sync-profiles-service-sources.ts",
-      "path": "scripts/sync-profiles-service-sources.ts",
-      "tags": [
-        "scripts/sync-profiles-service-sources",
-        "scripts/sync-profiles-service-sources.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/sync-sub2main-service-sources.ts",
-      "kind": "script",
-      "name": "sync-sub2main-service-sources.ts",
-      "path": "scripts/sync-sub2main-service-sources.ts",
-      "tags": [
-        "scripts/sync-sub2main-service-sources",
-        "scripts/sync-sub2main-service-sources.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/sync-submain-service-sources.ts",
-      "kind": "script",
-      "name": "sync-submain-service-sources.ts",
-      "path": "scripts/sync-submain-service-sources.ts",
-      "tags": [
-        "scripts/sync-submain-service-sources",
-        "scripts/sync-submain-service-sources.ts",
+        "scripts/sync-service-sources",
+        "scripts/sync-service-sources.ts",
         "ts"
       ]
     },
@@ -36941,6 +36819,17 @@
       ]
     },
     {
+      "id": "source:packages/release-core/src/pipeline/git-release-guards.ts",
+      "kind": "source",
+      "name": "git-release-guards.ts",
+      "path": "packages/release-core/src/pipeline/git-release-guards.ts",
+      "tags": [
+        "packages/release-core/src/pipeline/git-release-guards",
+        "packages/release-core/src/pipeline/git-release-guards.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/release-core/src/pipeline/input-hash.ts",
       "kind": "source",
       "name": "input-hash.ts",
@@ -36985,6 +36874,17 @@
       ]
     },
     {
+      "id": "source:packages/release-core/src/pipeline/readiness.ts",
+      "kind": "source",
+      "name": "readiness.ts",
+      "path": "packages/release-core/src/pipeline/readiness.ts",
+      "tags": [
+        "packages/release-core/src/pipeline/readiness",
+        "packages/release-core/src/pipeline/readiness.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/release-core/src/pipeline/resume-safety.ts",
       "kind": "source",
       "name": "resume-safety.ts",
@@ -37003,6 +36903,17 @@
       "tags": [
         "packages/release-core/src/pipeline/run-deployment-npm-script",
         "packages/release-core/src/pipeline/run-deployment-npm-script.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/release-core/src/pipeline/service-build-cache.ts",
+      "kind": "source",
+      "name": "service-build-cache.ts",
+      "path": "packages/release-core/src/pipeline/service-build-cache.ts",
+      "tags": [
+        "packages/release-core/src/pipeline/service-build-cache",
+        "packages/release-core/src/pipeline/service-build-cache.ts",
         "ts"
       ]
     },
@@ -54291,6 +54202,18 @@
       ]
     },
     {
+      "id": "test:packages/release-core/src/tests/git-release-guards.test.ts",
+      "kind": "test",
+      "name": "git-release-guards.test.ts",
+      "path": "packages/release-core/src/tests/git-release-guards.test.ts",
+      "tags": [
+        "packages/release-core/src/tests/git-release-guards",
+        "packages/release-core/src/tests/git-release-guards.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/release-core/src/tests/index.test.ts",
       "kind": "test",
       "name": "index.test.ts",
@@ -54298,6 +54221,18 @@
       "tags": [
         "packages/release-core/src/tests/index",
         "packages/release-core/src/tests/index.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/release-core/src/tests/readiness.test.ts",
+      "kind": "test",
+      "name": "readiness.test.ts",
+      "path": "packages/release-core/src/tests/readiness.test.ts",
+      "tags": [
+        "packages/release-core/src/tests/readiness",
+        "packages/release-core/src/tests/readiness.test.ts",
         "test",
         "ts"
       ]
@@ -54802,6 +54737,18 @@
       "tags": [
         "scripts/tests/fastlane-secret-policy",
         "scripts/tests/fastlane-secret-policy.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:scripts/tests/generic-service-tooling.test.ts",
+      "kind": "test",
+      "name": "generic-service-tooling.test.ts",
+      "path": "scripts/tests/generic-service-tooling.test.ts",
+      "tags": [
+        "scripts/tests/generic-service-tooling",
+        "scripts/tests/generic-service-tooling.test.ts",
         "test",
         "ts"
       ]

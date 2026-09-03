@@ -31,6 +31,10 @@ npm run services:sync            # refresh the six generated/ mirrors
 npm run services:verify          # every module edge resolves inside each upload
 npm run services:build           # next build in all six service folders
 
+# Generic workload entrypoints; no per-workload scripts exist
+npx tsx scripts/sync-service-sources.ts products
+npx tsx scripts/deploy-service.ts products
+
 # GitHub repository administration
 npm run github:protect -- --status     # confirm main has no branch protection
 npm run github:protect -- --remove     # delete leftover protection (apply is forbidden)
@@ -90,6 +94,24 @@ All executable database implementations are under
 `packages/data-core/src/tooling/`. Package commands are the supported entry
 points. Files under `scripts/` may coordinate builds and configuration, but the
 architecture check rejects database drivers, SQL, and IndexedDB access there.
+
+## Release tooling ownership
+
+`scripts/` owns command parsing, operator output, and compatibility command
+names. Reusable release guards, transaction state, exact-input service build
+cache behavior, and child-process release contracts belong to
+`@asol/release-core`. Vercel API calls, deployment monitoring, and production
+baseline rollback belong to `@asol/vercel-deploy-core`; generated source-mirror
+walking belongs to `@asol/service-mirror-core`.
+
+The canonical six standard workloads are `RELEASE_WORKLOADS` in
+`@asol/vercel-deploy-core`, and their directories, mirror entries, runtime
+assets, and credentials are read from `@asol/account-declarations`. The generic
+sync/deploy entrypoints reject names outside that set before mutation. The
+retained `*:deploy` npm names invoke the generic command directly; they are not
+wrappers. `control`
+is deliberately excluded: it is the privileged release authority and continues
+to use its explicit `control:sync` and `control:deploy` commands.
 
 ## Typical: static site + remote API
 

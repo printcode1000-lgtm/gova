@@ -68,7 +68,7 @@ after a response, the service one only chooses an address before a request.
 3. **Shared source is mirrored, not forked.** A module that needs code from
    `src/` gets it through a sync script that walks the real import graph, plus a
    contract test proving the mirror is reproducible. See
-   `scripts/sync-notifications-service-sources.ts`.
+   `scripts/sync-service-sources.ts notifications`.
 4. **The main app keeps its GitHub connection.** Deploy commands for other
    modules run with their own folder as the working directory, so they write
    that folder's `.vercel`, never the repository root's link.

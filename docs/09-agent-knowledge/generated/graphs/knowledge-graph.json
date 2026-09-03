@@ -10774,8 +10774,6 @@
         "push",
         "reads",
         "runs",
-        "scripts/sync-notifications-service-sources",
-        "scripts/sync-notifications-service-sources.ts",
         "service",
         "services/notifications",
         "services/notifications/",
@@ -10994,14 +10992,11 @@
         "products service module",
         "reads",
         "runs",
-        "scripts/sync-products-service-sources",
-        "scripts/sync-products-service-sources.ts",
         "serves",
         "service",
         "services/products/",
         "that",
         "the",
-        "ts",
         "turso",
         "vercel"
       ]
@@ -14176,7 +14171,11 @@
         "/01-architecture/readme",
         "2026-08",
         "> **note:** operational detail relocated here during the 2026-08 architecture reconstruction. architectural relationships: [docs/01-architecture/](../01-architecture/readme.md).",
+        "@asol/account-declarations",
         "@asol/data-core",
+        "@asol/release-core",
+        "@asol/service-mirror-core",
+        "@asol/vercel-deploy-core",
         "architectural",
         "architecture",
         "detail",
@@ -26565,50 +26564,6 @@
       ]
     },
     {
-      "id": "script:scripts/deploy-notifications-service.ts",
-      "kind": "script",
-      "name": "deploy-notifications-service.ts",
-      "path": "scripts/deploy-notifications-service.ts",
-      "tags": [
-        "scripts/deploy-notifications-service",
-        "scripts/deploy-notifications-service.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/deploy-orders-service.ts",
-      "kind": "script",
-      "name": "deploy-orders-service.ts",
-      "path": "scripts/deploy-orders-service.ts",
-      "tags": [
-        "scripts/deploy-orders-service",
-        "scripts/deploy-orders-service.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/deploy-products-service.ts",
-      "kind": "script",
-      "name": "deploy-products-service.ts",
-      "path": "scripts/deploy-products-service.ts",
-      "tags": [
-        "scripts/deploy-products-service",
-        "scripts/deploy-products-service.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/deploy-profiles-service.ts",
-      "kind": "script",
-      "name": "deploy-profiles-service.ts",
-      "path": "scripts/deploy-profiles-service.ts",
-      "tags": [
-        "scripts/deploy-profiles-service",
-        "scripts/deploy-profiles-service.ts",
-        "ts"
-      ]
-    },
-    {
       "id": "script:scripts/deploy-push-target-choice.ts",
       "kind": "script",
       "name": "deploy-push-target-choice.ts",
@@ -26642,24 +26597,13 @@
       ]
     },
     {
-      "id": "script:scripts/deploy-sub2main.ts",
+      "id": "script:scripts/deploy-service.ts",
       "kind": "script",
-      "name": "deploy-sub2main.ts",
-      "path": "scripts/deploy-sub2main.ts",
+      "name": "deploy-service.ts",
+      "path": "scripts/deploy-service.ts",
       "tags": [
-        "scripts/deploy-sub2main",
-        "scripts/deploy-sub2main.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/deploy-submain.ts",
-      "kind": "script",
-      "name": "deploy-submain.ts",
-      "path": "scripts/deploy-submain.ts",
-      "tags": [
-        "scripts/deploy-submain",
-        "scripts/deploy-submain.ts",
+        "scripts/deploy-service",
+        "scripts/deploy-service.ts",
         "ts"
       ]
     },
@@ -27599,17 +27543,6 @@
       ]
     },
     {
-      "id": "script:scripts/service-build-cache.ts",
-      "kind": "script",
-      "name": "service-build-cache.ts",
-      "path": "scripts/service-build-cache.ts",
-      "tags": [
-        "scripts/service-build-cache",
-        "scripts/service-build-cache.ts",
-        "ts"
-      ]
-    },
-    {
       "id": "script:scripts/setup-turso-db.ts",
       "kind": "script",
       "name": "setup-turso-db.ts",
@@ -27687,68 +27620,13 @@
       ]
     },
     {
-      "id": "script:scripts/sync-notifications-service-sources.ts",
+      "id": "script:scripts/sync-service-sources.ts",
       "kind": "script",
-      "name": "sync-notifications-service-sources.ts",
-      "path": "scripts/sync-notifications-service-sources.ts",
+      "name": "sync-service-sources.ts",
+      "path": "scripts/sync-service-sources.ts",
       "tags": [
-        "scripts/sync-notifications-service-sources",
-        "scripts/sync-notifications-service-sources.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/sync-orders-service-sources.ts",
-      "kind": "script",
-      "name": "sync-orders-service-sources.ts",
-      "path": "scripts/sync-orders-service-sources.ts",
-      "tags": [
-        "scripts/sync-orders-service-sources",
-        "scripts/sync-orders-service-sources.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/sync-products-service-sources.ts",
-      "kind": "script",
-      "name": "sync-products-service-sources.ts",
-      "path": "scripts/sync-products-service-sources.ts",
-      "tags": [
-        "scripts/sync-products-service-sources",
-        "scripts/sync-products-service-sources.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/sync-profiles-service-sources.ts",
-      "kind": "script",
-      "name": "sync-profiles-service-sources.ts",
-      "path": "scripts/sync-profiles-service-sources.ts",
-      "tags": [
-        "scripts/sync-profiles-service-sources",
-        "scripts/sync-profiles-service-sources.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/sync-sub2main-service-sources.ts",
-      "kind": "script",
-      "name": "sync-sub2main-service-sources.ts",
-      "path": "scripts/sync-sub2main-service-sources.ts",
-      "tags": [
-        "scripts/sync-sub2main-service-sources",
-        "scripts/sync-sub2main-service-sources.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/sync-submain-service-sources.ts",
-      "kind": "script",
-      "name": "sync-submain-service-sources.ts",
-      "path": "scripts/sync-submain-service-sources.ts",
-      "tags": [
-        "scripts/sync-submain-service-sources",
-        "scripts/sync-submain-service-sources.ts",
+        "scripts/sync-service-sources",
+        "scripts/sync-service-sources.ts",
         "ts"
       ]
     },
@@ -36941,6 +36819,17 @@
       ]
     },
     {
+      "id": "source:packages/release-core/src/pipeline/git-release-guards.ts",
+      "kind": "source",
+      "name": "git-release-guards.ts",
+      "path": "packages/release-core/src/pipeline/git-release-guards.ts",
+      "tags": [
+        "packages/release-core/src/pipeline/git-release-guards",
+        "packages/release-core/src/pipeline/git-release-guards.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/release-core/src/pipeline/input-hash.ts",
       "kind": "source",
       "name": "input-hash.ts",
@@ -36985,6 +36874,17 @@
       ]
     },
     {
+      "id": "source:packages/release-core/src/pipeline/readiness.ts",
+      "kind": "source",
+      "name": "readiness.ts",
+      "path": "packages/release-core/src/pipeline/readiness.ts",
+      "tags": [
+        "packages/release-core/src/pipeline/readiness",
+        "packages/release-core/src/pipeline/readiness.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/release-core/src/pipeline/resume-safety.ts",
       "kind": "source",
       "name": "resume-safety.ts",
@@ -37003,6 +36903,17 @@
       "tags": [
         "packages/release-core/src/pipeline/run-deployment-npm-script",
         "packages/release-core/src/pipeline/run-deployment-npm-script.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/release-core/src/pipeline/service-build-cache.ts",
+      "kind": "source",
+      "name": "service-build-cache.ts",
+      "path": "packages/release-core/src/pipeline/service-build-cache.ts",
+      "tags": [
+        "packages/release-core/src/pipeline/service-build-cache",
+        "packages/release-core/src/pipeline/service-build-cache.ts",
         "ts"
       ]
     },
@@ -54291,6 +54202,18 @@
       ]
     },
     {
+      "id": "test:packages/release-core/src/tests/git-release-guards.test.ts",
+      "kind": "test",
+      "name": "git-release-guards.test.ts",
+      "path": "packages/release-core/src/tests/git-release-guards.test.ts",
+      "tags": [
+        "packages/release-core/src/tests/git-release-guards",
+        "packages/release-core/src/tests/git-release-guards.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/release-core/src/tests/index.test.ts",
       "kind": "test",
       "name": "index.test.ts",
@@ -54298,6 +54221,18 @@
       "tags": [
         "packages/release-core/src/tests/index",
         "packages/release-core/src/tests/index.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/release-core/src/tests/readiness.test.ts",
+      "kind": "test",
+      "name": "readiness.test.ts",
+      "path": "packages/release-core/src/tests/readiness.test.ts",
+      "tags": [
+        "packages/release-core/src/tests/readiness",
+        "packages/release-core/src/tests/readiness.test.ts",
         "test",
         "ts"
       ]
@@ -54802,6 +54737,18 @@
       "tags": [
         "scripts/tests/fastlane-secret-policy",
         "scripts/tests/fastlane-secret-policy.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:scripts/tests/generic-service-tooling.test.ts",
+      "kind": "test",
+      "name": "generic-service-tooling.test.ts",
+      "path": "scripts/tests/generic-service-tooling.test.ts",
+      "tags": [
+        "scripts/tests/generic-service-tooling",
+        "scripts/tests/generic-service-tooling.test.ts",
         "test",
         "ts"
       ]
@@ -57715,7 +57662,7 @@
     },
     {
       "from": "command:notifications:deploy",
-      "to": "script:scripts/deploy-notifications-service.ts",
+      "to": "script:scripts/deploy-service.ts",
       "kind": "invokes"
     },
     {
@@ -57740,7 +57687,7 @@
     },
     {
       "from": "command:orders:deploy",
-      "to": "script:scripts/deploy-orders-service.ts",
+      "to": "script:scripts/deploy-service.ts",
       "kind": "invokes"
     },
     {
@@ -57920,7 +57867,7 @@
     },
     {
       "from": "command:products:deploy",
-      "to": "script:scripts/deploy-products-service.ts",
+      "to": "script:scripts/deploy-service.ts",
       "kind": "invokes"
     },
     {
@@ -57935,7 +57882,7 @@
     },
     {
       "from": "command:profiles:deploy",
-      "to": "script:scripts/deploy-profiles-service.ts",
+      "to": "script:scripts/deploy-service.ts",
       "kind": "invokes"
     },
     {
@@ -58280,7 +58227,7 @@
     },
     {
       "from": "command:sub2main:deploy",
-      "to": "script:scripts/deploy-sub2main.ts",
+      "to": "script:scripts/deploy-service.ts",
       "kind": "invokes"
     },
     {
@@ -58310,7 +58257,7 @@
     },
     {
       "from": "command:submain:deploy",
-      "to": "script:scripts/deploy-submain.ts",
+      "to": "script:scripts/deploy-service.ts",
       "kind": "invokes"
     },
     {
@@ -58756,6 +58703,11 @@
     {
       "from": "command:test:deployment-tools",
       "to": "test:scripts/tests/fastlane-secret-policy.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:deployment-tools",
+      "to": "test:scripts/tests/generic-service-tooling.test.ts",
       "kind": "invokes"
     },
     {
@@ -59555,7 +59507,17 @@
     },
     {
       "from": "command:test:release-core",
+      "to": "test:packages/release-core/src/tests/git-release-guards.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:release-core",
       "to": "test:packages/release-core/src/tests/index.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:release-core",
+      "to": "test:packages/release-core/src/tests/readiness.test.ts",
       "kind": "invokes"
     },
     {
@@ -70797,12 +70759,6 @@
     },
     {
       "from": "document:docs/05-platform-features/notifications-service-module.md",
-      "to": "script:scripts/sync-notifications-service-sources.ts",
-      "kind": "references",
-      "detail": "scripts/sync-notifications-service-sources.ts"
-    },
-    {
-      "from": "document:docs/05-platform-features/notifications-service-module.md",
       "to": "service:notifications",
       "kind": "references",
       "detail": "services/notifications"
@@ -71060,12 +71016,6 @@
       "to": "package:@asol/storage-core",
       "kind": "references",
       "detail": "packages/storage-core/src/config/storage-profiles.json"
-    },
-    {
-      "from": "document:docs/05-platform-features/products-service-module.md",
-      "to": "script:scripts/sync-products-service-sources.ts",
-      "kind": "references",
-      "detail": "scripts/sync-products-service-sources.ts"
     },
     {
       "from": "document:docs/05-platform-features/products-service-module.md",
@@ -74645,9 +74595,33 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/scripts-and-workflows.md",
+      "to": "package:@asol/account-declarations",
+      "kind": "references",
+      "detail": "@asol/account-declarations"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/scripts-and-workflows.md",
       "to": "package:@asol/data-core",
       "kind": "references",
       "detail": "@asol/data-core"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/scripts-and-workflows.md",
+      "to": "package:@asol/release-core",
+      "kind": "references",
+      "detail": "@asol/release-core"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/scripts-and-workflows.md",
+      "to": "package:@asol/service-mirror-core",
+      "kind": "references",
+      "detail": "@asol/service-mirror-core"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/scripts-and-workflows.md",
+      "to": "package:@asol/vercel-deploy-core",
+      "kind": "references",
+      "detail": "@asol/vercel-deploy-core"
     },
     {
       "from": "document:docs/07-mobile-and-release/scripts-and-workflows.md",
@@ -82130,6 +82104,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/release-core/src/pipeline/git-release-guards.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:packages/release-core/src/pipeline/input-hash.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -82154,6 +82134,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/release-core/src/pipeline/readiness.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:packages/release-core/src/pipeline/resume-safety.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -82161,6 +82147,12 @@
     {
       "from": "domain:architecture",
       "to": "source:packages/release-core/src/pipeline/run-deployment-npm-script.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/release-core/src/pipeline/service-build-cache.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -83414,7 +83406,19 @@
     },
     {
       "from": "domain:architecture",
+      "to": "test:packages/release-core/src/tests/git-release-guards.test.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "test:packages/release-core/src/tests/index.test.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "test:packages/release-core/src/tests/readiness.test.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -85952,30 +85956,6 @@
     },
     {
       "from": "domain:mobile-and-release",
-      "to": "script:scripts/deploy-notifications-service.ts",
-      "kind": "documents",
-      "detail": "scripts/"
-    },
-    {
-      "from": "domain:mobile-and-release",
-      "to": "script:scripts/deploy-orders-service.ts",
-      "kind": "documents",
-      "detail": "scripts/"
-    },
-    {
-      "from": "domain:mobile-and-release",
-      "to": "script:scripts/deploy-products-service.ts",
-      "kind": "documents",
-      "detail": "scripts/"
-    },
-    {
-      "from": "domain:mobile-and-release",
-      "to": "script:scripts/deploy-profiles-service.ts",
-      "kind": "documents",
-      "detail": "scripts/"
-    },
-    {
-      "from": "domain:mobile-and-release",
       "to": "script:scripts/deploy-push-target-choice.ts",
       "kind": "documents",
       "detail": "scripts/"
@@ -85994,13 +85974,7 @@
     },
     {
       "from": "domain:mobile-and-release",
-      "to": "script:scripts/deploy-sub2main.ts",
-      "kind": "documents",
-      "detail": "scripts/"
-    },
-    {
-      "from": "domain:mobile-and-release",
-      "to": "script:scripts/deploy-submain.ts",
+      "to": "script:scripts/deploy-service.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -86516,12 +86490,6 @@
     },
     {
       "from": "domain:mobile-and-release",
-      "to": "script:scripts/service-build-cache.ts",
-      "kind": "documents",
-      "detail": "scripts/"
-    },
-    {
-      "from": "domain:mobile-and-release",
       "to": "script:scripts/setup-turso-db.ts",
       "kind": "documents",
       "detail": "scripts/"
@@ -86564,37 +86532,7 @@
     },
     {
       "from": "domain:mobile-and-release",
-      "to": "script:scripts/sync-notifications-service-sources.ts",
-      "kind": "documents",
-      "detail": "scripts/"
-    },
-    {
-      "from": "domain:mobile-and-release",
-      "to": "script:scripts/sync-orders-service-sources.ts",
-      "kind": "documents",
-      "detail": "scripts/"
-    },
-    {
-      "from": "domain:mobile-and-release",
-      "to": "script:scripts/sync-products-service-sources.ts",
-      "kind": "documents",
-      "detail": "scripts/"
-    },
-    {
-      "from": "domain:mobile-and-release",
-      "to": "script:scripts/sync-profiles-service-sources.ts",
-      "kind": "documents",
-      "detail": "scripts/"
-    },
-    {
-      "from": "domain:mobile-and-release",
-      "to": "script:scripts/sync-sub2main-service-sources.ts",
-      "kind": "documents",
-      "detail": "scripts/"
-    },
-    {
-      "from": "domain:mobile-and-release",
-      "to": "script:scripts/sync-submain-service-sources.ts",
+      "to": "script:scripts/sync-service-sources.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -89751,6 +89689,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "test:scripts/tests/fastlane-secret-policy.test.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "test:scripts/tests/generic-service-tooling.test.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -135368,9 +135312,15 @@
     },
     {
       "from": "script:scripts/build-all-services.ts",
-      "to": "script:scripts/service-build-cache.ts",
+      "to": "package:@asol/release-core",
       "kind": "imports",
-      "detail": "./service-build-cache"
+      "detail": "@asol/release-core"
+    },
+    {
+      "from": "script:scripts/build-all-services.ts",
+      "to": "package:@asol/vercel-deploy-core",
+      "kind": "imports",
+      "detail": "@asol/vercel-deploy-core"
     },
     {
       "from": "script:scripts/build-android-debug.ts",
@@ -135789,15 +135739,15 @@
     },
     {
       "from": "script:scripts/check-service-smoke.ts",
-      "to": "script:scripts/release-service-smoke-probes.ts",
+      "to": "package:@asol/release-core",
       "kind": "imports",
-      "detail": "./release-service-smoke-probes"
+      "detail": "@asol/release-core"
     },
     {
       "from": "script:scripts/check-service-smoke.ts",
-      "to": "script:scripts/service-build-cache.ts",
+      "to": "script:scripts/release-service-smoke-probes.ts",
       "kind": "imports",
-      "detail": "./service-build-cache"
+      "detail": "./release-service-smoke-probes"
     },
     {
       "from": "script:scripts/check-service-smoke.ts",
@@ -135950,74 +135900,6 @@
       "detail": "@asol/vercel-deploy-core"
     },
     {
-      "from": "script:scripts/deploy-notifications-service.ts",
-      "to": "runtime:tooling",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "script:scripts/deploy-notifications-service.ts",
-      "to": "external-dependency:dotenv",
-      "kind": "imports",
-      "detail": "dotenv"
-    },
-    {
-      "from": "script:scripts/deploy-notifications-service.ts",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "imports",
-      "detail": "@asol/vercel-deploy-core"
-    },
-    {
-      "from": "script:scripts/deploy-orders-service.ts",
-      "to": "runtime:tooling",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "script:scripts/deploy-orders-service.ts",
-      "to": "external-dependency:dotenv",
-      "kind": "imports",
-      "detail": "dotenv"
-    },
-    {
-      "from": "script:scripts/deploy-orders-service.ts",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "imports",
-      "detail": "@asol/vercel-deploy-core"
-    },
-    {
-      "from": "script:scripts/deploy-products-service.ts",
-      "to": "runtime:tooling",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "script:scripts/deploy-products-service.ts",
-      "to": "external-dependency:dotenv",
-      "kind": "imports",
-      "detail": "dotenv"
-    },
-    {
-      "from": "script:scripts/deploy-products-service.ts",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "imports",
-      "detail": "@asol/vercel-deploy-core"
-    },
-    {
-      "from": "script:scripts/deploy-profiles-service.ts",
-      "to": "runtime:tooling",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "script:scripts/deploy-profiles-service.ts",
-      "to": "external-dependency:dotenv",
-      "kind": "imports",
-      "detail": "dotenv"
-    },
-    {
-      "from": "script:scripts/deploy-profiles-service.ts",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "imports",
-      "detail": "@asol/vercel-deploy-core"
-    },
-    {
       "from": "script:scripts/deploy-push-target-choice.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
@@ -136103,38 +135985,27 @@
       "detail": "./deploy-push"
     },
     {
-      "from": "script:scripts/deploy-sub2main.ts",
+      "from": "script:scripts/deploy-service.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
     },
     {
-      "from": "script:scripts/deploy-sub2main.ts",
+      "from": "script:scripts/deploy-service.ts",
       "to": "external-dependency:dotenv",
       "kind": "imports",
       "detail": "dotenv"
     },
     {
-      "from": "script:scripts/deploy-sub2main.ts",
+      "from": "script:scripts/deploy-service.ts",
       "to": "package:@asol/vercel-deploy-core",
       "kind": "imports",
       "detail": "@asol/vercel-deploy-core"
     },
     {
-      "from": "script:scripts/deploy-submain.ts",
-      "to": "runtime:tooling",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "script:scripts/deploy-submain.ts",
-      "to": "external-dependency:dotenv",
+      "from": "script:scripts/deploy-service.ts",
+      "to": "script:scripts/sync-service-sources.ts",
       "kind": "imports",
-      "detail": "dotenv"
-    },
-    {
-      "from": "script:scripts/deploy-submain.ts",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "imports",
-      "detail": "@asol/vercel-deploy-core"
+      "detail": "./sync-service-sources"
     },
     {
       "from": "script:scripts/deployed-origin-resolution.ts",
@@ -137438,6 +137309,12 @@
     },
     {
       "from": "script:scripts/release-readiness-publish.ts",
+      "to": "package:@asol/release-core",
+      "kind": "imports",
+      "detail": "@asol/release-core"
+    },
+    {
+      "from": "script:scripts/release-readiness-publish.ts",
       "to": "package:@asol/vercel-deploy-core",
       "kind": "imports",
       "detail": "@asol/vercel-deploy-core"
@@ -137456,12 +137333,6 @@
       "from": "script:scripts/release-rollback-baseline.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
-    },
-    {
-      "from": "script:scripts/release-rollback-baseline.ts",
-      "to": "package:@asol/account-declarations",
-      "kind": "imports",
-      "detail": "@asol/account-declarations"
     },
     {
       "from": "script:scripts/release-rollback-baseline.ts",
@@ -137786,22 +137657,6 @@
       "kind": "uses-environment"
     },
     {
-      "from": "script:scripts/service-build-cache.ts",
-      "to": "runtime:tooling",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "script:scripts/service-build-cache.ts",
-      "to": "package:@asol/release-core",
-      "kind": "imports",
-      "detail": "@asol/release-core"
-    },
-    {
-      "from": "script:scripts/service-build-cache.ts",
-      "to": "environment-key:ASOL_SERVICE_SMOKE_REBUILD",
-      "kind": "uses-environment"
-    },
-    {
       "from": "script:scripts/setup-turso-db.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
@@ -137844,6 +137699,12 @@
       "kind": "affects-runtime"
     },
     {
+      "from": "script:scripts/sync-all-service-sources.ts",
+      "to": "package:@asol/vercel-deploy-core",
+      "kind": "imports",
+      "detail": "@asol/vercel-deploy-core"
+    },
+    {
       "from": "script:scripts/sync-control-service-sources.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
@@ -137871,103 +137732,24 @@
       "kind": "affects-runtime"
     },
     {
-      "from": "script:scripts/sync-notifications-service-sources.ts",
+      "from": "script:scripts/sync-service-sources.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
     },
     {
-      "from": "script:scripts/sync-notifications-service-sources.ts",
+      "from": "script:scripts/sync-service-sources.ts",
+      "to": "package:@asol/account-declarations",
+      "kind": "imports",
+      "detail": "@asol/account-declarations"
+    },
+    {
+      "from": "script:scripts/sync-service-sources.ts",
       "to": "package:@asol/service-mirror-core",
       "kind": "imports",
       "detail": "@asol/service-mirror-core"
     },
     {
-      "from": "script:scripts/sync-notifications-service-sources.ts",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "imports",
-      "detail": "@asol/vercel-deploy-core"
-    },
-    {
-      "from": "script:scripts/sync-orders-service-sources.ts",
-      "to": "runtime:tooling",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "script:scripts/sync-orders-service-sources.ts",
-      "to": "package:@asol/service-mirror-core",
-      "kind": "imports",
-      "detail": "@asol/service-mirror-core"
-    },
-    {
-      "from": "script:scripts/sync-orders-service-sources.ts",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "imports",
-      "detail": "@asol/vercel-deploy-core"
-    },
-    {
-      "from": "script:scripts/sync-products-service-sources.ts",
-      "to": "runtime:tooling",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "script:scripts/sync-products-service-sources.ts",
-      "to": "package:@asol/service-mirror-core",
-      "kind": "imports",
-      "detail": "@asol/service-mirror-core"
-    },
-    {
-      "from": "script:scripts/sync-products-service-sources.ts",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "imports",
-      "detail": "@asol/vercel-deploy-core"
-    },
-    {
-      "from": "script:scripts/sync-profiles-service-sources.ts",
-      "to": "runtime:tooling",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "script:scripts/sync-profiles-service-sources.ts",
-      "to": "package:@asol/service-mirror-core",
-      "kind": "imports",
-      "detail": "@asol/service-mirror-core"
-    },
-    {
-      "from": "script:scripts/sync-profiles-service-sources.ts",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "imports",
-      "detail": "@asol/vercel-deploy-core"
-    },
-    {
-      "from": "script:scripts/sync-sub2main-service-sources.ts",
-      "to": "runtime:tooling",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "script:scripts/sync-sub2main-service-sources.ts",
-      "to": "package:@asol/service-mirror-core",
-      "kind": "imports",
-      "detail": "@asol/service-mirror-core"
-    },
-    {
-      "from": "script:scripts/sync-sub2main-service-sources.ts",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "imports",
-      "detail": "@asol/vercel-deploy-core"
-    },
-    {
-      "from": "script:scripts/sync-submain-service-sources.ts",
-      "to": "runtime:tooling",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "script:scripts/sync-submain-service-sources.ts",
-      "to": "package:@asol/service-mirror-core",
-      "kind": "imports",
-      "detail": "@asol/service-mirror-core"
-    },
-    {
-      "from": "script:scripts/sync-submain-service-sources.ts",
+      "from": "script:scripts/sync-service-sources.ts",
       "to": "package:@asol/vercel-deploy-core",
       "kind": "imports",
       "detail": "@asol/vercel-deploy-core"
@@ -138197,6 +137979,12 @@
       "to": "package:@asol/service-mirror-core",
       "kind": "imports",
       "detail": "@asol/service-mirror-core"
+    },
+    {
+      "from": "script:scripts/verify-service-mirrors.ts",
+      "to": "package:@asol/vercel-deploy-core",
+      "kind": "imports",
+      "detail": "@asol/vercel-deploy-core"
     },
     {
       "from": "service:control",
@@ -172739,6 +172527,12 @@
     },
     {
       "from": "source:packages/release-core/src/index.ts",
+      "to": "source:packages/release-core/src/pipeline/git-release-guards.ts",
+      "kind": "imports",
+      "detail": "./pipeline/git-release-guards"
+    },
+    {
+      "from": "source:packages/release-core/src/index.ts",
       "to": "source:packages/release-core/src/pipeline/input-hash.ts",
       "kind": "imports",
       "detail": "./pipeline/input-hash"
@@ -172763,6 +172557,12 @@
     },
     {
       "from": "source:packages/release-core/src/index.ts",
+      "to": "source:packages/release-core/src/pipeline/readiness.ts",
+      "kind": "imports",
+      "detail": "./pipeline/readiness"
+    },
+    {
+      "from": "source:packages/release-core/src/index.ts",
       "to": "source:packages/release-core/src/pipeline/resume-safety.ts",
       "kind": "imports",
       "detail": "./pipeline/resume-safety"
@@ -172772,6 +172572,12 @@
       "to": "source:packages/release-core/src/pipeline/run-deployment-npm-script.ts",
       "kind": "imports",
       "detail": "./pipeline/run-deployment-npm-script"
+    },
+    {
+      "from": "source:packages/release-core/src/index.ts",
+      "to": "source:packages/release-core/src/pipeline/service-build-cache.ts",
+      "kind": "imports",
+      "detail": "./pipeline/service-build-cache"
     },
     {
       "from": "source:packages/release-core/src/index.ts",
@@ -172890,6 +172696,36 @@
     },
     {
       "from": "source:packages/release-core/src/pipeline/error-summary.ts",
+      "to": "package:@asol/release-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/git-release-guards.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/git-release-guards.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/git-release-guards.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/git-release-guards.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/git-release-guards.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/git-release-guards.ts",
       "to": "package:@asol/release-core",
       "kind": "belongs-to"
     },
@@ -173030,6 +172866,36 @@
       "kind": "uses-environment"
     },
     {
+      "from": "source:packages/release-core/src/pipeline/readiness.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/readiness.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/readiness.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/readiness.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/readiness.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/readiness.ts",
+      "to": "package:@asol/release-core",
+      "kind": "belongs-to"
+    },
+    {
       "from": "source:packages/release-core/src/pipeline/resume-safety.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -173100,6 +172966,53 @@
       "to": "package:@asol/vercel-deploy-core",
       "kind": "imports",
       "detail": "@asol/vercel-deploy-core"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/service-build-cache.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/service-build-cache.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/service-build-cache.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/service-build-cache.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/service-build-cache.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/service-build-cache.ts",
+      "to": "package:@asol/release-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/service-build-cache.ts",
+      "to": "source:packages/release-core/src/pipeline/input-hash.ts",
+      "kind": "imports",
+      "detail": "./input-hash"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/service-build-cache.ts",
+      "to": "source:packages/release-core/src/pipeline/state.ts",
+      "kind": "imports",
+      "detail": "./state"
+    },
+    {
+      "from": "source:packages/release-core/src/pipeline/service-build-cache.ts",
+      "to": "environment-key:ASOL_SERVICE_SMOKE_REBUILD",
+      "kind": "uses-environment"
     },
     {
       "from": "source:packages/release-core/src/pipeline/state.ts",
@@ -243941,6 +243854,47 @@
       "kind": "tests"
     },
     {
+      "from": "test:packages/release-core/src/tests/git-release-guards.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/release-core/src/tests/git-release-guards.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/release-core/src/tests/git-release-guards.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/release-core/src/tests/git-release-guards.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/release-core/src/tests/git-release-guards.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/release-core/src/tests/git-release-guards.test.ts",
+      "to": "package:@asol/release-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:packages/release-core/src/tests/git-release-guards.test.ts",
+      "to": "source:packages/release-core/src/index.ts",
+      "kind": "imports",
+      "detail": "../index"
+    },
+    {
+      "from": "test:packages/release-core/src/tests/git-release-guards.test.ts",
+      "to": "package:@asol/release-core",
+      "kind": "tests"
+    },
+    {
       "from": "test:packages/release-core/src/tests/index.test.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -243997,6 +243951,47 @@
       "from": "test:packages/release-core/src/tests/index.test.ts",
       "to": "environment-key:ASOL_TEST_DEPLOY_TOKEN",
       "kind": "uses-environment"
+    },
+    {
+      "from": "test:packages/release-core/src/tests/readiness.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/release-core/src/tests/readiness.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/release-core/src/tests/readiness.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/release-core/src/tests/readiness.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/release-core/src/tests/readiness.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/release-core/src/tests/readiness.test.ts",
+      "to": "package:@asol/release-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:packages/release-core/src/tests/readiness.test.ts",
+      "to": "source:packages/release-core/src/index.ts",
+      "kind": "imports",
+      "detail": "../index"
+    },
+    {
+      "from": "test:packages/release-core/src/tests/readiness.test.ts",
+      "to": "package:@asol/release-core",
+      "kind": "tests"
     },
     {
       "from": "test:packages/secrets-core/src/tests/index.test.ts",
@@ -245843,12 +245838,6 @@
     },
     {
       "from": "test:scripts/tests/deploy-all-resume.test.ts",
-      "to": "script:scripts/service-build-cache.ts",
-      "kind": "imports",
-      "detail": "../service-build-cache"
-    },
-    {
-      "from": "test:scripts/tests/deploy-all-resume.test.ts",
       "to": "package:@asol/release-core",
       "kind": "tests"
     },
@@ -245860,11 +245849,6 @@
     {
       "from": "test:scripts/tests/deploy-all-resume.test.ts",
       "to": "script:scripts/gate-step-checkpoints.ts",
-      "kind": "tests"
-    },
-    {
-      "from": "test:scripts/tests/deploy-all-resume.test.ts",
-      "to": "script:scripts/service-build-cache.ts",
       "kind": "tests"
     },
     {
@@ -245993,6 +245977,44 @@
     {
       "from": "test:scripts/tests/fastlane-secret-policy.test.ts",
       "to": "script:scripts/fastlane-secret-policy.ts",
+      "kind": "tests"
+    },
+    {
+      "from": "test:scripts/tests/generic-service-tooling.test.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:scripts/tests/generic-service-tooling.test.ts",
+      "to": "package:@asol/account-declarations",
+      "kind": "imports",
+      "detail": "@asol/account-declarations"
+    },
+    {
+      "from": "test:scripts/tests/generic-service-tooling.test.ts",
+      "to": "package:@asol/vercel-deploy-core",
+      "kind": "imports",
+      "detail": "@asol/vercel-deploy-core"
+    },
+    {
+      "from": "test:scripts/tests/generic-service-tooling.test.ts",
+      "to": "script:scripts/sync-service-sources.ts",
+      "kind": "imports",
+      "detail": "../sync-service-sources"
+    },
+    {
+      "from": "test:scripts/tests/generic-service-tooling.test.ts",
+      "to": "package:@asol/account-declarations",
+      "kind": "tests"
+    },
+    {
+      "from": "test:scripts/tests/generic-service-tooling.test.ts",
+      "to": "package:@asol/vercel-deploy-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:scripts/tests/generic-service-tooling.test.ts",
+      "to": "script:scripts/sync-service-sources.ts",
       "kind": "tests"
     },
     {

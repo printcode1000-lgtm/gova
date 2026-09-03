@@ -23,9 +23,10 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import path from 'node:path';
 
 import { collectSpecifiers } from '@asol/service-mirror-core';
+import { RELEASE_WORKLOADS } from '@asol/vercel-deploy-core';
 
 const ROOT = process.cwd();
-const SERVICES = ['notifications', 'products', 'orders', 'profiles', 'submain', 'sub2main'] as const;
+const SERVICES = RELEASE_WORKLOADS;
 
 const CODE_EXTENSIONS = ['.ts', '.tsx', '.mts', '.cts', '.js', '.mjs'];
 const RESOLUTION_SUFFIXES = [
