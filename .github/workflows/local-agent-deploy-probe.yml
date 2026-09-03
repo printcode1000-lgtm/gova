@@ -7,46 +7,27 @@ on:
 permissions:
   contents: read
 jobs:
-  probe:
+  deploy:
     runs-on: [self-hosted, Linux, X64, gova]
-    timeout-minutes: 10
+    timeout-minutes: 120
     steps:
-      - name: Inspect local state through gateway
+      - name: Resume deploy on canonical local workspace
         shell: bash
         run: |
           set -euo pipefail
-          python3 - <<'PY'
-          import json, time, urllib.request
-          from pathlib import Path
-          base='http://127.0.0.1:8765'
-          key=Path('/home/hesham/.config/gova-agent/auth').read_text().strip()
-          headers={'X-Gova-Agent-Key':key,'Content-Type':'application/json'}
-          def req(method,path,payload=None):
-              data=None if payload is None else json.dumps(payload).encode()
-              r=urllib.request.Request(base+path,data=data,headers=headers,method=method)
-              with urllib.request.urlopen(r,timeout=30) as resp:
-                  return json.loads(resp.read().decode())
-          agent='cloud-deploy-repair-inspect-20260903'
-          req('POST','/v1/agent/register',{'agent_id':agent})
-          cmd="""set -e
-          echo '=== MAIN ==='
           cd /home/hesham/gova
-          git status --short --branch
-          echo HEAD=$(git rev-parse HEAD)
-          echo ORIGIN_MAIN=$(git rev-parse origin/main)
-          echo '=== INTEGRATION ==='
-          cd /home/hesham/gova-agents/integration
-          git status --short --branch
-          echo HEAD=$(git rev-parse HEAD)
-          echo ORIGIN_INTEGRATION=$(git rev-parse origin/integration)
-          """
-          started=req('POST','/v1/exec/start',{'agent_id':agent,'command':cmd,'cwd':'/home/hesham/gova'})
-          cid=started['command_id']
-          for _ in range(120):
-              st=req('GET','/v1/commands/'+cid)['command']
-              if st['status'] in ('completed','failed','cancelled'):
-                  break
-              time.sleep(1)
-          print(req('GET','/v1/commands/'+cid+'/logs?tail=100000'))
-          print('STATUS',st['status'],'EXIT',st.get('exit_code'))
-          PY
+          git fetch --quiet origin main
+          unexpected="$(git status --porcelain | awk '$2 !~ /^public\/sync_data\/.*schema-sync-report\.json$/ {print}')"
+          if [ -n "$unexpected" ]; then
+            echo "Unexpected local changes:" >&2
+            echo "$unexpected" >&2
+            exit 2
+          fi
+          git restore -- public/sync_data/*schema-sync-report.json
+          if [ "$(git branch --show-current)" != main ]; then
+            echo "Canonical workspace is not on main" >&2
+            exit 2
+          fi
+          git pull --ff-only origin main
+          npm run test:release-commands
+          npm run deploy:all -- --from-branch=tests
