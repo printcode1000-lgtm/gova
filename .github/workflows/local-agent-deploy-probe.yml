@@ -7,27 +7,17 @@ on:
 permissions:
   contents: read
 jobs:
-  deploy:
+  scan:
     runs-on: [self-hosted, Linux, X64, gova]
-    timeout-minutes: 120
+    timeout-minutes: 10
     steps:
-      - name: Resume deploy on canonical local workspace
+      - name: Scan presentation line lengths
         shell: bash
         run: |
           set -euo pipefail
           cd /home/hesham/gova
           git fetch --quiet origin main
-          unexpected="$(git status --porcelain | awk '$2 !~ /^public\/sync_data\/.*schema-sync-report\.json$/ {print}')"
-          if [ -n "$unexpected" ]; then
-            echo "Unexpected local changes:" >&2
-            echo "$unexpected" >&2
-            exit 2
-          fi
-          git restore -- public/sync_data/*schema-sync-report.json
-          if [ "$(git branch --show-current)" != main ]; then
-            echo "Canonical workspace is not on main" >&2
-            exit 2
-          fi
+          git restore -- public/sync_data/*schema-sync-report.json 2>/dev/null || true
           git pull --ff-only origin main
-          npm run test:release-commands
-          npm run deploy:all -- --from-branch=tests
+          find src/features/google-play-console/presentation -type f \( -name '*.ts' -o -name '*.tsx' \) -print0 | \
+            xargs -0 awk 'length($0)>120 {print FILENAME ":" FNR ":" length($0) ":" $0}'
