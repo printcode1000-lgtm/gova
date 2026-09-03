@@ -6,7 +6,9 @@ maintenance. They differ in which gates run, not in what publishing means:
 `scripts/deploy-push.ts` as `runReleaseTransaction`.
 
 For the account/project topology those commands act on, see
-[deployment-targets.md](./deployment-targets.md). For resuming a failed
+[deployment-targets.md](./deployment-targets.md). For the consolidated incident, repair,
+file-level change list, verification evidence, and remaining external Vercel limit, see the
+[2026-09-03 release orchestration hardening record](./release-orchestration-hardening-2026-09-03.md). For resuming a failed
 `deploy:all`, see
 [deploy-all-resume-and-checkpoints.md](./deploy-all-resume-and-checkpoints.md).
 
