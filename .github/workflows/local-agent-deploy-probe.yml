@@ -11,11 +11,11 @@ jobs:
     runs-on: [self-hosted, Linux, X64, gova]
     timeout-minutes: 15
     steps:
-      - name: Preserve stale worktree and submit verified repair
+      - name: Inspect merge conflicts through Gateway
         shell: bash
         run: |
           python3 - <<'PY'
-          import json, time, urllib.request, urllib.error
+          import json, time, urllib.request
           from pathlib import Path
           base='http://127.0.0.1:8765'
           key=Path('/home/hesham/.config/gova-agent/auth').read_text().strip()
@@ -23,28 +23,35 @@ jobs:
           def call(method,path,payload=None):
               body=None if payload is None else json.dumps(payload).encode()
               req=urllib.request.Request(base+path,data=body,headers=headers,method=method)
-              try:
-                  with urllib.request.urlopen(req,timeout=120) as r: return json.loads(r.read() or b'{}')
-              except urllib.error.HTTPError as e:
-                  print('HTTP', e.code, e.read().decode())
-                  raise
-          audit='chatgpt-integration-audit'
-          call('POST','/v1/agent/register',{'agent_id':audit})
-          command="set -e; git status --porcelain --untracked-files=all > /tmp/gova-integration-dirty.txt; if [ -s /tmp/gova-integration-dirty.txt ]; then git stash push -u -m 'preserved-stale-integration-before-smoke-fix-20260903'; fi; echo STASH; git stash list -1; echo STATUS; git status --short --branch"
-          started=call('POST','/v1/exec/start',{'agent_id':audit,'command':command,'cwd':'/home/hesham/gova-agents/integration'})
+              with urllib.request.urlopen(req,timeout=120) as r: return json.loads(r.read() or b'{}')
+          agent='chatgpt-integration-reconcile'
+          call('POST','/v1/agent/register',{'agent_id':agent})
+          command=r'''set -e
+          git fetch --quiet origin main integration
+          git checkout integration >/dev/null
+          git reset --hard origin/integration >/dev/null
+          test -z "$(git status --porcelain --untracked-files=all)"
+          set +e
+          git merge --no-commit --no-ff origin/main >/tmp/gova-merge-probe.out 2>&1
+          rc=$?
+          set -e
+          cat /tmp/gova-merge-probe.out
+          echo '=== CONFLICTS ==='
+          git diff --name-only --diff-filter=U
+          echo '=== STATUS ==='
+          git status --short
+          if git rev-parse -q --verify MERGE_HEAD >/dev/null; then git merge --abort; fi
+          echo '=== AFTER ABORT ==='
+          git status --short --branch
+          echo MERGE_PROBE_RC=$rc
+          '''
+          started=call('POST','/v1/exec/start',{'agent_id':agent,'command':command,'cwd':'/home/hesham/gova-agents/integration'})
           cid=started['command_id']
           while True:
               cmd=call('GET','/v1/commands/'+cid)['command']
               if cmd['status']!='running': break
               time.sleep(1)
-          logs=call('GET','/v1/commands/'+cid+'/logs?tail=100000')
+          logs=call('GET','/v1/commands/'+cid+'/logs?tail=180000')
           print(logs.get('stdout','')); print(logs.get('stderr',''))
           if cmd.get('exit_code') != 0: raise SystemExit(1)
-          result=call('POST','/v1/integration/submit',{
-              'agent_id':'chatgpt-service-smoke-fix',
-              'task_id':'task-6da808b04d6f',
-              'commit_sha':'6ca88e54d0a708967d13e5bb1afbae417bb352ae',
-              'verification':['git diff --check HEAD^ HEAD']
-          })
-          print('INTEGRATION_SUBMIT='+json.dumps(result,ensure_ascii=False))
           PY
