@@ -51,7 +51,7 @@ def main():
         print('R2 publishing skipped: tunnel URL missing', file=sys.stderr)
         return 3
 
-    public_url = URL_FILE.read_text().strip()
+    public_url = URL_FILE.read_text().strip().rstrip('/')
     if not public_url.startswith('https://'):
         print('R2 publishing skipped: invalid tunnel URL', file=sys.stderr)
         return 4
@@ -67,7 +67,10 @@ def main():
     payload = json.dumps({
         'service': 'gova-agent-gateway',
         'url': public_url,
-        'health': public_url.rstrip('/') + '/health',
+        'health': public_url + '/health',
+        'mcp': public_url + '/mcp',
+        'mcpTransport': 'streamable-http',
+        'mcpProtocolVersion': '2025-06-18',
         'updatedAt': now.isoformat(),
         'host': socket.gethostname(),
     }, separators=(',', ':'), ensure_ascii=False).encode()
