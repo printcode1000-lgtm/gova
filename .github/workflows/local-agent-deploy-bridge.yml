@@ -11,7 +11,7 @@ jobs:
     runs-on: [self-hosted, Linux, X64, gova]
     timeout-minutes: 180
     steps:
-      - name: Resume deploy all through persistent gateway
+      - name: Sync repaired main and resume deploy all through persistent gateway
         shell: bash
         run: |
           set -euo pipefail
@@ -27,11 +27,19 @@ jobs:
                   return json.loads(x.read() or b'{}')
           with urllib.request.urlopen(base+'/health',timeout=5) as r:
               if r.status != 200: raise SystemExit('gateway health failed')
-          agent='cloud-deploy-all-resume-20260903'
+          agent='cloud-deploy-all-resume2-20260903'
           req('POST','/v1/agent/register',{'agent_id':agent})
           command=r'''cd /home/hesham/gova
           set -o pipefail
-          npm run deploy:all -- --from-branch=production-doctor 2>&1 | tee /tmp/gova-deploy-all.log
+          test_file='src/features/profile/tests/profile-preview-responsive.test.ts'
+          git fetch --quiet origin main
+          if [ -n "$(git status --porcelain -- "$test_file")" ]; then
+            echo 'target test file has local modifications' >&2
+            exit 2
+          fi
+          git merge --ff-only origin/main
+          npx tsx "$test_file"
+          npm run deploy:all -- --from-branch=tests 2>&1 | tee /tmp/gova-deploy-all.log
           rc=${PIPESTATUS[0]}
           echo "DEPLOY_EXIT_CODE=$rc"
           exit "$rc"
