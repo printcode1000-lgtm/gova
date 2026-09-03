@@ -123,6 +123,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run github:ci-policy` | `Tooling` | 1 |  | 0 |
 | `npm run github:protect` | `Tooling` | 1 |  | 0 |
 | `npm run gova:artifact:verify` | `Tooling` | 1 |  | 0 |
+| `npm run gova:cors:push` | `Tooling` | 1 |  | 0 |
 | `npm run gova:tree` | `Tooling` | 1 |  | 0 |
 | `npm run gova:tree:check` | `Tooling` | 1 |  | 0 |
 | `npm run intelligence:retrain` | `Tooling` | 1 |  | 0 |

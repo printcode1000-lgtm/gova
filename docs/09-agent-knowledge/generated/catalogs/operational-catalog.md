@@ -137,6 +137,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run github:ci-policy` | `npx tsx scripts/github-ci-policy.ts` |
 | `npm run github:protect` | `npx tsx scripts/protect-main-branch.ts` |
 | `npm run gova:artifact:verify` | `npx tsx scripts/verify-gova-artifact.ts` |
+| `npm run gova:cors:push` | `npx tsx scripts/push-gova-cors-origins.ts` |
 | `npm run gova:tree` | `npx tsx scripts/build-gova-deployment-tree.ts` |
 | `npm run gova:tree:check` | `npx tsx scripts/build-gova-deployment-tree.ts --check` |
 | `npm run intelligence:retrain` | `npx tsx scripts/retrain-project-intelligence.ts` |

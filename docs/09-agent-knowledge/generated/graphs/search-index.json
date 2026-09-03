@@ -1784,6 +1784,21 @@
       ]
     },
     {
+      "id": "command:gova:cors:push",
+      "kind": "command",
+      "name": "npm run gova:cors:push",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "cors",
+        "gova",
+        "gova:cors:push",
+        "npm",
+        "npm run gova:cors:push",
+        "push",
+        "run"
+      ]
+    },
+    {
       "id": "command:gova:tree",
       "kind": "command",
       "name": "npm run gova:tree",
@@ -11264,6 +11279,8 @@
         "packages/storage-core/src/server/transport/r2-cors-policy.ts",
         "produced",
         "repository",
+        "scripts/push-gova-cors-origins",
+        "scripts/push-gova-cors-origins.ts",
         "sends",
         "services/profiles/src/app/lib/http",
         "services/profiles/src/app/lib/http.ts",
@@ -27204,6 +27221,17 @@
       "tags": [
         "scripts/provision-turso",
         "scripts/provision-turso.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/push-gova-cors-origins.ts",
+      "kind": "script",
+      "name": "push-gova-cors-origins.ts",
+      "path": "scripts/push-gova-cors-origins.ts",
+      "tags": [
+        "scripts/push-gova-cors-origins",
+        "scripts/push-gova-cors-origins.ts",
         "ts"
       ]
     },

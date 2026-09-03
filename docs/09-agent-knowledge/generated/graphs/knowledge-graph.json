@@ -1784,6 +1784,21 @@
       ]
     },
     {
+      "id": "command:gova:cors:push",
+      "kind": "command",
+      "name": "npm run gova:cors:push",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "cors",
+        "gova",
+        "gova:cors:push",
+        "npm",
+        "npm run gova:cors:push",
+        "push",
+        "run"
+      ]
+    },
+    {
       "id": "command:gova:tree",
       "kind": "command",
       "name": "npm run gova:tree",
@@ -11264,6 +11279,8 @@
         "packages/storage-core/src/server/transport/r2-cors-policy.ts",
         "produced",
         "repository",
+        "scripts/push-gova-cors-origins",
+        "scripts/push-gova-cors-origins.ts",
         "sends",
         "services/profiles/src/app/lib/http",
         "services/profiles/src/app/lib/http.ts",
@@ -27204,6 +27221,17 @@
       "tags": [
         "scripts/provision-turso",
         "scripts/provision-turso.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/push-gova-cors-origins.ts",
+      "kind": "script",
+      "name": "push-gova-cors-origins.ts",
+      "path": "scripts/push-gova-cors-origins.ts",
+      "tags": [
+        "scripts/push-gova-cors-origins",
+        "scripts/push-gova-cors-origins.ts",
         "ts"
       ]
     },
@@ -57591,6 +57619,16 @@
       "kind": "targets-runtime"
     },
     {
+      "from": "command:gova:cors:push",
+      "to": "script:scripts/push-gova-cors-origins.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:gova:cors:push",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
       "from": "command:gova:tree:check",
       "to": "script:scripts/build-gova-deployment-tree.ts",
       "kind": "invokes"
@@ -71322,6 +71360,12 @@
       "to": "package:@asol/service-runtime-core",
       "kind": "references",
       "detail": "@asol/service-runtime-core"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/cors-module.md",
+      "to": "script:scripts/push-gova-cors-origins.ts",
+      "kind": "references",
+      "detail": "scripts/push-gova-cors-origins.ts"
     },
     {
       "from": "document:docs/05-platform-features/sealed-packages/cors-module.md",
@@ -86263,6 +86307,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "script:scripts/provision-turso.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/push-gova-cors-origins.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -137036,6 +137086,40 @@
     {
       "from": "script:scripts/provision-turso.ts",
       "to": "environment-key:TURSO_ORGANIZATION",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "script:scripts/push-gova-cors-origins.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/push-gova-cors-origins.ts",
+      "to": "package:@asol/cors",
+      "kind": "imports",
+      "detail": "@asol/cors"
+    },
+    {
+      "from": "script:scripts/push-gova-cors-origins.ts",
+      "to": "package:@asol/native-core",
+      "kind": "imports",
+      "detail": "@asol/native-core"
+    },
+    {
+      "from": "script:scripts/push-gova-cors-origins.ts",
+      "to": "package:@asol/vercel-deploy-core",
+      "kind": "imports",
+      "detail": "@asol/vercel-deploy-core"
+    },
+    {
+      "from": "script:scripts/push-gova-cors-origins.ts",
+      "to": "script:scripts/load-release-env.ts",
+      "kind": "imports",
+      "detail": "./load-release-env"
+    },
+    {
+      "from": "script:scripts/push-gova-cors-origins.ts",
+      "to": "environment-key:VERCEL_TOKEN",
       "kind": "uses-environment"
     },
     {

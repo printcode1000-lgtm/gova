@@ -128,6 +128,20 @@ caller states what an unset variable means for it, because the answers genuinely
 
 The Configuration layer owns the environment read (`src/core/config/cors-origins.ts` is the
 application's one allowlisted reader); the parsing and the variable's name belong to this package.
+
+For the gova frontend the value is **derived, not typed**:
+
+```bash
+npm run gova:cors:push              # show what would be set
+npm run gova:cors:push -- --apply   # write it to the Vercel project
+```
+
+`scripts/push-gova-cors-origins.ts` builds the list from `API_BASE_URL` plus gova's production
+aliases and `DEVELOPMENT_ORIGINS`, round-trips it through `parseAllowedOrigins`, and upserts it. A
+hand-entered list is a fact about production that no test can see and no review can catch drifting,
+and the entry that goes missing is always the one nobody browses from — an installed Android or iOS
+build on `capacitor://localhost`. The variable takes effect on the next deployment, never on the one
+already serving.
 `DEVELOPMENT_ORIGINS` is exported for a caller that wants localhost and the Capacitor/Ionic shell
 origins as its fallback; no production surface uses it.
 
