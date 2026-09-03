@@ -11,45 +11,26 @@ jobs:
     runs-on: [self-hosted, Linux, X64, gova]
     timeout-minutes: 15
     steps:
-      - name: Inspect local Cloudflare and gateway state
+      - name: Discover existing Gova R2 configuration safely
         shell: bash
         run: |
           set -euo pipefail
-          echo '=== GOVA_CLOUDFLARE_BOOTSTRAP_BEGIN ==='
-          CF_BIN="$(command -v cloudflared || true)"
-          if [ -z "$CF_BIN" ] && [ -x /home/hesham/.local/bin/cloudflared ]; then CF_BIN=/home/hesham/.local/bin/cloudflared; fi
-          echo "cloudflared_present=$([ -n "$CF_BIN" ] && echo yes || echo no)"
-          if [ -n "$CF_BIN" ]; then "$CF_BIN" --version || true; fi
-
-          if curl -fsS --max-time 3 http://127.0.0.1:8765/health >/tmp/gova-gateway-health.json; then
-            echo 'gateway_health=ok'
-            cat /tmp/gova-gateway-health.json
+          echo '=== GOVA_R2_DISCOVERY_BEGIN ==='
+          echo "gateway_public_status:"
+          /home/hesham/.local/bin/gova-agent-public status || true
+          echo '--- candidate-files ---'
+          find /home/hesham/gova -xdev -type f \( -name '.env' -o -name '.env.*' -o -name 'r2.env' -o -name '*r2*.env' \) \
+            -not -path '*/node_modules/*' -not -path '*/.git/*' -print 2>/dev/null | sort | head -100 || true
+          echo '--- files-containing-required-r2-variable-names ---'
+          grep -RIl --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=.next \
+            -E 'R2_ACCOUNT_ID|R2_ACCESS_KEY_ID|R2_SECRET_ACCESS_KEY|R2_BUCKET' /home/hesham/gova 2>/dev/null | sort | head -100 || true
+          echo '--- config-status ---'
+          if [ -s /home/hesham/.config/gova-agent/r2.env ]; then
+            echo 'gova_agent_r2_env=present'
+            for key in R2_ACCOUNT_ID R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY R2_BUCKET R2_PUBLIC_BASE_URL; do
+              if grep -q "^${key}=" /home/hesham/.config/gova-agent/r2.env; then echo "${key}=present"; else echo "${key}=missing"; fi
+            done
           else
-            echo 'gateway_health=failed'
+            echo 'gova_agent_r2_env=missing'
           fi
-
-          if sudo -n true 2>/dev/null; then echo 'passwordless_sudo=yes'; else echo 'passwordless_sudo=no'; fi
-          echo "gateway_auth_file=$([ -s /home/hesham/.config/gova-agent/auth ] && echo present || echo missing)"
-          echo "cloudflare_cert=$([ -s /home/hesham/.cloudflared/cert.pem ] && echo present || echo missing)"
-          echo "cloudflare_config=$([ -s /home/hesham/.cloudflared/config.yml ] && echo present || echo missing)"
-          echo "cloudflare_config_yaml=$([ -s /home/hesham/.cloudflared/config.yaml ] && echo present || echo missing)"
-
-          if [ -n "$CF_BIN" ] && [ -s /home/hesham/.cloudflared/cert.pem ]; then
-            echo '--- named_tunnels ---'
-            "$CF_BIN" tunnel list --output json 2>/dev/null | python3 -c 'import json,sys; d=json.load(sys.stdin); print(json.dumps([{"id":x.get("id"),"name":x.get("name"),"createdAt":x.get("createdAt")} for x in d], ensure_ascii=False))' || true
-          fi
-
-          echo '--- cloudflared_files ---'
-          find /home/hesham/.cloudflared -maxdepth 1 -type f -printf '%f\n' 2>/dev/null | sort || true
-          echo '--- candidate_token_sources ---'
-          for f in \
-            /home/hesham/.config/gova-agent/cloudflare-tunnel-token \
-            /home/hesham/.config/cloudflared/tunnel-token \
-            /etc/cloudflared/tunnel-token; do
-            [ -s "$f" ] && echo "$f=present" || true
-          done
-          env | cut -d= -f1 | grep -E '^(CLOUDFLARE|CF_).*TUNNEL.*TOKEN$' || true
-          systemctl --user is-active gova-agent-monitor-public.service 2>/dev/null | sed 's/^/quick_tunnel_service=/' || true
-          systemctl is-active gova-agent-gateway.service 2>/dev/null | sed 's/^/gateway_system_service=/' || true
-          systemctl --user is-active gova-agent-gateway.service 2>/dev/null | sed 's/^/gateway_user_service=/' || true
-          echo '=== GOVA_CLOUDFLARE_BOOTSTRAP_END ==='
+          echo '=== GOVA_R2_DISCOVERY_END ==='
