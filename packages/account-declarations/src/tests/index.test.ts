@@ -2,6 +2,7 @@ import { readFileSync, readdirSync, existsSync } from 'fs';
 import path from 'path';
 import {
   ACCOUNT_DECLARATIONS,
+  CONTROL_DECLARATION,
   GOVA_DECLARATION,
   NOTIFICATIONS_DECLARATION,
   PRODUCTS_DECLARATION,
@@ -129,6 +130,21 @@ function runTests(): void {
     assert(overlap.length === 0, `${declaration.name}: no key is both required and optional`);
   }
   console.log('  ✔ Env key counts unchanged: 11 / 13 / 18 / 21.');
+
+  // ---------------------------------------------------------------- control Super Admin user-search data boundary
+  const controlUserSearchKeys = [
+    'PROFILE_CORE_DATABASE_URL',
+    'PROFILE_CORE_DATABASE_AUTH_TOKEN',
+    'TURSO_PRODUCT_DATABASE_URL',
+    'TURSO_PRODUCT_AUTH_TOKEN',
+  ];
+  for (const key of controlUserSearchKeys) {
+    assert(
+      (CONTROL_DECLARATION.requiredEnv as readonly string[]).includes(key),
+      `control: Super Admin user search requires ${key}`,
+    );
+  }
+  console.log('  ✔ Control declares the bounded profile-core + product credentials used by Super Admin user search.');
 
   // ---------------------------------------------------------------- no cross-account knowledge
   // Rule 0 at the data layer: a declaration may name only its own account.

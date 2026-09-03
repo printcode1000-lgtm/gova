@@ -157,15 +157,19 @@ and [Notification Bridge Module](../05-platform-features/notification-bridge-mod
 
 | Account | Email | Databases | Domain | Read by |
 |---|---|---:|---|---|
-| `hesham101` | `print.code.1000@gmail.com` | 3 | users and auth, advertisements, system operations | `gova` + `submain` + `sub2main` |
+| `hesham101` | `print.code.1000@gmail.com` | 3 | users and auth, advertisements, system operations | `gova` + `submain` + `sub2main` + `control` (users/system-ops only) |
 | `hesham102` | `bs.bid.story@gmail.com` | 1 | notifications | `gova` + `asol-notifications` |
-| `hesham103` | `gnagnahesham@gmail.com` | 1 | products | `gova` + `asol-products` + `sub2main` |
+| `hesham103` | `gnagnahesham@gmail.com` | 1 | products | `gova` + `asol-products` + `sub2main` + `control` (product counts only) |
 | `hesham104` | `tenderx10@gmail.com` | 9 | marketplace order shards | `gova` + `asol-orders` + `submain` |
-| `hesham105` | `hesham10125@gmail.com` | 7 | profile shards | `gova` + `asol-profiles` + `sub2main` |
+| `hesham105` | `hesham10125@gmail.com` | 7 | profile shards | `gova` + `asol-profiles` + `sub2main` + `control` (`profile-core` only) |
 
 `gova` and `submain` hold the full application runtime credentials. `sub2main`
 holds product, profile-shard, users, and R2 credentials for seller writes. Each
-read-only deployment holds **only** the shards it serves.
+read-only deployment holds **only** the shards it serves. `control` has one bounded
+cross-domain read for Super Admin user administration: users, `profile-core`, and
+product credentials are required so `/api/super-admin/users/search` can combine
+identity/specialties with product counts; it does not receive the other profile
+shards or workload write credentials.
 
 ### hesham101 — 3 databases
 

@@ -2,15 +2,21 @@
  * Operational-only control runtime. Values are deliberately names-only.
  *
  * What control's route graph proves it needs to answer at all: the session
- * secret every operational route verifies against, the primary Turso database
- * behind OTA administration, and the system-ops shard behind System Logs.
- * Without any one of them control still starts and then refuses every request,
+ * secret every operational route verifies against; the primary Turso database
+ * behind OTA administration and Super Admin users; the system-ops shard behind
+ * System Logs; and the bounded profile-core + product reads used by Super Admin
+ * user search (identity/specialties and product counts only).
+ * Without any one of them control can still start while the affected route fails,
  * which is the failure this list exists to make impossible.
  */
 export const CONTROL_RUNTIME_REQUIRED_ENV_KEYS = [
   'ASOL_SESSION_SIGNING_SECRET',
   'TURSO_DATABASE_URL',
   'TURSO_AUTH_TOKEN',
+  'PROFILE_CORE_DATABASE_URL',
+  'PROFILE_CORE_DATABASE_AUTH_TOKEN',
+  'TURSO_PRODUCT_DATABASE_URL',
+  'TURSO_PRODUCT_AUTH_TOKEN',
   'SYSTEM_OPS_DATABASE_URL',
   'SYSTEM_OPS_DATABASE_AUTH_TOKEN',
 ] as const;
