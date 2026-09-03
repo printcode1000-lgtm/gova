@@ -7,43 +7,22 @@ on:
 permissions:
   contents: read
 jobs:
-  bootstrap-and-verify:
+  verify-current-public-discovery:
     runs-on: [self-hosted, Linux, X64, gova]
-    timeout-minutes: 10
+    timeout-minutes: 5
     steps:
-      - name: Install current integration runtime and verify public discovery
+      - name: Verify current tunnel and R2 discovery without restart
         shell: bash
         run: |
           set -euo pipefail
-          git -C /home/hesham/gova fetch --quiet origin integration
-          mkdir -p /home/hesham/gova-agents
-          if [ ! -e /home/hesham/gova-agents/integration/.git ]; then
-            git -C /home/hesham/gova worktree add /home/hesham/gova-agents/integration integration
-          fi
-          git -C /home/hesham/gova-agents/integration checkout integration >/dev/null 2>&1
-          git -C /home/hesham/gova-agents/integration reset --hard origin/integration
-          GOVA_AGENT_REPO=/home/hesham/gova-agents/integration bash /home/hesham/gova-agents/integration/tools/local-agent/install.sh
-
-          echo '--- local public status ---'
+          systemctl --user is-active --quiet gova-agent-public.service
           /home/hesham/.local/bin/gova-agent-public status
           local_url="$(/home/hesham/.local/bin/gova-agent-public url)"
-
-          echo '--- publish discovery ---'
           discovery_url="$(/home/hesham/.local/bin/gova-agent-public publish)"
           printf 'discovery_url=%s\n' "$discovery_url"
           case "$discovery_url" in
             https://*) ;;
             *) echo 'publisher did not return a public discovery URL' >&2; exit 1 ;;
           esac
-
-          echo '--- verify public R2 discovery ---'
           discovery_json="$(curl -fsS --retry 5 --retry-delay 1 --max-time 15 "$discovery_url")"
           DISCOVERY_JSON="$discovery_json" LOCAL_URL="$local_url" python3 -c "import json,os; obj=json.loads(os.environ['DISCOVERY_JSON']); expected=os.environ['LOCAL_URL']; assert obj.get('service')=='gova-agent-gateway',obj; assert obj.get('url')==expected,(obj.get('url'),expected); assert obj.get('health')==expected.rstrip('/')+'/health',obj; print(json.dumps({'r2_discovery':'ok','url':obj['url'],'health':obj['health'],'updatedAt':obj.get('updatedAt')},ensure_ascii=False))"
-
-          echo '--- tunnel transport ---'
-          systemctl --user is-active --quiet gova-agent-public.service
-          if /home/hesham/.local/bin/gova-agent-public health; then
-            echo 'tunnel_health=ok'
-          else
-            echo 'tunnel_health=dns-propagation-pending'
-          fi
