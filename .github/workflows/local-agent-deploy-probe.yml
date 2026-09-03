@@ -7,23 +7,27 @@ on:
 permissions:
   contents: read
 jobs:
-  inspect:
+  validate:
     runs-on: [self-hosted, Linux, X64, gova]
-    timeout-minutes: 10
+    timeout-minutes: 30
     steps:
-      - name: Inspect local formatter availability
+      - name: Format and validate integration worktree
         shell: bash
         run: |
           set -euo pipefail
-          cd /home/hesham/gova
-          git fetch --quiet origin main
-          git restore -- public/sync_data/*schema-sync-report.json 2>/dev/null || true
-          git pull --ff-only origin main
-          node - <<'NODE'
-          for (const pkg of ['prettier','@biomejs/biome','typescript']) {
-            try { console.log(pkg + '=' + require.resolve(pkg)); }
-            catch { console.log(pkg + '=missing'); }
-          }
-          NODE
-          if [ -x node_modules/.bin/prettier ]; then node_modules/.bin/prettier --version; fi
-          if [ -x node_modules/.bin/biome ]; then node_modules/.bin/biome --version; fi
+          iw=/home/hesham/gova-agents/integration
+          git -C "$iw" fetch --quiet origin integration
+          if [ -n "$(git -C "$iw" status --porcelain)" ]; then
+            echo "integration worktree is dirty" >&2
+            git -C "$iw" status --short
+            exit 2
+          fi
+          git -C "$iw" checkout integration >/dev/null
+          git -C "$iw" reset --hard origin/integration >/dev/null
+          cd "$iw"
+          /home/hesham/gova/node_modules/.bin/prettier --write "src/features/google-play-console/presentation/**/*.tsx" --print-width 120
+          npm run test:release-commands
+          echo '=== DIFF STAT ==='
+          git diff --stat
+          echo '=== STATUS ==='
+          git status --short
