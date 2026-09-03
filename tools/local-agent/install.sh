@@ -9,9 +9,11 @@ mkdir -p \
   /home/hesham/.config/systemd/user \
   /home/hesham/.local/share/gova-agent-runtime \
   /home/hesham/.local/state/gova-agent-monitor \
+  /home/hesham/.local/state/gova-agent-tunnel \
   /home/hesham/.local/share/applications \
   /home/hesham/gova-agents
 install -m 0755 "$runtime_src/gateway.py" /home/hesham/.local/lib/gova-agent/gateway.py
+rm -f /home/hesham/.local/lib/gova-agent/mcp_bridge.py
 install -m 0755 "$runtime_src/cli.py" /home/hesham/.local/lib/gova-agent/cli.py
 install -m 0755 "$runtime_src/monitor.py" /home/hesham/.local/lib/gova-agent/monitor.py
 install -m 0755 "$runtime_src/monitor-launcher.sh" /home/hesham/.local/lib/gova-agent/monitor-launcher.sh
@@ -19,6 +21,9 @@ install -m 0755 "$runtime_src/web_monitor.py" /home/hesham/.local/lib/gova-agent
 install -m 0755 "$runtime_src/monitor-web-launcher.sh" /home/hesham/.local/lib/gova-agent/monitor-web-launcher.sh
 install -m 0755 "$runtime_src/monitor-public.sh" /home/hesham/.local/lib/gova-agent/monitor-public.sh
 install -m 0755 "$runtime_src/monitor-cloudflare-tunnel.sh" /home/hesham/.local/lib/gova-agent/monitor-cloudflare-tunnel.sh
+install -m 0755 "$runtime_src/gateway-quick-tunnel.sh" /home/hesham/.local/lib/gova-agent/gateway-quick-tunnel.sh
+install -m 0755 "$runtime_src/gova-agent-public.sh" /home/hesham/.local/lib/gova-agent/gova-agent-public.sh
+install -m 0755 "$runtime_src/publish-public-url-r2.py" /home/hesham/.local/lib/gova-agent/publish-public-url-r2.py
 install -m 0644 "$runtime_src/web/index.html" /home/hesham/.local/lib/gova-agent/web/index.html
 install -m 0755 "$runtime_src/recovery.py" /home/hesham/.local/lib/gova-agent/recovery.py
 install -m 0755 "$runtime_src/git_credential.py" /home/hesham/.local/lib/gova-agent/git_credential.py
@@ -27,11 +32,8 @@ ln -sfn /home/hesham/.local/lib/gova-agent/monitor.py /home/hesham/.local/bin/go
 ln -sfn /home/hesham/.local/lib/gova-agent/monitor-launcher.sh /home/hesham/.local/bin/gova-agent-monitor-launcher
 ln -sfn /home/hesham/.local/lib/gova-agent/monitor-web-launcher.sh /home/hesham/.local/bin/gova-agent-monitor-web
 ln -sfn /home/hesham/.local/lib/gova-agent/monitor-public.sh /home/hesham/.local/bin/gova-agent-monitor-public
+ln -sfn /home/hesham/.local/lib/gova-agent/gova-agent-public.sh /home/hesham/.local/bin/gova-agent-public
 
-# Git reads must not depend on stale desktop credentials. Publishing remains on
-# the gateway's GitHub API path. Empty helper entries intentionally reset any
-# inherited/global helpers, then the runtime helper resolves the local token at
-# request time without persisting the token itself.
 git -C "$repo" remote set-url origin https://github.com/printcode1000-lgtm/gova.git
 git -C "$repo" config --local --unset-all credential.helper 2>/dev/null || true
 git -C "$repo" config --local --unset-all credential.https://github.com.helper 2>/dev/null || true
@@ -40,8 +42,6 @@ git -C "$repo" config --local --add credential.helper /home/hesham/.local/lib/go
 git -C "$repo" config --local credential.https://github.com.helper ''
 git -C "$repo" config --local --add credential.https://github.com.helper /home/hesham/.local/lib/gova-agent/git_credential.py
 
-# Retire the old watch process. Keep the curses monitor installed as a CLI
-# fallback, while the desktop icon opens the Arabic loopback-only HTML monitor.
 pkill -f 'scripts/local-agent-watch.ts' 2>/dev/null || true
 cat > /home/hesham/.local/share/applications/gova-local-agents-monitor.desktop <<'DESKTOP'
 [Desktop Entry]
@@ -82,16 +82,15 @@ else
   systemctl --user restart gova-agent-gateway.service
 fi
 
-# The HTML dashboard is intentionally user-scoped and loopback-only.
 install -m 0644 "$runtime_src/gova-agent-monitor-web.service" /home/hesham/.config/systemd/user/gova-agent-monitor-web.service
+install -m 0644 "$runtime_src/gova-agent-public.service" /home/hesham/.config/systemd/user/gova-agent-public.service
 systemctl --user daemon-reload
 systemctl --user enable gova-agent-monitor-web.service
 systemctl --user restart gova-agent-monitor-web.service
-systemctl --user enable gova-agent-monitor-public.service >/dev/null 2>&1 || true
-systemctl --user restart gova-agent-monitor-public.service >/dev/null 2>&1 || true
+systemctl --user enable gova-agent-public.service >/dev/null 2>&1 || true
+systemctl --user restart gova-agent-public.service >/dev/null 2>&1 || true
 
-# Installation completes only when both local HTTP services accept requests.
-for _ in $(seq 1 80); do
+for _ in $(seq 1 160); do
   if python3 - <<'HEALTH' >/dev/null 2>&1
 import urllib.request
 for url in ('http://127.0.0.1:8765/health', 'http://127.0.0.1:8766/health'):
@@ -100,16 +99,19 @@ for url in ('http://127.0.0.1:8765/health', 'http://127.0.0.1:8766/health'):
             raise SystemExit(1)
 HEALTH
   then
-    exit 0
+    if [ -s /home/hesham/.local/state/gova-agent-tunnel/public-url ]; then
+      exit 0
+    fi
   fi
-  sleep 0.1
+  sleep 0.25
 done
 
-echo 'gova-agent services did not become ready after restart' >&2
+echo 'gova-agent services or public tunnel did not become ready after restart' >&2
 if sudo -n true 2>/dev/null; then
   sudo systemctl status gova-agent-gateway.service --no-pager || true
 else
   systemctl --user status gova-agent-gateway.service --no-pager || true
 fi
 systemctl --user status gova-agent-monitor-web.service --no-pager || true
+systemctl --user status gova-agent-public.service --no-pager || true
 exit 1
