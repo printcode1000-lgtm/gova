@@ -17,19 +17,44 @@ jobs:
           set -euo pipefail
           cat > /tmp/gova-service-smoke-finish.sh <<'SH_REPAIR'
           set -euo pipefail
+          echo '=== CURRENT PATCH STATE ==='
+          git status --short --branch
+          sed -n '1,55p' scripts/build-all-services.ts
+          sed -n '1,90p' scripts/check-service-smoke.ts
+
           python3 - <<'PY_PATCH'
           from pathlib import Path
+          import re
+
           p=Path('scripts/build-all-services.ts')
           s=p.read_text()
-          imp="import { createServiceReleaseEnvironment } from './service-release-environment';\n"
-          if imp not in s:
-              marker="import { RELEASE_WORKLOADS } from '@asol/vercel-deploy-core';\n"
-              if marker not in s:
-                  raise SystemExit('release workloads import marker not found')
-              s=s.replace(marker, marker+imp, 1)
+          imp='import { createServiceReleaseEnvironment } from "./service-release-environment";\n'
+          if 'createServiceReleaseEnvironment } from' not in s:
+              pattern=r'(import\s*\{\s*RELEASE_WORKLOADS\s*\}\s*from\s*[\'\"]@asol/vercel-deploy-core[\'\"];\n)'
+              s2,n=re.subn(pattern, r'\1'+imp, s, count=1)
+              if n != 1:
+                  # Fall back to inserting after the final top-level import statement.
+                  matches=list(re.finditer(r'^import .*?;\n', s, flags=re.MULTILINE))
+                  if not matches:
+                      raise SystemExit('no import insertion point found')
+                  pos=matches[-1].end()
+                  s2=s[:pos]+imp+s[pos:]
+              p.write_text(s2)
+
+          # Ensure the smoke file imported the helper as well.
+          p=Path('scripts/check-service-smoke.ts')
+          s=p.read_text()
+          if 'createServiceReleaseEnvironment } from' not in s:
+              matches=list(re.finditer(r'^import .*?;\n', s, flags=re.MULTILINE))
+              if not matches:
+                  raise SystemExit('no smoke import insertion point found')
+              pos=matches[-1].end()
+              s=s[:pos]+'import { createServiceReleaseEnvironment } from "./service-release-environment";\n'+s[pos:]
               p.write_text(s)
           PY_PATCH
-          grep -n 'createServiceReleaseEnvironment' scripts/build-all-services.ts scripts/check-service-smoke.ts
+
+          echo '=== IMPORT CHECK ==='
+          grep -n 'createServiceReleaseEnvironment' scripts/build-all-services.ts scripts/check-service-smoke.ts scripts/service-release-environment.ts
           npx tsx scripts/tests/service-release-environment.test.ts
           git diff --check
 
@@ -45,11 +70,14 @@ jobs:
             if [ -d "$src" ] && [ ! -e "$dst" ]; then ln -s "$src" "$dst"; created+=("$dst"); fi
           done
 
+          echo '=== CHECKPOINT services:build ==='
           npm run services:build
+          echo '=== CHECKPOINT smoke:services ==='
           npm run smoke:services
           cleanup
           trap - EXIT
 
+          echo '=== COMMIT REPAIR ==='
           git status --short
           git diff --check
           git add scripts/build-all-services.ts scripts/check-service-smoke.ts scripts/service-release-environment.ts scripts/tests/service-release-environment.test.ts docs/08-troubleshooting/problems/README.md docs/08-troubleshooting/problems/service-smoke-release-environment.md
