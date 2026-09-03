@@ -1,6 +1,11 @@
 name: local-agent-bootstrap
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - integration
+    paths:
+      - ".github/workflows/local-agent-bootstrap.yml"
 permissions:
   contents: read
 jobs:
