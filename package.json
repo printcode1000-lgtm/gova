@@ -70,6 +70,7 @@
     "test:phone-field": "npx tsx src/shared/phone/tests/phone-field-model.test.ts",
     "test:account-deletion-registry": "npx tsx packages/data-core/src/domains/account-deletion/tests/account-deletion-registry.contract.test.ts",
     "test:catalog-core": "npx tsx packages/catalog-core/src/tests/index.test.ts",
+    "test:cors-core": "npx tsx packages/cors/src/tests/index.test.ts",
     "test:format-core": "npx tsx packages/format-core/src/tests/index.test.ts",
     "test:google-play-store-assets-core": "npx tsx packages/google-play-store-assets-core/src/tests/index.test.ts",
     "test:signed-token-core": "npx tsx packages/signed-token-core/src/tests/index.test.ts",

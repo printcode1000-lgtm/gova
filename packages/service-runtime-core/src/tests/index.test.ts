@@ -2,8 +2,9 @@ import assert from 'node:assert/strict';
 import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
+import { BROWSER_REQUEST_HEADERS, createCorsPolicy, reflectRequestOrigin } from '@asol/cors';
+
 import {
-  BROWSER_REQUEST_HEADERS,
   createServiceHttp,
   credentialHealthReport,
   errorMessageOf,
@@ -21,18 +22,44 @@ const manifest = JSON.parse(
 assert.deepEqual(Object.keys(manifest.exports), ['.'], 'One door.');
 
 // Every deployment builds this into its own bundle, so a dependency here is a dependency in six
-// uploads. `Request`/`Response` are the whole contract.
-for (const file of ['domain/cors.ts', 'domain/error-status.ts', 'domain/service-http.ts', 'domain/health.ts', 'index.ts']) {
+// uploads. `Request`/`Response` are the whole contract, plus `@asol/cors` — which is itself
+// dependency-free and owns every `Access-Control-*` header in the repository.
+const ALLOWED_DEPENDENCIES = new Set(['@asol/cors']);
+for (const file of ['domain/error-status.ts', 'domain/service-http.ts', 'domain/service-proxy.ts', 'domain/health.ts', 'index.ts']) {
   const text = readFileSync(path.join(ROOT, 'packages/service-runtime-core/src', file), 'utf8');
   for (const match of text.matchAll(/from\s+'([^']+)'/g)) {
-    assert.ok(match[1]!.startsWith('.'), `${file} imports ${match[1]}; this package has no dependencies.`);
+    const specifier = match[1]!;
+    assert.ok(
+      specifier.startsWith('.') || ALLOWED_DEPENDENCIES.has(specifier),
+      `${file} imports ${specifier}; this package depends only on ${[...ALLOWED_DEPENDENCIES].join(', ')}.`,
+    );
   }
 }
 
-// ── CORS ────────────────────────────────────────────────────────────────────
+// CORS is not implemented here. A copy growing back in this package is how five copies existed.
+for (const file of ['domain/error-status.ts', 'domain/service-http.ts', 'domain/service-proxy.ts', 'domain/health.ts', 'index.ts']) {
+  const text = readFileSync(path.join(ROOT, 'packages/service-runtime-core/src', file), 'utf8');
+  for (const line of text.split('\n')) {
+    const code = line.trim();
+    if (code.startsWith('*') || code.startsWith('//') || code.startsWith('/*')) continue;
+    assert.ok(
+      !/Access-Control-/i.test(code),
+      `${file} writes a CORS header by hand: ${code}. @asol/cors owns every one of them.`,
+    );
+  }
+}
+
+// ── CORS pass-through ───────────────────────────────────────────────────────
+//
+// The semantics — exact-origin comparison, Vary, no wildcard with credentials, preflight and
+// response agreeing — belong to @asol/cors and are tested there. What this package owns is that a
+// deployment's own policy reaches every response it builds, including its error responses.
 const http = createServiceHttp({
-  methods: 'GET, OPTIONS',
-  headers: 'Content-Type, Accept',
+  cors: createCorsPolicy({
+    origins: reflectRequestOrigin(),
+    methods: ['GET', 'OPTIONS'],
+    headers: ['Content-Type', 'Accept'],
+  }),
   defaultRules: [{ status: 404, equals: ['missing'] }],
 });
 
@@ -185,5 +212,5 @@ for (const file of [
 }
 
 console.log(
-  `@asol/service-runtime-core contract: 1 door, zero dependencies, ${deployments.length} deployments on the shared runtime.`,
+  `@asol/service-runtime-core contract: 1 door, CORS delegated to @asol/cors, ${deployments.length} deployments on the shared runtime.`,
 );

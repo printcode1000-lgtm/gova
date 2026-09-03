@@ -13,6 +13,7 @@ Detailed module docs for sealed `@asol/*` packages. Canonical ownership summarie
 | Package | Document |
 |---|---|
 | `@asol/catalog-core` | [catalog-core-module.md](./catalog-core-module.md) |
+| `@asol/cors` | [cors-module.md](./cors-module.md) |
 | `@asol/data-core` | [data-core-module.md](./data-core-module.md) |
 | `@asol/env-core` | [env-core-module.md](./env-core-module.md) |
 | `@asol/format-core` | [format-core-module.md](./format-core-module.md) |

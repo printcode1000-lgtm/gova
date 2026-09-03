@@ -7,12 +7,10 @@
  * the mechanism; each deployment keeps its own policy — which methods it answers, which error
  * codes it can produce, which shards it needs.
  *
- * Dependency-free and framework-free: `Request` and `Response` only, so it runs in every runtime
- * a deployment might be built for.
+ * Framework-free: `Request` and `Response` only, so it runs in every runtime a deployment might be
+ * built for. Its one dependency is `@asol/cors`, which owns every CORS decision in the repository;
+ * this package holds no `Access-Control-*` header of its own.
  */
-export type { CorsPolicy } from './domain/cors';
-export { BROWSER_REQUEST_HEADERS, corsHeadersFor, preflightFor, withCorsFor } from './domain/cors';
-
 export type { ErrorStatusRule } from './domain/error-status';
 export { INTERNAL_SERVER_ERROR, errorMessageOf, mapErrorStatus } from './domain/error-status';
 

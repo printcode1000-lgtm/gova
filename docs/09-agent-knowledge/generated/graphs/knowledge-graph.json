@@ -2872,6 +2872,20 @@
       ]
     },
     {
+      "id": "command:test:cors-core",
+      "kind": "command",
+      "name": "npm run test:cors-core",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "cors-core",
+        "npm",
+        "npm run test:cors-core",
+        "run",
+        "test",
+        "test:cors-core"
+      ]
+    },
+    {
       "id": "command:test:data-core",
       "kind": "command",
       "name": "npm run test:data-core",
@@ -6226,6 +6240,7 @@
         "@asol/catalog-core",
         "@asol/catalog-core/server",
         "@asol/control-composition",
+        "@asol/cors",
         "@asol/data-core",
         "@asol/data-core/account-deletion",
         "@asol/data-core/advertisements",
@@ -6371,6 +6386,7 @@
         "packages/branding-core/",
         "packages/catalog-core/",
         "packages/control-composition/",
+        "packages/cors/",
         "packages/data-core/",
         "packages/data-health-core/",
         "packages/dev-core/",
@@ -6439,6 +6455,7 @@
         "@asol/branding-core",
         "@asol/catalog-core",
         "@asol/control-composition",
+        "@asol/cors",
         "@asol/data-core",
         "@asol/data-core/browser",
         "@asol/data-core/marketplace-orders",
@@ -6603,6 +6620,7 @@
         "@asol/branding-core",
         "@asol/catalog-core",
         "@asol/control-composition",
+        "@asol/cors",
         "@asol/data-core",
         "@asol/data-health-core",
         "@asol/dev-core",
@@ -6670,6 +6688,7 @@
         "packages/branding-core/",
         "packages/catalog-core/",
         "packages/control-composition/",
+        "packages/cors/",
         "packages/data-core/",
         "packages/data-health-core/",
         "packages/dev-core/",
@@ -7088,6 +7107,7 @@
       "summary": "Preserved operational and architectural detail, relocated here during the 2026-08 architecture reconstruction. Agents use this for implementation guidance.",
       "tags": [
         "2026-08",
+        "@asol/cors",
         "agents",
         "and",
         "architectural",
@@ -7413,6 +7433,7 @@
       "summary": "Preserved operational and architectural detail, relocated here during the 2026-08 architecture reconstruction. Agents use this for implementation guidance.",
       "tags": [
         "2026-08",
+        "@asol/cors",
         "agents",
         "and",
         "architectural",
@@ -7427,6 +7448,7 @@
         "implementation",
         "md",
         "operational",
+        "packages/cors/",
         "preserved",
         "preserved operational and architectural detail, relocated here during the 2026-08 architecture reconstruction. agents use this for implementation guidance.",
         "reconstruction",
@@ -7897,6 +7919,7 @@
         "/01-architecture/readme",
         "2026-08",
         "> **note:** operational detail relocated here during the 2026-08 architecture reconstruction. architectural relationships: [docs/01-architecture/](../01-architecture/readme.md).",
+        "@asol/cors",
         "architectural",
         "architecture",
         "detail",
@@ -8039,6 +8062,7 @@
       "tags": [
         "166",
         "8486fdbb1c87dc78481f2def0a23e043",
+        "@asol/cors",
         "@asol/ota-core",
         "@asol/storage-core",
         "account",
@@ -10510,6 +10534,7 @@
       "path": "docs/05-platform-features/network-status-system.md",
       "summary": "ASOL has a centralized, platform-agnostic network status system that covers every page and every Business API request. It works in the browser, static exports, Android, and iOS without importing Capacitor into application code.",
       "tags": [
+        "@asol/cors",
         "and",
         "android",
         "api",
@@ -11204,6 +11229,73 @@
       ]
     },
     {
+      "id": "document:docs/05-platform-features/sealed-packages/cors-module.md",
+      "kind": "document",
+      "name": "`@asol/cors`",
+      "path": "docs/05-platform-features/sealed-packages/cors-module.md",
+      "summary": "The single source of truth for CORS in this repository. Every `Access-Control-*` header any ASOL surface sends is produced here, and nowhere else.",
+      "tags": [
+        "@asol/cors",
+        "@asol/service-runtime-core",
+        "`@asol/cors`",
+        "access-control-",
+        "and",
+        "any",
+        "asol",
+        "cors",
+        "docs/05-platform-features/sealed-packages/cors-module",
+        "docs/05-platform-features/sealed-packages/cors-module.md",
+        "else",
+        "every",
+        "for",
+        "header",
+        "here",
+        "in",
+        "is",
+        "md",
+        "nowhere",
+        "of",
+        "packages/architecture-core/src/checks/cors-contract",
+        "packages/architecture-core/src/checks/cors-contract.ts",
+        "packages/cors/",
+        "packages/ota-core/scripts/sync-cors",
+        "packages/ota-core/scripts/sync-cors.ts",
+        "packages/storage-core/src/server/transport/r2-cors-policy",
+        "packages/storage-core/src/server/transport/r2-cors-policy.ts",
+        "produced",
+        "repository",
+        "sends",
+        "services/profiles/src/app/lib/http",
+        "services/profiles/src/app/lib/http.ts",
+        "single",
+        "source",
+        "src/apply",
+        "src/apply.ts",
+        "src/core/config/cors-origins",
+        "src/core/config/cors-origins.ts",
+        "src/env",
+        "src/env.ts",
+        "src/headers",
+        "src/headers.ts",
+        "src/origins",
+        "src/origins.ts",
+        "src/policy",
+        "src/policy.ts",
+        "src/preflight",
+        "src/preflight.ts",
+        "src/proxy",
+        "src/proxy.ts",
+        "src/types",
+        "src/types.ts",
+        "surface",
+        "the",
+        "the single source of truth for cors in this repository. every `access-control-*` header any asol surface sends is produced here, and nowhere else.",
+        "this",
+        "truth",
+        "ts"
+      ]
+    },
+    {
       "id": "document:docs/05-platform-features/sealed-packages/data-core-module.md",
       "kind": "document",
       "name": "`@asol/data-core`",
@@ -11578,6 +11670,7 @@
         "@asol/auth-core",
         "@asol/branding-core",
         "@asol/catalog-core",
+        "@asol/cors",
         "@asol/data-core",
         "@asol/dev-core",
         "@asol/env-core",
@@ -11629,11 +11722,16 @@
       "kind": "document",
       "name": "`@asol/service-runtime-core`",
       "path": "docs/05-platform-features/sealed-packages/service-runtime-core-module.md",
-      "summary": "What every service deployment does identically: CORS, error→status mapping, and liveness.",
+      "summary": "What every service deployment does identically: the CORS boundary, error→status mapping, and liveness. CORS itself is not implemented here — this package consumes [`@asol/cors`](./cors-module.md), which owns every `Access-Control-*` header in the repository.",
       "tags": [
+        "/cors-module",
+        "@asol/cors",
         "@asol/service-runtime-core",
         "`@asol/service-runtime-core`",
+        "access-control-",
         "and",
+        "boundary",
+        "consumes",
         "cors",
         "deployment",
         "docs/05-platform-features/sealed-packages/service-runtime-core-module",
@@ -11641,21 +11739,30 @@
         "does",
         "error",
         "every",
+        "header",
+        "here",
         "identically",
+        "implemented",
+        "in",
+        "is",
+        "itself",
         "liveness",
         "mapping",
         "md",
+        "not",
+        "owns",
+        "package",
+        "repository",
         "service",
-        "services/profiles/src/app/lib/http",
-        "services/profiles/src/app/lib/http.ts",
         "src/app/lib/http",
         "src/app/lib/http.ts",
-        "src/proxy",
-        "src/proxy.ts",
         "status",
+        "the",
+        "this",
         "ts",
         "what",
-        "what every service deployment does identically: cors, error→status mapping, and liveness."
+        "what every service deployment does identically: the cors boundary, error→status mapping, and liveness. cors itself is not implemented here — this package consumes [`@asol/cors`](./cors-module.md), which owns every `access-control-*` header in the repository.",
+        "which"
       ]
     },
     {
@@ -14857,6 +14964,7 @@
       "path": "docs/08-troubleshooting/problems/preflight-answered-without-cors-headers.md",
       "summary": "The browser reports a network failure for a route whose origin is healthy:",
       "tags": [
+        "@asol/cors",
         "@asol/service-runtime-core",
         "a route reports `unable to reach the server` while the server is up",
         "browser",
@@ -14869,6 +14977,7 @@
         "md",
         "network",
         "origin",
+        "packages/cors/",
         "reach",
         "reports",
         "route",
@@ -22217,6 +22326,26 @@
       ]
     },
     {
+      "id": "package:@asol/cors",
+      "kind": "package",
+      "name": "@asol/cors",
+      "path": "packages/cors",
+      "summary": "Cross-origin (CORS) policy, headers, and preflight; Layer: capability; Public exports: .",
+      "tags": [
+        ".",
+        "@asol/cors",
+        "and",
+        "capability",
+        "cors",
+        "cross-origin",
+        "cross-origin (cors) policy, headers, and preflight",
+        "headers",
+        "packages/cors",
+        "policy",
+        "preflight"
+      ]
+    },
+    {
       "id": "package:@asol/data-core",
       "kind": "package",
       "name": "@asol/data-core",
@@ -28595,6 +28724,17 @@
       ]
     },
     {
+      "id": "source:packages/architecture-core/src/checks/cors-contract.ts",
+      "kind": "source",
+      "name": "cors-contract.ts",
+      "path": "packages/architecture-core/src/checks/cors-contract.ts",
+      "tags": [
+        "packages/architecture-core/src/checks/cors-contract",
+        "packages/architecture-core/src/checks/cors-contract.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/architecture-core/src/checks/feature-application-door-purity-contract.ts",
       "kind": "source",
       "name": "feature-application-door-purity-contract.ts",
@@ -29422,6 +29562,94 @@
       "tags": [
         "packages/control-composition/src/index",
         "packages/control-composition/src/index.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/cors/src/apply.ts",
+      "kind": "source",
+      "name": "apply.ts",
+      "path": "packages/cors/src/apply.ts",
+      "tags": [
+        "packages/cors/src/apply",
+        "packages/cors/src/apply.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/cors/src/env.ts",
+      "kind": "source",
+      "name": "env.ts",
+      "path": "packages/cors/src/env.ts",
+      "tags": [
+        "packages/cors/src/env",
+        "packages/cors/src/env.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/cors/src/headers.ts",
+      "kind": "source",
+      "name": "headers.ts",
+      "path": "packages/cors/src/headers.ts",
+      "tags": [
+        "packages/cors/src/headers",
+        "packages/cors/src/headers.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/cors/src/index.ts",
+      "kind": "source",
+      "name": "index.ts",
+      "path": "packages/cors/src/index.ts",
+      "tags": [
+        "packages/cors/src/index",
+        "packages/cors/src/index.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/cors/src/origins.ts",
+      "kind": "source",
+      "name": "origins.ts",
+      "path": "packages/cors/src/origins.ts",
+      "tags": [
+        "packages/cors/src/origins",
+        "packages/cors/src/origins.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/cors/src/policy.ts",
+      "kind": "source",
+      "name": "policy.ts",
+      "path": "packages/cors/src/policy.ts",
+      "tags": [
+        "packages/cors/src/policy",
+        "packages/cors/src/policy.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/cors/src/preflight.ts",
+      "kind": "source",
+      "name": "preflight.ts",
+      "path": "packages/cors/src/preflight.ts",
+      "tags": [
+        "packages/cors/src/preflight",
+        "packages/cors/src/preflight.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/cors/src/types.ts",
+      "kind": "source",
+      "name": "types.ts",
+      "path": "packages/cors/src/types.ts",
+      "tags": [
+        "packages/cors/src/types",
+        "packages/cors/src/types.ts",
         "ts"
       ]
     },
@@ -36813,17 +37041,6 @@
       "tags": [
         "packages/service-mirror-core/src/index",
         "packages/service-mirror-core/src/index.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/service-runtime-core/src/domain/cors.ts",
-      "kind": "source",
-      "name": "cors.ts",
-      "path": "packages/service-runtime-core/src/domain/cors.ts",
-      "tags": [
-        "packages/service-runtime-core/src/domain/cors",
-        "packages/service-runtime-core/src/domain/cors.ts",
         "ts"
       ]
     },
@@ -53012,6 +53229,18 @@
       ]
     },
     {
+      "id": "test:packages/cors/src/tests/index.test.ts",
+      "kind": "test",
+      "name": "index.test.ts",
+      "path": "packages/cors/src/tests/index.test.ts",
+      "tags": [
+        "packages/cors/src/tests/index",
+        "packages/cors/src/tests/index.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/data-core/src/core/database-runtime-policy.test.ts",
       "kind": "test",
       "name": "database-runtime-policy.test.ts",
@@ -58343,6 +58572,16 @@
     },
     {
       "from": "command:test:control",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:test:cors-core",
+      "to": "test:packages/cors/src/tests/index.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:cors-core",
       "to": "runtime:tooling",
       "kind": "targets-runtime"
     },
@@ -64533,6 +64772,18 @@
     },
     {
       "from": "document:docs/01-architecture/08-reference/capability-map.md",
+      "to": "package:@asol/cors",
+      "kind": "references",
+      "detail": "@asol/cors"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/capability-map.md",
+      "to": "package:@asol/cors",
+      "kind": "references",
+      "detail": "packages/cors/"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/capability-map.md",
       "to": "package:@asol/data-core",
       "kind": "references",
       "detail": "@asol/data-core"
@@ -65540,6 +65791,12 @@
     },
     {
       "from": "document:docs/01-architecture/08-reference/dependency-map.md",
+      "to": "package:@asol/cors",
+      "kind": "references",
+      "detail": "@asol/cors"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/dependency-map.md",
       "to": "package:@asol/data-core",
       "kind": "references",
       "detail": "@asol/data-core"
@@ -66008,6 +66265,18 @@
       "to": "package:@asol/control-composition",
       "kind": "references",
       "detail": "packages/control-composition/"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/package-catalog.md",
+      "to": "package:@asol/cors",
+      "kind": "references",
+      "detail": "@asol/cors"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/package-catalog.md",
+      "to": "package:@asol/cors",
+      "kind": "references",
+      "detail": "packages/cors/"
     },
     {
       "from": "document:docs/01-architecture/08-reference/package-catalog.md",
@@ -67102,6 +67371,18 @@
     },
     {
       "from": "document:docs/01-architecture/10-application-layers/configuration-layer.md",
+      "to": "document:docs/05-platform-features/sealed-packages/cors-module.md",
+      "kind": "references",
+      "detail": "../../05-platform-features/sealed-packages/cors-module.md"
+    },
+    {
+      "from": "document:docs/01-architecture/10-application-layers/configuration-layer.md",
+      "to": "package:@asol/cors",
+      "kind": "references",
+      "detail": "@asol/cors"
+    },
+    {
+      "from": "document:docs/01-architecture/10-application-layers/configuration-layer.md",
       "to": "source:src/core/config/index.ts",
       "kind": "references",
       "detail": "src/core/config/"
@@ -67498,6 +67779,24 @@
       "to": "document:docs/01-architecture/README.md",
       "kind": "references",
       "detail": "../README.md"
+    },
+    {
+      "from": "document:docs/01-architecture/10-application-layers/security-rules.md",
+      "to": "document:docs/05-platform-features/sealed-packages/cors-module.md",
+      "kind": "references",
+      "detail": "../../05-platform-features/sealed-packages/cors-module.md"
+    },
+    {
+      "from": "document:docs/01-architecture/10-application-layers/security-rules.md",
+      "to": "package:@asol/cors",
+      "kind": "references",
+      "detail": "@asol/cors"
+    },
+    {
+      "from": "document:docs/01-architecture/10-application-layers/security-rules.md",
+      "to": "package:@asol/cors",
+      "kind": "references",
+      "detail": "packages/cors/"
     },
     {
       "from": "document:docs/01-architecture/10-application-layers/server-service-layer.md",
@@ -68070,6 +68369,12 @@
     },
     {
       "from": "document:docs/02-data-and-storage/environment-variables.md",
+      "to": "document:docs/05-platform-features/sealed-packages/cors-module.md",
+      "kind": "references",
+      "detail": "../05-platform-features/sealed-packages/cors-module.md"
+    },
+    {
+      "from": "document:docs/02-data-and-storage/environment-variables.md",
       "to": "document:docs/05-platform-features/service-bridge-module.md",
       "kind": "references",
       "detail": "../05-platform-features/service-bridge-module.md"
@@ -68091,6 +68396,12 @@
       "to": "feature:notifications",
       "kind": "references",
       "detail": "src/features/notifications/domain/web-push-config.ts"
+    },
+    {
+      "from": "document:docs/02-data-and-storage/environment-variables.md",
+      "to": "package:@asol/cors",
+      "kind": "references",
+      "detail": "@asol/cors"
     },
     {
       "from": "document:docs/02-data-and-storage/environment-variables.md",
@@ -68256,6 +68567,18 @@
       "to": "document:docs/05-platform-features/r2-storage-accounts.md",
       "kind": "references",
       "detail": "../../05-platform-features/r2-storage-accounts.md"
+    },
+    {
+      "from": "document:docs/02-data-and-storage/image-storage/r2-storage.md",
+      "to": "document:docs/05-platform-features/sealed-packages/cors-module.md",
+      "kind": "references",
+      "detail": "../../05-platform-features/sealed-packages/cors-module.md"
+    },
+    {
+      "from": "document:docs/02-data-and-storage/image-storage/r2-storage.md",
+      "to": "package:@asol/cors",
+      "kind": "references",
+      "detail": "@asol/cors"
     },
     {
       "from": "document:docs/02-data-and-storage/image-storage/r2-storage.md",
@@ -70115,6 +70438,18 @@
     },
     {
       "from": "document:docs/05-platform-features/network-status-system.md",
+      "to": "document:docs/05-platform-features/sealed-packages/cors-module.md",
+      "kind": "references",
+      "detail": "./sealed-packages/cors-module.md"
+    },
+    {
+      "from": "document:docs/05-platform-features/network-status-system.md",
+      "to": "package:@asol/cors",
+      "kind": "references",
+      "detail": "@asol/cors"
+    },
+    {
+      "from": "document:docs/05-platform-features/network-status-system.md",
       "to": "source:src/app/api/follow/route.ts",
       "kind": "references",
       "detail": "src/app/api"
@@ -70942,6 +71277,89 @@
       "detail": "scripts/validate-catalog.ts"
     },
     {
+      "from": "document:docs/05-platform-features/sealed-packages/cors-module.md",
+      "to": "domain:platform-features",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/cors-module.md",
+      "to": "document:docs/02-data-and-storage/environment-variables.md",
+      "kind": "references",
+      "detail": "../../02-data-and-storage/environment-variables.md"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/cors-module.md",
+      "to": "document:docs/02-data-and-storage/image-storage/r2-storage.md",
+      "kind": "references",
+      "detail": "../../02-data-and-storage/image-storage/r2-storage.md"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/cors-module.md",
+      "to": "document:docs/05-platform-features/sealed-packages/service-runtime-core-module.md",
+      "kind": "references",
+      "detail": "./service-runtime-core-module.md"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/cors-module.md",
+      "to": "document:docs/08-troubleshooting/problems/preflight-answered-without-cors-headers.md",
+      "kind": "references",
+      "detail": "../../08-troubleshooting/problems/preflight-answered-without-cors-headers.md"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/cors-module.md",
+      "to": "package:@asol/cors",
+      "kind": "references",
+      "detail": "@asol/cors"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/cors-module.md",
+      "to": "package:@asol/cors",
+      "kind": "references",
+      "detail": "packages/cors/"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/cors-module.md",
+      "to": "package:@asol/service-runtime-core",
+      "kind": "references",
+      "detail": "@asol/service-runtime-core"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/cors-module.md",
+      "to": "source:packages/architecture-core/src/checks/cors-contract.ts",
+      "kind": "references",
+      "detail": "packages/architecture-core/src/checks/cors-contract.ts"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/cors-module.md",
+      "to": "source:packages/ota-core/scripts/sync-cors.ts",
+      "kind": "references",
+      "detail": "packages/ota-core/scripts/sync-cors.ts"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/cors-module.md",
+      "to": "source:packages/storage-core/src/server/transport/r2-cors-policy.ts",
+      "kind": "references",
+      "detail": "packages/storage-core/src/server/transport/r2-cors-policy.ts"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/cors-module.md",
+      "to": "source:services/profiles/src/app/lib/http.ts",
+      "kind": "references",
+      "detail": "services/profiles/src/app/lib/http.ts"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/cors-module.md",
+      "to": "source:src/core/config/cors-origins.ts",
+      "kind": "references",
+      "detail": "src/core/config/cors-origins.ts"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/cors-module.md",
+      "to": "source:src/proxy.ts",
+      "kind": "references",
+      "detail": "src/proxy.ts"
+    },
+    {
       "from": "document:docs/05-platform-features/sealed-packages/data-core-module.md",
       "to": "domain:platform-features",
       "kind": "belongs-to"
@@ -71414,6 +71832,12 @@
     },
     {
       "from": "document:docs/05-platform-features/sealed-packages/README.md",
+      "to": "document:docs/05-platform-features/sealed-packages/cors-module.md",
+      "kind": "references",
+      "detail": "./cors-module.md"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/README.md",
       "to": "document:docs/05-platform-features/sealed-packages/data-core-module.md",
       "kind": "references",
       "detail": "./data-core-module.md"
@@ -71516,6 +71940,12 @@
     },
     {
       "from": "document:docs/05-platform-features/sealed-packages/README.md",
+      "to": "package:@asol/cors",
+      "kind": "references",
+      "detail": "@asol/cors"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/README.md",
       "to": "package:@asol/data-core",
       "kind": "references",
       "detail": "@asol/data-core"
@@ -71605,21 +72035,21 @@
     },
     {
       "from": "document:docs/05-platform-features/sealed-packages/service-runtime-core-module.md",
+      "to": "document:docs/05-platform-features/sealed-packages/cors-module.md",
+      "kind": "references",
+      "detail": "./cors-module.md"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/service-runtime-core-module.md",
+      "to": "package:@asol/cors",
+      "kind": "references",
+      "detail": "@asol/cors"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/service-runtime-core-module.md",
       "to": "package:@asol/service-runtime-core",
       "kind": "references",
       "detail": "@asol/service-runtime-core"
-    },
-    {
-      "from": "document:docs/05-platform-features/sealed-packages/service-runtime-core-module.md",
-      "to": "source:services/profiles/src/app/lib/http.ts",
-      "kind": "references",
-      "detail": "services/profiles/src/app/lib/http.ts"
-    },
-    {
-      "from": "document:docs/05-platform-features/sealed-packages/service-runtime-core-module.md",
-      "to": "source:src/proxy.ts",
-      "kind": "references",
-      "detail": "src/proxy.ts"
     },
     {
       "from": "document:docs/05-platform-features/sealed-packages/signed-token-core-module.md",
@@ -74613,6 +75043,12 @@
     },
     {
       "from": "document:docs/08-troubleshooting/problems/preflight-answered-without-cors-headers.md",
+      "to": "document:docs/05-platform-features/sealed-packages/cors-module.md",
+      "kind": "references",
+      "detail": "../../05-platform-features/sealed-packages/cors-module.md"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/preflight-answered-without-cors-headers.md",
       "to": "document:docs/08-troubleshooting/problems/main-push-without-vercel-deployment.md",
       "kind": "references",
       "detail": "main-push-without-vercel-deployment.md"
@@ -74622,6 +75058,18 @@
       "to": "document:docs/08-troubleshooting/problems/owned-route-not-shipped.md",
       "kind": "references",
       "detail": "owned-route-not-shipped.md"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/preflight-answered-without-cors-headers.md",
+      "to": "package:@asol/cors",
+      "kind": "references",
+      "detail": "@asol/cors"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/preflight-answered-without-cors-headers.md",
+      "to": "package:@asol/cors",
+      "kind": "references",
+      "detail": "packages/cors/"
     },
     {
       "from": "document:docs/08-troubleshooting/problems/preflight-answered-without-cors-headers.md",
@@ -76646,6 +77094,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "package:@asol/cors",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "package:@asol/data-core",
       "kind": "documents",
       "detail": "packages/"
@@ -77091,6 +77545,18 @@
     {
       "from": "domain:architecture",
       "to": "source:packages/architecture-core/src/checks/capability-ownership-contract.ts",
+      "kind": "documents",
+      "detail": "packages/architecture-core/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/checks/cors-contract.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/checks/cors-contract.ts",
       "kind": "documents",
       "detail": "packages/architecture-core/"
     },
@@ -77739,6 +78205,54 @@
     {
       "from": "domain:architecture",
       "to": "source:packages/control-composition/src/index.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/cors/src/apply.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/cors/src/env.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/cors/src/headers.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/cors/src/index.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/cors/src/origins.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/cors/src/policy.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/cors/src/preflight.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/cors/src/types.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -81644,12 +82158,6 @@
     },
     {
       "from": "domain:architecture",
-      "to": "source:packages/service-runtime-core/src/domain/cors.ts",
-      "kind": "documents",
-      "detail": "packages/"
-    },
-    {
-      "from": "domain:architecture",
       "to": "source:packages/service-runtime-core/src/domain/error-status.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -82341,6 +82849,12 @@
     {
       "from": "domain:architecture",
       "to": "test:packages/control-composition/src/tests/index.test.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "test:packages/cors/src/tests/index.test.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -107228,6 +107742,11 @@
     },
     {
       "from": "feature:notifications",
+      "to": "package:@asol/cors",
+      "kind": "imports"
+    },
+    {
+      "from": "feature:notifications",
       "to": "package:@asol/data-core",
       "kind": "imports"
     },
@@ -109328,6 +109847,11 @@
     },
     {
       "from": "package:@asol/ota-core",
+      "to": "package:@asol/cors",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/ota-core",
       "to": "package:@asol/data-core",
       "kind": "imports"
     },
@@ -109422,6 +109946,11 @@
       "kind": "imports"
     },
     {
+      "from": "package:@asol/service-runtime-core",
+      "to": "package:@asol/cors",
+      "kind": "imports"
+    },
+    {
       "from": "package:@asol/storage-core",
       "to": "external-dependency:@aws-sdk/client-s3",
       "kind": "imports"
@@ -109439,6 +109968,11 @@
     {
       "from": "package:@asol/storage-core",
       "to": "external-dependency:zod",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/storage-core",
+      "to": "package:@asol/cors",
       "kind": "imports"
     },
     {
@@ -109945,6 +110479,12 @@
     },
     {
       "from": "route:/api/advertisements/featured-marquee:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/advertisements/featured-marquee:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -110075,6 +110615,12 @@
     {
       "from": "route:/api/advertisements/featured-marquee/version:handler",
       "to": "package:@asol/backup-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/advertisements/featured-marquee/version:handler",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -110215,6 +110761,12 @@
     },
     {
       "from": "route:/api/advertisements/home-hero-slider:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/advertisements/home-hero-slider:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -110345,6 +110897,12 @@
     {
       "from": "route:/api/advertisements/home-hero-slider/version:handler",
       "to": "package:@asol/backup-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/advertisements/home-hero-slider/version:handler",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -110485,6 +111043,12 @@
     },
     {
       "from": "route:/api/advertisements/trending-ribbon:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/advertisements/trending-ribbon:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -110615,6 +111179,12 @@
     {
       "from": "route:/api/advertisements/trending-ribbon/version:handler",
       "to": "package:@asol/backup-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/advertisements/trending-ribbon/version:handler",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -113122,6 +113692,12 @@
     },
     {
       "from": "route:/api/notifications/broadcast/recipients:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/notifications/broadcast/recipients:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -113269,6 +113845,12 @@
     },
     {
       "from": "route:/api/notifications/broadcast/send:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/notifications/broadcast/send:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -113411,6 +113993,12 @@
     {
       "from": "route:/api/notifications/device-token:handler",
       "to": "package:@asol/branding-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/notifications/device-token:handler",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -113575,6 +114163,12 @@
     },
     {
       "from": "route:/api/notifications/devices:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/notifications/devices:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -113717,6 +114311,12 @@
     {
       "from": "route:/api/notifications/mobile-push/unlock:handler",
       "to": "package:@asol/branding-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/notifications/mobile-push/unlock:handler",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -113869,6 +114469,12 @@
     },
     {
       "from": "route:/api/notifications/preferences:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/notifications/preferences:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -114016,6 +114622,12 @@
     },
     {
       "from": "route:/api/notifications/recipient-tokens:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/notifications/recipient-tokens:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -114158,6 +114770,12 @@
     {
       "from": "route:/api/notifications/send:handler",
       "to": "package:@asol/branding-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/notifications/send:handler",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -114322,6 +114940,12 @@
     },
     {
       "from": "route:/api/notifications/test/self:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/notifications/test/self:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -114481,6 +115105,12 @@
     },
     {
       "from": "route:/api/notifications/test/send:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/notifications/test/send:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -114629,6 +115259,12 @@
     {
       "from": "route:/api/orders:handler",
       "to": "package:@asol/branding-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/orders:handler",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -115117,6 +115753,12 @@
     },
     {
       "from": "route:/api/orders/custom-request-from-profile:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/orders/custom-request-from-profile:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -115306,6 +115948,12 @@
     },
     {
       "from": "route:/api/orders/from-cart:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/orders/from-cart:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -115478,6 +116126,12 @@
     {
       "from": "route:/api/ota/access:handler",
       "to": "package:@asol/catalog-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/ota/access:handler",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -115666,6 +116320,12 @@
     },
     {
       "from": "route:/api/ota/admin/releases:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/ota/admin/releases:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -115844,6 +116504,12 @@
     {
       "from": "route:/api/ota/admin/releases/diff:handler",
       "to": "package:@asol/catalog-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/ota/admin/releases/diff:handler",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -116149,6 +116815,12 @@
     },
     {
       "from": "route:/api/products:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/products:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -116285,6 +116957,12 @@
     {
       "from": "route:/api/products/reviews:handler",
       "to": "package:@asol/backup-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/products/reviews:handler",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -116431,6 +117109,12 @@
     },
     {
       "from": "route:/api/products/reviews/helpful:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/products/reviews/helpful:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -116567,6 +117251,12 @@
     {
       "from": "route:/api/products/reviews/reply:handler",
       "to": "package:@asol/backup-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/products/reviews/reply:handler",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -117290,6 +117980,12 @@
     {
       "from": "route:/api/profile/fulfillment-settings:handler",
       "to": "package:@asol/branding-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/profile/fulfillment-settings:handler",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -118453,6 +119149,12 @@
     },
     {
       "from": "route:/api/search/fields:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/search/fields:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -118606,6 +119308,12 @@
     },
     {
       "from": "route:/api/search/products:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/search/products:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -118754,6 +119462,12 @@
     {
       "from": "route:/api/search/sellers:handler",
       "to": "package:@asol/backup-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/search/sellers:handler",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -120064,6 +120778,12 @@
     },
     {
       "from": "route:/api/storage/images/[imageKey]:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/storage/images/[imageKey]:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -120193,6 +120913,12 @@
     },
     {
       "from": "route:/api/storage/images/upload:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/storage/images/upload:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -120317,6 +121043,12 @@
     {
       "from": "route:/api/storage/profiles/[profileId]:handler",
       "to": "package:@asol/backup-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/storage/profiles/[profileId]:handler",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -120847,6 +121579,12 @@
     },
     {
       "from": "route:/api/super-admin/build-jobs/[jobId]/artifacts/[name]:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/build-jobs/[jobId]/artifacts/[name]:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -121043,6 +121781,12 @@
     {
       "from": "route:/api/super-admin/build-jobs/[jobId]/artifacts/[name]/analysis:handler",
       "to": "package:@asol/branding-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/build-jobs/[jobId]/artifacts/[name]/analysis:handler",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -121603,6 +122347,12 @@
     },
     {
       "from": "route:/api/super-admin/build-jobs/analysis:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/build-jobs/analysis:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -121787,6 +122537,12 @@
     {
       "from": "route:/api/super-admin/build-jobs/analysis/compare:handler",
       "to": "package:@asol/backup-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/build-jobs/analysis/compare:handler",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -122158,6 +122914,12 @@
     },
     {
       "from": "route:/api/super-admin/data-health:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/data-health:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -122300,6 +123062,12 @@
     {
       "from": "route:/api/super-admin/data-health/cleanup:handler",
       "to": "package:@asol/backup-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/data-health/cleanup:handler",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -122452,6 +123220,12 @@
     },
     {
       "from": "route:/api/super-admin/data-health/history:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/data-health/history:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -122594,6 +123368,12 @@
     {
       "from": "route:/api/super-admin/data-health/history/audit/clear:handler",
       "to": "package:@asol/backup-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/data-health/history/audit/clear:handler",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -122746,6 +123526,12 @@
     },
     {
       "from": "route:/api/super-admin/data-health/history/runs/clear:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/data-health/history/runs/clear:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -122888,6 +123674,12 @@
     {
       "from": "route:/api/super-admin/data-health/orders/plan:handler",
       "to": "package:@asol/backup-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/data-health/orders/plan:handler",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -123040,6 +123832,12 @@
     },
     {
       "from": "route:/api/super-admin/data-health/orders/purge:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/data-health/orders/purge:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -123182,6 +123980,12 @@
     {
       "from": "route:/api/super-admin/data-health/orders/retry-images:handler",
       "to": "package:@asol/backup-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/data-health/orders/retry-images:handler",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -123334,6 +124138,12 @@
     },
     {
       "from": "route:/api/super-admin/data-health/plan:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/data-health/plan:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -123476,6 +124286,12 @@
     {
       "from": "route:/api/super-admin/data-health/quarantine/clear:handler",
       "to": "package:@asol/backup-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/data-health/quarantine/clear:handler",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -123628,6 +124444,12 @@
     },
     {
       "from": "route:/api/super-admin/data-health/quarantine/delete:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/data-health/quarantine/delete:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -123775,6 +124597,12 @@
     },
     {
       "from": "route:/api/super-admin/data-health/quarantine/release:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/data-health/quarantine/release:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -123917,6 +124745,12 @@
     {
       "from": "route:/api/super-admin/data-health/schema:handler",
       "to": "package:@asol/backup-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/data-health/schema:handler",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -124957,6 +125791,12 @@
     },
     {
       "from": "route:/api/super-admin/dev-cloud-backup/backups/restore-saved:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/dev-cloud-backup/backups/restore-saved:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -125251,6 +126091,12 @@
     },
     {
       "from": "route:/api/super-admin/google-play-console:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-console:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -125417,6 +126263,12 @@
     {
       "from": "route:/api/super-admin/google-play-store-assets:handler",
       "to": "package:@asol/backup-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-store-assets:handler",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -125593,6 +126445,12 @@
     },
     {
       "from": "route:/api/super-admin/google-play-store-assets/backups:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-store-assets/backups:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -125759,6 +126617,12 @@
     {
       "from": "route:/api/super-admin/google-play-store-assets/backups/restore:handler",
       "to": "package:@asol/backup-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-store-assets/backups/restore:handler",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -125935,6 +126799,12 @@
     },
     {
       "from": "route:/api/super-admin/google-play-store-assets/fastlane:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-store-assets/fastlane:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -126101,6 +126971,12 @@
     {
       "from": "route:/api/super-admin/google-play-store-assets/images/delete:handler",
       "to": "package:@asol/backup-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-store-assets/images/delete:handler",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -126277,6 +127153,12 @@
     },
     {
       "from": "route:/api/super-admin/google-play-store-assets/images/upload:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-store-assets/images/upload:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -126443,6 +127325,12 @@
     {
       "from": "route:/api/super-admin/google-play-store-assets/listings/delete:handler",
       "to": "package:@asol/backup-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-store-assets/listings/delete:handler",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -126619,6 +127507,12 @@
     },
     {
       "from": "route:/api/super-admin/google-play-store-assets/mapping/upload:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-store-assets/mapping/upload:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -126790,6 +127684,12 @@
     },
     {
       "from": "route:/api/super-admin/google-play-store-assets/tracks:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-store-assets/tracks:handler",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -126956,6 +127856,12 @@
     {
       "from": "route:/api/super-admin/google-play-store-assets/tracks/promote:handler",
       "to": "package:@asol/backup-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-store-assets/tracks/promote:handler",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -128629,6 +129535,12 @@
     },
     {
       "from": "route:/cart:page",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/cart:page",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -129092,6 +130004,12 @@
     {
       "from": "route:/custom-request:page",
       "to": "package:@asol/auth-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/custom-request:page",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -129769,6 +130687,12 @@
     },
     {
       "from": "route:/dev/dev-cloud-backup:page",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/dev-cloud-backup:page",
       "to": "package:@asol/dev-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -129866,6 +130790,12 @@
     {
       "from": "route:/dev/monitor:page",
       "to": "package:@asol/branding-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/monitor:page",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -131257,6 +132187,12 @@
     },
     {
       "from": "route:/product:page",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/product:page",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -131480,6 +132416,12 @@
     {
       "from": "route:/profile:page",
       "to": "package:@asol/auth-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/profile:page",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -131923,6 +132865,12 @@
     },
     {
       "from": "route:/s/product:page",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/s/product:page",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -132163,6 +133111,12 @@
     },
     {
       "from": "route:/s/profile:page",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/s/profile:page",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -132343,6 +133297,12 @@
     },
     {
       "from": "route:/settings:page",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/settings:page",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -132476,6 +133436,12 @@
     {
       "from": "route:/settings/notifications:page",
       "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/settings/notifications:page",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -137200,6 +138166,11 @@
     },
     {
       "from": "service:control",
+      "to": "package:@asol/cors",
+      "kind": "imports"
+    },
+    {
+      "from": "service:control",
       "to": "package:@asol/data-core",
       "kind": "imports"
     },
@@ -137240,6 +138211,11 @@
     },
     {
       "from": "service:notifications",
+      "to": "package:@asol/cors",
+      "kind": "imports"
+    },
+    {
+      "from": "service:notifications",
       "to": "package:@asol/notifications-composition",
       "kind": "imports"
     },
@@ -137251,6 +138227,11 @@
     {
       "from": "service:orders",
       "to": "external-dependency:next",
+      "kind": "imports"
+    },
+    {
+      "from": "service:orders",
+      "to": "package:@asol/cors",
       "kind": "imports"
     },
     {
@@ -137275,6 +138256,11 @@
     },
     {
       "from": "service:products",
+      "to": "package:@asol/cors",
+      "kind": "imports"
+    },
+    {
+      "from": "service:products",
       "to": "package:@asol/products-composition",
       "kind": "imports"
     },
@@ -137291,6 +138277,11 @@
     {
       "from": "service:profiles",
       "to": "feature:profile",
+      "kind": "imports"
+    },
+    {
+      "from": "service:profiles",
+      "to": "package:@asol/cors",
       "kind": "imports"
     },
     {
@@ -137316,6 +138307,11 @@
     {
       "from": "service:sub2main",
       "to": "feature:profile",
+      "kind": "imports"
+    },
+    {
+      "from": "service:sub2main",
+      "to": "package:@asol/cors",
       "kind": "imports"
     },
     {
@@ -137366,6 +138362,11 @@
     {
       "from": "service:submain",
       "to": "package:@asol/auth-core",
+      "kind": "imports"
+    },
+    {
+      "from": "service:submain",
+      "to": "package:@asol/cors",
       "kind": "imports"
     },
     {
@@ -138935,6 +139936,42 @@
       "detail": "../registry/capability-registry"
     },
     {
+      "from": "source:packages/architecture-core/src/checks/cors-contract.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/cors-contract.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/cors-contract.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/cors-contract.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/cors-contract.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/cors-contract.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/cors-contract.ts",
+      "to": "source:packages/architecture-core/src/checks/architecture-types.ts",
+      "kind": "imports",
+      "detail": "./architecture-types"
+    },
+    {
       "from": "source:packages/architecture-core/src/checks/feature-application-door-purity-contract.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -140421,6 +141458,12 @@
       "to": "source:packages/architecture-core/src/checks/capability-ownership-contract.ts",
       "kind": "imports",
       "detail": "./checks/capability-ownership-contract"
+    },
+    {
+      "from": "source:packages/architecture-core/src/runner.ts",
+      "to": "source:packages/architecture-core/src/checks/cors-contract.ts",
+      "kind": "imports",
+      "detail": "./checks/cors-contract"
     },
     {
       "from": "source:packages/architecture-core/src/runner.ts",
@@ -142195,6 +143238,348 @@
       "to": "source:src/features/data/ports/data-core-runtime-config-ports.ts",
       "kind": "imports",
       "detail": "@/features/data/ports/data-core-runtime-config-ports"
+    },
+    {
+      "from": "source:packages/cors/src/apply.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/apply.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/apply.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/apply.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/apply.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/apply.ts",
+      "to": "package:@asol/cors",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/cors/src/apply.ts",
+      "to": "source:packages/cors/src/headers.ts",
+      "kind": "imports",
+      "detail": "./headers"
+    },
+    {
+      "from": "source:packages/cors/src/apply.ts",
+      "to": "source:packages/cors/src/types.ts",
+      "kind": "imports",
+      "detail": "./types"
+    },
+    {
+      "from": "source:packages/cors/src/env.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/env.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/env.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/env.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/env.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/env.ts",
+      "to": "package:@asol/cors",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/cors/src/env.ts",
+      "to": "source:packages/cors/src/origins.ts",
+      "kind": "imports",
+      "detail": "./origins"
+    },
+    {
+      "from": "source:packages/cors/src/headers.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/headers.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/headers.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/headers.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/headers.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/headers.ts",
+      "to": "package:@asol/cors",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/cors/src/headers.ts",
+      "to": "source:packages/cors/src/origins.ts",
+      "kind": "imports",
+      "detail": "./origins"
+    },
+    {
+      "from": "source:packages/cors/src/headers.ts",
+      "to": "source:packages/cors/src/types.ts",
+      "kind": "imports",
+      "detail": "./types"
+    },
+    {
+      "from": "source:packages/cors/src/index.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/index.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/index.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/index.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/index.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/index.ts",
+      "to": "package:@asol/cors",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/cors/src/index.ts",
+      "to": "source:packages/cors/src/apply.ts",
+      "kind": "imports",
+      "detail": "./apply"
+    },
+    {
+      "from": "source:packages/cors/src/index.ts",
+      "to": "source:packages/cors/src/env.ts",
+      "kind": "imports",
+      "detail": "./env"
+    },
+    {
+      "from": "source:packages/cors/src/index.ts",
+      "to": "source:packages/cors/src/headers.ts",
+      "kind": "imports",
+      "detail": "./headers"
+    },
+    {
+      "from": "source:packages/cors/src/index.ts",
+      "to": "source:packages/cors/src/origins.ts",
+      "kind": "imports",
+      "detail": "./origins"
+    },
+    {
+      "from": "source:packages/cors/src/index.ts",
+      "to": "source:packages/cors/src/policy.ts",
+      "kind": "imports",
+      "detail": "./policy"
+    },
+    {
+      "from": "source:packages/cors/src/index.ts",
+      "to": "source:packages/cors/src/preflight.ts",
+      "kind": "imports",
+      "detail": "./preflight"
+    },
+    {
+      "from": "source:packages/cors/src/index.ts",
+      "to": "source:packages/cors/src/types.ts",
+      "kind": "imports",
+      "detail": "./types"
+    },
+    {
+      "from": "source:packages/cors/src/origins.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/origins.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/origins.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/origins.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/origins.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/origins.ts",
+      "to": "package:@asol/cors",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/cors/src/origins.ts",
+      "to": "source:packages/cors/src/types.ts",
+      "kind": "imports",
+      "detail": "./types"
+    },
+    {
+      "from": "source:packages/cors/src/policy.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/policy.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/policy.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/policy.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/policy.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/policy.ts",
+      "to": "package:@asol/cors",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/cors/src/policy.ts",
+      "to": "source:packages/cors/src/origins.ts",
+      "kind": "imports",
+      "detail": "./origins"
+    },
+    {
+      "from": "source:packages/cors/src/policy.ts",
+      "to": "source:packages/cors/src/types.ts",
+      "kind": "imports",
+      "detail": "./types"
+    },
+    {
+      "from": "source:packages/cors/src/preflight.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/preflight.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/preflight.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/preflight.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/preflight.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/preflight.ts",
+      "to": "package:@asol/cors",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/cors/src/preflight.ts",
+      "to": "source:packages/cors/src/headers.ts",
+      "kind": "imports",
+      "detail": "./headers"
+    },
+    {
+      "from": "source:packages/cors/src/preflight.ts",
+      "to": "source:packages/cors/src/types.ts",
+      "kind": "imports",
+      "detail": "./types"
+    },
+    {
+      "from": "source:packages/cors/src/types.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/types.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/types.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/types.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/types.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/types.ts",
+      "to": "package:@asol/cors",
+      "kind": "belongs-to"
     },
     {
       "from": "source:packages/data-core/src/browser/asol-db-persister.ts",
@@ -166375,6 +167760,12 @@
     },
     {
       "from": "source:packages/ota-core/scripts/serve-static.ts",
+      "to": "package:@asol/cors",
+      "kind": "imports",
+      "detail": "@asol/cors"
+    },
+    {
+      "from": "source:packages/ota-core/scripts/serve-static.ts",
       "to": "package:@asol/native-core",
       "kind": "imports",
       "detail": "@asol/native-core"
@@ -166436,6 +167827,12 @@
     },
     {
       "from": "source:packages/ota-core/scripts/sync-cors.ts",
+      "to": "package:@asol/cors",
+      "kind": "imports",
+      "detail": "@asol/cors"
+    },
+    {
+      "from": "source:packages/ota-core/scripts/sync-cors.ts",
       "to": "package:@asol/env-core",
       "kind": "imports",
       "detail": "@asol/env-core/process"
@@ -166445,11 +167842,6 @@
       "to": "source:packages/ota-core/src/publishing/config/ota-r2-target.ts",
       "kind": "imports",
       "detail": "../src/publishing/config/ota-r2-target"
-    },
-    {
-      "from": "source:packages/ota-core/scripts/sync-cors.ts",
-      "to": "environment-key:ASOL_CORS_ORIGINS",
-      "kind": "uses-environment"
     },
     {
       "from": "source:packages/ota-core/scripts/validate-app-versions.ts",
@@ -171836,36 +173228,6 @@
       "kind": "belongs-to"
     },
     {
-      "from": "source:packages/service-runtime-core/src/domain/cors.ts",
-      "to": "runtime:android",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/service-runtime-core/src/domain/cors.ts",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/service-runtime-core/src/domain/cors.ts",
-      "to": "runtime:ios",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/service-runtime-core/src/domain/cors.ts",
-      "to": "runtime:static-out",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/service-runtime-core/src/domain/cors.ts",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/service-runtime-core/src/domain/cors.ts",
-      "to": "package:@asol/service-runtime-core",
-      "kind": "belongs-to"
-    },
-    {
       "from": "source:packages/service-runtime-core/src/domain/error-status.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -171957,9 +173319,9 @@
     },
     {
       "from": "source:packages/service-runtime-core/src/domain/service-http.ts",
-      "to": "source:packages/service-runtime-core/src/domain/cors.ts",
+      "to": "package:@asol/cors",
       "kind": "imports",
-      "detail": "./cors"
+      "detail": "@asol/cors"
     },
     {
       "from": "source:packages/service-runtime-core/src/domain/service-http.ts",
@@ -171999,9 +173361,9 @@
     },
     {
       "from": "source:packages/service-runtime-core/src/domain/service-proxy.ts",
-      "to": "source:packages/service-runtime-core/src/domain/cors.ts",
+      "to": "package:@asol/cors",
       "kind": "imports",
-      "detail": "./cors"
+      "detail": "@asol/cors"
     },
     {
       "from": "source:packages/service-runtime-core/src/index.ts",
@@ -172032,12 +173394,6 @@
       "from": "source:packages/service-runtime-core/src/index.ts",
       "to": "package:@asol/service-runtime-core",
       "kind": "belongs-to"
-    },
-    {
-      "from": "source:packages/service-runtime-core/src/index.ts",
-      "to": "source:packages/service-runtime-core/src/domain/cors.ts",
-      "kind": "imports",
-      "detail": "./domain/cors"
     },
     {
       "from": "source:packages/service-runtime-core/src/index.ts",
@@ -173445,8 +174801,9 @@
     },
     {
       "from": "source:packages/storage-core/src/server/transport/r2-cors-policy.ts",
-      "to": "environment-key:ASOL_CORS_ORIGINS",
-      "kind": "uses-environment"
+      "to": "package:@asol/cors",
+      "kind": "imports",
+      "detail": "@asol/cors"
     },
     {
       "from": "source:packages/storage-core/src/server/transport/r2-object-store.ts",
@@ -176683,9 +178040,9 @@
     },
     {
       "from": "source:services/control/src/control/operational-route.ts",
-      "to": "package:@asol/service-runtime-core",
+      "to": "package:@asol/cors",
       "kind": "imports",
-      "detail": "@asol/service-runtime-core"
+      "detail": "@asol/cors"
     },
     {
       "from": "source:services/control/src/control/operational-route.ts",
@@ -177079,6 +178436,12 @@
     },
     {
       "from": "source:services/notifications/src/app/api/notifications/send/route.ts",
+      "to": "package:@asol/cors",
+      "kind": "imports",
+      "detail": "@asol/cors"
+    },
+    {
+      "from": "source:services/notifications/src/app/api/notifications/send/route.ts",
       "to": "package:@asol/notifications-composition",
       "kind": "imports",
       "detail": "@asol/notifications-composition"
@@ -177214,6 +178577,12 @@
       "from": "source:services/orders/src/app/lib/http.ts",
       "to": "service:orders",
       "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/orders/src/app/lib/http.ts",
+      "to": "package:@asol/cors",
+      "kind": "imports",
+      "detail": "@asol/cors"
     },
     {
       "from": "source:services/orders/src/app/lib/http.ts",
@@ -177385,6 +178754,12 @@
       "from": "source:services/products/src/app/lib/http.ts",
       "to": "service:products",
       "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/products/src/app/lib/http.ts",
+      "to": "package:@asol/cors",
+      "kind": "imports",
+      "detail": "@asol/cors"
     },
     {
       "from": "source:services/products/src/app/lib/http.ts",
@@ -177667,6 +179042,12 @@
       "from": "source:services/profiles/src/app/lib/http.ts",
       "to": "service:profiles",
       "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/profiles/src/app/lib/http.ts",
+      "to": "package:@asol/cors",
+      "kind": "imports",
+      "detail": "@asol/cors"
     },
     {
       "from": "source:services/profiles/src/app/lib/http.ts",
@@ -178190,6 +179571,12 @@
       "from": "source:services/sub2main/src/app/lib/http.ts",
       "to": "service:sub2main",
       "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/sub2main/src/app/lib/http.ts",
+      "to": "package:@asol/cors",
+      "kind": "imports",
+      "detail": "@asol/cors"
     },
     {
       "from": "source:services/sub2main/src/app/lib/http.ts",
@@ -179275,6 +180662,12 @@
       "from": "source:services/submain/src/app/lib/http.ts",
       "to": "service:submain",
       "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/lib/http.ts",
+      "to": "package:@asol/cors",
+      "kind": "imports",
+      "detail": "@asol/cors"
     },
     {
       "from": "source:services/submain/src/app/lib/http.ts",
@@ -187042,8 +188435,9 @@
     },
     {
       "from": "source:src/core/config/cors-origins.ts",
-      "to": "environment-key:ASOL_CORS_ORIGINS",
-      "kind": "uses-environment"
+      "to": "package:@asol/cors",
+      "kind": "imports",
+      "detail": "@asol/cors"
     },
     {
       "from": "source:src/core/config/development-guard.server.ts",
@@ -206669,6 +208063,12 @@
       "to": "external-dependency:server-only",
       "kind": "imports",
       "detail": "server-only"
+    },
+    {
+      "from": "source:src/features/notifications/server/dev-notification-send-handler.server.ts",
+      "to": "package:@asol/cors",
+      "kind": "imports",
+      "detail": "@asol/cors"
     },
     {
       "from": "source:src/features/notifications/server/dev-notification-send-handler.server.ts",
@@ -233484,9 +234884,9 @@
     },
     {
       "from": "source:src/proxy.ts",
-      "to": "package:@asol/service-runtime-core",
+      "to": "package:@asol/cors",
       "kind": "imports",
-      "detail": "@asol/service-runtime-core"
+      "detail": "@asol/cors"
     },
     {
       "from": "source:src/proxy.ts",
@@ -238140,6 +239540,47 @@
       "kind": "tests"
     },
     {
+      "from": "test:packages/cors/src/tests/index.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/cors/src/tests/index.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/cors/src/tests/index.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/cors/src/tests/index.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/cors/src/tests/index.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/cors/src/tests/index.test.ts",
+      "to": "package:@asol/cors",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:packages/cors/src/tests/index.test.ts",
+      "to": "source:packages/cors/src/index.ts",
+      "kind": "imports",
+      "detail": "../index"
+    },
+    {
+      "from": "test:packages/cors/src/tests/index.test.ts",
+      "to": "package:@asol/cors",
+      "kind": "tests"
+    },
+    {
       "from": "test:packages/data-core/src/core/database-runtime-policy.test.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -242609,9 +244050,20 @@
     },
     {
       "from": "test:packages/service-runtime-core/src/tests/index.test.ts",
+      "to": "package:@asol/cors",
+      "kind": "imports",
+      "detail": "@asol/cors"
+    },
+    {
+      "from": "test:packages/service-runtime-core/src/tests/index.test.ts",
       "to": "source:packages/service-runtime-core/src/index.ts",
       "kind": "imports",
       "detail": "../index"
+    },
+    {
+      "from": "test:packages/service-runtime-core/src/tests/index.test.ts",
+      "to": "package:@asol/cors",
+      "kind": "tests"
     },
     {
       "from": "test:packages/service-runtime-core/src/tests/index.test.ts",
@@ -244588,9 +246040,20 @@
     },
     {
       "from": "test:scripts/tests/service-cors-boundary.test.ts",
+      "to": "package:@asol/cors",
+      "kind": "imports",
+      "detail": "@asol/cors"
+    },
+    {
+      "from": "test:scripts/tests/service-cors-boundary.test.ts",
       "to": "package:@asol/service-runtime-core",
       "kind": "imports",
       "detail": "@asol/service-runtime-core"
+    },
+    {
+      "from": "test:scripts/tests/service-cors-boundary.test.ts",
+      "to": "package:@asol/cors",
+      "kind": "tests"
     },
     {
       "from": "test:scripts/tests/service-cors-boundary.test.ts",

@@ -80,6 +80,9 @@
       "@asol/catalog-core/server": [
         "./generated/packages/catalog-core/src/server.ts"
       ],
+      "@asol/cors": [
+        "./generated/packages/cors/src/index.ts"
+      ],
       "@asol/data-core": [
         "./generated/packages/data-core/src/index.ts"
       ],

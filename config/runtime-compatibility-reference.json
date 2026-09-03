@@ -160,7 +160,7 @@
     "tsx": "4.23.12",
     "typescript": "5.9.3"
   },
-  "packageLockDigest": "a0e922d2e2a579871cb5389469a092d83907fbe347286910bdb3e7c4bdae4b93",
+  "packageLockDigest": "77e21ebf336e6d1785ab2fc28fd6e79f627808fc4a7ffe8e76fa22f458d9256d",
   "workspacePackages": {
     "account-bridge": "@asol/account-bridge@0.1.0",
     "account-declarations": "@asol/account-declarations@0.1.0",
@@ -170,6 +170,7 @@
     "branding-core": "@asol/branding-core@0.1.0",
     "catalog-core": "@asol/catalog-core@0.1.0",
     "control-composition": "@asol/control-composition@0.1.0",
+    "cors": "@asol/cors@0.1.0",
     "data-core": "@asol/data-core@0.1.0",
     "data-health-core": "@asol/data-health-core@0.1.0",
     "dev-core": "@asol/dev-core@0.1.0",

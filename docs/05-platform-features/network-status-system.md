@@ -338,7 +338,13 @@ http://localhost
 ionic://localhost
 ```
 
-If `ASOL_CORS_ORIGINS` is explicitly configured in Vercel, it replaces the default origin list. Include every required origin in that variable.
+`ASOL_CORS_ORIGINS` is the allowed-origin list, and it replaces any fallback entirely rather than
+merging with one — include **every** required origin in that variable, native shell origins
+included. The application's `/api/*` boundary allows nothing when the variable is unset, so a
+deployment that forgets a Capacitor origin refuses it rather than defaulting it in. The list is
+parsed only by [`@asol/cors`](./sealed-packages/cors-module.md), which exports the localhost and
+Capacitor/Ionic shell origins as `DEVELOPMENT_ORIGINS` for a caller that wants them as its own
+fallback.
 
 ## Deployment
 

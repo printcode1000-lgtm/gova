@@ -2,7 +2,8 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 
-import { createServiceProxy, BROWSER_REQUEST_HEADERS } from "@asol/service-runtime-core";
+import { BROWSER_REQUEST_HEADERS } from "@asol/cors";
+import { createServiceProxy } from "@asol/service-runtime-core";
 
 /**
  * Every deployment answers a preflight, for every path it can receive.
@@ -80,7 +81,7 @@ assert.match(
 );
 assert.equal(
   preflight.headers.get("access-control-allow-headers"),
-  BROWSER_REQUEST_HEADERS,
+  BROWSER_REQUEST_HEADERS.join(", "),
   "The header list is shared: no origin may answer a narrower list than the client sends.",
 );
 

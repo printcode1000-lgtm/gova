@@ -2,7 +2,9 @@
 
 ## Mission
 
-What every service deployment does identically: CORS, error→status mapping, and liveness.
+What every service deployment does identically: the CORS boundary, error→status mapping, and
+liveness. CORS itself is not implemented here — this package consumes
+[`@asol/cors`](./cors-module.md), which owns every `Access-Control-*` header in the repository.
 
 The six mirrors are separate Next.js projects that share no application code by design. What they
 were sharing anyway was five hand-copied `src/app/lib/http.ts` files and six hand-copied health
@@ -15,8 +17,10 @@ routes — and the comments in those files state outright that the status mappin
 | :--- | :--- | :--- |
 | `.` | `@asol/service-runtime-core` | `createServiceHttp`, `mapErrorStatus`, `shardHealthResponse`, `credentialHealthResponse` |
 
-Dependency-free and framework-free: `Request` and `Response` only, so it runs in every runtime a
-deployment might be built for.
+Framework-free: `Request` and `Response` only, so it runs in every runtime a deployment might be
+built for. Its one repository dependency is [`@asol/cors`](./cors-module.md), which is itself
+dependency-free. The direction is one-way — `services/* → @asol/service-runtime-core → @asol/cors` —
+and `@asol/cors` imports nothing from here.
 
 ## Mechanism here, policy in the deployment
 
@@ -30,8 +34,11 @@ const ORDER_ERROR_RULES: readonly ErrorStatusRule[] = [
 ];
 
 const http = createServiceHttp({
-  methods: 'GET, OPTIONS',
-  headers: 'Content-Type, Accept',
+  cors: createCorsPolicy({
+    origins: reflectRequestOrigin(),
+    methods: ['GET', 'OPTIONS'],
+    headers: ['Content-Type', 'Accept'],
+  }),
   defaultRules: ORDER_ERROR_RULES,
 });
 ```
@@ -39,38 +46,32 @@ const http = createServiceHttp({
 Rules are evaluated in order and the first match wins, which is what lets a specific code beat a
 broad `includes` rule placed after it. The **method** list stays per-deployment because it is a real
 per-deployment fact: a read-only deployment advertising `POST` describes a route it does not have.
-The **header** list does not — see [CORS](#cors).
+The **header** list does not: it is one list for the whole system, stated once in
+[`@asol/cors`](./cors-module.md#browser_request_headers).
 
 ## Why the main app's helpers still are not reused
 
 `apiSuccess` / `mapServiceError` reach into request tracing and system logging, which would pull
 most of the application's module graph into a deployment that only reads. That reasoning was
 already written in each of the five copies; it is now written once, and the part that carried no
-such weight — header construction, the message fallback, rule ordering — is shared.
+such weight — the message fallback and rule ordering — is shared.
 
 ## CORS
 
-Every deployment echoes the request origin and accepts no credentials — the browser bridge sends
-`credentials: "omit"` — which is what makes echoing safe. `Vary: Origin` is always set: echoing an
-origin without it poisons shared caches. An **error** response carries the CORS headers too, or the
-browser reports a CORS failure instead of the error the deployment actually returned.
+Owned by [`@asol/cors`](./cors-module.md), not by this package. A deployment states a `CorsPolicy`
+and `createServiceHttp` / `createServiceProxy` pass it through; `npm run architecture:check` fails
+if any file here writes an `Access-Control-*` header of its own.
 
-### `BROWSER_REQUEST_HEADERS`
+What this package still owns is that the policy reaches **every** response a deployment builds,
+including its error responses — without CORS on an error the browser reports a CORS failure instead
+of the error the deployment actually returned, and the real cause never reaches the caller — and
+that the boundary in `services/*/src/proxy.ts` answers a preflight for every path the deployment can
+receive, including the ones it does not implement.
 
-The accepted **request** headers are one list for the whole system, exported from this door:
-
-```text
-Content-Type, Authorization, Accept, X-Asol-Session-Token, X-Asol-Trace-Id
-```
-
-One client speaks to every deployment, so a mirror advertising fewer headers does not answer less —
-the browser's preflight rejects the call before it is sent and the client reports an unreachable
-server, with no CORS wording anywhere to point at the cause. Widening the list is safe: no
-deployment accepts credentials, and a header a service ignores stays ignored.
-
-`services/profiles/src/app/lib/http.ts`, `src/proxy.ts`, and the `headers()` entry in
-`next.config.ts` all read this constant; the package test fails if any of the three spells the list
-by hand again. The remaining mirrors still declare their own literal lists.
+`createServiceProxy()` defaults to reflecting the request origin over the full browser method set,
+because a boundary standing in front of paths it does not enumerate cannot narrow what it has not
+seen. `BROWSER_REQUEST_HEADERS` and the reasoning behind one shared request-header list now live in
+[`@asol/cors`](./cors-module.md#browser_request_headers).
 
 ## Health
 
@@ -83,3 +84,7 @@ Two shapes, because the deployments genuinely differ:
 One rule holds across both: report whether a credential is **present**, never its value, so the
 endpoint can stay public. `requireAll` is off by default because every deployment here has optional
 credentials whose absence degrades one feature rather than the service.
+
+## Related Documents
+
+- [`@asol/cors`](./cors-module.md) — the single source of truth for every CORS decision this package applies.

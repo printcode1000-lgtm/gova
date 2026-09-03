@@ -50,11 +50,21 @@ preflight — implemented or not — and adds the headers to every `/api` respon
 that does not already set them. Bodies stay with the routes; the boundary only
 guarantees the browser is allowed to see them.
 
+The headers themselves come from [`@asol/cors`](../../05-platform-features/sealed-packages/cors-module.md),
+which is now the single source of truth for every CORS decision in the
+repository: a deployment states a policy and asks the package for the record, and
+`npm run architecture:check` fails on any `Access-Control-*` header written
+outside `packages/cors/`. That closes the other half of this defect — nine
+surfaces used to write that record by hand, and the narrow header list below is
+one of the ways they drifted.
+
 The allowed header list is `BROWSER_REQUEST_HEADERS`, shared by every origin, so
 no account can answer a narrower list than the client sends. `credentials` are
 never allowed: the cross-origin contract is an explicit signed
 `x-asol-session-token`, never a cookie, so a permissive origin cannot be ridden
-on someone's session.
+on someone's session — and `createCorsPolicy` throws rather than combine
+credentials with an echoed or wildcard origin, so that guarantee cannot be lost
+by a later edit.
 
 `device-token` itself was a second, independent defect: it was unshipped because
 both operations verify device ownership through the users repository, which
@@ -68,6 +78,13 @@ deployment installs the shared boundary at the full `/api` matcher, and that a
 preflight **for a path no route implements** answers with a real
 `Access-Control-Allow-Origin`, an allow-methods list containing `DELETE`, and an
 allow-headers list equal to `BROWSER_REQUEST_HEADERS`.
+
+Two more gates stand behind it. `npm run test:cors-core` asserts the policy
+semantics directly — rejected origins, missing `Origin`, `Vary`, the
+wildcard-plus-credentials refusal, and that a preflight and a real response never
+disagree. `npm run architecture:check` fails the build if any file outside
+`packages/cors/` names an `Access-Control-*` header, so the per-route copies
+cannot come back one file at a time.
 
 ## The lesson this cost
 

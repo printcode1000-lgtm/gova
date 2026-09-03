@@ -7,40 +7,37 @@ import {
   ownedMethodsForPath,
   resolveRouteOwner,
 } from '@asol/account-bridge/routes';
-import { BROWSER_REQUEST_HEADERS } from '@asol/service-runtime-core';
-
-function isOriginAllowed(origin: string | null): boolean {
-  if (!origin) return false;
-  const allowed = getCorsOrigins();
-  return allowed.includes('*') || allowed.includes(origin);
-}
+import {
+  BROWSER_REQUEST_HEADERS,
+  BROWSER_REQUEST_METHODS,
+  allowOrigins,
+  createCorsPolicy,
+  handleCorsPreflight,
+  isCorsPreflight,
+  resolveCorsHeaders,
+  setCorsHeaders,
+  withAllowedMethods,
+} from '@asol/cors';
 
 /**
- * Every header a browser client may send cross-origin. Omitting one makes the preflight reject
- * the request before it is ever sent, which surfaces to the caller as an unreachable server
- * rather than as a CORS error.
+ * The gova compatibility boundary's CORS policy.
  *
- * The list itself is `BROWSER_REQUEST_HEADERS` in `@asol/service-runtime-core`, shared with the
- * service deployments so no mirror can answer a narrower list than this one. This middleware
- * overrides the `headers()` entry in `next.config.ts` for `/api/*`; that entry reads the same
- * constant.
+ * Unlike the service deployments, this one is an exact allow-list rather than an echo: the origins
+ * come from `ASOL_CORS_ORIGINS`, comparison is exact, and an origin that merely starts with an
+ * allowed one — `https://app.example.evil.tld` — is refused. The envelope itself is `@asol/cors`,
+ * so this boundary and the six deployments cannot answer different request-header lists; a mirror
+ * that advertises fewer headers than the client sends does not answer less, it makes the preflight
+ * reject the call and the caller see an unreachable server.
+ *
+ * Built per request because the allow-list is read per call: a build-time snapshot would freeze a
+ * stale value into the bundle.
  */
-function corsHeaders(origin: string | null): Record<string, string> {
-  const headers: Record<string, string> = {
-    'Access-Control-Allow-Methods': 'GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': BROWSER_REQUEST_HEADERS,
-    'Access-Control-Max-Age': '86400',
-  };
-
-  const allowed = getCorsOrigins();
-  if (allowed.includes('*')) {
-    headers['Access-Control-Allow-Origin'] = '*';
-  } else if (origin && isOriginAllowed(origin)) {
-    headers['Access-Control-Allow-Origin'] = origin;
-    headers['Vary'] = 'Origin';
-  }
-
-  return headers;
+function corsPolicy() {
+  return createCorsPolicy({
+    origins: allowOrigins(getCorsOrigins()),
+    methods: BROWSER_REQUEST_METHODS,
+    headers: BROWSER_REQUEST_HEADERS,
+  });
 }
 
 export function proxy(request: NextRequest) {
@@ -48,29 +45,23 @@ export function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const origin = request.headers.get('origin');
-  const headers = corsHeaders(origin);
+  const policy = corsPolicy();
   const pathname = request.nextUrl.pathname;
 
-  if (request.method === 'OPTIONS') {
+  if (isCorsPreflight(request)) {
+    // A preflight advertises the methods this path is actually owned for, so a client is not told
+    // it may send a verb no owner answers. A path with no owner still gets the boundary's own
+    // envelope — a preflight the browser refuses is reported as a network outage, not a 404.
     const methods = ownedMethodsForPath(pathname);
-    if (methods.length > 0) {
-      const allowedMethods = methods.includes('GET')
-        ? [...new Set([...methods, 'HEAD', 'OPTIONS'])]
-        : [...new Set([...methods, 'OPTIONS'])];
-      return new NextResponse(null, {
-        status: 204,
-        headers: {
-          ...headers,
-          'Access-Control-Allow-Methods': allowedMethods.join(', '),
-          'Access-Control-Allow-Headers': BROWSER_REQUEST_HEADERS,
-          'Access-Control-Max-Age': '86400',
-        },
-      });
-    }
-    return new NextResponse(null, { status: 204, headers });
+    if (methods.length === 0) return handleCorsPreflight(policy, request);
+
+    const owned = methods.includes('GET')
+      ? [...new Set([...methods, 'HEAD', 'OPTIONS'])]
+      : [...new Set([...methods, 'OPTIONS'])];
+    return handleCorsPreflight(withAllowedMethods(policy, owned), request);
   }
 
+  const headers = resolveCorsHeaders(policy, request);
   const owner = resolveRouteOwner(request.method, pathname);
   if (owner) {
     const businessOrigin = businessApiOrigins()[owner];
@@ -98,9 +89,7 @@ export function proxy(request: NextRequest) {
   }
 
   const response = NextResponse.next();
-  for (const [key, value] of Object.entries(headers)) {
-    response.headers.set(key, value);
-  }
+  setCorsHeaders(response.headers, policy, request);
   return response;
 }
 

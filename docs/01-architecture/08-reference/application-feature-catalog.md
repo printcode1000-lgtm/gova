@@ -650,4 +650,4 @@ src/
 | Application features | 47 |
 | Features with UI door | 32 |
 | Features with server door | 26 |
-| Sealed capability packages | 43 |
+| Sealed capability packages | 44 |

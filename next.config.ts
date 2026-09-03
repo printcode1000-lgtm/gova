@@ -1,7 +1,12 @@
 import type { NextConfig } from 'next';
 
 import { API_BASE_URL } from '@asol/native-core';
-import { BROWSER_REQUEST_HEADERS } from '@asol/service-runtime-core';
+import {
+  BROWSER_REQUEST_HEADERS,
+  anyOrigin,
+  createCorsPolicy,
+  resolveCorsHeaders,
+} from '@asol/cors';
 import {
   CURRENT_NATIVE_APP_VERSION,
   CURRENT_WEB_CONTENT_VERSION,
@@ -110,20 +115,25 @@ const nextConfig: NextConfig = {
   },
   allowedDevOrigins: ['localhost', '127.0.0.1'],
 
+  /**
+   * The static CORS envelope for every path this deployment serves.
+   *
+   * `@asol/cors` owns the header names and the values; this table only states the policy — public
+   * bytes, no credentials, and the one request-header list every ASOL surface answers with, so a
+   * client cannot be preflight-rejected here for a header another origin accepts. `src/proxy.ts`
+   * overrides this entry for `/api/*` with an exact origin allow-list built from the same package.
+   */
   async headers() {
+    const policy = createCorsPolicy({
+      origins: anyOrigin(),
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+      headers: BROWSER_REQUEST_HEADERS,
+      maxAgeSeconds: null,
+    });
     return [
       {
         source: '/:path*',
-        headers: [
-          { key: 'Access-Control-Allow-Origin', value: '*' },
-          { key: 'Access-Control-Allow-Methods', value: 'GET, POST, PUT, DELETE, OPTIONS' },
-          {
-            // The one list every ASOL surface answers with; src/proxy.ts overrides
-            // this entry for /api/* with the same constant.
-            key: 'Access-Control-Allow-Headers',
-            value: BROWSER_REQUEST_HEADERS,
-          },
-        ],
+        headers: Object.entries(resolveCorsHeaders(policy)).map(([key, value]) => ({ key, value })),
       },
     ];
   },

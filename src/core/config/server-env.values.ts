@@ -1,7 +1,6 @@
 export {
   getTursoRuntimeCredentials,
   getTursoPlatformCredentials,
-  getCorsOrigins,
   readOptionalEnv,
   getAppLinkAssociationConfig,
   listLibsqlDatabaseUrlKeys,

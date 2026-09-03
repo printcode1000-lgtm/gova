@@ -4,31 +4,10 @@ import { extractSessionToken, registerSessionSigningSecret, verifySignedSessionT
 import { SUPER_ADMIN_PHONE, SUPER_ADMIN_UID } from '@asol/auth-core';
 import { isSuperAdminIdentity, registerSuperAdminIdentity } from '@asol/auth-core/super-admin';
 import { businessApiErrorStatus } from '@/core/api/business-api-error-status';
-import { controlCorsHeaders } from './operational-route';
+import { controlCorsHeaders, withControlCors } from './operational-route';
 
 registerSessionSigningSecret(() => process.env.ASOL_SESSION_SIGNING_SECRET?.trim() ?? '');
 registerSuperAdminIdentity(() => ({ uid: SUPER_ADMIN_UID, phone: SUPER_ADMIN_PHONE }));
-
-/**
- * Every control response carries CORS, including the ones a handler builds itself.
- *
- * The Super Admin console is a browser client on another origin. A response
- * without `Access-Control-Allow-Origin` is discarded by the browser, and the
- * console reports an unreachable server for a runtime that answered correctly.
- * Adding the headers at the two runners covers every route at once, so a new
- * control route cannot forget them.
- */
-function withControlCors(request: Request, response: Response): Response {
-  const headers = new Headers(response.headers);
-  for (const [key, value] of Object.entries(controlCorsHeaders(request))) {
-    headers.set(key, value);
-  }
-  return new Response(response.body, {
-    status: response.status,
-    statusText: response.statusText,
-    headers,
-  });
-}
 
 type Awaitable<T> = T | Promise<T>;
 type Context = { admin: SignedSessionClaims };

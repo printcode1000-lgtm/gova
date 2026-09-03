@@ -214,6 +214,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:compositions` | `npm run test:notifications-composition && npm run test:products-composition && npm run test:orders-composition && npm run test:profiles-composition && npm run test:submain-composition && npm run test:sub2main-composition` |
 | `npm run test:console-command-parity` | `npx tsx src/features/release-commands/tests/console-command-parity.test.ts` |
 | `npm run test:control` | `npx tsx scripts/tests/control-service.test.ts` |
+| `npm run test:cors-core` | `npx tsx packages/cors/src/tests/index.test.ts` |
 | `npm run test:data-core` | `npm run test:data-health-core && npm run test:backup-core && npm run test:sqlite-reconnect && npx tsx packages/data-core/src/tests/index.test.ts && npx tsx packages/data-core/src/tests/schema-parity.test.ts` |
 | `npm run test:data-health` | `npx tsx scripts/test-data-health-environment.ts && cross-env NODE_OPTIONS=<redacted> npx tsx src/features/data-health/tests/development-guard.test.ts && npx tsx packages/data-core/src/domains/data-health/tests/data-health-policy.test.ts && cross-env NODE_OPTIONS=<redacted> npx tsx packages/data-core/src/domains/data-health/tests/order-purge.test.ts` |
 | `npm run test:data-health-core` | `npx tsx packages/data-health-core/src/tests/index.test.ts` |

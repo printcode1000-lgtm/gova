@@ -11,7 +11,7 @@ Canonical inventory of every sealed `@asol/*` package in `packages/`.
 
 ## Scope
 
-Covers all 43 sealed packages under `packages/`. Does not cover `services/*/generated/` mirrors.
+Covers all 44 sealed packages under `packages/`. Does not cover `services/*/generated/` mirrors.
 
 ## Source of Truth
 
@@ -102,6 +102,20 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Infrastructure Privileges** | `sharp` |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:branding-core` |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+
+### @asol/cors
+
+| Field | Value |
+|---|---|
+| **Package** | `@asol/cors` |
+| **Folder** | `packages/cors/` |
+| **Purpose** | Cross-origin (CORS) policy, headers, and preflight |
+| **Architectural Layer** | capability |
+| **Public Exports** | `.` |
+| **Infrastructure Privileges** | none |
+| **May Import App (`@/`)** | no |
+| **Test Gate** | `npm run architecture:check` |
 | **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/catalog-core
@@ -626,4 +640,4 @@ This Markdown file is **generated** and verified by `architecture:check`.
 
 | Metric | Value |
 |---|---|
-| Packages | 43 |
+| Packages | 44 |

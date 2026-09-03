@@ -3,6 +3,7 @@ import { createServer, request as httpRequest, type IncomingMessage, type Server
 import { request as httpsRequest } from "node:https";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { extname, join, resolve, normalize } from "node:path";
+import { anyOrigin, createCorsPolicy, resolveCorsHeaders } from "@asol/cors";
 import { API_BASE_URL } from "@asol/native-core";
 
 const rootDir = resolve("out");
@@ -106,9 +107,19 @@ function proxyApiRequest(
   req.pipe(upstream);
 }
 
+/**
+ * The static preview serves the exported bundle to whatever loads it — a browser on the machine, a
+ * Capacitor WebView on a device over the LAN — so it answers any origin. It has no session, no
+ * credentials, and no preflight of its own: the API calls it proxies are answered by the real
+ * deployment, which applies its own policy. Header names come from `@asol/cors` like everywhere
+ * else.
+ */
+const PREVIEW_CORS = createCorsPolicy({ origins: anyOrigin(), maxAgeSeconds: null });
+const previewCorsHeaders = resolveCorsHeaders(PREVIEW_CORS);
+
 createServer((req, res) => {
   const requestUrl = req.url ?? "/";
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  for (const [key, value] of Object.entries(previewCorsHeaders)) res.setHeader(key, value);
 
   if (requestUrl === "/api" || requestUrl.startsWith("/api/")) {
     proxyApiRequest(req, res);

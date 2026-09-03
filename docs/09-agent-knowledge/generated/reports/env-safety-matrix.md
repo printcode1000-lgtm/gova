@@ -44,7 +44,7 @@ Keys: **241**
 | `ASOL_CATALOG_PUBLIC_ROOT` | server-only | unknown | `packages/catalog-core/src/server/validate-catalog-v3.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_CATALOG_ROOT` | server-only | unknown | `packages/catalog-core/src/server/validate-catalog-v3.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_CONTROL_SMOKE_PORT` | server-only | unknown | `scripts/smoke-control-service.ts` | unclassified | server-only | npm run runtime:check:changed |
-| `ASOL_CORS_ORIGINS` | server-only | dangerous | `packages/ota-core/scripts/sync-cors.ts`, `packages/storage-core/src/server/transport/r2-cors-policy.ts`, `src/core/api/tests/compatibility-boundary.test.ts`, `src/core/config/cors-origins.ts` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
+| `ASOL_CORS_ORIGINS` | server-only | unknown | `src/core/api/tests/compatibility-boundary.test.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_DATA_SOURCE` | server-only | dangerous | `src/core/config/runtime-context.server.ts`, `src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `ASOL_DEPLOY_CALLBACK_SECRET` | server-only | dangerous | `scripts/release-readiness-publish.ts`, `scripts/run-remote-deploy-all.mjs` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
 | `ASOL_DEPLOY_CALLBACK_URL` | server-only | unknown | `scripts/run-remote-deploy-all.mjs` | unclassified | server-only | npm run runtime:check:changed |

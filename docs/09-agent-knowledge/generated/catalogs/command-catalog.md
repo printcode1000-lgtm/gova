@@ -200,6 +200,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:compositions` | `Tooling` | 6 |  | 0 |
 | `npm run test:console-command-parity` | `Tooling` | 1 |  | 0 |
 | `npm run test:control` | `Tooling` | 1 |  | 0 |
+| `npm run test:cors-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:data-core` | `Tooling` | 5 |  | 0 |
 | `npm run test:data-health` | `Tooling` | 4 |  | 1 |
 | `npm run test:data-health-core` | `Tooling` | 1 |  | 0 |

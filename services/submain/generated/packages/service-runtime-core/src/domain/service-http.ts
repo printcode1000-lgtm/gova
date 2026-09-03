@@ -1,4 +1,10 @@
-import { corsHeadersFor, preflightFor, withCorsFor, type CorsPolicy } from './cors';
+import {
+  handleCorsPreflight,
+  resolveCorsHeaders,
+  withCorsHeaders,
+  type CorsPolicy,
+} from '@asol/cors';
+
 import { errorMessageOf, mapErrorStatus, type ErrorStatusRule } from './error-status';
 
 /**
@@ -9,7 +15,11 @@ import { errorMessageOf, mapErrorStatus, type ErrorStatusRule } from './error-st
  * `apiSuccess` / `mapServiceError` still cannot be reused there — they reach into request tracing
  * and system logging, which would pull most of the application's module graph into a deployment
  * that only reads. What is shared now is the part that carried no such weight and had drifted
- * anyway: header construction, the message fallback, and the order rules are applied in.
+ * anyway: the message fallback and the order rules are applied in.
+ *
+ * CORS itself is not implemented here at all. The deployment states a `CorsPolicy` from
+ * `@asol/cors` and this file passes it through, so a mirror cannot answer a different envelope
+ * than the application does.
  */
 export interface ServiceHttp {
   corsHeaders(request: Request): Record<string, string>;
@@ -21,28 +31,30 @@ export interface ServiceHttp {
   jsonResponse(request: Request, data: unknown, status?: number): Response;
 }
 
-export interface ServiceHttpOptions extends CorsPolicy {
+export interface ServiceHttpOptions {
+  /** This deployment's CORS policy, built with `createCorsPolicy` from `@asol/cors`. */
+  cors: CorsPolicy;
   /** Applied when a route passes no rules of its own. */
   defaultRules?: readonly ErrorStatusRule[];
 }
 
 export function createServiceHttp(options: ServiceHttpOptions): ServiceHttp {
-  const policy: CorsPolicy = { methods: options.methods, headers: options.headers };
+  const policy = options.cors;
   const defaults = options.defaultRules ?? [];
 
   return {
-    corsHeaders: (request) => corsHeadersFor(request, policy),
-    preflight: (request) => preflightFor(request, policy),
-    withCors: (request, response) => withCorsFor(request, response, policy),
+    corsHeaders: (request) => resolveCorsHeaders(policy, request),
+    preflight: (request) => handleCorsPreflight(policy, request),
+    withCors: (request, response) => withCorsHeaders(response, policy, request),
     errorResponse(request, error, rules = defaults) {
       const message = errorMessageOf(error);
       return Response.json(
         { error: message },
-        { status: mapErrorStatus(message, rules), headers: corsHeadersFor(request, policy) },
+        { status: mapErrorStatus(message, rules), headers: resolveCorsHeaders(policy, request) },
       );
     },
     jsonResponse(request, data, status = 200) {
-      return Response.json(data, { status, headers: corsHeadersFor(request, policy) });
+      return Response.json(data, { status, headers: resolveCorsHeaders(policy, request) });
     },
   };
 }

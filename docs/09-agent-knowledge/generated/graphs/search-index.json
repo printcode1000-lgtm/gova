@@ -2872,6 +2872,20 @@
       ]
     },
     {
+      "id": "command:test:cors-core",
+      "kind": "command",
+      "name": "npm run test:cors-core",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "cors-core",
+        "npm",
+        "npm run test:cors-core",
+        "run",
+        "test",
+        "test:cors-core"
+      ]
+    },
+    {
       "id": "command:test:data-core",
       "kind": "command",
       "name": "npm run test:data-core",
@@ -6226,6 +6240,7 @@
         "@asol/catalog-core",
         "@asol/catalog-core/server",
         "@asol/control-composition",
+        "@asol/cors",
         "@asol/data-core",
         "@asol/data-core/account-deletion",
         "@asol/data-core/advertisements",
@@ -6371,6 +6386,7 @@
         "packages/branding-core/",
         "packages/catalog-core/",
         "packages/control-composition/",
+        "packages/cors/",
         "packages/data-core/",
         "packages/data-health-core/",
         "packages/dev-core/",
@@ -6439,6 +6455,7 @@
         "@asol/branding-core",
         "@asol/catalog-core",
         "@asol/control-composition",
+        "@asol/cors",
         "@asol/data-core",
         "@asol/data-core/browser",
         "@asol/data-core/marketplace-orders",
@@ -6603,6 +6620,7 @@
         "@asol/branding-core",
         "@asol/catalog-core",
         "@asol/control-composition",
+        "@asol/cors",
         "@asol/data-core",
         "@asol/data-health-core",
         "@asol/dev-core",
@@ -6670,6 +6688,7 @@
         "packages/branding-core/",
         "packages/catalog-core/",
         "packages/control-composition/",
+        "packages/cors/",
         "packages/data-core/",
         "packages/data-health-core/",
         "packages/dev-core/",
@@ -7088,6 +7107,7 @@
       "summary": "Preserved operational and architectural detail, relocated here during the 2026-08 architecture reconstruction. Agents use this for implementation guidance.",
       "tags": [
         "2026-08",
+        "@asol/cors",
         "agents",
         "and",
         "architectural",
@@ -7413,6 +7433,7 @@
       "summary": "Preserved operational and architectural detail, relocated here during the 2026-08 architecture reconstruction. Agents use this for implementation guidance.",
       "tags": [
         "2026-08",
+        "@asol/cors",
         "agents",
         "and",
         "architectural",
@@ -7427,6 +7448,7 @@
         "implementation",
         "md",
         "operational",
+        "packages/cors/",
         "preserved",
         "preserved operational and architectural detail, relocated here during the 2026-08 architecture reconstruction. agents use this for implementation guidance.",
         "reconstruction",
@@ -7897,6 +7919,7 @@
         "/01-architecture/readme",
         "2026-08",
         "> **note:** operational detail relocated here during the 2026-08 architecture reconstruction. architectural relationships: [docs/01-architecture/](../01-architecture/readme.md).",
+        "@asol/cors",
         "architectural",
         "architecture",
         "detail",
@@ -8039,6 +8062,7 @@
       "tags": [
         "166",
         "8486fdbb1c87dc78481f2def0a23e043",
+        "@asol/cors",
         "@asol/ota-core",
         "@asol/storage-core",
         "account",
@@ -10510,6 +10534,7 @@
       "path": "docs/05-platform-features/network-status-system.md",
       "summary": "ASOL has a centralized, platform-agnostic network status system that covers every page and every Business API request. It works in the browser, static exports, Android, and iOS without importing Capacitor into application code.",
       "tags": [
+        "@asol/cors",
         "and",
         "android",
         "api",
@@ -11204,6 +11229,73 @@
       ]
     },
     {
+      "id": "document:docs/05-platform-features/sealed-packages/cors-module.md",
+      "kind": "document",
+      "name": "`@asol/cors`",
+      "path": "docs/05-platform-features/sealed-packages/cors-module.md",
+      "summary": "The single source of truth for CORS in this repository. Every `Access-Control-*` header any ASOL surface sends is produced here, and nowhere else.",
+      "tags": [
+        "@asol/cors",
+        "@asol/service-runtime-core",
+        "`@asol/cors`",
+        "access-control-",
+        "and",
+        "any",
+        "asol",
+        "cors",
+        "docs/05-platform-features/sealed-packages/cors-module",
+        "docs/05-platform-features/sealed-packages/cors-module.md",
+        "else",
+        "every",
+        "for",
+        "header",
+        "here",
+        "in",
+        "is",
+        "md",
+        "nowhere",
+        "of",
+        "packages/architecture-core/src/checks/cors-contract",
+        "packages/architecture-core/src/checks/cors-contract.ts",
+        "packages/cors/",
+        "packages/ota-core/scripts/sync-cors",
+        "packages/ota-core/scripts/sync-cors.ts",
+        "packages/storage-core/src/server/transport/r2-cors-policy",
+        "packages/storage-core/src/server/transport/r2-cors-policy.ts",
+        "produced",
+        "repository",
+        "sends",
+        "services/profiles/src/app/lib/http",
+        "services/profiles/src/app/lib/http.ts",
+        "single",
+        "source",
+        "src/apply",
+        "src/apply.ts",
+        "src/core/config/cors-origins",
+        "src/core/config/cors-origins.ts",
+        "src/env",
+        "src/env.ts",
+        "src/headers",
+        "src/headers.ts",
+        "src/origins",
+        "src/origins.ts",
+        "src/policy",
+        "src/policy.ts",
+        "src/preflight",
+        "src/preflight.ts",
+        "src/proxy",
+        "src/proxy.ts",
+        "src/types",
+        "src/types.ts",
+        "surface",
+        "the",
+        "the single source of truth for cors in this repository. every `access-control-*` header any asol surface sends is produced here, and nowhere else.",
+        "this",
+        "truth",
+        "ts"
+      ]
+    },
+    {
       "id": "document:docs/05-platform-features/sealed-packages/data-core-module.md",
       "kind": "document",
       "name": "`@asol/data-core`",
@@ -11578,6 +11670,7 @@
         "@asol/auth-core",
         "@asol/branding-core",
         "@asol/catalog-core",
+        "@asol/cors",
         "@asol/data-core",
         "@asol/dev-core",
         "@asol/env-core",
@@ -11629,11 +11722,16 @@
       "kind": "document",
       "name": "`@asol/service-runtime-core`",
       "path": "docs/05-platform-features/sealed-packages/service-runtime-core-module.md",
-      "summary": "What every service deployment does identically: CORS, error→status mapping, and liveness.",
+      "summary": "What every service deployment does identically: the CORS boundary, error→status mapping, and liveness. CORS itself is not implemented here — this package consumes [`@asol/cors`](./cors-module.md), which owns every `Access-Control-*` header in the repository.",
       "tags": [
+        "/cors-module",
+        "@asol/cors",
         "@asol/service-runtime-core",
         "`@asol/service-runtime-core`",
+        "access-control-",
         "and",
+        "boundary",
+        "consumes",
         "cors",
         "deployment",
         "docs/05-platform-features/sealed-packages/service-runtime-core-module",
@@ -11641,21 +11739,30 @@
         "does",
         "error",
         "every",
+        "header",
+        "here",
         "identically",
+        "implemented",
+        "in",
+        "is",
+        "itself",
         "liveness",
         "mapping",
         "md",
+        "not",
+        "owns",
+        "package",
+        "repository",
         "service",
-        "services/profiles/src/app/lib/http",
-        "services/profiles/src/app/lib/http.ts",
         "src/app/lib/http",
         "src/app/lib/http.ts",
-        "src/proxy",
-        "src/proxy.ts",
         "status",
+        "the",
+        "this",
         "ts",
         "what",
-        "what every service deployment does identically: cors, error→status mapping, and liveness."
+        "what every service deployment does identically: the cors boundary, error→status mapping, and liveness. cors itself is not implemented here — this package consumes [`@asol/cors`](./cors-module.md), which owns every `access-control-*` header in the repository.",
+        "which"
       ]
     },
     {
@@ -14857,6 +14964,7 @@
       "path": "docs/08-troubleshooting/problems/preflight-answered-without-cors-headers.md",
       "summary": "The browser reports a network failure for a route whose origin is healthy:",
       "tags": [
+        "@asol/cors",
         "@asol/service-runtime-core",
         "a route reports `unable to reach the server` while the server is up",
         "browser",
@@ -14869,6 +14977,7 @@
         "md",
         "network",
         "origin",
+        "packages/cors/",
         "reach",
         "reports",
         "route",
@@ -22217,6 +22326,26 @@
       ]
     },
     {
+      "id": "package:@asol/cors",
+      "kind": "package",
+      "name": "@asol/cors",
+      "path": "packages/cors",
+      "summary": "Cross-origin (CORS) policy, headers, and preflight; Layer: capability; Public exports: .",
+      "tags": [
+        ".",
+        "@asol/cors",
+        "and",
+        "capability",
+        "cors",
+        "cross-origin",
+        "cross-origin (cors) policy, headers, and preflight",
+        "headers",
+        "packages/cors",
+        "policy",
+        "preflight"
+      ]
+    },
+    {
       "id": "package:@asol/data-core",
       "kind": "package",
       "name": "@asol/data-core",
@@ -28595,6 +28724,17 @@
       ]
     },
     {
+      "id": "source:packages/architecture-core/src/checks/cors-contract.ts",
+      "kind": "source",
+      "name": "cors-contract.ts",
+      "path": "packages/architecture-core/src/checks/cors-contract.ts",
+      "tags": [
+        "packages/architecture-core/src/checks/cors-contract",
+        "packages/architecture-core/src/checks/cors-contract.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/architecture-core/src/checks/feature-application-door-purity-contract.ts",
       "kind": "source",
       "name": "feature-application-door-purity-contract.ts",
@@ -29422,6 +29562,94 @@
       "tags": [
         "packages/control-composition/src/index",
         "packages/control-composition/src/index.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/cors/src/apply.ts",
+      "kind": "source",
+      "name": "apply.ts",
+      "path": "packages/cors/src/apply.ts",
+      "tags": [
+        "packages/cors/src/apply",
+        "packages/cors/src/apply.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/cors/src/env.ts",
+      "kind": "source",
+      "name": "env.ts",
+      "path": "packages/cors/src/env.ts",
+      "tags": [
+        "packages/cors/src/env",
+        "packages/cors/src/env.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/cors/src/headers.ts",
+      "kind": "source",
+      "name": "headers.ts",
+      "path": "packages/cors/src/headers.ts",
+      "tags": [
+        "packages/cors/src/headers",
+        "packages/cors/src/headers.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/cors/src/index.ts",
+      "kind": "source",
+      "name": "index.ts",
+      "path": "packages/cors/src/index.ts",
+      "tags": [
+        "packages/cors/src/index",
+        "packages/cors/src/index.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/cors/src/origins.ts",
+      "kind": "source",
+      "name": "origins.ts",
+      "path": "packages/cors/src/origins.ts",
+      "tags": [
+        "packages/cors/src/origins",
+        "packages/cors/src/origins.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/cors/src/policy.ts",
+      "kind": "source",
+      "name": "policy.ts",
+      "path": "packages/cors/src/policy.ts",
+      "tags": [
+        "packages/cors/src/policy",
+        "packages/cors/src/policy.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/cors/src/preflight.ts",
+      "kind": "source",
+      "name": "preflight.ts",
+      "path": "packages/cors/src/preflight.ts",
+      "tags": [
+        "packages/cors/src/preflight",
+        "packages/cors/src/preflight.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/cors/src/types.ts",
+      "kind": "source",
+      "name": "types.ts",
+      "path": "packages/cors/src/types.ts",
+      "tags": [
+        "packages/cors/src/types",
+        "packages/cors/src/types.ts",
         "ts"
       ]
     },
@@ -36813,17 +37041,6 @@
       "tags": [
         "packages/service-mirror-core/src/index",
         "packages/service-mirror-core/src/index.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/service-runtime-core/src/domain/cors.ts",
-      "kind": "source",
-      "name": "cors.ts",
-      "path": "packages/service-runtime-core/src/domain/cors.ts",
-      "tags": [
-        "packages/service-runtime-core/src/domain/cors",
-        "packages/service-runtime-core/src/domain/cors.ts",
         "ts"
       ]
     },
@@ -53007,6 +53224,18 @@
       "tags": [
         "packages/control-composition/src/tests/index",
         "packages/control-composition/src/tests/index.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/cors/src/tests/index.test.ts",
+      "kind": "test",
+      "name": "index.test.ts",
+      "path": "packages/cors/src/tests/index.test.ts",
+      "tags": [
+        "packages/cors/src/tests/index",
+        "packages/cors/src/tests/index.test.ts",
         "test",
         "ts"
       ]

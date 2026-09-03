@@ -117,6 +117,7 @@ const BUILD_STATIC_SUBSTEPS = [
   ["test-auth-core", "بوابة @asol/auth-core", "npm run test:auth-core"],
   ["test-account-deletion", "سجل حذف الحساب", "npm run test:account-deletion-registry"],
   ["test-catalog-core", "بوابة @asol/catalog-core", "npm run test:catalog-core"],
+  ["test-cors-core", "بوابة @asol/cors", "npm run test:cors-core"],
   ["test-format-core", "بوابة @asol/format-core", "npm run test:format-core"],
   ["test-gp-assets-core", "بوابة google-play-store-assets-core", "npm run test:google-play-store-assets-core"],
   ["test-signed-token-core", "بوابة @asol/signed-token-core", "npm run test:signed-token-core"],

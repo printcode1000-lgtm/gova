@@ -1,3 +1,4 @@
+import { createCorsPolicy, reflectRequestOrigin } from '@asol/cors';
 import { createServiceHttp, type ErrorStatusRule } from '@asol/service-runtime-core';
 
 /**
@@ -17,8 +18,11 @@ const ORDER_ERROR_RULES: readonly ErrorStatusRule[] = [
 ];
 
 const http = createServiceHttp({
-  methods: 'GET, OPTIONS',
-  headers: 'Content-Type, Accept',
+  cors: createCorsPolicy({
+    origins: reflectRequestOrigin(),
+    methods: ['GET', 'OPTIONS'],
+    headers: ['Content-Type', 'Accept'],
+  }),
   defaultRules: ORDER_ERROR_RULES,
 });
 

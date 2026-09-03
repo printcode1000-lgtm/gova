@@ -77,6 +77,9 @@
       "@asol/backup-core/server": [
         "./packages/backup-core/src/server.ts"
       ],
+      "@asol/cors": [
+        "./packages/cors/src/index.ts"
+      ],
       "@asol/catalog-core": [
         "./packages/catalog-core/src/index.ts"
       ],

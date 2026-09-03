@@ -1,5 +1,7 @@
 import "server-only";
 
+import { createCorsPolicy, reflectRequestOrigin, resolveCorsHeaders } from "@asol/cors";
+
 import { isDevRuntime } from "@/core/config/runtime-context.server";
 import {
   deliverNotificationGrants,
@@ -28,15 +30,19 @@ export function isDevNotificationSendEnabled(): boolean {
   return isDevRuntime();
 }
 
+/**
+ * The same envelope the notifications deployment answers with, so a client that
+ * works against localhost works against the service and back again. Credentials
+ * are never accepted — the authority is the signed grant in the body.
+ */
+const DEV_SEND_CORS = createCorsPolicy({
+  origins: reflectRequestOrigin(),
+  methods: ["POST", "OPTIONS"],
+  headers: ["Content-Type"],
+});
+
 function corsHeaders(request: Request): Record<string, string> {
-  const origin = request.headers.get("origin");
-  return {
-    "Access-Control-Allow-Origin": origin ?? "*",
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
-    "Access-Control-Max-Age": "86400",
-    Vary: "Origin",
-  };
+  return resolveCorsHeaders(DEV_SEND_CORS, request);
 }
 
 export async function handleDevNotificationSendPost(
