@@ -9,9 +9,9 @@ permissions:
 jobs:
   probe:
     runs-on: [self-hosted, Linux, X64, gova]
-    timeout-minutes: 20
+    timeout-minutes: 10
     steps:
-      - name: Diagnose failed service smoke at current release checkpoint
+      - name: Inspect service smoke runtime environment
         shell: bash
         run: |
           set -euo pipefail
@@ -21,9 +21,11 @@ jobs:
           git status --short --branch
           git rev-parse HEAD
           echo '=== GATEWAY ==='
-          curl -fsS http://127.0.0.1:8765/health || true
+          curl -fsS http://127.0.0.1:8765/health
           echo
-          echo '=== CONTEXT ==='
-          npx tsx scripts/docs/context.ts scripts/check-service-smoke.ts
-          echo '=== TARGETED CHECKPOINT ==='
-          npm run smoke:services
+          echo '=== STATIC MODE ==='
+          printf 'ASOL_MODE=%s\n' "${ASOL_MODE-<unset>}"
+          grep -RFn --exclude-dir=node_modules --exclude-dir=.next --exclude-dir=out 'Server database access is unavailable during static export.' packages src scripts services 2>/dev/null || true
+          grep -RFn --exclude-dir=node_modules --exclude-dir=.next --exclude-dir=out 'ASOL_MODE' packages/data-core scripts next.config.ts services/sub2main 2>/dev/null | head -80 || true
+          echo '=== RELEASE ENV SOURCES (NAMES ONLY) ==='
+          npx tsx -e "import {resolveReleaseToolEnvironmentSources} from '@asol/env-core/process'; const wanted=new Set(['TURSO_PRODUCT_DATABASE_URL','TURSO_PRODUCT_AUTH_TOKEN','TURSO_DATABASE_URL','TURSO_AUTH_TOKEN','TURSO_ADVERTISEMENTS_DATABASE_URL','TURSO_ADVERTISEMENTS_AUTH_TOKEN','TURSO_PROFILE_DATABASE_URL','TURSO_PROFILE_AUTH_TOKEN']); console.log(resolveReleaseToolEnvironmentSources({cwd:process.cwd()}).filter(x=>wanted.has(x.key)))"
