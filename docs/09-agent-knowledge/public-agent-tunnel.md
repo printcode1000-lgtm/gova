@@ -4,17 +4,56 @@
 
 The Gova local-agent runtime owns its public Cloudflare Quick Tunnel directly. It does not depend on the `p2p-link` companion repository.
 
-The public transport targets the persistent local-agent gateway:
+The public transport now terminates at a loopback MCP bridge before reaching the persistent gateway:
 
 ```text
-Cloudflare Quick Tunnel -> http://127.0.0.1:8765 -> gova-agent-gateway
+Cloudflare Quick Tunnel
+  -> http://127.0.0.1:8767 (Gova MCP bridge)
+  -> http://127.0.0.1:8765 (Gova Agent Gateway)
 ```
+
+The bridge preserves `/health` and `/v1/*` compatibility and adds a Streamable HTTP MCP endpoint at `/mcp`.
 
 The public URL is transient and is regenerated whenever `cloudflared` reconnects. The current URL is stored locally at:
 
 ```text
 /home/hesham/.local/state/gova-agent-tunnel/public-url
 ```
+
+## MCP Endpoint
+
+The public MCP endpoint is:
+
+```text
+<current-trycloudflare-url>/mcp
+```
+
+It accepts JSON-RPC 2.0 over HTTP POST and implements MCP initialization, ping, tool listing, and tool calls. The bridge advertises protocol version `2025-06-18` and also accepts the earlier `2025-03-26` and `2024-11-05` initialization versions.
+
+Authentication is mandatory for `/mcp`. Clients may provide the existing local-agent key through either:
+
+```text
+Authorization: Bearer <local-agent-key>
+```
+
+or the existing gateway-compatible header:
+
+```text
+X-Gova-Agent-Key: <local-agent-key>
+```
+
+The key remains only in `/home/hesham/.config/gova-agent/auth`; it is never published to R2 or committed to Git.
+
+The MCP bridge exposes these tools:
+
+- `gova_health`: read-only gateway health.
+- `gova_diagnostics`: read-only runtime/repository diagnostics.
+- `gova_command_start`: starts a shell command on the authorized local machine.
+- `gova_command_status`: reads command state and exit information.
+- `gova_command_logs`: reads command stdout/stderr.
+- `gova_command_cancel`: terminates a running command.
+
+Command execution still occurs through the existing gateway rather than inside the MCP bridge, so the established command tracking, logs, cancellation, runtime database, and local privilege model remain authoritative.
 
 ## Command
 
@@ -65,15 +104,16 @@ The default discovery object is:
 gova-agent/public.json
 ```
 
-Its JSON payload contains the active tunnel URL, `/health` URL, update timestamp, and local host name. The object is overwritten in place so consumers have one stable R2 discovery URL even though the Quick Tunnel hostname changes.
+Its JSON payload contains the active tunnel URL, `/health` URL, `/mcp` URL, MCP transport/protocol metadata, update timestamp, and local host name. The object is overwritten in place so consumers have one stable R2 discovery URL even though the Quick Tunnel hostname changes.
 
 ## Runtime Files
 
-- `tools/local-agent/gateway-quick-tunnel.sh`: launches `cloudflared` against port `8765`, captures the generated URL, and triggers R2 publication when it changes.
+- `tools/local-agent/mcp_bridge.py`: authenticated Streamable HTTP MCP adapter and compatibility proxy to the gateway.
+- `tools/local-agent/gateway-quick-tunnel.sh`: owns the loopback MCP bridge, launches `cloudflared` against port `8767`, captures the generated URL, and triggers R2 publication when it changes.
 - `tools/local-agent/publish-public-url-r2.py`: standalone Gova R2 discovery publisher using the existing `.env.local` credentials.
 - `tools/local-agent/gova-agent-public.sh`: user-facing lifecycle and publication command.
-- `tools/local-agent/gova-agent-public.service`: persistent user systemd service.
-- `tools/local-agent/install.sh`: installs the scripts, symlink, service, and starts the dedicated tunnel.
+- `tools/local-agent/gova-agent-public.service`: persistent user systemd service that owns both MCP bridge and tunnel lifecycle.
+- `tools/local-agent/install.sh`: installs the runtime and starts the dedicated public transport.
 
 ## Independence
 
