@@ -28659,6 +28659,17 @@
       ]
     },
     {
+      "id": "source:packages/architecture-core/src/checks/static-dom-component-repeatability-contract.ts",
+      "kind": "source",
+      "name": "static-dom-component-repeatability-contract.ts",
+      "path": "packages/architecture-core/src/checks/static-dom-component-repeatability-contract.ts",
+      "tags": [
+        "packages/architecture-core/src/checks/static-dom-component-repeatability-contract",
+        "packages/architecture-core/src/checks/static-dom-component-repeatability-contract.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/architecture-core/src/checks/static-dom-identity-contract.ts",
       "kind": "source",
       "name": "static-dom-identity-contract.ts",
@@ -52788,6 +52799,18 @@
       "tags": [
         "packages/architecture-core/src/tests/index",
         "packages/architecture-core/src/tests/index.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/architecture-core/src/tests/static-dom-component-repeatability-contract.test.ts",
+      "kind": "test",
+      "name": "static-dom-component-repeatability-contract.test.ts",
+      "path": "packages/architecture-core/src/tests/static-dom-component-repeatability-contract.test.ts",
+      "tags": [
+        "packages/architecture-core/src/tests/static-dom-component-repeatability-contract",
+        "packages/architecture-core/src/tests/static-dom-component-repeatability-contract.test.ts",
         "test",
         "ts"
       ]

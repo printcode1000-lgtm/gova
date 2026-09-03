@@ -28659,6 +28659,17 @@
       ]
     },
     {
+      "id": "source:packages/architecture-core/src/checks/static-dom-component-repeatability-contract.ts",
+      "kind": "source",
+      "name": "static-dom-component-repeatability-contract.ts",
+      "path": "packages/architecture-core/src/checks/static-dom-component-repeatability-contract.ts",
+      "tags": [
+        "packages/architecture-core/src/checks/static-dom-component-repeatability-contract",
+        "packages/architecture-core/src/checks/static-dom-component-repeatability-contract.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/architecture-core/src/checks/static-dom-identity-contract.ts",
       "kind": "source",
       "name": "static-dom-identity-contract.ts",
@@ -52788,6 +52799,18 @@
       "tags": [
         "packages/architecture-core/src/tests/index",
         "packages/architecture-core/src/tests/index.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/architecture-core/src/tests/static-dom-component-repeatability-contract.test.ts",
+      "kind": "test",
+      "name": "static-dom-component-repeatability-contract.test.ts",
+      "path": "packages/architecture-core/src/tests/static-dom-component-repeatability-contract.test.ts",
+      "tags": [
+        "packages/architecture-core/src/tests/static-dom-component-repeatability-contract",
+        "packages/architecture-core/src/tests/static-dom-component-repeatability-contract.test.ts",
         "test",
         "ts"
       ]
@@ -77065,6 +77088,18 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/checks/static-dom-component-repeatability-contract.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/checks/static-dom-component-repeatability-contract.ts",
+      "kind": "documents",
+      "detail": "packages/architecture-core/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:packages/architecture-core/src/checks/static-dom-identity-contract.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -82040,6 +82075,18 @@
     {
       "from": "domain:architecture",
       "to": "test:packages/architecture-core/src/tests/index.test.ts",
+      "kind": "documents",
+      "detail": "packages/architecture-core/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "test:packages/architecture-core/src/tests/static-dom-component-repeatability-contract.test.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "test:packages/architecture-core/src/tests/static-dom-component-repeatability-contract.test.ts",
       "kind": "documents",
       "detail": "packages/architecture-core/"
     },
@@ -139391,6 +139438,48 @@
       "detail": "./architecture-types"
     },
     {
+      "from": "source:packages/architecture-core/src/checks/static-dom-component-repeatability-contract.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/static-dom-component-repeatability-contract.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/static-dom-component-repeatability-contract.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/static-dom-component-repeatability-contract.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/static-dom-component-repeatability-contract.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/static-dom-component-repeatability-contract.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/static-dom-component-repeatability-contract.ts",
+      "to": "external-dependency:typescript",
+      "kind": "imports",
+      "detail": "typescript"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/static-dom-component-repeatability-contract.ts",
+      "to": "source:packages/architecture-core/src/checks/architecture-types.ts",
+      "kind": "imports",
+      "detail": "./architecture-types"
+    },
+    {
       "from": "source:packages/architecture-core/src/checks/static-dom-identity-contract.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -139431,6 +139520,12 @@
       "to": "source:packages/architecture-core/src/checks/architecture-types.ts",
       "kind": "imports",
       "detail": "./architecture-types"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/static-dom-identity-contract.ts",
+      "to": "source:packages/architecture-core/src/checks/static-dom-component-repeatability-contract.ts",
+      "kind": "imports",
+      "detail": "./static-dom-component-repeatability-contract"
     },
     {
       "from": "source:packages/architecture-core/src/checks/static-dom-runtime-registry-contract.ts",
@@ -139896,6 +139991,12 @@
     },
     {
       "from": "source:packages/architecture-core/src/index.ts",
+      "to": "source:packages/architecture-core/src/checks/static-dom-component-repeatability-contract.ts",
+      "kind": "imports",
+      "detail": "./checks/static-dom-component-repeatability-contract"
+    },
+    {
+      "from": "source:packages/architecture-core/src/index.ts",
       "to": "source:packages/architecture-core/src/checks/static-dom-identity-contract.ts",
       "kind": "imports",
       "detail": "./checks/static-dom-identity-contract"
@@ -140211,6 +140312,12 @@
       "to": "source:packages/architecture-core/src/checks/runtime-target-contract.ts",
       "kind": "imports",
       "detail": "./checks/runtime-target-contract"
+    },
+    {
+      "from": "source:packages/architecture-core/src/runner.ts",
+      "to": "source:packages/architecture-core/src/checks/static-dom-component-repeatability-contract.ts",
+      "kind": "imports",
+      "detail": "./checks/static-dom-component-repeatability-contract"
     },
     {
       "from": "source:packages/architecture-core/src/runner.ts",
@@ -237393,6 +237500,12 @@
     },
     {
       "from": "test:packages/architecture-core/src/tests/index.test.ts",
+      "to": "test:packages/architecture-core/src/tests/static-dom-component-repeatability-contract.test.ts",
+      "kind": "imports",
+      "detail": "./static-dom-component-repeatability-contract.test"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/index.test.ts",
       "to": "test:packages/architecture-core/src/tests/static-dom-identity-contract.test.ts",
       "kind": "imports",
       "detail": "./static-dom-identity-contract.test"
@@ -237406,6 +237519,69 @@
     {
       "from": "test:packages/architecture-core/src/tests/index.test.ts",
       "to": "package:@asol/architecture-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/static-dom-component-repeatability-contract.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/static-dom-component-repeatability-contract.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/static-dom-component-repeatability-contract.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/static-dom-component-repeatability-contract.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/static-dom-component-repeatability-contract.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/static-dom-component-repeatability-contract.test.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/static-dom-component-repeatability-contract.test.ts",
+      "to": "external-dependency:react",
+      "kind": "imports",
+      "detail": "react"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/static-dom-component-repeatability-contract.test.ts",
+      "to": "source:packages/architecture-core/src/index.ts",
+      "kind": "imports",
+      "detail": "../index"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/static-dom-component-repeatability-contract.test.ts",
+      "to": "source:src/shared/ui/input.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/input"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/static-dom-component-repeatability-contract.test.ts",
+      "to": "external-dependency:react",
+      "kind": "tests"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/static-dom-component-repeatability-contract.test.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:packages/architecture-core/src/tests/static-dom-component-repeatability-contract.test.ts",
+      "to": "source:src/shared/ui/input.tsx",
       "kind": "tests"
     },
     {

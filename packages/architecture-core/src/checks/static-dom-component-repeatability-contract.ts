@@ -243,6 +243,7 @@ function validStaticIdAttribute(attribute: ts.JsxAttribute | undefined): boolean
     const text = expression.getText();
     return /scope|Scope|Id|id/.test(text) && /-[a-z0-9]{6}`?$/.test(text);
   }
+  if (ts.isConditionalExpression(expression)) return validRepeatableParentScopedAttribute(attribute);
   if (ts.isIdentifier(expression) && expression.text === 'id') return true;
   if (ts.isPropertyAccessExpression(expression) && expression.name.text === 'id') return true;
   return false;

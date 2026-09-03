@@ -9,8 +9,8 @@ interface CardUiProps {
 const Card = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & CardUiProps
->(({ className, ...props }, ref) => (
-  <div id={props.id}
+>(({ className, id, ...props }, ref) => (
+  <div id={id}
     ref={ref}
     className={cn(
       'asol-card-neutral text-card-foreground',
@@ -24,8 +24,8 @@ Card.displayName = 'Card';
 const CardHeader = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & CardUiProps
->(({ className, ...props }, ref) => (
-  <div id={props.id}
+>(({ className, id, ...props }, ref) => (
+  <div id={id}
     ref={ref}
     className={cn('flex flex-col space-y-1.5 p-6', className)}
     {...props}
@@ -36,8 +36,8 @@ CardHeader.displayName = 'CardHeader';
 const CardTitle = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLHeadingElement> & CardUiProps
->(({ className, ...props }, ref) => (
-  <h3 id={props.id}
+>(({ className, id, ...props }, ref) => (
+  <h3 id={id}
     ref={ref}
     className={cn(
       'text-2xl font-semibold leading-none tracking-tight',
@@ -51,8 +51,8 @@ CardTitle.displayName = 'CardTitle';
 const CardDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement> & CardUiProps
->(({ className, ...props }, ref) => (
-  <p id={props.id}
+>(({ className, id, ...props }, ref) => (
+  <p id={id}
     ref={ref}
     className={cn('text-sm text-muted-foreground', className)}
     {...props}
@@ -63,16 +63,16 @@ CardDescription.displayName = 'CardDescription';
 const CardContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & CardUiProps
->(({ className, ...props }, ref) => (
-  <div id={props.id} ref={ref} className={cn('p-6 pt-0', className)} {...props} />
+>(({ className, id, ...props }, ref) => (
+  <div id={id} ref={ref} className={cn('p-6 pt-0', className)} {...props} />
 ));
 CardContent.displayName = 'CardContent';
 
 const CardFooter = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & CardUiProps
->(({ className, ...props }, ref) => (
-  <div id="shared-ui-card-div-6-mnojrk"
+>(({ className, id, ...props }, ref) => (
+  <div id={id}
     ref={ref}
     className={cn('flex items-center p-6 pt-0', className)}
     {...props}

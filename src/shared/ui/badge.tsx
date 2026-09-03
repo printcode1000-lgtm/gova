@@ -29,9 +29,9 @@ export interface BadgeProps
     VariantProps<typeof badgeVariants> {
 }
 
-function Badge({ className, variant, ...props }: BadgeProps & { id?: string }) {
+function Badge({ className, variant, id, ...props }: BadgeProps & { id?: string }) {
   return (
-    <div id={props.id}
+    <div id={id}
       className={cn(badgeVariants({ variant }), className)}
       {...props}
     />

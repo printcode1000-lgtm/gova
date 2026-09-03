@@ -9,7 +9,7 @@ interface LoadingSpinnerProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
 }
 
-export function LoadingSpinner({ size = 'md', className, ...props }: LoadingSpinnerProps & { id?: string }) {
+export function LoadingSpinner({ size = 'md', className, id, ...props }: LoadingSpinnerProps & { id?: string }) {
   const sizeClasses = {
     sm: 'w-4 h-4',
     md: 'w-8 h-8',
@@ -17,11 +17,11 @@ export function LoadingSpinner({ size = 'md', className, ...props }: LoadingSpin
   };
 
   return (
-    <div id={props.id}
+    <div id={id}
       className={cn('flex items-center justify-center', className)}
       {...props}
     >
-      <div id={props.id ? `${props.id}-div-2-qdangp` : undefined}
+      <div id={id ? `${id}-div-2-qdangp` : undefined}
         className={cn(
           'rounded-full animate-spin',
           sizeClasses[size]

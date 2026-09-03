@@ -114,3 +114,18 @@ fixture(
     assert.equal(relevant.length, 0, 'scoped child identity derived from repeatable parent passes');
   },
 );
+
+
+fixture(
+  {
+    'src/shared/ui/child.tsx': 'export function Child({id}:{id?:string}){return <div id={id ? `${id}-root-a1b2c3` : undefined}/>} ',
+    'src/features/parent.tsx': 'import {Child} from "@/shared/ui/child"; export function Parent({id}:{id?:string}){return <section id={id ? `${id}-root-b1c2d3` : undefined}><Child id={id ? `${id}-child-c1d2e3` : undefined}/></section>} ',
+    'src/app/page.tsx': 'import {Parent} from "../features/parent"; import {Child} from "../shared/ui/child"; export default function Page(){return <><Parent id="page-parent-root-d1e2f3"/><Child id="page-direct-root-e1f2g3"/></>}',
+  },
+  (root) => {
+    const relevant = scanStaticDomComponentRepeatability({ root }).violations.filter(
+      (v) => v.component === 'Child' && v.type === 'static-component-invalid-id',
+    );
+    assert.equal(relevant.length, 0, 'conditional scoped placement in a static parent passes');
+  },
+);

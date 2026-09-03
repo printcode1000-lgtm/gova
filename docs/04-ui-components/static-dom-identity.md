@@ -134,3 +134,4 @@ cross-module DOM contracts have one source of truth. This registry is kept
 small and runtime-bound; the generated documentation manifest remains the full
 audit inventory for all static JSX identities.
 
+A repeatable child may also use a conditionally present scope derived from the parent (for example, `id ? `${id}-child-<stable6>` : undefined`); the fallback must not create a second runtime identity.
