@@ -68,9 +68,6 @@ def main():
         'service': 'gova-agent-gateway',
         'url': public_url,
         'health': public_url + '/health',
-        'mcp': public_url + '/mcp',
-        'mcpTransport': 'streamable-http',
-        'mcpProtocolVersion': '2025-06-18',
         'updatedAt': now.isoformat(),
         'host': socket.gethostname(),
     }, separators=(',', ':'), ensure_ascii=False).encode()
