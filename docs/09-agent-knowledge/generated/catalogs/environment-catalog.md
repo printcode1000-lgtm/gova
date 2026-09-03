@@ -118,7 +118,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `FIREBASE_STORAGE_BUCKET` | server/tooling | 0 |  |
 | `GITHUB_ACTIONS` | server/tooling | 2 | `src/core/config/runtime-context.server.ts`, `src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` |
 | `GITHUB_ADMIN_TOKEN` | server/tooling | 3 | `scripts/block-branch-creation.ts`, `scripts/protect-main-branch.ts`, `packages/release-core/src/pipeline/push-main-branch.ts` |
-| `GITHUB_REPOSITORY` | server/tooling | 3 | `scripts/block-branch-creation.ts`, `scripts/protect-main-branch.ts`, `packages/release-core/src/pipeline/push-main-branch.ts` |
+| `GITHUB_REPOSITORY` | server/tooling | 4 | `scripts/block-branch-creation.ts`, `scripts/deploy-push.ts`, `scripts/protect-main-branch.ts`, `packages/release-core/src/pipeline/push-main-branch.ts` |
 | `GOOGLE_PLAY_JSON_KEY_FILE` | server/tooling | 2 | `packages/ota-core/src/publishing/adapters/google-play.adapter.ts`, `src/features/google-play-console/domain/development-guard.server.ts` |
 | `GOOGLE_PLAY_PACKAGE_NAME` | server/tooling | 2 | `packages/ota-core/src/publishing/adapters/google-play.adapter.ts`, `src/features/google-play-console/domain/development-guard.server.ts` |
 | `GOOGLE_PLAY_SERVICE_ACCOUNT_AUTH_PROVIDER_X509_CERT_URL` | server/tooling | 2 | `packages/ota-core/src/publishing/adapters/google-play.adapter.ts`, `src/features/google-play-console/domain/development-guard.server.ts` |

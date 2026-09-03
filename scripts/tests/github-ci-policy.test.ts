@@ -29,6 +29,14 @@ assert.ok(localAgentBootstrapWorkflowViolations(`${bootstrap}\n      - run: npm 
 assert.ok(localAgentBootstrapWorkflowViolations(`${bootstrap}\n      TOKEN: \${{ secrets.GITHUB_TOKEN }}\n`).some((e) => e.includes("secrets")));
 assert.ok(localAgentBootstrapWorkflowViolations(bootstrap.replace("workflow_dispatch:", "push:")).some((e) => e.includes("manual") || e.includes("push")));
 assert.ok(deploymentWorkflowViolations(deploy.replace("id-token: write", "id-token: read")).some((e) => e.includes("id-token: write")));
+assert.ok(
+  deploymentWorkflowViolations(
+    deploy.replace(
+      "startsWith(github.event.head_commit.message, 'deploy(push):')",
+      "startsWith(github.event.head_commit.message, 'other:')",
+    ),
+  ).some((e) => e.includes("release-owned commit prefix")),
+);
 assert.ok(docsWorkflowViolations(`${docs}\n      - run: npm run lint\n`).some((e) => e.includes("npm run lint") || e.includes("not allowed")));
 
 console.log("GitHub CI policy tests passed for docs + deploy + persistent local-agent bootstrap.");

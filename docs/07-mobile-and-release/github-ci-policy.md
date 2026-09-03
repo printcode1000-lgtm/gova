@@ -24,7 +24,9 @@ The only remote branches are `main` and `integration`. `main` is production/rele
 
 ## Deployment filtering
 
-`deploy-main.yml` excludes `tools/local-agent/**` and documentation/control-only paths because gateway implementation changes do not alter the served application.
+`deploy-main.yml` excludes `tools/local-agent/**` and documentation/control-only paths because gateway implementation changes do not alter the served application. It also skips `deploy(push): ...` and `deploy(main): ...` commits: those are release-owned commits whose creating command already runs the shared production transaction, so dispatching `deploy:revision` would duplicate the release and contend on the production lock.
+
+The GitHub-linked `gova` Vercel project accepts automatic Git deployments for `main` only. `vercel.json` sets `git.deploymentEnabled` to `{"*": false, "main": true}`; `integration` and every other branch create no Vercel deployment. Do not replace this with an ignored-build command: an ignored build is created and then canceled, which wastes deployment quota on the Hobby account.
 
 ## Prohibited
 

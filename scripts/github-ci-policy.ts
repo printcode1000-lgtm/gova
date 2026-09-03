@@ -36,6 +36,7 @@ const SELF_HOSTED_RUNNER = "runs-on: [self-hosted, Linux, X64, gova]";
 const GITHUB_HOSTED_RUNNER = "runs-on: ubuntu-latest";
 const RUNNER_SELECTOR_API = "listSelfHostedRunnersForRepo";
 const RUNNER_STATUS_SECRET = "secrets.GOVA_RUNNER_STATUS_TOKEN";
+export const RELEASE_OWNED_COMMIT_PREFIXES = ["deploy(push):", "deploy(main):"] as const;
 
 export const ALLOWED_WORKFLOW_FILES = [
   DEPLOY_WORKFLOW,
@@ -340,6 +341,11 @@ export function deploymentWorkflowViolations(source: string): string[] {
   }
   if (!/^ {2}push:\s*$/m.test(body) || !/^ {4}branches:\s*$/m.test(body) || !/^ {6}- main\s*$/m.test(body)) {
     errors.push("Deployment workflow must trigger only on push to main.");
+  }
+  for (const prefix of RELEASE_OWNED_COMMIT_PREFIXES) {
+    if (!body.includes(`startsWith(github.event.head_commit.message, '${prefix}')`)) {
+      errors.push(`Deployment workflow must skip release-owned commit prefix: ${prefix}`);
+    }
   }
   for (const ignored of DEPLOY_CONTROL_PLANE_IGNORES) {
     if (!body.includes(`- "${ignored}"`)) {

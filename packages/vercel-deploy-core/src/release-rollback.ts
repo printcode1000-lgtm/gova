@@ -95,6 +95,22 @@ export async function promoteDeployment(
   input: { project: string; deploymentId: string } & VercelProjectAccess,
   fetchImpl: Fetch = fetch,
 ): Promise<void> {
+  const currentResponse = await fetchImpl(
+    withTeam(
+      `https://api.vercel.com/v6/deployments?app=${encodeURIComponent(input.project)}&limit=1&target=production&state=READY`,
+      input.teamId,
+    ),
+    { headers: headers(input.token), cache: 'no-store' },
+  );
+  if (currentResponse.ok) {
+    const currentBody = (await currentResponse.json()) as {
+      deployments?: Array<{ uid?: string; id?: string }>;
+    };
+    const current = currentBody.deployments?.[0];
+    const currentId = current?.uid ?? current?.id;
+    if (currentId === input.deploymentId) return;
+  }
+
   const projectResponse = await fetchImpl(
     withTeam(`https://api.vercel.com/v9/projects/${encodeURIComponent(input.project)}`, input.teamId),
     { headers: headers(input.token), cache: 'no-store' },

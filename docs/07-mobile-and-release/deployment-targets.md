@@ -34,7 +34,7 @@ service so the super-admin result does not depend on an open browser.
 | | Main app | Control | Submain app | Sub2main app | Notifications | Products | Orders | Profiles |
 |---|---|---|---|---|---|---|---|---|
 | Vercel project | `gova` | `asol-control` | `asol-submain` | `asol-sub2main` | `asol-notifications` | `asol-products` | `asol-orders` | `asol-profiles` |
-| GitHub | connected — every push redeploys | **not connected** | **not connected** | **not connected** | **not connected** | **not connected** | **not connected** | **not connected** |
+| GitHub | connected — only `main` auto-deploys; all other branches are disabled by `vercel.json` | **not connected** | **not connected** | **not connected** | **not connected** | **not connected** | **not connected** | **not connected** |
 | Updated by | pushing to the repository | `npm run control:deploy` | `npm run submain:deploy` | `npm run sub2main:deploy` | `npm run notifications:deploy` | `npm run products:deploy` | `npm run orders:deploy` | `npm run profiles:deploy` |
 | Uploaded files | the gova deployment view | `services/control/` | the repository | the repository | `services/notifications/` | `services/products/` | `services/orders/` | `services/profiles/` |
 | Serves | frontend, `/api/health`, legacy `307` redirects | Super Admin operations, System Logs, OTA administration, release/readiness | isolated full-app staging | isolated full-app staging | push fan-out only | product reads only | the order list only | five profile reads |
@@ -65,8 +65,11 @@ to omit that target or make it a requirement of the main hosted build.
 
 ## One-command production deployment
 
-GitHub Actions is not a correctness gate. Every direct `git push origin main`
-dispatches `deploy:revision` for the authenticated pushed SHA. In order, it
+GitHub Actions is not a correctness gate. An ordinary direct `git push origin main`
+dispatches `deploy:revision` for the authenticated pushed SHA. Deployment commits
+created by `deploy:push` and `deploy:all` are excluded because those commands
+already own the same release transaction and dispatching it again would create a
+second release for the same SHA. In order, it
 captures the production rollback baseline for `gova`, `control`, and the six
 workloads; deploys the six isolated projects; deploys `control` at the same SHA
 through its own mandatory step; publishes durable exact-SHA release readiness to

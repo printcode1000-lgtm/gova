@@ -84,6 +84,26 @@ const ACCESS = () => ({ token: 'test-token', teamId: 'team_1' });
   assert.ok(calls.every((call) => call.url.includes('teamId=team_1')));
 }
 
+// ── Already-serving baseline is an idempotent restore ─────────────────────────
+{
+  const calls: Call[] = [];
+  const { fetchImpl } = stubFetch((url) => {
+    if (url.includes('/v6/deployments')) {
+      return Response.json({ deployments: [{ uid: 'dpl_before' }] });
+    }
+    return Response.json({ id: 'prj_should_not_be_needed' });
+  }, calls);
+
+  const outcomes = await rollbackToBaseline(
+    [{ account: 'gova', project: 'gova', deploymentId: 'dpl_before', capturedAt: 'x' }],
+    ACCESS,
+    fetchImpl,
+  );
+  assert.equal(outcomes[0]!.result, 'restored');
+  assert.equal(calls.some((call) => call.method === 'POST'), false);
+  assert.equal(calls.some((call) => call.url.includes('/promote/')), false);
+}
+
 // ── One failure never stops the rest ─────────────────────────────────────────
 //
 // A rollback that aborts halfway leaves exactly the mixed topology it exists to

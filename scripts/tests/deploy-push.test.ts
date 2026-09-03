@@ -8,6 +8,7 @@ import { readFileSync } from "node:fs";
 import { __testables as deployPushTestables } from "../deploy-push";
 import { __testables } from "../deploy-push-target-choice";
 
+async function run(): Promise<void> {
 const { parseProvidedTargets, expandSelection } = __testables;
 const {
   parseArgv,
@@ -16,6 +17,8 @@ const {
   RELEASE_MANIFEST,
   formatSuccessLine,
   FAIL_PREFIX,
+  githubRepositoryFromRemote,
+  assertMainGitDeploymentNotRejected,
 } = deployPushTestables;
 
 assert.ok(true, "Importing deploy-push must not trigger a deployment.");
@@ -81,6 +84,48 @@ assert.equal(compareVersions("0.1.15", "0.1.15"), 0);
 assert.equal(RELEASE_MANIFEST, "public/asol-web-manifest.json");
 assert.equal(FAIL_PREFIX, "[deploy:push] FAILED —");
 assert.match(formatSuccessLine(), /control, 6 isolated Vercel production targets, and main are READY/);
+assert.equal(
+  githubRepositoryFromRemote("https://github.com/printcode1000-lgtm/gova.git"),
+  "printcode1000-lgtm/gova",
+);
+assert.equal(
+  githubRepositoryFromRemote("git@github.com:printcode1000-lgtm/gova.git"),
+  "printcode1000-lgtm/gova",
+);
+assert.equal(githubRepositoryFromRemote("https://gitlab.com/example/gova.git"), null);
+await assert.rejects(
+  () =>
+    assertMainGitDeploymentNotRejected("a".repeat(40), {
+      repository: "printcode1000-lgtm/gova",
+      timeoutMs: 0,
+      fetchImpl: async () =>
+        Response.json({
+          statuses: [
+            {
+              context: "Vercel",
+              state: "failure",
+              description: "Deployment rate limited — retry in 24 hours.",
+              target_url: "https://vercel.com/hesham-101?upgradeToPro=build-rate-limit",
+            },
+          ],
+        }),
+    }),
+  /rate limit/i,
+);
+await assert.doesNotReject(() =>
+  assertMainGitDeploymentNotRejected("b".repeat(40), {
+    repository: "printcode1000-lgtm/gova",
+    timeoutMs: 0,
+    fetchImpl: async () =>
+      Response.json({ statuses: [{ context: "Vercel", state: "pending" }] }),
+  }),
+);
+
+const vercelConfig = JSON.parse(
+  readFileSync(new URL("../../vercel.json", import.meta.url), "utf8"),
+) as { git?: { deploymentEnabled?: Record<string, boolean> }; ignoreCommand?: unknown };
+assert.deepEqual(vercelConfig.git?.deploymentEnabled, { "*": false, main: true });
+assert.equal("ignoreCommand" in vercelConfig, false);
 const deployPushSource = readFileSync(new URL("../deploy-push.ts", import.meta.url), "utf8");
 
 /**
@@ -124,6 +169,11 @@ assert.match(
   revisionBody,
   /runReleaseTransaction\(\{/,
   "deploy:revision must publish through the shared release transaction, not its own order.",
+);
+assert.ok(
+  revisionBody.indexOf("assertMainGitDeploymentNotRejected(normalizedRevision)") <
+    revisionBody.indexOf("runReleaseTransaction({"),
+  "deploy:revision must stop on an immediate Vercel Git rejection before mutating production.",
 );
 
 /** The transaction itself is where the ordering contract is enforced. */
@@ -205,6 +255,16 @@ assert.ok(
   mainFn.indexOf("advanceToOriginMain()") < mainFn.indexOf('"git", ["add", "-A"]'),
   "deploy:push must advance HEAD to origin/main before it stages the tree.",
 );
+assert.ok(
+  mainFn.indexOf("verifyGitHubPush(revision)") <
+    mainFn.indexOf("await assertMainGitDeploymentNotRejected(revision)"),
+  "The early Vercel status gate must inspect the commit only after GitHub accepted the push.",
+);
+assert.ok(
+  mainFn.indexOf("await assertMainGitDeploymentNotRejected(revision)") <
+    mainFn.indexOf("runReleaseTransaction({"),
+  "A rejected main Git deployment must stop deploy:push before the release transaction mutates production.",
+);
 const advance = deployPushSource.slice(
   deployPushSource.indexOf("function advanceToOriginMain("),
 );
@@ -221,3 +281,9 @@ for (const entry of ["debug.log", "notes.tmp", "src/__probe__.ts", "scratchpad/o
 }
 
 console.log("deploy:push guard tests passed.");
+}
+
+void run().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});

@@ -42,6 +42,10 @@ env:
 
 jobs:
   select-runner:
+    # deploy:push/deploy:all already run the shared release transaction after pushing.
+    # Dispatching deploy:revision for those commits would start a second transaction
+    # against the same SHA and contend on the single-production-release lock.
+    if: ${{ !startsWith(github.event.head_commit.message, 'deploy(push):') && !startsWith(github.event.head_commit.message, 'deploy(main):') }}
     runs-on: ubuntu-latest
     timeout-minutes: 7
     outputs:

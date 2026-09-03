@@ -134867,6 +134867,11 @@
     },
     {
       "from": "script:scripts/deploy-push.ts",
+      "to": "environment-key:GITHUB_REPOSITORY",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "script:scripts/deploy-push.ts",
       "to": "environment-key:VERCEL_TOKEN",
       "kind": "uses-environment"
     },

@@ -58,7 +58,10 @@ reading the barrier back rather than trusting the write.
 **The baseline is captured before the first mutation.** A failure after step 2
 has already changed production. Capturing names and deployment ids up front is
 what lets the failure path re-promote the previous deployments automatically
-instead of stopping for a human decision.
+instead of stopping for a human decision. Rollback is idempotent: if a captured
+deployment is still the production deployment (for example, `gova` never moved
+because Git deployment was rejected), it is treated as already restored instead
+of calling Vercel's promote endpoint and turning the harmless no-op into a `409`.
 
 **Control is deployed, never "updated later".** Control is deliberately absent
 from `SERVICE_PHASE_IDS` and `ALL_DEPLOY_PUSH_TARGETS` — it holds deployment
@@ -159,6 +162,19 @@ deploy at all.
 The transaction itself is untouched: rollback baseline, control + six + main,
 the wait for `READY`, `smoke:deployed`, and automatic rollback on failure. So the
 result is still tracked and production still cannot stay broken.
+
+After the GitHub push but **before the first production mutation**, the publish
+path reads the exact commit's `Vercel` status from GitHub. An immediate Git-side
+rejection — including Vercel's deployment/build rate limit, where no deployment
+record exists to poll — aborts before any workload or control project changes.
+The same guard runs in `deploy:revision`, so a direct push cannot waste a full
+backend deployment cycle when the frontend is already known to be rejected.
+
+Deployment commits created by `deploy:push` (`deploy(push): ...`) and `deploy:all`
+(`deploy(main): ...`) already own this transaction. `deploy-main.yml` therefore
+skips those two commit prefixes; only an ordinary direct push dispatches the
+second-machine `deploy:revision` path. This prevents two release transactions for
+the same SHA from contending on the single-production-release lock.
 
 Two guards are not optional under `--fast`:
 

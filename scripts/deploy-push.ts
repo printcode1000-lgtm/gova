@@ -88,6 +88,99 @@ function git(args: string[]): string {
   }).trim();
 }
 
+function githubRepositoryFromRemote(remoteUrl: string): string | null {
+  const match = /github\.com(?::|\/)([^/:\s]+)\/([^/\s]+?)(?:\.git)?$/i.exec(remoteUrl.trim());
+  if (!match) return null;
+  return `${match[1]}/${match[2]!.replace(/\.git$/i, "")}`;
+}
+
+function resolveGitHubRepository(): string | null {
+  const configured = process.env.GITHUB_REPOSITORY?.trim();
+  if (configured && /^[^/\s]+\/[^/\s]+$/.test(configured)) return configured;
+  try {
+    return githubRepositoryFromRemote(git(["remote", "get-url", "origin"]));
+  } catch {
+    return null;
+  }
+}
+
+function wait(delayMs: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, delayMs));
+}
+
+async function assertMainGitDeploymentNotRejected(
+  revision: string,
+  options: {
+    repository?: string;
+    fetchImpl?: typeof fetch;
+    timeoutMs?: number;
+    pollIntervalMs?: number;
+  } = {},
+): Promise<void> {
+  const repository = options.repository ?? resolveGitHubRepository();
+  if (!repository) {
+    console.warn("[deploy:push] GitHub repository could not be resolved; exact-SHA Vercel verification remains the fallback.");
+    return;
+  }
+  const fetchImpl = options.fetchImpl ?? fetch;
+  const timeoutMs = options.timeoutMs ?? 12_000;
+  const pollIntervalMs = options.pollIntervalMs ?? 1_000;
+  const startedAt = Date.now();
+
+  for (;;) {
+    const response = await fetchImpl(
+      `https://api.github.com/repos/${repository}/commits/${revision}/status`,
+      {
+        headers: {
+          Accept: "application/vnd.github+json",
+          "User-Agent": "gova-release-gate",
+        },
+        cache: "no-store",
+      },
+    );
+    if (!response.ok) {
+      console.warn(
+        `[deploy:push] GitHub commit-status lookup returned ${response.status}; exact-SHA Vercel verification remains the fallback.`,
+      );
+      return;
+    }
+    const body = (await response.json()) as {
+      statuses?: Array<{
+        context?: string;
+        state?: string;
+        description?: string;
+        target_url?: string;
+      }>;
+    };
+    const vercel = body.statuses?.find((status) => status.context === "Vercel");
+    if (vercel) {
+      const state = vercel.state?.toLowerCase() ?? "";
+      if (state === "failure" || state === "error") {
+        const description = vercel.description?.trim() || "Vercel reported a failed commit status";
+        const targetUrl = vercel.target_url?.trim();
+        const rateLimited = /rate[ -]?limit|build-rate-limit/i.test(`${description} ${targetUrl ?? ""}`);
+        throw new Error(
+          `Vercel rejected the main Git deployment before any production runtime was changed: ${description}` +
+            (rateLimited
+              ? " The Vercel deployment/build rate limit is active; retry after it resets or upgrade the Vercel plan."
+              : "") +
+            (targetUrl ? ` (${targetUrl})` : ""),
+        );
+      }
+      console.log(
+        `[deploy:push] Vercel Git status for ${revision.slice(0, 12)} is ${state || "present"}; release mutation may start.`,
+      );
+      return;
+    }
+    if (Date.now() - startedAt >= timeoutMs) break;
+    await wait(pollIntervalMs);
+  }
+
+  console.log(
+    `[deploy:push] No immediate Vercel Git rejection appeared for ${revision.slice(0, 12)}; continuing to exact-SHA deployment verification.`,
+  );
+}
+
 function hasStagedChanges(): boolean {
   try {
     execFileSync("git", ["diff", "--cached", "--quiet"], {
@@ -724,6 +817,7 @@ export async function deployExistingRevision(revision: string): Promise<void> {
   const targets = [...ALL_DEPLOY_PUSH_TARGETS];
   await ensureReleaseSecretsRestored("deploy:revision");
   assertMainDeploymentCredentials();
+  await assertMainGitDeploymentNotRejected(normalizedRevision);
   await assertVercelAccountsForTargets(targets);
 
   const timestamp = new Date().toISOString();
@@ -798,6 +892,8 @@ export const __testables = {
   formatSuccessLine,
   FAIL_PREFIX,
   hasStagedChanges,
+  githubRepositoryFromRemote,
+  assertMainGitDeploymentNotRejected,
 };
 
 async function main(): Promise<void> {
@@ -899,6 +995,14 @@ async function main(): Promise<void> {
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     fail(message);
+    return;
+  }
+
+  try {
+    await assertMainGitDeploymentNotRejected(revision);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    fail(message, revision);
     return;
   }
 
