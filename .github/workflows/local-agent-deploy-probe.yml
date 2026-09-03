@@ -11,22 +11,25 @@ jobs:
     runs-on: [self-hosted, Linux, X64, gova]
     timeout-minutes: 10
     steps:
-      - name: Inspect original presentation sizes
+      - name: Measure human-authored line lengths on main HEAD
         shell: bash
         run: |
           set -euo pipefail
           cd /home/hesham/gova
-          for f in \
-            src/features/google-play-console/presentation/DeployRunbookExecutionBox.tsx \
-            src/features/google-play-console/presentation/DeployRunbookControls.tsx \
-            src/features/google-play-console/presentation/tabs/PlayTracksTab.tsx; do
-            printf '%s ' "$f"
-            git show HEAD:"$f" | wc -l
-          done
-          echo '=== ORIGINAL LONG COUNTS ==='
-          for f in \
-            src/features/google-play-console/presentation/DeployRunbookExecutionBox.tsx \
-            src/features/google-play-console/presentation/DeployRunbookControls.tsx \
-            src/features/google-play-console/presentation/tabs/PlayTracksTab.tsx; do
-            git show HEAD:"$f" | awk -v f="$f" 'length($0)>120 {n++} END{print f,n+0}'
-          done
+          python3 - <<'PY'
+          import re, subprocess
+          from pathlib import Path
+          root=Path('src/features/google-play-console/presentation')
+          files=subprocess.check_output(['git','ls-tree','-r','--name-only','HEAD',str(root)],text=True).splitlines()
+          bad=[]
+          for f in files:
+              if not f.endswith('.tsx'): continue
+              src=subprocess.check_output(['git','show',f'HEAD:{f}'],text=True)
+              for i,line in enumerate(src.splitlines(),1):
+                  normalized=re.sub(r'\s+id=(?:"[^"]*"|\'[^\']*\'|\{[^{}]*\})','',line)
+                  if len(normalized)>120:
+                      bad.append((f,i,len(line),len(normalized),line))
+          print('REMAINING',len(bad))
+          for row in bad:
+              print(f'{row[0]}:{row[1]} raw={row[2]} normalized={row[3]}:{row[4]}')
+          PY
