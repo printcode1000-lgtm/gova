@@ -1,0 +1,38 @@
+name: local-agent-deploy-probe
+on:
+  push:
+    branches: [integration]
+    paths:
+      - .github/workflows/local-agent-deploy-probe.yml
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: [self-hosted, Linux, X64, gova]
+    timeout-minutes: 5
+    steps:
+      - name: Probe gateway deploy progress
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,urllib.request
+          from pathlib import Path
+          base='http://127.0.0.1:8765'
+          key=Path('/home/hesham/.config/gova-agent/auth').read_text().strip()
+          headers={'X-Gova-Agent-Key':key,'Content-Type':'application/json'}
+          def req(path,timeout=30):
+              r=urllib.request.Request(base+path,headers=headers)
+              with urllib.request.urlopen(r,timeout=timeout) as x:
+                  return json.loads(x.read() or b'{}')
+          cmds=req('/v1/commands').get('commands',[])
+          matches=[c for c in cmds if c.get('agent_id')=='cloud-deploy-all-20260903']
+          if not matches:
+              print(json.dumps({'found':False}))
+              raise SystemExit(0)
+          c=matches[0]
+          logs=req('/v1/commands/'+c['id']+'/logs?tail=60000',60)
+          print(json.dumps({'found':True,'id':c['id'],'status':c.get('status'),'exit_code':c.get('exit_code')}))
+          print(logs.get('stdout',''))
+          if logs.get('stderr'): print(logs.get('stderr',''))
+          PY
