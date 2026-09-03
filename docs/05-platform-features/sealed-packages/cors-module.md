@@ -64,7 +64,7 @@ implements no CORS of its own.
 | :--- | :--- | :--- |
 | `reflectRequestOrigin()` | Echo the caller's origin; `*` when it sends none | The six deployments, the control runtime, the notification send endpoints |
 | `allowOrigins([...])` | Exact match only; no header at all for anything else | The main application's `/api/*` boundary (`src/proxy.ts`) |
-| `anyOrigin()` | Always `*` | The Next.js header table for non-API paths, the local static preview |
+| `anyOrigin()` | Always `*` | The Next.js header table for non-API paths (`/((?!api/).*)`), the local static preview |
 
 Echoing is safe **only** because no ASOL surface accepts credentials: the cross-origin contract is an
 explicit signed header (`X-Asol-Session-Token`) or a signed grant in the body, never a cookie, so a
@@ -151,6 +151,13 @@ Production origins are never hard-coded here. A deployment-specific domain belon
    `resolveCorsHeaders` the actual response uses, so the two can never disagree about which origins
    or headers are allowed.
 6. **A `204` is not a passing preflight.** It passes only when it carries an allow-origin header.
+7. **No static header table may cover the API surface.** A `headers()` entry in `next.config.ts`
+   cannot see the request's origin, so it can only ever answer `*`. While one covered `/:path*`,
+   an API request from an origin `src/proxy.ts` had *refused* still went out with
+   `Access-Control-Allow-Origin: *` — the middleware declined to name the origin and the static
+   entry granted it anyway, which made the exact allow-list decorative. That entry is now scoped
+   to `/((?!api/).*)`: pages and assets keep the wildcard because they are public bytes, and
+   `/api/*` is answered by the boundary alone.
 
 ## Where CORS logic is forbidden
 

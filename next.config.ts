@@ -116,12 +116,23 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: ['localhost', '127.0.0.1'],
 
   /**
-   * The static CORS envelope for every path this deployment serves.
+   * The static CORS envelope for the public bytes this deployment serves.
    *
    * `@asol/cors` owns the header names and the values; this table only states the policy — public
    * bytes, no credentials, and the one request-header list every ASOL surface answers with, so a
-   * client cannot be preflight-rejected here for a header another origin accepts. `src/proxy.ts`
-   * overrides this entry for `/api/*` with an exact origin allow-list built from the same package.
+   * client cannot be preflight-rejected here for a header another origin accepts.
+   *
+   * `/api/*` is excluded, and the exclusion is the whole point of the pattern. This table is
+   * static: it cannot see the request's origin, so it can only ever answer `*`. When it covered
+   * every path, an API request from an origin the boundary had *refused* still went out carrying
+   * `Access-Control-Allow-Origin: *` — the middleware declined to name the origin, and this entry
+   * granted it anyway. The refusal never reached the browser, and the exact allow-list in
+   * `src/proxy.ts` was decorative for as long as the two overlapped.
+   *
+   * So the API surface is governed by `src/proxy.ts` alone, which reads the request and answers
+   * from the same `@asol/cors` policy. Pages and assets keep the wildcard: they are public bytes
+   * with no session and no credentials, and a native shell on `capacitor://localhost` has to be
+   * able to read them.
    */
   async headers() {
     const policy = createCorsPolicy({
@@ -132,7 +143,7 @@ const nextConfig: NextConfig = {
     });
     return [
       {
-        source: '/:path*',
+        source: '/((?!api/).*)',
         headers: Object.entries(resolveCorsHeaders(policy)).map(([key, value]) => ({ key, value })),
       },
     ];
