@@ -11,28 +11,24 @@ jobs:
     runs-on: [self-hosted, Linux, X64, gova]
     timeout-minutes: 10
     steps:
-      - name: Probe running deploy through gateway
+      - name: Probe running deploy from local runtime
         shell: bash
         run: |
           set -euo pipefail
+          gova-agent-monitor --agent cloud-deploy-all-resume2-20260903 --json || true
           python3 - <<'PY'
-          import json,urllib.request
+          import sqlite3
           from pathlib import Path
-          base='http://127.0.0.1:8765'
-          key=Path('/home/hesham/.config/gova-agent/auth').read_text().strip()
-          headers={'X-Gova-Agent-Key':key,'Content-Type':'application/json'}
-          def req(path,timeout=60):
-              r=urllib.request.Request(base+path,headers=headers)
-              with urllib.request.urlopen(r,timeout=timeout) as x:
-                  return json.loads(x.read() or b'{}')
-          commands=req('/v1/commands').get('commands',[])
-          matches=[c for c in commands if c.get('agent_id')=='cloud-deploy-all-resume-20260903']
-          if not matches:
-              print(json.dumps({'found':False}))
+          db=Path('/home/hesham/.local/share/gova-agent-runtime/runtime.sqlite3')
+          con=sqlite3.connect(db); con.row_factory=sqlite3.Row
+          row=con.execute("select * from commands where agent_id=? order by started_at desc limit 1",('cloud-deploy-all-resume2-20260903',)).fetchone()
+          if not row:
+              print('NO_COMMAND')
               raise SystemExit(0)
-          c=matches[0]
-          logs=req('/v1/commands/'+c['id']+'/logs?tail=120000',120)
-          print(json.dumps({'found':True,'id':c['id'],'status':c.get('status'),'exit_code':c.get('exit_code')}))
-          print(logs.get('stdout',''))
-          if logs.get('stderr'): print(logs.get('stderr',''))
+          print(dict(row))
+          for key in ('out_path','err_path'):
+              p=Path(row[key])
+              if p.exists():
+                  print('=== '+key+' ===')
+                  print(p.read_bytes()[-160000:].decode(errors='replace'))
           PY
