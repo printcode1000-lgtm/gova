@@ -36,7 +36,8 @@ assert.match(
 );
 assert.match(preview, /<FollowButton[\s\S]*?className="w-full sm:w-auto"/);
 assert.match(preview, /const PROFILE_ACTION_TILE_CLASS = `\$\{ACTION_TILE_CLASS\} w-full border-input sm:w-auto`/);
-assert.match(preview, /section\.6" className="mx-2 grid min-w-0/);
+assert.match(preview, /className="mx-2 mt-3 min-w-0 border-b/);
+assert.match(preview, /className="flex min-w-0 items-start gap-3 sm:gap-4"/);
 
 assert.match(productGrid, /className="grid min-w-0 grid-cols-2/);
 assert.match(productGrid, /variant=\{showManagement \? "profile-edit" : "profile-preview"\}[\s\S]*?className="min-w-0"/);
