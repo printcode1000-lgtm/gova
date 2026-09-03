@@ -56,6 +56,13 @@ case "${1:-start}" in
   health)
     url="$(cat "$URL_FILE" 2>/dev/null || true)"
     if [ -z "$url" ]; then echo "URL not available" >&2; exit 1; fi
+    for _ in $(seq 1 60); do
+      if body="$(curl -fsS --max-time 3 "$url/health" 2>/dev/null)"; then
+        printf '%s\n' "$body"
+        exit 0
+      fi
+      sleep .5
+    done
     curl -fsS --max-time 10 "$url/health"
     printf '\n'
     ;;
