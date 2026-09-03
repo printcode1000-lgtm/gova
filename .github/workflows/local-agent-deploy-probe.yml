@@ -9,9 +9,9 @@ permissions:
 jobs:
   probe:
     runs-on: [self-hosted, Linux, X64, gova]
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
-      - name: Inspect merge conflicts through Gateway
+      - name: Reconcile main into integration through Gateway
         shell: bash
         run: |
           python3 - <<'PY'
@@ -23,35 +23,55 @@ jobs:
           def call(method,path,payload=None):
               body=None if payload is None else json.dumps(payload).encode()
               req=urllib.request.Request(base+path,data=body,headers=headers,method=method)
-              with urllib.request.urlopen(req,timeout=120) as r: return json.loads(r.read() or b'{}')
+              with urllib.request.urlopen(req,timeout=180) as r: return json.loads(r.read() or b'{}')
           agent='chatgpt-integration-reconcile'
           call('POST','/v1/agent/register',{'agent_id':agent})
-          command=r'''set -e
+          command=r'''set -euo pipefail
+          branch=reconcile-main-integration-20260903
           git fetch --quiet origin main integration
           git checkout integration >/dev/null
           git reset --hard origin/integration >/dev/null
           test -z "$(git status --porcelain --untracked-files=all)"
+          git checkout -B "$branch" origin/integration >/dev/null
           set +e
-          git merge --no-commit --no-ff origin/main >/tmp/gova-merge-probe.out 2>&1
-          rc=$?
+          git merge --no-commit --no-ff origin/main >/tmp/gova-merge.out 2>&1
+          merge_rc=$?
           set -e
-          cat /tmp/gova-merge-probe.out
-          echo '=== CONFLICTS ==='
-          git diff --name-only --diff-filter=U
-          echo '=== STATUS ==='
-          git status --short
-          if git rev-parse -q --verify MERGE_HEAD >/dev/null; then git merge --abort; fi
-          echo '=== AFTER ABORT ==='
+          cat /tmp/gova-merge.out
+          conflicts="$(git diff --name-only --diff-filter=U)"
+          expected=$'docs/09-agent-knowledge/generated/catalogs/repository-catalog.md\ndocs/09-agent-knowledge/generated/reports/graph-health.md'
+          if [ "$merge_rc" -ne 0 ] && [ "$conflicts" != "$expected" ]; then
+            echo 'unexpected merge conflicts:' >&2
+            printf '%s\n' "$conflicts" >&2
+            git merge --abort || true
+            exit 2
+          fi
+          if [ -n "$conflicts" ]; then
+            git checkout --ours -- docs/09-agent-knowledge/generated/catalogs/repository-catalog.md docs/09-agent-knowledge/generated/reports/graph-health.md
+            git add docs/09-agent-knowledge/generated/catalogs/repository-catalog.md docs/09-agent-knowledge/generated/reports/graph-health.md
+          fi
+          npm run docs:generate
+          git add docs/09-agent-knowledge/generated
+          test -z "$(git diff --name-only --diff-filter=U)"
+          npm run docs:check
+          npx tsx scripts/tests/service-release-environment.test.ts
+          git diff --check
+          git add -A
+          git diff --cached --check
+          git commit -m 'merge: reconcile main into integration'
+          sha=$(git rev-parse HEAD)
+          git push origin HEAD:refs/heads/$branch
+          echo RECONCILE_SHA=$sha
+          echo RECONCILE_BRANCH=$branch
           git status --short --branch
-          echo MERGE_PROBE_RC=$rc
           '''
           started=call('POST','/v1/exec/start',{'agent_id':agent,'command':command,'cwd':'/home/hesham/gova-agents/integration'})
-          cid=started['command_id']
-          while True:
+          cid=started['command_id']; print('COMMAND_ID='+cid,flush=True)
+          for _ in range(1800):
               cmd=call('GET','/v1/commands/'+cid)['command']
               if cmd['status']!='running': break
               time.sleep(1)
-          logs=call('GET','/v1/commands/'+cid+'/logs?tail=180000')
+          logs=call('GET','/v1/commands/'+cid+'/logs?tail=300000')
           print(logs.get('stdout','')); print(logs.get('stderr',''))
-          if cmd.get('exit_code') != 0: raise SystemExit(1)
+          if cmd.get('status')=='running' or cmd.get('exit_code') != 0: raise SystemExit(1)
           PY
