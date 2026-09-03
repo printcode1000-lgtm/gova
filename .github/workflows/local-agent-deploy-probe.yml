@@ -11,18 +11,22 @@ jobs:
     runs-on: [self-hosted, Linux, X64, gova]
     timeout-minutes: 10
     steps:
-      - name: Inspect remaining local formatting failures
+      - name: Inspect original presentation sizes
         shell: bash
         run: |
           set -euo pipefail
           cd /home/hesham/gova
-          echo '=== LONG TSX AFTER PRETTIER ==='
-          find src/features/google-play-console/presentation -type f -name '*.tsx' -print0 | \
-            xargs -0 awk 'length($0)>120 {print FILENAME ":" FNR ":" length($0) ":" $0}'
-          echo '=== LINE COUNTS OVER 200 ==='
-          find src/features/google-play-console/presentation -type f \( -name '*.ts' -o -name '*.tsx' \) -print0 | \
-            xargs -0 wc -l | awk '$1>200 && $2!="total" {print}'
-          echo '=== DOM WRITER LOCATIONS ==='
-          grep -R -n "function writeStaticDomIdentityManifest\|const writeStaticDomIdentityManifest\|writeStaticDomIdentityManifest" packages/architecture-core | head -30 || true
-          echo '=== STATUS ==='
-          git status --short
+          for f in \
+            src/features/google-play-console/presentation/DeployRunbookExecutionBox.tsx \
+            src/features/google-play-console/presentation/DeployRunbookControls.tsx \
+            src/features/google-play-console/presentation/tabs/PlayTracksTab.tsx; do
+            printf '%s ' "$f"
+            git show HEAD:"$f" | wc -l
+          done
+          echo '=== ORIGINAL LONG COUNTS ==='
+          for f in \
+            src/features/google-play-console/presentation/DeployRunbookExecutionBox.tsx \
+            src/features/google-play-console/presentation/DeployRunbookControls.tsx \
+            src/features/google-play-console/presentation/tabs/PlayTracksTab.tsx; do
+            git show HEAD:"$f" | awk -v f="$f" 'length($0)>120 {n++} END{print f,n+0}'
+          done
