@@ -5,11 +5,11 @@ on:
     paths: ['.github/workflows/local-agent-command-bridge.yml']
 permissions: {contents: read}
 jobs:
-  bridge:
+  probe:
     runs-on: [self-hosted, Linux, X64, gova]
-    timeout-minutes: 90
+    timeout-minutes: 10
     steps:
-      - name: Run full local Gova build through gateway
+      - name: Probe full build progress through gateway
         shell: bash
         run: |
           set -euo pipefail
@@ -21,39 +21,25 @@ jobs:
           headers={'X-Gova-Agent-Key':key,'Content-Type':'application/json'}
           def req(method,path,body=None,timeout=60):
               r=urllib.request.Request(base+path,data=None if body is None else json.dumps(body).encode(),method=method,headers=headers)
-              with urllib.request.urlopen(r,timeout=timeout) as x:
-                  raw=x.read()
-                  return json.loads(raw or b'{}')
-          agent='cloud-full-build-20260903'
+              with urllib.request.urlopen(r,timeout=timeout) as x:return json.loads(x.read() or b'{}')
+          agent='cloud-full-build-probe-20260903'
           req('POST','/v1/agent/register',{'agent_id':agent})
           command=r'''cd /home/hesham/gova
-          set -o pipefail
-          echo '=== PRECHECK ==='
-          echo "HOST=$(hostname)"
-          echo "PWD=$PWD"
-          echo "BRANCH=$(git branch --show-current)"
-          echo "HEAD=$(git rev-parse HEAD)"
-          git status --short --branch
-          echo '=== CONTEXT PACK: build ==='
-          npx tsx scripts/docs/context.ts build
-          echo '=== FULL BUILD: npm run build ==='
-          npm run build 2>&1 | tee /tmp/gova-full-build.log
-          rc=${PIPESTATUS[0]}
-          echo "BUILD_EXIT_CODE=$rc"
-          exit "$rc"
+          echo '=== BUILD PROCESSES ==='
+          pgrep -af 'next build|run-generated-gate|npm run build' || true
+          echo '=== BUILD LOG TAIL ==='
+          tail -n 160 /tmp/gova-full-build.log 2>/dev/null || true
           '''
           started=req('POST','/v1/exec/start',{'agent_id':agent,'command':command,'cwd':'/home/hesham/gova'})
-          cid=started['command_id']
-          print('COMMAND_ID='+cid, flush=True)
-          for _ in range(5400):
+          cid=started['command_id']; print('COMMAND_ID='+cid)
+          for _ in range(300):
               st=req('GET','/v1/commands/'+cid)['command']
               if st['status']!='running':
-                  logs=req('GET','/v1/commands/'+cid+'/logs?tail=500000',timeout=120)
+                  logs=req('GET','/v1/commands/'+cid+'/logs?tail=250000')
                   print(logs.get('stdout',''))
-                  if logs.get('stderr'):
-                      print(logs.get('stderr',''))
+                  if logs.get('stderr'): print(logs.get('stderr',''))
                   print('GATEWAY_EXIT_CODE='+str(st.get('exit_code')))
                   raise SystemExit(0 if st.get('exit_code')==0 else 1)
               time.sleep(1)
-          raise SystemExit('timeout waiting for gateway build')
+          raise SystemExit('timeout')
           PY
