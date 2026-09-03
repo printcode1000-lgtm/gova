@@ -11,32 +11,54 @@ jobs:
     runs-on: [self-hosted, Linux, X64, gova]
     timeout-minutes: 20
     steps:
-      - name: Integrate verified repair through Gateway
+      - name: Diagnose integration submit through Gateway
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY_GATEWAY'
-          import json, urllib.request
+          import json, time, urllib.request, urllib.error
           from pathlib import Path
           base='http://127.0.0.1:8765'
           key=Path('/home/hesham/.config/gova-agent/auth').read_text().strip()
           headers={'X-Gova-Agent-Key':key,'Content-Type':'application/json'}
-          def req(method,path,payload=None):
+          def req(method,path,payload=None,allow_error=False):
               data=None if payload is None else json.dumps(payload).encode()
               r=urllib.request.Request(base+path,data=data,headers=headers,method=method)
-              with urllib.request.urlopen(r,timeout=600) as resp:
-                  body=resp.read().decode()
-              return json.loads(body) if body else {}
+              try:
+                  with urllib.request.urlopen(r,timeout=600) as resp:
+                      body=resp.read().decode()
+                      return resp.status, (json.loads(body) if body else {})
+              except urllib.error.HTTPError as e:
+                  body=e.read().decode(errors='replace')
+                  if allow_error:
+                      try: obj=json.loads(body) if body else {}
+                      except Exception: obj={'raw':body}
+                      return e.code,obj
+                  raise
           agent='chatgpt-service-smoke-fix'
           task='task-6da808b04d6f'
           req('POST','/v1/agent/register',{'agent_id':agent})
-          result=req('POST','/v1/integration/submit',{
+          print('TASK', req('GET','/v1/tasks/'+task)[1])
+          print('DIAGNOSTICS', req('GET','/v1/diagnostics')[1])
+          cmd=req('POST','/v1/exec/start',{
+              'agent_id':agent,
+              'command':'set -e; echo ===INTEGRATION===; git status --short --branch; git rev-parse HEAD; git rev-parse origin/integration; git log -5 --oneline --decorate',
+              'cwd':'/home/hesham/gova-agents/integration'
+          })[1]
+          cid=cmd['command_id']
+          while True:
+              c=req('GET','/v1/commands/'+cid)[1]['command']
+              if c['status'] in {'completed','failed','interrupted','cancelled'}: break
+              time.sleep(1)
+          print('INTEGRATION_LOGS', req('GET','/v1/commands/'+cid+'/logs?tail=50000')[1])
+          status,result=req('POST','/v1/integration/submit',{
               'agent_id':agent,
               'task_id':task,
               'commit_sha':'6ca88e54d0a708967d13e5bb1afbae417bb352ae',
               'verification':['git diff --check HEAD^ HEAD']
-          })
-          print(result)
-          if not result.get('ok'):
+          },allow_error=True)
+          print('SUBMIT_HTTP',status)
+          print('SUBMIT_RESULT',result)
+          if status >= 400:
               raise SystemExit(1)
           PY_GATEWAY
