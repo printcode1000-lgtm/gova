@@ -6,6 +6,7 @@ STATE_DIR="${GOVA_AGENT_TUNNEL_STATE:-/home/hesham/.local/state/gova-agent-tunne
 LOG="$STATE_DIR/cloudflared.log"
 URL_FILE="$STATE_DIR/public-url"
 TARGET="${GOVA_AGENT_TUNNEL_TARGET:-http://127.0.0.1:8765}"
+PUBLISHER="${GOVA_AGENT_R2_PUBLISHER:-/home/hesham/.local/lib/gova-agent/publish-public-url-r2.py}"
 
 mkdir -p "$STATE_DIR"
 : > "$LOG"
@@ -16,9 +17,15 @@ set +e
   printf '%s\n' "$line" >> "$LOG"
   url="$(printf '%s\n' "$line" | grep -Eo 'https://[A-Za-z0-9-]+\.trycloudflare\.com' | head -n1 || true)"
   if [ -n "$url" ]; then
-    printf '%s\n' "$url" > "$URL_FILE.tmp"
-    chmod 0600 "$URL_FILE.tmp"
-    mv "$URL_FILE.tmp" "$URL_FILE"
+    previous="$(cat "$URL_FILE" 2>/dev/null || true)"
+    if [ "$url" != "$previous" ]; then
+      printf '%s\n' "$url" > "$URL_FILE.tmp"
+      chmod 0600 "$URL_FILE.tmp"
+      mv "$URL_FILE.tmp" "$URL_FILE"
+      if [ -x "$PUBLISHER" ]; then
+        "$PUBLISHER" >> "$STATE_DIR/r2-publish.log" 2>&1 || true
+      fi
+    fi
   fi
 done
 exit ${PIPESTATUS[0]}
