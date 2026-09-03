@@ -16,6 +16,47 @@
 - `tools/local-agent/selftest.py` is the reusable deterministic adversarial multi-agent runtime test.
 - `tools/local-agent/codex_test.py` is the real authenticated Codex worker validation harness.
 
+## Repository Synchronization Checkpoint (2026-09-03)
+
+The canonical device checkout is `/home/hesham/gova` and it was verified on branch `main` with an empty porcelain status before synchronization. The shared integration checkout remains `/home/hesham/gova-agents/integration`.
+
+At `2026-09-03T14:55:02Z`, the final synchronization verification reported:
+
+```json
+{
+  "device_branch": "main",
+  "device_main_sha": "172294c427e1a7d4554b8e9b0c6f344f77641948",
+  "origin_main_sha": "172294c427e1a7d4554b8e9b0c6f344f77641948",
+  "origin_integration_sha": "1b4ecc5157711267affe2747bcc11ecb6a6724f7",
+  "shared_tree_sha": "3a5989aee7c7bf19ecbd8c64efb45b17f573c8a5",
+  "working_tree_clean": true,
+  "main_vs_integration_file_diff": "empty"
+}
+```
+
+Interpretation of that checkpoint:
+
+- The device checkout, `origin/main`, and `origin/integration` had the same Git tree SHA. This proves the tracked file names, file modes, and file contents were identical recursively at that checkpoint.
+- `main` and `integration` intentionally had different commit SHAs and histories. Different commit SHAs do not imply different files when their tree SHA is identical.
+- The synchronization preserved the existing `main` history by creating a new `main` commit whose tree was exactly the verified `origin/integration` tree; no force-push was required.
+- A stale `/home/hesham/gova/.git/index.lock` was encountered during verification. It was removed only after confirming that neither `fuser` nor `lsof` reported an active holder. Active Git locks must never be removed automatically.
+- All temporary synchronization workflows and trigger files were absent from the final synchronized tree.
+- The final GitHub workflow set was exactly `deploy-main.yml`, `docs.yml`, and `local-agent-bootstrap.yml`.
+- The temporary synchronization procedure was a one-shot recovery/verification operation. It does not replace the normal gateway-based integration flow described above.
+
+For future equality checks, compare trees rather than commit identities:
+
+```bash
+git -C /home/hesham/gova fetch origin main integration
+git -C /home/hesham/gova status --porcelain --untracked-files=all
+git -C /home/hesham/gova rev-parse HEAD^{tree}
+git -C /home/hesham/gova rev-parse origin/main^{tree}
+git -C /home/hesham/gova rev-parse origin/integration^{tree}
+git -C /home/hesham/gova diff --quiet origin/main origin/integration
+```
+
+A synchronization operation must stop instead of resetting a worktree when `git status --porcelain --untracked-files=all` is non-empty.
+
 ## Local Agents Monitor
 
 `gova-agent-monitor` is the single supported local monitor. Installation replaces the legacy `@asol/local-agent-core` desktop launcher in place and terminates any stale `scripts/local-agent-watch.ts` process.
