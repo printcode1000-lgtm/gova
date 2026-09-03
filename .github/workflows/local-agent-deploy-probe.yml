@@ -11,7 +11,7 @@ jobs:
     runs-on: [self-hosted, Linux, X64, gova]
     timeout-minutes: 10
     steps:
-      - name: Inspect Gateway ownership
+      - name: Inspect recent Gateway commands
         shell: bash
         run: |
           python3 - <<'PY'
@@ -19,13 +19,8 @@ jobs:
           from pathlib import Path
           base='http://127.0.0.1:8765'
           key=Path('/home/hesham/.config/gova-agent/auth').read_text().strip()
-          headers={'X-Gova-Agent-Key':key}
-          def get(path):
-              req=urllib.request.Request(base+path,headers=headers)
-              with urllib.request.urlopen(req,timeout=30) as r:
-                  return json.loads(r.read())
-          print('TASKS='+json.dumps(get('/v1/tasks'),ensure_ascii=False))
-          print('AGENTS='+json.dumps(get('/v1/agents'),ensure_ascii=False))
-          print('LOCKS='+json.dumps(get('/v1/locks'),ensure_ascii=False))
-          print('DIAGNOSTICS='+json.dumps(get('/v1/diagnostics'),ensure_ascii=False))
+          req=urllib.request.Request(base+'/v1/commands',headers={'X-Gova-Agent-Key':key})
+          with urllib.request.urlopen(req,timeout=30) as r:
+              data=json.loads(r.read())
+          print(json.dumps(data,ensure_ascii=False))
           PY
