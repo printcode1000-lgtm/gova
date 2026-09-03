@@ -1,6 +1,7 @@
 import { execFileSync } from 'child_process';
 import { existsSync, rmSync } from 'fs';
 import path from 'path';
+import { createServiceReleaseEnvironment } from "./service-release-environment";
 
 import {
   discardServiceBuild,
@@ -29,9 +30,15 @@ import { RELEASE_WORKLOADS } from '@asol/vercel-deploy-core';
 const SERVICES = RELEASE_WORKLOADS;
 
 const ROOT = process.cwd();
+const SERVICE_ENV = createServiceReleaseEnvironment(ROOT);
 
 function run(command: string, args: string[], cwd: string): void {
-  execFileSync(command, args, { stdio: 'inherit', shell: process.platform === 'win32', cwd });
+  execFileSync(command, args, {
+    stdio: 'inherit',
+    shell: process.platform === 'win32',
+    cwd,
+    env: SERVICE_ENV,
+  });
 }
 
 function main(): void {
