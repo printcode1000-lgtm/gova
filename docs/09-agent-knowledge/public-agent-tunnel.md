@@ -84,7 +84,42 @@ The default discovery object is:
 gova-agent/public.json
 ```
 
+The verified public discovery URL is:
+
+```text
+https://pub-91c79e3f34ed4575b997fd68ac8dd278.r2.dev/gova-agent/public.json
+```
+
+Consumers must read this R2 document to discover the active Quick Tunnel URL. They must not persist a `trycloudflare.com` hostname as a permanent endpoint because that hostname can change whenever the tunnel restarts or reconnects.
+
 Its JSON payload contains only the active gateway tunnel URL, `/health` URL, update timestamp, and local host name. It contains no gateway authentication key and no MCP metadata.
+
+## Verified Runtime Checkpoint (2026-09-03)
+
+A real end-to-end verification completed successfully on the local machine. At `2026-09-03T13:36:44.071527Z`, the R2 discovery document contained:
+
+```json
+{
+  "service": "gova-agent-gateway",
+  "url": "https://biblical-ethnic-photographs-acid.trycloudflare.com",
+  "health": "https://biblical-ethnic-photographs-acid.trycloudflare.com/health",
+  "updatedAt": "2026-09-03T13:36:44.071527+00:00"
+}
+```
+
+That `trycloudflare.com` value is a historical verification snapshot, not a permanent address. The stable lookup location is the R2 discovery URL above.
+
+The same verification established all of the following:
+
+- `gova-agent-public.service` was active.
+- The general Gova R2 configuration was complete using `/home/hesham/gova/.env.local`.
+- `publish-public-url-r2.py` successfully wrote the discovery object through the Cloudflare R2 S3 API.
+- The public R2 object was readable after publication.
+- The tunnel URL in R2 exactly matched the locally recorded active Quick Tunnel URL.
+- Public gateway `/health` succeeded through the Quick Tunnel.
+- Gateway authentication and R2 credentials were not present in the discovery object.
+
+A newly generated Quick Tunnel hostname may briefly fail DNS resolution immediately after creation. This is expected propagation behavior; `gova-agent-public health` therefore retries transport/DNS failures rather than treating the first resolution failure as a permanent tunnel failure.
 
 ## Runtime Files
 
