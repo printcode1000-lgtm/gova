@@ -54,21 +54,37 @@ export function DeployRunbookCollapsible(props: {
             {props.badge}
           </div>
           {props.description ? (
-            <p id={props.id ? `${props.id}-text-6-wlivji` : undefined} className="text-xs text-on-surface-variant break-words">
+            <p
+              id={props.id ? `${props.id}-text-6-wlivji` : undefined}
+              className="text-xs text-on-surface-variant break-words"
+            >
               {props.description}
             </p>
           ) : null}
         </div>
-        <div id={props.id ? `${props.id}-div-7-pb7crt` : undefined} className="flex w-full shrink-0 items-center justify-between gap-2 sm:w-auto sm:justify-end">
+        <div
+          id={props.id ? `${props.id}-div-7-pb7crt` : undefined}
+          className="flex w-full shrink-0 items-center justify-between gap-2 sm:w-auto sm:justify-end"
+        >
           {props.actions ? (
-            <div id={props.id ? `${props.id}-div-8-xqdofo` : undefined} className="flex flex-wrap items-center gap-2">{props.actions}</div>
+            <div
+              id={props.id ? `${props.id}-div-8-xqdofo` : undefined}
+              className="flex flex-wrap items-center gap-2"
+            >
+              {props.actions}
+            </div>
           ) : null}
           <ChevronDown
             className="h-4 w-4 shrink-0 text-on-surface-variant transition-transform group-open:rotate-180"
           />
         </div>
       </summary>
-      <div id={props.id ? `${props.id}-div-9-krof5m` : undefined} className={cn(CONTENT_CLASS, props.contentClassName)}>{props.children}</div>
+      <div
+        id={props.id ? `${props.id}-div-9-krof5m` : undefined}
+        className={cn(CONTENT_CLASS, props.contentClassName)}
+      >
+        {props.children}
+      </div>
     </details>
   );
 }
