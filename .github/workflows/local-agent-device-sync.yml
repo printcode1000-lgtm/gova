@@ -31,10 +31,14 @@ jobs:
           fi
 
           parent="$(git -C "$repo" rev-parse origin/main)"
-          test "$(git -C "$repo" rev-parse HEAD)" = "$parent"
           desired_tree="$(git -C "$repo" rev-parse 'origin/integration^{tree}')"
+          echo "local_before=$(git -C "$repo" rev-parse HEAD)"
           echo "parent=$parent"
           echo "desired_tree=$desired_tree"
+
+          # The local main worktree was verified clean, so first bring its ref
+          # forward to the current remote main without discarding user work.
+          git -C "$repo" reset --hard "$parent"
 
           commit="$(printf '%s\n' 'chore: synchronize device and GitHub trees' | git -C "$repo" -c user.name='Gova Local Sync' -c user.email='local-sync@gova.invalid' commit-tree "$desired_tree" -p "$parent")"
           echo "sync_commit=$commit"
