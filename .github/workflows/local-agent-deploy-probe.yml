@@ -15,13 +15,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          gova-agent-monitor --agent cloud-deploy-all-resume2-20260903 --json || true
           python3 - <<'PY'
           import sqlite3
           from pathlib import Path
           db=Path('/home/hesham/.local/share/gova-agent-runtime/runtime.sqlite3')
           con=sqlite3.connect(db); con.row_factory=sqlite3.Row
-          row=con.execute("select * from commands where agent_id=? order by started_at desc limit 1",('cloud-deploy-all-resume2-20260903',)).fetchone()
+          row=con.execute("select * from commands where agent_id=? order by started_at desc limit 1",('cloud-deploy-all-resume3-20260903',)).fetchone()
           if not row:
               print('NO_COMMAND')
               raise SystemExit(0)
@@ -30,5 +29,5 @@ jobs:
               p=Path(row[key])
               if p.exists():
                   print('=== '+key+' ===')
-                  print(p.read_bytes()[-160000:].decode(errors='replace'))
+                  print(p.read_bytes()[-180000:].decode(errors='replace'))
           PY
