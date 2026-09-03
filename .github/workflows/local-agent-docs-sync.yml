@@ -1,0 +1,84 @@
+name: local-agent-docs-sync
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/local-agent/.docs-sync-trigger'
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: [self-hosted, Linux, X64, gova]
+    timeout-minutes: 10
+    steps:
+      - name: Synchronize documented state to local worktrees
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          main=/home/hesham/gova
+          integration=/home/hesham/gova-agents/integration
+
+          recover_stale_index_lock() {
+            local wt="$1"
+            local lock
+            lock="$(git -C "$wt" rev-parse --git-path index.lock)"
+            case "$lock" in
+              /*) ;;
+              *) lock="$wt/$lock" ;;
+            esac
+            if [ -e "$lock" ]; then
+              if command -v fuser >/dev/null 2>&1 && fuser "$lock" >/dev/null 2>&1; then
+                echo "Active Git index lock: $lock" >&2
+                exit 3
+              fi
+              if command -v lsof >/dev/null 2>&1 && lsof "$lock" >/dev/null 2>&1; then
+                echo "Active Git index lock: $lock" >&2
+                exit 3
+              fi
+              rm -f "$lock"
+              echo "stale_index_lock_recovered=$lock"
+            fi
+          }
+
+          git -C "$main" fetch --quiet origin main integration
+
+          test "$(git -C "$main" symbolic-ref --quiet --short HEAD)" = main
+          test "$(git -C "$integration" symbolic-ref --quiet --short HEAD)" = integration
+          test -z "$(git -C "$main" status --porcelain --untracked-files=all)"
+          test -z "$(git -C "$integration" status --porcelain --untracked-files=all)"
+
+          recover_stale_index_lock "$main"
+          recover_stale_index_lock "$integration"
+
+          parent="$(git -C "$main" rev-parse origin/main)"
+          desired_tree="$(git -C "$main" rev-parse 'origin/integration^{tree}')"
+
+          git -C "$main" reset --hard "$parent"
+          git -C "$integration" reset --hard origin/integration
+
+          commit="$(printf '%s\n' 'docs(local-agent): synchronize documented state to device' | git -C "$main" -c user.name='Gova Local Sync' -c user.email='local-sync@gova.invalid' commit-tree "$desired_tree" -p "$parent")"
+          git -C "$main" update-ref refs/heads/main "$commit" "$parent"
+          git -C "$main" reset --hard "$commit"
+          git -C "$main" push origin "$commit:refs/heads/main"
+          git -C "$main" fetch --quiet origin main integration
+
+          main_tree="$(git -C "$main" rev-parse 'HEAD^{tree}')"
+          remote_main_tree="$(git -C "$main" rev-parse 'origin/main^{tree}')"
+          local_integration_tree="$(git -C "$integration" rev-parse 'HEAD^{tree}')"
+          remote_integration_tree="$(git -C "$main" rev-parse 'origin/integration^{tree}')"
+
+          test "$main_tree" = "$remote_main_tree"
+          test "$main_tree" = "$local_integration_tree"
+          test "$main_tree" = "$remote_integration_tree"
+          test -z "$(git -C "$main" status --porcelain --untracked-files=all)"
+          test -z "$(git -C "$integration" status --porcelain --untracked-files=all)"
+          git -C "$main" diff --quiet origin/main origin/integration
+
+          echo "main=$(git -C "$main" rev-parse HEAD)"
+          echo "integration=$(git -C "$integration" rev-parse HEAD)"
+          echo "tree=$main_tree"
+          echo 'docs_and_files=identical'
