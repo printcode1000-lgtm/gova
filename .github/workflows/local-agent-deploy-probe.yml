@@ -11,71 +11,54 @@ jobs:
     runs-on: [self-hosted, Linux, X64, gova]
     timeout-minutes: 60
     steps:
-      - name: Finish service smoke repair through Gateway
+      - name: Verify repaired smoke gate through Gateway
         shell: bash
         run: |
           set -euo pipefail
-          cat > /tmp/gova-service-smoke-finish.sh <<'SH_REPAIR'
+          cat > /tmp/gova-service-smoke-verify.sh <<'SH_VERIFY'
           set -euo pipefail
-          echo '=== CURRENT PATCH STATE ==='
+          echo '=== REPAIR STATE ==='
           git status --short --branch
-          sed -n '1,55p' scripts/build-all-services.ts
-          sed -n '1,90p' scripts/check-service-smoke.ts
-
-          python3 - <<'PY_PATCH'
-          from pathlib import Path
-          import re
-
-          p=Path('scripts/build-all-services.ts')
-          s=p.read_text()
-          imp='import { createServiceReleaseEnvironment } from "./service-release-environment";\n'
-          if 'createServiceReleaseEnvironment } from' not in s:
-              pattern=r'(import\s*\{\s*RELEASE_WORKLOADS\s*\}\s*from\s*[\'\"]@asol/vercel-deploy-core[\'\"];\n)'
-              s2,n=re.subn(pattern, r'\1'+imp, s, count=1)
-              if n != 1:
-                  # Fall back to inserting after the final top-level import statement.
-                  matches=list(re.finditer(r'^import .*?;\n', s, flags=re.MULTILINE))
-                  if not matches:
-                      raise SystemExit('no import insertion point found')
-                  pos=matches[-1].end()
-                  s2=s[:pos]+imp+s[pos:]
-              p.write_text(s2)
-
-          # Ensure the smoke file imported the helper as well.
-          p=Path('scripts/check-service-smoke.ts')
-          s=p.read_text()
-          if 'createServiceReleaseEnvironment } from' not in s:
-              matches=list(re.finditer(r'^import .*?;\n', s, flags=re.MULTILINE))
-              if not matches:
-                  raise SystemExit('no smoke import insertion point found')
-              pos=matches[-1].end()
-              s=s[:pos]+'import { createServiceReleaseEnvironment } from "./service-release-environment";\n'+s[pos:]
-              p.write_text(s)
-          PY_PATCH
-
-          echo '=== IMPORT CHECK ==='
           grep -n 'createServiceReleaseEnvironment' scripts/build-all-services.ts scripts/check-service-smoke.ts scripts/service-release-environment.ts
           npx tsx scripts/tests/service-release-environment.test.ts
           git diff --check
 
-          created=()
-          cleanup() { for x in "${created[@]}"; do rm -f "$x"; done; }
-          trap cleanup EXIT
-          for rel in node_modules .env.local .env fastlane/.env; do
+          created_paths=()
+          cleanup_runtime() {
+            for x in "${created_paths[@]}"; do rm -rf "$x"; done
+          }
+          trap cleanup_runtime EXIT
+
+          if [ ! -e node_modules ]; then
+            cp -al /home/hesham/gova/node_modules ./node_modules
+            created_paths+=("$PWD/node_modules")
+          fi
+          for rel in .env.local .env fastlane/.env; do
             src="/home/hesham/gova/$rel"; dst="$PWD/$rel"
-            if [ -e "$src" ] && [ ! -e "$dst" ]; then mkdir -p "$(dirname "$dst")"; ln -s "$src" "$dst"; created+=("$dst"); fi
+            if [ -f "$src" ] && [ ! -e "$dst" ]; then
+              mkdir -p "$(dirname "$dst")"
+              cp -p "$src" "$dst"
+              created_paths+=("$dst")
+            fi
           done
           for svc in notifications products orders profiles submain sub2main; do
             src="/home/hesham/gova/services/$svc/node_modules"; dst="$PWD/services/$svc/node_modules"
-            if [ -d "$src" ] && [ ! -e "$dst" ]; then ln -s "$src" "$dst"; created+=("$dst"); fi
+            if [ -d "$src" ] && [ ! -e "$dst" ]; then
+              cp -al "$src" "$dst"
+              created_paths+=("$dst")
+            fi
           done
 
           echo '=== CHECKPOINT services:build ==='
           npm run services:build
           echo '=== CHECKPOINT smoke:services ==='
           npm run smoke:services
-          cleanup
+
+          cleanup_runtime
           trap - EXIT
+
+          # Mirror sync is a verification side effect, not part of this repair.
+          git restore --worktree -- services || true
 
           echo '=== COMMIT REPAIR ==='
           git status --short
@@ -85,27 +68,40 @@ jobs:
           git commit -m 'fix(release): load server service environment for smoke gate'
           echo COMMIT=$(git rev-parse HEAD)
           git status --short
-          SH_REPAIR
+          SH_VERIFY
 
           python3 - <<'PY_GATEWAY'
           import json, time, urllib.request
           from pathlib import Path
-          base='http://127.0.0.1:8765'; key=Path('/home/hesham/.config/gova-agent/auth').read_text().strip()
+          base='http://127.0.0.1:8765'
+          key=Path('/home/hesham/.config/gova-agent/auth').read_text().strip()
           headers={'X-Gova-Agent-Key':key,'Content-Type':'application/json'}
-          agent='chatgpt-service-smoke-fix'; worktree='/home/hesham/gova-agents/chatgpt-service-smoke-fix/task-6da808b04d6f'
+          agent='chatgpt-service-smoke-fix'
+          worktree='/home/hesham/gova-agents/chatgpt-service-smoke-fix/task-6da808b04d6f'
           def req(method,path,payload=None):
-              data=None if payload is None else json.dumps(payload).encode(); r=urllib.request.Request(base+path,data=data,headers=headers,method=method)
-              with urllib.request.urlopen(r,timeout=60) as resp: body=resp.read().decode()
+              data=None if payload is None else json.dumps(payload).encode()
+              r=urllib.request.Request(base+path,data=data,headers=headers,method=method)
+              with urllib.request.urlopen(r,timeout=60) as resp:
+                  body=resp.read().decode()
               return json.loads(body) if body else {}
           req('POST','/v1/agent/register',{'agent_id':agent})
-          started=req('POST','/v1/exec/start',{'agent_id':agent,'command':Path('/tmp/gova-service-smoke-finish.sh').read_text(),'cwd':worktree})
-          print('STARTED',started); cid=started.get('command_id')
+          started=req('POST','/v1/exec/start',{'agent_id':agent,'command':Path('/tmp/gova-service-smoke-verify.sh').read_text(),'cwd':worktree})
+          print('STARTED',started)
+          cid=started.get('command_id')
           if not cid: raise SystemExit('command id not found')
           while True:
-              state=req('GET','/v1/commands/'+cid); c=state.get('command') or state; status=c.get('status'); print('STATUS',status)
+              state=req('GET','/v1/commands/'+cid)
+              c=state.get('command') or state
+              status=c.get('status')
+              print('STATUS',status)
               if status in {'completed','failed','cancelled','canceled'}: break
               time.sleep(5)
-          logs=req('GET','/v1/commands/'+cid+'/logs?tail=260000'); print('=== GATEWAY LOGS ==='); print(logs.get('stdout','') or logs.get('logs') or logs); print(logs.get('stderr',''))
-          code=c.get('exit_code'); print('EXIT_CODE',code)
+          logs=req('GET','/v1/commands/'+cid+'/logs?tail=260000')
+          print('=== GATEWAY STDOUT ===')
+          print(logs.get('stdout','') or logs.get('logs') or logs)
+          print('=== GATEWAY STDERR ===')
+          print(logs.get('stderr',''))
+          code=c.get('exit_code')
+          print('EXIT_CODE',code)
           if status!='completed' or code not in (0,None): raise SystemExit(code or 1)
           PY_GATEWAY
