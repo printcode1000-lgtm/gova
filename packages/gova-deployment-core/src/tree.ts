@@ -145,6 +145,9 @@ const COPY_IGNORED = new Set([
   'services',
   '.local',
   '.vercel',
+  '.deploy-all',
+  '.agent-control',
+  '.serena',
   GOVA_DEPLOYMENT_DIR,
 ]);
 

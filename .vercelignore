@@ -58,3 +58,6 @@ assets/google-play/*.jks
 .env*
 !.env.example
 .ota/
+.deploy-all/
+.agent-control/
+.serena/
