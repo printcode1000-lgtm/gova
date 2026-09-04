@@ -1,8 +1,8 @@
 # Release Commands
 
-Three commands publish a release, and one deploys a single account for
-maintenance. They differ in which gates run, not in what publishing means:
-**every path that publishes runs the same ordered transaction**, defined once in
+Only `deploy:all` and `deploy:push:fast` publish a release. They differ in
+which gates run, not in what publishing means: **every public path runs the
+same ordered transaction**, defined once in
 `scripts/deploy-push.ts` as `runReleaseTransaction`.
 
 For the account/project topology those commands act on, see

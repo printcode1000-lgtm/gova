@@ -591,6 +591,8 @@ export async function deployAccountService(options: DeployAccountServiceOptions)
 
 export interface DeployAccountRootAppOptions {
   declaration: AccountDeclaration;
+  /** A prepared minimal upload tree; gova uses this instead of the full checkout. */
+  deploymentDirectory?: string;
   env?: Record<string, string | undefined>;
 }
 
@@ -621,7 +623,7 @@ export async function deployAccountRootApp(
     throw new Error(`Missing required environment values: ${missing.join(', ')}`);
   }
 
-  const repositoryRoot = process.cwd();
+  const repositoryRoot = options.deploymentDirectory ?? process.cwd();
   const teamId = await resolveAccountTeamId(declaration, env, token);
   const projectId = await ensureProject(token, declaration.project, teamId);
 
@@ -635,7 +637,7 @@ export async function deployAccountRootApp(
     else console.log(`  skip ${key} (not set locally)`);
   }
 
-  console.log(`\nUploading repository root and building remotely (${declaration.project})...`);
+  console.log(`\nUploading the declared deployment tree and building remotely (${declaration.project})...`);
   const runId = env.ASOL_DEPLOYMENT_RUN_ID?.trim() || `${declaration.name}-${Date.now()}`;
   const revision = env.ASOL_DEPLOYMENT_REVISION?.trim() || 'standalone';
   const comment =
@@ -647,6 +649,12 @@ export async function deployAccountRootApp(
       'deploy',
       '--prod',
       '--yes',
+      // gova's build barrier consumes the exact release SHA. This is a
+      // one-deployment build value: it is neither copied into project runtime
+      // environment nor supplied to any other account.
+      ...(declaration.name === 'gova' && /^[0-9a-f]{40}$/.test(revision)
+        ? ['--build-env', `ASOL_RELEASE_REVISION=${revision}`]
+        : []),
       ...vercelDeploymentMetadata({ target: declaration.name, comment, runId, revision }),
     ],
     projectId,

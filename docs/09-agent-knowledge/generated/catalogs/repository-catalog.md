@@ -10,7 +10,7 @@
 | Kind | Count |
 |---|---:|
 | artifact | 4 |
-| command | 274 |
+| command | 271 |
 | config | 12 |
 | document | 270 |
 | domain | 10 |

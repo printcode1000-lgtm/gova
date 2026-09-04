@@ -23,7 +23,8 @@ import { assertHostedGovaReleaseReady } from "./release-readiness-barrier";
  * `npm run build` / `deploy:all` preflight.
  */
 const ROOT = process.cwd();
-const BUILD_ROOT = path.join(ROOT, GOVA_DEPLOYMENT_DIR);
+const IS_GOVA_UPLOAD_VIEW = path.basename(ROOT) === GOVA_DEPLOYMENT_DIR;
+const BUILD_ROOT = IS_GOVA_UPLOAD_VIEW ? ROOT : path.join(ROOT, GOVA_DEPLOYMENT_DIR);
 
 function run(command: string, args: string[], cwd = ROOT): void {
   const result = spawnSync(command, args, {
@@ -83,8 +84,10 @@ async function main(): Promise<void> {
   // previous gova production deployment active.
   await assertHostedGovaReleaseReady();
 
-  console.log(`[vercel-build] generating ${GOVA_DEPLOYMENT_DIR}`);
-  buildGovaDeploymentTree(ROOT);
+  if (!IS_GOVA_UPLOAD_VIEW) {
+    console.log(`[vercel-build] generating ${GOVA_DEPLOYMENT_DIR}`);
+    buildGovaDeploymentTree(ROOT);
+  }
 
   process.env.ASOL_RUNTIME_ROLE = "gova-frontend";
   console.log(`[vercel-build] next build (${GOVA_DEPLOYMENT_DIR})`);

@@ -264,8 +264,10 @@ async function main() {
   if (outcome.exitCode === 0) {
     await patchSnapshot({ stage: "preflight" });
     const extraDeployAllArgs = command === "deploy:all" ? deployAllArgs() : [];
+    // The console's legacy command name is transport-only. It maps to the
+    // sole fast public release command and cannot select a partial account.
     const commandArgs = command === "deploy:push"
-      ? ["run", "deploy:push", "--", `--vercel-target=${target}`]
+      ? ["run", "deploy:push:fast"]
       : command === "deploy:revision"
         ? ["run", "deploy:revision", "--", `--revision=${revision}`]
         : ["run", "deploy:all", ...(extraDeployAllArgs.length > 0 ? ["--", ...extraDeployAllArgs] : [])];

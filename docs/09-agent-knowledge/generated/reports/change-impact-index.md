@@ -72,7 +72,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/featured-marquee-core` | package | 6 | 1 | 136 | 0 | 14 | 1 |
 | `@asol/format-core` | package | 7 | 2 | 41 | 0 | 37 | 0 |
 | `@asol/google-play-store-assets-core` | package | 7 | 2 | 15 | 0 | 23 | 0 |
-| `@asol/gova-deployment-core` | package | 4 | 2 | 0 | 0 | 4 | 3 |
+| `@asol/gova-deployment-core` | package | 4 | 2 | 0 | 0 | 5 | 3 |
 | `@asol/hero-slider-core` | package | 7 | 2 | 139 | 0 | 23 | 1 |
 | `@asol/map-core` | package | 10 | 1 | 2 | 0 | 9 | 7 |
 | `@asol/native-core` | package | 33 | 20 | 48 | 0 | 85 | 27 |

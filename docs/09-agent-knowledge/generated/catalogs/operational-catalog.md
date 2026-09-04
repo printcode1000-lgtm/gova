@@ -89,9 +89,6 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run dependencies:install` | `node scripts/install-compatible-dependencies.mjs` |
 | `npm run dependencies:outdated` | `npx tsx scripts/check-environment-requirements.ts --scenario=all --check-outdated` |
 | `npm run deploy:all` | `npx tsx scripts/deploy-all.ts` |
-| `npm run deploy:all:preflight` | `npx tsx scripts/deploy-all.ts --phase=preflight` |
-| `npm run deploy:all:publish` | `npx tsx scripts/deploy-all.ts --phase=publish` |
-| `npm run deploy:env:push` | `npx tsx scripts/push-production-deploy-env.ts` |
 | `npm run deploy:push:fast` | `npx tsx scripts/deploy-push.ts --fast --vercel-target=all` |
 | `npm run dev` | `next dev --turbo --port 3001` |
 | `npm run dev:checked` | `npm run server:stop && npm run branding:generate && npm run app:init && npm run catalog:validate && next dev --turbo --port 3001` |

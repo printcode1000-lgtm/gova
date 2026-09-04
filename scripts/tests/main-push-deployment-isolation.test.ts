@@ -11,7 +11,7 @@ const workflows = readdirSync(path.join(root, '.github', 'workflows')).filter((f
 assert.deepEqual(vercel.git?.deploymentEnabled, { '*': false, main: false });
 assert.deepEqual(workflows, ['docs.yml', 'local-agent-bootstrap.yml']);
 assert.equal(existsSync(path.join(root, '.github', 'workflows', 'deploy-main.yml')), false);
-for (const script of ['deploy:revision', 'deploy:redeploy-main', 'deploy:push', 'deploy:push:main', 'deploy:push:all', 'deploy:all:services', 'deploy:all:main']) {
+for (const script of ['deploy:revision', 'deploy:redeploy-main', 'deploy:push', 'deploy:push:main', 'deploy:push:all', 'deploy:all:services', 'deploy:all:main', 'deploy:all:preflight', 'deploy:all:publish', 'deploy:env:push']) {
   assert.equal(script in (packageJson.scripts ?? {}), false, `${script} must not be callable.`);
 }
 assert.equal(packageJson.scripts?.['deploy:push:fast'], 'npx tsx scripts/deploy-push.ts --fast --vercel-target=all');
@@ -20,6 +20,7 @@ assert.match(read('packages/vercel-deploy-core/src/index.ts'), /Direct Vercel ac
 assert.match(read('scripts/deploy-service.ts'), /assertReleaseDeploymentContext/);
 assert.match(read('scripts/deploy-control-service.ts'), /assertReleaseDeploymentContext/);
 assert.match(read('scripts/deploy-main-app.ts'), /assertReleaseDeploymentContext/);
+assert.match(read('scripts/run-remote-deploy-all.mjs'), /\["run", "deploy:push:fast"\]/);
 assert.doesNotMatch(read('.githooks/pre-push.d/10-main-only'), /deploy|vercel/i);
 
 console.log('Main-push deployment isolation contract passed.');

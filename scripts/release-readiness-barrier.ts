@@ -106,7 +106,10 @@ export async function waitForReleaseReadiness(
 export async function assertHostedGovaReleaseReady(
   env: NodeJS.ProcessEnv = process.env,
 ): Promise<void> {
-  const revision = env.VERCEL_GIT_COMMIT_SHA?.trim() ?? "";
+  // This is deliberately a release-command build input, not Vercel's Git
+  // metadata.  Git metadata is suppressed for every upload, including gova,
+  // so a push to main can never turn into a production deployment.
+  const revision = env.ASOL_RELEASE_REVISION?.trim() ?? "";
   const controlOrigin = env.NEXT_PUBLIC_ASOL_CONTROL_URL?.trim() ?? "";
   if (!SHA_PATTERN.test(revision)) throw new Error("releaseReadinessHostedRevisionMissing");
   if (!controlOrigin) throw new Error("releaseReadinessControlOriginMissing");

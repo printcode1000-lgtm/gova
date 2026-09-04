@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
@@ -43,6 +43,12 @@ function fixtureRepository(): string {
   assert.ok(existsSync(path.join(view, 'public/logo.png')), 'static assets must survive');
   assert.ok(existsSync(path.join(view, 'src/proxy.ts')), 'gova compatibility proxy must survive');
   assert.ok(existsSync(path.join(view, 'node_modules/@asol/gova-deployment-core')), 'workspace packages resolve inside the view');
+  const uploadConfig = JSON.parse(readFileSync(path.join(view, 'vercel.json'), 'utf8')) as {
+    outputDirectory?: string;
+    git?: { deploymentEnabled?: Record<string, boolean> };
+  };
+  assert.equal(uploadConfig.outputDirectory, '.next', 'the upload view must not nest a second build tree');
+  assert.deepEqual(uploadConfig.git?.deploymentEnabled, { '*': false, main: false });
 
   for (const omitted of [
     'src/app/api/super-admin/build-jobs/route.ts',

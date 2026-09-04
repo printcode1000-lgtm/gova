@@ -24,6 +24,15 @@ import path from 'node:path';
  */
 export const GOVA_DEPLOYMENT_DIR = '.tmp-gova-build';
 
+/** The upload view is itself the Vercel project root, never the full checkout. */
+const GOVA_UPLOAD_VERCEL_CONFIG = {
+  $schema: 'https://openapi.vercel.sh/vercel.json',
+  installCommand: 'npm ci',
+  buildCommand: 'npm run build:vercel',
+  outputDirectory: '.next',
+  git: { deploymentEnabled: { '*': false, main: false } },
+};
+
 /**
  * App subtrees omitted from the gova build.
  *
@@ -193,6 +202,13 @@ export function buildGovaDeploymentTree(root: string): GovaDeploymentManifest {
     mkdirSync(path.dirname(destination), { recursive: true });
     writeFileSync(destination, content, 'utf8');
   }
+  // Vercel uploads this view directly. Its output lives at the view root rather
+  // than in a second nested copy of `.tmp-gova-build`.
+  writeFileSync(
+    path.join(target, 'vercel.json'),
+    `${JSON.stringify(GOVA_UPLOAD_VERCEL_CONFIG, null, 2)}\n`,
+    'utf8',
+  );
   linkWorkspacePackages(target);
 
   const manifest = govaDeploymentManifest(root);
