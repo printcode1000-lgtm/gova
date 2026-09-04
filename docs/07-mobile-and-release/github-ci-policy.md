@@ -17,7 +17,9 @@ Exactly two workflow files may exist under `.github/workflows/`:
 
 Mode A registers with Gateway, creates a Mode-A task, and performs exactly one constrained GitHub dispatch of `local-agent-bootstrap.yml` on `main`. The self-hosted runner installs and enables the persistent Gateway, after which Gateway allows the isolated task worktree, local `agent/*` branch, locks, and verified submission to `integration`. The user's Mode A selection authorizes those steps, but never a third remote branch or deployment.
 
-Mode B uses the existing canonical working tree at `/home/hesham/gova`, preserves pre-existing local changes, edits the requested files directly, runs relevant non-browser verification, and leaves the result local. It must not register with `gova-agent-gateway`, create a per-task worktree or `agent/*` branch, use Gateway locks/checkpoints/handoffs, submit to `integration`, commit, push, or deploy.
+Mode B normally uses the existing canonical working tree at `/home/hesham/gova`, preserves pre-existing local changes, edits the requested files directly, runs relevant non-browser verification, and leaves the result local. It must not register with `gova-agent-gateway`, create a per-task worktree or `agent/*` branch, use Gateway locks/checkpoints/handoffs, submit to `integration`, commit, push, or deploy.
+
+A cloud agent selecting Mode B creates its task with `--cloud-bridge`. Gateway then uses the Mode-A infrastructure solely as a transport bridge: the agent receives a temporary worktree and local `agent/*` branch, runs verification, and submits the task commit to `integration`. Gateway obtains the resulting integration commit and applies that exact patch directly and unstaged to the canonical `/home/hesham/gova` checkout. It never commits or pushes `main`. Before applying, Gateway rejects any overlap between task paths and canonical uncommitted/staged/untracked paths, and it rejects a patch that cannot apply cleanly; both cases are recorded as a blocked projection.
 
 The agent must not proceed until the user chooses A or B when the task does not already state the choice.
 

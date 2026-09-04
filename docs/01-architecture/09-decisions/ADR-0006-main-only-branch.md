@@ -14,10 +14,10 @@ The repository must keep remote branch sprawl under control while allowing the u
 2. `main` remains the production/release branch and `/home/hesham/gova` is the canonical local checkout.
 3. Before its first task action, every local agent asks the user to choose mode A or B unless the user already selected one in the task.
 4. Mode A is Gateway-managed isolation: Gateway requires one constrained GitHub dispatch of the self-hosted bootstrap before it permits the task worktree under `/home/hesham/gova-agents`, local `agent/*` branch, state/locks, and verified submission to `integration`. The selection authorizes those steps but not deployment or another remote branch.
-5. Mode B edits `/home/hesham/gova` directly in its current branch and working tree while preserving pre-existing local changes. It does not create a worktree, `agent/*` branch, Gateway task/session, lock/checkpoint/handoff, integration submission, commit, push, or deployment.
+5. Mode B edits `/home/hesham/gova` directly in its current branch and working tree while preserving pre-existing local changes. A cloud Mode-B task explicitly marked `--cloud-bridge` may use the managed infrastructure as transport only: it creates a temporary worktree and local `agent/*` branch, submits its verified task commit to `integration`, and Gateway applies the resulting integration commit directly and unstaged to the canonical checkout. It never commits or pushes `main` and fails closed if the task paths overlap canonical changes or the patch cannot apply. A local Mode-B task does not create a worktree, `agent/*` branch, Gateway task/session, lock/checkpoint/handoff, integration submission, commit, push, or deployment.
 6. GitHub `workflow_dispatch` through `.github/workflows/local-agent-bootstrap.yml` is the primary remote bootstrap/entry path to prepare or recover the local device.
 7. The bootstrap installs from `/home/hesham/gova` and must not create or reset an integration worktree.
-8. `integration` is used only by the explicitly selected Mode A; no third remote ref, wildcard branch namespace, request branch, rescue branch, staging branch, or provider-generated branch is allowed.
+8. `integration` is used only by explicitly selected managed isolation or cloud-bridge Mode B; no third remote ref, wildcard branch namespace, request branch, rescue branch, staging branch, or provider-generated branch is allowed.
 
 ## Enforcement
 
@@ -28,8 +28,8 @@ The repository must keep remote branch sprawl under control while allowing the u
 
 ## Optional managed runtime
 
-The implementation under `tools/local-agent/`, the runtime database under `/home/hesham/.local/share/gova-agent-runtime/`, and `gova-agent-gateway.service` are retained. They are activated by explicit Mode A selection.
+The implementation under `tools/local-agent/`, the runtime database under `/home/hesham/.local/share/gova-agent-runtime/`, and `gova-agent-gateway.service` are retained. They are activated by explicit Mode A selection or explicit cloud-bridge Mode B selection.
 
 ## Consequences
 
-The user chooses between direct local editing and managed isolation for each task. GitHub remains a reliable bootstrap entry point while the two-remote-branch boundary stays fixed.
+The user chooses between direct local editing and managed isolation for each task; a cloud agent can preserve the direct-local result of Mode B through an explicit bridge. GitHub remains a reliable bootstrap entry point while the two-remote-branch boundary stays fixed.

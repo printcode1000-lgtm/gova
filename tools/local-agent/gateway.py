@@ -44,7 +44,7 @@ def init_db():
     c=db(); c.executescript('''
     CREATE TABLE IF NOT EXISTS agents(id TEXT PRIMARY KEY, session_id TEXT, task_id TEXT, worktree TEXT, branch TEXT, status TEXT, last_seen TEXT, latest_checkpoint TEXT, latest_commit TEXT, created_at TEXT, updated_at TEXT);
     CREATE TABLE IF NOT EXISTS sessions(id TEXT PRIMARY KEY, agent_id TEXT, status TEXT, started_at TEXT, last_seen TEXT, ended_at TEXT);
-    CREATE TABLE IF NOT EXISTS tasks(id TEXT PRIMARY KEY, goal TEXT, execution_mode TEXT, originating_agent TEXT, current_agent TEXT, worktree TEXT, branch TEXT, status TEXT, completed TEXT, remaining TEXT, decisions TEXT, modified_files TEXT, commits TEXT, commands TEXT, tests TEXT, test_results TEXT, known_failures TEXT, blockers TEXT, dependencies TEXT, next_action TEXT, handoff TEXT, created_at TEXT, updated_at TEXT);
+    CREATE TABLE IF NOT EXISTS tasks(id TEXT PRIMARY KEY, goal TEXT, execution_mode TEXT, execution_transport TEXT, originating_agent TEXT, current_agent TEXT, worktree TEXT, branch TEXT, status TEXT, completed TEXT, remaining TEXT, decisions TEXT, modified_files TEXT, commits TEXT, commands TEXT, tests TEXT, test_results TEXT, known_failures TEXT, blockers TEXT, dependencies TEXT, next_action TEXT, handoff TEXT, created_at TEXT, updated_at TEXT);
     CREATE TABLE IF NOT EXISTS mode_a_bootstraps(task_id TEXT PRIMARY KEY, agent_id TEXT NOT NULL, state TEXT NOT NULL, workflow TEXT NOT NULL, ref TEXT NOT NULL, requested_at TEXT NOT NULL, updated_at TEXT NOT NULL, error TEXT);
     CREATE TABLE IF NOT EXISTS commands(id TEXT PRIMARY KEY, agent_id TEXT, task_id TEXT, command TEXT, cwd TEXT, pid INTEGER, status TEXT, started_at TEXT, ended_at TEXT, exit_code INTEGER, out_path TEXT, err_path TEXT);
     CREATE TABLE IF NOT EXISTS locks(id TEXT PRIMARY KEY, kind TEXT, scope TEXT, agent_id TEXT, task_id TEXT, lease_until REAL, updated_at TEXT, UNIQUE(kind,scope));
@@ -54,6 +54,7 @@ def init_db():
     ''')
     columns={row['name'] for row in c.execute('PRAGMA table_info(tasks)').fetchall()}
     if 'execution_mode' not in columns: c.execute('ALTER TABLE tasks ADD COLUMN execution_mode TEXT')
+    if 'execution_transport' not in columns: c.execute('ALTER TABLE tasks ADD COLUMN execution_transport TEXT')
     c.close()
 init_db()
 
@@ -71,19 +72,31 @@ def checkpoint(task_id, **fields):
     parts.append('updated_at=?'); vals.append(now()); vals.append(task_id)
     c=db(); c.execute(f"UPDATE tasks SET {','.join(parts)} WHERE id=?", vals); c.close()
 
-def require_task_mode(task_id, expected='A'):
+def task_execution(task_id):
     if not task_id: raise RuntimeError('task_id with an explicit execution mode is required')
-    c=db(); row=c.execute('SELECT execution_mode FROM tasks WHERE id=?',(task_id,)).fetchone(); c.close()
+    c=db(); row=c.execute('SELECT execution_mode,execution_transport FROM tasks WHERE id=?',(task_id,)).fetchone(); c.close()
     if not row: raise RuntimeError('task not found')
     mode=row['execution_mode']
     if mode not in EXECUTION_MODES: raise RuntimeError('task has no valid execution mode')
+    transport=row['execution_transport'] or 'local'
+    if transport not in {'local','cloud-bridge'}: raise RuntimeError('task has no valid execution transport')
+    return mode,transport
+
+def require_task_mode(task_id, expected='A'):
+    mode,_transport=task_execution(task_id)
     if expected and mode != expected: raise RuntimeError(f'Gateway mutation is unavailable for execution mode {mode}; select Mode A')
     return mode
 
+def require_managed_transport(task_id):
+    mode,transport=task_execution(task_id)
+    if mode == 'A' or (mode == 'B' and transport == 'cloud-bridge'):
+        return mode,transport
+    raise RuntimeError('Gateway mutation is unavailable for local Mode B; select Mode A or cloud-bridge Mode B')
+
 def require_mode_a_bootstrap(task_id):
-    require_task_mode(task_id)
+    require_managed_transport(task_id)
     c=db(); row=c.execute('SELECT state FROM mode_a_bootstraps WHERE task_id=?',(task_id,)).fetchone(); c.close()
-    if not row or row['state'] != 'dispatched': raise RuntimeError('Mode A requires exactly one successful GitHub bootstrap dispatch before managed work')
+    if not row or row['state'] != 'dispatched': raise RuntimeError('managed execution requires exactly one successful GitHub bootstrap dispatch before work')
 
 def auth_value():
     try: return AUTH_FILE.read_text().strip()
@@ -237,9 +250,9 @@ def _github_api(method, path, body=None, allow=()):
         raise RuntimeError(f'GitHub API {method} {path} failed: {e.code} {raw[:1000]}')
 
 def dispatch_mode_a_bootstrap(agent_id, task_id, dry_run=False):
-    require_task_mode(task_id)
+    mode,transport=require_managed_transport(task_id)
     if dry_run:
-        return {'task_id':task_id,'workflow':MODE_A_BOOTSTRAP_WORKFLOW,'ref':MODE_A_BOOTSTRAP_REF,'dry_run':True}
+        return {'task_id':task_id,'workflow':MODE_A_BOOTSTRAP_WORKFLOW,'ref':MODE_A_BOOTSTRAP_REF,'execution_mode':mode,'execution_transport':transport,'dry_run':True}
     ts=now(); c=db()
     try:
         c.execute('INSERT INTO mode_a_bootstraps(task_id,agent_id,state,workflow,ref,requested_at,updated_at) VALUES(?,?,?,?,?,?,?)',
@@ -247,18 +260,18 @@ def dispatch_mode_a_bootstrap(agent_id, task_id, dry_run=False):
     except sqlite3.IntegrityError:
         row=c.execute('SELECT state,workflow,ref,requested_at,error FROM mode_a_bootstraps WHERE task_id=?',(task_id,)).fetchone()
         c.close()
-        raise RuntimeError(f'Mode A bootstrap is one-time per task and is already {row["state"]}')
+        raise RuntimeError(f'Managed bootstrap is one-time per task and is already {row["state"]}')
     c.close()
     try:
         _github_api('POST',f'/actions/workflows/{MODE_A_BOOTSTRAP_WORKFLOW}/dispatches',
                     {'ref':MODE_A_BOOTSTRAP_REF,'inputs':{'execution_mode':'A'}})
     except Exception as exc:
         c=db(); c.execute('UPDATE mode_a_bootstraps SET state=?,error=?,updated_at=? WHERE task_id=?',('failed',str(exc),now(),task_id)); c.close()
-        event('mode-a-bootstrap-failed',agent_id,task_id,{'workflow':MODE_A_BOOTSTRAP_WORKFLOW})
+        event('managed-bootstrap-failed',agent_id,task_id,{'workflow':MODE_A_BOOTSTRAP_WORKFLOW,'execution_mode':mode,'execution_transport':transport})
         raise
     c=db(); c.execute('UPDATE mode_a_bootstraps SET state=?,updated_at=? WHERE task_id=?',('dispatched',now(),task_id)); c.close()
-    event('mode-a-bootstrap-dispatched',agent_id,task_id,{'workflow':MODE_A_BOOTSTRAP_WORKFLOW,'ref':MODE_A_BOOTSTRAP_REF})
-    return {'task_id':task_id,'workflow':MODE_A_BOOTSTRAP_WORKFLOW,'ref':MODE_A_BOOTSTRAP_REF,'dispatched':True}
+    event('managed-bootstrap-dispatched',agent_id,task_id,{'workflow':MODE_A_BOOTSTRAP_WORKFLOW,'ref':MODE_A_BOOTSTRAP_REF,'execution_mode':mode,'execution_transport':transport})
+    return {'task_id':task_id,'workflow':MODE_A_BOOTSTRAP_WORKFLOW,'ref':MODE_A_BOOTSTRAP_REF,'execution_mode':mode,'execution_transport':transport,'dispatched':True}
 
 def publish_worktree_branch_api(worktree, branch='integration'):
     worktree=Path(worktree)
@@ -301,6 +314,40 @@ def publish_worktree_branch_api(worktree, branch='integration'):
     run(['git','reset','--hard',f'origin/{branch}'],worktree)
     return newc['sha']
 
+def changed_paths(base, target, cwd=REPO):
+    raw=run(['git','diff','--name-only','-z',f'{base}..{target}'],cwd).stdout.encode('utf-8','surrogateescape')
+    return {item.decode('utf-8','surrogateescape') for item in raw.split(b'\0') if item}
+
+def canonical_dirty_paths():
+    paths=set()
+    for args in (['git','diff','--name-only','-z'], ['git','diff','--cached','--name-only','-z'], ['git','ls-files','--others','--exclude-standard','-z']):
+        raw=run(args,REPO).stdout.encode('utf-8','surrogateescape')
+        paths.update(item.decode('utf-8','surrogateescape') for item in raw.split(b'\0') if item)
+    return paths
+
+def project_cloud_bridge_commit(agent_id, task_id, integration_sha):
+    mode,transport=task_execution(task_id)
+    if mode != 'B' or transport != 'cloud-bridge': return []
+    parent=run(['git','rev-parse',f'{integration_sha}^'],REPO).stdout.strip()
+    paths=changed_paths(parent,integration_sha)
+    overlap=sorted(paths & canonical_dirty_paths())
+    if overlap:
+        checkpoint(task_id,status='canonical-projection-blocked',blockers={'overlapping_paths':overlap},next_action='resolve local overlapping changes, then resubmit the task')
+        event('canonical-projection-blocked',agent_id,task_id,{'paths':overlap})
+        raise RuntimeError('canonical projection conflict: '+', '.join(overlap))
+    patch=run(['git','diff','--binary',f'{parent}..{integration_sha}'],REPO).stdout
+    applied=subprocess.run(['git','apply','--check'],cwd=str(REPO),input=patch,text=True,capture_output=True)
+    if applied.returncode:
+        checkpoint(task_id,status='canonical-projection-blocked',blockers={'error':(applied.stderr or applied.stdout)[-2000:]},next_action='reconcile canonical checkout with integration, then resubmit the task')
+        event('canonical-projection-blocked',agent_id,task_id,{'reason':'patch-does-not-apply'})
+        raise RuntimeError('canonical projection cannot apply cleanly: '+(applied.stderr or applied.stdout))
+    applied=subprocess.run(['git','apply'],cwd=str(REPO),input=patch,text=True,capture_output=True)
+    if applied.returncode:
+        raise RuntimeError('canonical projection failed: '+(applied.stderr or applied.stdout))
+    checkpoint(task_id,status='canonical-projected',commits=[integration_sha],modified_files=sorted(paths),next_action='')
+    event('canonical-projected',agent_id,task_id,{'sha':integration_sha,'paths':sorted(paths)})
+    return sorted(paths)
+
 def integration_submit(agent_id, task_id, commit_sha, verification=None):
     require_mode_a_bootstrap(task_id)
     acquire_lock(agent_id,task_id,'ref','integration',600)
@@ -326,6 +373,7 @@ def integration_submit(agent_id, task_id, commit_sha, verification=None):
         sha=publish_worktree_branch_api(iw,'integration')
         checkpoint(task_id,status='integrated',commits=[commit_sha,sha],next_action='')
         event('integration-pushed',agent_id,task_id,{'sha':sha})
+        project_cloud_bridge_commit(agent_id,task_id,sha)
         return sha
     finally:
         c=db(); c.execute("DELETE FROM locks WHERE kind='ref' AND scope='integration' AND agent_id=?",(agent_id,)); c.close()
@@ -373,7 +421,9 @@ class H(BaseHTTPRequestHandler):
             if path=='/v1/task/create':
                 aid=safe(data['agent_id']); tid=safe(data.get('task_id') or sid('task')); goal=str(data['goal']); mode=str(data.get('execution_mode','')).upper();
                 if mode not in EXECUTION_MODES: raise RuntimeError('execution_mode must be A or B')
-                ts=now(); c=db(); c.execute('INSERT INTO tasks(id,goal,execution_mode,originating_agent,current_agent,status,created_at,updated_at) VALUES(?,?,?,?,?,\'active\',?,?)',(tid,goal,mode,aid,aid,ts,ts)); c.execute('UPDATE agents SET task_id=?,updated_at=? WHERE id=?',(tid,ts,aid)); c.close(); event('task-created',aid,tid,{'goal':goal,'execution_mode':mode}); return self.sendj(200,{'ok':True,'task_id':tid,'execution_mode':mode})
+                transport='cloud-bridge' if bool(data.get('cloud_bridge',False)) else 'local'
+                if transport == 'cloud-bridge' and mode != 'B': raise RuntimeError('cloud_bridge is available only for execution mode B')
+                ts=now(); c=db(); c.execute('INSERT INTO tasks(id,goal,execution_mode,execution_transport,originating_agent,current_agent,status,created_at,updated_at) VALUES(?,?,?,?,?,?,\'active\',?,?)',(tid,goal,mode,transport,aid,aid,ts,ts)); c.execute('UPDATE agents SET task_id=?,updated_at=? WHERE id=?',(tid,ts,aid)); c.close(); event('task-created',aid,tid,{'goal':goal,'execution_mode':mode,'execution_transport':transport}); return self.sendj(200,{'ok':True,'task_id':tid,'execution_mode':mode,'execution_transport':transport})
             if path=='/v1/task/checkpoint': checkpoint(data['task_id'],**data.get('fields',{})); event('checkpoint',data.get('agent_id'),data['task_id'],data.get('fields',{})); return self.sendj(200,{'ok':True})
             if path=='/v1/task/handoff':
                 tid=data['task_id']; to=safe(data['to_agent']); frm=safe(data['from_agent']); notes=str(data.get('notes','')); c=db(); c.execute('INSERT INTO handoffs(task_id,from_agent,to_agent,notes,created_at) VALUES(?,?,?,?,?)',(tid,frm,to,notes,now())); c.execute('UPDATE tasks SET current_agent=?,handoff=?,updated_at=? WHERE id=?',(to,notes,now(),tid)); c.execute('UPDATE agents SET task_id=?,updated_at=? WHERE id=?',(tid,now(),to)); c.close(); event('handoff',frm,tid,{'to':to,'notes':notes}); return self.sendj(200,{'ok':True})
