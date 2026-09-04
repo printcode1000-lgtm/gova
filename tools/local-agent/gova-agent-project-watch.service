@@ -1,0 +1,13 @@
+[Unit]
+Description=Gova Local Agent Integration Pickup
+After=default.target
+
+[Service]
+Type=oneshot
+Environment=PYTHONUNBUFFERED=1
+Environment=GOVA_AGENT_REPO=/home/hesham/gova
+Environment=GOVA_AGENT_RUNTIME=/home/hesham/.local/share/gova-agent-runtime
+Environment=GOVA_AGENT_WORKTREES=/home/hesham/gova-agents
+ExecStart=/usr/bin/python3 /home/hesham/.local/lib/gova-agent/project_watch.py
+TimeoutStartSec=3600
+NoNewPrivileges=true

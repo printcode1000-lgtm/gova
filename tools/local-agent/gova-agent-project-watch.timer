@@ -1,0 +1,11 @@
+[Unit]
+Description=Gova local agent: poll integration every 10 seconds
+
+[Timer]
+OnBootSec=30s
+OnUnitInactiveSec=10s
+AccuracySec=1s
+Unit=gova-agent-project-watch.service
+
+[Install]
+WantedBy=timers.target

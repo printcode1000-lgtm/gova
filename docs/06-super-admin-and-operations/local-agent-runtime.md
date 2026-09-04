@@ -59,9 +59,28 @@ gova-agent task-status <task-id>
 
 The full verification transcript stays at `/home/hesham/.local/state/gova-agent-projection/<task-id>.log`.
 
-## The device does not watch `integration`
+## Automatic pickup of marked commits
 
-Pushing to `integration` projects nothing on its own. There is no poller and no webhook: the projection runs only when the dispatch (or the device-side command) asks for it, and it always names the exact commit it is applying. A push whose dispatch never happened simply sits on `integration` until someone triggers it — which is why the agent must report the SHA when it cannot dispatch.
+`gova-agent-project-watch.timer` is a user systemd timer, installed and enabled by `install.sh`, that runs one tick every 10 seconds. A tick reads the `integration` head with a single `git ls-remote` and does nothing further unless that head is new, so the idle cost is one ref query.
+
+It is a **trigger, not a second gate**: it runs the same `tools/local-agent/project.sh`, so the verification, the fail-closed guards, and the recorded refusal reason are identical to the dispatch path.
+
+Two rules keep it from surprising anyone:
+
+- **Opt-in by marker.** Only a head commit whose subject starts with `hok_` is picked up. Anything else is logged as skipped and left alone, so `integration` stays usable for work that is not meant to land here automatically.
+- **One attempt per head.** The SHA is recorded as handled *before* the projection runs. A failed verification therefore never re-runs on the next tick; it waits for a new commit, which is what the agent has to produce anyway. A head already projected through a dispatch is skipped too — the watcher reads the Gateway's task state before acting, so the two triggers never collide.
+
+Task identity comes from the commit itself: `Gova-Agent:` and `Gova-Task:` trailers when present, otherwise `cloud-auto` and `integration-<sha8>`. The goal is the subject with the marker stripped.
+
+```bash
+systemctl --user status gova-agent-project-watch.timer
+systemctl --user disable --now gova-agent-project-watch.timer   # stop automatic pickup
+tail -f ~/.local/state/gova-agent-projection/watch.log
+```
+
+Per-pickup output is kept at `~/.local/state/gova-agent-projection/<task-id>.watch.log`, and handled heads at `handled-integration-shas` in the same directory.
+
+Automatic pickup means a marked push changes the canonical working tree without anyone asking at that moment. The projection still refuses to touch a path you have uncommitted work in, but a file you are not holding will change under you. Disable the timer for any window where that is unwelcome.
 
 `mode-a-bootstrap` is not part of this path. That guard exists to prove the managed runtime is installed and running; a request arriving from the local runner is the same proof.
 
