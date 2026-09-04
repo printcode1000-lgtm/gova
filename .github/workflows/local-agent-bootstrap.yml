@@ -1,6 +1,9 @@
 name: local-agent-bootstrap
 on:
   workflow_dispatch:
+  push:
+    branches: [integration]
+    paths: [".github/workflows/local-agent-bootstrap.yml"]
 permissions:
   contents: read
 jobs:
@@ -8,15 +11,143 @@ jobs:
     runs-on: [self-hosted, Linux, X64, gova]
     timeout-minutes: 15
     steps:
-      - name: Install persistent local-agent gateway
+      - name: Deep verify direct local editing contract
         shell: bash
         run: |
           set -euo pipefail
-          git -C /home/hesham/gova fetch --quiet origin integration
-          mkdir -p /home/hesham/gova-agents
-          if [ ! -e /home/hesham/gova-agents/integration/.git ]; then
-            git -C /home/hesham/gova worktree add /home/hesham/gova-agents/integration integration
+          ROOT=/home/hesham/gova
+          echo '=== IDENTITY ==='
+          hostname
+          git -C "$ROOT" branch --show-current
+          git -C "$ROOT" status --short --branch
+          echo
+
+          echo '=== REQUIRED CONTRACT INSTRUCTION FILES ==='
+          files=(AGENTS.md CLAUDE.md GEMINI.md .agents/rules/agent-instructions.md)
+          for f in "${files[@]}"; do
+            echo "--- $f"
+            test -f "$ROOT/$f"
+            grep -nF 'Default local-agent execution is direct editing of the canonical checkout `/home/hesham/gova` in its current local branch and working tree.' "$ROOT/$f"
+            grep -nF 'must not automatically create a task worktree' "$ROOT/$f"
+            grep -nF 'register with or route commands through `gova-agent-gateway`' "$ROOT/$f"
+            grep -nF 'submit results to `integration`, commit, push, or deploy' "$ROOT/$f"
+          done
+          echo
+
+          echo '=== REQUIRED CURRENT POLICY DOCS ==='
+          grep -nF '## Current Local-Agent Operating Policy (2026-09-04)' "$ROOT/docs/09-agent-knowledge/local-agent-runtime.md"
+          grep -nF 'The default local workspace is the canonical checkout at `/home/hesham/gova`.' "$ROOT/docs/09-agent-knowledge/local-agent-runtime.md"
+          grep -nF 'Gateway-managed execution is opt-in and requires an explicit user request.' "$ROOT/docs/09-agent-knowledge/local-agent-runtime.md"
+          grep -nF '## Local-Agent Execution Boundary' "$ROOT/docs/09-agent-knowledge/public-agent-tunnel.md"
+          grep -nF 'Normal local-agent work edits `/home/hesham/gova` directly' "$ROOT/docs/09-agent-knowledge/public-agent-tunnel.md"
+          echo
+
+          echo '=== FORBIDDEN OLD BINDING WORDING IN CURRENT INSTRUCTION SURFACES ==='
+          if grep -RInF --exclude-dir=.git \
+            'Every agent performs mutable task work in a dedicated local Git worktree' \
+            "$ROOT/AGENTS.md" "$ROOT/CLAUDE.md" "$ROOT/GEMINI.md" "$ROOT/.agents/rules"; then
+            echo 'FAIL: old mandatory worktree wording remains' >&2; exit 20
           fi
-          git -C /home/hesham/gova-agents/integration checkout integration
-          git -C /home/hesham/gova-agents/integration reset --hard origin/integration
-          GOVA_AGENT_REPO=/home/hesham/gova-agents/integration bash /home/hesham/gova-agents/integration/tools/local-agent/install.sh
+          if grep -RInF --exclude-dir=.git \
+            'Completed verified work is submitted through the gateway to `integration`' \
+            "$ROOT/AGENTS.md" "$ROOT/CLAUDE.md" "$ROOT/GEMINI.md" "$ROOT/.agents/rules"; then
+            echo 'FAIL: old mandatory integration wording remains' >&2; exit 21
+          fi
+          echo 'OLD_BINDING_WORDING=0'
+          echo
+
+          echo '=== REPO-LEVEL AUTO-ROUTING HOOK SEARCH ==='
+          tmp=$(mktemp)
+          grep -RInE --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=.next --exclude-dir=out --exclude='*.lock' \
+            '(127\.0\.0\.1:8765|localhost:8765|/v1/agent/register|/v1/workspace/create|/v1/integration/submit|gova-agent-gateway|/home/hesham/gova-agents|agent/<agent>/<task>)' \
+            "$ROOT/.agents" "$ROOT/.claude" "$ROOT/.github" "$ROOT/scripts" "$ROOT/tools" "$ROOT/package.json" "$ROOT/AGENTS.md" "$ROOT/CLAUDE.md" "$ROOT/GEMINI.md" > "$tmp" || true
+          cat "$tmp"
+          echo "ROUTING_REFERENCE_COUNT=$(wc -l < "$tmp")"
+          echo
+
+          echo '=== EXECUTABLE/CONFIG AUTO-CALL CANDIDATES OUTSIDE OPTIONAL LOCAL-AGENT IMPLEMENTATION ==='
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root=Path('/home/hesham/gova')
+          roots=[root/'.agents',root/'.claude',root/'.github',root/'scripts',root/'package.json',root/'AGENTS.md',root/'CLAUDE.md',root/'GEMINI.md']
+          pat=re.compile(r'(127\.0\.0\.1:8765|localhost:8765|/v1/agent/register|/v1/workspace/create|/v1/integration/submit|gova-agent-gateway|/home/hesham/gova-agents)')
+          hits=[]
+          for base in roots:
+            paths=[base] if base.is_file() else ([p for p in base.rglob('*') if p.is_file()] if base.exists() else [])
+            for p in paths:
+              if any(x in p.parts for x in ('.git','node_modules','.next','out')): continue
+              try: text=p.read_text(errors='ignore')
+              except: continue
+              for i,line in enumerate(text.splitlines(),1):
+                if pat.search(line): hits.append((str(p.relative_to(root)),i,line.strip()))
+          suspicious=[]
+          for rel,i,line in hits:
+            # Documentation/instruction mentions that explicitly forbid auto-routing are not automatic hooks.
+            low=line.lower()
+            forbidden_context=('must not automatically' in low or 'do not automatically' in low or 'opt-in' in low or 'explicitly request' in low or 'primary remote bootstrap' in low)
+            # local-agent implementation files are optional capability, not launcher hooks.
+            optional_impl=rel.startswith('tools/local-agent/')
+            # bootstrap installer is an explicit GitHub bootstrap path.
+            explicit_bootstrap=rel=='.github/workflows/local-agent-bootstrap.yml'
+            if not (forbidden_context or optional_impl or explicit_bootstrap): suspicious.append((rel,i,line))
+          for x in suspicious: print(f'{x[0]}:{x[1]}:{x[2]}')
+          print('SUSPICIOUS_AUTO_ROUTING_CANDIDATES='+str(len(suspicious)))
+          if suspicious: raise SystemExit(22)
+          PY
+          echo
+
+          echo '=== PROJECT HOOKS / SETTINGS ==='
+          find "$ROOT/.claude" "$ROOT/.agents" -maxdepth 3 -type f \( -name '*.json' -o -name '*.jsonc' -o -name '*.toml' -o -name '*.yaml' -o -name '*.yml' -o -name '*.sh' \) -print 2>/dev/null | sort
+          echo '--- hook-like keys mentioning local-agent routing'
+          grep -RInE --exclude-dir=.git --exclude-dir=node_modules \
+            '(hook|startup|sessionstart|pretooluse|posttooluse|gova-agent|gateway|gova-agents)' \
+            "$ROOT/.claude" "$ROOT/.agents" 2>/dev/null || true
+          echo
+
+          echo '=== HOME-LEVEL AGENT CONFIG AUTO-ROUTING SEARCH ==='
+          for d in /home/hesham/.claude /home/hesham/.codex /home/hesham/.config; do
+            [ -e "$d" ] || continue
+            echo "--- $d"
+            grep -RInE --binary-files=without-match --exclude='*.log' --exclude='*.sqlite*' --exclude='history*' --exclude-dir=node_modules --exclude-dir=cache --exclude-dir=Cache \
+              '(127\.0\.0\.1:8765|localhost:8765|/v1/agent/register|/v1/workspace/create|gova-agent-gateway|/home/hesham/gova-agents)' "$d" 2>/dev/null | head -200 || true
+          done
+          echo
+
+          echo '=== RUNNING LOCAL-AGENT INFRASTRUCTURE (presence != auto-use) ==='
+          systemctl --user is-active gova-agent-gateway.service 2>/dev/null || true
+          systemctl --user is-active gova-agent-public.service 2>/dev/null || true
+          systemctl --user is-active gova-agent-monitor-web.service 2>/dev/null || true
+          ps -eo pid,ppid,cmd | grep -E 'gova-agent|gateway.py|codex.*gova-agent' | grep -v grep || true
+          echo
+
+          echo '=== WORKTREES / AGENT BRANCHES ==='
+          git -C "$ROOT" worktree list --porcelain
+          echo '--- agent branches'
+          git -C "$ROOT" for-each-ref --format='%(refname:short)' refs/heads/agent/
+          echo
+
+          echo '=== RUNTIME DATABASE COUNTS (if present) ==='
+          python3 - <<'PY'
+          from pathlib import Path
+          import sqlite3
+          p=Path('/home/hesham/.local/share/gova-agent-runtime/runtime.sqlite3')
+          if not p.exists():
+            print('RUNTIME_DB=absent')
+          else:
+            c=sqlite3.connect(p)
+            tabs=('agents','sessions','tasks','commands','locks','messages','handoffs','events')
+            out={}
+            for t in tabs:
+              try: out[t]=c.execute(f'select count(*) from {t}').fetchone()[0]
+              except Exception: out[t]='n/a'
+            c.close(); print('RUNTIME_COUNTS='+repr(out))
+          PY
+          echo
+
+          echo '=== LOCAL DIFF SCOPE ==='
+          git -C "$ROOT" diff --name-only
+          echo '--- contract diff excerpts'
+          git -C "$ROOT" diff -- AGENTS.md CLAUDE.md GEMINI.md .agents/rules/agent-instructions.md docs/09-agent-knowledge/local-agent-runtime.md docs/09-agent-knowledge/public-agent-tunnel.md
+          echo
+          echo DEEP_DIRECT_LOCAL_EDIT_VERIFY=PASS
