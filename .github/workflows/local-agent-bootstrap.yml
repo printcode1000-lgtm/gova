@@ -1,102 +1,22 @@
 name: local-agent-bootstrap
 on:
   workflow_dispatch:
-  push:
-    branches: [integration]
-    paths: [.github/workflows/local-agent-bootstrap.yml]
 permissions:
   contents: read
 jobs:
   bootstrap:
     runs-on: [self-hosted, Linux, X64, gova]
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
-      - name: Cancel residual jobs and restore manual bootstrap
+      - name: Install persistent local-agent gateway
         shell: bash
         run: |
           set -euo pipefail
-          python3 - <<'PY'
-          import base64,json,os,time,urllib.request,urllib.error
-          from pathlib import Path
-          names=('GOVA_LOCAL_DISPATCH_TOKEN','GITHUB_ADMIN_TOKEN','GOVA_RUNNER_STATUS_TOKEN')
-          token=''
-          for f in (Path('/home/hesham/gova/.env.local'),Path('/home/hesham/gova/.env')):
-              if not f.exists(): continue
-              for line in f.read_text(errors='ignore').splitlines():
-                  for n in names:
-                      if line.startswith(n+'='):
-                          token=line.split('=',1)[1].strip().strip('"\'')
-                          if token: break
-                  if token: break
-              if token: break
-          if not token: raise SystemExit('local GitHub admin token not found')
-          current=int(os.environ['GITHUB_RUN_ID'])
-          base='https://api.github.com/repos/printcode1000-lgtm/gova'
-          hdr={'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','User-Agent':'gova-cleanup','Content-Type':'application/json'}
-          def call(method,path,data=None):
-              raw=None if data is None else json.dumps(data).encode()
-              req=urllib.request.Request(base+path,data=raw,method=method,headers=hdr)
-              try:
-                  with urllib.request.urlopen(req,timeout=20) as r:
-                      b=r.read(); return r.status,json.loads(b) if b else None
-              except urllib.error.HTTPError as e:
-                  return e.code,None
-          for _ in range(8):
-              others=[]
-              for status in ('queued','in_progress'):
-                  code,data=call('GET',f'/actions/runs?status={status}&per_page=100')
-                  if code!=200 or not data: continue
-                  for run in data.get('workflow_runs',[]):
-                      rid=int(run['id'])
-                      if rid!=current: others.append(rid)
-              if not others: break
-              for rid in sorted(set(others)):
-                  c,_=call('POST',f'/actions/runs/{rid}/cancel'); print('cancel',rid,c)
-              time.sleep(2)
-          original="""name: local-agent-bootstrap
-          on:
-            workflow_dispatch:
-          permissions:
-            contents: read
-          jobs:
-            bootstrap:
-              runs-on: [self-hosted, Linux, X64, gova]
-              timeout-minutes: 15
-              steps:
-                - name: Install persistent local-agent gateway
-                  shell: bash
-                  run: |
-                    set -euo pipefail
-                    git -C /home/hesham/gova fetch --quiet origin integration
-                    mkdir -p /home/hesham/gova-agents
-                    if [ ! -e /home/hesham/gova-agents/integration/.git ]; then
-                      git -C /home/hesham/gova worktree add /home/hesham/gova-agents/integration integration
-                    fi
-                    git -C /home/hesham/gova-agents/integration checkout integration
-                    git -C /home/hesham/gova-agents/integration reset --hard origin/integration
-                    GOVA_AGENT_REPO=/home/hesham/gova-agents/integration bash /home/hesham/gova-agents/integration/tools/local-agent/install.sh
-          """
-          code,cur=call('GET','/contents/.github/workflows/local-agent-bootstrap.yml?ref=integration')
-          if code!=200: raise SystemExit('cannot read current workflow')
-          code,out=call('PUT','/contents/.github/workflows/local-agent-bootstrap.yml',{'message':'chore(local-agent): restore manual bootstrap [skip ci]','content':base64.b64encode(original.encode()).decode(),'sha':cur['sha'],'branch':'integration'})
-          if code not in (200,201): raise SystemExit('cannot restore workflow')
-          print('restore',out['commit']['sha'])
-          time.sleep(3)
-          for _ in range(6):
-              others=[]
-              for status in ('queued','in_progress'):
-                  c,d=call('GET',f'/actions/runs?status={status}&per_page=100')
-                  if c==200 and d:
-                      others += [int(r['id']) for r in d.get('workflow_runs',[]) if int(r['id'])!=current]
-              if not others: break
-              for rid in sorted(set(others)):
-                  call('POST',f'/actions/runs/{rid}/cancel')
-              time.sleep(2)
-          if others: raise SystemExit('residual active workflow runs remain: '+repr(others))
-          print('ACTIVE_OTHER_RUNS=0')
-          PY
           git -C /home/hesham/gova fetch --quiet origin integration
-          if [ -d /home/hesham/gova-agents/integration ]; then
-            git -C /home/hesham/gova-agents/integration reset --hard origin/integration
+          mkdir -p /home/hesham/gova-agents
+          if [ ! -e /home/hesham/gova-agents/integration/.git ]; then
+            git -C /home/hesham/gova worktree add /home/hesham/gova-agents/integration integration
           fi
-          echo FINAL_JOB_CLEANUP=PASS
+          git -C /home/hesham/gova-agents/integration checkout integration
+          git -C /home/hesham/gova-agents/integration reset --hard origin/integration
+          GOVA_AGENT_REPO=/home/hesham/gova-agents/integration bash /home/hesham/gova-agents/integration/tools/local-agent/install.sh
