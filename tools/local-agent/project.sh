@@ -49,7 +49,11 @@ export DOCS_CI_BASE_REF="${INTEGRATION_SHA}^"
 npm run architecture:check
 npm run docs:ci
 
-suites="$(npx tsx scripts/local-agent/related-core-tests.ts "${INTEGRATION_SHA}^" "$INTEGRATION_SHA")"
+# The resolver runs from the canonical checkout, never from the tree being
+# judged: a commit must not get to decide which suites are run against it,
+# and a commit branched from an older `integration` would not carry the
+# resolver at all. The gate's own logic stays the reviewed version on `main`.
+suites="$(cd "$REPO" && npx tsx scripts/local-agent/related-core-tests.ts "${INTEGRATION_SHA}^" "$INTEGRATION_SHA")"
 echo "related core suites: ${suites:-(none)}"
 while IFS= read -r suite; do
   [ -n "$suite" ] || continue
