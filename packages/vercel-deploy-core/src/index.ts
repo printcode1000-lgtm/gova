@@ -1,4 +1,4 @@
-import { execFileSync } from 'child_process';
+import { spawnSync } from 'child_process';
 import { existsSync, readFileSync, rmSync } from 'node:fs';
 import path from 'path';
 import { ACCOUNT_DECLARATIONS, type AccountDeclaration } from '@asol/account-declarations';
@@ -433,6 +433,17 @@ export interface RunVercelOptions {
 }
 
 const PINNED_VERCEL_CLI = '59.0.0';
+const VERCEL_UPLOAD_MAX_ATTEMPTS = 3;
+
+function isTransientVercelUploadFailure(output: string): boolean {
+  return /fetch failed|failed to fetch|ECONNRESET|ECONNREFUSED|ETIMEDOUT|EAI_AGAIN|UND_ERR_|socket hang up/i.test(output);
+}
+
+function printVercelOutput(value: string | Buffer | undefined): string {
+  const output = value?.toString() ?? '';
+  if (output) process.stdout.write(output);
+  return output;
+}
 
 function resolvePinnedVercelCli(): string {
   const packageJsonPath = path.join(process.cwd(), 'node_modules', 'vercel', 'package.json');
@@ -500,12 +511,24 @@ export function runVercel(options: RunVercelOptions): void {
   if (options.teamId) childEnv.VERCEL_ORG_ID = options.teamId;
   else delete childEnv.VERCEL_ORG_ID;
 
-  execFileSync(command, commandArgs, {
-    stdio: 'inherit',
-    shell: false,
-    cwd: options.serviceDir,
-    env: childEnv,
-  });
+  for (let attempt = 1; attempt <= VERCEL_UPLOAD_MAX_ATTEMPTS; attempt += 1) {
+    const result = spawnSync(command, commandArgs, {
+      shell: false,
+      cwd: options.serviceDir,
+      env: childEnv,
+      encoding: 'utf8',
+    });
+    const output = `${printVercelOutput(result.stdout)}${printVercelOutput(result.stderr)}`;
+    if (!result.error && result.status === 0) return;
+
+    const reason = result.error?.message ?? output.trim() ?? `Vercel CLI exited ${result.status ?? 'without a status'}`;
+    if (!isTransientVercelUploadFailure(`${reason}\n${output}`) || attempt === VERCEL_UPLOAD_MAX_ATTEMPTS) {
+      throw new Error(`Vercel CLI failed after ${attempt} attempt(s): ${reason}`);
+    }
+    console.warn(
+      `[vercel] transient upload failure on attempt ${attempt}/${VERCEL_UPLOAD_MAX_ATTEMPTS}: ${reason}. Retrying.`,
+    );
+  }
 }
 
 export interface DeployAccountServiceOptions {

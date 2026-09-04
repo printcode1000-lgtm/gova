@@ -81,6 +81,8 @@ async function runTests(): Promise<void> {
   assert(indexSource.includes("path.join(process.cwd(), 'node_modules', 'vercel', 'package.json')"), 'D3: CLI binary is resolved from the project-pinned node_modules install');
   assert(!indexSource.includes('npx'), 'D3: runVercel must not invoke npx and therefore cannot drift from the pin');
   assert(indexSource.includes('manifest.version !== PINNED_VERCEL_CLI'), 'D3: mismatched installed CLI version is rejected');
+  assert(indexSource.includes('const VERCEL_UPLOAD_MAX_ATTEMPTS = 3'), 'D3: transient uploads are bounded to three attempts');
+  assert(indexSource.includes('isTransientVercelUploadFailure'), 'D3: only transient transport failures retry');
   console.log('  ✔ CLI pin @59.0.0 verified.');
 
   // Test 3b: CLI uploads carry no Git commit metadata (D1)

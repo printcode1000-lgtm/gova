@@ -5,6 +5,11 @@ which gates run, not in what publishing means: **every public path runs the
 same ordered transaction**, defined once in
 `scripts/deploy-push.ts` as `runReleaseTransaction`.
 
+Vercel uploads retry at most three times only for transient transport failures
+such as `fetch failed` or connection resets. Build, environment, account, and
+readiness failures do not retry; their exact CLI output remains the terminal
+release error.
+
 For the account/project topology those commands act on, see
 [deployment-targets.md](./deployment-targets.md). For the consolidated incident, repair,
 file-level change list, verification evidence, and remaining external Vercel limit, see the
