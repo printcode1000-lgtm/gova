@@ -37,7 +37,7 @@ In Mode A, the Gateway listens on TCP port `8765`; `/health` is public and mutat
 
 A cloud agent has no route to the Gateway: the service listens on the device, its key never leaves `/home/hesham/.config/gova-agent/auth`, and the public monitor tunnel is observability, not a work channel. So the cloud path delivers work through Git and asks the device to apply it.
 
-1. The agent edits in its own cloud checkout, based on `origin/integration`, and verifies there. `integration` is the base every cloud task branches from, so it must carry the current tooling; when it falls behind `main`, publish a commit onto `integration` whose tree is `main`'s tree — a merge commit with both branches as parents keeps either history and stays a fast-forward:
+1. The agent edits in its own cloud checkout, based on `origin/integration`, and **verifies there before pushing** — `npm run architecture:check`, `npm run docs:ci`, and the `*-core` suites related to the change. A change that touches an API route, a package boundary, or anything else the Knowledge Graph derives from must also run `npm run docs:generate` and commit the regenerated files; the device gate reads those as stale and refuses the task otherwise. Verification on the device is a second opinion, not the agent's first one. `integration` is the base every cloud task branches from, so it must carry the current tooling; when it falls behind `main`, publish a commit onto `integration` whose tree is `main`'s tree — a merge commit with both branches as parents keeps either history and stays a fast-forward:
 
    ```bash
    git fetch origin main integration
@@ -50,6 +50,18 @@ A cloud agent has no route to the Gateway: the service listens on the device, it
 6. The Gateway projects that work onto `/home/hesham/gova` as an unstaged patch covering everything between the fork point and the named commit.
 
 Failure is closed at every step: verification failure stops before projection, an unpublished SHA is rejected, a non cloud-bridge task is rejected, and a projection whose paths overlap canonical uncommitted work — or whose patch does not apply — is refused and recorded as `canonical-projection-blocked`.
+
+Every refusal states its reason where it can be read back. The task is registered with the Gateway before verification starts, so a failed check lands on the task as `verification-failed` carrying the failing command, the integration SHA, and the tail of its output; a refused projection lands as `canonical-projection-blocked` carrying the overlapping paths or the patch error. Both are readable without the workflow log:
+
+```bash
+gova-agent task-status <task-id>
+```
+
+The full verification transcript stays at `/home/hesham/.local/state/gova-agent-projection/<task-id>.log`.
+
+## The device does not watch `integration`
+
+Pushing to `integration` projects nothing on its own. There is no poller and no webhook: the projection runs only when the dispatch (or the device-side command) asks for it, and it always names the exact commit it is applying. A push whose dispatch never happened simply sits on `integration` until someone triggers it — which is why the agent must report the SHA when it cannot dispatch.
 
 `mode-a-bootstrap` is not part of this path. That guard exists to prove the managed runtime is installed and running; a request arriving from the local runner is the same proof.
 
