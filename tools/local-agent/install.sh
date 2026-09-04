@@ -25,6 +25,7 @@ install -m 0755 "$runtime_src/gateway-quick-tunnel.sh" /home/hesham/.local/lib/g
 install -m 0755 "$runtime_src/gova-agent-public.sh" /home/hesham/.local/lib/gova-agent/gova-agent-public.sh
 install -m 0755 "$runtime_src/publish-public-url-r2.py" /home/hesham/.local/lib/gova-agent/publish-public-url-r2.py
 install -m 0644 "$runtime_src/web/index.html" /home/hesham/.local/lib/gova-agent/web/index.html
+install -m 0755 "$runtime_src/project_watch.py" /home/hesham/.local/lib/gova-agent/project_watch.py
 install -m 0755 "$runtime_src/recovery.py" /home/hesham/.local/lib/gova-agent/recovery.py
 install -m 0755 "$runtime_src/git_credential.py" /home/hesham/.local/lib/gova-agent/git_credential.py
 ln -sfn /home/hesham/.local/lib/gova-agent/cli.py /home/hesham/.local/bin/gova-agent
@@ -83,10 +84,14 @@ else
 fi
 
 install -m 0644 "$runtime_src/gova-agent-monitor-web.service" /home/hesham/.config/systemd/user/gova-agent-monitor-web.service
+install -m 0644 "$runtime_src/gova-agent-project-watch.service" /home/hesham/.config/systemd/user/gova-agent-project-watch.service
+install -m 0644 "$runtime_src/gova-agent-project-watch.timer" /home/hesham/.config/systemd/user/gova-agent-project-watch.timer
 install -m 0644 "$runtime_src/gova-agent-public.service" /home/hesham/.config/systemd/user/gova-agent-public.service
 systemctl --user daemon-reload
 systemctl --user enable gova-agent-monitor-web.service
 systemctl --user restart gova-agent-monitor-web.service
+systemctl --user enable gova-agent-project-watch.timer
+systemctl --user restart gova-agent-project-watch.timer
 systemctl --user enable gova-agent-public.service >/dev/null 2>&1 || true
 systemctl --user restart gova-agent-public.service >/dev/null 2>&1 || true
 

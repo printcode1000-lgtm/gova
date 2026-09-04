@@ -116,6 +116,20 @@
       "cwd": "${workspaceFolder}",
       "presentation": {
         "group": "ASOL Deployment",
+        "order": 4
+      }
+    },
+    {
+      "name": "Deploy Push Fast - دفع ونشر سريع",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "deploy:push:fast"],
+      "autoAttachChildProcesses": false,
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL Deployment",
         "order": 3
       }
     },

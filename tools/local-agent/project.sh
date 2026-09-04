@@ -7,6 +7,10 @@
 # here — the canonical toolchain, not the cloud one — and only then asks the local
 # Gateway to project it, unstaged, into /home/hesham/gova.
 #
+# The task is registered with the Gateway *before* verification runs, so a refusal
+# leaves a durable, readable reason on the task instead of only a workflow log the
+# cloud agent may not be able to read.
+#
 # Nothing here reaches the Gateway over a network, consumes a GitHub secret, or
 # touches `main`. Verification failure means no projection at all.
 set -euo pipefail
@@ -14,6 +18,7 @@ set -euo pipefail
 REPO="${GOVA_AGENT_REPO:-/home/hesham/gova}"
 VERIFY_TREE="${GOVA_AGENT_VERIFY_WORKTREE:-/home/hesham/gova-agents/verify}"
 CLI="${GOVA_AGENT_CLI:-/home/hesham/.local/bin/gova-agent}"
+LOG_DIR="${GOVA_AGENT_PROJECTION_LOGS:-/home/hesham/.local/state/gova-agent-projection}"
 AGENT_ID="${AGENT_ID:?AGENT_ID is required}"
 TASK_ID="${TASK_ID:?TASK_ID is required}"
 TASK_GOAL="${TASK_GOAL:?TASK_GOAL is required}"
@@ -24,11 +29,56 @@ if ! [[ "$INTEGRATION_SHA" =~ ^[0-9a-f]{40}$ ]]; then
   exit 1
 fi
 
-git -C "$REPO" fetch --prune origin integration
+git -C "$REPO" fetch --prune origin main integration
 if ! git -C "$REPO" merge-base --is-ancestor "$INTEGRATION_SHA" origin/integration; then
   echo "$INTEGRATION_SHA is not published on origin/integration; push the verified commit there first" >&2
   exit 1
 fi
+
+# The task's boundary is the fork point with main, the same base the Gateway
+# projects from. Judging only the head commit would verify less than what lands.
+BASE="$(git -C "$REPO" merge-base origin/main "$INTEGRATION_SHA")"
+echo "verifying $BASE..$INTEGRATION_SHA"
+
+"$CLI" register "$AGENT_ID"
+if ! "$CLI" task-status "$TASK_ID" >/dev/null 2>&1; then
+  "$CLI" task-create "$AGENT_ID" "$TASK_GOAL" --task-id "$TASK_ID" --mode B --cloud-bridge
+fi
+
+mkdir -p "$LOG_DIR"
+LOG="$LOG_DIR/${TASK_ID}.log"
+: > "$LOG"
+
+checkpoint_json() {
+  "$CLI" checkpoint "$TASK_ID" "$AGENT_ID" "$1" >/dev/null
+}
+
+# The refusal reason is written onto the task itself: the failing command and the
+# tail of its output. Whoever triggered the projection — a dispatch from the cloud
+# or an operator here — can then read why from `gova-agent task-status` or the
+# monitor, without digging through a workflow log.
+report_failure() {
+  python3 - "$1" "$LOG" "$INTEGRATION_SHA" <<'PY' > "$LOG_DIR/${TASK_ID}.checkpoint.json"
+import json, pathlib, sys
+command, log, sha = sys.argv[1], sys.argv[2], sys.argv[3]
+tail = pathlib.Path(log).read_text(errors='replace')[-4000:]
+print(json.dumps({
+    'status': 'verification-failed',
+    'blockers': {'command': command, 'integration_sha': sha, 'output': tail},
+    'next_action': 'fix the failure on integration, push a follow-up commit, and dispatch the projection again',
+}))
+PY
+  checkpoint_json "$(cat "$LOG_DIR/${TASK_ID}.checkpoint.json")"
+}
+
+verify() {
+  echo "--- $1" | tee -a "$LOG"
+  if ! ( set -o pipefail; eval "$1" 2>&1 | tee -a "$LOG" ); then
+    report_failure "$1"
+    echo "verification failed: $1" >&2
+    exit 1
+  fi
+}
 
 # A detached verification worktree keeps the canonical checkout — including the
 # user's uncommitted work — untouched while the commit is being judged. It reuses
@@ -45,23 +95,21 @@ if [ ! -e "$VERIFY_TREE/node_modules" ] && [ -d "$REPO/node_modules" ]; then
 fi
 
 cd "$VERIFY_TREE"
-export DOCS_CI_BASE_REF="${INTEGRATION_SHA}^"
-npm run architecture:check
-npm run docs:ci
+export DOCS_CI_BASE_REF="$BASE"
+checkpoint_json '{"status":"verifying","next_action":"wait for the device-side verification to finish"}'
+verify "npm run architecture:check"
+verify "npm run docs:ci"
 
 # The resolver runs from the canonical checkout, never from the tree being
 # judged: a commit must not get to decide which suites are run against it,
 # and a commit branched from an older `integration` would not carry the
 # resolver at all. The gate's own logic stays the reviewed version on `main`.
-suites="$(cd "$REPO" && npx tsx scripts/local-agent/related-core-tests.ts "${INTEGRATION_SHA}^" "$INTEGRATION_SHA")"
+suites="$(cd "$REPO" && npx tsx scripts/local-agent/related-core-tests.ts "$BASE" "$INTEGRATION_SHA")"
 echo "related core suites: ${suites:-(none)}"
 while IFS= read -r suite; do
   [ -n "$suite" ] || continue
-  npm run "$suite"
+  verify "npm run $suite"
 done <<< "$suites"
 
-"$CLI" register "$AGENT_ID"
-if ! "$CLI" task-status "$TASK_ID" >/dev/null 2>&1; then
-  "$CLI" task-create "$AGENT_ID" "$TASK_GOAL" --task-id "$TASK_ID" --mode B --cloud-bridge
-fi
+checkpoint_json "$(printf '{"status":"verified","tests":%s,"next_action":"project into the canonical checkout"}' "$(python3 -c 'import json,sys;print(json.dumps(sys.stdin.read().split()))' <<< "$suites")")"
 "$CLI" project "$AGENT_ID" "$TASK_ID" "$INTEGRATION_SHA"

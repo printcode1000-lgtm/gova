@@ -37,19 +37,50 @@ In Mode A, the Gateway listens on TCP port `8765`; `/health` is public and mutat
 
 A cloud agent has no route to the Gateway: the service listens on the device, its key never leaves `/home/hesham/.config/gova-agent/auth`, and the public monitor tunnel is observability, not a work channel. So the cloud path delivers work through Git and asks the device to apply it.
 
-1. The agent edits in its own cloud checkout, based on `origin/integration`, and verifies there. `integration` is the base every cloud task branches from, so it must carry the current tooling; when it falls behind `main`, publish a commit onto `integration` whose tree is `main`'s tree — a merge commit with both branches as parents keeps either history and stays a fast-forward:
+1. The agent edits in its own cloud checkout, based on `origin/integration`, and **verifies there before pushing** — `npm run architecture:check`, `npm run docs:ci`, and the `*-core` suites related to the change. A change that touches an API route, a package boundary, or anything else the Knowledge Graph derives from must also run `npm run docs:generate` and commit the regenerated files; the device gate reads those as stale and refuses the task otherwise. Verification on the device is a second opinion, not the agent's first one. `integration` is the base every cloud task branches from, so it must carry the current tooling; when it falls behind `main`, publish a commit onto `integration` whose tree is `main`'s tree — a merge commit with both branches as parents keeps either history and stays a fast-forward:
 
    ```bash
    git fetch origin main integration
    git push origin "$(git commit-tree origin/main^{tree} -p origin/integration -p origin/main -m 'chore(integration): align tree with main')":refs/heads/integration
    ```
-2. It pushes exactly one verified commit to `integration`. No other remote ref is involved; `agent/*` branch creation is blocked by the repository ruleset.
+2. It pushes its verified work to `integration`. No other remote ref is involved; `agent/*` branch creation is blocked by the repository ruleset. One commit is preferred, but the projection measures its delta from `git merge-base origin/main <sha>`, so a task that took several commits lands whole rather than losing its earlier hunks.
 3. It dispatches `local-agent-project.yml` with `agent_id`, `task_id`, `goal`, and the full 40-character `integration_sha`. Step 2 needs only repository write access, which a connected agent already has; this step needs `actions: write`. An agent whose connection lacks it reports the SHA instead, and an operator runs the device-side command below — the gate and its guarantees are identical either way.
 4. The self-hosted runner executes `tools/local-agent/project.sh` on the device. The script refuses a SHA that is not an ancestor of `origin/integration`, prepares a detached verification worktree at that commit (reusing the canonical `node_modules` by symlink), and runs `npm run architecture:check`, `npm run docs:ci`, and the `*-core` suites related to the change. The suites run in that worktree, but `scripts/local-agent/related-core-tests.ts` resolves them from the canonical checkout: a commit must not decide which suites are run against it, and a commit branched from an older `integration` would not carry the resolver at all.
 5. On success the script registers the agent, creates the cloud-bridge Mode B task if it does not exist, and calls `gova-agent project`, which posts to `/v1/canonical/project`.
-6. The Gateway projects that commit onto `/home/hesham/gova` as an unstaged patch.
+6. The Gateway projects that work onto `/home/hesham/gova` as an unstaged patch covering everything between the fork point and the named commit.
 
 Failure is closed at every step: verification failure stops before projection, an unpublished SHA is rejected, a non cloud-bridge task is rejected, and a projection whose paths overlap canonical uncommitted work — or whose patch does not apply — is refused and recorded as `canonical-projection-blocked`.
+
+Every refusal states its reason where it can be read back. The task is registered with the Gateway before verification starts, so a failed check lands on the task as `verification-failed` carrying the failing command, the integration SHA, and the tail of its output; a refused projection lands as `canonical-projection-blocked` carrying the overlapping paths or the patch error. Both are readable without the workflow log:
+
+```bash
+gova-agent task-status <task-id>
+```
+
+The full verification transcript stays at `/home/hesham/.local/state/gova-agent-projection/<task-id>.log`.
+
+## Automatic pickup of marked commits
+
+`gova-agent-project-watch.timer` is a user systemd timer, installed and enabled by `install.sh`, that runs one tick every 10 seconds. A tick reads the `integration` head with a single `git ls-remote` and does nothing further unless that head is new, so the idle cost is one ref query.
+
+It is a **trigger, not a second gate**: it runs the same `tools/local-agent/project.sh`, so the verification, the fail-closed guards, and the recorded refusal reason are identical to the dispatch path.
+
+Two rules keep it from surprising anyone:
+
+- **Opt-in by marker.** Only a head commit whose subject starts with `hok_` is picked up. Anything else is logged as skipped and left alone, so `integration` stays usable for work that is not meant to land here automatically.
+- **One attempt per head.** The SHA is recorded as handled *before* the projection runs. A failed verification therefore never re-runs on the next tick; it waits for a new commit, which is what the agent has to produce anyway. A head already projected through a dispatch is skipped too — the watcher reads the Gateway's task state before acting, so the two triggers never collide.
+
+Task identity comes from the commit itself: `Gova-Agent:` and `Gova-Task:` trailers when present, otherwise `cloud-auto` and `integration-<sha8>`. The goal is the subject with the marker stripped.
+
+```bash
+systemctl --user status gova-agent-project-watch.timer
+systemctl --user disable --now gova-agent-project-watch.timer   # stop automatic pickup
+tail -f ~/.local/state/gova-agent-projection/watch.log
+```
+
+Per-pickup output is kept at `~/.local/state/gova-agent-projection/<task-id>.watch.log`, and handled heads at `handled-integration-shas` in the same directory.
+
+Automatic pickup means a marked push changes the canonical working tree without anyone asking at that moment. The projection still refuses to touch a path you have uncommitted work in, but a file you are not holding will change under you. Disable the timer for any window where that is unwelcome.
 
 `mode-a-bootstrap` is not part of this path. That guard exists to prove the managed runtime is installed and running; a request arriving from the local runner is the same proof.
 
