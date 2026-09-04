@@ -17411,6 +17411,19 @@
       ]
     },
     {
+      "id": "environment-key:ASOL_GOVA_UPLOAD_VIEW",
+      "kind": "environment-key",
+      "name": "ASOL_GOVA_UPLOAD_VIEW",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "asol_gova_upload_view",
+        "environment",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
       "id": "environment-key:ASOL_IOS_BUNDLE_ID",
       "kind": "environment-key",
       "name": "ASOL_IOS_BUNDLE_ID",
@@ -137860,6 +137873,11 @@
       "to": "script:scripts/vercel-deployment-guards.ts",
       "kind": "imports",
       "detail": "./vercel-deployment-guards"
+    },
+    {
+      "from": "script:scripts/vercel-deployment-build.ts",
+      "to": "environment-key:ASOL_GOVA_UPLOAD_VIEW",
+      "kind": "uses-environment"
     },
     {
       "from": "script:scripts/vercel-deployment-build.ts",

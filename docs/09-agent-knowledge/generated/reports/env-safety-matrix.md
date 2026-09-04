@@ -7,7 +7,7 @@
 
 Key **names only**. Values are never emitted. Command assignments are redacted elsewhere in generated catalogs.
 
-Keys: **241**
+Keys: **242**
 
 | Key | Visibility | Static/native | Consumers (sample) | Relevance | Classification | Runtime checks |
 |---|---|---|---|---|---|---|
@@ -51,6 +51,7 @@ Keys: **241**
 | `ASOL_DEPLOY_REPOSITORY_URL` | server-only | unknown | `scripts/push-production-deploy-env.ts`, `services/control/src/app/api/health/route.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_DEPLOY_REVISION_AT_START` | server-only | unknown | `scripts/deploy-all.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_DEPLOY_RUN_ID` | server-only | unknown | `scripts/deploy-all.ts`, `scripts/gate-step-checkpoints.ts`, `scripts/tests/deploy-all-resume.test.ts` | unclassified | server-only | npm run runtime:check:changed |
+| `ASOL_GOVA_UPLOAD_VIEW` | server-only | unknown | `scripts/vercel-deployment-build.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_IOS_BUNDLE_ID` | server-only | unknown | `packages/ota-core/src/publishing/adapters/app-store-connect.adapter.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` | native/fastlane | server-only | npm run runtime:check:changed |
 | `ASOL_IOS_EXPORT_METHOD` | server-only | unknown | none | native/fastlane | missing/unknown consumers | npm run runtime:check:changed |
 | `ASOL_IOS_TEAM_ID` | server-only | unknown | `src/core/config/server-env/server-env.values.turso-env.ts` | native/fastlane | server-only | npm run runtime:check:changed |

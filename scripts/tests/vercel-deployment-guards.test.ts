@@ -114,6 +114,7 @@ const govaTreeIndex = buildSource.indexOf("buildGovaDeploymentTree(ROOT)");
 assert.ok(readinessCallIndex >= 0, "build:vercel must call the exact-SHA readiness barrier.");
 assert.ok(govaTreeIndex > readinessCallIndex, "readiness must complete before any publishable gova tree is built.");
 assert.match(buildSource, /IS_GOVA_UPLOAD_VIEW/);
+assert.match(buildSource, /ASOL_GOVA_UPLOAD_VIEW === "1"/);
 assert.match(buildSource, /runtime !== "gova"/);
 
 const revision = "a".repeat(40);

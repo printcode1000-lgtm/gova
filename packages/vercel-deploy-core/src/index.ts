@@ -676,7 +676,10 @@ export async function deployAccountRootApp(
       // one-deployment build value: it is neither copied into project runtime
       // environment nor supplied to any other account.
       ...(declaration.name === 'gova' && /^[0-9a-f]{40}$/.test(revision)
-        ? ['--build-env', `ASOL_RELEASE_REVISION=${revision}`]
+        ? [
+            '--build-env', `ASOL_RELEASE_REVISION=${revision}`,
+            '--build-env', 'ASOL_GOVA_UPLOAD_VIEW=1',
+          ]
         : []),
       ...vercelDeploymentMetadata({ target: declaration.name, comment, runId, revision }),
     ],

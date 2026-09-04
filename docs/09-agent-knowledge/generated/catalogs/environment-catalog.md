@@ -49,6 +49,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `ASOL_DEPLOY_REPOSITORY_URL` | server/tooling | 2 | `scripts/push-production-deploy-env.ts`, `services/control/src/app/api/health/route.ts` |
 | `ASOL_DEPLOY_REVISION_AT_START` | server/tooling | 1 | `scripts/deploy-all.ts` |
 | `ASOL_DEPLOY_RUN_ID` | server/tooling | 3 | `scripts/deploy-all.ts`, `scripts/gate-step-checkpoints.ts`, `scripts/tests/deploy-all-resume.test.ts` |
+| `ASOL_GOVA_UPLOAD_VIEW` | server/tooling | 1 | `scripts/vercel-deployment-build.ts` |
 | `ASOL_IOS_BUNDLE_ID` | server/tooling | 2 | `packages/ota-core/src/publishing/adapters/app-store-connect.adapter.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` |
 | `ASOL_IOS_EXPORT_METHOD` | server/tooling | 0 |  |
 | `ASOL_IOS_TEAM_ID` | server/tooling | 1 | `src/core/config/server-env/server-env.values.turso-env.ts` |

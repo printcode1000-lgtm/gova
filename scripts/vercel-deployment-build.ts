@@ -23,7 +23,10 @@ import { assertHostedGovaReleaseReady } from "./release-readiness-barrier";
  * `npm run build` / `deploy:all` preflight.
  */
 const ROOT = process.cwd();
-const IS_GOVA_UPLOAD_VIEW = path.basename(ROOT) === GOVA_DEPLOYMENT_DIR;
+// Vercel mounts every upload at `/vercel/path0`, so the directory name cannot
+// identify the prepared view remotely. The explicit build input is set only by
+// the gova release uploader.
+const IS_GOVA_UPLOAD_VIEW = process.env.ASOL_GOVA_UPLOAD_VIEW === "1";
 const BUILD_ROOT = IS_GOVA_UPLOAD_VIEW ? ROOT : path.join(ROOT, GOVA_DEPLOYMENT_DIR);
 
 function run(command: string, args: string[], cwd = ROOT): void {
