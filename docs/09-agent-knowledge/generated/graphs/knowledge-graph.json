@@ -1076,21 +1076,6 @@
       ]
     },
     {
-      "id": "command:deploy:all:main",
-      "kind": "command",
-      "name": "npm run deploy:all:main",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "all",
-        "deploy",
-        "deploy:all:main",
-        "main",
-        "npm",
-        "npm run deploy:all:main",
-        "run"
-      ]
-    },
-    {
       "id": "command:deploy:all:preflight",
       "kind": "command",
       "name": "npm run deploy:all:preflight",
@@ -1121,21 +1106,6 @@
       ]
     },
     {
-      "id": "command:deploy:all:services",
-      "kind": "command",
-      "name": "npm run deploy:all:services",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "all",
-        "deploy",
-        "deploy:all:services",
-        "npm",
-        "npm run deploy:all:services",
-        "run",
-        "services"
-      ]
-    },
-    {
       "id": "command:deploy:env:push",
       "kind": "command",
       "name": "npm run deploy:env:push",
@@ -1146,35 +1116,6 @@
         "env",
         "npm",
         "npm run deploy:env:push",
-        "push",
-        "run"
-      ]
-    },
-    {
-      "id": "command:deploy:push",
-      "kind": "command",
-      "name": "npm run deploy:push",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "deploy",
-        "deploy:push",
-        "npm",
-        "npm run deploy:push",
-        "push",
-        "run"
-      ]
-    },
-    {
-      "id": "command:deploy:push:all",
-      "kind": "command",
-      "name": "npm run deploy:push:all",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "all",
-        "deploy",
-        "deploy:push:all",
-        "npm",
-        "npm run deploy:push:all",
         "push",
         "run"
       ]
@@ -1191,49 +1132,6 @@
         "npm",
         "npm run deploy:push:fast",
         "push",
-        "run"
-      ]
-    },
-    {
-      "id": "command:deploy:push:main",
-      "kind": "command",
-      "name": "npm run deploy:push:main",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "deploy",
-        "deploy:push:main",
-        "main",
-        "npm",
-        "npm run deploy:push:main",
-        "push",
-        "run"
-      ]
-    },
-    {
-      "id": "command:deploy:redeploy-main",
-      "kind": "command",
-      "name": "npm run deploy:redeploy-main",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "deploy",
-        "deploy:redeploy-main",
-        "npm",
-        "npm run deploy:redeploy-main",
-        "redeploy-main",
-        "run"
-      ]
-    },
-    {
-      "id": "command:deploy:revision",
-      "kind": "command",
-      "name": "npm run deploy:revision",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "deploy",
-        "deploy:revision",
-        "npm",
-        "npm run deploy:revision",
-        "revision",
         "run"
       ]
     },
@@ -26382,6 +26280,17 @@
       "tags": [
         "scripts/architecture/generate-architecture-docs",
         "scripts/architecture/generate-architecture-docs.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/assert-release-deployment-context.ts",
+      "kind": "script",
+      "name": "assert-release-deployment-context.ts",
+      "path": "scripts/assert-release-deployment-context.ts",
+      "tags": [
+        "scripts/assert-release-deployment-context",
+        "scripts/assert-release-deployment-context.ts",
         "ts"
       ]
     },
@@ -54863,6 +54772,18 @@
       ]
     },
     {
+      "id": "test:scripts/tests/main-push-deployment-isolation.test.ts",
+      "kind": "test",
+      "name": "main-push-deployment-isolation.test.ts",
+      "path": "scripts/tests/main-push-deployment-isolation.test.ts",
+      "tags": [
+        "scripts/tests/main-push-deployment-isolation",
+        "scripts/tests/main-push-deployment-isolation.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:scripts/tests/mirror-status-parity.test.ts",
       "kind": "test",
       "name": "mirror-status-parity.test.ts",
@@ -56975,21 +56896,6 @@
       "kind": "targets-runtime"
     },
     {
-      "from": "command:deploy:all:main",
-      "to": "script:scripts/deploy-all.ts",
-      "kind": "invokes"
-    },
-    {
-      "from": "command:deploy:all:main",
-      "to": "runtime:tooling",
-      "kind": "targets-runtime"
-    },
-    {
-      "from": "command:deploy:all:main",
-      "to": "runtime:web",
-      "kind": "targets-runtime"
-    },
-    {
       "from": "command:deploy:all:preflight",
       "to": "script:scripts/deploy-all.ts",
       "kind": "invokes"
@@ -57016,21 +56922,6 @@
     },
     {
       "from": "command:deploy:all:publish",
-      "to": "runtime:web",
-      "kind": "targets-runtime"
-    },
-    {
-      "from": "command:deploy:all:services",
-      "to": "script:scripts/deploy-all.ts",
-      "kind": "invokes"
-    },
-    {
-      "from": "command:deploy:all:services",
-      "to": "runtime:tooling",
-      "kind": "targets-runtime"
-    },
-    {
-      "from": "command:deploy:all:services",
       "to": "runtime:web",
       "kind": "targets-runtime"
     },
@@ -57065,21 +56956,6 @@
       "kind": "targets-runtime"
     },
     {
-      "from": "command:deploy:push:all",
-      "to": "script:scripts/deploy-push.ts",
-      "kind": "invokes"
-    },
-    {
-      "from": "command:deploy:push:all",
-      "to": "runtime:tooling",
-      "kind": "targets-runtime"
-    },
-    {
-      "from": "command:deploy:push:all",
-      "to": "runtime:web",
-      "kind": "targets-runtime"
-    },
-    {
       "from": "command:deploy:push:fast",
       "to": "script:scripts/deploy-push.ts",
       "kind": "invokes"
@@ -57091,66 +56967,6 @@
     },
     {
       "from": "command:deploy:push:fast",
-      "to": "runtime:web",
-      "kind": "targets-runtime"
-    },
-    {
-      "from": "command:deploy:push:main",
-      "to": "script:scripts/deploy-push.ts",
-      "kind": "invokes"
-    },
-    {
-      "from": "command:deploy:push:main",
-      "to": "runtime:tooling",
-      "kind": "targets-runtime"
-    },
-    {
-      "from": "command:deploy:push:main",
-      "to": "runtime:web",
-      "kind": "targets-runtime"
-    },
-    {
-      "from": "command:deploy:push",
-      "to": "script:scripts/deploy-push.ts",
-      "kind": "invokes"
-    },
-    {
-      "from": "command:deploy:push",
-      "to": "runtime:tooling",
-      "kind": "targets-runtime"
-    },
-    {
-      "from": "command:deploy:push",
-      "to": "runtime:web",
-      "kind": "targets-runtime"
-    },
-    {
-      "from": "command:deploy:redeploy-main",
-      "to": "script:scripts/redeploy-main-vercel.ts",
-      "kind": "invokes"
-    },
-    {
-      "from": "command:deploy:redeploy-main",
-      "to": "runtime:tooling",
-      "kind": "targets-runtime"
-    },
-    {
-      "from": "command:deploy:redeploy-main",
-      "to": "runtime:web",
-      "kind": "targets-runtime"
-    },
-    {
-      "from": "command:deploy:revision",
-      "to": "script:scripts/deploy-revision.ts",
-      "kind": "invokes"
-    },
-    {
-      "from": "command:deploy:revision",
-      "to": "runtime:tooling",
-      "kind": "targets-runtime"
-    },
-    {
-      "from": "command:deploy:revision",
       "to": "runtime:web",
       "kind": "targets-runtime"
     },
@@ -58836,17 +58652,17 @@
     },
     {
       "from": "command:test:deployment-tools",
+      "to": "test:scripts/tests/main-push-deployment-isolation.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:deployment-tools",
       "to": "test:scripts/tests/mirror-status-parity.test.ts",
       "kind": "invokes"
     },
     {
       "from": "command:test:deployment-tools",
       "to": "test:scripts/tests/pipeline-coverage.test.ts",
-      "kind": "invokes"
-    },
-    {
-      "from": "command:test:deployment-tools",
-      "to": "test:scripts/tests/release-secret-wiring.test.ts",
       "kind": "invokes"
     },
     {
@@ -85954,6 +85770,12 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "script:scripts/assert-release-deployment-context.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "script:scripts/backup-project-secrets.ts",
       "kind": "documents",
       "detail": "scripts/"
@@ -89849,6 +89671,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "test:scripts/tests/github-ci-policy.test.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "test:scripts/tests/main-push-deployment-isolation.test.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -135428,6 +135256,11 @@
       "detail": "../docs/generate"
     },
     {
+      "from": "script:scripts/assert-release-deployment-context.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
       "from": "script:scripts/backup-project-secrets.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
@@ -136061,6 +135894,12 @@
       "detail": "@asol/vercel-deploy-core"
     },
     {
+      "from": "script:scripts/deploy-control-service.ts",
+      "to": "script:scripts/assert-release-deployment-context.ts",
+      "kind": "imports",
+      "detail": "./assert-release-deployment-context"
+    },
+    {
       "from": "script:scripts/deploy-main-app.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
@@ -136076,6 +135915,12 @@
       "to": "package:@asol/vercel-deploy-core",
       "kind": "imports",
       "detail": "@asol/vercel-deploy-core"
+    },
+    {
+      "from": "script:scripts/deploy-main-app.ts",
+      "to": "script:scripts/assert-release-deployment-context.ts",
+      "kind": "imports",
+      "detail": "./assert-release-deployment-context"
     },
     {
       "from": "script:scripts/deploy-push-target-choice.ts",
@@ -136178,6 +136023,12 @@
       "to": "package:@asol/vercel-deploy-core",
       "kind": "imports",
       "detail": "@asol/vercel-deploy-core"
+    },
+    {
+      "from": "script:scripts/deploy-service.ts",
+      "to": "script:scripts/assert-release-deployment-context.ts",
+      "kind": "imports",
+      "detail": "./assert-release-deployment-context"
     },
     {
       "from": "script:scripts/deploy-service.ts",
@@ -246221,6 +246072,11 @@
       "from": "test:scripts/tests/github-ci-policy.test.ts",
       "to": "script:scripts/github-ci-policy.ts",
       "kind": "tests"
+    },
+    {
+      "from": "test:scripts/tests/main-push-deployment-isolation.test.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
     },
     {
       "from": "test:scripts/tests/mirror-status-parity.test.ts",

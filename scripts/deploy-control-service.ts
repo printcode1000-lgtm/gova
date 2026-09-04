@@ -2,6 +2,7 @@ import { execFileSync } from 'child_process';
 import { existsSync } from 'fs';
 import dotenv from 'dotenv';
 import { CONTROL_DECLARATION, deployAccountService } from '@asol/vercel-deploy-core';
+import { assertReleaseDeploymentContext } from './assert-release-deployment-context';
 
 if (existsSync('.env.local')) dotenv.config({ path: '.env.local', quiet: true });
 dotenv.config({ path: '.env', quiet: true });
@@ -20,6 +21,8 @@ function syncSharedSources(): void {
     cwd: process.cwd(),
   });
 }
+
+assertReleaseDeploymentContext('control:deploy');
 
 deployAccountService({
   declaration: CONTROL_DECLARATION,

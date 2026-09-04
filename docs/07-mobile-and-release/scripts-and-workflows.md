@@ -280,7 +280,7 @@ resolved by path. It is in `deploy:all` preflight and in `verify:all`.
 
 See [github-ci-policy.md](./github-ci-policy.md). GitHub Actions is not the command transport for local agents. The only local-agent workflow is the manual `local-agent-bootstrap.yml`, used for initial install/reinstall/recovery of `gova-agent-gateway.service`. Normal agent commands, reads, writes, locks, messages, checkpoints, handoffs, and streaming results travel directly through the persistent gateway and create no GitHub Actions run.
 
-The production deploy workflow remains tied to pushes on `main`. Documentation validation remains path-filtered. `tools/local-agent/**` is control-plane-only and is excluded from production deployment triggering. Agent task work is isolated in local worktrees under `/home/hesham/gova-agents` and is submitted to `integration` only after verification.
+There is no production deploy workflow. A push to `main` is Git-only; production deployment is available only through `deploy:all` and `deploy:push:fast`. Documentation validation remains path-filtered. Agent task work is isolated in local worktrees under `/home/hesham/gova-agents` and is submitted to `integration` only after verification.
 
 
 ## Branch protection

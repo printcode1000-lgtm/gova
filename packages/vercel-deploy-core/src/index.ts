@@ -25,6 +25,14 @@ export * from './release-rollback';
 export { deleteProjectEnv } from './project-env';
 
 export const RELEASE_ROLLBACK_ACCOUNTS = ["gova", "control", ...RELEASE_WORKLOADS] as const;
+const RELEASE_DEPLOYMENT_CONTEXT = 'ASOL_RELEASE_DEPLOYMENT_CONTEXT';
+
+function assertApprovedReleaseDeployment(): void {
+  if (process.env[RELEASE_DEPLOYMENT_CONTEXT] === 'approved') return;
+  throw new Error(
+    'Direct Vercel account deployment is disabled. Use npm run deploy:all or npm run deploy:push:fast.',
+  );
+}
 
 export function vercelAccessForReleaseAccount(account: string): { token: string; teamId?: string } {
   const declaration = ACCOUNT_DECLARATIONS[account];
@@ -507,6 +515,7 @@ export interface DeployAccountServiceOptions {
 }
 
 export async function deployAccountService(options: DeployAccountServiceOptions): Promise<void> {
+  assertApprovedReleaseDeployment();
   const { declaration, syncSources } = options;
   const env = options.env ?? process.env;
 
@@ -594,6 +603,7 @@ export interface DeployAccountRootAppOptions {
 export async function deployAccountRootApp(
   options: DeployAccountRootAppOptions,
 ): Promise<VercelDeploymentReport> {
+  assertApprovedReleaseDeployment();
   const { declaration } = options;
   const env = options.env ?? process.env;
 

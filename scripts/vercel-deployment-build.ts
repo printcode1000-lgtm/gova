@@ -76,7 +76,7 @@ async function main(): Promise<void> {
     throw new Error(`build:vercel is the gova frontend builder, not runtime "${runtime}".`);
   }
 
-  // A GitHub-linked gova build starts at the same time as the release workflow.
+  // An explicit release starts the gova build only after its backend prerequisites.
   // It must not produce a publishable frontend artifact until control proves
   // that control + all six Git-disconnected workloads are READY for this exact
   // 40-character Git SHA. Failed/timeout readiness is fail-closed, leaving the

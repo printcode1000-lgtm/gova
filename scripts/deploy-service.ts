@@ -2,8 +2,10 @@ import { existsSync } from "node:fs";
 import dotenv from "dotenv";
 import { deployAccountService } from "@asol/vercel-deploy-core";
 import { resolveReleaseWorkloadDeclaration, syncReleaseWorkloadSources } from "./sync-service-sources";
+import { assertReleaseDeploymentContext } from "./assert-release-deployment-context";
 
 export async function deployReleaseWorkload(service: string): Promise<void> {
+  assertReleaseDeploymentContext(`${service}:deploy`);
   if (existsSync(".env.local")) dotenv.config({ path: ".env.local", quiet: true });
   dotenv.config({ path: ".env", quiet: true });
   const declaration = resolveReleaseWorkloadDeclaration(service);

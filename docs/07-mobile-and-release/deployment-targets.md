@@ -71,7 +71,7 @@ production transaction. In order, it
 captures the production rollback baseline for `gova`, `control`, and the six
 workloads; deploys the six isolated projects; deploys `control` at the same SHA
 through its own mandatory step; publishes durable exact-SHA release readiness to
-the control plane; and only then waits for the GitHub-linked main project. The
+the control plane; and only then explicitly deploys the main project. The
 gova build is started explicitly only after that readiness is published, so main
 is never deployed against unfinished backends and a failed release leaves the previous
 gova production deployment active. Any
@@ -174,8 +174,8 @@ advanced while the long preflight ran, the run stops without staging or
 committing; restart the full release so the newer tree is checked too. Only
 then does it create or verify the encrypted secret backup, stage the
 complete working tree, and create a main deployment commit named
-`deploy(main): <ISO timestamp>`. It pushes `main` to GitHub, which lets the one
-GitHub-linked Vercel project auto-deploy. The six isolated Vercel deployments
+`deploy(main): <ISO timestamp>`. It pushes `main` to GitHub without starting a
+Vercel deployment. The release's explicit main phase deploys Gova. The six isolated Vercel deployments
 and main verification then start together; the command waits for their combined
 report and prints every result, including failures. If the configured GitHub credential
 is needed, the retry temporarily updates the local Git remote and still runs

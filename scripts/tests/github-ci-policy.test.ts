@@ -28,4 +28,4 @@ assert.ok(localAgentBootstrapWorkflowViolations(bootstrap.replace("workflow_disp
 assert.ok(localAgentBootstrapWorkflowViolations(bootstrap.replace("- A", "- B")).some((e) => e.includes("Mode A")));
 assert.ok(docsWorkflowViolations(`${docs}\n      - run: npm run lint\n`).some((e) => e.includes("npm run lint") || e.includes("not allowed")));
 
-console.log("GitHub CI policy tests passed for docs + deploy + persistent local-agent bootstrap.");
+console.log("GitHub CI policy tests passed for docs validation and persistent local-agent bootstrap.");

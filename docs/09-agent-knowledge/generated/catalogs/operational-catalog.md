@@ -89,17 +89,10 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run dependencies:install` | `node scripts/install-compatible-dependencies.mjs` |
 | `npm run dependencies:outdated` | `npx tsx scripts/check-environment-requirements.ts --scenario=all --check-outdated` |
 | `npm run deploy:all` | `npx tsx scripts/deploy-all.ts` |
-| `npm run deploy:all:main` | `npx tsx scripts/deploy-all.ts --phase=main` |
 | `npm run deploy:all:preflight` | `npx tsx scripts/deploy-all.ts --phase=preflight` |
 | `npm run deploy:all:publish` | `npx tsx scripts/deploy-all.ts --phase=publish` |
-| `npm run deploy:all:services` | `npx tsx scripts/deploy-all.ts --phase=services` |
 | `npm run deploy:env:push` | `npx tsx scripts/push-production-deploy-env.ts` |
-| `npm run deploy:push` | `npx tsx scripts/deploy-push.ts` |
-| `npm run deploy:push:all` | `npx tsx scripts/deploy-push.ts --vercel-target=all` |
 | `npm run deploy:push:fast` | `npx tsx scripts/deploy-push.ts --fast --vercel-target=all` |
-| `npm run deploy:push:main` | `npx tsx scripts/deploy-push.ts --vercel-target=none` |
-| `npm run deploy:redeploy-main` | `npx tsx scripts/redeploy-main-vercel.ts` |
-| `npm run deploy:revision` | `npx tsx scripts/deploy-revision.ts` |
 | `npm run dev` | `next dev --turbo --port 3001` |
 | `npm run dev:checked` | `npm run server:stop && npm run branding:generate && npm run app:init && npm run catalog:validate && next dev --turbo --port 3001` |
 | `npm run dev:distributed` | `npx tsx scripts/dev-distributed.ts` |
@@ -223,7 +216,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:delivery-planner` | `npx tsx src/features/cart/tests/multi-seller-delivery-planner.test.ts` |
 | `npm run test:deploy-all-resume` | `npx tsx scripts/tests/deploy-all-resume.test.ts` |
 | `npm run test:deploy-runbook-execution` | `npx tsx scripts/architecture/deploy-runbook-execution.test.ts` |
-| `npm run test:deployment-tools` | `npx tsx scripts/tests/vercel-deployment-monitor.test.ts && npx tsx scripts/tests/run-deployment-npm-script.test.ts && npx tsx scripts/tests/deploy-all.test.ts && npx tsx scripts/tests/deploy-state-revision.test.ts && npm run test:deploy-all-resume && npx tsx scripts/tests/deploy-push.test.ts && npx tsx scripts/tests/generic-service-tooling.test.ts && npx tsx scripts/tests/route-ownership-coverage.test.ts && npx tsx scripts/tests/mirror-status-parity.test.ts && npx tsx scripts/tests/service-cors-boundary.test.ts && npx tsx scripts/tests/vercelignore-contract.test.ts && npx tsx scripts/tests/pipeline-coverage.test.ts && npx tsx scripts/tests/github-ci-policy.test.ts && npx tsx scripts/tests/vercel-deployment-guards.test.ts && npx tsx scripts/tests/secret-presence-status.test.ts && npx tsx scripts/tests/fastlane-secret-policy.test.ts && npx tsx scripts/tests/release-secret-wiring.test.ts && npx tsx scripts/tests/expected-deployed-release-marker.test.ts && npm run github:ci-policy` |
+| `npm run test:deployment-tools` | `npx tsx scripts/tests/vercel-deployment-monitor.test.ts && npx tsx scripts/tests/run-deployment-npm-script.test.ts && npx tsx scripts/tests/deploy-all.test.ts && npx tsx scripts/tests/deploy-state-revision.test.ts && npm run test:deploy-all-resume && npx tsx scripts/tests/deploy-push.test.ts && npx tsx scripts/tests/main-push-deployment-isolation.test.ts && npx tsx scripts/tests/generic-service-tooling.test.ts && npx tsx scripts/tests/route-ownership-coverage.test.ts && npx tsx scripts/tests/mirror-status-parity.test.ts && npx tsx scripts/tests/service-cors-boundary.test.ts && npx tsx scripts/tests/vercelignore-contract.test.ts && npx tsx scripts/tests/pipeline-coverage.test.ts && npx tsx scripts/tests/github-ci-policy.test.ts && npx tsx scripts/tests/vercel-deployment-guards.test.ts && npx tsx scripts/tests/secret-presence-status.test.ts && npx tsx scripts/tests/fastlane-secret-policy.test.ts && npx tsx scripts/tests/expected-deployed-release-marker.test.ts && npm run github:ci-policy` |
 | `npm run test:dev-cloud-backup` | `cross-env NODE_OPTIONS=<redacted> npx tsx src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` |
 | `npm run test:dev-core` | `npx tsx packages/dev-core/src/tests/index.test.ts` |
 | `npm run test:env-core` | `npx tsx packages/env-core/src/tests/index.test.ts` |

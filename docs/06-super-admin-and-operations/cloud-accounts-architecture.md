@@ -40,7 +40,7 @@ of them. See [The control runtime](control-runtime.md).
 
 | Account | Email | Project | Serves | GitHub | Updated by |
 |---|---|---|---|---|---|
-| `hesham-101` | `print.code.1000@gmail.com` | `gova` | frontend, static assets, `/.well-known/**`, `/api/health`, and the compatibility redirect boundary. No Business API. | **connected** — every push redeploys | pushing to GitHub |
+| `hesham-101` | `print.code.1000@gmail.com` | `gova` | frontend, static assets, `/.well-known/**`, `/api/health`, and the compatibility redirect boundary. No Business API. | connected — Git deploy disabled | `deploy:all` or `deploy:push:fast` |
 | `asol-control` | `tenderxcontractors@gmail.com` | `asol-control` | Super Admin server operations, System Logs, OTA administration, build/release jobs, production deployment authority, Vercel Sandbox orchestration, callbacks, release readiness | not connected | `npm run control:deploy` |
 | `submain` | `groupstenderximages@gmail.com` | `asol-submain` | search (`/api/search/*`), cart checkout, order creation (`POST /api/orders/from-cart`, `POST /api/orders/custom-request-from-profile`) | not connected | `npm run submain:deploy` |
 | `sub2main` | `tenderx.engineer100@gmail.com` | `asol-sub2main` | seller writes: product mutations, profile updates, storage uploads, pharmacy catalog | not connected | `npm run sub2main:deploy` |

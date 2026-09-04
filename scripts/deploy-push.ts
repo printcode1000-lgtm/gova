@@ -820,6 +820,10 @@ export const __testables = {
 
 async function main(): Promise<void> {
   const { flags, targetArgs } = parseArgv(process.argv.slice(2));
+  if (!flags.fast) {
+    fail("Direct deploy:push is disabled. Use npm run deploy:all or npm run deploy:push:fast.");
+    return;
+  }
   const isolatedTargets = await resolveServiceDeployTargets(targetArgs);
 
   // A maintenance deploy diverts before any branch check, because it writes

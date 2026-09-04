@@ -1076,21 +1076,6 @@
       ]
     },
     {
-      "id": "command:deploy:all:main",
-      "kind": "command",
-      "name": "npm run deploy:all:main",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "all",
-        "deploy",
-        "deploy:all:main",
-        "main",
-        "npm",
-        "npm run deploy:all:main",
-        "run"
-      ]
-    },
-    {
       "id": "command:deploy:all:preflight",
       "kind": "command",
       "name": "npm run deploy:all:preflight",
@@ -1121,21 +1106,6 @@
       ]
     },
     {
-      "id": "command:deploy:all:services",
-      "kind": "command",
-      "name": "npm run deploy:all:services",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "all",
-        "deploy",
-        "deploy:all:services",
-        "npm",
-        "npm run deploy:all:services",
-        "run",
-        "services"
-      ]
-    },
-    {
       "id": "command:deploy:env:push",
       "kind": "command",
       "name": "npm run deploy:env:push",
@@ -1146,35 +1116,6 @@
         "env",
         "npm",
         "npm run deploy:env:push",
-        "push",
-        "run"
-      ]
-    },
-    {
-      "id": "command:deploy:push",
-      "kind": "command",
-      "name": "npm run deploy:push",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "deploy",
-        "deploy:push",
-        "npm",
-        "npm run deploy:push",
-        "push",
-        "run"
-      ]
-    },
-    {
-      "id": "command:deploy:push:all",
-      "kind": "command",
-      "name": "npm run deploy:push:all",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "all",
-        "deploy",
-        "deploy:push:all",
-        "npm",
-        "npm run deploy:push:all",
         "push",
         "run"
       ]
@@ -1191,49 +1132,6 @@
         "npm",
         "npm run deploy:push:fast",
         "push",
-        "run"
-      ]
-    },
-    {
-      "id": "command:deploy:push:main",
-      "kind": "command",
-      "name": "npm run deploy:push:main",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "deploy",
-        "deploy:push:main",
-        "main",
-        "npm",
-        "npm run deploy:push:main",
-        "push",
-        "run"
-      ]
-    },
-    {
-      "id": "command:deploy:redeploy-main",
-      "kind": "command",
-      "name": "npm run deploy:redeploy-main",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "deploy",
-        "deploy:redeploy-main",
-        "npm",
-        "npm run deploy:redeploy-main",
-        "redeploy-main",
-        "run"
-      ]
-    },
-    {
-      "id": "command:deploy:revision",
-      "kind": "command",
-      "name": "npm run deploy:revision",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "deploy",
-        "deploy:revision",
-        "npm",
-        "npm run deploy:revision",
-        "revision",
         "run"
       ]
     },
@@ -26382,6 +26280,17 @@
       "tags": [
         "scripts/architecture/generate-architecture-docs",
         "scripts/architecture/generate-architecture-docs.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/assert-release-deployment-context.ts",
+      "kind": "script",
+      "name": "assert-release-deployment-context.ts",
+      "path": "scripts/assert-release-deployment-context.ts",
+      "tags": [
+        "scripts/assert-release-deployment-context",
+        "scripts/assert-release-deployment-context.ts",
         "ts"
       ]
     },
@@ -54858,6 +54767,18 @@
       "tags": [
         "scripts/tests/github-ci-policy",
         "scripts/tests/github-ci-policy.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:scripts/tests/main-push-deployment-isolation.test.ts",
+      "kind": "test",
+      "name": "main-push-deployment-isolation.test.ts",
+      "path": "scripts/tests/main-push-deployment-isolation.test.ts",
+      "tags": [
+        "scripts/tests/main-push-deployment-isolation",
+        "scripts/tests/main-push-deployment-isolation.test.ts",
         "test",
         "ts"
       ]

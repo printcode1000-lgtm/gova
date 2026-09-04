@@ -3,6 +3,7 @@ import { spawn, type ChildProcess } from "node:child_process";
 import type { VercelDeploymentReport } from "@asol/vercel-deploy-core";
 
 const REPORT_MARKER = "[ASOL_DEPLOY_REPORT] ";
+const RELEASE_DEPLOYMENT_CONTEXT = "ASOL_RELEASE_DEPLOYMENT_CONTEXT";
 const DEPLOY_ONLY_NPM_CONFIG_KEYS = new Set([
   "npm_config_phase",
   "npm_config_from_phase",
@@ -97,7 +98,7 @@ export async function runDeploymentNpmScript(
 
   const child: ChildProcess = spawn(command, args, {
     cwd: process.cwd(),
-    env: childProcessEnvForDeployment(options.env),
+    env: childProcessEnvForDeployment({ ...options.env, [RELEASE_DEPLOYMENT_CONTEXT]: "approved" }),
     stdio: capture || grouped ? ["ignore", "pipe", "pipe"] : "inherit",
     shell: false,
     windowsHide: true,
