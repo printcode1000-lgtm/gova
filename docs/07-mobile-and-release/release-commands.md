@@ -252,16 +252,16 @@ are now converged onto `nextjs` on every deploy.
 
 ## The gova build view and Vercel's output directory
 
-`build:vercel` generates `.tmp-gova-build/` — a deterministic copy of the
-repository with the Business API route trees left out — and runs `next build`
-**inside it**. The artifact therefore lands in `.tmp-gova-build/.next`, while
-Vercel's Next.js builder looks for `.next` at the project root.
+The release uploader generates `.tmp-gova-build/` — a deterministic copy of the
+repository with the Business API route trees left out — then uploads that view
+as Vercel's project root. It marks the upload with `ASOL_GOVA_UPLOAD_VIEW=1`, so
+`build:vercel` builds the already-uploaded root and writes `.next` there.
 
-`vercel.json` sets `outputDirectory` to `.tmp-gova-build/.next` for exactly this
-reason. Without it a deployment fails with `NEXT_NO_ROUTES_MANIFEST` *after* a
-build that succeeded and passed every artifact scan — the isolation worked, the
-output was simply somewhere Vercel does not read. `vercel-deployment-guards.test.ts`
-pins the value against `GOVA_DEPLOYMENT_DIR` so the two cannot drift.
+The view replaces the application backend `instrumentation.ts` with an empty
+frontend entrypoint and skips the application's global Drizzle trace inclusion.
+Next traces conditional imports, so both protections are required to prevent
+database drivers from reaching a frontend artifact that has no database
+capability. Its `vercel.json` sets `outputDirectory` to `.next`.
 
 This failure could only appear once a SHA actually crossed the readiness
 barrier; every earlier attempt failed before the gova build was allowed to

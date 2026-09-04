@@ -51,6 +51,14 @@ export const GOVA_OMITTED_APP_TREES = [
 export const GOVA_OMITTED_FILES = [] as const;
 
 const GOVA_VIEW_FILE_OVERRIDES: Record<string, string> = {
+  // Next traces every import reachable from instrumentation, including imports
+  // behind a runtime branch. The application instrumentation registers backend
+  // ports and would therefore ship database drivers with every gova page. The
+  // frontend has no server capability to register: its only handler is health
+  // and its API boundary is the proxy, so this upload has an intentionally
+  // empty instrumentation entrypoint.
+  'src/instrumentation.ts': `export async function register(): Promise<void> {}
+`,
   'src/app/s/product/page.tsx': `import { Suspense } from "react";
 
 import { ProductPageContent } from "@/features/product/ui";

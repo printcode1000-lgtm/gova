@@ -42,6 +42,11 @@ function fixtureRepository(): string {
   assert.ok(existsSync(path.join(view, 'src/app/page.tsx')), 'pages must survive');
   assert.ok(existsSync(path.join(view, 'public/logo.png')), 'static assets must survive');
   assert.ok(existsSync(path.join(view, 'src/proxy.ts')), 'gova compatibility proxy must survive');
+  assert.equal(
+    readFileSync(path.join(view, 'src/instrumentation.ts'), 'utf8'),
+    'export async function register(): Promise<void> {}\n',
+    'gova must not trace the application backend composition through instrumentation',
+  );
   assert.ok(existsSync(path.join(view, 'node_modules/@asol/gova-deployment-core')), 'workspace packages resolve inside the view');
   const uploadConfig = JSON.parse(readFileSync(path.join(view, 'vercel.json'), 'utf8')) as {
     outputDirectory?: string;
