@@ -55716,6 +55716,18 @@
       ]
     },
     {
+      "id": "test:src/features/seller-card/application/services/seller-card-presenter.test.ts",
+      "kind": "test",
+      "name": "seller-card-presenter.test.ts",
+      "path": "src/features/seller-card/application/services/seller-card-presenter.test.ts",
+      "tags": [
+        "src/features/seller-card/application/services/seller-card-presenter",
+        "src/features/seller-card/application/services/seller-card-presenter.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:src/features/seller-discounts/tests/seller-discount-engine.test.ts",
       "kind": "test",
       "name": "seller-discount-engine.test.ts",
