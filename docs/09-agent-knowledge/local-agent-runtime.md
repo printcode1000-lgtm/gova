@@ -1,12 +1,25 @@
 # Persistent Local Agent Runtime
 
-## Final Migration State (2026-09-02)
+## Current Local-Agent Operating Policy (2026-09-04)
+
+This section supersedes the older gateway-first migration notes below for normal local-agent work.
+
+- The default local workspace is the canonical checkout at `/home/hesham/gova`. Local agents edit requested files there directly.
+- Do not create per-task worktrees or `agent/*` branches unless the user explicitly requests isolated worktree execution.
+- Do not automatically register with, send commands through, or otherwise use `gova-agent-gateway`/localhost agent control. Gateway-managed execution is opt-in and requires an explicit user request.
+- Do not automatically submit completed work to `integration`, commit, push, or deploy. Each of those actions requires explicit user intent.
+- GitHub `workflow_dispatch` through `.github/workflows/local-agent-bootstrap.yml` is the primary remote bootstrap/entry path for preparing or recovering the local device. Bootstrap may install or restart gateway infrastructure, but that infrastructure is not the default execution path for local agents.
+- Existing local modifications in `/home/hesham/gova` must be preserved. A local agent must not reset, replace, or relocate them merely to obtain isolation.
+
+The sections dated 2026-09-02 and 2026-09-03 below are retained as historical migration and verification records. Where they describe gateway-first normal execution, this current policy takes precedence.
+
+## Historical Migration State (2026-09-02, superseded by the 2026-09-04 policy)
 
 - GitHub has exactly two remote branches: `main` and `integration`. Agent task branches are local-only Git worktrees.
-- Normal agent commands use the persistent `gova-agent-gateway` service and do not dispatch GitHub Actions jobs.
+- Historical state at that checkpoint: normal agent commands used the persistent `gova-agent-gateway` service. This is no longer the default after the 2026-09-04 policy above.
 - Runtime state is SQLite WAL under `/home/hesham/.local/share/gova-agent-runtime/`.
 - Agent worktrees live under `/home/hesham/gova-agents/`; the shared integration worktree is `/home/hesham/gova-agents/integration`.
-- New task worktrees start from the latest `origin/integration`, so every new agent sees all previously integrated work.
+- Historical state at that checkpoint: new task worktrees started from `origin/integration`. Current default local work does not create a task worktree.
 - The only Local Runner GitHub workflow is `local-agent-bootstrap.yml`, which is manual bootstrap/reinstall only.
 - The retired request branch, dispatch workflows, `.agent-control`, `@asol/local-agent-core`, and `scripts/local-agent-*.ts` control plane have been removed.
 - Normal completion integrates local commits through the gateway into `integration`; promotion from `integration` to `main` is separate and deliberate.

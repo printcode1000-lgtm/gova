@@ -2,6 +2,10 @@
 
 ## Purpose
 
+## Scope boundary
+
+This recovery facility belongs to the **optional Gateway-managed/isolation mode**. Normal direct local-agent editing of `/home/hesham/gova` does not create Gateway task state, task worktrees, or `agent/*` branches, so it does not require this recovery flow. Use this document only when managed runtime recovery was explicitly requested or when recovering historical managed state.
+
 The persistent local-agent runtime has a self-contained recovery command. It is intended to rebuild the execution control plane after repository loss, runtime-database damage, machine replacement, or accidental worktree deletion without using `main` as a recovery channel.
 
 The recovery entry point is:

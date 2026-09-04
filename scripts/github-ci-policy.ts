@@ -398,8 +398,8 @@ export function deploymentWorkflowViolations(source: string): string[] {
 
 /**
  * Shared requirements for every job that runs on the local pool: it must work
- * in `/home/hesham/gova`, reach the coordination channel there, and never
- * re-materialise the workspace it already has.
+ * in `/home/hesham/gova`, use that canonical checkout as the bootstrap source,
+ * and never re-materialise or route normal work through an integration worktree.
  */
 export function localAgentBootstrapWorkflowViolations(source: string): string[] {
   const errors: string[] = [];
@@ -415,7 +415,8 @@ export function localAgentBootstrapWorkflowViolations(source: string): string[] 
   // the operator to guess which step tripped it.
   const reinstallSteps = ["actions/checkout@", "actions/setup-node@", "npm ci"].filter((step) => body.includes(step));
   if (reinstallSteps.length > 0) errors.push(`Local agent bootstrap must reuse the host checkout/toolchain and must not reinstall dependencies. Forbidden step(s): ${reinstallSteps.join(", ")}.`);
-  if (!body.includes("/home/hesham/gova-agents/integration") || !body.includes("tools/local-agent/install.sh")) errors.push("Local agent bootstrap must install from the integration worktree.");
+  if (!body.includes("GOVA_AGENT_REPO=/home/hesham/gova") || !body.includes("/home/hesham/gova/tools/local-agent/install.sh")) errors.push("Local agent bootstrap must install from the canonical checkout `/home/hesham/gova`.");
+  if (body.includes("/home/hesham/gova-agents/integration") || /git\s+-C\s+\/home\/hesham\/gova\s+worktree\s+add/.test(body)) errors.push("Local agent bootstrap must not create or use the integration worktree.");
   const jobIds = docsWorkflowJobIds(body);
   if (jobIds.length !== 1 || jobIds[0] !== "bootstrap") errors.push(`Local agent bootstrap must contain exactly one bootstrap job. Found: ${jobIds.join(", ") || "(none)"}.`);
   return errors;

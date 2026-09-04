@@ -1,51 +1,47 @@
-# Persistent Local Agent Runtime
+# Local Agent Runner Pool
 
 ## Purpose
 
-`/home/hesham/gova` is the canonical repository clone and Git object source. Agents do not mutate it as a shared task workspace. The persistent `gova-agent-gateway` multiplexes all agent operations after a one-time/manual GitHub bootstrap.
+`/home/hesham/gova` is the canonical repository clone **and the default local-agent working tree**. GitHub `workflow_dispatch` through the manual bootstrap workflow is the primary remote entry/recovery path. Self-hosted runners provide physical execution on the machine; they do not imply a separate task workspace.
 
-## Topology
+## Default topology
 
 ```text
-GitHub Actions (manual bootstrap/recovery only)
-  -> gova self-hosted runner
-     -> tools/local-agent/install.sh
-        -> gova-agent-gateway.service
+GitHub workflow_dispatch
+  -> Gova self-hosted runner
+     -> bootstrap infrastructure from /home/hesham/gova
 
-Agents
-  <-> persistent gateway API
-      <-> SQLite WAL runtime state
-      <-> isolated local Git worktrees
-      <-> integration submit lock
+Local agent
+  -> /home/hesham/gova
+     -> direct inspect / edit / verify
 ```
 
-Normal agent commands do not create GitHub jobs.
+A normal local task creates no Gateway runtime rows, no `agent/*` branch, and no per-task worktree.
 
 ## Filesystem
 
-- Canonical clone: `/home/hesham/gova`.
-- Agent/task worktrees: `/home/hesham/gova-agents/<agent>/<task>/`.
-- Shared integration worktree: `/home/hesham/gova-agents/integration`.
-- Runtime state: `/home/hesham/.local/share/gova-agent-runtime/runtime.sqlite3`.
-- Authentication material: `/home/hesham/.config/gova-agent/auth`.
-- Installed gateway code: `/home/hesham/.local/lib/gova-agent/`.
+- Canonical/default working clone: `/home/hesham/gova`.
+- Optional managed worktree root: `/home/hesham/gova-agents/`.
+- Optional Gateway runtime state: `/home/hesham/.local/share/gova-agent-runtime/runtime.sqlite3`.
+- Gateway authentication material: `/home/hesham/.config/gova-agent/auth`.
+- Installed optional Gateway code: `/home/hesham/.local/lib/gova-agent/`.
 
-Each task uses a local-only `agent/<agent>/<task>` branch. These branches are filesystem/Git isolation details and are never published.
+The optional directories and services may exist while unused. Their presence does not select managed mode.
 
-## Persistent state and coordination
+## Optional managed coordination
 
-The runtime stores agents, sessions, tasks, commands, locks, messages, handoffs, and append-only events. Tasks persist goal, completed work, remaining work, decisions, modified files, commits, commands, tests/results, failures, blockers, dependencies, next action, and handoff notes so another equal-capability agent can resume at any time.
+When the user explicitly requests Gateway-managed isolation or multi-agent coordination, the existing runtime can store agents, sessions, tasks, commands, locks, messages, handoffs, and events. In that explicit mode, local-only worktrees/branches and `integration-submit` may be used according to the Gateway contract.
 
-Locks are leased and stale locks are recoverable. Command stdout/stderr and exit state are persisted independently from the requesting connection.
+These capabilities are not part of normal local-agent completion.
 
 ## Integration
 
-Remote GitHub state is limited to `main` and `integration`. Completed verified task commits are submitted through `/v1/integration/submit`, which serializes integration with a ref lock, verifies requested commands, and publishes `integration` through the authenticated GitHub API. Promotion to `main` is outside normal agent task completion.
+Remote GitHub state is limited to `main` and `integration`. `integration` is not an automatic completion lane. It is used only when the user explicitly requests integration/aggregation.
 
 ## Bootstrap
 
-`.github/workflows/local-agent-bootstrap.yml` is the only Local Runner workflow and is manual-only. It exists for first install/reinstall/recovery. It is not a command channel and must not be triggered by pushes after migration.
+`.github/workflows/local-agent-bootstrap.yml` is the only Local Runner bootstrap workflow and is manual-only. It installs/reinstalls from `/home/hesham/gova`, preserves the canonical working tree, and must not create or reset a persistent integration worktree.
 
-## Retired architecture
+## Retired automatic behavior
 
-The GitHub-dispatch workflows, request branch, repository control-plane package/scripts, and old machine-local coordination/worktree directories are retired. There must be no second active control plane alongside the persistent gateway.
+The following are not default behavior: Gateway-first command routing, automatic per-task worktree creation, automatic `agent/*` branches, automatic `integration-submit`, and automatic Git/release actions. They may occur only when explicitly requested for the current task.

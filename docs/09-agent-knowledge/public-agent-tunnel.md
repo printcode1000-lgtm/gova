@@ -1,5 +1,9 @@
 # Gova Local Agent Public Tunnel
 
+## Local-Agent Execution Boundary
+
+This tunnel is infrastructure for explicitly requested gateway-controlled access. It does not make the gateway the default execution path for local agents. Normal local-agent work edits `/home/hesham/gova` directly and must not use the localhost gateway, create agent worktrees, or submit to `integration` unless the user explicitly requests that mode. GitHub bootstrap remains the primary remote entry/recovery path.
+
 ## Purpose
 
 The Gova local-agent runtime owns its public Cloudflare Quick Tunnel directly. It does not depend on the `p2p-link` companion repository.
