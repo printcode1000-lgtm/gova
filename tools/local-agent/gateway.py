@@ -325,10 +325,10 @@ def canonical_dirty_paths():
         paths.update(item.decode('utf-8','surrogateescape') for item in raw.split(b'\0') if item)
     return paths
 
-def project_cloud_bridge_commit(agent_id, task_id, integration_sha):
+def project_cloud_bridge_commit(agent_id, task_id, integration_sha, base=None):
     mode,transport=task_execution(task_id)
     if mode != 'B' or transport != 'cloud-bridge': return []
-    parent=run(['git','rev-parse',f'{integration_sha}^'],REPO).stdout.strip()
+    parent=base or run(['git','rev-parse',f'{integration_sha}^'],REPO).stdout.strip()
     paths=changed_paths(parent,integration_sha)
     overlap=sorted(paths & canonical_dirty_paths())
     if overlap:
@@ -370,7 +370,15 @@ def canonical_project(agent_id, task_id, integration_sha):
     run(['git', 'fetch', '--prune', 'origin', 'integration'], REPO)
     if run(['git', 'merge-base', '--is-ancestor', sha, 'origin/integration'], REPO, check=False).returncode:
         raise RuntimeError(f'{sha} is not published on origin/integration; only an integration commit may be projected')
-    return sha, project_cloud_bridge_commit(agent_id, task_id, sha)
+    # The delta is measured from the fork point with `main`, not from the commit's
+    # own parent. A cloud task is described as one commit, but nothing stops an
+    # agent from publishing two, and projecting only the last one would either
+    # drop the earlier hunks or fail to apply at all. The fork point is the exact
+    # boundary of that task's own work, whatever number of commits it took, and it
+    # stays correct when `main` moves on afterwards.
+    run(['git', 'fetch', '--prune', 'origin', 'main'], REPO)
+    base = run(['git', 'merge-base', 'origin/main', sha], REPO).stdout.strip()
+    return sha, project_cloud_bridge_commit(agent_id, task_id, sha, base)
 
 def integration_submit(agent_id, task_id, commit_sha, verification=None):
     require_mode_a_bootstrap(task_id)

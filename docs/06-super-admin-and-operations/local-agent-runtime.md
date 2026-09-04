@@ -43,11 +43,11 @@ A cloud agent has no route to the Gateway: the service listens on the device, it
    git fetch origin main integration
    git push origin "$(git commit-tree origin/main^{tree} -p origin/integration -p origin/main -m 'chore(integration): align tree with main')":refs/heads/integration
    ```
-2. It pushes exactly one verified commit to `integration`. No other remote ref is involved; `agent/*` branch creation is blocked by the repository ruleset.
+2. It pushes its verified work to `integration`. No other remote ref is involved; `agent/*` branch creation is blocked by the repository ruleset. One commit is preferred, but the projection measures its delta from `git merge-base origin/main <sha>`, so a task that took several commits lands whole rather than losing its earlier hunks.
 3. It dispatches `local-agent-project.yml` with `agent_id`, `task_id`, `goal`, and the full 40-character `integration_sha`. Step 2 needs only repository write access, which a connected agent already has; this step needs `actions: write`. An agent whose connection lacks it reports the SHA instead, and an operator runs the device-side command below — the gate and its guarantees are identical either way.
 4. The self-hosted runner executes `tools/local-agent/project.sh` on the device. The script refuses a SHA that is not an ancestor of `origin/integration`, prepares a detached verification worktree at that commit (reusing the canonical `node_modules` by symlink), and runs `npm run architecture:check`, `npm run docs:ci`, and the `*-core` suites related to the change. The suites run in that worktree, but `scripts/local-agent/related-core-tests.ts` resolves them from the canonical checkout: a commit must not decide which suites are run against it, and a commit branched from an older `integration` would not carry the resolver at all.
 5. On success the script registers the agent, creates the cloud-bridge Mode B task if it does not exist, and calls `gova-agent project`, which posts to `/v1/canonical/project`.
-6. The Gateway projects that commit onto `/home/hesham/gova` as an unstaged patch.
+6. The Gateway projects that work onto `/home/hesham/gova` as an unstaged patch covering everything between the fork point and the named commit.
 
 Failure is closed at every step: verification failure stops before projection, an unpublished SHA is rejected, a non cloud-bridge task is rejected, and a projection whose paths overlap canonical uncommitted work — or whose patch does not apply — is refused and recorded as `canonical-projection-blocked`.
 

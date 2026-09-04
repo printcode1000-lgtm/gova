@@ -125,4 +125,25 @@ with tempfile.TemporaryDirectory() as temp:
     assert projected == ['bridge.txt']
     assert (root / 'bridge.txt').read_text() == 'from cloud bridge\n'
 
+    # A cloud task described as one commit may still arrive as several. The
+    # projection is measured from the fork point with main, so the whole task
+    # lands — projecting only the last commit would drop the first file and leave
+    # the second one's patch without its context.
+    git('reset', '--hard', 'main')
+    git('checkout', 'integration')
+    (root / 'first.txt').write_text('first commit\n')
+    git('add', 'first.txt')
+    git('commit', '-m', 'first of two')
+    (root / 'bridge.txt').write_text('second commit rewrites the bridge\n')
+    git('commit', '-am', 'second of two')
+    two_commit_sha = git('rev-parse', 'HEAD')
+    git('push', '-q', 'origin', 'integration')
+    git('checkout', 'main')
+    git('reset', '--hard', 'main')
+
+    _sha, projected = gateway.canonical_project('agent', 'mode-b-cloud', two_commit_sha)
+    assert projected == ['bridge.txt', 'first.txt'], projected
+    assert (root / 'first.txt').read_text() == 'first commit\n'
+    assert (root / 'bridge.txt').read_text() == 'second commit rewrites the bridge\n'
+
 print('local-agent mode guard: PASS')
