@@ -40,7 +40,7 @@ function ratingValue(row: UserProfileRow): number | null {
 }
 
 export function sellerCardTitle(row: UserProfileRow): string {
-  return text(row.storeName);
+  return text(row.storeName) || text(getOptional(row, "store_name"));
 }
 
 export function sellerCardAvatar(row: UserProfileRow): string {
@@ -61,7 +61,10 @@ export function createSellerCardViewModel(
 ): SellerCardViewModel {
   const images = {} as StoreImagesLike;
   const title = sellerCardTitle(row);
-  const identityLabel = title || text(row.primaryPhone);
+  const identityLabel =
+    title ||
+    text(getOptional(row, "registrationPhone")) ||
+    text(getOptional(row, "registration_phone"));
   const rating = ratingValue(row);
   const badges: SellerCardBadge[] = [];
 

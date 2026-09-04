@@ -10,7 +10,6 @@ function sellerRow(overrides: Record<string, unknown> = {}): UserProfileRow {
     storeName: "",
     storeDescription: "",
     storeStory: "",
-    primaryPhone: "",
     ...overrides,
   } as unknown as UserProfileRow;
 }
@@ -19,7 +18,7 @@ assert.equal(
   createSellerCardViewModel(
     sellerRow({
       storeName: "متجر النور",
-      primaryPhone: "+201000000001",
+      registrationPhone: "+201000000001",
     }),
   ).identityLabel,
   "متجر النور",
@@ -28,21 +27,38 @@ assert.equal(
 
 assert.equal(
   createSellerCardViewModel(
-    sellerRow({ primaryPhone: "+201000000002" }),
+    sellerRow({
+      storeName: "",
+      store_name: "متجر من صف SQL الخام",
+      registrationPhone: "+201000000002",
+    }),
   ).identityLabel,
-  "+201000000002",
+  "متجر من صف SQL الخام",
+  "raw profile rows must expose their store_name as the seller alias",
+);
+
+assert.equal(
+  createSellerCardViewModel(
+    sellerRow({ registrationPhone: "+201000000003" }),
+  ).identityLabel,
+  "+201000000003",
   "registration phone must be shown when the store alias is absent",
 );
 
 assert.equal(
   createSellerCardViewModel(
-    sellerRow({
-      storeName: "   ",
-      primaryPhone: "+201000000003",
-    }),
+    sellerRow({ registration_phone: "+201000000004" }),
   ).identityLabel,
-  "+201000000003",
-  "blank store aliases must fall back to the registration phone",
+  "+201000000004",
+  "snake-case registration phone must also be supported when supplied",
+);
+
+assert.equal(
+  createSellerCardViewModel(
+    sellerRow({ primaryPhone: "+201000000005" }),
+  ).identityLabel,
+  "",
+  "profile primary phone must not replace the original registration phone",
 );
 
 assert.equal(
