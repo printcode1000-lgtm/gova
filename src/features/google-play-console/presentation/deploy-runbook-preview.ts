@@ -23,19 +23,16 @@ export function deployAllPreview(
   return parts.join(" ").replace(/\s+/g, " ").trim();
 }
 
-export function deployPushPreview(
-  target: string,
-  flags: {
-    allowEmpty: boolean;
-    allowManifestDowngrade: boolean;
-    allowScratchFiles: boolean;
-  },
-) {
+/**
+ * `deploy:push:fast` is pinned to `--fast --vercel-target=all`, so there is no
+ * target to preview. `--fast` also returns before the scratch-file and
+ * manifest-downgrade refusals, so showing those flags would promise a check the
+ * run does not perform; `--allow-empty` reaches the commit and is kept.
+ */
+export function deployPushPreview(flags: { allowEmpty: boolean }) {
   const parts = [
-    `npm run deploy:push -- --vercel-target=${target}`,
-    flags.allowEmpty ? "--allow-empty" : "",
-    flags.allowManifestDowngrade ? "--allow-manifest-downgrade" : "",
-    flags.allowScratchFiles ? "--allow-scratch-files" : "",
+    "npm run deploy:push:fast",
+    flags.allowEmpty ? "-- --allow-empty" : "",
   ].filter(Boolean);
-  return parts.join("");
+  return parts.join(" ").replace(/\s+/g, " ").trim();
 }

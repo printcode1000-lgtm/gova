@@ -59,8 +59,8 @@ typecheck, generated test gates, or database ensure/schema sync.
 Local `npm run build` remains the correctness gate (`scripts/run-generated-gate.ts build`).
 Do not point Vercel at `npm run build`. Isolated `services/*` projects keep
 `next build` only. The hosted guard never invents missing URLs or credentials.
-Separately, `smoke:deployed` requires explicit origins for all seven deployment
-targets; a missing origin is an environment-evidence gap rather than a reason
+Separately, `smoke:deployed` requires explicit origins for all eight deployment
+targets (`gova`, `control`, and the six workloads); a missing origin is an environment-evidence gap rather than a reason
 to omit that target or make it a requirement of the main hosted build.
 
 ## One-command production deployment
@@ -83,22 +83,16 @@ change additionally runs the path-filtered docs workflow. See
 Two commands push `main` to production from a local `main` working tree:
 
 ```bash
-npm run deploy:all    # full preflight, then publish
-npm run deploy:push   # publish only — no lint/build/test gates
+npm run deploy:all        # full preflight, then publish
+npm run deploy:push:fast  # explicit fast publish after local verification
 ```
 
 Both publish through that same ordered transaction and explicitly deploy the gova
-project after release readiness. A partial `--vercel-target=`
-selection is maintenance, not a release: `deploy:push` deploys the named
-accounts from the current `HEAD` and does not commit, push, or mark any SHA
-ready. Only the complete control + six workload proof may release the gova build
-barrier.
+project after release readiness. No other public deployment command is
+supported. Only the complete control + six workload proof may release the gova
+build barrier.
 
-The internal `npm run deploy:revision -- --revision=<sha>` command is reserved
-for controlled maintenance. It requires a clean checkout at that exact full SHA
-and never stages, commits, or pushes.
-
-[release-commands.md](./release-commands.md) is the reference for all four
+[release-commands.md](./release-commands.md) is the reference for both
 commands, the transaction's ordering contract, the deployment commit's
 `[docs-contract-change]` stamping, and the deployment prerequisites.
 
@@ -140,7 +134,7 @@ The six isolated Vercel phases each contain one deploy branch:
 `submain:deploy`, and `sub2main:deploy`. The final `main` phase contains three
 branches: `main-ready` (match commit SHA and wait for `READY`), `main-serving`
 (`release:check` — production serves this build), and `deployed-smoke`
-(`smoke:deployed` — the seven deployed origins answer their data routes).
+(`smoke:deployed` — the eight deployed origins answer their data routes).
 
    `services:build` was added after every other check in this list passed, the
    release commit was pushed, `main` went `READY`, and **the isolated service
@@ -219,7 +213,7 @@ never sees, and a guard that cries wolf locally is one people learn to skip.
 ### Smoke: the built server has to answer
 
 `READY` means a deployment exists, not that a request succeeds. The pipeline
-built, uploaded and polled until Vercel said READY for all seven targets while
+built, uploaded and polled until Vercel said READY for every target while
 every server route answered 500 — and the profiles account served errors to the
 browser for hours with `/api/health` returning 200 the whole time, because
 health touches no shard.
@@ -230,7 +224,7 @@ Three gates close that:
 | --- | --- | --- |
 | `smoke:production` | after `build`, before `build:static` | five routes on the main app, each crossing a different composition root |
 | `smoke:services` | after `services:build` | one route per isolated account that reaches **that account's own data** — against a **locally built** copy |
-| `smoke:deployed` | `main` phase, after `main-serving` | the same data probes against the **seven deployed origins** baked into the static/mobile bundle as `NEXT_PUBLIC_ASOL_*_URL` |
+| `smoke:deployed` | `main` phase, after `main-serving` | the same data probes against the **eight deployed origins** baked into the static/mobile bundle as `NEXT_PUBLIC_ASOL_*_URL` |
 
 Health is deliberately not the probe. The fault these gates exist for —
 a composition root that never registers a port — leaves health green and
@@ -377,15 +371,16 @@ Run it alone at any time to answer "is my change actually live?":
 npm run release:check
 ```
 
-### The gate that asks the seven deployed origins
+### The gate that asks the eight deployed origins
 
 `npm run smoke:deployed` (`scripts/check-deployed-origins.ts`) runs as the
 `deployed-smoke` branch of the `main` phase, right after `main-serving`.
 
 `smoke:services` proves a locally built service answers. It does not prove the
-origin the Capacitor bundle will call. Those origins are the seven
-`NEXT_PUBLIC_ASOL_*_URL` values the static build bakes in (same names
-`assertStatic*BaseUrl` in `@asol/ota-core/publishing` requires). Both
+origin the Capacitor bundle will call. Those origins are the eight
+`NEXT_PUBLIC_ASOL_*_URL` values the static build bakes in — one per account in
+`ACCOUNT_ORIGIN_ENV`, matching the eight `assertStatic*BaseUrl` calls
+`@asol/ota-core/publishing` makes in `build-out.ts`. Both
 `smoke:services` and `smoke:deployed` read probe path/method/body/accept from
 `scripts/release-service-smoke-probes.ts` so the tables cannot drift; main
 reuses the products data read for `NEXT_PUBLIC_ASOL_API_BASE_URL`.
@@ -433,15 +428,18 @@ nothing about whether one is in progress.
 
 ### Do not push to `main` while `deploy:all` is running
 
-The main app is connected to GitHub and redeploys on every push to `main`. The
-six isolated accounts are not — they update only when their deploy command runs.
+No account deploys from Git: `vercel.json` disables Git deployments for every
+branch, `main` included, and every project — `gova` too — is updated only when
+its deploy command runs. A concurrent push therefore cannot replace a build the
+run is waiting on.
 
-So a push during a `deploy:all` run supersedes the deployment that run just
-created: Vercel abandons the in-flight build for the newer commit, and the
-run's `main` phase reports `TIMEOUT` — "did not reach a terminal state before
-the verification deadline". Nothing is broken; the deployment was simply
-replaced. The six accounts are unaffected, which is why a report can show them
-all READY next to a timed-out main.
+It breaks the run a different way. `deploy:all` publishes by committing and
+pushing `main` itself, and the release transaction pins one revision from that
+commit through control, the six workloads, readiness, and the explicit `gova`
+deployment. A push that lands in between moves `origin/main` under the run: the
+`publish` phase is rejected as non-fast-forward, or — after publish — the SHA
+that production serves stops matching the SHA the run marked ready, and
+`release:check` fails.
 
 This is easy to cause without noticing, because several preflight phases rewrite
 tracked files as a side effect of running:
@@ -450,15 +448,16 @@ tracked files as a side effect of running:
   `public/sync_data/*.json` (timestamps only);
 - `build:static` rewrites `public/asol-web-manifest.json` with a new build id.
 
-Committing each of those mid-run — to keep the tree clean — is what triggers the
-cancellation. Let the run's own publish phase commit them instead; that is what
-it is for.
+Committing and pushing each of those mid-run — to keep the tree clean — is what
+moves `origin/main`. Let the run's own publish phase commit them instead; that is
+what it is for.
 
 If it happens: don't re-run `--phase=main` against a stale `run-state.json`,
 which replays the cached result without deploying, and don't delete that file to
 force a retry — it holds the progress of *every* phase, so the next
-`--phase=main` refuses on unmet prerequisites. Either let the GitHub integration
-finish deploying the newest commit, or start a fresh `deploy:all --allow-empty`.
+`--phase=main` refuses on unmet prerequisites. Start a fresh
+`deploy:all --allow-empty` for the commit that is now on `origin/main`; nothing
+else publishes it, because no branch deploys from Git.
 
 To confirm what production is actually serving, compare the deployed manifest to
 the local one:
@@ -490,22 +489,33 @@ An unrecognised option aborts rather than being ignored, so a mistyped
 problem and retry **only** the failed phase (or continue from it). Progress is
 stored in `.deploy-all/run-state.json` (gitignored).
 
+The phase order is declared once in
+`packages/release-core/src/pipeline/phases.ts` as `DEPLOY_ALL_PHASE_ORDER`:
+
+```text
+preflight → publish → control → notifications → products → orders → profiles
+          → submain → sub2main → readiness → main
+```
+
 | Phase | What it does |
 | :-- | :-- |
 | `preflight` | Branch/credential guards + production/Vercel readiness + checks/tests + DB sync + server/static builds + service mirror verification/builds |
 | `publish` | `secrets:backup`, deployment commit, `git push origin main` |
+| `control` | One CLI deploy of `asol-control` at the same SHA — its own mandatory step, never one of the six workloads |
 | `notifications` … `sub2main` | One CLI service deploy each (six accounts) |
-| `main` | Wait until `gova` is `READY`, confirm production serves this build (`release:check`), then `smoke:deployed` against the seven origins |
+| `readiness` | Publish exact-SHA release readiness to control's production-deploy callback |
+| `main` | Explicitly deploy `gova` (`main:deploy`) and wait for `READY`, confirm production serves this build (`release:check`), then `smoke:deployed` against the eight origins |
+
+There is no per-phase npm script. Phases are selected on `deploy:all` itself:
 
 ```bash
-npm run deploy:all                      # all phases in order
-npm run deploy:all:preflight            # phase 1 only
-npm run deploy:all:publish              # phase 2 only (requires preflight in state)
-npm run deploy:all:services             # all six service phases
-npm run deploy:all:main                 # verify gova only
-
-npm run deploy:all -- --phase=submain   # retry one service
-npm run deploy:all -- --from-phase=orders   # orders → profiles → submain → sub2main → main
+npm run deploy:all                          # all phases in order
+npm run deploy:all -- --phase=preflight     # preflight only
+npm run deploy:all -- --phase=publish       # publish only (requires preflight in state)
+npm run deploy:all -- --phase=services      # alias for all six service phases
+npm run deploy:all -- --phase=main          # deploy and verify gova only
+npm run deploy:all -- --phase=submain       # retry one service
+npm run deploy:all -- --from-phase=orders   # orders → … → readiness → main
 npm run deploy:all -- --list-phases
 ```
 
@@ -530,53 +540,14 @@ The final console line is always explicit:
 the module does not deploy — the entrypoint is guarded so `npm test` can never
 become a release.
 
-### `deploy:push` — publish and verify only
+### `deploy:push:fast` — explicit fast publish
 
-`scripts/deploy-push.ts` skips the expensive preflight gates: no lint, typecheck,
-tests, builds, database sync, or service mirror build. It still runs fast safety
-guards before the first git write: main branch, required Vercel account access
-for the selected targets, scratch-file refusal, release-manifest downgrade
-refusal, and non-empty deployment refusal unless explicitly allowed. At startup
-it asks which isolated Vercel **service** account(s) to deploy (or accepts
-`--vercel-target=` on the command line). These three steps are **always
-mandatory**:
+`npm run deploy:push:fast` is the only public fast release path. It always
+publishes the complete transaction: control, six workloads, readiness, and
+gova. It has no account-selection, revision, or partial-target form.
 
-1. `secrets:backup`
-2. GitHub push to `main` with `origin/main` verification
-3. main (`gova`) Vercel verification until `READY`
-
-Interactive choices:
-
-| Key | Target |
-| :-- | :-- |
-| 0 | GitHub + main only — no service deploys |
-| 1 | `notifications` |
-| 2 | `products` |
-| 3 | `orders` |
-| 4 | `profiles` |
-| 5 | `submain` (`asol-submain`, `groupstenderximages@gmail.com`) |
-| 6 | `sub2main` (`asol-sub2main`, `tenderx.engineer100@gmail.com`) |
-| 7 | all six isolated accounts (4 services + `asol-submain` + `asol-sub2main`) |
-
-Non-interactive examples:
-
-```bash
-npm run deploy:push:main
-npm run deploy:push:all
-npm run deploy:push -- --vercel-target=main
-npm run deploy:push -- --vercel-target=none
-npm run deploy:push -- --vercel-target=notifications
-npm run deploy:push -- --vercel-target=submain
-npm run deploy:push -- --vercel-target=sub2main
-npm run deploy:push -- --vercel-target=all
-```
-
-On Windows, `npm run deploy:push -- --vercel-target=...` may not forward args;
-use `deploy:push:main` / `deploy:push:all` or `npx tsx scripts/deploy-push.ts
---vercel-target=...` directly.
-
-Service deploy scripts emit `[ASOL_DEPLOY_REPORT]` on stdout. `deploy:push` and
-`deploy:all` capture that line from the child npm process (stdout and stderr,
+Service deploy scripts emit `[ASOL_DEPLOY_REPORT]` on stdout. `deploy:push:fast`
+and `deploy:all` capture that line from the child npm process (stdout and stderr,
 after streams close) via `packages/release-core/src/pipeline/run-deployment-npm-script.ts`. Child
 processes run without `NODE_OPTIONS` / VS Code inspector hooks so nested
 `npx tsx` deploy scripts keep piped output reliable. VS Code launch configs for
@@ -585,60 +556,23 @@ Service mirror manifests preserve their previous `generatedAt` when the mirrored
 entry points and file list did not change, so a successful deploy does not leave
 timestamp-only manifest drift in the working tree.
 
-`--vercel-target=main` and `--vercel-target=none` skip the six isolated deploy
-scripts (four services plus `asol-submain` and `asol-sub2main`). Any other choice still runs the
-mandatory steps above, then deploys and verifies only the selected account(s).
-
-After GitHub confirms the commit, `deploy:push` starts every selected isolated
-target and the GitHub-linked main verification together, then waits for all
-results as one batch. A failed target does not cancel the other in-flight
-targets; the final table reports every result. When no isolated account is chosen, success requires secrets backup, GitHub
-verification, and main `READY` on Vercel. When an isolated account is also
-chosen, that account must reach `READY` as well. `submain` uses
-`VERCEL_SUBMAIN_TOKEN` and `VERCEL_SUBMAIN_ORG_ID`; `sub2main` uses
-`VERCEL_SUB2MAIN_TOKEN` and `VERCEL_SUB2MAIN_ORG_ID`. Neither is GitHub-linked.
-
-`VERCEL_TOKEN` and the root `.vercel/project.json` are always required for main
-verification. Selected isolated accounts use their own tokens from `.env.local`
-/ `.env`, and those tokens are checked before `secrets:backup`, `commit`, or
-`push`.
-
-Fast safety escape hatches are explicit:
-
-| Flag | Effect |
-| :-- | :-- |
-| `--allow-empty` | Redeploys the current commit when there is nothing new to commit. |
-| `--allow-scratch-files` | Allows files matching scratch patterns such as `*.log`, `*.tmp`, `*.bak`, or `scratchpad/`. |
-| `--allow-manifest-downgrade` | Allows a lower `releaseId`, `version`, or `minimumNativeVersion` in `public/asol-web-manifest.json`. |
-
-It still does not report native/OTA surface status; use `deploy:all` for the
-full release gate.
-
-The final console line is always explicit:
-
-- main only: `[deploy:push] SUCCESS — secrets backup completed, GitHub push verified, and main Vercel production target is READY.`
-- with services: `[deploy:push] SUCCESS — secrets backup completed, GitHub push verified; main and <service(s)> Vercel production targets are READY.`
-- failure: `[deploy:push] FAILED — <reason>` (with `git revert` guidance when the
-  push already landed).
-
-`scripts/tests/deploy-push.test.ts` asserts target parsing and that importing the
-module does not deploy.
+After GitHub confirms the commit, the transaction deploys the six workloads,
+then control, publishes exact-SHA readiness, and finally deploys gova. Every
+target must be `READY`; a failure retracts readiness and re-promotes the captured
+baseline. `deploy:push:fast` does not replace the native or OTA release gate;
+use `deploy:all` when those checks are required.
 
 The command verifies that the new commit leaves the working tree clean, so every
-Vercel account receives the same revision. A
-zero exit code from the upload process is not considered success. Every service
-polls the Vercel API for the deployment tagged with this exact run id until it is
-`READY`, `ERROR`, `CANCELED`, or times out; alias failures turn an otherwise
-ready build into an error. The main GitHub-triggered deployment is independently
-matched by commit SHA and monitored the same way. The final console table always
-shows target, account, project, unique comment, state, URL, and Vercel error.
-`deploy:all` exits non-zero if any of the seven production targets is not verified
-`READY`.
+Vercel account receives the same revision. A zero exit code from an upload is not
+success: every target is polled by exact run id until `READY`, `ERROR`,
+`CANCELED`, or timeout. Gova is an explicit CLI deployment after readiness, not
+a Git-triggered deployment. The final console table shows target, account,
+project, unique comment, state, URL, and Vercel error.
 
 Each service continues to read its dedicated Vercel token and required
 environment values from `.env.local` or `.env`. `VERCEL_TOKEN` and the root
-`.vercel/project.json` are additionally required to verify the GitHub-linked
-main deployment. The root link is never rewritten by a service command.
+`.vercel/project.json` are required for the explicit gova deployment. The root
+link is never rewritten by a service command.
 
 The Vercel CLI is intentionally not a project dependency. Each isolated service
 deployment invokes `vercel@59.0.0` as an ephemeral `npx --package` tool, keeping

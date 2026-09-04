@@ -106,7 +106,6 @@ export async function startProductionDeploy(input: {
   confirmation: string;
   callbackUrl: string;
   command?: "deploy:all" | "deploy:push";
-  target?: "all" | "main" | "notifications" | "products" | "orders" | "profiles" | "submain" | "sub2main";
   deployAllOptions?: RemoteDeployAllOptions;
 }): Promise<RemoteDeployAllResult> {
   if (input.confirmation?.trim() !== REMOTE_DEPLOY_ALL_CONFIRMATION) {
@@ -118,31 +117,8 @@ export async function startProductionDeploy(input: {
     initiatedByUid: input.adminUid,
     callbackUrl: input.callbackUrl,
     command: input.command,
-    target: input.target,
     deployAllOptions: input.deployAllOptions,
   }).catch(translateSandboxError);
-}
-
-/** Start the exact revision authenticated by the GitHub OIDC route. */
-export async function startGitHubProductionDeploy(input: {
-  revision: string;
-  callbackUrl: string;
-}): Promise<RemoteDeployAllResult> {
-  if (!remoteDeployAllReadiness().ready) throw new Error("productionDeployNotConfigured");
-  return startRemoteDeployAll({
-    initiatedByUid: SUPER_ADMIN_UID,
-    callbackUrl: input.callbackUrl,
-    command: "deploy:revision",
-    target: "all",
-    revision: input.revision,
-  }).catch(translateSandboxError);
-}
-
-export async function getGitHubProductionDeployStatus(
-  requestId: string,
-): Promise<RemoteDeployAllResult | null> {
-  const result = await getRemoteDeployAllResult().catch(translateSandboxError);
-  return result.snapshot.requestId === requestId ? result : null;
 }
 
 /**

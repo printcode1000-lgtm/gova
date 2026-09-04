@@ -93,7 +93,7 @@ On first load, `cleanLegacyStore()`:
 
 ## Session Service API
 
-**File:** `src/features/auth/services/session-api-service.ts`  
+**File:** `src/features/auth/application/services/session-api-service.ts`  
 **Export:** `sessionService`
 
 | Method | Effect |

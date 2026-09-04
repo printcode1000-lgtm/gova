@@ -69,7 +69,7 @@ Only declared doors are importable. Enforced by four independent layers (see [En
 
 ### Rule 6 — Branch and release gates
 
-`main` is the only branch. Release quality is gated by local npm scripts in the build chain, not by GitHub Actions. GitHub has two narrow workflows: path-filtered docs validation and an OIDC-authenticated production deployment dispatcher for every `main` push; see [github-ci-policy.md](../../07-mobile-and-release/github-ci-policy.md).
+`main` and `integration` are the only remote branches, and `main` is the production/release branch (ADR-0006). Release quality is gated by local npm scripts in the build chain, not by GitHub Actions. GitHub has two narrow workflows and neither deploys: path-filtered docs validation (`docs.yml`) and the manual local-agent bootstrap (`local-agent-bootstrap.yml`). Production is published only by an explicit local release command; see [github-ci-policy.md](../../07-mobile-and-release/github-ci-policy.md).
 
 **Agent action:** Commit and push to `main`. Run `npm run build` or at minimum `npm run architecture:check` before claiming done. See ADR-0006.
 

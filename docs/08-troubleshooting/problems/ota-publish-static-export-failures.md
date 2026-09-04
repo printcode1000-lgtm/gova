@@ -57,7 +57,7 @@ VS Code/Devin injected `NODE_OPTIONS` and `VSCODE_INSPECTOR_OPTIONS`. Every nest
 
 - `scripts/child-process-env.ts`
 - `scripts/build-static.ts`
-- `scripts/ota-publish.ts`
+- `packages/ota-core/scripts/ota-publish.ts`
 - `scripts/cap-build.ts`
 
 ## 3. New public assets were unclassified

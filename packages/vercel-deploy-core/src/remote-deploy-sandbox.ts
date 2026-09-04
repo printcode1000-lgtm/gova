@@ -340,15 +340,9 @@ export async function startRemoteDeployAll(input: {
   initiatedByUid: string;
   callbackUrl: string;
   command?: RemoteDeployCommand;
-  revision?: string;
-  target?: "all" | "main" | "notifications" | "products" | "orders" | "profiles" | "submain" | "sub2main";
   deployAllOptions?: RemoteDeployAllOptions;
 }): Promise<RemoteDeployAllResult> {
   const command = input.command ?? "deploy:all";
-  const revision = input.revision?.trim().toLowerCase();
-  if (command === "deploy:revision" && !/^[0-9a-f]{40}$/.test(revision ?? "")) {
-    throw new Error("remoteDeployRevisionInvalid");
-  }
   const config = deployEnvironment();
   const sandbox = await Sandbox.getOrCreate({
     name: SANDBOX_NAME,
@@ -392,8 +386,6 @@ export async function startRemoteDeployAll(input: {
     sandboxSessionId: sandbox.currentSession().sessionId,
     initiatedByUid: input.initiatedByUid,
     command,
-    revision: command === "deploy:revision" ? revision : undefined,
-    target: input.target ?? "all",
     deployAllOptions: command === "deploy:all" ? input.deployAllOptions : undefined,
     startedAt: now,
     updatedAt: now,
@@ -417,18 +409,13 @@ export async function startRemoteDeployAll(input: {
     // A persistent sandbox can retain generated mirror changes from the
     // previous release. Force the branch switch so those disposable outputs,
     // including untracked files that now exist in main, cannot block setup.
-    const checkoutRevision = command === "deploy:revision" ? revision! : "FETCH_HEAD";
-    if (command === "deploy:revision") {
-      const belongsToMain = await commandAllowingFailure(sandbox, "git", [
-        "merge-base",
-        "--is-ancestor",
-        checkoutRevision,
-        "FETCH_HEAD",
-      ]);
-      if (!belongsToMain) throw new Error("remoteDeployRevisionNotOnMain");
-    }
-    await commandOutput(sandbox, "git", ["checkout", "-f", "-B", MAIN_BRANCH, checkoutRevision]);
-    await commandOutput(sandbox, "git", ["reset", "--hard", checkoutRevision]);
+    //
+    // The tip of `main` is the only thing this ever checks out. A caller cannot
+    // name a revision: the console selects intent, never a commit, so there is
+    // no path by which a release publishes anything but what `main` currently
+    // holds.
+    await commandOutput(sandbox, "git", ["checkout", "-f", "-B", MAIN_BRANCH, "FETCH_HEAD"]);
+    await commandOutput(sandbox, "git", ["reset", "--hard", "FETCH_HEAD"]);
     await commandOutput(sandbox, "git", ["clean", "-fd", "-e", `${STATE_DIRECTORY}/`]);
     await commandOutput(sandbox, "git", ["config", "user.name", "ASOL Production Deploy"]);
     await commandOutput(sandbox, "git", ["config", "user.email", "deploy@asol.app"]);
@@ -439,8 +426,6 @@ export async function startRemoteDeployAll(input: {
         "scripts/run-remote-deploy-all.mjs",
         `--request-id=${requestId}`,
         `--command=${command}`,
-        ...(revision ? [`--revision=${revision}`] : []),
-        `--target=${input.target ?? "all"}`,
         `--deploy-all-resume-mode=${input.deployAllOptions?.resumeMode ?? "full"}`,
         ...(input.deployAllOptions?.branchId ? [`--deploy-all-branch=${input.deployAllOptions.branchId}`] : []),
         ...(input.deployAllOptions?.serviceSmokeRebuild ? ["--deploy-all-service-smoke-rebuild"] : []),

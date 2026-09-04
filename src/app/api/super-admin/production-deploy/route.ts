@@ -33,7 +33,6 @@ export async function POST(request: Request) {
           body?.command === "deploy:all" || body?.command === "deploy:push"
             ? body.command
             : undefined,
-        target: body?.target,
         deployAllOptions: body?.deployAllOptions,
       }),
   );

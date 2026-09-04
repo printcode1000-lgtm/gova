@@ -26,10 +26,17 @@ export function RunbookPanel(
     help: Record<string, string>;
     selected: Set<string>;
     setSelected: (next: Set<string>) => void;
-    scenarioLabel: string;
-    scenarioValue: string;
-    onScenarioChange: (value: string) => void;
-    scenarios: readonly (readonly [string, string])[];
+    /**
+     * A run-mode selector, when the command has more than one mode.
+     *
+     * `deploy:push:fast` has exactly one — the complete transaction — so its
+     * panel passes nothing and the selector is not rendered. A select with a
+     * single option reads as a choice the operator does not have.
+     */
+    scenarioLabel?: string;
+    scenarioValue?: string;
+    onScenarioChange?: (value: string) => void;
+    scenarios?: readonly (readonly [string, string])[];
     extraOptions?: React.ReactNode;
   } & { id?: string },
 ) {
@@ -51,17 +58,19 @@ export function RunbookPanel(
         <p id="features-google-play-console-presentation-deployrunbookcontrols-text-4-ajg7ss" className="mt-1 text-sm text-on-surface-variant break-words">{props.description}</p>
       </header>
 
-      <DeployRunbookCollapsible id="deploy-runbook-controls-runbook-panel-deploy-runbook-collapsible-5a95f3"
-        title="وضع التشغيل"
-        description={SCENARIO_HELP}
-      >
-        <ScenarioSelect
-          label={props.scenarioLabel}
-          value={props.scenarioValue}
-          onChange={props.onScenarioChange}
-          scenarios={props.scenarios}
-        />
-      </DeployRunbookCollapsible>
+      {props.scenarios && props.onScenarioChange ? (
+        <DeployRunbookCollapsible id="deploy-runbook-controls-runbook-panel-deploy-runbook-collapsible-5a95f3"
+          title="وضع التشغيل"
+          description={SCENARIO_HELP}
+        >
+          <ScenarioSelect
+            label={props.scenarioLabel ?? ""}
+            value={props.scenarioValue ?? ""}
+            onChange={props.onScenarioChange}
+            scenarios={props.scenarios}
+          />
+        </DeployRunbookCollapsible>
+      ) : null}
 
       <DeployRunbookCollapsible id="deploy-runbook-controls-runbook-panel-deploy-runbook-collapsible-cad13f"
         title="اختيار الفروع"

@@ -83,7 +83,7 @@ assert.ok(compareVersions("0.1.15", "0.1.0") > 0);
 assert.equal(compareVersions("0.1.15", "0.1.15"), 0);
 assert.equal(RELEASE_MANIFEST, "public/asol-web-manifest.json");
 assert.equal(FAIL_PREFIX, "[deploy:push] FAILED —");
-assert.match(formatSuccessLine(), /control, 6 isolated Vercel production targets, and main are READY/);
+assert.match(formatSuccessLine(true), /control, 6 isolated Vercel production targets, and main are READY/);
 assert.equal(
   githubRepositoryFromRemote("https://github.com/printcode1000-lgtm/gova.git"),
   "printcode1000-lgtm/gova",
@@ -139,47 +139,37 @@ assert.doesNotMatch(
   /Promise\.allSettled\(\[\s*deploySelectedAccounts\([^)]*\),\s*verifyMainDeployment\(/,
   "No publish path may race main verification against unfinished backend deployments.",
 );
+/**
+ * A partial selection is refused, never diverted.
+ *
+ * The maintenance path used to deploy the named accounts from the current HEAD.
+ * It wrote no git and therefore never checked the branch, which made it the one
+ * way a publish could reach Vercel from something other than `main`. It is gone:
+ * an account is now deployed on its own with its own `*:deploy` script.
+ */
 assert.match(
   deployPushSource,
-  /if \(isolatedTargets\.length !== ALL_DEPLOY_PUSH_TARGETS\.length\) \{\s*await runTargetedMaintenanceDeploy\(/,
-  "A partial --vercel-target selection must divert to the maintenance path before any git write.",
+  /if \(isolatedTargets\.length !== ALL_DEPLOY_PUSH_TARGETS\.length\) \{\s*fail\(/,
+  "A partial --vercel-target selection must be refused before any git write.",
 );
-const maintenanceBody = deployPushSource.slice(
-  deployPushSource.indexOf("async function runTargetedMaintenanceDeploy("),
-  deployPushSource.indexOf("async function deployMainRuntime("),
-);
-for (const forbidden of ["pushMainBranch(", "publishReleaseReadiness(", '"commit"']) {
+for (const removed of ["runTargetedMaintenanceDeploy", "deployExistingRevision", "deploy:revision"]) {
   assert.ok(
-    !maintenanceBody.includes(forbidden),
-    `A targeted maintenance deploy must not reach ${forbidden}.`,
+    !deployPushSource.includes(removed),
+    `${removed} was removed with the GitHub deployment workflow and must not come back.`,
   );
 }
+
 /**
- * `deploy:revision` is the GitHub-push release path. It must not race main
- * verification against unfinished backends, it must deploy control at the same
- * SHA, and it is the only place that may release the gova build barrier.
+ * `--fast` skips `secrets:backup`, so the success line must not claim it ran.
+ * A final line that names a skipped step teaches the wrong recovery.
  */
-const revisionStart = deployPushSource.indexOf("export async function deployExistingRevision(");
-const revisionBody = deployPushSource.slice(
-  revisionStart,
-  deployPushSource.indexOf("function verifyGitHubPush(", revisionStart),
-);
-assert.ok(revisionBody.length > 0, "deployExistingRevision must be readable as one block.");
-assert.match(
-  revisionBody,
-  /runReleaseTransaction\(\{/,
-  "deploy:revision must publish through the shared release transaction, not its own order.",
-);
-assert.ok(
-  revisionBody.indexOf("assertMainGitDeploymentNotRejected(normalizedRevision)") <
-    revisionBody.indexOf("runReleaseTransaction({"),
-  "deploy:revision must stop on an immediate Vercel Git rejection before mutating production.",
-);
+assert.match(formatSuccessLine(true), /secrets backup completed/);
+assert.match(formatSuccessLine(false), /secrets backup skipped \(--fast\)/);
 
 /** The transaction itself is where the ordering contract is enforced. */
 const transactionBody = deployPushSource.slice(
   deployPushSource.indexOf("async function runReleaseTransaction("),
-  deployPushSource.indexOf("/**\n * Deploy a commit that is already on main"),
+  deployPushSource.indexOf("function failedReportDetails("),
 );
 for (const [needle, why] of [
   ["captureReleaseRollbackBaseline(", "capture a rollback baseline before the first production mutation"],
@@ -240,14 +230,13 @@ assert.ok(
   "The mirrors must be synced before they are built.",
 );
 
-// `--fast` must never reach the maintenance path: that path writes no git and
-// therefore never checks the branch, which is the only way a publish flag could
-// deploy from something other than main.
+// A partial selection must be refused before anything is restored, backed up or
+// written, so a publish can never begin against an incomplete target set.
 const mainFn = deployPushSource.slice(deployPushSource.indexOf("async function main("));
 assert.ok(
-  mainFn.indexOf("flags.fast && isolatedTargets.length !== ALL_DEPLOY_PUSH_TARGETS.length") <
-    mainFn.indexOf("await runTargetedMaintenanceDeploy("),
-  "--fast must be refused for a partial selection before the maintenance path is taken.",
+  mainFn.indexOf("isolatedTargets.length !== ALL_DEPLOY_PUSH_TARGETS.length") <
+    mainFn.indexOf("await assertFastPublishReadiness("),
+  "A partial selection must be refused before the publish readiness gate runs.",
 );
 
 // The deployment commit must be written on top of origin/main, not beside it.

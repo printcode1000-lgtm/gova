@@ -66,6 +66,12 @@ The generator emits:
 
 When these files are committed, byte-for-byte drift becomes binding and `docs:ci` / `architecture:check` instruct the agent to regenerate. A fresh checkout does not need a snapshot to obtain correct task context because the live graph is rebuilt from repository truth.
 
+### Summaries are rebased, not copied
+
+A document node's summary is lifted verbatim out of the document it describes, and any Markdown link inside it is relative to *that* file. The catalogs are written to `docs/09-agent-knowledge/generated/catalogs/`, a different depth, so a copied link pointed at a path that does not exist — every relative link reaching the document catalog was broken.
+
+`relinkSummary` in `scripts/docs/render.ts` resolves each relative href against the source document's directory and re-relativises it against the catalog directory, so the link still names the same file. Absolute, protocol and bare-anchor hrefs are untouched: they do not depend on where they are read. Any future renderer that copies authored prose between depths owes the same treatment.
+
 ## Secret-Safety Invariant
 
 Environment knowledge contains **names only**. `process.env.KEY`, `.env.example` key names, and root-command assignment names may become graph nodes. Values must not.

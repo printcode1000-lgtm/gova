@@ -6,7 +6,7 @@ The `TrendingRibbon` is a reusable, self-scrolling text ticker component designe
 
 ## Component Location
 * Runtime contract and validation: `packages/trending-ribbon-core/src`
-* Component code: `src/shared/ui/TrendingRibbon.tsx`
+* Component code: `src/features/advertisements/presentation/TrendingRibbon.tsx`
 * Home cache and synchronization: `src/features/advertisements/presentation/hooks/use-home-trending-ribbon.ts`
 * Server adapter: `src/features/advertisements/server/services/trending-ribbon-service.server.ts`
 

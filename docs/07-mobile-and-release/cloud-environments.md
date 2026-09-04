@@ -4,7 +4,7 @@ This repository supports cloud development and remote workspaces through project
 
 ## 1. GitHub Codespaces & Dev Containers
 
-The repository includes [`.devcontainer/devcontainer.json`](file:///.devcontainer/devcontainer.json):
+The repository includes `.devcontainer/devcontainer.json`:
 
 - **Base Image**: `mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm` (Node 22)
 - **Lifecycle Hook (`postCreateCommand`)**: Installs `npm@11` and executes `npm ci`

@@ -57,7 +57,7 @@ version that dipped would answer an old shell with "you are up to date"
 instead of routing it to the native-version gate, and that shell would never
 be told to update again.
 
-`src/features/release-commands/domain/content-version.ts` holds the rules;
+`packages/ota-core/src/domain/versioning/content-version.ts` holds the rules;
 `assertContentVersionAdvances` refuses any version that fails to outrank the
 one it replaces, and names the way out: raise the Android version first. The
 rules live in the domain rather than in `scripts/` because the release console
@@ -143,7 +143,7 @@ bridges are isolated beside it in
 
 ### 2. Publish gate — the channel refuses an unsafe upload
 
-`scripts/ota/ota-native-compatibility.ts` compares the **working tree** against
+`packages/ota-core/src/publishing/gate/native-gate.ts` compares the **working tree** against
 the commit the last store build was made from. When any native surface changed,
 `npm run ota:publish` **refuses to run**.
 
@@ -171,12 +171,9 @@ where it lives.** A file is classified native when it either:
    coupled to.
 
 This replaces the previous legacy directory-prefix rule, which was wrong
-in both directions. It under-matched: the four sanctioned Capacitor-import
-exceptions (`packages/ota-core/src/adapters/ota.adapter.ts`,
-`packages/ota-core/src/adapters/back-button.adapter.ts`,
-`packages/ota-core/src/runtime/api-service.ts`,
-`src/features/page-snapshot/presentation/hooks/use-page-snapshot.tsx`) sit outside that
-prefix and passed the gate untouched. It also over-matched: facades, web
+in both directions. It under-matched: the sanctioned Capacitor-import exceptions
+living outside `packages/native-core/src/adapters/` passed the gate untouched.
+It also over-matched: facades, web
 adapters, `share-validator.ts`, and `duplicate-filter.ts` are pure TypeScript
 that ships inside the web bundle, and blocking them pushed publishers toward
 routinely declaring an override, which costs more than the risk it removed.
@@ -187,13 +184,15 @@ reach a device and never trip the gate.
 
 Files currently declared in `NATIVE_CONTRACT_FILES`:
 
-| File                                                     | Coupled native artifact                                            |
-| -------------------------------------------------------- | ------------------------------------------------------------------ |
-| `capabilities/shell-capabilities.ts`                      | Declares what the compiled shell contains                          |
-| `capabilities/capability-keys.ts`                         | Vocabulary shared by manifests, shells, and bundles                |
-| `capabilities/capability-registry.ts`                     | Maps keys onto the plugin names the shell registers                |
-| `notifications/types.ts`                                  | Channel ids and `DEFAULT_CHANNEL_SOUND` must match `res/raw` and `strings.xml` |
-| `permissions/types.ts`                                    | `PermissionKinds` must match `AndroidManifest.xml` and `Info.plist` |
+All five live under `packages/native-core/src/`:
+
+| File                                            | Coupled native artifact                                            |
+| ----------------------------------------------- | ------------------------------------------------------------------ |
+| `capabilities/shell-capabilities.ts`            | Declares what the compiled shell contains                          |
+| `capabilities/capability-keys.ts`               | Vocabulary shared by manifests, shells, and bundles                |
+| `capabilities/capability-registry.ts`           | Maps keys onto the plugin names the shell registers                |
+| `domain/notifications/channel-constants.ts`     | Channel ids and `DEFAULT_CHANNEL_SOUND` must match `res/raw` and `strings.xml` |
+| `domain/permissions/permission-kinds.ts`        | `PermissionKinds` must match `AndroidManifest.xml` and `Info.plist` |
 
 Do not add a file here to be safe. Add it only when you can name the native
 artifact it would break.
@@ -797,7 +796,7 @@ npm run ota:revoke -- 0.2.4
 npm run ota:revoke -- --restore 0.2.4
 ```
 
-The command updates `scripts/ota/ota-revocations.json`, signs it with the OTA
+The command updates `packages/ota-core/src/publishing/release/ota-revocations.json`, signs it with the OTA
 key, and writes `app-updates/revocations.json` with `no-store, max-age=0`.
 Normal publication republishes the tracked list.
 
@@ -949,7 +948,7 @@ Splash displays technical current/R2 versions, changed/deleted counts, download 
 | `packages/data-core/src/domains/ota/repositories/ota-release-repository.ts` | Release state and audit persistence                                          |
 | `packages/native-core/src/adapters/ota.adapter.ts`                           | Private storage and WebView activation                                       |
 | `src/features/splash/presentation/SplashInitializer.tsx`                                | Startup execution and progress details                                       |
-| `src/features/super-admin/presentation/SuperAdminOtaReleasesPage.tsx`                   | Approval dashboard and device testing controls                               |
+| `src/app/super-admin/ota-releases/page.tsx` → `/dev/release-console?tab=ota-releases` | Approval dashboard and device testing controls (development-only; the super-admin route is a redirect) |
 
 ## Verification
 
@@ -1263,7 +1262,7 @@ list — which is what an over-reporting gate trains you to do, and it is more
 dangerous than no gate at all, because the one true alarm arrives looking
 exactly like the five false ones.
 
-`scripts/test-ota-native-compatibility.ts` pins both directions: the real
+`packages/ota-core/src/tests/native-compatibility.test.ts` (run by `npm run test:ota-core`) pins both directions: the real
 surfaces must be detected, and `fastlane/`, `assets/`, and a build-time constant
 under `platform/` must stay silent while a plugin import under `platform/` still
 fires.
@@ -1296,7 +1295,8 @@ approval gates pass.
 
 There is a third, faster lane. Withdrawing a feature does not need OTA at all:
 `feature_flags` in the users database takes effect on the next client refresh.
-See [Live control without a release](./native-platform.md#live-control-without-a-release).
+The `feature_flags` table lives in the users database — see
+[current-databases.md](../../02-data-and-storage/current-databases.md).
 
 ### Where the line falls per feature
 

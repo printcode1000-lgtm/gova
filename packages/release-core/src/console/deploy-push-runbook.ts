@@ -28,6 +28,15 @@ function branch(
   return { id, label, command, kind, dangerous };
 }
 
+/**
+ * What `npm run deploy:push:fast` actually does, branch by branch.
+ *
+ * `--fast` is what the console runs, and it keeps only the checks that cost
+ * nothing and cannot be recovered from afterwards. The account-access check,
+ * the scratch-file / manifest-downgrade / non-empty refusals, the mirror builds
+ * and `secrets:backup` are all skipped — listing them here would promise gates
+ * the run does not perform. Use `deploy:all` when those are required.
+ */
 export const DEPLOY_PUSH_RUNBOOK: readonly DeployPushRunbookPhase[] = [
   {
     id: "fast-guards",
@@ -38,11 +47,8 @@ export const DEPLOY_PUSH_RUNBOOK: readonly DeployPushRunbookPhase[] = [
         label: "local safety checks",
         branches: [
           branch("push-main-branch", "must run on main", "assert:main-branch", "assertion"),
+          branch("push-secrets-restore", "restore release secrets from the encrypted archive", "secrets:restore", "npm"),
           branch("push-main-credentials", "main Vercel token and project link", "assert:main-deployment-credentials", "assertion"),
-          branch("push-target-accounts", "selected Vercel account access", "assert:vercel-accounts-for-targets", "vercel"),
-          branch("push-scratch-files", "scratch file refusal", "assert:no-scratch-files", "assertion"),
-          branch("push-release-manifest", "release manifest downgrade refusal", "assert:release-manifest-not-downgraded", "assertion"),
-          branch("push-non-empty", "non-empty deployment refusal", "assert:something-to-push", "assertion"),
         ],
       },
     ],
@@ -52,15 +58,11 @@ export const DEPLOY_PUSH_RUNBOOK: readonly DeployPushRunbookPhase[] = [
     label: "GitHub publish",
     sections: [
       {
-        id: "push-secrets",
-        label: "secret archive",
-        branches: [branch("push-secrets-backup", "encrypted secrets backup", "secrets:backup", "npm")],
-      },
-      {
         id: "push-git",
         label: "Git revision",
         branches: [
           branch("push-clear-git-lock", "clear abandoned git lock only", "git:index-lock:clear-stale", "git"),
+          branch("push-advance-origin", "fast-forward HEAD to origin/main", "git:fetch+merge --ff-only", "git"),
           branch("push-stage-tree", "stage deployment tree", "git:add -A", "git", true),
           branch("push-commit-tree", "create deployment commit", "git:commit", "git", true),
           branch("push-clean-tree", "verify committed tree is stable", "git:status --porcelain", "git"),
@@ -72,11 +74,16 @@ export const DEPLOY_PUSH_RUNBOOK: readonly DeployPushRunbookPhase[] = [
   },
   {
     id: "fast-vercel",
-    label: "Vercel production targets",
+    label: "release transaction",
     sections: [
       {
+        id: "push-rollback-baseline",
+        label: "rollback baseline",
+        branches: [branch("push-capture-baseline", "capture the live production deployments", "vercel:capture-baseline", "vercel")],
+      },
+      {
         id: "push-isolated-targets",
-        label: "selected isolated accounts",
+        label: "six isolated accounts",
         branches: [
           branch("push-notifications", "notifications production deploy", "notifications:deploy", "npm", true),
           branch("push-products", "products production deploy", "products:deploy", "npm", true),
@@ -87,9 +94,19 @@ export const DEPLOY_PUSH_RUNBOOK: readonly DeployPushRunbookPhase[] = [
         ],
       },
       {
+        id: "push-control",
+        label: "control",
+        branches: [branch("push-control-deploy", "control production deploy at the same SHA", "control:deploy", "npm", true)],
+      },
+      {
+        id: "push-readiness",
+        label: "exact-SHA readiness",
+        branches: [branch("push-publish-readiness", "publish readiness so the gova build may publish", "release:readiness-publish", "npm", true)],
+      },
+      {
         id: "push-main-verification",
-        label: "main app readiness",
-        branches: [branch("push-main-ready", "match commit SHA and wait for READY", "vercel:wait-main-ready", "vercel")],
+        label: "main app deployment",
+        branches: [branch("push-main-ready", "deploy gova and wait for READY", "main:deploy", "npm", true)],
       },
     ],
   },

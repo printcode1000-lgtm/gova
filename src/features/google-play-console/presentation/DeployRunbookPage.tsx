@@ -19,7 +19,6 @@ import {
   DEPLOY_PUSH_DESCRIPTION,
   PUSH_BRANCH_HELP,
   STATUS_SUMMARY_DESCRIPTION,
-  deployPushTargets,
 } from "./deploy-runbook-copy";
 import { deployAllPreview, deployPushPreview } from "./deploy-runbook-preview";
 import {
@@ -38,7 +37,6 @@ export function DeployRunbookPage() {
   const [allSelected, setAllSelected] = React.useState(() => new Set(deployAllBranchIds()));
   const [pushSelected, setPushSelected] = React.useState(() => new Set(deployPushBranchIds()));
   const [allScenario, setAllScenario] = React.useState("full");
-  const [pushTarget, setPushTarget] = React.useState("all");
   const [continueOnError, setContinueOnError] = React.useState(false);
   const [skipPreflight, setSkipPreflight] = React.useState(false);
   const [allowEmpty, setAllowEmpty] = React.useState(false);
@@ -84,11 +82,7 @@ export function DeployRunbookPage() {
           allowManifestDowngrade,
           allowScratchFiles,
         })
-      : deployPushPreview(pushTarget, {
-          allowEmpty,
-          allowManifestDowngrade,
-          allowScratchFiles,
-        });
+      : deployPushPreview({ allowEmpty });
 
   const start = () =>
     void jobs.start(
@@ -109,12 +103,7 @@ export function DeployRunbookPage() {
         : {
             commandId: "deploy-push-runbook",
             confirmationPhrase: exactPhrase,
-            parameters: {
-              deployPushTarget: pushTarget,
-              deployPushAllowEmpty: allowEmpty,
-              deployPushAllowManifestDowngrade: allowManifestDowngrade,
-              deployPushAllowScratchFiles: allowScratchFiles,
-            },
+            parameters: { deployPushAllowEmpty: allowEmpty },
           },
     );
 
@@ -164,10 +153,6 @@ export function DeployRunbookPage() {
           help={PUSH_BRANCH_HELP}
           selected={pushSelected}
           setSelected={setPushSelected}
-          scenarioLabel="هدف Vercel"
-          scenarioValue={pushTarget}
-          onScenarioChange={setPushTarget}
-          scenarios={deployPushTargets}
         />
       )}
 

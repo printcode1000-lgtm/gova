@@ -1,9 +1,40 @@
+import { posix } from 'node:path';
+
 import type { KnowledgeEdge, KnowledgeGraph, KnowledgeNode } from './model';
+
+/** Where every generated catalog is written. Relative links are rebased onto it. */
+const CATALOG_DIRECTORY = 'docs/09-agent-knowledge/generated/catalogs';
 
 const GENERATED_BANNER = `<!-- GENERATED FILE. DO NOT EDIT BY HAND.\n     Source: live repository graph built by scripts/docs/.\n     Regenerate: npm run docs:generate\n     Validate: npm run docs:ci -->\n`;
 
 function cell(value: string | undefined): string {
   return (value || '').replace(/\|/g, '\\|').replace(/\r?\n/g, ' ');
+}
+
+/**
+ * Rebase a document's own relative links onto the catalog's directory.
+ *
+ * A summary is copied verbatim out of the document it describes, and its links
+ * are relative to *that* file. The catalog sits at a different depth, so
+ * `../08-reference/capability-map.md` — correct inside
+ * `docs/01-architecture/02-packages/` — pointed at a path that does not exist
+ * once it landed in the catalog. Every such link in the catalog was broken.
+ *
+ * Resolving against the source directory and re-relativising against the
+ * catalog keeps the link pointing at the same file. Absolute, protocol and
+ * bare-anchor hrefs are left alone: they do not depend on where they are read.
+ */
+function relinkSummary(summary: string | undefined, sourcePath: string | undefined): string {
+  if (!summary || !sourcePath) return summary || '';
+  const sourceDirectory = posix.dirname(sourcePath);
+  return summary.replace(/\]\(([^)\s]+)\)/g, (whole, href: string) => {
+    if (/^(?:[a-z][a-z0-9+.-]*:|\/|#)/i.test(href)) return whole;
+    const [target, anchor] = href.split('#');
+    if (!target) return whole;
+    const resolved = posix.normalize(posix.join(sourceDirectory, target));
+    const rebased = posix.relative(CATALOG_DIRECTORY, resolved);
+    return `](${rebased}${anchor ? `#${anchor}` : ''})`;
+  });
 }
 
 function byKind(graph: KnowledgeGraph, kind: KnowledgeNode['kind']): KnowledgeNode[] {
@@ -57,7 +88,9 @@ export function renderRepositoryCatalog(graph: KnowledgeGraph): string {
 export function renderDocumentCatalog(graph: KnowledgeGraph): string {
   const lines = [GENERATED_BANNER, '# Document Catalog', '', 'Searchable inventory of hand-written and generated-entry Markdown documents.', '', '| Document | Path | Summary |', '|---|---|---|'];
   for (const node of byKind(graph, 'document')) {
-    lines.push(`| ${cell(node.name)} | \`${cell(node.path)}\` | ${cell(node.summary)} |`);
+    lines.push(
+      `| ${cell(node.name)} | \`${cell(node.path)}\` | ${cell(relinkSummary(node.summary, node.path))} |`,
+    );
   }
   lines.push('');
   return lines.join('\n');

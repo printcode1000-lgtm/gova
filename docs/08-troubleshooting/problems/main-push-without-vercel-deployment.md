@@ -1,8 +1,18 @@
 # A push to `main` produces no Vercel deployment
 
-## Symptom
+**Status:** Obsolete — the failure mode was removed on 2026-09-04, not fixed.
 
-`deploy:push` deploys control and all six workloads, publishes exact-SHA
+`gova` no longer deploys from Git at all: `vercel.json` sets
+`git.deploymentEnabled` to `false` for `*` **and** for `main`. A push producing
+no Vercel deployment is now the designed behavior, and the release transaction
+publishes `gova` with an explicit `main:deploy` step whose deployment it created
+itself and therefore cannot fail to find. Keep this record for the readiness
+lesson below, which still governs every release; do not treat the symptom as a
+current fault.
+
+## Symptom (historical)
+
+`deploy:push:fast` deploys control and all six workloads, publishes exact-SHA
 readiness, then fails:
 
 ```
@@ -39,9 +49,11 @@ around it.
 One correlation was observed — the missing pushes fell in a window when the
 `integration` branch was being pushed every few minutes — but it does not
 survive scrutiny and **should not be treated as the cause**. `integration` never
-deploys: the `ignoreCommand` cancels every one of its deployments by design, so
-its records represent builds that never ran and never competed for a publish.
-Correlation in time is not evidence of contention.
+deploys: at the time, `git.deploymentEnabled` was `false` for every branch except
+`main`, so its records represent builds that never ran and never competed for a
+publish. (`ignoreCommand` is deliberately absent — an ignored build is still
+created and canceled, so it still consumes deployment capacity.) Correlation in
+time is not evidence of contention.
 
 `integration` is a deliberate branch for local runner work and tests. Nothing is
 pushed from it to `main` today, though that may change. It is not the problem and
@@ -49,8 +61,12 @@ must not be removed.
 
 ## What to do
 
-Re-run `npm run deploy:push`. The failure is transient: the same commit deploys
-on a later attempt.
+At the time: re-run `npm run deploy:push:fast`; the failure was transient and the
+same commit deployed on a later attempt.
+
+Today a `main deployment is NOT_FOUND` line means something else — the explicit
+`main:deploy` upload did not produce a matching deployment record — and is a real
+fault to diagnose, not a Vercel Git-webhook gap.
 
 ## Why the failure is safe
 

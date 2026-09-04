@@ -1,4 +1,4 @@
-# /profile prerender failure — useSearchParams without Suspense
+# /profile prerender failure â€” useSearchParams without Suspense
 
 **Date:** 2026-06-27  
 **Environment:** Vercel Production / `npm run build`  

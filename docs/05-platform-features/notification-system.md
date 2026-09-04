@@ -1683,14 +1683,17 @@ Consequences, stated accurately:
 
 ### Files
 
+The Java sources live in `@asol/native-core`, not in the generated `android/`
+project: base path `packages/native-core/android/src/main/java/hgh/asol/app/`.
+
 | File | Role |
 |------|------|
-| `android/.../AsolPushMessagingService.java` | Receives the FCM message, persists, then posts |
-| `android/.../AsolNotificationInboxStore.java` | The encrypted, app-private, bounded store |
-| `android/.../AsolNotificationRecord.java` | The record, keeping the complete payload |
-| `android/.../AsolNotificationTapProtocol.java` | The application-owned tap handshake |
-| `android/.../AsolNotificationInboxPlugin.java` | The bridge: list, acknowledge, clear, tap, tray sweep |
-| `android/.../AsolAppLifecycle.java` | Whether the Activity is in front, so nothing rings twice |
+| `AsolPushMessagingService.java` | Receives the FCM message, persists, then posts |
+| `AsolNotificationInboxStore.java` | The encrypted, app-private, bounded store |
+| `AsolNotificationRecord.java` | The record, keeping the complete payload |
+| `AsolNotificationTapProtocol.java` | The application-owned tap handshake |
+| `AsolNotificationInboxPlugin.java` | The bridge: list, acknowledge, clear, tap, tray sweep |
+| `AsolAppLifecycle.java` | Whether the Activity is in front, so nothing rings twice |
 | `packages/native-core/src/adapters/notifications.adapter.ts` | The typed bridge |
 | `notifications/infrastructure/native/native-inbox.service.ts` | The adapter |
 | `notifications/application/native-inbox-service.ts` | Import, acknowledge, and tap orchestration |
@@ -1783,7 +1786,7 @@ above which iOS silently substitutes the system sound).
 
 Because Android reads a notification's sound from its **channel** on API 26 and
 above, "which sound" and "which channel" are one question. It is answered in one
-place — `src/features/notifications/domain/notification-sound.ts` — and read by
+place — `packages/notifications-core/src/domain/notification-sound.ts` — and read by
 all three senders: the FCM provider, the direct APNs provider, and the on-device
 local notification.
 
@@ -2222,7 +2225,7 @@ from FCM and APNs.
 
 | Half | Where | Why |
 |------|-------|-----|
-| Public key, subject | `src/features/notifications/domain/web-push-config.ts` | Handed to every browser that subscribes — it *is* `applicationServerKey`. A database row and an authenticated API protected nothing and cost a round trip before every subscription. |
+| Public key, subject | `packages/notifications-core/src/domain/web-push-config.ts` | Handed to every browser that subscribes — it *is* `applicationServerKey`. A database row and an authenticated API protected nothing and cost a round trip before every subscription. |
 | Private key | `WEB_PUSH_VAPID_PRIVATE_KEY`, notifications account only | A real secret, held exactly like `FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64` and `APNS_PRIVATE_KEY`. |
 
 There is no `/super-admin/vapid` page, no `notification_vapid_settings` table,

@@ -123,7 +123,7 @@ and silent delivery are expressed in the `apns` block built by
 
 On Apple there is no silent flag: the absence of a `sound` key *is* the silent
 banner. The file name is declared once in
-`src/features/notifications/domain/notification-sound.ts` and read by both Apple
+`packages/notifications-core/src/domain/notification-sound.ts` and read by both Apple
 transports, and `npm run ios:push:validate` fails if either stops using it.
 
 ## External Apple configuration still required

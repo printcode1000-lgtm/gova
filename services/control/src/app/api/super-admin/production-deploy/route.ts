@@ -7,13 +7,13 @@ import { runControlSuperAdminJsonRoute, runControlSuperAdminRoute } from '@/cont
 import type { StartRemoteDeployAllInput } from '@asol/vercel-deploy-core/remote-deploy-contracts';
 
 /**
- * `deploy:revision` is deliberately absent.
+ * The console selects intent, never a commit.
  *
- * A revision deploy targets an exact commit authenticated by the GitHub OIDC
- * route, which has its own entry point. Accepting it from a Super Admin session
- * would let the console deploy a commit no push event vouched for.
+ * There is no revision form to accept: the sandbox always checks out the tip of
+ * `main`, so a console request cannot name a commit no one pushed. `command` is
+ * narrowed here anyway, because a body is caller-supplied input.
  */
-type ConsoleDeployBody = Omit<StartRemoteDeployAllInput, 'command' | 'revision'> & {
+type ConsoleDeployBody = Omit<StartRemoteDeployAllInput, 'command'> & {
   command?: 'deploy:all' | 'deploy:push';
 };
 
@@ -28,6 +28,6 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   return runControlSuperAdminJsonRoute<ConsoleDeployBody, unknown>(request, ({ admin, body }) =>
-    startProductionDeploy({ adminUid: admin.uid, confirmation: body?.confirmation ?? '', callbackUrl: callbackUrl(request), command: body?.command, target: body?.target, deployAllOptions: body?.deployAllOptions }),
+    startProductionDeploy({ adminUid: admin.uid, confirmation: body?.confirmation ?? '', callbackUrl: callbackUrl(request), command: body?.command, deployAllOptions: body?.deployAllOptions }),
   );
 }

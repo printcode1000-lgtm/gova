@@ -50,9 +50,10 @@ reverted — a frontend on one SHA above backends on another, the one state the
 barrier exists to prevent. The transaction marks the revision `failed` before it
 rolls anything back, which makes `build:vercel` fail closed for that SHA forever.
 
-That is not hypothetical. A `deploy:push` whose gova deployment never appeared on
+That is not hypothetical. A publish whose gova deployment never appeared on
 Vercel left `ready` standing, and the topology had to be realigned by hand with
-an extra release.
+an extra release — see
+[main-push-without-vercel-deployment.md](../08-troubleshooting/problems/main-push-without-vercel-deployment.md).
 
 The retraction needed two halves, and the first one alone was worthless. Sending
 the failure to the callback logged "readiness withdrawn" while the barrier kept
@@ -122,46 +123,26 @@ leaving those checkpoints in place makes the next resume skip the deployments
 that were just reverted and then fail with no deployment report — the release
 becomes unretryable without deleting state by hand.
 
-## `deploy:revision` — controlled maintenance path
-
-```bash
-npm run deploy:revision -- --revision=<40-character-sha>
-```
-
-This command is reserved for controlled maintenance at an already-pushed SHA.
-An ordinary push to `main` never invokes it or deploys any Vercel project.
-
-It requires a clean checkout at that exact full SHA, never stages, commits, or
-pushes, and runs the transaction unchanged. It runs no gates: correctness is
-proven locally and by `deploy:all`, and the Vercel build is release coordination
-rather than CI.
-
-## `deploy:push` — publish without the gates
-
-```bash
-npm run deploy:push
-```
-
-Commits the working tree, pushes `main`, verifies the push reached GitHub, and
-runs the same transaction. Use it when the gates have already passed and you do
-not want to pay for them again; `deploy:all -- --skip-preflight` is the
-equivalent with the runbook's resume machinery.
-
-Flags: `--allow-empty`, `--allow-manifest-downgrade`, `--allow-scratch-files`,
-`--fast`.
-
-### `deploy:push:fast` — the commit, the push, and the Vercel wait
+## `deploy:push:fast` — the fast explicit release
 
 ```bash
 npm run deploy:push:fast
 ```
 
-`--fast --vercel-target=all`. Everything between the commit and Vercel is
-dropped: the Vercel token round trip, the scratch-file, manifest-downgrade and
-non-empty refusals, `secrets:backup`, and the mirror builds below. What survives
-is only what costs nothing and cannot be recovered from afterwards — the branch
-check, the restore of absent release credentials (a no-op when they are present),
-and `VERCEL_TOKEN`, without which the run cannot deploy at all.
+This is the only public fast path. It runs `--fast --vercel-target=all`.
+It skips account-access checks, publish refusals, `secrets:backup`, and local
+mirror builds. The branch check, secret restore, release credentials, exact-SHA
+deployment reports, and `VERCEL_TOKEN` remain mandatory.
+
+Because the backup is skipped, the final line says so — `secrets backup skipped
+(--fast)` rather than `secrets backup completed`. A success line naming a step
+the run did not perform is how an operator comes to believe an encrypted archive
+of the current secrets exists when none was written.
+
+`--allow-scratch-files` and `--allow-manifest-downgrade` have no effect here:
+`--fast` returns before the refusals they waive. `--allow-empty` still reaches
+the commit. The console's Deploy Push tab offers only that one flag for the same
+reason.
 
 The transaction itself is untouched: rollback baseline, control + six + main,
 the wait for `READY`, `smoke:deployed`, and automatic rollback on failure. So the
@@ -173,9 +154,11 @@ Vercel deployment or second-machine release path to race with that transaction.
 
 Two guards are not optional under `--fast`:
 
-- **`main` only.** A partial `--vercel-target=` is refused outright. That path is
-  a maintenance deploy, it writes no git and therefore never checks the branch —
-  the one way a publish flag could have reached Vercel from another branch.
+- **`main` only.** A partial `--vercel-target=` is refused outright. It used to
+  divert to a maintenance deploy that wrote no git and therefore never checked
+  the branch — the one way a publish could have reached Vercel from another
+  branch. That path was removed on 2026-09-04: to deploy one account for
+  maintenance, run that account's own `*:deploy` script.
 - **`HEAD` is advanced to `origin/main` before the commit.** The run fetches and
   fast-forwards, so the deployment commit is written on top of the remote rather
   than beside it. Only a fast-forward is automatic: `--ff-only` leaves the
@@ -187,39 +170,10 @@ The uncommitted tree is the point, not an accident: `git add -A` stages every
 modified and untracked file, so anything not yet on GitHub is published by the
 same commit.
 
-The trade is the mirror builds. `--fast` moves a mirror type error from two
-minutes locally to a failed publish cycle after `main` has already moved. Use it
-when the correctness gates have just run — which is what `deploy:push` assumes of
-its caller anyway.
-
-**It does prove the mirrors build.** `services:sync`, `services:build` and
-`control:build` run before the push. That is not a correctness gate sneaking
-back in — the root `typecheck` covers `src/` and the packages but not the
-service trees, so a type error inside a mirror is invisible locally and surfaces
-as `Command "npm run build" exited with 1` on Vercel, after `main` has already
-moved. Syncing first matters for the same reason: a mirror built from stale
-sources proves nothing about the sources being pushed.
-
-### Targeted maintenance deploys
-
-`--vercel-target=` selects accounts. A selection that is **not** the complete
-set of six diverts — before any git write — to a maintenance deploy: it deploys
-the named accounts from the current `HEAD` and stops. No commit, no push, no
-readiness.
-
-The rule exists because publishing is all-or-nothing under the barrier. A push
-starts the gova build; the build then waits for a readiness that a partial
-deploy is forbidden to mark, and fails closed when the wait times out. Before
-this rule `--vercel-target=none` pushed `main` and deployed nothing, which
-guaranteed exactly that outcome.
-
-```bash
-npm run deploy:push -- --vercel-target=products   # maintenance: deploys products only
-npm run deploy:push                               # release: control + six + main
-```
-
-Only the complete control + six workload proof may release the gova build
-barrier.
+The trade is intentional: a mirror error can surface only during the remote
+release after `main` has moved. Use this command only after the local gates have
+already passed. There is no public partial-target, revision, or generic
+`deploy:push` command.
 
 ## Deployment prerequisites
 
@@ -266,6 +220,22 @@ capability. Its `vercel.json` sets `outputDirectory` to `.next`.
 This failure could only appear once a SHA actually crossed the readiness
 barrier; every earlier attempt failed before the gova build was allowed to
 publish, which is why it surfaced late.
+
+**Delete the view after a local release.** `.tmp-gova-build/` is gitignored and
+disposable, but nothing removes it — not the uploader, not `deploy:all`. Left in
+place it is an unauthorized top-level source directory, and the Repository Sweep
+in `npm run architecture:check` fails on it:
+
+```text
+Unauthorized top-level source directory ".tmp-gova-build" contains N script file(s).
+```
+
+Every other reported violation then comes from files copied inside it, not from
+repository source. Remove the directory and re-run the check:
+
+```bash
+rm -rf .tmp-gova-build
+```
 
 ## Verification
 

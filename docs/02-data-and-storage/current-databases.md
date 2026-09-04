@@ -304,7 +304,7 @@ Tables:
 Device-token rows contain transport registration only. Chat preferences are not duplicated onto tokens. The notifications database uses one pre-release baseline migration and is synchronized to its isolated Turso database from the same final SQLite schema.
 
 The Web Push VAPID pair is not a table. Its public half is a constant in
-`src/features/notifications/domain/web-push-config.ts` and its private half is
+`packages/notifications-core/src/domain/web-push-config.ts` and its private half is
 `WEB_PUSH_VAPID_PRIVATE_KEY`, matching how the Firebase and APNs credentials
 are held.
 

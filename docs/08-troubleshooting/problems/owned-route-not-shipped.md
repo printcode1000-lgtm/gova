@@ -217,8 +217,11 @@ the full suite green, and `Failed to type check` on Vercel after `main` had
 moved.
 
 `services:build` compiles each mirror the way Vercel does, so it catches this —
-but `deploy:push` skipped it, being the no-gates path. It no longer does:
-`services:sync`, `services:build` and `control:build` now run before the push.
+but the no-gates publish path skipped it. It no longer does: `services:sync`,
+`services:build` and `control:build` run before the push in
+`assertServiceMirrorsBuild`. `deploy:push:fast` is the one exception, and it says
+so: `--fast` skips the mirror builds by name, which is exactly the trade this
+incident priced.
 The rule that came out of it is narrow and worth keeping: a check may be skipped
 when it proves *correctness*, never when it proves the artifact can be built.
 

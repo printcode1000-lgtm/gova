@@ -30,7 +30,15 @@ export const REMOTE_DEPLOY_ALL_STAGES = [
 
 export type RemoteDeployAllStage = (typeof REMOTE_DEPLOY_ALL_STAGES)[number];
 export type RemoteDeployAllEmailStatus = "pending" | "sent" | "failed";
-export type RemoteDeployCommand = "deploy:all" | "deploy:push" | "deploy:revision";
+/**
+ * What the console asked the sandbox to run.
+ *
+ * `deploy:push` is a transport-only name: the runner maps it to the single
+ * public fast release command, `deploy:push:fast`. There is no revision form and
+ * no partial-account form — every release publishes control, the six workloads,
+ * exact-SHA readiness and `gova` together, or it publishes nothing.
+ */
+export type RemoteDeployCommand = "deploy:all" | "deploy:push";
 export type RemoteDeployAllResumeMode = "full" | "from-branch" | "rerun-branch" | "rerun-failed";
 
 export interface RemoteDeployAllOptions {
@@ -55,9 +63,6 @@ export interface RemoteDeployAllSnapshot {
   sandboxSessionId?: string;
   initiatedByUid?: string;
   command?: RemoteDeployCommand;
-  /** Exact main commit selected by the authenticated GitHub push event. */
-  revision?: string;
-  target?: "all" | "main" | "notifications" | "products" | "orders" | "profiles" | "submain" | "sub2main";
   deployAllOptions?: RemoteDeployAllOptions;
   startedAt?: string;
   updatedAt: string;
@@ -93,8 +98,6 @@ export interface RemoteDeployAllResult {
 export interface StartRemoteDeployAllInput {
   confirmation: string;
   command?: RemoteDeployCommand;
-  revision?: string;
-  target?: "all" | "main" | "notifications" | "products" | "orders" | "profiles" | "submain" | "sub2main";
   deployAllOptions?: RemoteDeployAllOptions;
 }
 

@@ -9,6 +9,20 @@ coordination fixes made on 2026-09-03. The normative behavior remains defined by
 [Release Commands](./release-commands.md), [Deployment Targets](./deployment-targets.md),
 and [GitHub CI Policy](./github-ci-policy.md).
 
+> **Historical record — partly superseded on 2026-09-04.** Sections 1–3 below
+> describe a world in which `main` still produced a Vercel Git deployment and
+> `.github/workflows/deploy-main.yml` dispatched `deploy:revision` for ordinary
+> pushes. Both are gone. `vercel.json` now disables Git deployments for **every**
+> branch including `main`, the deployment workflow was deleted (only `docs.yml`
+> and `local-agent-bootstrap.yml` may exist), and `deploy:revision` and the
+> generic `deploy:push` were removed from `package.json`. `gova` is published
+> only by the explicit `main:deploy` step inside the release transaction, and the
+> only public release commands are `deploy:all` and `deploy:push:fast`. Read this
+> document for *why* the coordination problem existed; read
+> [GitHub CI Policy](./github-ci-policy.md) and
+> [Release Commands](./release-commands.md) for what is true now. See
+> [§ What replaced this design](#what-replaced-this-design).
+
 ## Incident summary
 
 The release path had four interacting failure modes:
@@ -199,11 +213,39 @@ can proceed only after the Vercel limit resets or the account limit is changed.
 
 ## Operational invariants after this change
 
-1. Non-`main` Git pushes must not create Vercel Git deployments for `gova`.
-2. A `deploy(push):` or `deploy(main):` commit must not launch `deploy:revision`.
-3. An ordinary direct push to `main` must still dispatch `deploy:revision`.
+These were the invariants as of 2026-09-03. Invariants 1–3 were replaced the
+next day by a stricter rule — see the section below.
+
+1. ~~Non-`main` Git pushes must not create Vercel Git deployments for `gova`.~~
+2. ~~A `deploy(push):` or `deploy(main):` commit must not launch `deploy:revision`.~~
+3. ~~An ordinary direct push to `main` must still dispatch `deploy:revision`.~~
 4. A failed/error Vercel commit status must stop publishing before the first
    production runtime mutation.
 5. Rollback must be safe when a captured deployment is already Production.
 6. Generated knowledge documentation must be regenerated whenever release source
    changes alter environment-key consumers or graph relationships.
+
+## What replaced this design
+
+The 2026-09-03 repair kept two release entrypoints — the local commands and a
+GitHub-dispatched `deploy:revision` — and spent its complexity keeping them from
+colliding. On 2026-09-04 the second entrypoint was removed instead:
+
+| Then | Now |
+| --- | --- |
+| `vercel.json` allowed Git deployments on `main` | `git.deploymentEnabled` is `false` for `*` **and** `main`; nothing deploys from Git |
+| `.github/workflows/deploy-main.yml` dispatched a release on push | The workflow is deleted; `ALLOWED_WORKFLOW_FILES` in `scripts/github-ci-policy.ts` permits only `docs.yml` and `local-agent-bootstrap.yml` |
+| `deploy:revision` deployed an already-pushed SHA | Removed from `package.json`; `gova` is deployed by the transaction's explicit `main:deploy` step |
+| `deploy:push` published with selectable targets | Removed; `deploy:push:fast` publishes the complete set, and a bare `deploy:push` is refused |
+| Duplicate-release contention was prevented by a commit-prefix skip | There is no second entrypoint to contend with |
+
+Invariants 4–6 survive unchanged: `assertMainGitDeploymentNotRejected` still runs
+in `scripts/deploy-push.ts` as a cheap pre-mutation check, rollback is still
+idempotent, and generated knowledge is still regenerated with release-source
+changes.
+
+`RELEASE_OWNED_COMMIT_PREFIXES` and `deploymentWorkflowViolations()` remain in
+`scripts/github-ci-policy.ts`. They are the contract a deployment workflow would
+have to satisfy *if one were ever reintroduced*; with no such workflow present
+they enforce nothing, and `ALLOWED_WORKFLOW_FILES` is what actually keeps one
+from existing.

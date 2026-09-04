@@ -471,44 +471,20 @@ function printRollbackGuidance(revision: string): void {
   );
 }
 
-function formatSuccessLine(): string {
+/**
+ * `--fast` skips `secrets:backup`, so the success line must not claim it.
+ *
+ * A final line is the only thing most operators read. One that names a step the
+ * run deliberately skipped teaches the wrong recovery: it says an encrypted
+ * archive of the current secrets exists when none was written.
+ */
+function formatSuccessLine(secretsBackedUp: boolean): string {
   return (
-    "[deploy:push] SUCCESS — secrets backup completed, GitHub push verified; " +
+    "[deploy:push] SUCCESS — " +
+    (secretsBackedUp ? "secrets backup completed, " : "secrets backup skipped (--fast), ") +
+    "GitHub push verified; " +
     `control, ${ALL_DEPLOY_PUSH_TARGETS.length} isolated Vercel production targets, ` +
     "and main are READY, and exact-SHA release readiness is published."
-  );
-}
-
-/**
- * A targeted deploy is maintenance, and maintenance never publishes.
- *
- * `deploy:push` used to push `main` for any selection, including
- * `--vercel-target=none`. Under the release barrier that is a trap: the push
- * starts the GitHub-linked gova build, the build waits for exact-SHA readiness
- * that a partial deploy must never mark, and gova fails closed after the
- * timeout. So a partial selection deploys the named accounts from the current
- * HEAD and stops — no commit, no push, no readiness.
- *
- * `docs/07-mobile-and-release/release-commands.md` § "Targeted maintenance
- * deploys" records the rule this enforces.
- */
-async function runTargetedMaintenanceDeploy(
-  targets: readonly DeployPushTarget[],
-): Promise<void> {
-  const revision = git(["rev-parse", "HEAD"]);
-  const timestamp = new Date().toISOString();
-  const runId = `${timestamp.replace(/[^0-9]/g, "").slice(0, 17)}-${revision.slice(0, 12)}`;
-  await ensureReleaseSecretsRestored("deploy:push");
-  await assertVercelAccountsForTargets(targets);
-  console.log(
-    `[deploy:push] Targeted maintenance deploy of ${targets.join(", ")} at ${revision.slice(0, 12)}. ` +
-      "main is not pushed and no SHA is marked ready.",
-  );
-  const reports = await deploySelectedAccounts({ targets, timestamp, revision, runId });
-  printFinalSummary(reports);
-  console.log(
-    `[deploy:push] SUCCESS — ${targets.length} maintenance target(s) READY. ` +
-      "Run deploy:all or deploy:push with the complete set to publish a release.",
   );
 }
 
@@ -625,7 +601,7 @@ async function runReleaseTransaction(input: {
   readonly runId: string;
   readonly mainComment: string;
   readonly logPrefix: string;
-  readonly command: "deploy:revision" | "deploy:push";
+  readonly command: "deploy:push";
   readonly sandboxName: string;
   readonly initiatedByUid: string;
 }): Promise<VercelDeploymentReport[]> {
@@ -720,49 +696,6 @@ async function runReleaseTransaction(input: {
   }
 }
 
-/**
- * Deploy a commit that is already on main without creating or pushing another
- * commit. This is the GitHub-push automation path; the caller authenticates
- * the event and the sandbox pins HEAD before reaching this function.
- */
-export async function deployExistingRevision(revision: string): Promise<void> {
-  const normalizedRevision = revision.trim().toLowerCase();
-  if (!/^[0-9a-f]{40}$/.test(normalizedRevision)) {
-    throw new Error("--revision must be a full 40-character Git commit SHA.");
-  }
-  if (git(["rev-parse", "HEAD"]).toLowerCase() !== normalizedRevision) {
-    throw new Error("The checked-out HEAD does not match --revision.");
-  }
-  if (git(["status", "--porcelain"])) {
-    throw new Error("The revision deployment requires a clean working tree.");
-  }
-
-  const targets = [...ALL_DEPLOY_PUSH_TARGETS];
-  await ensureReleaseSecretsRestored("deploy:revision");
-  assertMainDeploymentCredentials();
-  await assertVercelAccountsForTargets(targets);
-
-  const timestamp = new Date().toISOString();
-  const runId = `${timestamp.replace(/[^0-9]/g, "").slice(0, 17)}-${normalizedRevision.slice(0, 12)}`;
-  const mainComment = `deploy(revision): ${timestamp} @ ${normalizedRevision.slice(0, 12)}`;
-
-  const reports = await runReleaseTransaction({
-    revision: normalizedRevision,
-    timestamp,
-    runId,
-    mainComment,
-    logPrefix: "[deploy:revision]",
-    command: "deploy:revision",
-    sandboxName: "deploy-revision-sandbox",
-    initiatedByUid: "github-push",
-  });
-
-  printFinalSummary(reports);
-  console.log(
-    `[deploy:revision] SUCCESS — control, ${targets.length} isolated Vercel targets, and main are READY at ${normalizedRevision.slice(0, 12)}.`,
-  );
-}
-
 function failedReportDetails(reports: readonly VercelDeploymentReport[]): string[] {
   return reports
     .filter((report) => report.state !== "READY")
@@ -826,32 +759,29 @@ async function main(): Promise<void> {
   }
   const isolatedTargets = await resolveServiceDeployTargets(targetArgs);
 
-  // A maintenance deploy diverts before any branch check, because it writes
-  // nothing to git. `--fast` is a publish flag, so a partial selection under it
-  // would silently deploy from whatever branch the caller happened to be on —
-  // the one path that could reach Vercel off `main`. It is refused instead.
-  if (flags.fast && isolatedTargets.length !== ALL_DEPLOY_PUSH_TARGETS.length) {
-    fail(
-      "--fast publishes the complete set (control + six workloads + main). " +
-        `Selected: ${isolatedTargets.join(", ") || "(none)"}. ` +
-        "Drop --fast for a targeted maintenance deploy.",
-    );
-    return;
-  }
-
-  // Publishing is all-or-nothing: control and all six workloads, or no push.
+  // Publishing is all-or-nothing: control, all six workloads, readiness and
+  // main, or no push at all. A partial selection is refused rather than
+  // diverted: it would deploy from whatever branch the caller happened to be
+  // on, having written no git and therefore never checked the branch — the one
+  // path by which a publish could reach Vercel from something other than `main`.
   if (isolatedTargets.length !== ALL_DEPLOY_PUSH_TARGETS.length) {
-    await runTargetedMaintenanceDeploy(isolatedTargets);
+    fail(
+      "deploy:push:fast publishes the complete set (control + six workloads + main). " +
+        `Selected: ${isolatedTargets.join(", ") || "(none)"}. ` +
+        "There is no partial-target deploy; use the account's own deploy script for maintenance.",
+    );
     return;
   }
 
   await assertFastPublishReadiness(isolatedTargets, flags);
 
+  let secretsBackedUp = false;
   if (flags.fast) {
     console.log("[deploy:push] --fast: skipping secrets:backup.");
   } else {
     try {
       await runDeploymentNpmScript("secrets:backup", { logPrefix: "deploy:push" });
+      secretsBackedUp = true;
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       fail(`secrets:backup did not complete: ${message}`);
@@ -942,7 +872,7 @@ async function main(): Promise<void> {
   }
 
   printFinalSummary(reports);
-  console.log(formatSuccessLine());
+  console.log(formatSuccessLine(secretsBackedUp));
 }
 
 /**

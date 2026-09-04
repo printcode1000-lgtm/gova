@@ -170,7 +170,7 @@ Two invariants are unchanged:
 
 ## Deployed smoke origins
 
-`smoke:deployed` asks the seven deployed origins for a route that reaches their own data. It resolves each origin as:
+`smoke:deployed` asks the eight deployed origins for a route that reaches their own data. It resolves each origin as:
 
 1. The explicit `NEXT_PUBLIC_ASOL_*_URL` environment value, when set.
 2. Otherwise the canonical production constant declared in `@asol/native-core` — the same declaration `build:static` bakes into the static and native bundles.
@@ -202,7 +202,7 @@ The same branch table is printed on success, so a resumed run states plainly how
 
 ## Related
 
-- [Deployment Targets](./deployment-targets.md) — the seven accounts and what deploys where.
+- [Deployment Targets](./deployment-targets.md) — the eight accounts and what deploys where.
 - [Release and Secrets](./release-and-secrets.md) — secret archive and restore contract.
 - [Scripts and Workflows](./scripts-and-workflows.md) — command inventory and the `main`-only rule.
 - [Release Command Center](./capacitor/release-command-center.md) — the console that renders the same runbook.
