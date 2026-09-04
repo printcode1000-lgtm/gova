@@ -2,13 +2,11 @@ import {
   DEPLOY_ALL_RUNBOOK,
   DEPLOY_PUSH_RUNBOOK,
   DEPLOY_ALL_SCENARIO_VALUES,
-  DEPLOY_PUSH_TARGET_VALUES,
   deployAllBranchIds,
   deployPushBranchIds,
   type DeployAllRunbookBranch,
   type DeployPushRunbookBranch,
   type DeployAllScenarioValue,
-  type DeployPushTargetValue,
 } from "@asol/release-core/console";
 
 /** Arabic labels for catalog scenario values — keys must cover every exported value. */
@@ -26,22 +24,10 @@ const DEPLOY_ALL_SCENARIO_LABELS: Record<DeployAllScenarioValue, string> = {
   "from-sub2main": "استكمال من sub2main",
 };
 
-const DEPLOY_PUSH_TARGET_LABELS: Record<DeployPushTargetValue, string> = {
-  none: "GitHub + main فقط",
-  main: "main فقط",
-  notifications: "notifications",
-  products: "products",
-  orders: "orders",
-  profiles: "profiles",
-  submain: "submain",
-  sub2main: "sub2main",
-  all: "كل حسابات Vercel",
-};
-
 /** High-signal Arabic help; anything missing falls back to the runbook command. */
 const ALL_BRANCH_HELP_OVERRIDES: Record<string, string> = {
   "production-doctor": "يفحص جاهزية بيئة الإنتاج محلياً قبل أي كتابة في Git؛ تخطيه يعني أنك تثق أن Node وVercel والأسرار جاهزة.",
-  "vercel-account-access": "يتحقق من الوصول لكل حسابات Vercel السبعة حتى لا يظهر نقص التوكن بعد الدفع.",
+  "vercel-account-access": "يتحقق من الوصول لكل حسابات Vercel الثمانية حتى لا يظهر نقص التوكن بعد الدفع.",
   lint: "يشغل فحص جودة الكود. إذا فشل، يتوقف التسلسل قبل النشر.",
   types: "يشغل TypeScript بدون إخراج ملفات؛ يكشف كسر العقود والاستيرادات.",
   architecture: "يتأكد من حدود الحزم وقواعد العزل ومنع الاستيرادات المخالفة.",
@@ -78,25 +64,25 @@ const ALL_BRANCH_HELP_OVERRIDES: Record<string, string> = {
 
 const PUSH_BRANCH_HELP_OVERRIDES: Record<string, string> = {
   "push-main-branch": "يتأكد أن التشغيل من main فقط.",
+  "push-secrets-restore": "يستعيد أسرار الإصدار من الأرشيف المشفر قبل أي نشر.",
   "push-main-credentials": "يتأكد من توكن Vercel الأساسي وربط مشروع gova.",
-  "push-target-accounts": "يتحقق من الحسابات المختارة في Vercel قبل commit/push.",
-  "push-scratch-files": "يمنع دفع ملفات مؤقتة أو logs بالخطأ.",
-  "push-release-manifest": "يمنع خفض manifest الإصدار في مسار الدفع السريع.",
-  "push-non-empty": "يمنع دفع commit فارغ إلا مع allow-empty.",
-  "push-secrets-backup": "يتأكد من أرشيف الأسرار المشفر قبل الدفع.",
   "push-clear-git-lock": "يزيل Git lock مهجوراً فقط.",
+  "push-advance-origin": "يقدّم HEAD إلى origin/main بـ fast-forward فقط؛ يرفض التباعد بدل إعادة الأساس فوق شجرة غير مُودعة.",
   "push-stage-tree": "يضيف كل تغييرات الشجرة إلى commit الدفع.",
   "push-commit-tree": "ينشئ commit بعنوان deploy(push).",
   "push-clean-tree": "يتأكد أن الشجرة نظيفة بعد commit.",
   "push-github": "يدفع main إلى GitHub.",
   "push-github-verify": "يتحقق أن origin/main يطابق commit المدفوع.",
-  "push-notifications": "ينشر notifications عند اختيار target مطابق.",
-  "push-products": "ينشر products عند اختيار target مطابق.",
-  "push-orders": "ينشر orders عند اختيار target مطابق.",
-  "push-profiles": "ينشر profiles عند اختيار target مطابق.",
-  "push-submain": "ينشر submain عند اختيار target مطابق.",
-  "push-sub2main": "ينشر sub2main عند اختيار target مطابق.",
-  "push-main-ready": "ينتظر gova الرئيسي حتى يصبح READY بعد GitHub push.",
+  "push-capture-baseline": "يلتقط النشرات الإنتاجية الحالية قبل أول تغيير، ليصبح التراجع التلقائي ممكناً.",
+  "push-notifications": "ينشر notifications في حسابه المعزول.",
+  "push-products": "ينشر products في حسابه المعزول.",
+  "push-orders": "ينشر orders في حسابه المعزول.",
+  "push-profiles": "ينشر profiles في حسابه المعزول.",
+  "push-submain": "ينشر submain في حسابه المعزول.",
+  "push-sub2main": "ينشر sub2main في حسابه المعزول.",
+  "push-control-deploy": "ينشر control على نفس الـ SHA؛ خطوة إلزامية مستقلة وليست حملاً سابعاً.",
+  "push-publish-readiness": "ينشر جاهزية الـ SHA الدقيقة؛ هذا وحده ما يسمح لبناء gova بالنشر.",
+  "push-main-ready": "ينشر gova صراحةً وينتظر READY؛ الفشل يسحب الجاهزية ويعيد الأساس الملتقط.",
 };
 
 function findAllBranch(id: string): DeployAllRunbookBranch | undefined {
@@ -149,10 +135,6 @@ export const deployAllScenarios = DEPLOY_ALL_SCENARIO_VALUES.map(
   (value) => [value, DEPLOY_ALL_SCENARIO_LABELS[value]] as const,
 );
 
-export const deployPushTargets = DEPLOY_PUSH_TARGET_VALUES.map(
-  (value) => [value, DEPLOY_PUSH_TARGET_LABELS[value]] as const,
-);
-
 export function deployAllScenarioArg(value: string): string {
   if (value === "full") return "";
   if (value === "services") return "--phase=services";
@@ -165,4 +147,4 @@ export const STATUS_SUMMARY_DESCRIPTION =
   "نظرة سريعة على الفروع المفعّلة وحالة التنفيذ وسلوك الخطأ.";
 
 export const DEPLOY_PUSH_DESCRIPTION =
-  "المسار السريع: أسرار، commit، push، ثم تحقق Vercel للأهداف المختارة دون فحوصات build/test.";
+  "المسار السريع الوحيد: commit وpush، ثم المعاملة كاملة — الأحمال الستة، control، الجاهزية، وgova — دون فحوصات build/test ودون اختيار حساب.";

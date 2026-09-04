@@ -16,6 +16,7 @@ const isGithubActions = process.env.GITHUB_ACTIONS === 'true';
 const repositoryName = process.env.GITHUB_REPOSITORY ? `/${process.env.GITHUB_REPOSITORY.split('/')[1]}` : '';
 
 const isStatic = process.env.ASOL_MODE === 'static';
+const isGovaUploadView = process.env.ASOL_GOVA_UPLOAD_VIEW === '1';
 const basePath = process.env.ASOL_BASE_PATH?.replace(/\/$/, '') || (isGithubActions && isStatic ? repositoryName : '');
 const assetPrefix = basePath;
 const deterministicBuildId = process.env.ASOL_NEXT_BUILD_ID;
@@ -57,10 +58,16 @@ const nextConfig: NextConfig = {
   // Node.js-only packages. Prevent Next.js from bundling them — let Node require()
   // them at runtime. `drizzle-orm` stays external; Turso adapters import through
   // `drizzle-libsql.server.ts` so Next file tracing ships `drizzle-orm/libsql`.
-  serverExternalPackages: ['@libsql/client', 'better-sqlite3', 'drizzle-orm'],
-  outputFileTracingIncludes: {
-    '/*': ['./node_modules/drizzle-orm/libsql/**/*'],
-  },
+  // The gova upload has no database capability, and adding these files to every
+  // frontend route would make its minimal artifact carry a backend driver.
+  ...(isGovaUploadView
+    ? {}
+    : {
+        serverExternalPackages: ['@libsql/client', 'better-sqlite3', 'drizzle-orm'],
+        outputFileTracingIncludes: {
+          '/*': ['./node_modules/drizzle-orm/libsql/**/*'],
+        },
+      }),
 
   /**
    * The release console reads build artifacts off the local filesystem, so Next
@@ -113,8 +120,7 @@ const nextConfig: NextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
-  allowedDevOrigins: ['localhost', '127.0.0.1'],
-
+allowedDevOrigins: ['localhost', '127.0.0.1', '192.168.1.2'],
   /**
    * The static CORS envelope for the public bytes this deployment serves.
    *

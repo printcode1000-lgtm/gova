@@ -7,14 +7,14 @@
 | Responsibility                      | File                                                        |
 | ----------------------------------- | ----------------------------------------------------------- |
 | Runtime contract, schemas and save policy | `packages/hero-slider-core/src`                            |
-| Reusable component                  | `src/shared/ui/HeroSlider.tsx`                          |
-| Reusable component public props/types | `src/shared/ui/hero-slider.types.ts`                   |
-| Reusable component transition styling | `src/shared/ui/hero-slider-styles.ts`                  |
-| View-mode off-screen image probes   | `src/shared/ui/HeroSliderImageProbe.tsx`                |
-| Carousel slide filtering helpers    | `src/shared/ui/hero-slider-model.ts`                    |
-| Carousel UI helper tests            | `src/shared/ui/hero-slider.test.ts`                     |
-| Full administrative editor          | `src/shared/ui/HeroSliderEditor.tsx`                    |
-| Image-only profile editor           | `src/shared/ui/HeroSliderImagesEditor.tsx`              |
+| Reusable component                  | `src/features/advertisements/presentation/HeroSlider.tsx`                          |
+| Reusable component public props/types | `src/features/advertisements/presentation/hero-slider.types.ts`                   |
+| Reusable component transition styling | `src/features/advertisements/presentation/hero-slider-styles.ts`                  |
+| View-mode off-screen image probes   | `src/features/advertisements/presentation/HeroSliderImageProbe.tsx`                |
+| Carousel slide filtering helpers    | `src/features/advertisements/presentation/hero-slider-model.ts`                    |
+| Carousel UI helper tests            | `src/features/advertisements/presentation/hero-slider.test.ts`                     |
+| Full administrative editor          | `src/features/advertisements/presentation/HeroSliderEditor.tsx`                    |
+| Image-only profile editor           | `src/features/advertisements/presentation/HeroSliderImagesEditor.tsx`              |
 | Home integration                    | `src/features/home/presentation/HomeScreen.tsx`                        |
 | Home cache and synchronization      | `src/features/advertisements/presentation/hooks/use-home-hero-slider.ts` |
 | Home save broadcast                 | `src/features/advertisements/application/home-hero-slider-sync.ts`      |
@@ -242,7 +242,7 @@ Relevant files:
 - `src/features/advertisements/server/services/home-hero-slider-service.server.ts`
 - `packages/hero-slider-core/src/server/home-hero-slider-service.ts`
 - `packages/data-core/src/domains/advertisements/repositories/home-hero-slider.repository.ts`
-- `packages/data-core/src/core/database/advertisements-db-client.ts`
+- `packages/data-core/src/core/database/advertisements-turso-db-client.ts`
 
 ### API routes
 
@@ -309,7 +309,7 @@ Maximum processed image size: 1 MB (1024 KB)
 Output format: WebP
 ```
 
-This profile is declared in `packages/storage-core/packages/storage-core/src/config/storage-profiles.json` and exposed as `StorageProfiles.HomeHeroSlider`.
+This profile is declared in `packages/storage-core/src/config/storage-profiles.json` and exposed as `StorageProfiles.HomeHeroSlider`.
 
 `StorageImageManager` uploads the image and returns:
 
@@ -430,7 +430,7 @@ Maximum processed image size: 20 KB
 Output format: WebP
 ```
 
-These profiles are also declared in `packages/storage-core/packages/storage-core/src/config/storage-profiles.json`.
+These profiles are also declared in `packages/storage-core/src/config/storage-profiles.json`.
 
 ## Choosing the correct mode and persistence flow
 

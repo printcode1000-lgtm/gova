@@ -19,7 +19,7 @@ import {
  * the release can never publish.
  */
 
-export type ReleaseReadinessCommand = "deploy:all" | "deploy:revision" | "deploy:push";
+export type ReleaseReadinessCommand = "deploy:all" | "deploy:push";
 
 /** A deployment report becomes the component evidence the release state stores. */
 export function releaseComponentFromReport(

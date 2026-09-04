@@ -54,7 +54,6 @@ export function ProductionDeployPage() {
   const { result, running, starting, error, start } = useProductionDeploy();
   const [confirmation, setConfirmation] = React.useState("");
   const [tab, setTab] = React.useState<"deploy:all" | "deploy:push">("deploy:all");
-  const [target, setTarget] = React.useState<PushTarget>("all");
   const [resumeMode, setResumeMode] = React.useState<RemoteDeployAllResumeMode>("full");
   const [branchId, setBranchId] = React.useState(DEPLOY_ALL_BRANCH_IDS[0] ?? "");
   const [serviceSmokeRebuild, setServiceSmokeRebuild] = React.useState(false);
@@ -122,10 +121,10 @@ export function ProductionDeployPage() {
 
       <section id='features-release-commands-presentation-productiondeploypage-section-14-pgrv3l' className="space-y-3 rounded-lg border p-3">
         {tab === "deploy:push" ? (
-          <>
-            <label id='features-release-commands-presentation-productiondeploypage-label-15-olxc1v' className="block text-sm font-medium" htmlFor="production-deploy-target">هدف Deploy Push</label>
-            <select id="production-deploy-target" value={target} onChange={(event) => setTarget(event.target.value as PushTarget)} className="h-10 w-full rounded-md border bg-background px-3 text-sm" aria-label="هدف Deploy Push">{PUSH_TARGETS.map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select>
-          </>
+          <p id='features-release-commands-presentation-productiondeploypage-p-15-olxc1v' className="text-sm text-muted-foreground">
+            ينشر المعاملة كاملة: control ثم الأحمال الستة ثم جاهزية الإصدار ثم gova. لا يوجد
+            اختيار حساب جزئي.
+          </p>
         ) : (
           <DeployAllOptions
             resumeMode={resumeMode}
@@ -155,7 +154,7 @@ export function ProductionDeployPage() {
           className="w-full active:scale-[0.99] focus-visible:ring-2"
           onClick={() => {
             setConfirmation("");
-            void start(tab, target, tab === "deploy:all" ? deployAllOptions : undefined);
+            void start(tab, tab === "deploy:all" ? deployAllOptions : undefined);
           }}
         >
           {starting || running ? (
@@ -246,8 +245,6 @@ export function ProductionDeployPage() {
   );
 }
 
-type PushTarget = "all" | "main" | "notifications" | "products" | "orders" | "profiles" | "submain" | "sub2main";
-const PUSH_TARGETS: readonly [PushTarget, string][] = [["all", "كل الأهداف"], ["main", "التطبيق الرئيسي"], ["notifications", "الإشعارات"], ["products", "المنتجات"], ["orders", "الطلبات"], ["profiles", "الملفات الشخصية"], ["submain", "Submain"], ["sub2main", "Sub2main"]];
 const DEPLOY_ALL_BRANCH_IDS = deployAllBranchIds();
 const DEPLOY_ALL_RESUME_MODES: readonly [RemoteDeployAllResumeMode, string][] = [
   ["full", "تشغيل كامل"],

@@ -1,4 +1,4 @@
-import { execFileSync } from 'child_process';
+import { spawnSync } from 'child_process';
 import { existsSync, readFileSync, rmSync } from 'node:fs';
 import path from 'path';
 import { ACCOUNT_DECLARATIONS, type AccountDeclaration } from '@asol/account-declarations';
@@ -10,6 +10,7 @@ import {
   rollbackToBaseline,
 } from './release-rollback';
 import {
+  type VercelDeploymentReport,
   printDeploymentReport,
   vercelDeploymentMetadata,
   waitForVercelProductionDeployment,
@@ -24,6 +25,14 @@ export * from './release-rollback';
 export { deleteProjectEnv } from './project-env';
 
 export const RELEASE_ROLLBACK_ACCOUNTS = ["gova", "control", ...RELEASE_WORKLOADS] as const;
+const RELEASE_DEPLOYMENT_CONTEXT = 'ASOL_RELEASE_DEPLOYMENT_CONTEXT';
+
+function assertApprovedReleaseDeployment(): void {
+  if (process.env[RELEASE_DEPLOYMENT_CONTEXT] === 'approved') return;
+  throw new Error(
+    'Direct Vercel account deployment is disabled. Use npm run deploy:all or npm run deploy:push:fast.',
+  );
+}
 
 export function vercelAccessForReleaseAccount(account: string): { token: string; teamId?: string } {
   const declaration = ACCOUNT_DECLARATIONS[account];
@@ -424,6 +433,17 @@ export interface RunVercelOptions {
 }
 
 const PINNED_VERCEL_CLI = '59.0.0';
+const VERCEL_UPLOAD_MAX_ATTEMPTS = 3;
+
+function isTransientVercelUploadFailure(output: string): boolean {
+  return /fetch failed|failed to fetch|ECONNRESET|ECONNREFUSED|ETIMEDOUT|EAI_AGAIN|UND_ERR_|socket hang up/i.test(output);
+}
+
+function printVercelOutput(value: string | Buffer | undefined): string {
+  const output = value?.toString() ?? '';
+  if (output) process.stdout.write(output);
+  return output;
+}
 
 function resolvePinnedVercelCli(): string {
   const packageJsonPath = path.join(process.cwd(), 'node_modules', 'vercel', 'package.json');
@@ -491,12 +511,24 @@ export function runVercel(options: RunVercelOptions): void {
   if (options.teamId) childEnv.VERCEL_ORG_ID = options.teamId;
   else delete childEnv.VERCEL_ORG_ID;
 
-  execFileSync(command, commandArgs, {
-    stdio: 'inherit',
-    shell: false,
-    cwd: options.serviceDir,
-    env: childEnv,
-  });
+  for (let attempt = 1; attempt <= VERCEL_UPLOAD_MAX_ATTEMPTS; attempt += 1) {
+    const result = spawnSync(command, commandArgs, {
+      shell: false,
+      cwd: options.serviceDir,
+      env: childEnv,
+      encoding: 'utf8',
+    });
+    const output = `${printVercelOutput(result.stdout)}${printVercelOutput(result.stderr)}`;
+    if (!result.error && result.status === 0) return;
+
+    const reason = result.error?.message ?? output.trim() ?? `Vercel CLI exited ${result.status ?? 'without a status'}`;
+    if (!isTransientVercelUploadFailure(`${reason}\n${output}`) || attempt === VERCEL_UPLOAD_MAX_ATTEMPTS) {
+      throw new Error(`Vercel CLI failed after ${attempt} attempt(s): ${reason}`);
+    }
+    console.warn(
+      `[vercel] transient upload failure on attempt ${attempt}/${VERCEL_UPLOAD_MAX_ATTEMPTS}: ${reason}. Retrying.`,
+    );
+  }
 }
 
 export interface DeployAccountServiceOptions {
@@ -506,6 +538,7 @@ export interface DeployAccountServiceOptions {
 }
 
 export async function deployAccountService(options: DeployAccountServiceOptions): Promise<void> {
+  assertApprovedReleaseDeployment();
   const { declaration, syncSources } = options;
   const env = options.env ?? process.env;
 
@@ -581,6 +614,8 @@ export async function deployAccountService(options: DeployAccountServiceOptions)
 
 export interface DeployAccountRootAppOptions {
   declaration: AccountDeclaration;
+  /** A prepared minimal upload tree; gova uses this instead of the full checkout. */
+  deploymentDirectory?: string;
   env?: Record<string, string | undefined>;
 }
 
@@ -592,7 +627,8 @@ export interface DeployAccountRootAppOptions {
  */
 export async function deployAccountRootApp(
   options: DeployAccountRootAppOptions,
-): Promise<void> {
+): Promise<VercelDeploymentReport> {
+  assertApprovedReleaseDeployment();
   const { declaration } = options;
   const env = options.env ?? process.env;
 
@@ -610,7 +646,7 @@ export async function deployAccountRootApp(
     throw new Error(`Missing required environment values: ${missing.join(', ')}`);
   }
 
-  const repositoryRoot = process.cwd();
+  const repositoryRoot = options.deploymentDirectory ?? process.cwd();
   const teamId = await resolveAccountTeamId(declaration, env, token);
   const projectId = await ensureProject(token, declaration.project, teamId);
 
@@ -624,7 +660,7 @@ export async function deployAccountRootApp(
     else console.log(`  skip ${key} (not set locally)`);
   }
 
-  console.log(`\nUploading repository root and building remotely (${declaration.project})...`);
+  console.log(`\nUploading the declared deployment tree and building remotely (${declaration.project})...`);
   const runId = env.ASOL_DEPLOYMENT_RUN_ID?.trim() || `${declaration.name}-${Date.now()}`;
   const revision = env.ASOL_DEPLOYMENT_REVISION?.trim() || 'standalone';
   const comment =
@@ -636,6 +672,15 @@ export async function deployAccountRootApp(
       'deploy',
       '--prod',
       '--yes',
+      // gova's build barrier consumes the exact release SHA. This is a
+      // one-deployment build value: it is neither copied into project runtime
+      // environment nor supplied to any other account.
+      ...(declaration.name === 'gova' && /^[0-9a-f]{40}$/.test(revision)
+        ? [
+            '--build-env', `ASOL_RELEASE_REVISION=${revision}`,
+            '--build-env', 'ASOL_GOVA_UPLOAD_VIEW=1',
+          ]
+        : []),
       ...vercelDeploymentMetadata({ target: declaration.name, comment, runId, revision }),
     ],
     projectId,
@@ -658,4 +703,5 @@ export async function deployAccountRootApp(
   if (report.state !== 'READY') {
     throw new Error(`Vercel verification failed: ${report.message}`);
   }
+  return report;
 }

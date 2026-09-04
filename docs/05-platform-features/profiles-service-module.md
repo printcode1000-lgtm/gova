@@ -61,8 +61,8 @@ the four excluded paths are absent.
 
 ## CORS
 
-`src/app/lib/http.ts` answers `GET, OPTIONS` — its own methods — and
-[`BROWSER_REQUEST_HEADERS`](sealed-packages/service-runtime-core-module.md#browser_request_headers)
+`services/profiles/src/app/lib/http.ts` answers `GET, OPTIONS` — its own methods — and
+[`BROWSER_REQUEST_HEADERS`](sealed-packages/service-runtime-core-module.md#cors)
 for the accepted request headers, the same list the main app answers with. It previously advertised
 `Content-Type, Accept`; any client header outside that pair would have been rejected at preflight
 and surfaced as "Unable to reach the server", not as a CORS error.

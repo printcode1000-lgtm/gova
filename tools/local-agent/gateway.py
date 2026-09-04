@@ -15,6 +15,9 @@ DB_PATH = RUNTIME / 'runtime.sqlite3'
 COMMAND_DIR = RUNTIME / 'commands'
 LOCK_LEASE = int(os.environ.get('GOVA_AGENT_LOCK_LEASE_SECONDS', '180'))
 MAX_BODY = 2_000_000
+EXECUTION_MODES = {'A', 'B'}
+MODE_A_BOOTSTRAP_WORKFLOW = 'local-agent-bootstrap.yml'
+MODE_A_BOOTSTRAP_REF = 'main'
 
 for p in (RUNTIME, COMMAND_DIR, WORKTREE_ROOT): p.mkdir(parents=True, exist_ok=True)
 
@@ -41,13 +44,18 @@ def init_db():
     c=db(); c.executescript('''
     CREATE TABLE IF NOT EXISTS agents(id TEXT PRIMARY KEY, session_id TEXT, task_id TEXT, worktree TEXT, branch TEXT, status TEXT, last_seen TEXT, latest_checkpoint TEXT, latest_commit TEXT, created_at TEXT, updated_at TEXT);
     CREATE TABLE IF NOT EXISTS sessions(id TEXT PRIMARY KEY, agent_id TEXT, status TEXT, started_at TEXT, last_seen TEXT, ended_at TEXT);
-    CREATE TABLE IF NOT EXISTS tasks(id TEXT PRIMARY KEY, goal TEXT, originating_agent TEXT, current_agent TEXT, worktree TEXT, branch TEXT, status TEXT, completed TEXT, remaining TEXT, decisions TEXT, modified_files TEXT, commits TEXT, commands TEXT, tests TEXT, test_results TEXT, known_failures TEXT, blockers TEXT, dependencies TEXT, next_action TEXT, handoff TEXT, created_at TEXT, updated_at TEXT);
+    CREATE TABLE IF NOT EXISTS tasks(id TEXT PRIMARY KEY, goal TEXT, execution_mode TEXT, execution_transport TEXT, originating_agent TEXT, current_agent TEXT, worktree TEXT, branch TEXT, status TEXT, completed TEXT, remaining TEXT, decisions TEXT, modified_files TEXT, commits TEXT, commands TEXT, tests TEXT, test_results TEXT, known_failures TEXT, blockers TEXT, dependencies TEXT, next_action TEXT, handoff TEXT, created_at TEXT, updated_at TEXT);
+    CREATE TABLE IF NOT EXISTS mode_a_bootstraps(task_id TEXT PRIMARY KEY, agent_id TEXT NOT NULL, state TEXT NOT NULL, workflow TEXT NOT NULL, ref TEXT NOT NULL, requested_at TEXT NOT NULL, updated_at TEXT NOT NULL, error TEXT);
     CREATE TABLE IF NOT EXISTS commands(id TEXT PRIMARY KEY, agent_id TEXT, task_id TEXT, command TEXT, cwd TEXT, pid INTEGER, status TEXT, started_at TEXT, ended_at TEXT, exit_code INTEGER, out_path TEXT, err_path TEXT);
     CREATE TABLE IF NOT EXISTS locks(id TEXT PRIMARY KEY, kind TEXT, scope TEXT, agent_id TEXT, task_id TEXT, lease_until REAL, updated_at TEXT, UNIQUE(kind,scope));
     CREATE TABLE IF NOT EXISTS messages(id INTEGER PRIMARY KEY AUTOINCREMENT, sender TEXT, recipient TEXT, kind TEXT, body TEXT, created_at TEXT);
     CREATE TABLE IF NOT EXISTS handoffs(id INTEGER PRIMARY KEY AUTOINCREMENT, task_id TEXT, from_agent TEXT, to_agent TEXT, notes TEXT, created_at TEXT);
     CREATE TABLE IF NOT EXISTS events(id INTEGER PRIMARY KEY AUTOINCREMENT, type TEXT, agent_id TEXT, task_id TEXT, payload TEXT, created_at TEXT);
-    '''); c.close()
+    ''')
+    columns={row['name'] for row in c.execute('PRAGMA table_info(tasks)').fetchall()}
+    if 'execution_mode' not in columns: c.execute('ALTER TABLE tasks ADD COLUMN execution_mode TEXT')
+    if 'execution_transport' not in columns: c.execute('ALTER TABLE tasks ADD COLUMN execution_transport TEXT')
+    c.close()
 init_db()
 
 def event(kind, agent=None, task=None, payload=None):
@@ -63,6 +71,32 @@ def checkpoint(task_id, **fields):
     if not parts: return
     parts.append('updated_at=?'); vals.append(now()); vals.append(task_id)
     c=db(); c.execute(f"UPDATE tasks SET {','.join(parts)} WHERE id=?", vals); c.close()
+
+def task_execution(task_id):
+    if not task_id: raise RuntimeError('task_id with an explicit execution mode is required')
+    c=db(); row=c.execute('SELECT execution_mode,execution_transport FROM tasks WHERE id=?',(task_id,)).fetchone(); c.close()
+    if not row: raise RuntimeError('task not found')
+    mode=row['execution_mode']
+    if mode not in EXECUTION_MODES: raise RuntimeError('task has no valid execution mode')
+    transport=row['execution_transport'] or 'local'
+    if transport not in {'local','cloud-bridge'}: raise RuntimeError('task has no valid execution transport')
+    return mode,transport
+
+def require_task_mode(task_id, expected='A'):
+    mode,_transport=task_execution(task_id)
+    if expected and mode != expected: raise RuntimeError(f'Gateway mutation is unavailable for execution mode {mode}; select Mode A')
+    return mode
+
+def require_managed_transport(task_id):
+    mode,transport=task_execution(task_id)
+    if mode == 'A' or (mode == 'B' and transport == 'cloud-bridge'):
+        return mode,transport
+    raise RuntimeError('Gateway mutation is unavailable for local Mode B; select Mode A or cloud-bridge Mode B')
+
+def require_mode_a_bootstrap(task_id):
+    require_managed_transport(task_id)
+    c=db(); row=c.execute('SELECT state FROM mode_a_bootstraps WHERE task_id=?',(task_id,)).fetchone(); c.close()
+    if not row or row['state'] != 'dispatched': raise RuntimeError('managed execution requires exactly one successful GitHub bootstrap dispatch before work')
 
 def auth_value():
     try: return AUTH_FILE.read_text().strip()
@@ -89,6 +123,7 @@ def reconcile_command(row):
     return d
 
 def create_worktree(agent_id, task_id):
+    require_mode_a_bootstrap(task_id)
     a=safe(agent_id); t=safe(task_id)
     path=WORKTREE_ROOT/a/t
     branch=f"agent/{a}/{t}"
@@ -120,6 +155,7 @@ def remove_worktree(agent_id, task_id, force=False):
     event('worktree-removed',agent_id,task_id,{})
 
 def start_command(agent_id, task_id, command, cwd=None):
+    require_mode_a_bootstrap(task_id)
     cid=sid('cmd')
     if cwd is None and task_id:
         c=db(); row=c.execute('SELECT worktree FROM tasks WHERE id=?',(task_id,)).fetchone(); c.close(); cwd=row['worktree'] if row and row['worktree'] else str(REPO)
@@ -160,6 +196,7 @@ def cancel_command(cid):
     return command_status(cid)
 
 def acquire_lock(agent_id, task_id, kind, scope, lease=None):
+    require_mode_a_bootstrap(task_id)
     lease=float(lease or LOCK_LEASE); ts=time.time(); c=db(); c.execute('BEGIN IMMEDIATE')
     row=c.execute('SELECT * FROM locks WHERE kind=? AND scope=?',(kind,scope)).fetchone()
     if row and row['lease_until']>ts and row['agent_id']!=agent_id:
@@ -212,6 +249,30 @@ def _github_api(method, path, body=None, allow=()):
             return e.code,obj
         raise RuntimeError(f'GitHub API {method} {path} failed: {e.code} {raw[:1000]}')
 
+def dispatch_mode_a_bootstrap(agent_id, task_id, dry_run=False):
+    mode,transport=require_managed_transport(task_id)
+    if dry_run:
+        return {'task_id':task_id,'workflow':MODE_A_BOOTSTRAP_WORKFLOW,'ref':MODE_A_BOOTSTRAP_REF,'execution_mode':mode,'execution_transport':transport,'dry_run':True}
+    ts=now(); c=db()
+    try:
+        c.execute('INSERT INTO mode_a_bootstraps(task_id,agent_id,state,workflow,ref,requested_at,updated_at) VALUES(?,?,?,?,?,?,?)',
+                  (task_id,agent_id,'requesting',MODE_A_BOOTSTRAP_WORKFLOW,MODE_A_BOOTSTRAP_REF,ts,ts))
+    except sqlite3.IntegrityError:
+        row=c.execute('SELECT state,workflow,ref,requested_at,error FROM mode_a_bootstraps WHERE task_id=?',(task_id,)).fetchone()
+        c.close()
+        raise RuntimeError(f'Managed bootstrap is one-time per task and is already {row["state"]}')
+    c.close()
+    try:
+        _github_api('POST',f'/actions/workflows/{MODE_A_BOOTSTRAP_WORKFLOW}/dispatches',
+                    {'ref':MODE_A_BOOTSTRAP_REF,'inputs':{'execution_mode':'A'}})
+    except Exception as exc:
+        c=db(); c.execute('UPDATE mode_a_bootstraps SET state=?,error=?,updated_at=? WHERE task_id=?',('failed',str(exc),now(),task_id)); c.close()
+        event('managed-bootstrap-failed',agent_id,task_id,{'workflow':MODE_A_BOOTSTRAP_WORKFLOW,'execution_mode':mode,'execution_transport':transport})
+        raise
+    c=db(); c.execute('UPDATE mode_a_bootstraps SET state=?,updated_at=? WHERE task_id=?',('dispatched',now(),task_id)); c.close()
+    event('managed-bootstrap-dispatched',agent_id,task_id,{'workflow':MODE_A_BOOTSTRAP_WORKFLOW,'ref':MODE_A_BOOTSTRAP_REF,'execution_mode':mode,'execution_transport':transport})
+    return {'task_id':task_id,'workflow':MODE_A_BOOTSTRAP_WORKFLOW,'ref':MODE_A_BOOTSTRAP_REF,'execution_mode':mode,'execution_transport':transport,'dispatched':True}
+
 def publish_worktree_branch_api(worktree, branch='integration'):
     worktree=Path(worktree)
     status, br=_github_api('GET',f'/branches/{branch}',allow=(404,))
@@ -253,7 +314,66 @@ def publish_worktree_branch_api(worktree, branch='integration'):
     run(['git','reset','--hard',f'origin/{branch}'],worktree)
     return newc['sha']
 
+def changed_paths(base, target, cwd=REPO):
+    raw=run(['git','diff','--name-only','-z',f'{base}..{target}'],cwd).stdout.encode('utf-8','surrogateescape')
+    return {item.decode('utf-8','surrogateescape') for item in raw.split(b'\0') if item}
+
+def canonical_dirty_paths():
+    paths=set()
+    for args in (['git','diff','--name-only','-z'], ['git','diff','--cached','--name-only','-z'], ['git','ls-files','--others','--exclude-standard','-z']):
+        raw=run(args,REPO).stdout.encode('utf-8','surrogateescape')
+        paths.update(item.decode('utf-8','surrogateescape') for item in raw.split(b'\0') if item)
+    return paths
+
+def project_cloud_bridge_commit(agent_id, task_id, integration_sha):
+    mode,transport=task_execution(task_id)
+    if mode != 'B' or transport != 'cloud-bridge': return []
+    parent=run(['git','rev-parse',f'{integration_sha}^'],REPO).stdout.strip()
+    paths=changed_paths(parent,integration_sha)
+    overlap=sorted(paths & canonical_dirty_paths())
+    if overlap:
+        checkpoint(task_id,status='canonical-projection-blocked',blockers={'overlapping_paths':overlap},next_action='resolve local overlapping changes, then resubmit the task')
+        event('canonical-projection-blocked',agent_id,task_id,{'paths':overlap})
+        raise RuntimeError('canonical projection conflict: '+', '.join(overlap))
+    patch=run(['git','diff','--binary',f'{parent}..{integration_sha}'],REPO).stdout
+    applied=subprocess.run(['git','apply','--check'],cwd=str(REPO),input=patch,text=True,capture_output=True)
+    if applied.returncode:
+        checkpoint(task_id,status='canonical-projection-blocked',blockers={'error':(applied.stderr or applied.stdout)[-2000:]},next_action='reconcile canonical checkout with integration, then resubmit the task')
+        event('canonical-projection-blocked',agent_id,task_id,{'reason':'patch-does-not-apply'})
+        raise RuntimeError('canonical projection cannot apply cleanly: '+(applied.stderr or applied.stdout))
+    applied=subprocess.run(['git','apply'],cwd=str(REPO),input=patch,text=True,capture_output=True)
+    if applied.returncode:
+        raise RuntimeError('canonical projection failed: '+(applied.stderr or applied.stdout))
+    checkpoint(task_id,status='canonical-projected',commits=[integration_sha],modified_files=sorted(paths),next_action='')
+    event('canonical-projected',agent_id,task_id,{'sha':integration_sha,'paths':sorted(paths)})
+    return sorted(paths)
+
+def canonical_project(agent_id, task_id, integration_sha):
+    """Project an already published `integration` commit onto the canonical checkout.
+
+    This is the whole Gateway surface the cloud Mode-B path uses. The agent never
+    reaches this process over a network: it pushed its verified commit to
+    `integration`, and the self-hosted runner on this machine asks for the
+    projection from `127.0.0.1`. `require_mode_a_bootstrap` is deliberately not a
+    precondition here — the bootstrap guard exists to prove the managed runtime is
+    installed and running, and a request arriving from the local runner is that
+    same proof.
+
+    What is verified instead is the commit itself: only a full SHA that is an
+    ancestor of `origin/integration` may be projected, so nothing outside the
+    aggregation branch can reach `/home/hesham/gova` through this endpoint.
+    """
+    sha = str(integration_sha).strip().lower()
+    if not re.fullmatch(r'[0-9a-f]{40}', sha): raise RuntimeError('integration_sha must be a full 40-character commit SHA')
+    mode, transport = task_execution(task_id)
+    if mode != 'B' or transport != 'cloud-bridge': raise RuntimeError('canonical projection is available only for a cloud-bridge Mode B task')
+    run(['git', 'fetch', '--prune', 'origin', 'integration'], REPO)
+    if run(['git', 'merge-base', '--is-ancestor', sha, 'origin/integration'], REPO, check=False).returncode:
+        raise RuntimeError(f'{sha} is not published on origin/integration; only an integration commit may be projected')
+    return sha, project_cloud_bridge_commit(agent_id, task_id, sha)
+
 def integration_submit(agent_id, task_id, commit_sha, verification=None):
+    require_mode_a_bootstrap(task_id)
     acquire_lock(agent_id,task_id,'ref','integration',600)
     iw=WORKTREE_ROOT/'integration'
     try:
@@ -277,6 +397,7 @@ def integration_submit(agent_id, task_id, commit_sha, verification=None):
         sha=publish_worktree_branch_api(iw,'integration')
         checkpoint(task_id,status='integrated',commits=[commit_sha,sha],next_action='')
         event('integration-pushed',agent_id,task_id,{'sha':sha})
+        project_cloud_bridge_commit(agent_id,task_id,sha)
         return sha
     finally:
         c=db(); c.execute("DELETE FROM locks WHERE kind='ref' AND scope='integration' AND agent_id=?",(agent_id,)); c.close()
@@ -322,7 +443,11 @@ class H(BaseHTTPRequestHandler):
             if path=='/v1/agent/register':
                 aid=safe(data['agent_id']); sess=data.get('session_id') or sid('session'); ts=now(); c=db(); c.execute('INSERT INTO agents(id,session_id,status,last_seen,created_at,updated_at) VALUES(?,?,\'idle\',?,?,?) ON CONFLICT(id) DO UPDATE SET session_id=excluded.session_id,status=\'idle\',last_seen=excluded.last_seen,updated_at=excluded.updated_at',(aid,sess,ts,ts,ts)); c.execute('INSERT OR REPLACE INTO sessions(id,agent_id,status,started_at,last_seen) VALUES(?,?,\'active\',?,?)',(sess,aid,ts,ts)); c.close(); event('agent-registered',aid,None,{'session_id':sess}); return self.sendj(200,{'ok':True,'agent_id':aid,'session_id':sess})
             if path=='/v1/task/create':
-                aid=safe(data['agent_id']); tid=safe(data.get('task_id') or sid('task')); goal=str(data['goal']); ts=now(); c=db(); c.execute('INSERT INTO tasks(id,goal,originating_agent,current_agent,status,created_at,updated_at) VALUES(?,?,?,?,\'active\',?,?)',(tid,goal,aid,aid,ts,ts)); c.execute('UPDATE agents SET task_id=?,updated_at=? WHERE id=?',(tid,ts,aid)); c.close(); event('task-created',aid,tid,{'goal':goal}); return self.sendj(200,{'ok':True,'task_id':tid})
+                aid=safe(data['agent_id']); tid=safe(data.get('task_id') or sid('task')); goal=str(data['goal']); mode=str(data.get('execution_mode','')).upper();
+                if mode not in EXECUTION_MODES: raise RuntimeError('execution_mode must be A or B')
+                transport='cloud-bridge' if bool(data.get('cloud_bridge',False)) else 'local'
+                if transport == 'cloud-bridge' and mode != 'B': raise RuntimeError('cloud_bridge is available only for execution mode B')
+                ts=now(); c=db(); c.execute('INSERT INTO tasks(id,goal,execution_mode,execution_transport,originating_agent,current_agent,status,created_at,updated_at) VALUES(?,?,?,?,?,?,\'active\',?,?)',(tid,goal,mode,transport,aid,aid,ts,ts)); c.execute('UPDATE agents SET task_id=?,updated_at=? WHERE id=?',(tid,ts,aid)); c.close(); event('task-created',aid,tid,{'goal':goal,'execution_mode':mode,'execution_transport':transport}); return self.sendj(200,{'ok':True,'task_id':tid,'execution_mode':mode,'execution_transport':transport})
             if path=='/v1/task/checkpoint': checkpoint(data['task_id'],**data.get('fields',{})); event('checkpoint',data.get('agent_id'),data['task_id'],data.get('fields',{})); return self.sendj(200,{'ok':True})
             if path=='/v1/task/handoff':
                 tid=data['task_id']; to=safe(data['to_agent']); frm=safe(data['from_agent']); notes=str(data.get('notes','')); c=db(); c.execute('INSERT INTO handoffs(task_id,from_agent,to_agent,notes,created_at) VALUES(?,?,?,?,?)',(tid,frm,to,notes,now())); c.execute('UPDATE tasks SET current_agent=?,handoff=?,updated_at=? WHERE id=?',(to,notes,now(),tid)); c.execute('UPDATE agents SET task_id=?,updated_at=? WHERE id=?',(tid,now(),to)); c.close(); event('handoff',frm,tid,{'to':to,'notes':notes}); return self.sendj(200,{'ok':True})
@@ -330,6 +455,8 @@ class H(BaseHTTPRequestHandler):
             if path=='/v1/workspace/create':
                 p,b=create_worktree(data['agent_id'],data['task_id']); return self.sendj(200,{'ok':True,'worktree':p,'branch':b})
             if path=='/v1/workspace/remove': remove_worktree(data['agent_id'],data['task_id'],bool(data.get('force',False))); return self.sendj(200,{'ok':True})
+            if path=='/v1/mode-a/bootstrap':
+                result=dispatch_mode_a_bootstrap(safe(data['agent_id']),data['task_id'],bool(data.get('dry_run',False))); return self.sendj(200,{'ok':True,**result})
             if path=='/v1/exec/start':
                 cid,pid=start_command(safe(data['agent_id']),data.get('task_id'),str(data['command']),data.get('cwd')); return self.sendj(200,{'ok':True,'command_id':cid,'pid':pid})
             if path=='/v1/exec/cancel': return self.sendj(200,{'ok':True,'command':cancel_command(data['command_id'])})
@@ -343,6 +470,8 @@ class H(BaseHTTPRequestHandler):
                 sender=safe(data['sender']); recipient=safe(data.get('recipient','all')) if data.get('recipient','all')!='all' else 'all'; kind=str(data.get('kind','note')); body=str(data['body']); c=db(); cur=c.execute('INSERT INTO messages(sender,recipient,kind,body,created_at) VALUES(?,?,?,?,?)',(sender,recipient,kind,body,now())); mid=cur.lastrowid; c.close(); event('message',sender,data.get('task_id'),{'to':recipient,'kind':kind}); return self.sendj(200,{'ok':True,'message_id':mid})
             if path=='/v1/integration/submit':
                 sha=integration_submit(safe(data['agent_id']),data['task_id'],data['commit_sha'],data.get('verification') or []); return self.sendj(200,{'ok':True,'integration_sha':sha})
+            if path=='/v1/canonical/project':
+                sha,paths=canonical_project(safe(data['agent_id']),data['task_id'],data['integration_sha']); return self.sendj(200,{'ok':True,'integration_sha':sha,'projected_paths':paths})
             return self.sendj(404,{'ok':False,'error':'not found'})
         except Exception as e: return self.sendj(409 if 'conflict' in str(e).lower() else 500,{'ok':False,'error':str(e)})
 

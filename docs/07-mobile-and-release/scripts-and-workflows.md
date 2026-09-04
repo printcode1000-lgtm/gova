@@ -6,8 +6,11 @@
 
 ```bash
 # Development
-npm run dev                    # fast Next dev only
+npm run dev                    # fast Next dev only — gova alone on 3001
 npm run dev:checked            # slower startup with generation + catalog validation
+npm run dev:distributed        # all eight runtimes on 3001-3008, no gova fallback
+npm run dev:distributed:smoke  # start all eight, prove route ownership, exit
+npm run server:stop            # frees port 3001 only, not the distributed ports
 npm run db:create:sqlite
 npm run db:create:profile
 
@@ -23,7 +26,7 @@ npm run test:compositions
 npm run test:account-declarations
 npm run test:data-core                # every database + offline schema parity
 npm run test:orders-core               # the order domain
-npm run github:ci-policy               # local guard: only docs/** GitHub workflow exists
+npm run github:ci-policy               # local guard: no GitHub production deployment workflow
 npm run docs:check                     # documentation contract (also the docs workflow)
 
 # Service deployments — the only check that builds what Vercel builds
@@ -41,15 +44,14 @@ npm run github:protect -- --remove     # delete leftover protection (apply is fo
 npm run github:block-branches -- --dry-run
 npm run github:ci-policy
 
-# Local agent GitHub workflows
-
 # Local agent control plane (machine-local)
-npm run local-agent:doctor
-npm run local-agent:status
-npm run local-agent:coordination -- --action=status
-npm run local-agent:cleanup
-npm run local-agent:dispatch:check -- .agent-control/requests/<request_id>.json
-npm run local-agent:device:discover -- --dry-run
+# A Python CLI installed from tools/local-agent — not npm scripts.
+# Full surface: docs/06-super-admin-and-operations/local-agent-runtime.md
+gova-agent health
+gova-agent diagnostics
+gova-agent tasks
+gova-agent locks
+gova-agent lock-recover
 
 # Schema & database
 npm run db:drizzle -- generate
@@ -60,15 +62,18 @@ npm run db:schema:sync:release   # required credentials; used by deploy:all pref
 npm run db:provision:turso
 npm run provision:mobile-push   # native outbound push credentials → .env.local
 npm run db:push:vercel-env      # Turso + bridge URLs + ASOL_MOBILE_PUSH_* when provisioned
-npm run deploy:redeploy-main    # pick up new env vars on the GitHub-linked main app
 npm run submain:deploy          # full app on submain (groupstenderximages@gmail.com)
 npm run sub2main:deploy         # full app on sub2main (tenderx.engineer100@gmail.com)
-npm run vercel:accounts:check   # read-only check for all seven Vercel account tokens
-npm run deploy:all              # full gate: env/Vercel → checks/tests → DB → builds → services → main
-npm run deploy:all:preflight    # comprehensive preflight only, no commit/push/deploy
-npm run deploy:all:publish      # commit + push main only
-npm run deploy:all:services     # six CLI service deploys
-npm run deploy:all:main         # verify GitHub-linked gova READY
+npm run vercel:accounts:check   # read-only check for all eight Vercel account tokens
+npm run deploy:all              # full gate: env/Vercel → checks/tests → DB → builds → services → readiness → gova
+npm run deploy:push             # same transaction, publish gates, no correctness preflight
+npm run deploy:push:fast        # same transaction, no gates at all
+npm run deploy:all -- --list-phases           # the phase ids deploy:all accepts
+npm run deploy:all -- --phase=preflight       # preflight only, no commit/push/deploy
+npm run deploy:all -- --phase=publish         # commit + push main only
+npm run deploy:all -- --phase=services        # the six CLI service deploys
+npm run deploy:all -- --phase=main            # explicitly deploy gova and verify READY
+npm run main:deploy             # deploy gova alone, outside the release transaction
 npm run data-access:sync-public
 
 npm run secrets:backup
@@ -183,8 +188,9 @@ running the TypeScript script directly. It reports:
 - registry updates only when explicitly requested with
   `npm run dependencies:outdated`; they are advisory and never rewrite the
   reference;
-- the one GitHub-linked Vercel project, seven account tokens (including
-  `VERCEL_SUBMAIN_TOKEN` for `groupstenderximages@gmail.com`), and the ephemeral
+- the one GitHub-linked Vercel project, eight account tokens — `VERCEL_TOKEN`
+  for `gova` plus one dedicated token per isolated account, including
+  `VERCEL_SUBMAIN_TOKEN` for `groupstenderximages@gmail.com` — and the ephemeral
   Vercel CLI policy;
 - JDK 21, Android SDK 36, ADB, and the checked-in Gradle wrapper;
 - Xcode requirements on macOS and an explicit not-applicable result elsewhere.
@@ -213,9 +219,11 @@ Gova environment reconciliation requests up to 100 project environment entries b
 Gova env reconciliation preserves existing Vercel target scopes and variable types (including Sensitive entries) when a key already exists; it updates every matching entry by value only, without widening targets or changing type.
 
 `npm run deploy:all` is organized as a runbook:
-phase → section → branch → one command. The phase order is still
-`preflight → publish → notifications → products → orders → profiles → submain →
-sub2main → main`, but `--list-phases` now prints the nested sections too.
+phase → section → branch → one command. The phase order is declared in
+`packages/release-core/src/pipeline/phases.ts`:
+`preflight → publish → control → notifications → products → orders → profiles →
+submain → sub2main → readiness → main`, and `--list-phases` prints the nested
+sections too.
 
 The preflight phase runs before the first Git write. Its sections are:
 
@@ -230,9 +238,10 @@ The preflight phase runs before the first Git write. Its sections are:
 5. isolated service deployments:
    `services:sync`, `services:verify`, then `services:build`.
 
-The publish phase has separate guard, secrets, and Git sections; every service
-phase has exactly one deploy branch; the final main phase has one Vercel
-readiness verification branch.
+The publish phase has separate guard, secrets, and Git sections; `control` and
+every service phase has exactly one deploy branch; `readiness` publishes the
+exact-SHA release state; the final `main` phase deploys `gova` and then verifies
+it with `release:check` and `smoke:deployed`.
 
 `npm run services:build` (`scripts/build-all-services.ts`) refreshes the six
 mirrors and then runs `next build` inside every `services/<name>/` folder,
@@ -244,7 +253,7 @@ the repository root, where the root's `node_modules` and module graph are
 present; a service is uploaded alone and installed against its own
 `package.json`. Three production failures reached Vercel through that gap before
 this step existed — see
-[the module isolation rules](../01-architecture/02-packages/module-isolation-rules.md#standing-weakness-local-green-is-not-ci-green).
+[the module isolation rules](../01-architecture/02-packages/module-isolation-rules.md#rule-5--no-deep-imports).
 
 If it reports a missing npm package, the fix is to add the package to that
 service's `package.json`, not to the root's. `npm run services:sync` fails the
@@ -280,7 +289,7 @@ resolved by path. It is in `deploy:all` preflight and in `verify:all`.
 
 See [github-ci-policy.md](./github-ci-policy.md). GitHub Actions is not the command transport for local agents. The only local-agent workflow is the manual `local-agent-bootstrap.yml`, used for initial install/reinstall/recovery of `gova-agent-gateway.service`. Normal agent commands, reads, writes, locks, messages, checkpoints, handoffs, and streaming results travel directly through the persistent gateway and create no GitHub Actions run.
 
-The production deploy workflow remains tied to pushes on `main`. Documentation validation remains path-filtered. `tools/local-agent/**` is control-plane-only and is excluded from production deployment triggering. Agent task work is isolated in local worktrees under `/home/hesham/gova-agents` and is submitted to `integration` only after verification.
+There is no production deploy workflow. A push to `main` is Git-only; production deployment is available only through `deploy:all`, `deploy:push` and `deploy:push:fast`. Documentation validation remains path-filtered. Agent task work is isolated in local worktrees under `/home/hesham/gova-agents` and is submitted to `integration` only after verification.
 
 
 ## Branch protection
@@ -347,18 +356,22 @@ block is a release path that can be lost.
 
 ### Vercel picks up every push
 
-The `gova` project is linked by GitHub App — `link.type: github`,
-`link.repoId: 1276783681`, `link.productionBranch: main` — and every push to
-`main` produces a production deployment with `meta.githubDeployment: 1`. Verified
-by matching eight consecutive commits against their deployments, all `READY`.
+The `gova` project is still linked by GitHub App — `link.type: github`,
+`link.repoId: 1276783681`, `link.productionBranch: main` — but the link no
+longer deploys anything. `vercel.json` sets `git.deploymentEnabled` to `false`
+for `*` **and** for `main`, so a push produces no deployment at all; `gova` is
+published only by the explicit `main:deploy` step inside the release
+transaction.
 
 The link is stored by numeric repo id, so renaming the *repository* would not
 break it. `productionBranch` is the literal string `main`, so **renaming the
-branch would**. That is the concrete reason `main` is never renamed, on top of
-being the only branch this repository allows.
+branch would** — and the branch name is also what
+`assertReleaseMainBranch` checks before any release command writes git. That is
+the concrete reason `main` is never renamed, on top of being one of only two
+branches this repository allows.
 
-Nothing in `deploy:all` or `deploy:push` creates a branch, so no release path
-is affected either way.
+Nothing in `deploy:all`, `deploy:push` or `deploy:push:fast` creates a branch, so no release
+path is affected either way.
 
 ## Retained local notes (not project documentation)
 
@@ -368,7 +381,6 @@ tree):
 
 | Path | Evidence | Policy |
 | --- | --- | --- |
-| `note/k1.md` | Operator reconstruction brief for `docs/01-architecture/`. No imports, scripts, or CI entry points. | Retained as a local brief. Do not treat as a runtime or docs source. |
-| `note/note1.md` | Operator PowerShell/IDE scratch notes. No imports or tooling entry points. | Retained as local scratch. |
+| `note/` | Operator briefs and scratch notes (`agent-execution-mode-enforcement-plan.md`, `asol-control-single-agent-execution-plan.md`, `user note`). No imports, scripts, or CI entry points. | Retained as local notes. Do not treat as a runtime or docs source. |
 | `test_profile/*.cmd`, `*.ps1`, `*.lnk`, `*.bat` | Tracked developer launchers. `git ls-files test_profile` lists them. | Keep tracked. |
 | `test_profile/manageProfile/` | Local Chrome profile caches. Gitignored. | Must stay untracked. `.vercelignore` excludes the whole `test_profile/` tree. |

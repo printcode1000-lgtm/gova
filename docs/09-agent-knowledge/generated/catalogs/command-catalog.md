@@ -75,17 +75,8 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run dependencies:install` | `Tooling` | 1 |  | 0 |
 | `npm run dependencies:outdated` | `Tooling` | 1 |  | 0 |
 | `npm run deploy:all` | `Tooling`, `Web` | 1 |  | 0 |
-| `npm run deploy:all:main` | `Tooling`, `Web` | 1 |  | 0 |
-| `npm run deploy:all:preflight` | `Tooling`, `Web` | 1 |  | 0 |
-| `npm run deploy:all:publish` | `Tooling`, `Web` | 1 |  | 0 |
-| `npm run deploy:all:services` | `Tooling`, `Web` | 1 |  | 0 |
-| `npm run deploy:env:push` | `Tooling`, `Web` | 1 |  | 0 |
 | `npm run deploy:push` | `Tooling`, `Web` | 1 |  | 0 |
-| `npm run deploy:push:all` | `Tooling`, `Web` | 1 |  | 0 |
 | `npm run deploy:push:fast` | `Tooling`, `Web` | 1 |  | 0 |
-| `npm run deploy:push:main` | `Tooling`, `Web` | 1 |  | 0 |
-| `npm run deploy:redeploy-main` | `Tooling`, `Web` | 1 |  | 0 |
-| `npm run deploy:revision` | `Tooling`, `Web` | 1 |  | 0 |
 | `npm run dev` | `Development`, `Tooling` | 0 |  | 0 |
 | `npm run dev:checked` | `Development`, `Tooling` | 4 |  | 0 |
 | `npm run dev:distributed` | `Tooling` | 1 |  | 0 |
@@ -130,6 +121,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run ios:push:validate` | `iOS`, `Tooling` | 1 |  | 0 |
 | `npm run ios:spm:normalize` | `iOS`, `Tooling` | 1 |  | 0 |
 | `npm run lint` | `Tooling` | 0 |  | 0 |
+| `npm run main:deploy` | `Tooling` | 1 |  | 0 |
 | `npm run maplibre:sync` | `Tooling` | 1 |  | 0 |
 | `npm run notifications:check:local` | `Tooling` | 1 |  | 0 |
 | `npm run notifications:deploy` | `Independent services`, `Tooling` | 1 |  | 0 |
@@ -208,7 +200,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:delivery-planner` | `Tooling` | 1 |  | 0 |
 | `npm run test:deploy-all-resume` | `Tooling` | 1 |  | 0 |
 | `npm run test:deploy-runbook-execution` | `Tooling` | 1 |  | 0 |
-| `npm run test:deployment-tools` | `Tooling` | 19 |  | 0 |
+| `npm run test:deployment-tools` | `Tooling` | 20 |  | 0 |
 | `npm run test:dev-cloud-backup` | `Tooling` | 1 |  | 1 |
 | `npm run test:dev-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:env-core` | `Tooling` | 1 |  | 0 |

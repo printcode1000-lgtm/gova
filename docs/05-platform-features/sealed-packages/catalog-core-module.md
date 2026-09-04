@@ -5,9 +5,9 @@
 `@asol/catalog-core` is the sealed workspace package for Catalog v3: shared types, Zod contracts,
 display visibility rules, and the full-tree validator used by CI and Catalog Studio.
 
-Located at `packages/catalog-core/`, it replaces logic that previously lived in
-`@asol/catalog-core/` and `scripts/validate-catalog.ts`. Runtime category projections and
-Catalog Studio editing remain in `src/features/`.
+Located at `packages/catalog-core/`, it replaces logic that previously lived in the
+application feature `src/features/catalog-data/` and in `scripts/validate-catalog.ts`.
+Runtime category projections and Catalog Studio editing remain in `src/features/`.
 
 ---
 
@@ -26,13 +26,18 @@ Catalog Studio editing remain in `src/features/`.
 
 | Old location | Replacement |
 | :--- | :--- |
-| `@asol/catalog-core/types/catalog-v3.types.ts` | `@asol/catalog-core` |
-| `@asol/catalog-core/contracts/catalog-v3.contract.ts` | `@asol/catalog-core` |
-| `@asol/catalog-core/utils/catalog-display.ts` | `@asol/catalog-core` |
+| `src/features/catalog-data/types/catalog-v3.types.ts` | `@asol/catalog-core` |
+| `src/features/catalog-data/contracts/catalog-v3.contract.ts` | `@asol/catalog-core` |
+| `src/features/catalog-data/utils/catalog-display.ts` | `@asol/catalog-core` |
 | `scripts/validate-catalog.ts` (validation body) | `validateCatalogV3` in `@asol/catalog-core/server` |
 
-`@asol/catalog-core/` remains as a **thin re-export shim** so existing `@/features/catalog-data`
-imports keep working.
+The migration is complete: `src/features/catalog-data/` no longer exists and no
+re-export shim remains. Every consumer imports one of the two doors above.
+
+An earlier revision of this document listed the old paths as
+`@asol/catalog-core/...` and described the package as a shim for itself. That was
+a find-and-replace fault introduced when the file was created, not a description
+of anything the repository ever contained.
 
 ---
 
@@ -66,7 +71,6 @@ packages/catalog-core/
 
 public/catagory/**          → static Catalog v3 data
 scripts/validate-catalog.ts → thin CLI wrapper
-@asol/catalog-core/  → re-export shim
 src/features/categories/    → categoryService + loader
 src/features/catalog-studio/ → dev editor (spawns validate-catalog.ts)
 ```

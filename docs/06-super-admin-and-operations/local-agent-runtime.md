@@ -2,42 +2,67 @@
 
 ## Purpose
 
-The Local Runner is a persistent multi-agent execution environment. GitHub Actions is bootstrap/release infrastructure, not the normal command transport.
+Before the first task action, every local agent asks the user to select an execution mode unless the task already selects one. Mode A is Gateway-managed isolation; Mode B edits the canonical checkout at `/home/hesham/gova` directly. GitHub `workflow_dispatch` through `local-agent-bootstrap.yml` is the primary remote bootstrap/entry path and does not select a mode.
 
 ## Remote branch model
 
-GitHub contains exactly two branches: `main` and `integration`. Agent branches such as `agent/<agent>/<task>` are local-only and must never be pushed. Normal agent completion integrates into `integration`; promotion from `integration` to `main` is a separate deliberate release operation. Local-agent runtime tests and normal agent submissions must not write `main`.
+GitHub contains exactly two recognized remote branches: `main` and `integration`. `main` is the production/release branch. Mode A explicitly authorizes a local `agent/*` branch and submitting verified work to `integration`; it never creates another remote branch or authorizes deployment. Mode B keeps the canonical checkout on its current branch and does not create an `agent/*` branch, move work to `integration`, commit, push, or deploy.
 
 ## Local layout
 
-- Canonical checkout: `/home/hesham/gova`
-- Agent worktrees: `/home/hesham/gova-agents/<agent>/<task>`
-- Integration worktree: `/home/hesham/gova-agents/integration`
-- Runtime state: `/home/hesham/.local/share/gova-agent-runtime`
-- Runtime database: `runtime.sqlite3` using SQLite WAL
-- Command output: `commands/`
-- Local client: `/home/hesham/.local/bin/gova-agent`
-- Local monitor: `/home/hesham/.local/bin/gova-agent-monitor`
+- Default working checkout: `/home/hesham/gova`
+- Optional managed worktree root: `/home/hesham/gova-agents/` (created/used only when explicitly requested)
+- Optional Gateway runtime state: `/home/hesham/.local/share/gova-agent-runtime`
+- Optional Gateway database: `runtime.sqlite3` using SQLite WAL
+- Optional local client: `/home/hesham/.local/bin/gova-agent`
+- Read-only local monitor: `/home/hesham/.local/bin/gova-agent-monitor`
 
-## Gateway
+## Mode B: direct local editing
 
-`gova-agent-gateway.service` runs continuously under systemd, restarts automatically, and listens on TCP port `8765`. `/health` is public; all mutation/state APIs require the local gateway key stored outside Git in `/home/hesham/.config/gova-agent/auth`.
+1. Work in `/home/hesham/gova` on its current local branch and working tree.
+2. Preserve every pre-existing local modification; never reset or relocate it merely to obtain isolation.
+3. Read the required project context and modify the requested files directly.
+4. Run the smallest relevant non-browser verification locally.
+5. Stop with the verified changes still local unless the user explicitly asks for commit, push, integration, or deployment.
 
-The service uses HTTP/JSON because it has very low startup/runtime overhead, works over LAN/Tailscale/private tunnels, and does not require GitHub jobs. Commands run in independent process groups; stdout/stderr are written directly to runtime files, so client disconnects do not terminate work.
+Mode B does **not** register an agent with localhost control, create a task/worktree, create an `agent/*` branch, acquire Gateway locks, or submit anything to `integration`.
 
-## Agent lifecycle
+## Mode A: Gateway-managed isolation
 
-1. Register an agent.
-2. Create or resume a task.
-3. Create a task worktree from the current `origin/integration` baseline.
-4. Acquire narrow path/module locks only when needed.
-5. Execute commands directly through the gateway.
-6. Checkpoint meaningful state.
-7. Commit on the local agent branch.
-8. Submit the commit to local integration.
-9. The integration path cherry-picks, verifies, and publishes only `integration`.
+`gova-agent-gateway.service` may remain installed and running under systemd. Use Gateway registration, task state, locks, worktrees, handoffs, and `integration-submit` when the user selects Mode A.
 
-Agents are peers. Handoff state is stored in SQLite, not model memory.
+In Mode A, the Gateway listens on TCP port `8765`; `/health` is public and mutation/state APIs require the local key stored outside Git in `/home/hesham/.config/gova-agent/auth`. Create the Mode-A task, run `gova-agent mode-a-bootstrap <agent> <task>` once, then wait for the manual GitHub dispatch to run the self-hosted bootstrap and restart the persistent service. Gateway rejects a worktree, command, lock, or integration submission until that dispatch is recorded. The selected flow then creates its worktree under `/home/hesham/gova-agents/`, uses a local `agent/*` branch, and submits verified work through `integration-submit`.
+
+## Cloud Mode B: Git as transport, the runner as projector
+
+A cloud agent has no route to the Gateway: the service listens on the device, its key never leaves `/home/hesham/.config/gova-agent/auth`, and the public monitor tunnel is observability, not a work channel. So the cloud path delivers work through Git and asks the device to apply it.
+
+1. The agent edits in its own cloud checkout, based on `origin/integration`, and verifies there. `integration` is the base every cloud task branches from, so it must carry the current tooling; when it falls behind `main`, publish a commit onto `integration` whose tree is `main`'s tree — a merge commit with both branches as parents keeps either history and stays a fast-forward:
+
+   ```bash
+   git fetch origin main integration
+   git push origin "$(git commit-tree origin/main^{tree} -p origin/integration -p origin/main -m 'chore(integration): align tree with main')":refs/heads/integration
+   ```
+2. It pushes exactly one verified commit to `integration`. No other remote ref is involved; `agent/*` branch creation is blocked by the repository ruleset.
+3. It dispatches `local-agent-project.yml` with `agent_id`, `task_id`, `goal`, and the full 40-character `integration_sha`.
+4. The self-hosted runner executes `tools/local-agent/project.sh` on the device. The script refuses a SHA that is not an ancestor of `origin/integration`, prepares a detached verification worktree at that commit (reusing the canonical `node_modules` by symlink), and runs `npm run architecture:check`, `npm run docs:ci`, and the `*-core` suites related to the change. The suites run in that worktree, but `scripts/local-agent/related-core-tests.ts` resolves them from the canonical checkout: a commit must not decide which suites are run against it, and a commit branched from an older `integration` would not carry the resolver at all.
+5. On success the script registers the agent, creates the cloud-bridge Mode B task if it does not exist, and calls `gova-agent project`, which posts to `/v1/canonical/project`.
+6. The Gateway projects that commit onto `/home/hesham/gova` as an unstaged patch.
+
+Failure is closed at every step: verification failure stops before projection, an unpublished SHA is rejected, a non cloud-bridge task is rejected, and a projection whose paths overlap canonical uncommitted work — or whose patch does not apply — is refused and recorded as `canonical-projection-blocked`.
+
+`mode-a-bootstrap` is not part of this path. That guard exists to prove the managed runtime is installed and running; a request arriving from the local runner is the same proof.
+
+```bash
+git push origin HEAD:integration
+gh workflow run local-agent-project.yml -f agent_id=cloud-001 -f task_id=notifications-copy -f goal="Fix notification copy" -f integration_sha=<40-char-sha>
+```
+
+The device-side equivalent, when reproducing the same gate by hand:
+
+```bash
+AGENT_ID=cloud-001 TASK_ID=notifications-copy TASK_GOAL="Fix notification copy" INTEGRATION_SHA=<40-char-sha> bash tools/local-agent/project.sh
+```
 
 ## Unified local execution monitor
 
@@ -105,7 +130,7 @@ The HTML monitor is responsive across desktop, laptop, tablet, and phone widths.
 
 Public viewing is provided by a Cloudflare Quick Tunnel while the HTTP server itself remains bound to loopback. `gova-agent-monitor-public enable` starts the persistent user service and writes the current HTTPS `trycloudflare.com` URL to `/home/hesham/.local/state/gova-agent-monitor/public-url`; the dashboard displays that URL at the top and offers a copy control. Anyone who has the public URL can view the read-only monitor while the tunnel is enabled, so the URL should be treated as public observability access. A Quick Tunnel URL may change after the tunnel service restarts; the dashboard automatically displays the current URL. `gova-agent-monitor-public disable` stops the public tunnel.
 
-## CLI examples
+## Optional Gateway CLI examples
 
 ```bash
 gova-agent health
@@ -114,25 +139,26 @@ gova-agent task-create agent-001 "Refactor notifications" --task-id notification
 gova-agent workspace-create agent-001 notifications-refactor
 gova-agent exec agent-001 'git status --short' --task-id notifications-refactor
 gova-agent messages --recipient agent-001
+gova-agent project cloud-001 notifications-copy <40-char-integration-sha>
 gova-agent locks
 gova-agent diagnostics
 ```
 
-## Locks and recovery
+## Optional managed-mode locks and recovery
 
-Locks are scoped by kind and name/path and carry leases. Expired locks are recovered automatically at gateway startup or through `gova-agent lock-recover`. The system intentionally does not serialize unrelated agents.
+The following behavior applies only when Gateway-managed mode was explicitly requested. Locks are scoped by kind and name/path and carry leases. Expired locks are recovered automatically at gateway startup or through `gova-agent lock-recover`. The system intentionally does not serialize unrelated agents.
 
 Task/worktree/command/message/handoff state survives gateway restarts. Commands are launched independently of the client request. After gateway restart, command state is reconciled from PID and exit-marker files. After machine reboot, durable task state remains and dead commands are marked interrupted when inspected.
 
-The integration lock serializes only the final integration transaction. If a cherry-pick conflicts, the gateway aborts the cherry-pick, resets the integration worktree to `origin/integration`, records the conflict on the task, and releases the lock. A failed submission therefore does not leave the shared integration worktree dirty.
+When the user explicitly requests `integration-submit`, the integration lock serializes only that final integration transaction. If a cherry-pick conflicts, the gateway aborts the cherry-pick, resets the integration worktree to `origin/integration`, records the conflict on the task, and releases the lock. A failed submission therefore does not leave the shared integration worktree dirty.
 
-## Dependency reuse
+## Optional managed-worktree dependency reuse
 
-Worktree creation does not run `npm ci`. When the canonical checkout already has `node_modules`, a new worktree may get a fast symlink to that dependency tree. If a task changes dependency manifests/lockfiles, materialize its own dependencies before running package-manager mutations; do not mutate the shared symlink.
+When an isolated worktree was explicitly requested, worktree creation does not run `npm ci`. When the canonical checkout already has `node_modules`, a new worktree may get a fast symlink to that dependency tree. If a task changes dependency manifests/lockfiles, materialize its own dependencies before running package-manager mutations; do not mutate the shared symlink.
 
 ## Real Codex validation
 
-`tools/local-agent/codex_test.py` validates an authenticated local Codex worker as a real gateway agent. The test creates an isolated agent worktree, runs Codex concurrently with a reviewer peer, requires the live monitor to show both a local agent and a cloud probe, records a checkpoint/handoff, validates the exact changed paths, creates a trusted local branch commit, and submits that commit only to `integration`.
+`tools/local-agent/codex_test.py` is an explicit Gateway test harness, not the normal local-agent workflow. When deliberately run, it validates an authenticated Codex worker in isolated managed mode, including worktree, checkpoint/handoff, commit-scope, and optional `integration` behavior.
 
 On this Ubuntu host, Codex's normal Linux `workspace-write` sandbox cannot execute because Bubblewrap cannot create the required user namespace (`RTM_NEWADDR: Operation not permitted`). The validation harness therefore runs Codex with its internal sandbox disabled for that process, while removing GitHub token environment variables and overriding Git's credential helper and push URL. The model is restricted by task scope to its isolated worktree, and the trusted harness rejects any change outside the exact allowed path before committing or integrating it. This fallback is for the local Codex worker test; it does not grant normal gateway clients a new GitHub publication path.
 
@@ -148,7 +174,7 @@ If passwordless system service installation is unavailable, the installer falls 
 
 ## Bootstrap
 
-`tools/local-agent/install.sh` installs the committed runtime without dependency installation. The legacy GitHub request/workflow transport is not part of normal operation after migration. The committed bootstrap workflow is manual-only (`workflow_dispatch`) and exists only to install or refresh the persistent runtime; it is not the per-command transport.
+`tools/local-agent/install.sh` installs or refreshes optional local-agent infrastructure without dependency installation. The committed bootstrap workflow is manual-only (`workflow_dispatch`), is the primary remote bootstrap/entry path, and installs from the canonical checkout `/home/hesham/gova` without creating or resetting an integration worktree. Bootstrap does not opt normal local agents into Gateway-managed execution.
 
 The installer also installs a desktop entry named **Gova Local Agents Monitor**. The icon opens the local Arabic HTML dashboard through `gova-agent-monitor-web`; the terminal monitor remains available as a CLI fallback.
 
@@ -164,7 +190,9 @@ gova-agent recovery restore /path/to/gova-agent-recovery.tar.gz /empty/restore-r
 
 The archive preserves the complete committed Local Agent source, all local refs and local-only agent commits, a consistent SQLite backup, and recoverable staged/unstaged/safe-untracked worktree state. Credentials are intentionally excluded and regenerated or reconnected after recovery. The exact archive contract, exclusions, verification procedure, and isolated restore sequence are defined in `docs/06-super-admin-and-operations/local-agent-recovery.md`.
 
-## Failure recovery
+## Optional managed-mode failure recovery
+
+These cases apply only to explicitly selected Gateway-managed execution.
 
 - Agent/client disconnect: command continues and logs remain queryable.
 - Gateway crash: systemd restarts it; SQLite/task state remains.
@@ -180,4 +208,3 @@ The desktop launcher opens one read-only terminal window containing Dashboard, A
 ### Stable single-window navigation
 
 The monitor uses numeric screen navigation: `1` Dashboard, `2` Agents, `3` GitHub, `4` Runtime, `5` Worktrees, and `6` Logs. Agent details use arrow keys plus Enter. Loading frames are shown only when the monitor starts or changes screens; periodic refreshes keep the current data visible until the refreshed snapshot is ready, preventing blank/flickering screens.
-

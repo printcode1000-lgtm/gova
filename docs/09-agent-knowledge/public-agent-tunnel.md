@@ -1,5 +1,13 @@
 # Gova Local Agent Public Tunnel
 
+## Not an Agent Channel
+
+**This tunnel is human observability infrastructure. No agent — cloud or local — may use it, look for it, or ask for it as a way to reach the Gateway.** A cloud agent delivers work through Git and the `local-agent-project.yml` dispatch, described in [GitHub CI Policy](../07-mobile-and-release/github-ci-policy.md); the Gateway key never leaves the device, so a public URL would be useless to an agent anyway, and treating it as a work channel is a policy violation, not a workaround. An agent that cannot reach the device has one correct move: use the Git transport, or say plainly which authorization it lacks.
+
+## Local-Agent Execution Boundary
+
+This tunnel is infrastructure for explicitly requested, human-operated gateway access. It does not make the gateway the default execution path for local agents. Normal local-agent work edits `/home/hesham/gova` directly and must not use the localhost gateway, create agent worktrees, or submit to `integration` unless the user explicitly requests that mode. GitHub bootstrap remains the primary remote entry/recovery path.
+
 ## Purpose
 
 The Gova local-agent runtime owns its public Cloudflare Quick Tunnel directly. It does not depend on the `p2p-link` companion repository.

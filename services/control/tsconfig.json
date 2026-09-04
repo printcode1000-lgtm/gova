@@ -323,9 +323,6 @@
       ],
       "@asol/vercel-deploy-core/release-state": [
         "./generated/packages/vercel-deploy-core/src/release-state.ts"
-      ],
-      "@asol/vercel-deploy-core/github-push-identity": [
-        "./generated/packages/vercel-deploy-core/src/github-push-identity.ts"
       ]
     }
   },

@@ -288,7 +288,7 @@ Capacitor integration must **not**:
 Platform-specific settings live in:
 
 - `capacitor.config.ts`
-- `packages/native-core/src/domain/config/capacitor.defaults.ts`
+- `packages/native-core/src/domain/defaults/platform-defaults.ts`
 - `scripts/cap-build.ts`
 - `android/` · `ios/` (generated)
 

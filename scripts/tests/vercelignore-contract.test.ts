@@ -98,6 +98,9 @@ const excludedPaths = [
   "docs/README.md",
   "services/notifications/generated/mirror.ts",
   "assets/google-play/k.jks",
+  ".deploy-all/service-builds/notifications/next-build/node_modules/stale-link",
+  ".agent-control/requests/previous.json",
+  ".serena/cache/index.json",
 ];
 
 const mustStayPaths = [

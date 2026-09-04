@@ -1076,81 +1076,6 @@
       ]
     },
     {
-      "id": "command:deploy:all:main",
-      "kind": "command",
-      "name": "npm run deploy:all:main",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "all",
-        "deploy",
-        "deploy:all:main",
-        "main",
-        "npm",
-        "npm run deploy:all:main",
-        "run"
-      ]
-    },
-    {
-      "id": "command:deploy:all:preflight",
-      "kind": "command",
-      "name": "npm run deploy:all:preflight",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "all",
-        "deploy",
-        "deploy:all:preflight",
-        "npm",
-        "npm run deploy:all:preflight",
-        "preflight",
-        "run"
-      ]
-    },
-    {
-      "id": "command:deploy:all:publish",
-      "kind": "command",
-      "name": "npm run deploy:all:publish",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "all",
-        "deploy",
-        "deploy:all:publish",
-        "npm",
-        "npm run deploy:all:publish",
-        "publish",
-        "run"
-      ]
-    },
-    {
-      "id": "command:deploy:all:services",
-      "kind": "command",
-      "name": "npm run deploy:all:services",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "all",
-        "deploy",
-        "deploy:all:services",
-        "npm",
-        "npm run deploy:all:services",
-        "run",
-        "services"
-      ]
-    },
-    {
-      "id": "command:deploy:env:push",
-      "kind": "command",
-      "name": "npm run deploy:env:push",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "deploy",
-        "deploy:env:push",
-        "env",
-        "npm",
-        "npm run deploy:env:push",
-        "push",
-        "run"
-      ]
-    },
-    {
       "id": "command:deploy:push",
       "kind": "command",
       "name": "npm run deploy:push",
@@ -1160,21 +1085,6 @@
         "deploy:push",
         "npm",
         "npm run deploy:push",
-        "push",
-        "run"
-      ]
-    },
-    {
-      "id": "command:deploy:push:all",
-      "kind": "command",
-      "name": "npm run deploy:push:all",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "all",
-        "deploy",
-        "deploy:push:all",
-        "npm",
-        "npm run deploy:push:all",
         "push",
         "run"
       ]
@@ -1191,49 +1101,6 @@
         "npm",
         "npm run deploy:push:fast",
         "push",
-        "run"
-      ]
-    },
-    {
-      "id": "command:deploy:push:main",
-      "kind": "command",
-      "name": "npm run deploy:push:main",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "deploy",
-        "deploy:push:main",
-        "main",
-        "npm",
-        "npm run deploy:push:main",
-        "push",
-        "run"
-      ]
-    },
-    {
-      "id": "command:deploy:redeploy-main",
-      "kind": "command",
-      "name": "npm run deploy:redeploy-main",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "deploy",
-        "deploy:redeploy-main",
-        "npm",
-        "npm run deploy:redeploy-main",
-        "redeploy-main",
-        "run"
-      ]
-    },
-    {
-      "id": "command:deploy:revision",
-      "kind": "command",
-      "name": "npm run deploy:revision",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "deploy",
-        "deploy:revision",
-        "npm",
-        "npm run deploy:revision",
-        "revision",
         "run"
       ]
     },
@@ -1880,6 +1747,20 @@
         "lint",
         "npm",
         "npm run lint",
+        "run"
+      ]
+    },
+    {
+      "id": "command:main:deploy",
+      "kind": "command",
+      "name": "npm run main:deploy",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "deploy",
+        "main",
+        "main:deploy",
+        "npm",
+        "npm run main:deploy",
         "run"
       ]
     },
@@ -6363,7 +6244,6 @@
         "@asol/trending-ribbon-core",
         "@asol/trending-ribbon-core/server",
         "@asol/vercel-deploy-core",
-        "@asol/vercel-deploy-core/github-push-identity",
         "@asol/vercel-deploy-core/project-env",
         "@asol/vercel-deploy-core/release-rollback",
         "@asol/vercel-deploy-core/release-state",
@@ -6911,26 +6791,33 @@
     {
       "id": "document:docs/01-architecture/09-decisions/ADR-0006-main-only-branch.md",
       "kind": "document",
-      "name": "ADR-0006: Fixed Two-Branch Repository Model",
+      "name": "ADR-0006: Fixed Two-Branch Repository Model and Explicit Agent Execution Choice",
       "path": "docs/01-architecture/09-decisions/ADR-0006-main-only-branch.md",
-      "summary": "Accepted; superseded topology finalized 2026-09-02.",
+      "summary": "Accepted; local-agent execution policy revised 2026-09-04.",
       "tags": [
-        "2026-09-02",
+        "2026-09-04",
         "accepted",
-        "accepted; superseded topology finalized 2026-09-02.",
+        "accepted; local-agent execution policy revised 2026-09-04.",
         "adr-0006",
-        "adr-0006: fixed two-branch repository model",
+        "adr-0006: fixed two-branch repository model and explicit agent execution choice",
+        "agent",
+        "and",
+        "choice",
         "docs/01-architecture/09-decisions/adr-0006-main-only-branch",
         "docs/01-architecture/09-decisions/adr-0006-main-only-branch.md",
-        "finalized",
+        "execution",
+        "explicit",
         "fixed",
+        "local-agent",
         "md",
         "model",
+        "policy",
         "repository",
+        "revised",
         "scripts/block-branch-creation",
         "scripts/block-branch-creation.ts",
-        "superseded",
-        "topology",
+        "scripts/github-ci-policy",
+        "scripts/github-ci-policy.ts",
         "ts",
         "two-branch"
       ]
@@ -7801,11 +7688,11 @@
         "operational",
         "packages/data-core/src/core/database/",
         "packages/data-core/src/core/database/...",
+        "packages/notifications-core/src/domain/web-push-config",
+        "packages/notifications-core/src/domain/web-push-config.ts",
         "reconstruction",
         "relationships",
         "relocated",
-        "src/features/notifications/domain/web-push-config",
-        "src/features/notifications/domain/web-push-config.ts",
         "the",
         "ts"
       ]
@@ -7948,6 +7835,8 @@
         "md",
         "note",
         "operational",
+        "packages/notifications-core/src/domain/web-push-config",
+        "packages/notifications-core/src/domain/web-push-config.ts",
         "packages/ota-core/src/publishing/build/out-runtime-config",
         "packages/ota-core/src/publishing/build/out-runtime-config.ts",
         "reconstruction",
@@ -7955,8 +7844,6 @@
         "relocated",
         "scripts/protect-main-branch",
         "scripts/protect-main-branch.ts",
-        "src/features/notifications/domain/web-push-config",
-        "src/features/notifications/domain/web-push-config.ts",
         "the",
         "ts",
         "variables"
@@ -9571,12 +9458,12 @@
         "self-scrolling",
         "server",
         "showcase",
+        "src/features/advertisements/presentation/featuredmarquee",
+        "src/features/advertisements/presentation/featuredmarquee.tsx",
         "src/features/advertisements/presentation/hooks/use-home-featured-marquee",
         "src/features/advertisements/presentation/hooks/use-home-featured-marquee.ts",
         "src/features/advertisements/server/services/featured-marquee-service",
         "src/features/advertisements/server/services/featured-marquee-service.server.ts",
-        "src/shared/ui/featuredmarquee",
-        "src/shared/ui/featuredmarquee.tsx",
         "the",
         "the `featuredmarquee` is a reusable, self-scrolling product showcase component designed for next.js app router applications. it displays an infinite horizontal marquee of product cards and has zero direct dependencies on feature-specific translations or business logic.",
         "translations",
@@ -9616,15 +9503,15 @@
         "md",
         "modes",
         "not",
-        "packages/data-core/src/core/database/advertisements-db-client",
-        "packages/data-core/src/core/database/advertisements-db-client.ts",
+        "packages/data-core/src/core/database/advertisements-turso-db-client",
+        "packages/data-core/src/core/database/advertisements-turso-db-client.ts",
         "packages/data-core/src/domains/advertisements/repositories/home-hero-slider",
         "packages/data-core/src/domains/advertisements/repositories/home-hero-slider.repository.ts",
         "packages/hero-slider-core/src",
         "packages/hero-slider-core/src/server/home-hero-slider-service",
         "packages/hero-slider-core/src/server/home-hero-slider-service.ts",
-        "packages/storage-core/packages/storage-core/src/config/storage-profiles",
-        "packages/storage-core/packages/storage-core/src/config/storage-profiles.json",
+        "packages/storage-core/src/config/storage-profiles",
+        "packages/storage-core/src/config/storage-profiles.json",
         "pages",
         "persistence",
         "project",
@@ -9642,6 +9529,21 @@
         "src/app/api/advertisements/home-hero-slider/version/route.ts",
         "src/features/advertisements/application/home-hero-slider-sync",
         "src/features/advertisements/application/home-hero-slider-sync.ts",
+        "src/features/advertisements/presentation/hero-slider",
+        "src/features/advertisements/presentation/hero-slider-model",
+        "src/features/advertisements/presentation/hero-slider-model.ts",
+        "src/features/advertisements/presentation/hero-slider-styles",
+        "src/features/advertisements/presentation/hero-slider-styles.ts",
+        "src/features/advertisements/presentation/hero-slider.test.ts",
+        "src/features/advertisements/presentation/hero-slider.types.ts",
+        "src/features/advertisements/presentation/heroslider",
+        "src/features/advertisements/presentation/heroslider.tsx",
+        "src/features/advertisements/presentation/heroslidereditor",
+        "src/features/advertisements/presentation/heroslidereditor.tsx",
+        "src/features/advertisements/presentation/herosliderimageprobe",
+        "src/features/advertisements/presentation/herosliderimageprobe.tsx",
+        "src/features/advertisements/presentation/herosliderimageseditor",
+        "src/features/advertisements/presentation/herosliderimageseditor.tsx",
         "src/features/advertisements/presentation/hooks/use-home-hero-slider",
         "src/features/advertisements/presentation/hooks/use-home-hero-slider.ts",
         "src/features/advertisements/server/services/home-hero-slider-service",
@@ -9658,21 +9560,6 @@
         "src/features/super-admin/presentation/superadminherosliderpage.tsx",
         "src/features/super-admin/presentation/use-super-admin-hero-slider-save",
         "src/features/super-admin/presentation/use-super-admin-hero-slider-save.ts",
-        "src/shared/ui/hero-slider",
-        "src/shared/ui/hero-slider-model",
-        "src/shared/ui/hero-slider-model.ts",
-        "src/shared/ui/hero-slider-styles",
-        "src/shared/ui/hero-slider-styles.ts",
-        "src/shared/ui/hero-slider.test.ts",
-        "src/shared/ui/hero-slider.types.ts",
-        "src/shared/ui/heroslider",
-        "src/shared/ui/heroslider.tsx",
-        "src/shared/ui/heroslidereditor",
-        "src/shared/ui/heroslidereditor.tsx",
-        "src/shared/ui/herosliderimageprobe",
-        "src/shared/ui/herosliderimageprobe.tsx",
-        "src/shared/ui/herosliderimageseditor",
-        "src/shared/ui/herosliderimageseditor.tsx",
         "test",
         "the",
         "they",
@@ -9801,10 +9688,10 @@
         "server",
         "src/features/advertisements/presentation/hooks/use-home-trending-ribbon",
         "src/features/advertisements/presentation/hooks/use-home-trending-ribbon.ts",
+        "src/features/advertisements/presentation/trendingribbon",
+        "src/features/advertisements/presentation/trendingribbon.tsx",
         "src/features/advertisements/server/services/trending-ribbon-service",
         "src/features/advertisements/server/services/trending-ribbon-service.server.ts",
-        "src/shared/ui/trendingribbon",
-        "src/shared/ui/trendingribbon.tsx",
         "text",
         "the",
         "the `trendingribbon` is a reusable, self-scrolling text ticker component designed for next.js app router applications. it displays a marquee of trending product or topic names in a highlighted error-tonal band, with no dependency on translations or business logic.",
@@ -10280,16 +10167,16 @@
         "sql",
         "src/features/account-deletion/",
         "src/features/auth/",
+        "src/features/auth/application/services/session-api-service",
+        "src/features/auth/application/services/session-api-service.ts",
         "src/features/auth/presentation/accountdeletionpagecontent",
         "src/features/auth/presentation/accountdeletionpagecontent.tsx",
         "src/features/auth/server/auth-core-bootstrap",
         "src/features/auth/server/auth-core-bootstrap.server.ts",
         "src/features/auth/server/auth-core-ports",
         "src/features/auth/server/auth-core-ports.server.ts",
-        "src/features/auth/services/auth-service",
-        "src/features/auth/services/auth-service.server.ts",
-        "src/features/auth/services/session-api-service",
-        "src/features/auth/services/session-api-service.ts",
+        "src/features/auth/server/services/auth-service",
+        "src/features/auth/server/services/auth-service.server.ts",
         "src/features/auth/services/signed-session-token",
         "src/features/auth/services/signed-session-token.server.ts",
         "src/features/auth/utils/password-hash",
@@ -10649,23 +10536,11 @@
       "path": "docs/05-platform-features/notification-system.md",
       "summary": "> Specialty-based buyer/provider conversations are documented in [`specialty-notification-chat.md`](specialty-notification-chat.md). They use notifications as their sole transport and keep message content only in the local notification center.",
       "tags": [
-        "/asolapplifecycle",
-        "/asolnotificationinboxplugin",
-        "/asolnotificationinboxstore",
-        "/asolnotificationrecord",
-        "/asolnotificationtapprotocol",
-        "/asolpushmessagingservice",
         "> specialty-based buyer/provider conversations are documented in [`specialty-notification-chat.md`](specialty-notification-chat.md). they use notifications as their sole transport and keep message content only in the local notification center.",
         "@asol/account-bridge",
+        "@asol/native-core",
         "adapter",
         "and",
-        "android/",
-        "android/.../asolapplifecycle.java",
-        "android/.../asolnotificationinboxplugin.java",
-        "android/.../asolnotificationinboxstore.java",
-        "android/.../asolnotificationrecord.java",
-        "android/.../asolnotificationtapprotocol.java",
-        "android/.../asolpushmessagingservice.java",
         "are",
         "as",
         "asol",
@@ -10681,7 +10556,6 @@
         "in",
         "ios/app/app/custom_notification",
         "ios/app/app/custom_notification.caf",
-        "java",
         "js",
         "keep",
         "local",
@@ -10697,10 +10571,15 @@
         "packages/data-core/src/browser/asol-db",
         "packages/data-core/src/browser/workers/asol-push-sw",
         "packages/data-core/src/browser/workers/asol-push-sw.js",
+        "packages/native-core/android/src/main/java/hgh/asol/app/",
         "packages/native-core/src/adapters/notifications",
         "packages/native-core/src/adapters/notifications.adapter.ts",
         "packages/native-core/src/tests/contract/app-settings-plugin",
         "packages/native-core/src/tests/contract/app-settings-plugin.test.ts",
+        "packages/notifications-core/src/domain/notification-sound",
+        "packages/notifications-core/src/domain/notification-sound.ts",
+        "packages/notifications-core/src/domain/web-push-config",
+        "packages/notifications-core/src/domain/web-push-config.ts",
         "server",
         "services/notifications",
         "sole",
@@ -10717,10 +10596,6 @@
         "src/features/cart/presentation/cartpagecontent",
         "src/features/cart/presentation/cartpagecontent.tsx",
         "src/features/notifications",
-        "src/features/notifications/domain/notification-sound",
-        "src/features/notifications/domain/notification-sound.ts",
-        "src/features/notifications/domain/web-push-config",
-        "src/features/notifications/domain/web-push-config.ts",
         "src/features/notifications/tests",
         "src/features/settings/presentation/notificationssettingspagecontent",
         "src/features/settings/presentation/notificationssettingspagecontent.tsx",
@@ -10771,6 +10646,8 @@
         "one",
         "out",
         "own",
+        "packages/notifications-core/src/service-runtime",
+        "packages/notifications-core/src/service-runtime.ts",
         "push",
         "reads",
         "runs",
@@ -10778,8 +10655,6 @@
         "services/notifications",
         "services/notifications/",
         "src/app/api/notifications/send",
-        "src/features/notifications/service-runtime",
-        "src/features/notifications/service-runtime.ts",
         "that",
         "thing",
         "ts",
@@ -11033,10 +10908,10 @@
         "serves",
         "service",
         "services/profiles/",
+        "services/profiles/src/app/lib/http",
+        "services/profiles/src/app/lib/http.ts",
         "seven",
         "shards",
-        "src/app/lib/http",
-        "src/app/lib/http.ts",
         "that",
         "the",
         "their",
@@ -11194,13 +11069,8 @@
       "tags": [
         "@asol/catalog-core",
         "@asol/catalog-core/",
-        "@asol/catalog-core/contracts/catalog-v3",
-        "@asol/catalog-core/contracts/catalog-v3.contract.ts",
+        "@asol/catalog-core/...",
         "@asol/catalog-core/server",
-        "@asol/catalog-core/types/catalog-v3",
-        "@asol/catalog-core/types/catalog-v3.types.ts",
-        "@asol/catalog-core/utils/catalog-display",
-        "@asol/catalog-core/utils/catalog-display.ts",
         "`@asol/catalog-core` architecture & consolidation",
         "`@asol/catalog-core` is the sealed workspace package for catalog v3: shared types, zod contracts, display visibility rules, and the full-tree validator used by ci and catalog studio.",
         "and",
@@ -11226,6 +11096,13 @@
         "sealed",
         "shared",
         "src/features/",
+        "src/features/catalog-data/",
+        "src/features/catalog-data/contracts/catalog-v3",
+        "src/features/catalog-data/contracts/catalog-v3.contract.ts",
+        "src/features/catalog-data/types/catalog-v3",
+        "src/features/catalog-data/types/catalog-v3.types.ts",
+        "src/features/catalog-data/utils/catalog-display",
+        "src/features/catalog-data/utils/catalog-display.ts",
         "studio",
         "the",
         "ts",
@@ -11570,7 +11447,6 @@
       "tags": [
         "> **canonical path**: `packages/ota-core/` > **package name**: `@asol/ota-core`",
         "@asol/native-core",
-        "@asol/notifications",
         "@asol/ota-core",
         "@asol/ota-core/publishing",
         "`@asol/ota-core` — architecture reference",
@@ -11582,10 +11458,13 @@
         "name",
         "package",
         "packages/native-core/",
+        "packages/notifications-core/src/services/providers/fcm-http-v1",
+        "packages/notifications-core/src/services/providers/fcm-http-v1.server.ts",
         "packages/ota-core/",
         "packages/ota-core/src/tests/",
         "path",
         "reference",
+        "server",
         "src/index",
         "src/index.ts",
         "ts"
@@ -11928,13 +11807,15 @@
         "md",
         "notification-chat",
         "operations",
+        "packages/architecture-core/src/checks/application-cycle-contract",
+        "packages/architecture-core/src/checks/application-cycle-contract.ts",
         "protected",
         "session",
         "session system",
+        "src/features/auth/application/services/session-api-service",
+        "src/features/auth/application/services/session-api-service.ts",
         "src/features/auth/presentation/sessionprovider",
         "src/features/auth/presentation/sessionprovider.tsx",
-        "src/features/auth/services/session-api-service",
-        "src/features/auth/services/session-api-service.ts",
         "src/shared/session-runtime/",
         "state",
         "system",
@@ -12075,7 +11956,9 @@
       "path": "docs/05-platform-features/voice-input-system.md",
       "summary": "ASOL provides automatic speech-to-text controls for eligible `input` and `textarea` elements across every page and feature. Pages do not need to import a microphone component or initialize speech recognition manually.",
       "tags": [
+        "@asol/native-core",
         "across",
+        "adapter",
         "and",
         "android/app/src/main/androidmanifest",
         "android/app/src/main/androidmanifest.xml",
@@ -12107,6 +11990,8 @@
         "need",
         "not",
         "or",
+        "packages/native-core/src/adapters/speech",
+        "packages/native-core/src/adapters/speech.adapter.ts",
         "page",
         "pages",
         "plist",
@@ -12124,8 +12009,6 @@
         "src/features/voice-input/presentation/hooks/use-voice-input-scanner.ts",
         "src/features/voice-input/presentation/voiceinputcontroller",
         "src/features/voice-input/presentation/voiceinputcontroller.tsx",
-        "src/platform/speech/speech-recognition-adapter",
-        "src/platform/speech/speech-recognition-adapter.ts",
         "src/shared/locales/ar",
         "src/shared/locales/ar.json",
         "src/shared/locales/en",
@@ -12349,48 +12232,28 @@
       "kind": "document",
       "name": "GOVA Local Agent Connection Guide",
       "path": "docs/06-super-admin-and-operations/local-agent-connection.md",
-      "summary": "This file defines the **approved connection path for local-agent access in the GOVA project**. Any cloud agent or GitHub-driven agent must follow this model when it needs to reach the local machine and perform work against the real repository.",
+      "summary": "This document defines the current approved remote-entry and local-execution model.",
       "tags": [
-        "access",
-        "against",
         "agent",
         "and",
-        "any",
         "approved",
-        "cloud",
         "connection",
+        "current",
         "defines",
         "docs/06-super-admin-and-operations/local-agent-connection",
         "docs/06-super-admin-and-operations/local-agent-connection.md",
-        "file",
-        "follow",
-        "for",
-        "github-driven",
+        "document",
         "gova",
         "gova local agent connection guide",
         "guide",
-        "in",
-        "it",
         "local",
-        "local-agent",
-        "machine",
+        "local-execution",
         "md",
         "model",
-        "must",
-        "needs",
-        "or",
-        "path",
-        "perform",
-        "project",
-        "reach",
-        "real",
-        "repository",
+        "remote-entry",
         "the",
         "this",
-        "this file defines the **approved connection path for local-agent access in the gova project**. any cloud agent or github-driven agent must follow this model when it needs to reach the local machine and perform work against the real repository.",
-        "to",
-        "when",
-        "work"
+        "this document defines the current approved remote-entry and local-execution model."
       ]
     },
     {
@@ -12398,48 +12261,48 @@
       "kind": "document",
       "name": "Local Agent Disaster Recovery",
       "path": "docs/06-super-admin-and-operations/local-agent-recovery.md",
-      "summary": "The persistent local-agent runtime has a self-contained recovery command. It is intended to rebuild the execution control plane after repository loss, runtime-database damage, machine replacement, or accidental worktree deletion without using `main` as a recovery channel.",
+      "summary": "This recovery facility belongs to the **optional Gateway-managed/isolation mode**. Normal direct local-agent editing of `/home/hesham/gova` does not create Gateway task state, task worktrees, or `agent/*` branches, so it does not require this recovery flow. Use this document only",
       "tags": [
-        "accidental",
-        "after",
+        "/home/hesham/gova",
         "agent",
-        "as",
-        "channel",
-        "command",
-        "control",
-        "damage",
-        "deletion",
+        "agent/",
+        "belongs",
+        "branches",
+        "create",
+        "direct",
         "disaster",
         "docs/06-super-admin-and-operations/local-agent-recovery",
         "docs/06-super-admin-and-operations/local-agent-recovery.md",
-        "execution",
-        "has",
-        "intended",
-        "is",
+        "document",
+        "does",
+        "editing",
+        "facility",
+        "flow",
+        "gateway",
+        "gateway-managed/isolation",
         "it",
         "local",
         "local agent disaster recovery",
         "local-agent",
-        "loss",
-        "machine",
-        "main",
         "md",
+        "mode",
+        "normal",
+        "not",
+        "of",
+        "only",
+        "optional",
         "or",
-        "persistent",
-        "plane",
-        "rebuild",
         "recovery",
-        "replacement",
-        "repository",
-        "runtime",
-        "runtime-database",
-        "self-contained",
+        "require",
+        "so",
+        "state",
+        "task",
         "the",
-        "the persistent local-agent runtime has a self-contained recovery command. it is intended to rebuild the execution control plane after repository loss, runtime-database damage, machine replacement, or accidental worktree deletion without using `main` as a recovery channel.",
+        "this",
+        "this recovery facility belongs to the **optional gateway-managed/isolation mode**. normal direct local-agent editing of `/home/hesham/gova` does not create gateway task state, task worktrees, or `agent/*` branches, so it does not require this recovery flow. use this document only",
         "to",
-        "using",
-        "without",
-        "worktree"
+        "use",
+        "worktrees"
       ]
     },
     {
@@ -12447,33 +12310,52 @@
       "kind": "document",
       "name": "Persistent Local Agent Runtime",
       "path": "docs/06-super-admin-and-operations/local-agent-runtime.md",
-      "summary": "The Local Runner is a persistent multi-agent execution environment. GitHub Actions is bootstrap/release infrastructure, not the normal command transport.",
+      "summary": "Before the first task action, every local agent asks the user to select an execution mode unless the task already selects one. Mode A is Gateway-managed isolation; Mode B edits the canonical checkout at `/home/hesham/gova` directly. GitHub `workflow_dispatch` through `local-agent",
       "tags": [
-        "actions",
+        "/home/hesham/gova",
+        "action",
         "agent",
-        "bootstrap/release",
-        "command",
+        "already",
+        "an",
+        "asks",
+        "at",
+        "before",
+        "before the first task action, every local agent asks the user to select an execution mode unless the task already selects one. mode a is gateway-managed isolation; mode b edits the canonical checkout at `/home/hesham/gova` directly. github `workflow_dispatch` through `local-agent",
+        "canonical",
+        "checkout",
+        "directly",
         "docs/06-super-admin-and-operations/local-agent-recovery",
         "docs/06-super-admin-and-operations/local-agent-recovery.md",
         "docs/06-super-admin-and-operations/local-agent-runtime",
         "docs/06-super-admin-and-operations/local-agent-runtime.md",
-        "environment",
+        "edits",
+        "every",
         "execution",
+        "first",
+        "gateway-managed",
         "github",
-        "infrastructure",
         "is",
+        "isolation",
         "local",
+        "local-agent",
         "md",
-        "multi-agent",
-        "normal",
-        "not",
+        "mode",
+        "one",
         "persistent",
         "persistent local agent runtime",
-        "runner",
         "runtime",
+        "scripts/local-agent/related-core-tests",
+        "scripts/local-agent/related-core-tests.ts",
+        "select",
+        "selects",
+        "task",
         "the",
-        "the local runner is a persistent multi-agent execution environment. github actions is bootstrap/release infrastructure, not the normal command transport.",
-        "transport"
+        "through",
+        "to",
+        "ts",
+        "unless",
+        "user",
+        "workflow_dispatch"
       ]
     },
     {
@@ -12505,13 +12387,13 @@
         "md",
         "notification",
         "notifications",
+        "packages/notifications-core/src/domain/notification-test-scenarios",
+        "packages/notifications-core/src/domain/notification-test-scenarios.ts",
         "page",
         "production",
         "provider",
         "registration",
         "sound",
-        "src/features/notifications/domain/notification-test-scenarios",
-        "src/features/notifications/domain/notification-test-scenarios.ts",
         "src/features/super-admin/presentation/notification-tests/notification-test-presentation",
         "src/features/super-admin/presentation/notification-tests/notification-test-presentation.ts",
         "super",
@@ -12666,48 +12548,52 @@
       "kind": "document",
       "name": "Super Admin Production Deploy",
       "path": "docs/06-super-admin-and-operations/super-admin-production-deploy.md",
-      "summary": "Every GitHub `push` event for `main` also reaches the machine-only `/api/super-admin/production-deploy/github` endpoint using GitHub OIDC. The endpoint accepts only this repository's `deploy-main.yml`, pins the sandbox to the token's SHA, and launches `deploy:revision` for all ta",
+      "summary": "GitHub pushes do not start production deployments. The machine-only production deploy endpoint is reserved for authenticated explicit release requests; no Vercel, repository, archive, email, or notification secret is stored in GitHub.",
       "tags": [
-        "/api/super-admin/production-deploy/github",
-        "accepts",
+        "@asol/vercel-deploy-core/github-push-identity",
         "admin",
-        "all",
-        "also",
-        "and",
+        "archive",
+        "authenticated",
         "deploy",
-        "deploy-main",
+        "deployments",
+        "do",
         "docs/06-super-admin-and-operations/super-admin-production-deploy",
         "docs/06-super-admin-and-operations/super-admin-production-deploy.md",
+        "email",
         "endpoint",
-        "event",
-        "every",
-        "every github `push` event for `main` also reaches the machine-only `/api/super-admin/production-deploy/github` endpoint using github oidc. the endpoint accepts only this repository's `deploy-main.yml`, pins the sandbox to the token's sha, and launches `deploy:revision` for all ta",
+        "explicit",
         "for",
         "github",
-        "launches",
+        "github pushes do not start production deployments. the machine-only production deploy endpoint is reserved for authenticated explicit release requests; no vercel, repository, archive, email, or notification secret is stored in github.",
+        "in",
+        "is",
         "machine-only",
-        "main",
         "md",
         "mjs",
-        "oidc",
-        "only",
+        "no",
+        "not",
+        "notification",
+        "or",
         "packages/vercel-deploy-core/src/remote-deploy-contracts",
         "packages/vercel-deploy-core/src/remote-deploy-contracts.ts",
         "packages/vercel-deploy-core/src/remote-deploy-sandbox",
         "packages/vercel-deploy-core/src/remote-deploy-sandbox.ts",
-        "pins",
         "production",
-        "push",
-        "reaches",
+        "pushes",
+        "release",
         "repository",
-        "revision",
-        "sandbox",
+        "requests",
+        "reserved",
+        "scripts/deploy-push",
+        "scripts/deploy-push.ts",
+        "scripts/github-ci-policy",
+        "scripts/github-ci-policy.ts",
         "scripts/push-production-deploy-env",
         "scripts/push-production-deploy-env.ts",
         "scripts/run-remote-deploy-all",
         "scripts/run-remote-deploy-all.mjs",
+        "secret",
         "server",
-        "sha",
         "src/features/release-commands/domain/production-deploy-report",
         "src/features/release-commands/domain/production-deploy-report.ts",
         "src/features/release-commands/presentation/productiondeploypage",
@@ -12716,17 +12602,14 @@
         "src/features/release-commands/server/services/production-deploy-email.server.ts",
         "src/features/release-commands/server/services/production-deploy-service",
         "src/features/release-commands/server/services/production-deploy-service.server.ts",
+        "start",
+        "stored",
         "super",
         "super admin production deploy",
-        "ta",
         "the",
-        "this",
-        "to",
-        "token",
         "ts",
         "tsx",
-        "using",
-        "yml"
+        "vercel"
       ]
     },
     {
@@ -12810,12 +12693,12 @@
         "packages/account-bridge/src/mobile-push/",
         "packages/account-bridge/src/mobile-push/embedded-blob",
         "packages/account-bridge/src/mobile-push/embedded-blob.ts",
+        "packages/native-core/scripts/sync-android-push-assets",
+        "packages/native-core/scripts/sync-android-push-assets.ts",
+        "packages/notifications-core/src/domain/notification-sound",
+        "packages/notifications-core/src/domain/notification-sound.ts",
         "plugin",
         "push",
-        "scripts/sync-android-push-assets",
-        "scripts/sync-android-push-assets.ts",
-        "src/features/notifications/domain/notification-sound",
-        "src/features/notifications/domain/notification-sound.ts",
         "states",
         "terminated",
         "the",
@@ -12987,7 +12870,6 @@
         "code",
         "contain",
         "database",
-        "defaults",
         "docs/07-mobile-and-release/capacitor/capacitor",
         "docs/07-mobile-and-release/capacitor/capacitor.md",
         "does",
@@ -13006,8 +12888,8 @@
         "packages/native-core/scripts/android-build-preflight",
         "packages/native-core/scripts/android-build-preflight.ts",
         "packages/native-core/src/adapters/",
-        "packages/native-core/src/domain/config/capacitor",
-        "packages/native-core/src/domain/config/capacitor.defaults.ts",
+        "packages/native-core/src/domain/defaults/platform-defaults",
+        "packages/native-core/src/domain/defaults/platform-defaults.ts",
         "platform",
         "produced",
         "properties",
@@ -13199,6 +13081,8 @@
         "package",
         "packages/account-bridge/src/mobile-push/fcm-message",
         "packages/account-bridge/src/mobile-push/fcm-message.ts",
+        "packages/notifications-core/src/domain/notification-sound",
+        "packages/notifications-core/src/domain/notification-sound.ts",
         "pbxproj",
         "pinned",
         "plist",
@@ -13207,8 +13091,6 @@
         "registration",
         "same",
         "sdk",
-        "src/features/notifications/domain/notification-sound",
-        "src/features/notifications/domain/notification-sound.ts",
         "src/features/notifications/domain/push-token-kind",
         "src/features/notifications/domain/push-token-kind.ts",
         "swift",
@@ -13230,8 +13112,10 @@
       "path": "docs/07-mobile-and-release/capacitor/mobile-back-button-system.md",
       "summary": "ASOL handles the Android system Back action consistently across the application. The action may come from the navigation bar, a hardware button, or the Android back gesture.",
       "tags": [
+        "@asol/native-core",
         "across",
         "action",
+        "adapter",
         "android",
         "application",
         "asol",
@@ -13254,14 +13138,14 @@
         "mobile back button system",
         "navigation",
         "or",
+        "packages/native-core/src/adapters/back-button",
+        "packages/native-core/src/adapters/back-button.adapter.ts",
         "src/app/layout",
         "src/app/layout.tsx",
         "src/features/navigation/presentation/hooks/use-mobile-back-button",
         "src/features/navigation/presentation/hooks/use-mobile-back-button.ts",
         "src/features/navigation/presentation/mobilebackbuttoncontroller",
         "src/features/navigation/presentation/mobilebackbuttoncontroller.tsx",
-        "src/platform/navigation/capacitor-back-button-adapter",
-        "src/platform/navigation/capacitor-back-button-adapter.ts",
         "src/shared/locales/ar",
         "src/shared/locales/ar.json",
         "src/shared/locales/en",
@@ -13309,8 +13193,8 @@
         "native",
         "note",
         "operational",
-        "packages/architecture-core/src/checks/native-core-contract",
-        "packages/architecture-core/src/checks/native-core-contract.ts",
+        "packages/architecture-core/src/checks/architecture-types",
+        "packages/architecture-core/src/checks/architecture-types.ts",
         "packages/native-core/",
         "packages/native-core/android",
         "packages/native-core/android/",
@@ -13398,10 +13282,10 @@
         "native surface protection",
         "one",
         "ota",
+        "packages/ota-core/src/publishing/gate/native-gate",
+        "packages/ota-core/src/publishing/gate/native-gate.ts",
         "protection",
         "repository",
-        "scripts/ota/ota-native-compatibility",
-        "scripts/ota/ota-native-compatibility.ts",
         "ship",
         "surface",
         "tells",
@@ -13453,6 +13337,8 @@
         "ota update system",
         "packages/data-core/src/domains/ota/repositories/ota-release-repository",
         "packages/data-core/src/domains/ota/repositories/ota-release-repository.ts",
+        "packages/native-core/src/",
+        "packages/native-core/src/adapters/",
         "packages/native-core/src/adapters/ota",
         "packages/native-core/src/adapters/ota.adapter.ts",
         "packages/native-core/src/capabilities/capability-registry",
@@ -13463,16 +13349,18 @@
         "packages/ota-core/scripts/build-out.ts",
         "packages/ota-core/scripts/ota-publish",
         "packages/ota-core/scripts/ota-publish.ts",
-        "packages/ota-core/src/adapters/back-button",
-        "packages/ota-core/src/adapters/back-button.adapter.ts",
-        "packages/ota-core/src/adapters/ota",
-        "packages/ota-core/src/adapters/ota.adapter.ts",
+        "packages/ota-core/src/domain/versioning/content-version",
+        "packages/ota-core/src/domain/versioning/content-version.ts",
         "packages/ota-core/src/publishing/adapters/r2-storage",
         "packages/ota-core/src/publishing/adapters/r2-storage.adapter.ts",
         "packages/ota-core/src/publishing/config/ota-config",
         "packages/ota-core/src/publishing/config/ota-config.ts",
+        "packages/ota-core/src/publishing/gate/native-gate",
+        "packages/ota-core/src/publishing/gate/native-gate.ts",
         "packages/ota-core/src/publishing/release/capability-scan",
         "packages/ota-core/src/publishing/release/capability-scan.ts",
+        "packages/ota-core/src/publishing/release/ota-revocations",
+        "packages/ota-core/src/publishing/release/ota-revocations.json",
         "packages/ota-core/src/runtime/api-service",
         "packages/ota-core/src/runtime/api-service.ts",
         "packages/ota-core/src/runtime/native-adapters",
@@ -13481,6 +13369,8 @@
         "packages/ota-core/src/runtime/release-service.server.ts",
         "packages/ota-core/src/runtime/update-service",
         "packages/ota-core/src/runtime/update-service.ts",
+        "packages/ota-core/src/tests/native-compatibility",
+        "packages/ota-core/src/tests/native-compatibility.test.ts",
         "paths",
         "previously",
         "release",
@@ -13490,12 +13380,6 @@
         "scripts/build-static.ts",
         "scripts/cap-build",
         "scripts/cap-build.ts",
-        "scripts/ota/ota-native-compatibility",
-        "scripts/ota/ota-native-compatibility.ts",
-        "scripts/ota/ota-revocations",
-        "scripts/ota/ota-revocations.json",
-        "scripts/test-ota-native-compatibility",
-        "scripts/test-ota-native-compatibility.ts",
         "selected",
         "served",
         "server",
@@ -13503,17 +13387,14 @@
         "signed",
         "sizes",
         "so",
+        "src/app/super-admin/ota-releases/page",
+        "src/app/super-admin/ota-releases/page.tsx",
         "src/core/config/app-version",
         "src/core/config/app-version.ts",
-        "src/features/page-snapshot/presentation/hooks/use-page-snapshot",
-        "src/features/page-snapshot/presentation/hooks/use-page-snapshot.tsx",
-        "src/features/release-commands/domain/content-version",
-        "src/features/release-commands/domain/content-version.ts",
         "src/features/splash/presentation/splashinitializer",
         "src/features/splash/presentation/splashinitializer.tsx",
-        "src/features/super-admin/presentation/superadminotareleasespage",
-        "src/features/super-admin/presentation/superadminotareleasespage.tsx",
         "system",
+        "test",
         "the",
         "transport",
         "tree",
@@ -13770,6 +13651,8 @@
         "note",
         "operational",
         "packages/native-core/android/build/",
+        "packages/release-core/src/pipeline/phases",
+        "packages/release-core/src/pipeline/phases.ts",
         "packages/release-core/src/pipeline/run-deployment-npm-script",
         "packages/release-core/src/pipeline/run-deployment-npm-script.ts",
         "reconstruction",
@@ -13787,8 +13670,6 @@
         "scripts/release-service-smoke-probes.ts",
         "scripts/tests/deploy-all",
         "scripts/tests/deploy-all.test.ts",
-        "scripts/tests/deploy-push",
-        "scripts/tests/deploy-push.test.ts",
         "scripts/tests/vercelignore-contract",
         "scripts/tests/vercelignore-contract.test.ts",
         "scripts/vercel-deployment-build",
@@ -13806,88 +13687,153 @@
       ]
     },
     {
+      "id": "document:docs/07-mobile-and-release/distributed-local-development.md",
+      "kind": "document",
+      "name": "Distributed Local Development",
+      "path": "docs/07-mobile-and-release/distributed-local-development.md",
+      "summary": "`npm run dev:distributed` runs the **whole production topology on one machine**: eight Next.js processes on eight ports, with gova's client bridge pointed at the local origins exactly the way production points it at public ones.",
+      "tags": [
+        "@asol/account-bridge/routes",
+        "`npm run dev:distributed` runs the **whole production topology on one machine**: eight next.js processes on eight ports, with gova's client bridge pointed at the local origins exactly the way production points it at public ones.",
+        "at",
+        "bridge",
+        "client",
+        "dev",
+        "development",
+        "distributed",
+        "distributed local development",
+        "docs/07-mobile-and-release/distributed-local-development",
+        "docs/07-mobile-and-release/distributed-local-development.md",
+        "eight",
+        "exactly",
+        "gova",
+        "it",
+        "js",
+        "local",
+        "machine",
+        "md",
+        "next",
+        "npm",
+        "on",
+        "one",
+        "ones",
+        "origins",
+        "packages/account-declarations/src/accounts/local-development",
+        "packages/account-declarations/src/accounts/local-development.ts",
+        "pointed",
+        "points",
+        "ports",
+        "processes",
+        "production",
+        "public",
+        "run",
+        "runs",
+        "scripts/stop-dev-server",
+        "scripts/stop-dev-server.ts",
+        "the",
+        "topology",
+        "ts",
+        "way",
+        "whole",
+        "with"
+      ]
+    },
+    {
       "id": "document:docs/07-mobile-and-release/github-ci-policy.md",
       "kind": "document",
       "name": "GitHub CI Policy",
       "path": "docs/07-mobile-and-release/github-ci-policy.md",
-      "summary": "GitHub Actions is not the normal transport for local-agent commands. The persistent local gateway owns command execution, coordination, worktrees, locks, checkpoints, handoffs, and result streaming.",
+      "summary": "GitHub `workflow_dispatch` has exactly two uses. `local-agent-bootstrap.yml` is the primary remote bootstrap/entry path for preparing or recovering the Gova local device. `local-agent-project.yml` is the cloud Mode-B command channel: it carries no work, only the identity of a com",
       "tags": [
-        "actions",
-        "and",
-        "checkpoints",
+        "bootstrap/entry",
+        "carries",
+        "channel",
         "ci",
+        "cloud",
+        "com",
         "command",
-        "commands",
-        "coordination",
+        "device",
         "docs/07-mobile-and-release/github-ci-policy",
         "docs/07-mobile-and-release/github-ci-policy.md",
-        "execution",
+        "exactly",
         "for",
-        "gateway",
         "github",
-        "github actions is not the normal transport for local-agent commands. the persistent local gateway owns command execution, coordination, worktrees, locks, checkpoints, handoffs, and result streaming.",
+        "github `workflow_dispatch` has exactly two uses. `local-agent-bootstrap.yml` is the primary remote bootstrap/entry path for preparing or recovering the gova local device. `local-agent-project.yml` is the cloud mode-b command channel: it carries no work, only the identity of a com",
         "github ci policy",
-        "handoffs",
+        "gova",
+        "has",
+        "identity",
         "is",
+        "it",
         "local",
-        "local-agent",
-        "locks",
+        "local-agent-bootstrap",
+        "local-agent-project",
         "md",
-        "normal",
-        "not",
-        "owns",
-        "persistent",
+        "mode-b",
+        "no",
+        "of",
+        "only",
+        "or",
+        "path",
         "policy",
-        "result",
-        "streaming",
+        "preparing",
+        "primary",
+        "recovering",
+        "remote",
         "the",
-        "transport",
-        "worktrees"
+        "two",
+        "uses",
+        "work",
+        "workflow_dispatch",
+        "yml"
       ]
     },
     {
       "id": "document:docs/07-mobile-and-release/local-agent-runner-pool.md",
       "kind": "document",
-      "name": "Persistent Local Agent Runtime",
+      "name": "Local Agent Runner Pool",
       "path": "docs/07-mobile-and-release/local-agent-runner-pool.md",
-      "summary": "`/home/hesham/gova` is the canonical repository clone and Git object source. Agents do not mutate it as a shared task workspace. The persistent `gova-agent-gateway` multiplexes all agent operations after a one-time/manual GitHub bootstrap.",
+      "summary": "`/home/hesham/gova` is the canonical repository clone **and the default local-agent working tree**. GitHub `workflow_dispatch` through the manual bootstrap workflow is the primary remote entry/recovery path. Self-hosted runners provide physical execution on the machine; they do n",
       "tags": [
         "/home/hesham/gova",
-        "`/home/hesham/gova` is the canonical repository clone and git object source. agents do not mutate it as a shared task workspace. the persistent `gova-agent-gateway` multiplexes all agent operations after a one-time/manual github bootstrap.",
-        "after",
+        "`/home/hesham/gova` is the canonical repository clone **and the default local-agent working tree**. github `workflow_dispatch` through the manual bootstrap workflow is the primary remote entry/recovery path. self-hosted runners provide physical execution on the machine; they do n",
         "agent",
-        "agents",
-        "all",
         "and",
-        "as",
         "bootstrap",
         "canonical",
         "clone",
+        "default",
         "do",
         "docs/07-mobile-and-release/local-agent-runner-pool",
         "docs/07-mobile-and-release/local-agent-runner-pool.md",
-        "git",
+        "entry/recovery",
+        "execution",
         "github",
-        "gova-agent-gateway",
         "is",
-        "it",
         "local",
+        "local agent runner pool",
+        "local-agent",
+        "machine",
+        "manual",
         "md",
-        "multiplexes",
-        "mutate",
-        "not",
-        "object",
-        "one-time/manual",
-        "operations",
-        "persistent",
-        "persistent local agent runtime",
+        "on",
+        "path",
+        "physical",
+        "pool",
+        "primary",
+        "provide",
+        "remote",
         "repository",
-        "runtime",
-        "shared",
-        "source",
-        "task",
+        "runner",
+        "runners",
+        "self-hosted",
         "the",
-        "workspace"
+        "they",
+        "through",
+        "tree",
+        "workflow",
+        "workflow_dispatch",
+        "working"
       ]
     },
     {
@@ -13917,9 +13863,12 @@
         "repository-only",
         "runner",
         "sandbox",
+        "scripts/retrain-project-intelligence",
+        "scripts/retrain-project-intelligence.ts",
         "surface",
         "the",
-        "the gova local runner is an authenticated host-control execution surface, not a repository-only sandbox."
+        "the gova local runner is an authenticated host-control execution surface, not a repository-only sandbox.",
+        "ts"
       ]
     },
     {
@@ -14044,32 +13993,32 @@
       "kind": "document",
       "name": "Release Commands",
       "path": "docs/07-mobile-and-release/release-commands.md",
-      "summary": "Three commands publish a release, and one deploys a single account for maintenance. They differ in which gates run, not in what publishing means: **every path that publishes runs the same ordered transaction**, defined once in `scripts/deploy-push.ts` as `runReleaseTransaction`.",
+      "summary": "Three commands publish a release — `deploy:all`, `deploy:push` and `deploy:push:fast`. They differ in which gates run, not in what publishing means: **every public path runs the same ordered transaction**, defined once in `scripts/deploy-push.ts` as `runReleaseTransaction`.",
       "tags": [
-        "account",
+        "@asol/account-bridge/routes",
+        "all",
         "and",
         "as",
         "commands",
         "defined",
-        "deploys",
+        "deploy",
         "differ",
         "docs/07-mobile-and-release/release-commands",
         "docs/07-mobile-and-release/release-commands.md",
         "every",
-        "for",
+        "fast",
         "gates",
         "in",
-        "maintenance",
         "md",
         "means",
         "not",
         "once",
-        "one",
         "ordered",
         "path",
+        "public",
         "publish",
-        "publishes",
         "publishing",
+        "push",
         "release",
         "release commands",
         "run",
@@ -14078,12 +14027,13 @@
         "same",
         "scripts/deploy-push",
         "scripts/deploy-push.ts",
-        "single",
-        "that",
+        "scripts/tests/deploy-push",
+        "scripts/tests/deploy-push.test.ts",
+        "test",
         "the",
         "they",
         "three",
-        "three commands publish a release, and one deploys a single account for maintenance. they differ in which gates run, not in what publishing means: **every path that publishes runs the same ordered transaction**, defined once in `scripts/deploy-push.ts` as `runreleasetransaction`.",
+        "three commands publish a release — `deploy:all`, `deploy:push` and `deploy:push:fast`. they differ in which gates run, not in what publishing means: **every public path runs the same ordered transaction**, defined once in `scripts/deploy-push.ts` as `runreleasetransaction`.",
         "transaction",
         "ts",
         "what",
@@ -14188,6 +14138,8 @@
         "note",
         "operational",
         "packages/data-core/src/tooling/",
+        "packages/release-core/src/pipeline/phases",
+        "packages/release-core/src/pipeline/phases.ts",
         "reconstruction",
         "relationships",
         "relocated",
@@ -14687,32 +14639,31 @@
       "kind": "document",
       "name": "A push to `main` produces no Vercel deployment",
       "path": "docs/08-troubleshooting/problems/main-push-without-vercel-deployment.md",
-      "summary": "`deploy:push` deploys control and all six workloads, publishes exact-SHA readiness, then fails:",
+      "summary": "**Status:** Obsolete — the failure mode was removed on 2026-09-04, not fixed.",
       "tags": [
-        "`deploy:push` deploys control and all six workloads, publishes exact-sha readiness, then fails:",
+        "**status:** obsolete — the failure mode was removed on 2026-09-04, not fixed.",
+        "2026-09-04",
         "a push to `main` produces no vercel deployment",
-        "all",
-        "and",
-        "control",
-        "deploy",
         "deployment",
-        "deploys",
         "docs/08-troubleshooting/problems/main-push-without-vercel-deployment",
         "docs/08-troubleshooting/problems/main-push-without-vercel-deployment.md",
-        "exact-sha",
-        "fails",
+        "failure",
+        "fixed",
         "main",
         "md",
+        "mode",
         "no",
+        "not",
+        "obsolete",
+        "on",
         "produces",
-        "publishes",
         "push",
-        "readiness",
-        "six",
-        "then",
+        "removed",
+        "status",
+        "the",
         "to",
         "vercel",
-        "workloads"
+        "was"
       ]
     },
     {
@@ -14828,6 +14779,8 @@
         "ota publish and static export failures",
         "packages/data-core/src/domains/profile/repositories/specialty-columns",
         "packages/data-core/src/domains/profile/repositories/specialty-columns.server.ts",
+        "packages/ota-core/scripts/ota-publish",
+        "packages/ota-core/scripts/ota-publish.ts",
         "powershell",
         "publish",
         "resolved",
@@ -14837,8 +14790,6 @@
         "scripts/cap-build.ts",
         "scripts/child-process-env",
         "scripts/child-process-env.ts",
-        "scripts/ota-publish",
-        "scripts/ota-publish.ts",
         "server",
         "solution",
         "src/app/categories/",
@@ -15013,13 +14964,13 @@
     {
       "id": "document:docs/08-troubleshooting/problems/profile-prerender-useSearchParams-suspense.md",
       "kind": "document",
-      "name": "/profile prerender failure � useSearchParams without Suspense",
+      "name": "/profile prerender failure — useSearchParams without Suspense",
       "path": "docs/08-troubleshooting/problems/profile-prerender-useSearchParams-suspense.md",
       "summary": "**Date:** 2026-06-27 **Environment:** Vercel Production / `npm run build` **Solution Status:** Resolved",
       "tags": [
         "**date:** 2026-06-27 **environment:** vercel production / `npm run build` **solution status:** resolved",
         "/profile",
-        "/profile prerender failure � usesearchparams without suspense",
+        "/profile prerender failure — usesearchparams without suspense",
         "2026-06-27",
         "build",
         "date",
@@ -16096,6 +16047,7 @@
         "dependencies",
         "derive",
         "docs/09-agent-knowledge/generated/",
+        "docs/09-agent-knowledge/generated/catalogs/",
         "docs/09-agent-knowledge/generation-and-drift",
         "docs/09-agent-knowledge/generation-and-drift.md",
         "drift",
@@ -16125,6 +16077,8 @@
         "scripts/docs/check.ts",
         "scripts/docs/context",
         "scripts/docs/context.ts",
+        "scripts/docs/render",
+        "scripts/docs/render.ts",
         "scripts/docs/repository-knowledge",
         "scripts/docs/repository-knowledge.ts",
         "services",
@@ -16205,45 +16159,79 @@
       "kind": "document",
       "name": "Persistent Local Agent Runtime",
       "path": "docs/09-agent-knowledge/local-agent-runtime.md",
-      "summary": "The canonical device checkout is `/home/hesham/gova` and it was verified on branch `main` with an empty porcelain status before synchronization. The shared integration checkout remains `/home/hesham/gova-agents/integration`.",
+      "summary": "This section supersedes the older gateway-first migration notes below for normal local-agent work.",
       "tags": [
-        "/home/hesham/gova",
-        "/home/hesham/gova-agents/integration",
         "@asol/local-agent-core",
         "agent",
-        "an",
-        "and",
-        "before",
-        "branch",
-        "canonical",
-        "checkout",
-        "device",
+        "below",
         "docs/09-agent-knowledge/local-agent-runtime",
         "docs/09-agent-knowledge/local-agent-runtime.md",
-        "empty",
-        "integration",
-        "is",
-        "it",
+        "for",
+        "gateway-first",
         "local",
-        "main",
+        "local-agent",
         "md",
-        "on",
+        "migration",
+        "normal",
+        "notes",
+        "older",
         "persistent",
         "persistent local agent runtime",
-        "porcelain",
-        "remains",
         "runtime",
         "scripts/local-agent-watch",
         "scripts/local-agent-watch.ts",
-        "shared",
-        "status",
-        "synchronization",
+        "section",
+        "supersedes",
         "the",
-        "the canonical device checkout is `/home/hesham/gova` and it was verified on branch `main` with an empty porcelain status before synchronization. the shared integration checkout remains `/home/hesham/gova-agents/integration`.",
+        "this",
+        "this section supersedes the older gateway-first migration notes below for normal local-agent work.",
         "ts",
-        "verified",
-        "was",
-        "with"
+        "work"
+      ]
+    },
+    {
+      "id": "document:docs/09-agent-knowledge/project-intelligence.md",
+      "kind": "document",
+      "name": "Project Intelligence",
+      "path": "docs/09-agent-knowledge/project-intelligence.md",
+      "summary": "`.agents/skills/project-intelligence/` holds a second, agent-owned knowledge model of this repository, separate from `docs/`. This document explains what it is, how it differs from the documentation system, and when to distrust it.",
+      "tags": [
+        "`.agents/skills/project-intelligence/` holds a second, agent-owned knowledge model of this repository, separate from `docs/`. this document explains what it is, how it differs from the documentation system, and when to distrust it.",
+        "agent-owned",
+        "agents/skills/project-intelligence/",
+        "and",
+        "differs",
+        "distrust",
+        "docs/",
+        "docs/09-agent-knowledge/project-intelligence",
+        "docs/09-agent-knowledge/project-intelligence.md",
+        "document",
+        "documentation",
+        "explains",
+        "from",
+        "holds",
+        "how",
+        "intelligence",
+        "is",
+        "it",
+        "knowledge",
+        "md",
+        "model",
+        "of",
+        "project",
+        "project intelligence",
+        "repository",
+        "scripts/retrain-project-intelligence",
+        "scripts/retrain-project-intelligence.ts",
+        "second",
+        "separate",
+        "system",
+        "the",
+        "this",
+        "to",
+        "ts",
+        "what",
+        "when"
       ]
     },
     {
@@ -16251,34 +16239,52 @@
       "kind": "document",
       "name": "Gova Local Agent Public Tunnel",
       "path": "docs/09-agent-knowledge/public-agent-tunnel.md",
-      "summary": "The Gova local-agent runtime owns its public Cloudflare Quick Tunnel directly. It does not depend on the `p2p-link` companion repository.",
+      "summary": "**This tunnel is human observability infrastructure. No agent — cloud or local — may use it, look for it, or ask for it as a way to reach the Gateway.** A cloud agent delivers work through Git and the `local-agent-project.yml` dispatch, described in [GitHub CI Policy](../07-mobil",
       "tags": [
+        "**this tunnel is human observability infrastructure. no agent — cloud or local — may use it, look for it, or ask for it as a way to reach the gateway.** a cloud agent delivers work through git and the `local-agent-project.yml` dispatch, described in [github ci policy](../07-mobil",
+        "/07-mobil",
         "agent",
-        "cloudflare",
-        "companion",
-        "depend",
-        "directly",
+        "and",
+        "as",
+        "ask",
+        "ci",
+        "cloud",
+        "delivers",
+        "described",
+        "dispatch",
         "docs/09-agent-knowledge/public-agent-tunnel",
         "docs/09-agent-knowledge/public-agent-tunnel.md",
-        "does",
+        "for",
+        "gateway",
+        "git",
+        "github",
         "gova",
         "gova local agent public tunnel",
+        "human",
+        "in",
+        "infrastructure",
+        "is",
         "it",
-        "its",
         "local",
-        "local-agent",
+        "local-agent-project",
+        "look",
+        "may",
         "md",
-        "not",
-        "on",
-        "owns",
-        "p2p-link",
+        "no",
+        "observability",
+        "or",
+        "policy",
         "public",
-        "quick",
-        "repository",
-        "runtime",
+        "reach",
         "the",
-        "the gova local-agent runtime owns its public cloudflare quick tunnel directly. it does not depend on the `p2p-link` companion repository.",
-        "tunnel"
+        "this",
+        "through",
+        "to",
+        "tunnel",
+        "use",
+        "way",
+        "work",
+        "yml"
       ]
     },
     {
@@ -17524,6 +17530,19 @@
       "summary": "Server/tooling environment key name",
       "tags": [
         "asol_deploy_run_id",
+        "environment",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:ASOL_GOVA_UPLOAD_VIEW",
+      "kind": "environment-key",
+      "name": "ASOL_GOVA_UPLOAD_VIEW",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "asol_gova_upload_view",
         "environment",
         "server",
         "server tooling environment",
@@ -21369,21 +21388,6 @@
       ]
     },
     {
-      "id": "external-dependency:jose",
-      "kind": "external-dependency",
-      "name": "jose",
-      "summary": "Declared dependency range observed: ^6.2.3",
-      "tags": [
-        "^6.2.3",
-        "dependency",
-        "external",
-        "external dependency npm package",
-        "jose",
-        "npm",
-        "package"
-      ]
-    },
-    {
       "id": "external-dependency:libphonenumber-js",
       "kind": "external-dependency",
       "name": "libphonenumber-js",
@@ -23232,16 +23236,14 @@
       "kind": "package",
       "name": "@asol/vercel-deploy-core",
       "path": "packages/vercel-deploy-core",
-      "summary": "Vercel deployment orchestration; Layer: capability; Public exports: ., ./github-push-identity, ./project-env, ./release-rollback, ./release-state, ./remote-deploy-contracts, ./remote-deploy-sandbox",
+      "summary": "Vercel deployment orchestration; Layer: capability; Public exports: ., ./project-env, ./release-rollback, ./release-state, ./remote-deploy-contracts, ./remote-deploy-sandbox",
       "tags": [
         ".",
-        "./github-push-identity",
         "./project-env",
         "./release-rollback",
         "./release-state",
         "./remote-deploy-contracts",
         "./remote-deploy-sandbox",
-        "/github-push-identity",
         "/project-env",
         "/release-rollback",
         "/release-state",
@@ -23251,7 +23253,6 @@
         "@vercel/sandbox",
         "capability",
         "deployment",
-        "jose",
         "orchestration",
         "packages/vercel-deploy-core",
         "vercel",
@@ -25186,22 +25187,6 @@
       ]
     },
     {
-      "id": "route:/api/super-admin/production-deploy/github:handler",
-      "kind": "route",
-      "name": "/api/super-admin/production-deploy/github",
-      "path": "src/app/api/super-admin/production-deploy/github/route.ts",
-      "summary": "App Router request handler",
-      "tags": [
-        "/api/super-admin/production-deploy/github",
-        "api",
-        "handler",
-        "handler api",
-        "src/app/api/super-admin/production-deploy/github/route",
-        "src/app/api/super-admin/production-deploy/github/route.ts",
-        "ts"
-      ]
-    },
-    {
       "id": "route:/api/super-admin/users/delete:handler",
       "kind": "route",
       "name": "/api/super-admin/users/delete",
@@ -26356,6 +26341,17 @@
       ]
     },
     {
+      "id": "script:scripts/assert-release-deployment-context.ts",
+      "kind": "script",
+      "name": "assert-release-deployment-context.ts",
+      "path": "scripts/assert-release-deployment-context.ts",
+      "tags": [
+        "scripts/assert-release-deployment-context",
+        "scripts/assert-release-deployment-context.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/backup-project-secrets.ts",
       "kind": "script",
       "name": "backup-project-secrets.ts",
@@ -26609,6 +26605,17 @@
       ]
     },
     {
+      "id": "script:scripts/deploy-main-app.ts",
+      "kind": "script",
+      "name": "deploy-main-app.ts",
+      "path": "scripts/deploy-main-app.ts",
+      "tags": [
+        "scripts/deploy-main-app",
+        "scripts/deploy-main-app.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/deploy-push-target-choice.ts",
       "kind": "script",
       "name": "deploy-push-target-choice.ts",
@@ -26627,17 +26634,6 @@
       "tags": [
         "scripts/deploy-push",
         "scripts/deploy-push.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/deploy-revision.ts",
-      "kind": "script",
-      "name": "deploy-revision.ts",
-      "path": "scripts/deploy-revision.ts",
-      "tags": [
-        "scripts/deploy-revision",
-        "scripts/deploy-revision.ts",
         "ts"
       ]
     },
@@ -27144,6 +27140,17 @@
       "tags": [
         "scripts/load-release-env",
         "scripts/load-release-env.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent/related-core-tests.ts",
+      "kind": "script",
+      "name": "related-core-tests.ts",
+      "path": "scripts/local-agent/related-core-tests.ts",
+      "tags": [
+        "scripts/local-agent/related-core-tests",
+        "scripts/local-agent/related-core-tests.ts",
         "ts"
       ]
     },
@@ -37946,17 +37953,6 @@
       ]
     },
     {
-      "id": "source:packages/vercel-deploy-core/src/github-push-identity.ts",
-      "kind": "source",
-      "name": "github-push-identity.ts",
-      "path": "packages/vercel-deploy-core/src/github-push-identity.ts",
-      "tags": [
-        "packages/vercel-deploy-core/src/github-push-identity",
-        "packages/vercel-deploy-core/src/github-push-identity.ts",
-        "ts"
-      ]
-    },
-    {
       "id": "source:packages/vercel-deploy-core/src/index.ts",
       "kind": "source",
       "name": "index.ts",
@@ -38586,17 +38582,6 @@
       "tags": [
         "services/control/src/app/api/super-admin/production-deploy/callback/route",
         "services/control/src/app/api/super-admin/production-deploy/callback/route.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:services/control/src/app/api/super-admin/production-deploy/github/route.ts",
-      "kind": "source",
-      "name": "route.ts",
-      "path": "services/control/src/app/api/super-admin/production-deploy/github/route.ts",
-      "tags": [
-        "services/control/src/app/api/super-admin/production-deploy/github/route",
-        "services/control/src/app/api/super-admin/production-deploy/github/route.ts",
         "ts"
       ]
     },
@@ -41331,17 +41316,6 @@
       "tags": [
         "src/app/api/super-admin/production-deploy/callback/route",
         "src/app/api/super-admin/production-deploy/callback/route.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:src/app/api/super-admin/production-deploy/github/route.ts",
-      "kind": "source",
-      "name": "route.ts",
-      "path": "src/app/api/super-admin/production-deploy/github/route.ts",
-      "tags": [
-        "src/app/api/super-admin/production-deploy/github/route",
-        "src/app/api/super-admin/production-deploy/github/route.ts",
         "ts"
       ]
     },
@@ -54822,6 +54796,30 @@
       ]
     },
     {
+      "id": "test:scripts/tests/local-agent-related-core-tests.test.ts",
+      "kind": "test",
+      "name": "local-agent-related-core-tests.test.ts",
+      "path": "scripts/tests/local-agent-related-core-tests.test.ts",
+      "tags": [
+        "scripts/tests/local-agent-related-core-tests",
+        "scripts/tests/local-agent-related-core-tests.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:scripts/tests/main-push-deployment-isolation.test.ts",
+      "kind": "test",
+      "name": "main-push-deployment-isolation.test.ts",
+      "path": "scripts/tests/main-push-deployment-isolation.test.ts",
+      "tags": [
+        "scripts/tests/main-push-deployment-isolation",
+        "scripts/tests/main-push-deployment-isolation.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:scripts/tests/mirror-status-parity.test.ts",
       "kind": "test",
       "name": "mirror-status-parity.test.ts",
@@ -56934,66 +56932,6 @@
       "kind": "targets-runtime"
     },
     {
-      "from": "command:deploy:all:main",
-      "to": "script:scripts/deploy-all.ts",
-      "kind": "invokes"
-    },
-    {
-      "from": "command:deploy:all:main",
-      "to": "runtime:tooling",
-      "kind": "targets-runtime"
-    },
-    {
-      "from": "command:deploy:all:main",
-      "to": "runtime:web",
-      "kind": "targets-runtime"
-    },
-    {
-      "from": "command:deploy:all:preflight",
-      "to": "script:scripts/deploy-all.ts",
-      "kind": "invokes"
-    },
-    {
-      "from": "command:deploy:all:preflight",
-      "to": "runtime:tooling",
-      "kind": "targets-runtime"
-    },
-    {
-      "from": "command:deploy:all:preflight",
-      "to": "runtime:web",
-      "kind": "targets-runtime"
-    },
-    {
-      "from": "command:deploy:all:publish",
-      "to": "script:scripts/deploy-all.ts",
-      "kind": "invokes"
-    },
-    {
-      "from": "command:deploy:all:publish",
-      "to": "runtime:tooling",
-      "kind": "targets-runtime"
-    },
-    {
-      "from": "command:deploy:all:publish",
-      "to": "runtime:web",
-      "kind": "targets-runtime"
-    },
-    {
-      "from": "command:deploy:all:services",
-      "to": "script:scripts/deploy-all.ts",
-      "kind": "invokes"
-    },
-    {
-      "from": "command:deploy:all:services",
-      "to": "runtime:tooling",
-      "kind": "targets-runtime"
-    },
-    {
-      "from": "command:deploy:all:services",
-      "to": "runtime:web",
-      "kind": "targets-runtime"
-    },
-    {
       "from": "command:deploy:all",
       "to": "script:scripts/deploy-all.ts",
       "kind": "invokes"
@@ -57005,36 +56943,6 @@
     },
     {
       "from": "command:deploy:all",
-      "to": "runtime:web",
-      "kind": "targets-runtime"
-    },
-    {
-      "from": "command:deploy:env:push",
-      "to": "script:scripts/push-production-deploy-env.ts",
-      "kind": "invokes"
-    },
-    {
-      "from": "command:deploy:env:push",
-      "to": "runtime:tooling",
-      "kind": "targets-runtime"
-    },
-    {
-      "from": "command:deploy:env:push",
-      "to": "runtime:web",
-      "kind": "targets-runtime"
-    },
-    {
-      "from": "command:deploy:push:all",
-      "to": "script:scripts/deploy-push.ts",
-      "kind": "invokes"
-    },
-    {
-      "from": "command:deploy:push:all",
-      "to": "runtime:tooling",
-      "kind": "targets-runtime"
-    },
-    {
-      "from": "command:deploy:push:all",
       "to": "runtime:web",
       "kind": "targets-runtime"
     },
@@ -57054,21 +56962,6 @@
       "kind": "targets-runtime"
     },
     {
-      "from": "command:deploy:push:main",
-      "to": "script:scripts/deploy-push.ts",
-      "kind": "invokes"
-    },
-    {
-      "from": "command:deploy:push:main",
-      "to": "runtime:tooling",
-      "kind": "targets-runtime"
-    },
-    {
-      "from": "command:deploy:push:main",
-      "to": "runtime:web",
-      "kind": "targets-runtime"
-    },
-    {
       "from": "command:deploy:push",
       "to": "script:scripts/deploy-push.ts",
       "kind": "invokes"
@@ -57080,36 +56973,6 @@
     },
     {
       "from": "command:deploy:push",
-      "to": "runtime:web",
-      "kind": "targets-runtime"
-    },
-    {
-      "from": "command:deploy:redeploy-main",
-      "to": "script:scripts/redeploy-main-vercel.ts",
-      "kind": "invokes"
-    },
-    {
-      "from": "command:deploy:redeploy-main",
-      "to": "runtime:tooling",
-      "kind": "targets-runtime"
-    },
-    {
-      "from": "command:deploy:redeploy-main",
-      "to": "runtime:web",
-      "kind": "targets-runtime"
-    },
-    {
-      "from": "command:deploy:revision",
-      "to": "script:scripts/deploy-revision.ts",
-      "kind": "invokes"
-    },
-    {
-      "from": "command:deploy:revision",
-      "to": "runtime:tooling",
-      "kind": "targets-runtime"
-    },
-    {
-      "from": "command:deploy:revision",
       "to": "runtime:web",
       "kind": "targets-runtime"
     },
@@ -57705,6 +57568,16 @@
     },
     {
       "from": "command:lint",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:main:deploy",
+      "to": "script:scripts/deploy-main-app.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:main:deploy",
       "to": "runtime:tooling",
       "kind": "targets-runtime"
     },
@@ -58785,17 +58658,22 @@
     },
     {
       "from": "command:test:deployment-tools",
+      "to": "test:scripts/tests/local-agent-related-core-tests.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:deployment-tools",
+      "to": "test:scripts/tests/main-push-deployment-isolation.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:deployment-tools",
       "to": "test:scripts/tests/mirror-status-parity.test.ts",
       "kind": "invokes"
     },
     {
       "from": "command:test:deployment-tools",
       "to": "test:scripts/tests/pipeline-coverage.test.ts",
-      "kind": "invokes"
-    },
-    {
-      "from": "command:test:deployment-tools",
-      "to": "test:scripts/tests/release-secret-wiring.test.ts",
       "kind": "invokes"
     },
     {
@@ -65700,12 +65578,6 @@
       "from": "document:docs/01-architecture/08-reference/capability-map.md",
       "to": "package:@asol/vercel-deploy-core",
       "kind": "references",
-      "detail": "@asol/vercel-deploy-core/github-push-identity"
-    },
-    {
-      "from": "document:docs/01-architecture/08-reference/capability-map.md",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "references",
       "detail": "@asol/vercel-deploy-core/project-env"
     },
     {
@@ -67048,6 +66920,12 @@
       "detail": "scripts/block-branch-creation.ts"
     },
     {
+      "from": "document:docs/01-architecture/09-decisions/ADR-0006-main-only-branch.md",
+      "to": "script:scripts/github-ci-policy.ts",
+      "kind": "references",
+      "detail": "scripts/github-ci-policy.ts"
+    },
+    {
       "from": "document:docs/01-architecture/09-decisions/ADR-0007-application-feature-consolidation.md",
       "to": "domain:architecture",
       "kind": "belongs-to"
@@ -68297,12 +68175,6 @@
     },
     {
       "from": "document:docs/02-data-and-storage/current-databases.md",
-      "to": "feature:notifications",
-      "kind": "references",
-      "detail": "src/features/notifications/domain/web-push-config.ts"
-    },
-    {
-      "from": "document:docs/02-data-and-storage/current-databases.md",
       "to": "package:@asol/data-core",
       "kind": "references",
       "detail": "@asol/data-core/marketplace-orders"
@@ -68318,6 +68190,12 @@
       "to": "package:@asol/orders-core",
       "kind": "references",
       "detail": "@asol/orders-core"
+    },
+    {
+      "from": "document:docs/02-data-and-storage/current-databases.md",
+      "to": "source:packages/notifications-core/src/domain/web-push-config.ts",
+      "kind": "references",
+      "detail": "packages/notifications-core/src/domain/web-push-config.ts"
     },
     {
       "from": "document:docs/02-data-and-storage/database-schema-compatibility.md",
@@ -68461,12 +68339,6 @@
     },
     {
       "from": "document:docs/02-data-and-storage/environment-variables.md",
-      "to": "feature:notifications",
-      "kind": "references",
-      "detail": "src/features/notifications/domain/web-push-config.ts"
-    },
-    {
-      "from": "document:docs/02-data-and-storage/environment-variables.md",
       "to": "package:@asol/cors",
       "kind": "references",
       "detail": "@asol/cors"
@@ -68482,6 +68354,12 @@
       "to": "script:scripts/protect-main-branch.ts",
       "kind": "references",
       "detail": "scripts/protect-main-branch.ts"
+    },
+    {
+      "from": "document:docs/02-data-and-storage/environment-variables.md",
+      "to": "source:packages/notifications-core/src/domain/web-push-config.ts",
+      "kind": "references",
+      "detail": "packages/notifications-core/src/domain/web-push-config.ts"
     },
     {
       "from": "document:docs/02-data-and-storage/image-storage/image-storage-architecture-contract.md",
@@ -69619,6 +69497,12 @@
     },
     {
       "from": "document:docs/04-ui-components/guides/featured-marquee-guide.md",
+      "to": "source:src/features/advertisements/presentation/FeaturedMarquee.tsx",
+      "kind": "references",
+      "detail": "src/features/advertisements/presentation/FeaturedMarquee.tsx"
+    },
+    {
+      "from": "document:docs/04-ui-components/guides/featured-marquee-guide.md",
       "to": "source:src/features/advertisements/presentation/hooks/use-home-featured-marquee.ts",
       "kind": "references",
       "detail": "src/features/advertisements/presentation/hooks/use-home-featured-marquee.ts"
@@ -69642,12 +69526,6 @@
     },
     {
       "from": "document:docs/04-ui-components/guides/hero-slider-guide.md",
-      "to": "package:@asol/data-core",
-      "kind": "references",
-      "detail": "packages/data-core/src/core/database/advertisements-db-client.ts"
-    },
-    {
-      "from": "document:docs/04-ui-components/guides/hero-slider-guide.md",
       "to": "package:@asol/hero-slider-core",
       "kind": "references",
       "detail": "packages/hero-slider-core/src"
@@ -69656,13 +69534,19 @@
       "from": "document:docs/04-ui-components/guides/hero-slider-guide.md",
       "to": "package:@asol/storage-core",
       "kind": "references",
-      "detail": "packages/storage-core/packages/storage-core/src/config/storage-profiles.json"
+      "detail": "packages/storage-core/src/config/storage-profiles.json"
     },
     {
       "from": "document:docs/04-ui-components/guides/hero-slider-guide.md",
       "to": "package:@asol/storage-image-manager-core",
       "kind": "references",
       "detail": "@asol/storage-image-manager-core"
+    },
+    {
+      "from": "document:docs/04-ui-components/guides/hero-slider-guide.md",
+      "to": "source:packages/data-core/src/core/database/advertisements-turso-db-client.ts",
+      "kind": "references",
+      "detail": "packages/data-core/src/core/database/advertisements-turso-db-client.ts"
     },
     {
       "from": "document:docs/04-ui-components/guides/hero-slider-guide.md",
@@ -69693,6 +69577,48 @@
       "to": "source:src/features/advertisements/application/home-hero-slider-sync.ts",
       "kind": "references",
       "detail": "src/features/advertisements/application/home-hero-slider-sync.ts"
+    },
+    {
+      "from": "document:docs/04-ui-components/guides/hero-slider-guide.md",
+      "to": "source:src/features/advertisements/presentation/hero-slider-model.ts",
+      "kind": "references",
+      "detail": "src/features/advertisements/presentation/hero-slider-model.ts"
+    },
+    {
+      "from": "document:docs/04-ui-components/guides/hero-slider-guide.md",
+      "to": "source:src/features/advertisements/presentation/hero-slider-styles.ts",
+      "kind": "references",
+      "detail": "src/features/advertisements/presentation/hero-slider-styles.ts"
+    },
+    {
+      "from": "document:docs/04-ui-components/guides/hero-slider-guide.md",
+      "to": "source:src/features/advertisements/presentation/hero-slider.types.ts",
+      "kind": "references",
+      "detail": "src/features/advertisements/presentation/hero-slider.types.ts"
+    },
+    {
+      "from": "document:docs/04-ui-components/guides/hero-slider-guide.md",
+      "to": "source:src/features/advertisements/presentation/HeroSlider.tsx",
+      "kind": "references",
+      "detail": "src/features/advertisements/presentation/HeroSlider.tsx"
+    },
+    {
+      "from": "document:docs/04-ui-components/guides/hero-slider-guide.md",
+      "to": "source:src/features/advertisements/presentation/HeroSliderEditor.tsx",
+      "kind": "references",
+      "detail": "src/features/advertisements/presentation/HeroSliderEditor.tsx"
+    },
+    {
+      "from": "document:docs/04-ui-components/guides/hero-slider-guide.md",
+      "to": "source:src/features/advertisements/presentation/HeroSliderImageProbe.tsx",
+      "kind": "references",
+      "detail": "src/features/advertisements/presentation/HeroSliderImageProbe.tsx"
+    },
+    {
+      "from": "document:docs/04-ui-components/guides/hero-slider-guide.md",
+      "to": "source:src/features/advertisements/presentation/HeroSliderImagesEditor.tsx",
+      "kind": "references",
+      "detail": "src/features/advertisements/presentation/HeroSliderImagesEditor.tsx"
     },
     {
       "from": "document:docs/04-ui-components/guides/hero-slider-guide.md",
@@ -69735,6 +69661,12 @@
       "to": "source:src/features/super-admin/presentation/use-super-admin-hero-slider-save.ts",
       "kind": "references",
       "detail": "src/features/super-admin/presentation/use-super-admin-hero-slider-save.ts"
+    },
+    {
+      "from": "document:docs/04-ui-components/guides/hero-slider-guide.md",
+      "to": "test:src/features/advertisements/presentation/hero-slider.test.ts",
+      "kind": "references",
+      "detail": "src/features/advertisements/presentation/hero-slider.test.ts"
     },
     {
       "from": "document:docs/04-ui-components/guides/pharmacy-profile-catalog.md",
@@ -69828,6 +69760,12 @@
       "to": "source:src/features/advertisements/presentation/hooks/use-home-trending-ribbon.ts",
       "kind": "references",
       "detail": "src/features/advertisements/presentation/hooks/use-home-trending-ribbon.ts"
+    },
+    {
+      "from": "document:docs/04-ui-components/guides/trending-ribbon-guide.md",
+      "to": "source:src/features/advertisements/presentation/TrendingRibbon.tsx",
+      "kind": "references",
+      "detail": "src/features/advertisements/presentation/TrendingRibbon.tsx"
     },
     {
       "from": "document:docs/04-ui-components/guides/trending-ribbon-guide.md",
@@ -70141,18 +70079,6 @@
       "from": "document:docs/05-platform-features/auth-core-module.md",
       "to": "feature:auth",
       "kind": "references",
-      "detail": "src/features/auth/services/auth-service.server.ts"
-    },
-    {
-      "from": "document:docs/05-platform-features/auth-core-module.md",
-      "to": "feature:auth",
-      "kind": "references",
-      "detail": "src/features/auth/services/session-api-service.ts"
-    },
-    {
-      "from": "document:docs/05-platform-features/auth-core-module.md",
-      "to": "feature:auth",
-      "kind": "references",
       "detail": "src/features/auth/services/signed-session-token.server.ts"
     },
     {
@@ -70241,6 +70167,12 @@
     },
     {
       "from": "document:docs/05-platform-features/auth-core-module.md",
+      "to": "source:src/features/auth/application/services/session-api-service.ts",
+      "kind": "references",
+      "detail": "src/features/auth/application/services/session-api-service.ts"
+    },
+    {
+      "from": "document:docs/05-platform-features/auth-core-module.md",
       "to": "source:src/features/auth/presentation/AccountDeletionPageContent.tsx",
       "kind": "references",
       "detail": "src/features/auth/presentation/AccountDeletionPageContent.tsx"
@@ -70256,6 +70188,12 @@
       "to": "source:src/features/auth/server/auth-core-ports.server.ts",
       "kind": "references",
       "detail": "src/features/auth/server/auth-core-ports.server.ts"
+    },
+    {
+      "from": "document:docs/05-platform-features/auth-core-module.md",
+      "to": "source:src/features/auth/server/services/auth-service.server.ts",
+      "kind": "references",
+      "detail": "src/features/auth/server/services/auth-service.server.ts"
     },
     {
       "from": "document:docs/05-platform-features/favorites-system.md",
@@ -70674,18 +70612,6 @@
       "from": "document:docs/05-platform-features/notification-system.md",
       "to": "feature:notifications",
       "kind": "references",
-      "detail": "src/features/notifications/domain/notification-sound.ts"
-    },
-    {
-      "from": "document:docs/05-platform-features/notification-system.md",
-      "to": "feature:notifications",
-      "kind": "references",
-      "detail": "src/features/notifications/domain/web-push-config.ts"
-    },
-    {
-      "from": "document:docs/05-platform-features/notification-system.md",
-      "to": "feature:notifications",
-      "kind": "references",
       "detail": "src/features/notifications/tests"
     },
     {
@@ -70705,6 +70631,12 @@
       "to": "package:@asol/account-bridge",
       "kind": "references",
       "detail": "@asol/account-bridge"
+    },
+    {
+      "from": "document:docs/05-platform-features/notification-system.md",
+      "to": "package:@asol/native-core",
+      "kind": "references",
+      "detail": "@asol/native-core"
     },
     {
       "from": "document:docs/05-platform-features/notification-system.md",
@@ -70732,9 +70664,27 @@
     },
     {
       "from": "document:docs/05-platform-features/notification-system.md",
+      "to": "source:packages/native-core/android/src/main/java/hgh/asol/app/AsolNativeCore.java",
+      "kind": "references",
+      "detail": "packages/native-core/android/src/main/java/hgh/asol/app/"
+    },
+    {
+      "from": "document:docs/05-platform-features/notification-system.md",
       "to": "source:packages/native-core/src/adapters/notifications.adapter.ts",
       "kind": "references",
       "detail": "packages/native-core/src/adapters/notifications.adapter.ts"
+    },
+    {
+      "from": "document:docs/05-platform-features/notification-system.md",
+      "to": "source:packages/notifications-core/src/domain/notification-sound.ts",
+      "kind": "references",
+      "detail": "packages/notifications-core/src/domain/notification-sound.ts"
+    },
+    {
+      "from": "document:docs/05-platform-features/notification-system.md",
+      "to": "source:packages/notifications-core/src/domain/web-push-config.ts",
+      "kind": "references",
+      "detail": "packages/notifications-core/src/domain/web-push-config.ts"
     },
     {
       "from": "document:docs/05-platform-features/notification-system.md",
@@ -70821,12 +70771,6 @@
     },
     {
       "from": "document:docs/05-platform-features/notifications-service-module.md",
-      "to": "feature:notifications",
-      "kind": "references",
-      "detail": "src/features/notifications/service-runtime.ts"
-    },
-    {
-      "from": "document:docs/05-platform-features/notifications-service-module.md",
       "to": "service:notifications",
       "kind": "references",
       "detail": "services/notifications"
@@ -70836,6 +70780,12 @@
       "to": "service:notifications",
       "kind": "references",
       "detail": "services/notifications/"
+    },
+    {
+      "from": "document:docs/05-platform-features/notifications-service-module.md",
+      "to": "source:packages/notifications-core/src/service-runtime.ts",
+      "kind": "references",
+      "detail": "packages/notifications-core/src/service-runtime.ts"
     },
     {
       "from": "document:docs/05-platform-features/notifications-service-module.md",
@@ -71115,6 +71065,12 @@
       "detail": "services/profiles/"
     },
     {
+      "from": "document:docs/05-platform-features/profiles-service-module.md",
+      "to": "source:services/profiles/src/app/lib/http.ts",
+      "kind": "references",
+      "detail": "services/profiles/src/app/lib/http.ts"
+    },
+    {
       "from": "document:docs/05-platform-features/qr-code-system.md",
       "to": "domain:platform-features",
       "kind": "belongs-to"
@@ -71294,31 +71250,13 @@
       "from": "document:docs/05-platform-features/sealed-packages/catalog-core-module.md",
       "to": "package:@asol/catalog-core",
       "kind": "references",
-      "detail": "@asol/catalog-core/"
-    },
-    {
-      "from": "document:docs/05-platform-features/sealed-packages/catalog-core-module.md",
-      "to": "package:@asol/catalog-core",
-      "kind": "references",
-      "detail": "@asol/catalog-core/contracts/catalog-v3.contract.ts"
+      "detail": "@asol/catalog-core/..."
     },
     {
       "from": "document:docs/05-platform-features/sealed-packages/catalog-core-module.md",
       "to": "package:@asol/catalog-core",
       "kind": "references",
       "detail": "@asol/catalog-core/server"
-    },
-    {
-      "from": "document:docs/05-platform-features/sealed-packages/catalog-core-module.md",
-      "to": "package:@asol/catalog-core",
-      "kind": "references",
-      "detail": "@asol/catalog-core/types/catalog-v3.types.ts"
-    },
-    {
-      "from": "document:docs/05-platform-features/sealed-packages/catalog-core-module.md",
-      "to": "package:@asol/catalog-core",
-      "kind": "references",
-      "detail": "@asol/catalog-core/utils/catalog-display.ts"
     },
     {
       "from": "document:docs/05-platform-features/sealed-packages/catalog-core-module.md",
@@ -71780,6 +71718,12 @@
       "to": "package:@asol/ota-core",
       "kind": "references",
       "detail": "packages/ota-core/src/tests/"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/ota-core-module.md",
+      "to": "source:packages/notifications-core/src/services/providers/fcm-http-v1.server.ts",
+      "kind": "references",
+      "detail": "packages/notifications-core/src/services/providers/fcm-http-v1.server.ts"
     },
     {
       "from": "document:docs/05-platform-features/sealed-packages/product-core-module.md",
@@ -72255,15 +72199,21 @@
     },
     {
       "from": "document:docs/05-platform-features/session-system.md",
-      "to": "feature:auth",
-      "kind": "references",
-      "detail": "src/features/auth/services/session-api-service.ts"
-    },
-    {
-      "from": "document:docs/05-platform-features/session-system.md",
       "to": "package:@asol/auth-core",
       "kind": "references",
       "detail": "@asol/auth-core/server"
+    },
+    {
+      "from": "document:docs/05-platform-features/session-system.md",
+      "to": "source:packages/architecture-core/src/checks/application-cycle-contract.ts",
+      "kind": "references",
+      "detail": "packages/architecture-core/src/checks/application-cycle-contract.ts"
+    },
+    {
+      "from": "document:docs/05-platform-features/session-system.md",
+      "to": "source:src/features/auth/application/services/session-api-service.ts",
+      "kind": "references",
+      "detail": "src/features/auth/application/services/session-api-service.ts"
     },
     {
       "from": "document:docs/05-platform-features/session-system.md",
@@ -72420,6 +72370,12 @@
     },
     {
       "from": "document:docs/05-platform-features/voice-input-system.md",
+      "to": "package:@asol/native-core",
+      "kind": "references",
+      "detail": "@asol/native-core"
+    },
+    {
+      "from": "document:docs/05-platform-features/voice-input-system.md",
       "to": "source:android/app/src/main/AndroidManifest.xml",
       "kind": "references",
       "detail": "android/app/src/main/AndroidManifest.xml"
@@ -72429,6 +72385,12 @@
       "to": "source:ios/App/App/Info.plist",
       "kind": "references",
       "detail": "ios/App/App/Info.plist"
+    },
+    {
+      "from": "document:docs/05-platform-features/voice-input-system.md",
+      "to": "source:packages/native-core/src/adapters/speech.adapter.ts",
+      "kind": "references",
+      "detail": "packages/native-core/src/adapters/speech.adapter.ts"
     },
     {
       "from": "document:docs/05-platform-features/voice-input-system.md",
@@ -72768,12 +72730,6 @@
       "kind": "belongs-to"
     },
     {
-      "from": "document:docs/06-super-admin-and-operations/local-agent-connection.md",
-      "to": "document:docs/06-super-admin-and-operations/local-agent-runtime.md",
-      "kind": "references",
-      "detail": "./local-agent-runtime.md"
-    },
-    {
       "from": "document:docs/06-super-admin-and-operations/local-agent-recovery.md",
       "to": "domain:super-admin-and-operations",
       "kind": "belongs-to"
@@ -72790,15 +72746,21 @@
       "detail": "docs/06-super-admin-and-operations/local-agent-recovery.md"
     },
     {
+      "from": "document:docs/06-super-admin-and-operations/local-agent-runtime.md",
+      "to": "script:scripts/local-agent/related-core-tests.ts",
+      "kind": "references",
+      "detail": "scripts/local-agent/related-core-tests.ts"
+    },
+    {
       "from": "document:docs/06-super-admin-and-operations/notification-tests.md",
       "to": "domain:super-admin-and-operations",
       "kind": "belongs-to"
     },
     {
       "from": "document:docs/06-super-admin-and-operations/notification-tests.md",
-      "to": "feature:notifications",
+      "to": "source:packages/notifications-core/src/domain/notification-test-scenarios.ts",
       "kind": "references",
-      "detail": "src/features/notifications/domain/notification-test-scenarios.ts"
+      "detail": "packages/notifications-core/src/domain/notification-test-scenarios.ts"
     },
     {
       "from": "document:docs/06-super-admin-and-operations/notification-tests.md",
@@ -73025,6 +72987,24 @@
     },
     {
       "from": "document:docs/06-super-admin-and-operations/super-admin-production-deploy.md",
+      "to": "package:@asol/vercel-deploy-core",
+      "kind": "references",
+      "detail": "@asol/vercel-deploy-core/github-push-identity"
+    },
+    {
+      "from": "document:docs/06-super-admin-and-operations/super-admin-production-deploy.md",
+      "to": "script:scripts/deploy-push.ts",
+      "kind": "references",
+      "detail": "scripts/deploy-push.ts"
+    },
+    {
+      "from": "document:docs/06-super-admin-and-operations/super-admin-production-deploy.md",
+      "to": "script:scripts/github-ci-policy.ts",
+      "kind": "references",
+      "detail": "scripts/github-ci-policy.ts"
+    },
+    {
+      "from": "document:docs/06-super-admin-and-operations/super-admin-production-deploy.md",
       "to": "script:scripts/push-production-deploy-env.ts",
       "kind": "references",
       "detail": "scripts/push-production-deploy-env.ts"
@@ -73161,12 +73141,6 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/android-push-notifications.md",
-      "to": "feature:notifications",
-      "kind": "references",
-      "detail": "src/features/notifications/domain/notification-sound.ts"
-    },
-    {
-      "from": "document:docs/07-mobile-and-release/capacitor/android-push-notifications.md",
       "to": "package:@asol/account-bridge",
       "kind": "references",
       "detail": "@asol/account-bridge"
@@ -73194,6 +73168,18 @@
       "to": "source:packages/account-bridge/src/mobile-push/types.ts",
       "kind": "references",
       "detail": "packages/account-bridge/src/mobile-push/"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/capacitor/android-push-notifications.md",
+      "to": "source:packages/native-core/scripts/sync-android-push-assets.ts",
+      "kind": "references",
+      "detail": "packages/native-core/scripts/sync-android-push-assets.ts"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/capacitor/android-push-notifications.md",
+      "to": "source:packages/notifications-core/src/domain/notification-sound.ts",
+      "kind": "references",
+      "detail": "packages/notifications-core/src/domain/notification-sound.ts"
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/android-r8-optimization.md",
@@ -73378,12 +73364,6 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/capacitor.md",
-      "to": "package:@asol/native-core",
-      "kind": "references",
-      "detail": "packages/native-core/src/domain/config/capacitor.defaults.ts"
-    },
-    {
-      "from": "document:docs/07-mobile-and-release/capacitor/capacitor.md",
       "to": "script:scripts/cap-build.ts",
       "kind": "references",
       "detail": "scripts/cap-build.ts"
@@ -73399,6 +73379,12 @@
       "to": "source:packages/native-core/src/adapters/emitter.ts",
       "kind": "references",
       "detail": "packages/native-core/src/adapters/"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/capacitor/capacitor.md",
+      "to": "source:packages/native-core/src/domain/defaults/platform-defaults.ts",
+      "kind": "references",
+      "detail": "packages/native-core/src/domain/defaults/platform-defaults.ts"
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/fastlane-module.md",
@@ -73464,12 +73450,6 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/ios-push-notifications.md",
-      "to": "feature:notifications",
-      "kind": "references",
-      "detail": "src/features/notifications/domain/notification-sound.ts"
-    },
-    {
-      "from": "document:docs/07-mobile-and-release/capacitor/ios-push-notifications.md",
       "to": "package:@asol/branding-core",
       "kind": "references",
       "detail": "@asol/branding-core"
@@ -73488,6 +73468,12 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/ios-push-notifications.md",
+      "to": "source:packages/notifications-core/src/domain/notification-sound.ts",
+      "kind": "references",
+      "detail": "packages/notifications-core/src/domain/notification-sound.ts"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/capacitor/ios-push-notifications.md",
       "to": "source:src/features/notifications/domain/push-token-kind.ts",
       "kind": "references",
       "detail": "src/features/notifications/domain/push-token-kind.ts"
@@ -73496,6 +73482,18 @@
       "from": "document:docs/07-mobile-and-release/capacitor/mobile-back-button-system.md",
       "to": "domain:mobile-and-release",
       "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/capacitor/mobile-back-button-system.md",
+      "to": "package:@asol/native-core",
+      "kind": "references",
+      "detail": "@asol/native-core"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/capacitor/mobile-back-button-system.md",
+      "to": "source:packages/native-core/src/adapters/back-button.adapter.ts",
+      "kind": "references",
+      "detail": "packages/native-core/src/adapters/back-button.adapter.ts"
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/mobile-back-button-system.md",
@@ -73525,12 +73523,6 @@
       "to": "document:docs/01-architecture/README.md",
       "kind": "references",
       "detail": "../../01-architecture/README.md"
-    },
-    {
-      "from": "document:docs/07-mobile-and-release/capacitor/native-core-module.md",
-      "to": "package:@asol/architecture-core",
-      "kind": "references",
-      "detail": "packages/architecture-core/src/checks/native-core-contract.ts"
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/native-core-module.md",
@@ -73624,6 +73616,12 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/native-core-module.md",
+      "to": "source:packages/architecture-core/src/checks/architecture-types.ts",
+      "kind": "references",
+      "detail": "packages/architecture-core/src/checks/architecture-types.ts"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/capacitor/native-core-module.md",
       "to": "source:packages/native-core/scripts/android-build-preflight.ts",
       "kind": "references",
       "detail": "packages/native-core/scripts/android-build-preflight.ts"
@@ -73699,9 +73697,21 @@
       "detail": "./ota-update-system.md"
     },
     {
+      "from": "document:docs/07-mobile-and-release/capacitor/native-surface-protection.md",
+      "to": "source:packages/ota-core/src/publishing/gate/native-gate.ts",
+      "kind": "references",
+      "detail": "packages/ota-core/src/publishing/gate/native-gate.ts"
+    },
+    {
       "from": "document:docs/07-mobile-and-release/capacitor/ota-update-system.md",
       "to": "domain:mobile-and-release",
       "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/capacitor/ota-update-system.md",
+      "to": "document:docs/02-data-and-storage/current-databases.md",
+      "kind": "references",
+      "detail": "../../02-data-and-storage/current-databases.md"
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/ota-update-system.md",
@@ -73723,12 +73733,6 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/ota-update-system.md",
-      "to": "document:docs/07-mobile-and-release/capacitor/native-platform.md",
-      "kind": "references",
-      "detail": "./native-platform.md"
-    },
-    {
-      "from": "document:docs/07-mobile-and-release/capacitor/ota-update-system.md",
       "to": "document:docs/07-mobile-and-release/capacitor/native-surface-protection.md",
       "kind": "references",
       "detail": "./native-surface-protection.md"
@@ -73741,27 +73745,15 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/ota-update-system.md",
-      "to": "feature:release-commands",
+      "to": "package:@asol/native-core",
       "kind": "references",
-      "detail": "src/features/release-commands/domain/content-version.ts"
-    },
-    {
-      "from": "document:docs/07-mobile-and-release/capacitor/ota-update-system.md",
-      "to": "feature:super-admin",
-      "kind": "references",
-      "detail": "src/features/super-admin/presentation/SuperAdminOtaReleasesPage.tsx"
+      "detail": "packages/native-core/src/"
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/ota-update-system.md",
       "to": "package:@asol/ota-core",
       "kind": "references",
-      "detail": "packages/ota-core/src/adapters/back-button.adapter.ts"
-    },
-    {
-      "from": "document:docs/07-mobile-and-release/capacitor/ota-update-system.md",
-      "to": "package:@asol/ota-core",
-      "kind": "references",
-      "detail": "packages/ota-core/src/adapters/ota.adapter.ts"
+      "detail": "packages/ota-core/src/publishing/release/ota-revocations.json"
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/ota-update-system.md",
@@ -73786,6 +73778,12 @@
       "to": "source:packages/data-core/src/domains/ota/repositories/ota-release-repository.ts",
       "kind": "references",
       "detail": "packages/data-core/src/domains/ota/repositories/ota-release-repository.ts"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/capacitor/ota-update-system.md",
+      "to": "source:packages/native-core/src/adapters/emitter.ts",
+      "kind": "references",
+      "detail": "packages/native-core/src/adapters/"
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/ota-update-system.md",
@@ -73819,6 +73817,12 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/ota-update-system.md",
+      "to": "source:packages/ota-core/src/domain/versioning/content-version.ts",
+      "kind": "references",
+      "detail": "packages/ota-core/src/domain/versioning/content-version.ts"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/capacitor/ota-update-system.md",
       "to": "source:packages/ota-core/src/publishing/adapters/r2-storage.adapter.ts",
       "kind": "references",
       "detail": "packages/ota-core/src/publishing/adapters/r2-storage.adapter.ts"
@@ -73828,6 +73832,12 @@
       "to": "source:packages/ota-core/src/publishing/config/ota-config.ts",
       "kind": "references",
       "detail": "packages/ota-core/src/publishing/config/ota-config.ts"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/capacitor/ota-update-system.md",
+      "to": "source:packages/ota-core/src/publishing/gate/native-gate.ts",
+      "kind": "references",
+      "detail": "packages/ota-core/src/publishing/gate/native-gate.ts"
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/ota-update-system.md",
@@ -73861,21 +73871,27 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/ota-update-system.md",
+      "to": "source:src/app/super-admin/ota-releases/page.tsx",
+      "kind": "references",
+      "detail": "src/app/super-admin/ota-releases/page.tsx"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/capacitor/ota-update-system.md",
       "to": "source:src/core/config/app-version.ts",
       "kind": "references",
       "detail": "src/core/config/app-version.ts"
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/ota-update-system.md",
-      "to": "source:src/features/page-snapshot/presentation/hooks/use-page-snapshot.tsx",
-      "kind": "references",
-      "detail": "src/features/page-snapshot/presentation/hooks/use-page-snapshot.tsx"
-    },
-    {
-      "from": "document:docs/07-mobile-and-release/capacitor/ota-update-system.md",
       "to": "source:src/features/splash/presentation/SplashInitializer.tsx",
       "kind": "references",
       "detail": "src/features/splash/presentation/SplashInitializer.tsx"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/capacitor/ota-update-system.md",
+      "to": "test:packages/ota-core/src/tests/native-compatibility.test.ts",
+      "kind": "references",
+      "detail": "packages/ota-core/src/tests/native-compatibility.test.ts"
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/release-command-center.md",
@@ -74306,6 +74322,12 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/deployment-targets.md",
+      "to": "source:packages/release-core/src/pipeline/phases.ts",
+      "kind": "references",
+      "detail": "packages/release-core/src/pipeline/phases.ts"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/deployment-targets.md",
       "to": "source:packages/release-core/src/pipeline/run-deployment-npm-script.ts",
       "kind": "references",
       "detail": "packages/release-core/src/pipeline/run-deployment-npm-script.ts"
@@ -74318,15 +74340,62 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/deployment-targets.md",
-      "to": "test:scripts/tests/deploy-push.test.ts",
-      "kind": "references",
-      "detail": "scripts/tests/deploy-push.test.ts"
-    },
-    {
-      "from": "document:docs/07-mobile-and-release/deployment-targets.md",
       "to": "test:scripts/tests/vercelignore-contract.test.ts",
       "kind": "references",
       "detail": "scripts/tests/vercelignore-contract.test.ts"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/distributed-local-development.md",
+      "to": "domain:mobile-and-release",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/distributed-local-development.md",
+      "to": "document:docs/01-architecture/02-packages/module-isolation-rules.md",
+      "kind": "references",
+      "detail": "../01-architecture/02-packages/module-isolation-rules.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/distributed-local-development.md",
+      "to": "document:docs/01-architecture/06-runtime-boundaries/service-boundaries.md",
+      "kind": "references",
+      "detail": "../01-architecture/06-runtime-boundaries/service-boundaries.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/distributed-local-development.md",
+      "to": "document:docs/07-mobile-and-release/deployment-targets.md",
+      "kind": "references",
+      "detail": "./deployment-targets.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/distributed-local-development.md",
+      "to": "document:docs/07-mobile-and-release/scripts-and-workflows.md",
+      "kind": "references",
+      "detail": "./scripts-and-workflows.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/distributed-local-development.md",
+      "to": "document:docs/09-agent-knowledge/runtime-contract.md",
+      "kind": "references",
+      "detail": "../09-agent-knowledge/runtime-contract.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/distributed-local-development.md",
+      "to": "package:@asol/account-bridge",
+      "kind": "references",
+      "detail": "@asol/account-bridge/routes"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/distributed-local-development.md",
+      "to": "script:scripts/stop-dev-server.ts",
+      "kind": "references",
+      "detail": "scripts/stop-dev-server.ts"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/distributed-local-development.md",
+      "to": "source:packages/account-declarations/src/accounts/local-development.ts",
+      "kind": "references",
+      "detail": "packages/account-declarations/src/accounts/local-development.ts"
     },
     {
       "from": "document:docs/07-mobile-and-release/github-ci-policy.md",
@@ -74350,6 +74419,12 @@
       "detail": "docs/07-mobile-and-release/local-server-filesystem-boundary.md"
     },
     {
+      "from": "document:docs/07-mobile-and-release/local-runner-full-host-control.md",
+      "to": "script:scripts/retrain-project-intelligence.ts",
+      "kind": "references",
+      "detail": "scripts/retrain-project-intelligence.ts"
+    },
+    {
       "from": "document:docs/07-mobile-and-release/local-server-filesystem-boundary.md",
       "to": "domain:mobile-and-release",
       "kind": "belongs-to"
@@ -74364,6 +74439,12 @@
       "from": "document:docs/07-mobile-and-release/README.md",
       "to": "domain:mobile-and-release",
       "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/README.md",
+      "to": "document:docs/07-mobile-and-release/capacitor/fastlane-module.md",
+      "kind": "references",
+      "detail": "./capacitor/fastlane-module.md"
     },
     {
       "from": "document:docs/07-mobile-and-release/README.md",
@@ -74382,6 +74463,12 @@
       "to": "document:docs/07-mobile-and-release/deployment-targets.md",
       "kind": "references",
       "detail": "./deployment-targets.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/README.md",
+      "to": "document:docs/07-mobile-and-release/distributed-local-development.md",
+      "kind": "references",
+      "detail": "./distributed-local-development.md"
     },
     {
       "from": "document:docs/07-mobile-and-release/README.md",
@@ -74533,15 +74620,33 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/release-commands.md",
+      "to": "document:docs/08-troubleshooting/problems/main-push-without-vercel-deployment.md",
+      "kind": "references",
+      "detail": "../08-troubleshooting/problems/main-push-without-vercel-deployment.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/release-commands.md",
       "to": "document:docs/09-agent-knowledge/document-mutability.md",
       "kind": "references",
       "detail": "../09-agent-knowledge/document-mutability.md"
     },
     {
       "from": "document:docs/07-mobile-and-release/release-commands.md",
+      "to": "package:@asol/account-bridge",
+      "kind": "references",
+      "detail": "@asol/account-bridge/routes"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/release-commands.md",
       "to": "script:scripts/deploy-push.ts",
       "kind": "references",
       "detail": "scripts/deploy-push.ts"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/release-commands.md",
+      "to": "test:scripts/tests/deploy-push.test.ts",
+      "kind": "references",
+      "detail": "scripts/tests/deploy-push.test.ts"
     },
     {
       "from": "document:docs/07-mobile-and-release/release-orchestration-hardening-2026-09-03.md",
@@ -74657,12 +74762,6 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/scripts-and-workflows.md",
-      "to": "domain:architecture",
-      "kind": "references",
-      "detail": "docs/01-architecture/"
-    },
-    {
-      "from": "document:docs/07-mobile-and-release/scripts-and-workflows.md",
       "to": "package:@asol/account-declarations",
       "kind": "references",
       "detail": "@asol/account-declarations"
@@ -74708,6 +74807,12 @@
       "to": "source:packages/data-core/src/tooling/index.ts",
       "kind": "references",
       "detail": "packages/data-core/src/tooling/"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/scripts-and-workflows.md",
+      "to": "source:packages/release-core/src/pipeline/phases.ts",
+      "kind": "references",
+      "detail": "packages/release-core/src/pipeline/phases.ts"
     },
     {
       "from": "document:docs/08-troubleshooting/problems/architecture-docs-drift-crlf-windows.md",
@@ -75010,6 +75115,12 @@
       "to": "source:packages/data-core/src/domains/profile/repositories/specialty-columns.server.ts",
       "kind": "references",
       "detail": "packages/data-core/src/domains/profile/repositories/specialty-columns.server.ts"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/ota-publish-static-export-failures.md",
+      "to": "source:packages/ota-core/scripts/ota-publish.ts",
+      "kind": "references",
+      "detail": "packages/ota-core/scripts/ota-publish.ts"
     },
     {
       "from": "document:docs/08-troubleshooting/problems/ota-publish-static-export-failures.md",
@@ -76156,6 +76267,12 @@
     },
     {
       "from": "document:docs/09-agent-knowledge/generation-and-drift.md",
+      "to": "script:scripts/docs/render.ts",
+      "kind": "references",
+      "detail": "scripts/docs/render.ts"
+    },
+    {
+      "from": "document:docs/09-agent-knowledge/generation-and-drift.md",
       "to": "script:scripts/docs/repository-knowledge.ts",
       "kind": "references",
       "detail": "scripts/docs/repository-knowledge.ts"
@@ -76213,9 +76330,50 @@
       "kind": "belongs-to"
     },
     {
+      "from": "document:docs/09-agent-knowledge/project-intelligence.md",
+      "to": "domain:agent-knowledge",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/09-agent-knowledge/project-intelligence.md",
+      "to": "document:docs/07-mobile-and-release/local-runner-full-host-control.md",
+      "kind": "references",
+      "detail": "../07-mobile-and-release/local-runner-full-host-control.md"
+    },
+    {
+      "from": "document:docs/09-agent-knowledge/project-intelligence.md",
+      "to": "document:docs/09-agent-knowledge/agent-protocol.md",
+      "kind": "references",
+      "detail": "./agent-protocol.md"
+    },
+    {
+      "from": "document:docs/09-agent-knowledge/project-intelligence.md",
+      "to": "document:docs/09-agent-knowledge/document-mutability.md",
+      "kind": "references",
+      "detail": "./document-mutability.md"
+    },
+    {
+      "from": "document:docs/09-agent-knowledge/project-intelligence.md",
+      "to": "document:docs/09-agent-knowledge/generation-and-drift.md",
+      "kind": "references",
+      "detail": "./generation-and-drift.md"
+    },
+    {
+      "from": "document:docs/09-agent-knowledge/project-intelligence.md",
+      "to": "script:scripts/retrain-project-intelligence.ts",
+      "kind": "references",
+      "detail": "scripts/retrain-project-intelligence.ts"
+    },
+    {
       "from": "document:docs/09-agent-knowledge/public-agent-tunnel.md",
       "to": "domain:agent-knowledge",
       "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/09-agent-knowledge/public-agent-tunnel.md",
+      "to": "document:docs/07-mobile-and-release/github-ci-policy.md",
+      "kind": "references",
+      "detail": "../07-mobile-and-release/github-ci-policy.md"
     },
     {
       "from": "document:docs/09-agent-knowledge/README.md",
@@ -76263,6 +76421,12 @@
       "to": "document:docs/09-agent-knowledge/knowledge-schema.md",
       "kind": "references",
       "detail": "./knowledge-schema.md"
+    },
+    {
+      "from": "document:docs/09-agent-knowledge/README.md",
+      "to": "document:docs/09-agent-knowledge/project-intelligence.md",
+      "kind": "references",
+      "detail": "./project-intelligence.md"
     },
     {
       "from": "document:docs/09-agent-knowledge/README.md",
@@ -82765,12 +82929,6 @@
     },
     {
       "from": "domain:architecture",
-      "to": "source:packages/vercel-deploy-core/src/github-push-identity.ts",
-      "kind": "documents",
-      "detail": "packages/"
-    },
-    {
-      "from": "domain:architecture",
       "to": "source:packages/vercel-deploy-core/src/index.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -85903,6 +86061,12 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "script:scripts/assert-release-deployment-context.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "script:scripts/backup-project-secrets.ts",
       "kind": "documents",
       "detail": "scripts/"
@@ -86041,6 +86205,12 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "script:scripts/deploy-main-app.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "script:scripts/deploy-push-target-choice.ts",
       "kind": "documents",
       "detail": "scripts/"
@@ -86048,12 +86218,6 @@
     {
       "from": "domain:mobile-and-release",
       "to": "script:scripts/deploy-push.ts",
-      "kind": "documents",
-      "detail": "scripts/"
-    },
-    {
-      "from": "domain:mobile-and-release",
-      "to": "script:scripts/deploy-revision.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -86330,6 +86494,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "script:scripts/load-release-env.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/local-agent/related-core-tests.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -88345,12 +88515,6 @@
     },
     {
       "from": "domain:mobile-and-release",
-      "to": "source:packages/vercel-deploy-core/src/github-push-identity.ts",
-      "kind": "documents",
-      "detail": "packages/vercel-deploy-core/"
-    },
-    {
-      "from": "domain:mobile-and-release",
       "to": "source:packages/vercel-deploy-core/src/index.ts",
       "kind": "documents",
       "detail": "packages/vercel-deploy-core/"
@@ -88682,12 +88846,6 @@
     {
       "from": "domain:mobile-and-release",
       "to": "source:services/control/src/app/api/super-admin/production-deploy/callback/route.ts",
-      "kind": "documents",
-      "detail": "services/"
-    },
-    {
-      "from": "domain:mobile-and-release",
-      "to": "source:services/control/src/app/api/super-admin/production-deploy/github/route.ts",
       "kind": "documents",
       "detail": "services/"
     },
@@ -89792,6 +89950,18 @@
     {
       "from": "domain:mobile-and-release",
       "to": "test:scripts/tests/github-ci-policy.test.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "test:scripts/tests/local-agent-related-core-tests.test.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "test:scripts/tests/main-push-deployment-isolation.test.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -100033,12 +100203,6 @@
     },
     {
       "from": "domain:ui-components",
-      "to": "route:/api/super-admin/production-deploy/github:handler",
-      "kind": "documents",
-      "detail": "src/app/"
-    },
-    {
-      "from": "domain:ui-components",
       "to": "route:/api/super-admin/users/delete:handler",
       "kind": "documents",
       "detail": "src/app/"
@@ -101156,12 +101320,6 @@
     {
       "from": "domain:ui-components",
       "to": "source:src/app/api/super-admin/production-deploy/callback/route.ts",
-      "kind": "documents",
-      "detail": "src/app/"
-    },
-    {
-      "from": "domain:ui-components",
-      "to": "source:src/app/api/super-admin/production-deploy/github/route.ts",
       "kind": "documents",
       "detail": "src/app/"
     },
@@ -110249,18 +110407,7 @@
     },
     {
       "from": "package:@asol/vercel-deploy-core",
-      "to": "external-dependency:jose",
-      "kind": "declares-dependency",
-      "detail": "dependencies:^6.2.3"
-    },
-    {
-      "from": "package:@asol/vercel-deploy-core",
       "to": "external-dependency:@vercel/sandbox",
-      "kind": "imports"
-    },
-    {
-      "from": "package:@asol/vercel-deploy-core",
-      "to": "external-dependency:jose",
       "kind": "imports"
     },
     {
@@ -128572,177 +128719,6 @@
       "detail": "route source dependency"
     },
     {
-      "from": "route:/api/super-admin/production-deploy/github:handler",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/github:handler",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/github:handler",
-      "to": "source:src/app/api/super-admin/production-deploy/github/route.ts",
-      "kind": "contains"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/github:handler",
-      "to": "feature:google-play-console",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/github:handler",
-      "to": "feature:release-commands",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/github:handler",
-      "to": "feature:system-logs",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/github:handler",
-      "to": "package:@asol/account-declarations",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/github:handler",
-      "to": "package:@asol/auth-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/github:handler",
-      "to": "package:@asol/backup-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/github:handler",
-      "to": "package:@asol/branding-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/github:handler",
-      "to": "package:@asol/data-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/github:handler",
-      "to": "package:@asol/data-core",
-      "kind": "related-to",
-      "detail": "route write gateway"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/github:handler",
-      "to": "package:@asol/data-health-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/github:handler",
-      "to": "package:@asol/dev-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/github:handler",
-      "to": "package:@asol/env-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/github:handler",
-      "to": "package:@asol/featured-marquee-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/github:handler",
-      "to": "package:@asol/hero-slider-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/github:handler",
-      "to": "package:@asol/notifications-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/github:handler",
-      "to": "package:@asol/observability-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/github:handler",
-      "to": "package:@asol/orders-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/github:handler",
-      "to": "package:@asol/ota-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/github:handler",
-      "to": "package:@asol/product-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/github:handler",
-      "to": "package:@asol/release-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/github:handler",
-      "to": "package:@asol/signed-token-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/github:handler",
-      "to": "package:@asol/storage-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/github:handler",
-      "to": "package:@asol/storage-core",
-      "kind": "related-to",
-      "detail": "route write gateway"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/github:handler",
-      "to": "package:@asol/system-logs-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/github:handler",
-      "to": "package:@asol/trending-ribbon-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/github:handler",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
       "from": "route:/api/super-admin/users/delete:handler",
       "to": "runtime:development",
       "kind": "affects-runtime"
@@ -135371,6 +135347,11 @@
       "detail": "../docs/generate"
     },
     {
+      "from": "script:scripts/assert-release-deployment-context.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
       "from": "script:scripts/backup-project-secrets.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
@@ -135987,11 +135968,6 @@
       "kind": "uses-environment"
     },
     {
-      "from": "script:scripts/deploy-all.ts",
-      "to": "environment-key:VERCEL_TOKEN",
-      "kind": "uses-environment"
-    },
-    {
       "from": "script:scripts/deploy-control-service.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
@@ -136007,6 +135983,41 @@
       "to": "package:@asol/vercel-deploy-core",
       "kind": "imports",
       "detail": "@asol/vercel-deploy-core"
+    },
+    {
+      "from": "script:scripts/deploy-control-service.ts",
+      "to": "script:scripts/assert-release-deployment-context.ts",
+      "kind": "imports",
+      "detail": "./assert-release-deployment-context"
+    },
+    {
+      "from": "script:scripts/deploy-main-app.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/deploy-main-app.ts",
+      "to": "external-dependency:dotenv",
+      "kind": "imports",
+      "detail": "dotenv"
+    },
+    {
+      "from": "script:scripts/deploy-main-app.ts",
+      "to": "package:@asol/gova-deployment-core",
+      "kind": "imports",
+      "detail": "@asol/gova-deployment-core"
+    },
+    {
+      "from": "script:scripts/deploy-main-app.ts",
+      "to": "package:@asol/vercel-deploy-core",
+      "kind": "imports",
+      "detail": "@asol/vercel-deploy-core"
+    },
+    {
+      "from": "script:scripts/deploy-main-app.ts",
+      "to": "script:scripts/assert-release-deployment-context.ts",
+      "kind": "imports",
+      "detail": "./assert-release-deployment-context"
     },
     {
       "from": "script:scripts/deploy-push-target-choice.ts",
@@ -136083,17 +136094,6 @@
       "kind": "uses-environment"
     },
     {
-      "from": "script:scripts/deploy-revision.ts",
-      "to": "runtime:tooling",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "script:scripts/deploy-revision.ts",
-      "to": "script:scripts/deploy-push.ts",
-      "kind": "imports",
-      "detail": "./deploy-push"
-    },
-    {
       "from": "script:scripts/deploy-service.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
@@ -136109,6 +136109,12 @@
       "to": "package:@asol/vercel-deploy-core",
       "kind": "imports",
       "detail": "@asol/vercel-deploy-core"
+    },
+    {
+      "from": "script:scripts/deploy-service.ts",
+      "to": "script:scripts/assert-release-deployment-context.ts",
+      "kind": "imports",
+      "detail": "./assert-release-deployment-context"
     },
     {
       "from": "script:scripts/deploy-service.ts",
@@ -136949,6 +136955,11 @@
       "to": "package:@asol/env-core",
       "kind": "imports",
       "detail": "@asol/env-core/process"
+    },
+    {
+      "from": "script:scripts/local-agent/related-core-tests.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
     },
     {
       "from": "script:scripts/migrate-static-dom-ids.ts",
@@ -138027,6 +138038,11 @@
       "to": "script:scripts/vercel-deployment-guards.ts",
       "kind": "imports",
       "detail": "./vercel-deployment-guards"
+    },
+    {
+      "from": "script:scripts/vercel-deployment-build.ts",
+      "to": "environment-key:ASOL_GOVA_UPLOAD_VIEW",
+      "kind": "uses-environment"
     },
     {
       "from": "script:scripts/vercel-deployment-build.ts",
@@ -176936,42 +176952,6 @@
       "detail": "../domain/trending-ribbon.schema"
     },
     {
-      "from": "source:packages/vercel-deploy-core/src/github-push-identity.ts",
-      "to": "runtime:android",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/vercel-deploy-core/src/github-push-identity.ts",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/vercel-deploy-core/src/github-push-identity.ts",
-      "to": "runtime:ios",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/vercel-deploy-core/src/github-push-identity.ts",
-      "to": "runtime:static-out",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/vercel-deploy-core/src/github-push-identity.ts",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/vercel-deploy-core/src/github-push-identity.ts",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "source:packages/vercel-deploy-core/src/github-push-identity.ts",
-      "to": "external-dependency:jose",
-      "kind": "imports",
-      "detail": "jose"
-    },
-    {
       "from": "source:packages/vercel-deploy-core/src/index.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -177830,34 +177810,6 @@
     },
     {
       "from": "source:services/control/src/app/api/super-admin/production-deploy/callback/route.ts",
-      "to": "source:src/features/release-commands/server/services/production-deploy-service.server.ts",
-      "kind": "imports",
-      "detail": "@/features/release-commands/server/services/production-deploy-service.server"
-    },
-    {
-      "from": "source:services/control/src/app/api/super-admin/production-deploy/github/route.ts",
-      "to": "runtime:services",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:services/control/src/app/api/super-admin/production-deploy/github/route.ts",
-      "to": "service:control",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "source:services/control/src/app/api/super-admin/production-deploy/github/route.ts",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "imports",
-      "detail": "@asol/vercel-deploy-core/github-push-identity"
-    },
-    {
-      "from": "source:services/control/src/app/api/super-admin/production-deploy/github/route.ts",
-      "to": "source:src/core/config/control-env.ts",
-      "kind": "imports",
-      "detail": "@/core/config/control-env"
-    },
-    {
-      "from": "source:services/control/src/app/api/super-admin/production-deploy/github/route.ts",
       "to": "source:src/features/release-commands/server/services/production-deploy-service.server.ts",
       "kind": "imports",
       "detail": "@/features/release-commands/server/services/production-deploy-service.server"
@@ -184637,46 +184589,6 @@
     },
     {
       "from": "source:src/app/api/super-admin/production-deploy/callback/route.ts",
-      "to": "source:src/features/release-commands/server.ts",
-      "kind": "imports",
-      "detail": "@/features/release-commands/server"
-    },
-    {
-      "from": "source:src/app/api/super-admin/production-deploy/github/route.ts",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/app/api/super-admin/production-deploy/github/route.ts",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/app/api/super-admin/production-deploy/github/route.ts",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "imports",
-      "detail": "@asol/vercel-deploy-core/github-push-identity"
-    },
-    {
-      "from": "source:src/app/api/super-admin/production-deploy/github/route.ts",
-      "to": "source:src/core/api/api-response.ts",
-      "kind": "imports",
-      "detail": "@/core/api/api-response"
-    },
-    {
-      "from": "source:src/app/api/super-admin/production-deploy/github/route.ts",
-      "to": "source:src/core/api/traced-route.ts",
-      "kind": "imports",
-      "detail": "@/core/api/traced-route"
-    },
-    {
-      "from": "source:src/app/api/super-admin/production-deploy/github/route.ts",
-      "to": "source:src/core/config/control-env.ts",
-      "kind": "imports",
-      "detail": "@/core/config/control-env"
-    },
-    {
-      "from": "source:src/app/api/super-admin/production-deploy/github/route.ts",
       "to": "source:src/features/release-commands/server.ts",
       "kind": "imports",
       "detail": "@/features/release-commands/server"
@@ -245789,12 +245701,6 @@
     },
     {
       "from": "test:packages/vercel-deploy-core/src/tests/index.test.ts",
-      "to": "source:packages/vercel-deploy-core/src/github-push-identity.ts",
-      "kind": "imports",
-      "detail": "../github-push-identity"
-    },
-    {
-      "from": "test:packages/vercel-deploy-core/src/tests/index.test.ts",
       "to": "source:packages/vercel-deploy-core/src/index.ts",
       "kind": "imports",
       "detail": "../index"
@@ -246152,6 +246058,27 @@
       "from": "test:scripts/tests/github-ci-policy.test.ts",
       "to": "script:scripts/github-ci-policy.ts",
       "kind": "tests"
+    },
+    {
+      "from": "test:scripts/tests/local-agent-related-core-tests.test.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:scripts/tests/local-agent-related-core-tests.test.ts",
+      "to": "script:scripts/local-agent/related-core-tests.ts",
+      "kind": "imports",
+      "detail": "../local-agent/related-core-tests"
+    },
+    {
+      "from": "test:scripts/tests/local-agent-related-core-tests.test.ts",
+      "to": "script:scripts/local-agent/related-core-tests.ts",
+      "kind": "tests"
+    },
+    {
+      "from": "test:scripts/tests/main-push-deployment-isolation.test.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
     },
     {
       "from": "test:scripts/tests/mirror-status-parity.test.ts",

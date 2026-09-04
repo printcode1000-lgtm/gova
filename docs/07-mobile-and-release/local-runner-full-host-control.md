@@ -171,17 +171,19 @@ Any legacy code path that attempts to publish `codex/**`, `agent-control`, anoth
 
 ## Host Tools
 
-Antigravity is a permanently denied Local Runner host tool. This is a binding repository policy, not a user-toggleable machine preference.
+Antigravity (`antigravity`, `agy`) must not be invoked from a Local Runner job. This is a binding repository policy.
 
-Enforcement is defense in depth:
+**It is policy, not code.** An earlier revision of this document described a defense-in-depth enforcement stack — a `.local/host-tools.json` file that could not enable the tool, a `setHostToolAllowed(true)` call that was refused, PATH refusal shims "always installed" for Local Runner subprocesses, and a pre-execution check on submitted login-shell commands. **None of that exists in this repository.** There is no `host-tools.json`, no `setHostToolAllowed`, no shim installer, and no command inspection for these binaries; a search of `tools/`, `scripts/`, `config/`, `packages/` and `src/` returns nothing. A reader who trusted that list would believe a dispatched job was mechanically prevented from running the tool when nothing prevents it.
 
-- a machine-local `.local/host-tools.json` file cannot enable it;
-- attempting `setHostToolAllowed(true)` or toggling the tool is refused;
-- PATH refusal shims for both `antigravity` and `agy` are always installed for Local Runner subprocess environments;
-- submitted login-shell commands are checked before execution and rejected when they request `antigravity` or `agy`;
-- the Local Agent monitor has no key or action that can enable the tool.
+Because the restriction is unenforced, it holds only as long as the operator and every agent honour it. Treat the presence of `/usr/local/bin/antigravity` or `/home/hesham/.local/bin/agy` as available-but-forbidden in a Local Runner job, not as unreachable.
 
-The presence of `/usr/local/bin/antigravity`, `/home/hesham/.local/bin/agy`, or any future installation of equivalent binaries does not grant Local Runner permission to invoke them.
+### The one sanctioned use
+
+`agy` is invoked deliberately in exactly one place: `scripts/retrain-project-intelligence.ts`, reached through `npm run intelligence:retrain`. It spawns `agy --dangerously-skip-permissions -p <prompt>` to run the Project Intelligence retraining cycle over `.agents/skills/project-intelligence/`.
+
+That is a **developer-invoked local command**, not a Local Runner dispatch path, and it is the reason a blanket PATH shim was never installed: it would break this command. The policy above governs what a dispatched job may do; it does not forbid the operator from running `intelligence:retrain` at their own terminal.
+
+If mechanical enforcement is wanted later, it has to be built — and it has to exempt this command or replace it.
 
 
 ## Operational Limits

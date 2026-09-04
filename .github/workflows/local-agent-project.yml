@@ -1,0 +1,38 @@
+name: local-agent-project
+on:
+  workflow_dispatch:
+    inputs:
+      agent_id:
+        description: Cloud agent identity
+        required: true
+        type: string
+      task_id:
+        description: Gateway task id for this projection
+        required: true
+        type: string
+      goal:
+        description: Task goal recorded on the Gateway task
+        required: true
+        type: string
+      integration_sha:
+        description: Full 40-character SHA already published on integration
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  project:
+    runs-on: [self-hosted, Linux, X64, gova]
+    timeout-minutes: 60
+    steps:
+      - name: Verify the integration commit and project it into the canonical checkout
+        shell: bash
+        env:
+          AGENT_ID: ${{ inputs.agent_id }}
+          TASK_ID: ${{ inputs.task_id }}
+          TASK_GOAL: ${{ inputs.goal }}
+          INTEGRATION_SHA: ${{ inputs.integration_sha }}
+        run: |
+          set -euo pipefail
+          test -d /home/hesham/gova/.git
+          GOVA_AGENT_REPO=/home/hesham/gova bash /home/hesham/gova/tools/local-agent/project.sh

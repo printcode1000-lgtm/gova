@@ -52,7 +52,7 @@ investigate permission, channel settings, and the packaged sound resource.
 | Silent control | `asol_silent_v4` | none |
 
 The shared definitions live in
-`src/features/notifications/domain/notification-test-scenarios.ts`. Contract
+`packages/notifications-core/src/domain/notification-test-scenarios.ts`. Contract
 tests verify that each displayed scenario resolves to the advertised Android
 channel and that its audible label matches its sound value.
 

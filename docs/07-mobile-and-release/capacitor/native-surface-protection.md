@@ -28,7 +28,7 @@ discovery** instead.
 
 | Layer | Where | Fails the build? |
 |---|---|---|
-| Classifier | `scripts/ota/ota-native-compatibility.ts` | — |
+| Classifier | `packages/ota-core/src/publishing/gate/native-gate.ts` | — |
 | Report at check time | `npm run architecture:check` | **No** |
 | Enforcement at publish time | `npm run ota:publish` | **Yes** |
 | Regression test | `npm run test:ota-core` | Yes |
@@ -158,7 +158,7 @@ reviewing their own work it decays into a ritual.
 
 **CODEOWNERS.** It needs a second reviewer to mean anything, so it was deleted
 outright — see rule 6 in
-[the module isolation rules](../../01-architecture/02-packages/module-isolation-rules.md#6-branch-protection).
+[the module isolation rules](../../01-architecture/02-packages/module-isolation-rules.md#rule-6--branch-and-release-gates).
 
 Branch protection is the exception on this list: it *is* applied, because its
 value here does not come from review. Force-pushes and deletions are blocked and

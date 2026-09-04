@@ -19,11 +19,6 @@ import {
   isRemoteDeployAllTerminal,
 } from '../remote-deploy-contracts';
 import {
-  GITHUB_DEPLOY_WORKFLOW,
-  resolveDeploymentRepository,
-  validateGitHubPushClaims,
-} from '../github-push-identity';
-import {
   RELEASE_WORKLOADS,
   applyReleaseStateMutation,
   releaseReadinessStatusFromStore,
@@ -81,6 +76,8 @@ async function runTests(): Promise<void> {
   assert(indexSource.includes("path.join(process.cwd(), 'node_modules', 'vercel', 'package.json')"), 'D3: CLI binary is resolved from the project-pinned node_modules install');
   assert(!indexSource.includes('npx'), 'D3: runVercel must not invoke npx and therefore cannot drift from the pin');
   assert(indexSource.includes('manifest.version !== PINNED_VERCEL_CLI'), 'D3: mismatched installed CLI version is rejected');
+  assert(indexSource.includes('const VERCEL_UPLOAD_MAX_ATTEMPTS = 3'), 'D3: transient uploads are bounded to three attempts');
+  assert(indexSource.includes('isTransientVercelUploadFailure'), 'D3: only transient transport failures retry');
   console.log('  ✔ CLI pin @59.0.0 verified.');
 
   // Test 3b: CLI uploads carry no Git commit metadata (D1)
@@ -153,34 +150,28 @@ async function runTests(): Promise<void> {
   );
   console.log('  ✔ Remote deploy contracts cover every deploy:all phase.');
 
-  const repository = 'owner/repo';
-  const validClaims = {
-    repository,
-    ref: 'refs/heads/main',
-    event_name: 'push',
-    workflow_ref: `${repository}/${GITHUB_DEPLOY_WORKFLOW}@refs/heads/main`,
-    sub: `repo:${repository}:ref:refs/heads/main`,
-    sha: 'a'.repeat(40),
-    actor: 'release-actor',
-    run_id: '123',
-  };
-  const githubIdentity = validateGitHubPushClaims(validClaims, repository);
-  assert(githubIdentity.revision === 'a'.repeat(40), 'GitHub identity returns the authenticated SHA');
+  // No GitHub event starts a release, so the remote deploy command vocabulary
+  // must not offer a revision form. `deploy:revision` and its OIDC entry point
+  // were removed with `.github/workflows/deploy-main.yml`: production is
+  // published only by an explicit local release command, and the sandbox always
+  // checks out the tip of `main`.
   assert(
-    resolveDeploymentRepository({ ASOL_DEPLOY_REPOSITORY_URL: 'https://github.com/owner/repo.git' }) === repository,
-    'GitHub identity derives the allowed repository from deploy configuration',
+    !contractsSource.includes('deploy:revision'),
+    'The remote deploy contract must not offer a revision command',
   );
-  let rejectedWrongWorkflow = false;
-  try {
-    validateGitHubPushClaims(
-      { ...validClaims, workflow_ref: `${repository}/.github/workflows/other.yml@refs/heads/main` },
-      repository,
-    );
-  } catch {
-    rejectedWrongWorkflow = true;
-  }
-  assert(rejectedWrongWorkflow, 'GitHub identity rejects any other workflow');
-  console.log('  ✔ GitHub push identity pins repository, main, workflow, event, and revision.');
+  assert(
+    !contractsSource.includes('revision?:') && !contractsSource.includes('target?:'),
+    'The remote deploy snapshot must carry neither a revision nor a partial target',
+  );
+  const sandboxCheckoutSource = readFileSync(
+    new URL('../remote-deploy-sandbox.ts', import.meta.url),
+    'utf8',
+  );
+  assert(
+    sandboxCheckoutSource.includes('"checkout", "-f", "-B", MAIN_BRANCH, "FETCH_HEAD"'),
+    'The sandbox must check out the tip of main and nothing a caller can name',
+  );
+  console.log('  ✔ Remote deploy publishes the tip of main; no revision or partial-target form exists.');
 
   // On Vercel the OIDC token is a per-request header, not an environment
   // variable: requiring the variable reported a working project as unconfigured.
@@ -240,12 +231,15 @@ async function runTests(): Promise<void> {
   assert(sandboxSource.includes('"FETCH_HEAD"'), 'The release branch is built from FETCH_HEAD');
   assert(sandboxSource.includes('"--unshallow"'), 'The clone is deepened so the publish push is accepted');
   assert(
-    sandboxSource.includes('["checkout", "-f", "-B", MAIN_BRANCH, checkoutRevision]'),
+    sandboxSource.includes('["checkout", "-f", "-B", MAIN_BRANCH, "FETCH_HEAD"]'),
     'A persistent sandbox must discard generated mirror drift before switching to the fetched main revision',
   );
+  // There is no ancestry check because there is nothing to check: the only
+  // reachable revision is whatever `git fetch origin main` just produced, so a
+  // caller cannot name a commit that is off `main` in the first place.
   assert(
-    sandboxSource.includes('"merge-base"') && sandboxSource.includes('checkoutRevision'),
-    'Automated revision deploys verify ancestry and check out the authenticated SHA',
+    !sandboxSource.includes('"merge-base"') && !sandboxSource.includes('checkoutRevision'),
+    'The sandbox must not accept a caller-named revision to check out',
   );
   console.log('  ✔ Release checkout survives a shallow, detached clone.');
 

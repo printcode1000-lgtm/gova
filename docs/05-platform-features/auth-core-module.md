@@ -43,9 +43,9 @@ This migration was done without backward compatibility: legacy SHA-256 password 
 | :--- | :--- |
 | `src/features/auth/server/auth-core-ports.server.ts` | Registers session signing secret and super-admin identity before token use |
 | `src/features/auth/server/auth-core-bootstrap.server.ts` | Binds Turso repositories + image deletion port → exports `authOperationsService`, `accountDeletionService` |
-| `src/features/auth/services/auth-service.server.ts` | Thin server facade delegating to `authOperationsService` |
+| `src/features/auth/server/services/auth-service.server.ts` | Thin server facade delegating to `authOperationsService` |
 | `packages/data-core/src/domains/account-deletion/` | SQL/data deletion implementation (`AccountDeletionRepositoryPort` adapter) |
-| `src/features/auth/services/session-api-service.ts` | IndexedDB session persistence (client-only; not part of auth-core) |
+| `src/features/auth/application/services/session-api-service.ts` | IndexedDB session persistence (client-only; not part of auth-core) |
 
 ---
 

@@ -247,7 +247,7 @@ verified.
 | `WEB_PUSH_VAPID_PRIVATE_KEY` | notifications service, server-only | Signs the VAPID JWT. Required by `npm run notifications:deploy`: browsers are the one transport that needs no store account and no native build, so a deployment without it silently loses the channel it always has. |
 
 The public key and the `mailto:` subject are **not** environment variables. They
-are constants in `src/features/notifications/domain/web-push-config.ts`, because
+are constants in `packages/notifications-core/src/domain/web-push-config.ts`, because
 every subscribing browser receives the public key anyway — it is
 `applicationServerKey`. Keeping it in the bundle also lets a static export and
 the native shell subscribe with no server call.
@@ -298,18 +298,21 @@ Six Vercel accounts; see [26-cloud-accounts.md](../06-super-admin-and-operations
 full-application deployments share runtime env keys but use different deploy
 tokens and update paths.
 
-**Main app (`gova`)** — connected to GitHub and redeployed automatically on every push.
-That link must stay as it is. After local provisioning, push users, product,
+**Main app (`gova`)** — linked to GitHub, but Git deployments are disabled for
+every branch including `main` (`vercel.json` → `git.deploymentEnabled`). Pushing
+deploys nothing; `gova` is published only by an explicit deploy command. That
+link must stay as it is. After local provisioning, push users, product,
 advertisements, notifications, every shard runtime variable, and native mobile
 push credentials (`ASOL_MOBILE_PUSH_*`, `NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB`):
 
 ```bash
 npm run provision:mobile-push   # once, after FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64 is set locally
 npm run db:push:vercel-env
-npm run deploy:redeploy-main    # or push to GitHub if you prefer the normal pipeline
+npm run main:deploy             # explicitly redeploy gova so it picks up the new values
 ```
 
-Then wait for the deployment to finish.
+Then wait for the deployment to finish. `main:deploy` publishes `gova` alone; use
+`npm run deploy:all` when the whole release must move together.
 
 **Secondary full app (`submain`)** — account email `groupstenderximages@gmail.com`,
 not connected to GitHub. Deploy token: `VERCEL_SUBMAIN_TOKEN` (deploy script only;

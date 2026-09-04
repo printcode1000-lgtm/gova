@@ -4,6 +4,33 @@ The local full-release shortcuts create their signed AAB and APK through `script
 
 Fastlane runs through `scripts/fastlane-runner.ts` so that Ruby/Bundler runs consistently on Windows and every lane receives the authoritative release environment plus scoped secret auto-restore before Ruby starts.
 
+## Command Surface
+
+Every lane is reached through an npm script; nothing calls `bundle exec fastlane`
+directly, because the runner is what restores the scoped secrets and normalises
+Ruby/Bundler on Windows before Ruby starts.
+
+| Command | Lane |
+| --- | --- |
+| `npm run fastlane -- <platform> <lane>` | any lane, passed straight through |
+| `npm run fastlane:android:doctor` | `android doctor` |
+| `npm run fastlane:android:build` | `android build` |
+| `npm run fastlane:android:aab:signed` | `android aab_signed` |
+| `npm run fastlane:android:aab:unsigned` | `android aab_unsigned` |
+| `npm run fastlane:android:apk:signed` | `android apk_signed` |
+| `npm run fastlane:android:apk:unsigned` | `android apk_unsigned` |
+| `npm run fastlane:android:aab:signed:no-r8` | `android aab_signed_no_r8` |
+| `npm run fastlane:android:aab:unsigned:no-r8` | `android aab_unsigned_no_r8` |
+| `npm run fastlane:android:apk:signed:no-r8` | `android apk_signed_no_r8` |
+| `npm run fastlane:android:apk:unsigned:no-r8` | `android apk_unsigned_no_r8` |
+| `npm run fastlane:android:internal` | `android internal` |
+| `npm run fastlane:android:production` | `android production` |
+| `npm run fastlane:ios:build` | `ios build` |
+| `npm run fastlane:ios:testflight` | `ios beta` |
+
+The iOS `doctor` lane has no npm alias; reach it with
+`npm run fastlane -- ios doctor`.
+
 ## Android Lanes
 
 Current release lanes:

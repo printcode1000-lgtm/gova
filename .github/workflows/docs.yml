@@ -25,6 +25,7 @@ on:
       - "package-lock.json"
       - ".github/workflows/docs.yml"
       - ".github/workflows/local-agent-bootstrap.yml"
+      - ".github/workflows/local-agent-project.yml"
       - "tools/local-agent/**"
   pull_request:
     branches:
@@ -44,6 +45,7 @@ on:
       - "package-lock.json"
       - ".github/workflows/docs.yml"
       - ".github/workflows/local-agent-bootstrap.yml"
+      - ".github/workflows/local-agent-project.yml"
       - "tools/local-agent/**"
 permissions:
   actions: read

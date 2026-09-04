@@ -16,7 +16,6 @@ import {
   ANDROID_RELEASE_PATHS,
   PUSH_BRANCH_HELP,
   deployAllScenarios,
-  deployPushTargets,
 } from "@/features/google-play-console";
 import {
   productionDeployEmail,
@@ -53,7 +52,6 @@ import {
   nextBuildJobActivity,
   nextBuildJobStage,
   DEPLOY_ALL_SCENARIO_VALUES,
-  DEPLOY_PUSH_TARGET_VALUES,
   deployAllBranchIds,
   deployPushBranchIds,
 } from "@asol/release-core/console";
@@ -169,11 +167,8 @@ assert.deepEqual(
   [...DEPLOY_ALL_SCENARIO_VALUES],
   "Deploy All UI scenarios must match release-core catalog enum values",
 );
-assert.deepEqual(
-  deployPushTargets.map(([value]) => value),
-  [...DEPLOY_PUSH_TARGET_VALUES],
-  "Deploy Push UI targets must match release-core catalog enum values",
-);
+// Deploy Push has no target vocabulary to match: `deploy:push:fast` is pinned
+// to the complete set and refuses any partial selection.
 
 const androidBranchIds = allAndroidReleaseBranchIds();
 assert.equal(new Set(androidBranchIds).size, androidBranchIds.length,

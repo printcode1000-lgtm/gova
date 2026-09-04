@@ -49,7 +49,6 @@ const pkg = JSON.parse(read("package.json")) as {
 };
 const buildSource = read("scripts/vercel-deployment-build.ts");
 const guardSource = read("scripts/vercel-deployment-guards.ts");
-const deployWorkflowSource = read(".github/workflows/deploy-main.yml");
 
 assert.equal(
   vercelConfig.installCommand,
@@ -106,13 +105,16 @@ assert.deepEqual(
 assert.doesNotMatch(buildSource, /shell:\s*true/);
 
 // ── Exact-SHA release publication barrier ────────────────────────────────────
-// The Git-linked gova build and deploy workflow start concurrently. The build
+// The explicit release transaction deploys gova only after its prerequisites.
+// The build
 // must wait for control + six workload proofs before it creates the deployment
 // tree, otherwise a frontend can publish while its owned APIs are still old.
 const readinessCallIndex = buildSource.indexOf("await assertHostedGovaReleaseReady()");
 const govaTreeIndex = buildSource.indexOf("buildGovaDeploymentTree(ROOT)");
 assert.ok(readinessCallIndex >= 0, "build:vercel must call the exact-SHA readiness barrier.");
 assert.ok(govaTreeIndex > readinessCallIndex, "readiness must complete before any publishable gova tree is built.");
+assert.match(buildSource, /IS_GOVA_UPLOAD_VIEW/);
+assert.match(buildSource, /ASOL_GOVA_UPLOAD_VIEW === "1"/);
 assert.match(buildSource, /runtime !== "gova"/);
 
 const revision = "a".repeat(40);
@@ -131,20 +133,6 @@ assert.throws(
 assert.throws(
   () => parseReleaseReadinessResponse(revision, { revision, status: "succeeded" }),
   /InvalidStatus/,
-);
-
-// The main-push dispatcher must talk only to the stable control alias. A
-// regression back to gova recreates the release race and keeps operational
-// Business API execution in the frontend deployment.
-assert.match(
-  deployWorkflowSource,
-  /ASOL_CONTROL_DEPLOY_ENDPOINT:\s*https:\/\/asol-control\.vercel\.app\/api\/super-admin\/production-deploy\/github/,
-);
-assert.doesNotMatch(deployWorkflowSource, /gova-swart\.vercel\.app\/api\/super-admin\/production-deploy\/github/);
-assert.equal(
-  [...deployWorkflowSource.matchAll(/const endpoint = process\.env\.ASOL_CONTROL_DEPLOY_ENDPOINT;/g)].length,
-  2,
-  "both self-hosted and GitHub-hosted paths must dispatch through ASOL Control.",
 );
 
 // ── Environment ownership is per runtime, never a union ──────────────────────

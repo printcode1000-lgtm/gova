@@ -1,10 +1,8 @@
 # Super Admin Production Deploy
 
-Every GitHub `push` event for `main` also reaches the machine-only
-`/api/super-admin/production-deploy/github` endpoint using GitHub OIDC. The
-endpoint accepts only this repository's `deploy-main.yml`, pins the sandbox to
-the token's SHA, and launches `deploy:revision` for all targets. No Vercel,
-repository, archive, email, or notification secret is stored in GitHub.
+GitHub pushes do not start production deployments. The machine-only production
+deploy endpoint is reserved for authenticated explicit release requests; no
+Vercel, repository, archive, email, or notification secret is stored in GitHub.
 
 The terminal sandbox callback delivers the signed in-app notification directly
 to the notifications service and sends email independently. Failure messages
@@ -37,8 +35,17 @@ mismatch, missing state or legacy state expands a continuation to full
 validation before applying branch selection. The reason and effective plan are
 written to the run log. Same-revision continuations remain branch-precise.
 
-The page also exposes a **Deploy Push** tab. It runs `deploy:push` in the same
-Sandbox and lets the super admin select `all`, `main`, or one isolated service.
+The page also exposes a **Deploy Push** tab. It runs `npm run deploy:push:fast`
+in the same Sandbox — the complete transaction: control, the six workloads,
+exact-SHA readiness, then `gova`.
+
+It has no target selector. It used to, and the selection did nothing:
+`scripts/run-remote-deploy-all.mjs` maps the console's `deploy:push` command to
+`deploy:push:fast`, which is pinned to `--vercel-target=all`, and a partial
+selection is refused by `scripts/deploy-push.ts` anyway. A control that cannot
+change the outcome is a false promise, so it was removed along with the target
+vocabulary behind it. To deploy one account for maintenance, run that account's
+own `*:deploy` script.
 
 Before its architecture guard, the pipeline regenerates the repository knowledge
 snapshots. This keeps a fresh Sandbox clone valid even when a generated catalog
@@ -187,8 +194,8 @@ The page lists any that are missing instead of failing silently.
 | `ASOL_DEPLOY_SANDBOX_TIMEOUT_MINUTES` | optional; sandbox lifetime, default 45 |
 | `ASOL_DEPLOY_SANDBOX_VCPUS` | optional; sandbox size, default 2 |
 
-`npm run deploy:env:push` writes every one of these — except `VERCEL_OIDC_TOKEN` —
-onto the `gova` project from the local `.env.local`/`.env`, generating
+`npx tsx scripts/push-production-deploy-env.ts` writes every one of these —
+except `VERCEL_OIDC_TOKEN` — onto the `gova` project from the local `.env.local`/`.env`, generating
 `ASOL_DEPLOY_CALLBACK_SECRET` only when the project does not already have one and
 deriving the repository URL from `origin`. It never invents any other value: a
 key with no local value is reported and skipped.
@@ -233,10 +240,30 @@ never about Vercel.
 | `packages/vercel-deploy-core/src/remote-deploy-contracts.ts` | snapshot, stage, and readiness shapes shared by both halves |
 | `packages/vercel-deploy-core/src/remote-deploy-sandbox.ts` | create/resume the sandbox, guard concurrency, read state |
 | `scripts/run-remote-deploy-all.mjs` | sandbox-side runner: state file, log, deploy option translation, terminal callback |
-| `scripts/push-production-deploy-env.ts` | `deploy:env:push` — syncs the configuration above to Vercel |
+| `scripts/push-production-deploy-env.ts` | syncs the configuration above to Vercel (run with `npx tsx`; the `deploy:env:push` npm alias was removed) |
 | `src/features/release-commands/server/services/production-deploy-service.server.ts` | start, status, callback handling |
 | `src/features/release-commands/server/services/production-deploy-email.server.ts` | the result email |
 | `src/features/release-commands/presentation/ProductionDeployPage.tsx` | the console page |
+
+## There is no GitHub deploy entry point
+
+`POST /api/super-admin/production-deploy/github` was removed on 2026-09-04,
+together with `startGitHubProductionDeploy`, `getGitHubProductionDeployStatus`,
+and the `@asol/vercel-deploy-core/github-push-identity` door that authenticated
+its OIDC token.
+
+It had already stopped working. Its only caller was
+`.github/workflows/deploy-main.yml`, and that workflow was deleted —
+`ALLOWED_WORKFLOW_FILES` in `scripts/github-ci-policy.ts` permits only
+`docs.yml` and `local-agent-bootstrap.yml`. Its identity check also pinned
+`workflow_ref` to that exact deleted path, so no token could satisfy it, and the
+`deploy:revision` command it asked the sandbox for is no longer a script in
+`package.json`.
+
+An authenticated route that cannot succeed is worse than no route: it reads as a
+supported entry point in every inventory that finds it. The statement at the top
+of this document is now enforced by the absence of the endpoint, not by policy
+alone — GitHub pushes do not start production deployments.
 
 ## Safety Boundary
 

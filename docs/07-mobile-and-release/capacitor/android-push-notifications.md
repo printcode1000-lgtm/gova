@@ -11,7 +11,7 @@ ASOL Android uses Firebase Cloud Messaging through the official Capacitor 8 Push
 - Android App ID: `1:543298343631:android:01192cf95a765130609dba`
 - Android package: `hgh.asol.app`
 
-`scripts/sync-android-push-assets.ts` validates all four values before every Capacitor sync. A mismatch fails the build.
+`packages/native-core/scripts/sync-android-push-assets.ts` validates all four values before every Capacitor sync. A mismatch fails the build.
 
 ## Build Assets
 
@@ -250,7 +250,7 @@ cannot be changed afterwards. The first creation on a device must therefore
 already carry the final custom sound, and changing any of those behaviours later
 requires a new channel-id generation — which discards every per-channel
 preference the user has set. See
-[Channel generations](../../05-platform-features/notification-system.md#sound-and-channels).
+[Android Channel Policy](../../05-platform-features/notification-system.md#android-channel-policy).
 
 The channel set is created only by the application-owned native bridge, never by
 Capacitor's string-based `createChannel`. The Java side sets the sound from a
@@ -399,7 +399,7 @@ sound from importance 3 upward, and a channel created *without* a sound still
 inherits the system sound — omitting the file is not enough on its own.
 
 Channel selection lives in
-[`src/features/notifications/domain/notification-sound.ts`](../../../src/features/notifications/tests/notification-sound-contract.test.ts)
+[`packages/notifications-core/src/domain/notification-sound.ts`](../../../src/features/notifications/tests/notification-sound-contract.test.ts)
 and is shared by the server FCM provider and the on-device local notification,
 so a notification sounds the same whichever displayed it. In order:
 

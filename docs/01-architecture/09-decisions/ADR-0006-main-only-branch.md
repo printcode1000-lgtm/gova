@@ -1,38 +1,35 @@
-# ADR-0006: Fixed Two-Branch Repository Model
+# ADR-0006: Fixed Two-Branch Repository Model and Explicit Agent Execution Choice
 
 ## Status
 
-Accepted; superseded topology finalized 2026-09-02.
+Accepted; local-agent execution policy revised 2026-09-04.
 
 ## Context
 
-GitHub-dispatched agent commands and the permanent `integration` working branch created an unnecessary remote control plane. Agents now share a persistent local gateway that can multiplex commands, coordination, worktrees, checkpoints, and handoffs without creating a GitHub job per operation.
+The repository must keep remote branch sprawl under control while allowing the user to choose direct local work or managed isolation per task. Earlier revisions made one execution path implicit, which could either add unwanted indirection or modify the files the user was inspecting without an explicit mode choice.
 
 ## Decision
 
 1. The only recognized remote branches are `main` and `integration`.
-2. `main` remains the production/release branch and is never an agent scratch branch.
-3. `integration` is the persistent non-production aggregation branch for verified agent results.
-4. Each agent/task receives a local-only worktree and `agent/<agent>/<task>` branch under `/home/hesham/gova-agents`. These task branches must never be pushed.
-5. Normal agent work uses `gova-agent-gateway`; GitHub Actions is not the command transport.
-6. Verified completion uses the gateway `integration-submit` operation, serialized by an integration ref lock.
-7. No third remote ref, wildcard branch namespace, request branch, rescue branch, staging branch, or provider-generated branch is allowed.
-8. Promotion from `integration` to `main` is separate and deliberate.
+2. `main` remains the production/release branch and `/home/hesham/gova` is the canonical local checkout.
+3. Before its first task action, every local agent asks the user to choose mode A or B unless the user already selected one in the task.
+4. Mode A is Gateway-managed isolation: Gateway requires one constrained GitHub dispatch of the self-hosted bootstrap before it permits the task worktree under `/home/hesham/gova-agents`, local `agent/*` branch, state/locks, and verified submission to `integration`. The selection authorizes those steps but not deployment or another remote branch.
+5. Mode B edits `/home/hesham/gova` directly in its current branch and working tree while preserving pre-existing local changes. A cloud Mode-B task explicitly marked `--cloud-bridge` may use the managed infrastructure as transport only: it creates a temporary worktree and local `agent/*` branch, submits its verified task commit to `integration`, and Gateway applies the resulting integration commit directly and unstaged to the canonical checkout. It never commits or pushes `main` and fails closed if the task paths overlap canonical changes or the patch cannot apply. A local Mode-B task does not create a worktree, `agent/*` branch, Gateway task/session, lock/checkpoint/handoff, integration submission, commit, push, or deployment.
+6. GitHub `workflow_dispatch` through `.github/workflows/local-agent-bootstrap.yml` is the primary remote bootstrap/entry path to prepare or recover the local device.
+7. The bootstrap installs from `/home/hesham/gova` and must not create or reset an integration worktree.
+8. `integration` is used only by explicitly selected managed isolation or cloud-bridge Mode B; no third remote ref, wildcard branch namespace, request branch, rescue branch, staging branch, or provider-generated branch is allowed.
 
 ## Enforcement
 
 - `.githooks/pre-push.d/10-main-only` allows only `refs/heads/main` and `refs/heads/integration`.
-- `scripts/block-branch-creation.ts` maintains an active GitHub creation ruleset whose only exclusions are those two refs.
-- Agent task branches remain local-only.
-- `.github/workflows/local-agent-bootstrap.yml` is manual bootstrap/reinstall only.
+- `scripts/block-branch-creation.ts` keeps the remote two-branch rule.
+- `scripts/github-ci-policy.ts` requires the bootstrap to use `/home/hesham/gova` and rejects integration-worktree bootstrap behavior.
+- Agent instruction surfaces require an explicit A/B execution choice and prohibit steps outside the selected mode.
 
-## Runtime
+## Optional managed runtime
 
-- Gateway implementation: `tools/local-agent/`.
-- Runtime database: `/home/hesham/.local/share/gova-agent-runtime/runtime.sqlite3` (SQLite WAL).
-- Agent worktrees: `/home/hesham/gova-agents/`.
-- Persistent service: `gova-agent-gateway.service`.
+The implementation under `tools/local-agent/`, the runtime database under `/home/hesham/.local/share/gova-agent-runtime/`, and `gova-agent-gateway.service` are retained. They are activated by explicit Mode A selection or explicit cloud-bridge Mode B selection.
 
 ## Consequences
 
-Agent parallelism is local and does not create remote branch sprawl. Any agent can resume another task from persistent checkpoints/handoffs. GitHub is used for the two durable repository refs, not as an RPC bus.
+The user chooses between direct local editing and managed isolation for each task; a cloud agent can preserve the direct-local result of Mode B through an explicit bridge. GitHub remains a reliable bootstrap entry point while the two-remote-branch boundary stays fixed.

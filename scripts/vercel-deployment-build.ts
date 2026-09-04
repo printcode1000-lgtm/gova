@@ -23,7 +23,11 @@ import { assertHostedGovaReleaseReady } from "./release-readiness-barrier";
  * `npm run build` / `deploy:all` preflight.
  */
 const ROOT = process.cwd();
-const BUILD_ROOT = path.join(ROOT, GOVA_DEPLOYMENT_DIR);
+// Vercel mounts every upload at `/vercel/path0`, so the directory name cannot
+// identify the prepared view remotely. The explicit build input is set only by
+// the gova release uploader.
+const IS_GOVA_UPLOAD_VIEW = process.env.ASOL_GOVA_UPLOAD_VIEW === "1";
+const BUILD_ROOT = IS_GOVA_UPLOAD_VIEW ? ROOT : path.join(ROOT, GOVA_DEPLOYMENT_DIR);
 
 function run(command: string, args: string[], cwd = ROOT): void {
   const result = spawnSync(command, args, {
@@ -76,15 +80,17 @@ async function main(): Promise<void> {
     throw new Error(`build:vercel is the gova frontend builder, not runtime "${runtime}".`);
   }
 
-  // A GitHub-linked gova build starts at the same time as the release workflow.
+  // An explicit release starts the gova build only after its backend prerequisites.
   // It must not produce a publishable frontend artifact until control proves
   // that control + all six Git-disconnected workloads are READY for this exact
   // 40-character Git SHA. Failed/timeout readiness is fail-closed, leaving the
   // previous gova production deployment active.
   await assertHostedGovaReleaseReady();
 
-  console.log(`[vercel-build] generating ${GOVA_DEPLOYMENT_DIR}`);
-  buildGovaDeploymentTree(ROOT);
+  if (!IS_GOVA_UPLOAD_VIEW) {
+    console.log(`[vercel-build] generating ${GOVA_DEPLOYMENT_DIR}`);
+    buildGovaDeploymentTree(ROOT);
+  }
 
   process.env.ASOL_RUNTIME_ROLE = "gova-frontend";
   console.log(`[vercel-build] next build (${GOVA_DEPLOYMENT_DIR})`);

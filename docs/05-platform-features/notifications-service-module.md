@@ -96,7 +96,7 @@ Rather than maintain a second copy of the send logic by hand,
 `scripts/sync-service-sources.ts notifications` walks the real import graph from
 one entry point and mirrors exactly the files it reaches.
 
-**That entry point is `src/features/notifications/service-runtime.ts`, and it is
+**That entry point is `packages/notifications-core/src/service-runtime.ts`, and it is
 the only notification path this deployment may import.** The route reaches it and
 nothing else; `architecture:check` and the module boundary test both reject any
 other notification import in `services/notifications`.

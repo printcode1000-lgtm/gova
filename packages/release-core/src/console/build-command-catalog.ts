@@ -1,7 +1,4 @@
-import {
-  DEPLOY_ALL_SCENARIO_VALUES,
-  DEPLOY_PUSH_TARGET_VALUES,
-} from "./deploy-scenario-values";
+import { DEPLOY_ALL_SCENARIO_VALUES } from "./deploy-scenario-values";
 
 export type BuildCommandCategory = "web-static" | "ota" | "native-android" | "verification" | "fastlane" | "deployment";
 export type BuildCommandDanger = "safe" | "destructive" | "publishes-live";
@@ -25,10 +22,7 @@ export type BuildParameterName =
   | "deployAllAllowEmpty"
   | "deployAllAllowManifestDowngrade"
   | "deployAllAllowScratchFiles"
-  | "deployPushTarget"
-  | "deployPushAllowEmpty"
-  | "deployPushAllowManifestDowngrade"
-  | "deployPushAllowScratchFiles";
+  | "deployPushAllowEmpty";
 
 export type BuildParameterSchema =
   | { name: BuildParameterName; type: "boolean"; flag: string }
@@ -126,15 +120,7 @@ const deployAllSkipPreflight = { name: "deployAllSkipPreflight", type: "boolean"
 const deployAllAllowEmpty = { name: "deployAllAllowEmpty", type: "boolean", flag: "--allow-empty" } as const;
 const deployAllAllowManifestDowngrade = { name: "deployAllAllowManifestDowngrade", type: "boolean", flag: "--allow-manifest-downgrade" } as const;
 const deployAllAllowScratchFiles = { name: "deployAllAllowScratchFiles", type: "boolean", flag: "--allow-scratch-files" } as const;
-const deployPushTarget = {
-  name: "deployPushTarget",
-  type: "enum",
-  flag: "--vercel-target",
-  values: DEPLOY_PUSH_TARGET_VALUES,
-} as const;
 const deployPushAllowEmpty = { name: "deployPushAllowEmpty", type: "boolean", flag: "--allow-empty" } as const;
-const deployPushAllowManifestDowngrade = { name: "deployPushAllowManifestDowngrade", type: "boolean", flag: "--allow-manifest-downgrade" } as const;
-const deployPushAllowScratchFiles = { name: "deployPushAllowScratchFiles", type: "boolean", flag: "--allow-scratch-files" } as const;
 const track = { name: "track", type: "enum", flag: "track", values: ["internal", "alpha", "beta", "production"] } as const;
 const rollout = { name: "rollout", type: "number", flag: "rollout", min: 0, max: 1 } as const;
 const releaseNotes = { name: "releaseNotes", type: "localized-text", flag: "release_notes_b64", maxLanguages: 20, maxLength: 500 } as const;
@@ -204,11 +190,12 @@ export const BUILD_COMMAND_CATALOG = [
     deployAllAllowManifestDowngrade,
     deployAllAllowScratchFiles,
   ], true),
-  entry("deploy-push-runbook", "deploy:push", "deployment", "publishes-live", ["VERCEL_TOKEN"], [], "5-45 min", "DEPLOY_PUSH", [
-    deployPushTarget,
+  // `deploy:push:fast` is pinned to `--fast --vercel-target=all`, so there is no
+  // target to choose. `--fast` also returns before the scratch-file and
+  // manifest-downgrade refusals, which leaves `--allow-empty` — used at the
+  // commit itself — as the only flag that still changes what the run does.
+  entry("deploy-push-runbook", "deploy:push:fast", "deployment", "publishes-live", ["VERCEL_TOKEN"], [], "5-45 min", "DEPLOY_PUSH", [
     deployPushAllowEmpty,
-    deployPushAllowManifestDowngrade,
-    deployPushAllowScratchFiles,
   ], true),
   entry("cap-sync", "cap:sync", "native-android", "safe", [], ["android/app/src/main/assets/public"], "3-8 min"),
   entry("cap-copy", "cap:copy", "native-android", "safe", [], ["android/app/src/main/assets/public"], "2-5 min"),
@@ -272,7 +259,6 @@ export function materializeBuildCommandParameters(command: BuildCommandCatalogEn
         if (value === "from-submain") argv.push("--from-phase=submain");
         if (value === "from-sub2main") argv.push("--from-phase=sub2main");
       }
-      else if (schema.name === "deployPushTarget") argv.push(`--vercel-target=${value}`);
       else if (schema.name === "otaSource") {
         if (value === "resume-published") argv.push("--resume");
         if (value === "skip-ota") argv.push("--skip-ota");

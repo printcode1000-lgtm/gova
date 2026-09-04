@@ -176,7 +176,8 @@ before any work begins — never a default, never inferred.
 1. **`exports` seal** in `package.json` — two doors, no wildcard.
 2. **ESLint** — bans `@asol/ota-core/*` deep-path imports repo-wide; bans `@aws-sdk/*` and
    `google-auth-library` outside `packages/ota-core/src/publishing/adapters/**` (with a narrow
-   exception for `fcm-http-v1.server.ts`, documented in the `@asol/notifications` README).
+   exception for `packages/notifications-core/src/services/providers/fcm-http-v1.server.ts`,
+   which needs it to mint FCM HTTP v1 access tokens).
 3. **Architecture contract** — `architecture-check.ota-core-contract.ts` runs as part of
    `npm run architecture:check`.
 4. **Contract tests** — `runtime-sealing.test.ts` (module graph purity) and

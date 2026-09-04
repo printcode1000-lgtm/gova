@@ -8,7 +8,7 @@ how a release uses it.
 
 The Super Admin console can deploy production, read every system log, administer
 OTA releases, purge orders, and restore database backups. While those routes
-lived in `gova`, the GitHub-linked project that every push redeploys, the
+lived in `gova`, the GitHub-linked project that was automatically redeployed on every push, the
 deployment serving the storefront also held the session signing secret, the
 deployment credentials for seven other accounts, and write access to every
 database. A frontend does not need any of that, and an account that holds a
@@ -73,8 +73,8 @@ A short SHA is refused with `400`. A barrier that guessed which commit you meant
 would be worse than one that is down.
 
 `deploy:all` publishes this row only after the irreversible release has deployed
-and observed `READY` for control and all six workloads. The GitHub-linked gova
-build waits on this row before it generates the gova-only build view, so the
+and observed `READY` for control and all six workloads. The explicit gova
+deployment waits on this row before it generates the gova-only build view, so the
 frontend can never publish ahead of the runtimes it redirects to.
 
 ## The error contract is shared, not restated

@@ -1117,7 +1117,7 @@
     {
       "id": "${props.id}",
       "source": "src/features/google-play-console/presentation/DeployRunbookControls.tsx",
-      "line": 48,
+      "line": 55,
       "element": "section",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -1125,7 +1125,7 @@
     {
       "id": "${props.id}",
       "source": "src/features/google-play-console/presentation/DeployRunbookControls.tsx",
-      "line": 127,
+      "line": 136,
       "element": "label",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -9669,7 +9669,7 @@
     {
       "id": "features-google-play-console-presentation-deployrunbookcontrols-div-6-ubxh7z",
       "source": "src/features/google-play-console/presentation/DeployRunbookControls.tsx",
-      "line": 75,
+      "line": 84,
       "element": "div",
       "semanticName": "google-play-console-presentation-deployrunbookcontrols-div-6",
       "kind": "literal"
@@ -9677,7 +9677,7 @@
     {
       "id": "features-google-play-console-presentation-deployrunbookcontrols-div-7-5bhmhk",
       "source": "src/features/google-play-console/presentation/DeployRunbookControls.tsx",
-      "line": 95,
+      "line": 104,
       "element": "div",
       "semanticName": "google-play-console-presentation-deployrunbookcontrols-div-7",
       "kind": "literal"
@@ -9685,7 +9685,7 @@
     {
       "id": "features-google-play-console-presentation-deployrunbookcontrols-div-9-tzpee6",
       "source": "src/features/google-play-console/presentation/DeployRunbookControls.tsx",
-      "line": 108,
+      "line": 117,
       "element": "div",
       "semanticName": "google-play-console-presentation-deployrunbookcontrols-div-9",
       "kind": "literal"
@@ -9693,7 +9693,7 @@
     {
       "id": "features-google-play-console-presentation-deployrunbookcontrols-header-2-i9cwes",
       "source": "src/features/google-play-console/presentation/DeployRunbookControls.tsx",
-      "line": 49,
+      "line": 56,
       "element": "header",
       "semanticName": "google-play-console-presentation-deployrunbookcontrols-header-2",
       "kind": "literal"
@@ -9701,7 +9701,7 @@
     {
       "id": "features-google-play-console-presentation-deployrunbookcontrols-heading-3-ldt014",
       "source": "src/features/google-play-console/presentation/DeployRunbookControls.tsx",
-      "line": 50,
+      "line": 57,
       "element": "h2",
       "semanticName": "google-play-console-presentation-deployrunbookcontrols-heading-3",
       "kind": "literal"
@@ -9709,7 +9709,7 @@
     {
       "id": "features-google-play-console-presentation-deployrunbookcontrols-label-15-xw5h8i",
       "source": "src/features/google-play-console/presentation/DeployRunbookControls.tsx",
-      "line": 149,
+      "line": 158,
       "element": "label",
       "semanticName": "google-play-console-presentation-deployrunbookcontrols-label-15",
       "kind": "literal"
@@ -9717,7 +9717,7 @@
     {
       "id": "features-google-play-console-presentation-deployrunbookcontrols-select-17-r96yrm",
       "source": "src/features/google-play-console/presentation/DeployRunbookControls.tsx",
-      "line": 151,
+      "line": 160,
       "element": "select",
       "semanticName": "google-play-console-presentation-deployrunbookcontrols-select-17",
       "kind": "literal"
@@ -9725,7 +9725,7 @@
     {
       "id": "features-google-play-console-presentation-deployrunbookcontrols-text-16-tiw69r",
       "source": "src/features/google-play-console/presentation/DeployRunbookControls.tsx",
-      "line": 150,
+      "line": 159,
       "element": "span",
       "semanticName": "google-play-console-presentation-deployrunbookcontrols-text-16",
       "kind": "literal"
@@ -9733,7 +9733,7 @@
     {
       "id": "features-google-play-console-presentation-deployrunbookcontrols-text-18-bywyfa",
       "source": "src/features/google-play-console/presentation/DeployRunbookControls.tsx",
-      "line": 162,
+      "line": 171,
       "element": "span",
       "semanticName": "google-play-console-presentation-deployrunbookcontrols-text-18",
       "kind": "literal"
@@ -9741,7 +9741,7 @@
     {
       "id": "features-google-play-console-presentation-deployrunbookcontrols-text-4-ajg7ss",
       "source": "src/features/google-play-console/presentation/DeployRunbookControls.tsx",
-      "line": 51,
+      "line": 58,
       "element": "p",
       "semanticName": "google-play-console-presentation-deployrunbookcontrols-text-4",
       "kind": "literal"
@@ -9749,7 +9749,7 @@
     {
       "id": "features-google-play-console-presentation-deployrunbookcontrols-text-5-ei2r2a",
       "source": "src/features/google-play-console/presentation/DeployRunbookControls.tsx",
-      "line": 70,
+      "line": 79,
       "element": "span",
       "semanticName": "google-play-console-presentation-deployrunbookcontrols-text-5",
       "kind": "literal"
@@ -9757,7 +9757,7 @@
     {
       "id": "features-google-play-console-presentation-deployrunbookcontrols-text-8-j3oyhb",
       "source": "src/features/google-play-console/presentation/DeployRunbookControls.tsx",
-      "line": 103,
+      "line": 112,
       "element": "span",
       "semanticName": "google-play-console-presentation-deployrunbookcontrols-text-8",
       "kind": "literal"
@@ -9933,7 +9933,7 @@
     {
       "id": "features-google-play-console-presentation-deployrunbookpage-div-3-69zscw",
       "source": "src/features/google-play-console/presentation/DeployRunbookPage.tsx",
-      "line": 62,
+      "line": 60,
       "element": "div",
       "semanticName": "google-play-console-presentation-deployrunbookpage-div-3",
       "kind": "literal"
@@ -9941,7 +9941,7 @@
     {
       "id": "features-google-play-console-presentation-deployrunbookpage-main-1-waa4bw",
       "source": "src/features/google-play-console/presentation/DeployRunbookPage.tsx",
-      "line": 51,
+      "line": 49,
       "element": "main",
       "semanticName": "google-play-console-presentation-deployrunbookpage-main-1",
       "kind": "literal"
@@ -9949,7 +9949,7 @@
     {
       "id": "features-google-play-console-presentation-deployrunbookpage-main-2-ech6zn",
       "source": "src/features/google-play-console/presentation/DeployRunbookPage.tsx",
-      "line": 61,
+      "line": 59,
       "element": "main",
       "semanticName": "google-play-console-presentation-deployrunbookpage-main-2",
       "kind": "literal"
@@ -9957,7 +9957,7 @@
     {
       "id": "features-google-play-console-presentation-deployrunbookpage-main-4-3terue",
       "source": "src/features/google-play-console/presentation/DeployRunbookPage.tsx",
-      "line": 122,
+      "line": 111,
       "element": "main",
       "semanticName": "google-play-console-presentation-deployrunbookpage-main-4",
       "kind": "literal"
@@ -13053,7 +13053,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-code-57-dnjexe",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 336,
+      "line": 333,
       "element": "code",
       "semanticName": "release-commands-presentation-productiondeploypage-code-57",
       "kind": "literal"
@@ -13061,7 +13061,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-code-6-umudd5",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 99,
+      "line": 98,
       "element": "code",
       "semanticName": "release-commands-presentation-productiondeploypage-code-6",
       "kind": "literal"
@@ -13069,7 +13069,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-dd-28-lgowmz",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 178,
+      "line": 177,
       "element": "dd",
       "semanticName": "release-commands-presentation-productiondeploypage-dd-28",
       "kind": "literal"
@@ -13077,7 +13077,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-dd-30-j9zp3o",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 180,
+      "line": 179,
       "element": "dd",
       "semanticName": "release-commands-presentation-productiondeploypage-dd-30",
       "kind": "literal"
@@ -13085,7 +13085,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-dd-32-pm9yka",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 182,
+      "line": 181,
       "element": "dd",
       "semanticName": "release-commands-presentation-productiondeploypage-dd-32",
       "kind": "literal"
@@ -13093,7 +13093,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-dd-34-e3xkrn",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 184,
+      "line": 183,
       "element": "dd",
       "semanticName": "release-commands-presentation-productiondeploypage-dd-34",
       "kind": "literal"
@@ -13101,7 +13101,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-dd-36-l6ebuz",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 186,
+      "line": 185,
       "element": "dd",
       "semanticName": "release-commands-presentation-productiondeploypage-dd-36",
       "kind": "literal"
@@ -13109,7 +13109,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-dd-38-c38hpg",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 188,
+      "line": 187,
       "element": "dd",
       "semanticName": "release-commands-presentation-productiondeploypage-dd-38",
       "kind": "literal"
@@ -13117,7 +13117,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-dd-41-up7pdx",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 193,
+      "line": 192,
       "element": "dd",
       "semanticName": "release-commands-presentation-productiondeploypage-dd-41",
       "kind": "literal"
@@ -13125,7 +13125,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-div-46-xaetrb",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 235,
+      "line": 234,
       "element": "div",
       "semanticName": "release-commands-presentation-productiondeploypage-div-46",
       "kind": "literal"
@@ -13133,7 +13133,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-div-48-qyc4bk",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 276,
+      "line": 273,
       "element": "div",
       "semanticName": "release-commands-presentation-productiondeploypage-div-48",
       "kind": "literal"
@@ -13141,7 +13141,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-div-56-qvsu5b",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 335,
+      "line": 332,
       "element": "div",
       "semanticName": "release-commands-presentation-productiondeploypage-div-56",
       "kind": "literal"
@@ -13149,7 +13149,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-div-7-infgtv",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 104,
+      "line": 103,
       "element": "div",
       "semanticName": "release-commands-presentation-productiondeploypage-div-7",
       "kind": "literal"
@@ -13157,7 +13157,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-dl-26-mvefqa",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 176,
+      "line": 175,
       "element": "dl",
       "semanticName": "release-commands-presentation-productiondeploypage-dl-26",
       "kind": "literal"
@@ -13165,7 +13165,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-dt-27-l3uogc",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 177,
+      "line": 176,
       "element": "dt",
       "semanticName": "release-commands-presentation-productiondeploypage-dt-27",
       "kind": "literal"
@@ -13173,7 +13173,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-dt-29-ulsfnz",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 179,
+      "line": 178,
       "element": "dt",
       "semanticName": "release-commands-presentation-productiondeploypage-dt-29",
       "kind": "literal"
@@ -13181,7 +13181,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-dt-31-jidc4p",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 181,
+      "line": 180,
       "element": "dt",
       "semanticName": "release-commands-presentation-productiondeploypage-dt-31",
       "kind": "literal"
@@ -13189,7 +13189,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-dt-33-9t75dl",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 183,
+      "line": 182,
       "element": "dt",
       "semanticName": "release-commands-presentation-productiondeploypage-dt-33",
       "kind": "literal"
@@ -13197,7 +13197,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-dt-35-9j5khn",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 185,
+      "line": 184,
       "element": "dt",
       "semanticName": "release-commands-presentation-productiondeploypage-dt-35",
       "kind": "literal"
@@ -13205,7 +13205,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-dt-37-ts8mh8",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 187,
+      "line": 186,
       "element": "dt",
       "semanticName": "release-commands-presentation-productiondeploypage-dt-37",
       "kind": "literal"
@@ -13213,7 +13213,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-dt-39-dme2he",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 189,
+      "line": 188,
       "element": "dt",
       "semanticName": "release-commands-presentation-productiondeploypage-dt-39",
       "kind": "literal"
@@ -13221,7 +13221,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-header-2-ypetim",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 93,
+      "line": 92,
       "element": "header",
       "semanticName": "release-commands-presentation-productiondeploypage-header-2",
       "kind": "literal"
@@ -13229,7 +13229,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-heading-24-jtctmf",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 172,
+      "line": 171,
       "element": "h2",
       "semanticName": "release-commands-presentation-productiondeploypage-heading-24",
       "kind": "literal"
@@ -13237,7 +13237,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-heading-3-cr9m3t",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 94,
+      "line": 93,
       "element": "h1",
       "semanticName": "release-commands-presentation-productiondeploypage-heading-3",
       "kind": "literal"
@@ -13245,7 +13245,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-heading-45-ktcfl1",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 231,
+      "line": 230,
       "element": "h2",
       "semanticName": "release-commands-presentation-productiondeploypage-heading-45",
       "kind": "literal"
@@ -13253,23 +13253,15 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-input-54-l8fk81",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 303,
+      "line": 300,
       "element": "input",
       "semanticName": "release-commands-presentation-productiondeploypage-input-54",
       "kind": "literal"
     },
     {
-      "id": "features-release-commands-presentation-productiondeploypage-label-15-olxc1v",
-      "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 126,
-      "element": "label",
-      "semanticName": "release-commands-presentation-productiondeploypage-label-15",
-      "kind": "literal"
-    },
-    {
       "id": "features-release-commands-presentation-productiondeploypage-label-17-e6qpmm",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 139,
+      "line": 138,
       "element": "label",
       "semanticName": "release-commands-presentation-productiondeploypage-label-17",
       "kind": "literal"
@@ -13277,7 +13269,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-label-49-s6arp6",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 277,
+      "line": 274,
       "element": "label",
       "semanticName": "release-commands-presentation-productiondeploypage-label-49",
       "kind": "literal"
@@ -13285,7 +13277,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-label-51-l2xpap",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 289,
+      "line": 286,
       "element": "label",
       "semanticName": "release-commands-presentation-productiondeploypage-label-51",
       "kind": "literal"
@@ -13293,7 +13285,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-label-53-xyllbe",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 302,
+      "line": 299,
       "element": "label",
       "semanticName": "release-commands-presentation-productiondeploypage-label-53",
       "kind": "literal"
@@ -13301,7 +13293,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-main-1-7fhqac",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 92,
+      "line": 91,
       "element": "main",
       "semanticName": "release-commands-presentation-productiondeploypage-main-1",
       "kind": "literal"
@@ -13309,15 +13301,23 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-ol-42-nsklzi",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 197,
+      "line": 196,
       "element": "ol",
       "semanticName": "release-commands-presentation-productiondeploypage-ol-42",
       "kind": "literal"
     },
     {
+      "id": "features-release-commands-presentation-productiondeploypage-p-15-olxc1v",
+      "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
+      "line": 124,
+      "element": "p",
+      "semanticName": "release-commands-presentation-productiondeploypage-p-15",
+      "kind": "literal"
+    },
+    {
       "id": "features-release-commands-presentation-productiondeploypage-pre-47-2rbrnl",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 236,
+      "line": 235,
       "element": "pre",
       "semanticName": "release-commands-presentation-productiondeploypage-pre-47",
       "kind": "literal"
@@ -13325,7 +13325,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-section-10-tbpwxi",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 110,
+      "line": 109,
       "element": "section",
       "semanticName": "release-commands-presentation-productiondeploypage-section-10",
       "kind": "literal"
@@ -13333,7 +13333,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-section-14-pgrv3l",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 123,
+      "line": 122,
       "element": "section",
       "semanticName": "release-commands-presentation-productiondeploypage-section-14",
       "kind": "literal"
@@ -13341,7 +13341,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-section-23-ll5y5r",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 171,
+      "line": 170,
       "element": "section",
       "semanticName": "release-commands-presentation-productiondeploypage-section-23",
       "kind": "literal"
@@ -13349,7 +13349,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-section-44-rnpbu4",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 230,
+      "line": 229,
       "element": "section",
       "semanticName": "release-commands-presentation-productiondeploypage-section-44",
       "kind": "literal"
@@ -13357,7 +13357,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-select-50-laehef",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 278,
+      "line": 275,
       "element": "select",
       "semanticName": "release-commands-presentation-productiondeploypage-select-50",
       "kind": "literal"
@@ -13365,7 +13365,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-text-11-xcyha1",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 111,
+      "line": 110,
       "element": "p",
       "semanticName": "release-commands-presentation-productiondeploypage-text-11",
       "kind": "literal"
@@ -13373,7 +13373,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-text-22-dfhzti",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 168,
+      "line": 167,
       "element": "p",
       "semanticName": "release-commands-presentation-productiondeploypage-text-22",
       "kind": "literal"
@@ -13381,7 +13381,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-text-43-4w0yew",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 224,
+      "line": 223,
       "element": "p",
       "semanticName": "release-commands-presentation-productiondeploypage-text-43",
       "kind": "literal"
@@ -13389,7 +13389,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-text-5-jclace",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 98,
+      "line": 97,
       "element": "p",
       "semanticName": "release-commands-presentation-productiondeploypage-text-5",
       "kind": "literal"
@@ -13397,7 +13397,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-text-55-etplka",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 310,
+      "line": 307,
       "element": "span",
       "semanticName": "release-commands-presentation-productiondeploypage-text-55",
       "kind": "literal"
@@ -13405,7 +13405,7 @@
     {
       "id": "features-release-commands-presentation-productiondeploypage-ul-13-zz8esk",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 115,
+      "line": 114,
       "element": "ul",
       "semanticName": "release-commands-presentation-productiondeploypage-ul-13",
       "kind": "literal"
@@ -24013,15 +24013,7 @@
     {
       "id": "production-deploy-branch",
       "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 290,
-      "element": "select",
-      "semanticName": "deploy",
-      "kind": "literal"
-    },
-    {
-      "id": "production-deploy-target",
-      "source": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "line": 127,
+      "line": 287,
       "element": "select",
       "semanticName": "deploy",
       "kind": "literal"
@@ -24741,7 +24733,7 @@
     {
       "id": "props.id ? `${props.id}-div-7-pb7crt` : undefined",
       "source": "src/features/google-play-console/presentation/DeployRunbookCollapsible.tsx",
-      "line": 62,
+      "line": 65,
       "element": "div",
       "semanticName": "div-7",
       "kind": "scoped-template"
@@ -24757,7 +24749,7 @@
     {
       "id": "props.id ? `${props.id}-div-8-xqdofo` : undefined",
       "source": "src/features/google-play-console/presentation/DeployRunbookCollapsible.tsx",
-      "line": 64,
+      "line": 70,
       "element": "div",
       "semanticName": "div-8",
       "kind": "scoped-template"
@@ -24765,7 +24757,7 @@
     {
       "id": "props.id ? `${props.id}-div-9-krof5m` : undefined",
       "source": "src/features/google-play-console/presentation/DeployRunbookCollapsible.tsx",
-      "line": 71,
+      "line": 82,
       "element": "div",
       "semanticName": "div-9",
       "kind": "scoped-template"
@@ -24781,7 +24773,7 @@
     {
       "id": "props.id ? `${props.id}-input-12-qrac8u` : undefined",
       "source": "src/features/google-play-console/presentation/DeployRunbookControls.tsx",
-      "line": 129,
+      "line": 138,
       "element": "input",
       "semanticName": "input-12",
       "kind": "scoped-template"
@@ -24813,7 +24805,7 @@
     {
       "id": "props.id ? `${props.id}-text-11-exqq4b` : undefined",
       "source": "src/features/google-play-console/presentation/DeployRunbookControls.tsx",
-      "line": 128,
+      "line": 137,
       "element": "span",
       "semanticName": "text-11",
       "kind": "scoped-template"
@@ -24829,7 +24821,7 @@
     {
       "id": "props.id ? `${props.id}-text-13-ikfjlc` : undefined",
       "source": "src/features/google-play-console/presentation/DeployRunbookControls.tsx",
-      "line": 135,
+      "line": 144,
       "element": "span",
       "semanticName": "text-13",
       "kind": "scoped-template"
@@ -24837,7 +24829,7 @@
     {
       "id": "props.id ? `${props.id}-text-14-gxltb6` : undefined",
       "source": "src/features/google-play-console/presentation/DeployRunbookControls.tsx",
-      "line": 137,
+      "line": 146,
       "element": "span",
       "semanticName": "text-14",
       "kind": "scoped-template"

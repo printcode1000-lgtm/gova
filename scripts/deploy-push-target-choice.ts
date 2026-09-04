@@ -23,28 +23,22 @@ export const ALL_DEPLOY_PUSH_TARGETS: readonly DeployPushTarget[] = [
 
 export const VERCEL_TARGET_FLAG = "--vercel-target=";
 
+/**
+ * The prompt offers what a run can actually do, and nothing else.
+ *
+ * It used to list each isolated account, because a partial selection diverted to
+ * a maintenance deploy. That path is gone: `deploy:push` publishes the complete
+ * set or refuses, so an account key here would be a choice that always ends in a
+ * refusal. Deploy one account with its own `*:deploy` script.
+ */
 const CHOICES = [
   {
     key: "0",
     target: "none" as const,
-    label: "Nothing (maintenance no-op — no commit, no push, no deploy)",
-  },
-  { key: "1", target: "notifications" as const, label: "Notifications (asol-notifications)" },
-  { key: "2", target: "products" as const, label: "Products (asol-products)" },
-  { key: "3", target: "orders" as const, label: "Orders (asol-orders)" },
-  { key: "4", target: "profiles" as const, label: "Profiles (asol-profiles)" },
-  {
-    key: "5",
-    target: "submain" as const,
-    label: "Secondary full app (asol-submain, groupstenderximages@gmail.com)",
+    label: "Nothing — stop without committing, pushing or deploying",
   },
   {
-    key: "6",
-    target: "sub2main" as const,
-    label: "Third full app (asol-sub2main, tenderx.engineer100@gmail.com)",
-  },
-  {
-    key: "7",
+    key: "1",
     target: "all" as const,
     label: "Publish a release: control + all six isolated accounts + main",
   },
@@ -118,20 +112,24 @@ function expandSelection(
 
 function logResolvedTargets(source: string, targets: DeployPushTarget[]): void {
   if (targets.length === 0) {
-    console.log(
-      `[deploy:push] Service targets: none — secrets backup, GitHub push, and main verification only (${source}).`,
-    );
+    console.log(`[deploy:push] Service targets: none — nothing will be published (${source}).`);
     return;
   }
+  // The release console reads this line back with
+  // /\[deploy:push\] Service targets: ([^(]+)\(/, so the account list must stay
+  // between the label and the first parenthesis. Extra prose goes after it.
   console.log(
-    `[deploy:push] Service targets: ${targets.join(", ")}; main is always verified (${source}).`,
+    `[deploy:push] Service targets: ${targets.join(", ")} (${source}). ` +
+      "Control, readiness and main follow.",
   );
 }
 
 /**
- * Resolves which isolated Vercel service accounts `deploy:push` should deploy.
- * An empty result means GitHub push + main verification only.
- * `secrets:backup` is always run by the caller before publish steps.
+ * Resolves which isolated Vercel accounts `deploy:push` should deploy.
+ *
+ * The only publishing answer is the complete set. Anything else is refused by
+ * the caller, so this resolves to either all six isolated accounts or an empty
+ * selection that stops the run.
  */
 export async function resolveServiceDeployTargets(
   args: readonly string[],
@@ -149,21 +147,20 @@ export async function resolveServiceDeployTargets(
         "deploy:push needs a deployment scope and there is no terminal to ask.",
         "",
         "Pass one explicitly:",
-        "  --vercel-target=all           publish a release: control + all six + main",
-        "  --vercel-target=products      maintenance: deploy that account only",
-        "  --vercel-target=none          maintenance no-op",
+        "  --vercel-target=all    publish a release: control + all six + main",
+        "  --vercel-target=none   stop without committing, pushing or deploying",
         "",
-        `Service values: ${ALL_DEPLOY_PUSH_TARGETS.join(", ")}, all, main, or none.`,
-        "Only the complete set publishes. A partial selection deploys the named",
-        "accounts from the current HEAD and does not commit, push, or mark a SHA",
-        "ready — see docs/07-mobile-and-release/release-commands.md.",
+        "Only the complete set publishes. A partial selection is refused — deploy",
+        "one account with its own *:deploy script instead. See",
+        "docs/07-mobile-and-release/release-commands.md.",
       ].join("\n"),
     );
   }
 
-  console.log("\n[deploy:push] Choose Vercel service account(s) to deploy.");
+  console.log("\n[deploy:push] Choose what this run publishes.");
   console.log(
-    "secrets:backup, GitHub push, and main (gova) Vercel verification are always performed.\n",
+    "The complete set is the only publishing option: control, the six isolated\n" +
+      "accounts, exact-SHA readiness, and gova.\n",
   );
   for (const choice of CHOICES) {
     console.log(`  ${choice.key}) ${choice.label}`);
@@ -176,15 +173,13 @@ export async function resolveServiceDeployTargets(
       (choice) => choice.key === answer || choice.target === answer,
     );
     if (!chosen) {
-      console.log("Not one of the choices. Answer 0–7, or press Ctrl+C to stop.");
+      console.log(
+        `Not one of the choices. Answer ${CHOICES.map((choice) => choice.key).join(" or ")}, ` +
+          "or press Ctrl+C to stop.",
+      );
       continue;
     }
-    const targets =
-      chosen.target === "all"
-        ? [...ALL_DEPLOY_PUSH_TARGETS]
-        : chosen.target === "none"
-          ? []
-          : [chosen.target];
+    const targets = chosen.target === "all" ? [...ALL_DEPLOY_PUSH_TARGETS] : [];
     logResolvedTargets("from prompt", targets);
     console.log("");
     return targets;

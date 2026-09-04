@@ -19,16 +19,10 @@ export const DEPLOY_ALL_SCENARIO_VALUES = [
 
 export type DeployAllScenarioValue = (typeof DEPLOY_ALL_SCENARIO_VALUES)[number];
 
-export const DEPLOY_PUSH_TARGET_VALUES = [
-  "none",
-  "main",
-  "notifications",
-  "products",
-  "orders",
-  "profiles",
-  "submain",
-  "sub2main",
-  "all",
-] as const;
-
-export type DeployPushTargetValue = (typeof DEPLOY_PUSH_TARGET_VALUES)[number];
+/**
+ * There is deliberately no deploy:push target vocabulary.
+ *
+ * `deploy:push:fast` is pinned to `--fast --vercel-target=all` and refuses any
+ * partial selection, so a target enum here would describe choices no run can
+ * accept. Deploy one account on its own with its own `*:deploy` script.
+ */

@@ -11,7 +11,6 @@ import { addViolation, extractImports, rel } from './architecture-types';
  * listed here is still a deep import.
  */
 const VERCEL_DEPLOY_CORE_DOORS = new Set([
-  '@asol/vercel-deploy-core/github-push-identity',
   '@asol/vercel-deploy-core/remote-deploy-contracts',
   '@asol/vercel-deploy-core/remote-deploy-sandbox',
 ]);
