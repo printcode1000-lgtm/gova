@@ -2,11 +2,11 @@
 
 ## Purpose
 
-The canonical checkout at `/home/hesham/gova` is the default local-agent execution environment. GitHub `workflow_dispatch` through `local-agent-bootstrap.yml` is the primary remote bootstrap/entry path. Once an agent is operating locally, it edits the canonical checkout directly. The persistent Gateway remains available only as an explicitly requested managed/isolation mode.
+Before the first task action, every local agent asks the user to select an execution mode unless the task already selects one. Mode A is Gateway-managed isolation; Mode B edits the canonical checkout at `/home/hesham/gova` directly. GitHub `workflow_dispatch` through `local-agent-bootstrap.yml` is the primary remote bootstrap/entry path and does not select a mode.
 
 ## Remote branch model
 
-GitHub contains exactly two recognized remote branches: `main` and `integration`. `main` is the production/release branch and the canonical local checkout normally stays on its current branch while agents edit files directly. `integration` is used only when the user explicitly requests aggregation/integration work. Normal local-agent completion does not create an `agent/*` branch, does not move work to `integration`, and does not commit, push, or deploy unless the user explicitly requests those actions.
+GitHub contains exactly two recognized remote branches: `main` and `integration`. `main` is the production/release branch. Mode A explicitly authorizes a local `agent/*` branch and submitting verified work to `integration`; it never creates another remote branch or authorizes deployment. Mode B keeps the canonical checkout on its current branch and does not create an `agent/*` branch, move work to `integration`, commit, push, or deploy.
 
 ## Local layout
 
@@ -17,7 +17,7 @@ GitHub contains exactly two recognized remote branches: `main` and `integration`
 - Optional local client: `/home/hesham/.local/bin/gova-agent`
 - Read-only local monitor: `/home/hesham/.local/bin/gova-agent-monitor`
 
-## Default local-agent lifecycle
+## Mode B: direct local editing
 
 1. Work in `/home/hesham/gova` on its current local branch and working tree.
 2. Preserve every pre-existing local modification; never reset or relocate it merely to obtain isolation.
@@ -25,13 +25,13 @@ GitHub contains exactly two recognized remote branches: `main` and `integration`
 4. Run the smallest relevant non-browser verification locally.
 5. Stop with the verified changes still local unless the user explicitly asks for commit, push, integration, or deployment.
 
-This default lifecycle does **not** register an agent with localhost control, create a task/worktree, create an `agent/*` branch, acquire Gateway locks, or submit anything to `integration`.
+Mode B does **not** register an agent with localhost control, create a task/worktree, create an `agent/*` branch, acquire Gateway locks, or submit anything to `integration`.
 
-## Optional Gateway-managed isolation mode
+## Mode A: Gateway-managed isolation
 
-`gova-agent-gateway.service` may remain installed and running under systemd. Its presence does not select it as the execution path. Use Gateway registration, task state, locks, worktrees, handoffs, or `integration-submit` only when the user explicitly requests managed/isolation mode.
+`gova-agent-gateway.service` may remain installed and running under systemd. Use Gateway registration, task state, locks, worktrees, handoffs, and `integration-submit` when the user selects Mode A.
 
-In that explicit mode, the Gateway listens on TCP port `8765`; `/health` is public and mutation/state APIs require the local key stored outside Git in `/home/hesham/.config/gova-agent/auth`. Worktrees under `/home/hesham/gova-agents/` and `integration-submit` are optional capabilities of this mode, not steps in normal local-agent work.
+In Mode A, the Gateway listens on TCP port `8765`; `/health` is public and mutation/state APIs require the local key stored outside Git in `/home/hesham/.config/gova-agent/auth`. The selected flow creates its worktree under `/home/hesham/gova-agents/`, uses a local `agent/*` branch, and submits verified work through `integration-submit`.
 
 ## Unified local execution monitor
 
@@ -176,4 +176,3 @@ The desktop launcher opens one read-only terminal window containing Dashboard, A
 ### Stable single-window navigation
 
 The monitor uses numeric screen navigation: `1` Dashboard, `2` Agents, `3` GitHub, `4` Runtime, `5` Worktrees, and `6` Logs. Agent details use arrow keys plus Enter. Loading frames are shown only when the monitor starts or changes screens; periodic refreshes keep the current data visible until the refreshed snapshot is ready, preventing blank/flickering screens.
-
