@@ -1,6 +1,13 @@
 name: local-agent-bootstrap
 on:
   workflow_dispatch:
+    inputs:
+      execution_mode:
+        description: Gateway-managed execution mode
+        required: true
+        type: choice
+        options:
+          - A
 permissions:
   contents: read
 jobs:
@@ -12,5 +19,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          test "${{ inputs.execution_mode }}" = A
           test -d /home/hesham/gova/.git
           GOVA_AGENT_REPO=/home/hesham/gova bash /home/hesham/gova/tools/local-agent/install.sh

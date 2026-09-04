@@ -13,7 +13,7 @@ The repository must keep remote branch sprawl under control while allowing the u
 1. The only recognized remote branches are `main` and `integration`.
 2. `main` remains the production/release branch and `/home/hesham/gova` is the canonical local checkout.
 3. Before its first task action, every local agent asks the user to choose mode A or B unless the user already selected one in the task.
-4. Mode A is Gateway-managed isolation: it creates a task worktree under `/home/hesham/gova-agents`, a local `agent/*` branch, and Gateway task state/locks, then submits verified work to `integration`. The selection authorizes those steps but not deployment or another remote branch.
+4. Mode A is Gateway-managed isolation: Gateway requires one constrained GitHub dispatch of the self-hosted bootstrap before it permits the task worktree under `/home/hesham/gova-agents`, local `agent/*` branch, state/locks, and verified submission to `integration`. The selection authorizes those steps but not deployment or another remote branch.
 5. Mode B edits `/home/hesham/gova` directly in its current branch and working tree while preserving pre-existing local changes. It does not create a worktree, `agent/*` branch, Gateway task/session, lock/checkpoint/handoff, integration submission, commit, push, or deployment.
 6. GitHub `workflow_dispatch` through `.github/workflows/local-agent-bootstrap.yml` is the primary remote bootstrap/entry path to prepare or recover the local device.
 7. The bootstrap installs from `/home/hesham/gova` and must not create or reset an integration worktree.

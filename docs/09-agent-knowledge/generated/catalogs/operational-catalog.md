@@ -144,6 +144,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run ios:push:validate` | `npx tsx packages/native-core/scripts/validate-ios-push-policy.ts` |
 | `npm run ios:spm:normalize` | `npx tsx packages/native-core/scripts/normalize-capacitor-spm-paths.ts` |
 | `npm run lint` | `eslint .` |
+| `npm run main:deploy` | `npx tsx scripts/deploy-main-app.ts` |
 | `npm run maplibre:sync` | `npx tsx scripts/sync-maplibre-worker.ts` |
 | `npm run notifications:check:local` | `npx tsx scripts/check-localhost-notifications.ts` |
 | `npm run notifications:deploy` | `npx tsx scripts/deploy-service.ts notifications` |

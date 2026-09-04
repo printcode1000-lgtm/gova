@@ -62,7 +62,6 @@ import {
 import {
   type VercelDeploymentReport,
   type ProjectDeploymentBaseline,
-  waitForVercelProductionDeployment,
 } from "@asol/vercel-deploy-core";
 import {
   DEPLOY_ALL_PREFLIGHT_SECTIONS,
@@ -911,11 +910,6 @@ function assertDeploymentCredentials(): void {
         missingRuntime.map((entry) => `  - ${entry}`).join("\n"),
     );
   }
-  if (!existsSync(ROOT_VERCEL_LINK)) {
-    throw new Error(
-      ".vercel/project.json is required to identify the GitHub-linked main project.",
-    );
-  }
 }
 
 async function captureRollbackBaseline(): Promise<ProjectDeploymentBaseline[]> {
@@ -1068,30 +1062,21 @@ function fail(message: string, revision?: string): void {
   process.exitCode = 1;
 }
 
-async function verifyMainDeployment(input: {
+async function deployMainRuntime(input: {
   revision: string;
   comment: string;
 }): Promise<VercelDeploymentReport> {
-  const token = process.env.VERCEL_TOKEN?.trim();
-  if (!token) throw new Error("VERCEL_TOKEN is required to verify the GitHub-linked main deployment.");
-  if (!existsSync(ROOT_VERCEL_LINK)) {
-    throw new Error(".vercel/project.json is required to identify the GitHub-linked main project.");
-  }
-  const link = JSON.parse(readFileSync(ROOT_VERCEL_LINK, "utf8")) as {
-    projectId?: string;
-    orgId?: string;
-    projectName?: string;
-  };
-  if (!link.projectId) throw new Error("The main Vercel project link has no projectId.");
-  return waitForVercelProductionDeployment({
-    token,
-    project: link.projectId,
-    target: "main",
-    account: link.orgId ?? "personal",
-    comment: input.comment,
-    teamId: link.orgId,
-    revision: input.revision,
+  const report = await runDeploymentNpmScript("main:deploy", {
+    logPrefix: "deploy:all",
+    captureReport: true,
+    env: {
+      ASOL_DEPLOYMENT_RUN_ID: `main-${input.revision.slice(0, 12)}`,
+      ASOL_DEPLOYMENT_REVISION: input.revision,
+      ASOL_DEPLOYMENT_COMMENT: input.comment,
+    },
   });
+  if (!report) throw new Error("main:deploy returned no deployment report.");
+  return report;
 }
 
 interface PublishContext {
@@ -1255,7 +1240,7 @@ async function runPublishPhase(
       // name the revision that is now public, and how to take it back.
       context.pushedRevision = revision;
       console.log(
-        "[deploy:all] GitHub push completed; only the existing GitHub-linked main Vercel project will auto-deploy.",
+        "[deploy:all] GitHub push completed; gova will deploy only in the explicit main phase.",
       );
     },
     context,
@@ -1384,7 +1369,7 @@ async function runMainPhase(
       revision: publishContext.revision,
       inputHash: sourceHashFor(context),
       run: async () => {
-        mainReport = await verifyMainDeployment({
+        mainReport = await deployMainRuntime({
           revision: publishContext.revision,
           comment: publishContext.mainComment,
         });

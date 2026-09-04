@@ -130,6 +130,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run ios:push:validate` | `iOS`, `Tooling` | 1 |  | 0 |
 | `npm run ios:spm:normalize` | `iOS`, `Tooling` | 1 |  | 0 |
 | `npm run lint` | `Tooling` | 0 |  | 0 |
+| `npm run main:deploy` | `Tooling` | 1 |  | 0 |
 | `npm run maplibre:sync` | `Tooling` | 1 |  | 0 |
 | `npm run notifications:check:local` | `Tooling` | 1 |  | 0 |
 | `npm run notifications:deploy` | `Independent services`, `Tooling` | 1 |  | 0 |

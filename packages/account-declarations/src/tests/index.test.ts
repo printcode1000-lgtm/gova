@@ -176,8 +176,9 @@ function runTests(): void {
   }
   console.log('  ✔ No declaration references another account.');
 
-  // ---------------------------------------------------------------- gova is verification-only
+  // ---------------------------------------------------------------- gova is an explicit root deployment
   assert(GOVA_DECLARATION.serviceDir === undefined, 'gova has no serviceDir: it is the whole repo');
+  assert(GOVA_DECLARATION.deployFromRepositoryRoot === true, 'gova deploys explicitly from the repository root');
   assert(GOVA_DECLARATION.mirrorEntryPoints.length === 0, 'gova has no mirror');
   assert(SUBMAIN_DECLARATION.serviceDir === 'services/submain', 'submain deploys from services/submain');
   assert(SUBMAIN_DECLARATION.deployFromRepositoryRoot === undefined, 'submain is not a root deploy');
@@ -193,7 +194,7 @@ function runTests(): void {
     !SUB2MAIN_DECLARATION.requiredEnv.some((key) => key.startsWith('VERCEL_')),
     'sub2main runtime env must not include deploy tokens',
   );
-  console.log('  ✔ gova is verification-only; submain and sub2main are service deploys.');
+  console.log('  ✔ gova deploys explicitly from root; submain and sub2main are service deploys.');
 
   // ---------------------------------------------------------------- compositions stay off the engine
   // This is the regression that made layer 2 unwireable: each composition imported the

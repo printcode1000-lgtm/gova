@@ -150,6 +150,7 @@
     "smoke:deployed": "npx tsx scripts/check-deployed-origins.ts && npx tsx scripts/check-owned-route-reads.ts",
     "vercel:function-size:check": "npx tsx scripts/check-vercel-function-size.ts",
     "deploy:redeploy-main": "npx tsx scripts/redeploy-main-vercel.ts",
+    "main:deploy": "npx tsx scripts/deploy-main-app.ts",
     "db:migrate:users": "npx tsx packages/data-core/src/tooling/apply-users-migrations.ts",
     "notifications:check:local": "npx tsx scripts/check-localhost-notifications.ts",
     "control:sync": "npx tsx scripts/sync-control-service-sources.ts",

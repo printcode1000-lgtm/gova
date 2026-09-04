@@ -23,7 +23,7 @@ npm run test:compositions
 npm run test:account-declarations
 npm run test:data-core                # every database + offline schema parity
 npm run test:orders-core               # the order domain
-npm run github:ci-policy               # local guard: only docs/** GitHub workflow exists
+npm run github:ci-policy               # local guard: no GitHub production deployment workflow
 npm run docs:check                     # documentation contract (also the docs workflow)
 
 # Service deployments — the only check that builds what Vercel builds
@@ -60,7 +60,7 @@ npm run db:schema:sync:release   # required credentials; used by deploy:all pref
 npm run db:provision:turso
 npm run provision:mobile-push   # native outbound push credentials → .env.local
 npm run db:push:vercel-env      # Turso + bridge URLs + ASOL_MOBILE_PUSH_* when provisioned
-npm run deploy:redeploy-main    # pick up new env vars on the GitHub-linked main app
+npm run deploy:redeploy-main    # explicitly redeploy the main app after env updates
 npm run submain:deploy          # full app on submain (groupstenderximages@gmail.com)
 npm run sub2main:deploy         # full app on sub2main (tenderx.engineer100@gmail.com)
 npm run vercel:accounts:check   # read-only check for all seven Vercel account tokens
@@ -68,7 +68,7 @@ npm run deploy:all              # full gate: env/Vercel → checks/tests → DB 
 npm run deploy:all:preflight    # comprehensive preflight only, no commit/push/deploy
 npm run deploy:all:publish      # commit + push main only
 npm run deploy:all:services     # six CLI service deploys
-npm run deploy:all:main         # verify GitHub-linked gova READY
+npm run deploy:all:main         # explicitly deploy gova and verify READY
 npm run data-access:sync-public
 
 npm run secrets:backup

@@ -10,6 +10,7 @@ import {
   rollbackToBaseline,
 } from './release-rollback';
 import {
+  type VercelDeploymentReport,
   printDeploymentReport,
   vercelDeploymentMetadata,
   waitForVercelProductionDeployment,
@@ -592,7 +593,7 @@ export interface DeployAccountRootAppOptions {
  */
 export async function deployAccountRootApp(
   options: DeployAccountRootAppOptions,
-): Promise<void> {
+): Promise<VercelDeploymentReport> {
   const { declaration } = options;
   const env = options.env ?? process.env;
 
@@ -658,4 +659,5 @@ export async function deployAccountRootApp(
   if (report.state !== 'READY') {
     throw new Error(`Vercel verification failed: ${report.message}`);
   }
+  return report;
 }

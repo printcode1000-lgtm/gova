@@ -1,10 +1,8 @@
 # Super Admin Production Deploy
 
-Every GitHub `push` event for `main` also reaches the machine-only
-`/api/super-admin/production-deploy/github` endpoint using GitHub OIDC. The
-endpoint accepts only this repository's `deploy-main.yml`, pins the sandbox to
-the token's SHA, and launches `deploy:revision` for all targets. No Vercel,
-repository, archive, email, or notification secret is stored in GitHub.
+GitHub pushes do not start production deployments. The machine-only production
+deploy endpoint is reserved for authenticated explicit release requests; no
+Vercel, repository, archive, email, or notification secret is stored in GitHub.
 
 The terminal sandbox callback delivers the signed in-app notification directly
 to the notifications service and sends email independently. Failure messages

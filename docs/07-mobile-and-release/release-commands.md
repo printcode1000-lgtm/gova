@@ -19,15 +19,15 @@ file-level change list, verification evidence, and remaining external Vercel lim
 2. deploy the six workloads    notifications, products, orders, profiles, submain, sub2main
 3. deploy control              its own mandatory step, same SHA, never a seventh workload
 4. publish exact-SHA readiness POST to control's production-deploy callback
-5. verify main                 wait for the GitHub-linked gova deployment of that SHA
+5. deploy main                 explicitly deploy gova for that SHA and wait for READY
    on any failure              re-promote the captured baseline automatically
 ```
 
 ### Why the order is the contract
 
 **Readiness gates the frontend.** `build:vercel` — the Vercel build command for
-the GitHub-linked `gova` project — waits for the release state of its exact
-`VERCEL_GIT_COMMIT_SHA` to become `ready` *before* it produces a publishable
+the explicitly deployed `gova` project — waits for the release state of its exact
+release revision to become `ready` *before* it produces a publishable
 artifact. A `failed` state or a timeout fails the build closed, leaving the
 previous gova production deployment serving. So step 4 is the only thing that
 lets a frontend publish, and it must not run until steps 2 and 3 are READY.
@@ -117,16 +117,14 @@ leaving those checkpoints in place makes the next resume skip the deployments
 that were just reverted and then fail with no deployment report — the release
 becomes unretryable without deleting state by hand.
 
-## `deploy:revision` — the GitHub push path
+## `deploy:revision` — controlled maintenance path
 
 ```bash
 npm run deploy:revision -- --revision=<40-character-sha>
 ```
 
-Not run by hand. Every push to `main` reaches control's machine-only
-`/api/super-admin/production-deploy/github` endpoint over GitHub OIDC, and
-control starts this command inside the persistent Vercel Sandbox, pinned to the
-token's SHA.
+This command is reserved for controlled maintenance at an already-pushed SHA.
+An ordinary push to `main` never invokes it or deploys any Vercel project.
 
 It requires a clean checkout at that exact full SHA, never stages, commits, or
 pushes, and runs the transaction unchanged. It runs no gates: correctness is
@@ -158,25 +156,15 @@ dropped: the Vercel token round trip, the scratch-file, manifest-downgrade and
 non-empty refusals, `secrets:backup`, and the mirror builds below. What survives
 is only what costs nothing and cannot be recovered from afterwards — the branch
 check, the restore of absent release credentials (a no-op when they are present),
-and `VERCEL_TOKEN` plus `.vercel/project.json`, without which the run cannot
-deploy at all.
+and `VERCEL_TOKEN`, without which the run cannot deploy at all.
 
 The transaction itself is untouched: rollback baseline, control + six + main,
 the wait for `READY`, `smoke:deployed`, and automatic rollback on failure. So the
 result is still tracked and production still cannot stay broken.
 
-After the GitHub push but **before the first production mutation**, the publish
-path reads the exact commit's `Vercel` status from GitHub. An immediate Git-side
-rejection — including Vercel's deployment/build rate limit, where no deployment
-record exists to poll — aborts before any workload or control project changes.
-The same guard runs in `deploy:revision`, so a direct push cannot waste a full
-backend deployment cycle when the frontend is already known to be rejected.
-
-Deployment commits created by `deploy:push` (`deploy(push): ...`) and `deploy:all`
-(`deploy(main): ...`) already own this transaction. `deploy-main.yml` therefore
-skips those two commit prefixes; only an ordinary direct push dispatches the
-second-machine `deploy:revision` path. This prevents two release transactions for
-the same SHA from contending on the single-production-release lock.
+After the GitHub push, the release transaction explicitly deploys Vercel only
+after its control and workload prerequisites are READY. There is no GitHub-side
+Vercel deployment or second-machine release path to race with that transaction.
 
 Two guards are not optional under `--fast`:
 
@@ -234,7 +222,7 @@ barrier.
 | --- | --- | --- |
 | `ASOL_DEPLOY_CALLBACK_SECRET` | the publishing host **and** the `asol-control` project | Authenticates the readiness/terminal callback. Both sides compare the same value; without it on control the callback answers `503 productionDeployNotConfigured`, and without it locally the release fails before publishing readiness. |
 | `NEXT_PUBLIC_ASOL_CONTROL_URL` | the publishing host and the `gova` project | Where readiness is published, and where `build:vercel` polls for it. |
-| `VERCEL_TOKEN` + `.vercel/project.json` | the publishing host | Identifies and verifies the GitHub-linked main project. |
+| `VERCEL_TOKEN` | the publishing host | Explicitly deploys and verifies the main project. |
 | each account's `VERCEL_*_TOKEN` | the publishing host | Deploys that account and captures its rollback baseline. |
 
 Public origins (`NEXT_PUBLIC_ASOL_*_URL` for control and the six workloads) must

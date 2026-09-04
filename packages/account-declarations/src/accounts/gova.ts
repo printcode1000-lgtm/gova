@@ -4,7 +4,7 @@ import {
 } from './gova-runtime-env-keys';
 
 /**
- * gova after the cutover: the only GitHub-linked project, and a frontend.
+ * gova is a frontend deployed explicitly by the release commands.
  *
  * It requires the seven owner origins because its compatibility boundary
  * redirects to them, and nothing more. A frontend that declared a database or a
@@ -19,6 +19,7 @@ export const GOVA_DECLARATION = {
   email: 'print.code.1000@gmail.com',
   tokenEnvVar: 'VERCEL_TOKEN',
   serviceDir: undefined,
+  deployFromRepositoryRoot: true,
   requiredEnv: REQUIRED_ENV_KEYS,
   optionalEnv: OPTIONAL_ENV_KEYS,
   mirrorEntryPoints: [],

@@ -34,8 +34,8 @@ service so the super-admin result does not depend on an open browser.
 | | Main app | Control | Submain app | Sub2main app | Notifications | Products | Orders | Profiles |
 |---|---|---|---|---|---|---|---|---|
 | Vercel project | `gova` | `asol-control` | `asol-submain` | `asol-sub2main` | `asol-notifications` | `asol-products` | `asol-orders` | `asol-profiles` |
-| GitHub | connected — only `main` auto-deploys; all other branches are disabled by `vercel.json` | **not connected** | **not connected** | **not connected** | **not connected** | **not connected** | **not connected** | **not connected** |
-| Updated by | pushing to the repository | `npm run control:deploy` | `npm run submain:deploy` | `npm run sub2main:deploy` | `npm run notifications:deploy` | `npm run products:deploy` | `npm run orders:deploy` | `npm run profiles:deploy` |
+| GitHub | connected, but Git deployments are disabled for every branch | **not connected** | **not connected** | **not connected** | **not connected** | **not connected** | **not connected** | **not connected** |
+| Updated by | explicit release command (`deploy:all` or `deploy:push:fast`) | `npm run control:deploy` | `npm run submain:deploy` | `npm run sub2main:deploy` | `npm run notifications:deploy` | `npm run products:deploy` | `npm run orders:deploy` | `npm run profiles:deploy` |
 | Uploaded files | the gova deployment view | `services/control/` | the repository | the repository | `services/notifications/` | `services/products/` | `services/orders/` | `services/profiles/` |
 | Serves | frontend, `/api/health`, legacy `307` redirects | Super Admin operations, System Logs, OTA administration, release/readiness | isolated full-app staging | isolated full-app staging | push fan-out only | product reads only | the order list only | five profile reads |
 | Turso account | none | `hesham101` primary + system-ops shard | same runtime env as `gova` | same runtime env as `gova` | `hesham102` | `hesham103` | `hesham104` | `hesham105` |
@@ -65,18 +65,16 @@ to omit that target or make it a requirement of the main hosted build.
 
 ## One-command production deployment
 
-GitHub Actions is not a correctness gate. An ordinary direct `git push origin main`
-dispatches `deploy:revision` for the authenticated pushed SHA. Deployment commits
-created by `deploy:push` and `deploy:all` are excluded because those commands
-already own the same release transaction and dispatching it again would create a
-second release for the same SHA. In order, it
+GitHub Actions is not a correctness or deployment gate. An ordinary direct `git push origin main`
+never deploys any Vercel project. The explicit release commands own the only
+production transaction. In order, it
 captures the production rollback baseline for `gova`, `control`, and the six
 workloads; deploys the six isolated projects; deploys `control` at the same SHA
 through its own mandatory step; publishes durable exact-SHA release readiness to
 the control plane; and only then waits for the GitHub-linked main project. The
-gova build is blocked on that readiness (`build:vercel` waits before it produces
-a publishable artifact), so main is never verified against unfinished backends
-and a failed release leaves the previous gova production deployment active. Any
+gova build is started explicitly only after that readiness is published, so main
+is never deployed against unfinished backends and a failed release leaves the previous
+gova production deployment active. Any
 failure rolls back to the captured baseline automatically. The terminal callback
 then sends the super-admin push notification and email. A docs
 change additionally runs the path-filtered docs workflow. See
@@ -89,15 +87,16 @@ npm run deploy:all    # full preflight, then publish
 npm run deploy:push   # publish only — no lint/build/test gates
 ```
 
-Both publish through that same ordered transaction. A partial `--vercel-target=`
+Both publish through that same ordered transaction and explicitly deploy the gova
+project after release readiness. A partial `--vercel-target=`
 selection is maintenance, not a release: `deploy:push` deploys the named
 accounts from the current `HEAD` and does not commit, push, or mark any SHA
 ready. Only the complete control + six workload proof may release the gova build
 barrier.
 
 The internal `npm run deploy:revision -- --revision=<sha>` command is reserved
-for the authenticated automation path. It requires a clean checkout at that
-exact full SHA and never stages, commits, or pushes.
+for controlled maintenance. It requires a clean checkout at that exact full SHA
+and never stages, commits, or pushes.
 
 [release-commands.md](./release-commands.md) is the reference for all four
 commands, the transaction's ordering contract, the deployment commit's

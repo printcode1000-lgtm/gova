@@ -31,7 +31,7 @@ Mode B does **not** register an agent with localhost control, create a task/work
 
 `gova-agent-gateway.service` may remain installed and running under systemd. Use Gateway registration, task state, locks, worktrees, handoffs, and `integration-submit` when the user selects Mode A.
 
-In Mode A, the Gateway listens on TCP port `8765`; `/health` is public and mutation/state APIs require the local key stored outside Git in `/home/hesham/.config/gova-agent/auth`. The selected flow creates its worktree under `/home/hesham/gova-agents/`, uses a local `agent/*` branch, and submits verified work through `integration-submit`.
+In Mode A, the Gateway listens on TCP port `8765`; `/health` is public and mutation/state APIs require the local key stored outside Git in `/home/hesham/.config/gova-agent/auth`. Create the Mode-A task, run `gova-agent mode-a-bootstrap <agent> <task>` once, then wait for the manual GitHub dispatch to run the self-hosted bootstrap and restart the persistent service. Gateway rejects a worktree, command, lock, or integration submission until that dispatch is recorded. The selected flow then creates its worktree under `/home/hesham/gova-agents/`, uses a local `agent/*` branch, and submits verified work through `integration-submit`.
 
 ## Unified local execution monitor
 

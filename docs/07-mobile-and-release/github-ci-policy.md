@@ -4,11 +4,10 @@ GitHub `workflow_dispatch` through `local-agent-bootstrap.yml` is the primary re
 
 ## Allowed workflows
 
-Exactly three workflow files may exist under `.github/workflows/`:
+Exactly two workflow files may exist under `.github/workflows/`:
 
 | Workflow | Trigger | Purpose |
 |---|---|---|
-| `deploy-main.yml` | push to `main` | Production deployment orchestration |
 | `docs.yml` | documentation-related push/PR | Documentation validation |
 | `local-agent-bootstrap.yml` | manual `workflow_dispatch` only | Prepare/recover local-agent infrastructure from the canonical checkout |
 
@@ -16,7 +15,7 @@ Exactly three workflow files may exist under `.github/workflows/`:
 
 ## Agent execution modes
 
-Mode A registers with Gateway, creates an isolated task worktree under `/home/hesham/gova-agents` and a local `agent/*` branch, uses Gateway state/locks, and submits verified work to `integration`. The user's Mode A selection authorizes those steps, but never a third remote branch or deployment.
+Mode A registers with Gateway, creates a Mode-A task, and performs exactly one constrained GitHub dispatch of `local-agent-bootstrap.yml` on `main`. The self-hosted runner installs and enables the persistent Gateway, after which Gateway allows the isolated task worktree, local `agent/*` branch, locks, and verified submission to `integration`. The user's Mode A selection authorizes those steps, but never a third remote branch or deployment.
 
 Mode B uses the existing canonical working tree at `/home/hesham/gova`, preserves pre-existing local changes, edits the requested files directly, runs relevant non-browser verification, and leaves the result local. It must not register with `gova-agent-gateway`, create a per-task worktree or `agent/*` branch, use Gateway locks/checkpoints/handoffs, submit to `integration`, commit, push, or deploy.
 
@@ -28,9 +27,7 @@ The only remote branches are `main` and `integration`. `main` is production/rele
 
 ## Deployment filtering
 
-`deploy-main.yml` excludes `tools/local-agent/**` and documentation/control-only paths because local-agent tooling changes do not alter the served application. It also skips release-owned deploy commits whose creating command already runs the production transaction.
-
-The GitHub-linked `gova` Vercel project accepts automatic Git deployments for `main` only. `integration` and every other branch create no Vercel deployment.
+No GitHub Actions workflow deploys production. The Git-linked `gova` Vercel project has Git deployments disabled for every branch. Production deployment occurs only through the explicit release commands, including `npm run deploy:all` and `npm run deploy:push:fast`.
 
 ## Prohibited
 

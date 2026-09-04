@@ -24,7 +24,6 @@ import {
 import {
   type VercelDeploymentReport,
   verifyAccountTokenAccess,
-  waitForVercelProductionDeployment,
 } from "@asol/vercel-deploy-core";
 import { ACCOUNT_DECLARATIONS } from "@asol/account-declarations";
 import { ensureReleaseSecretsRestored } from "./ensure-release-secrets-restored";
@@ -263,11 +262,6 @@ function assertMainDeploymentCredentials(): void {
   if (!process.env.VERCEL_TOKEN?.trim()) {
     throw new Error(
       "VERCEL_TOKEN is required to verify the main Vercel deployment. Set it before running deploy:push.",
-    );
-  }
-  if (!existsSync(ROOT_VERCEL_LINK)) {
-    throw new Error(
-      ".vercel/project.json is required to identify the GitHub-linked main project.",
     );
   }
 }
@@ -518,32 +512,21 @@ async function runTargetedMaintenanceDeploy(
   );
 }
 
-async function verifyMainDeployment(input: {
+async function deployMainRuntime(input: {
   revision: string;
   comment: string;
 }): Promise<VercelDeploymentReport> {
-  const token = process.env.VERCEL_TOKEN?.trim();
-  if (!token) {
-    throw new Error("VERCEL_TOKEN is required to verify the GitHub-linked main deployment.");
-  }
-  if (!existsSync(ROOT_VERCEL_LINK)) {
-    throw new Error(".vercel/project.json is required to identify the GitHub-linked main project.");
-  }
-  const link = JSON.parse(readFileSync(ROOT_VERCEL_LINK, "utf8")) as {
-    projectId?: string;
-    orgId?: string;
-    projectName?: string;
-  };
-  if (!link.projectId) throw new Error("The main Vercel project link has no projectId.");
-  return waitForVercelProductionDeployment({
-    token,
-    project: link.projectId,
-    target: "main",
-    account: link.orgId ?? "personal",
-    comment: input.comment,
-    teamId: link.orgId,
-    revision: input.revision,
+  const report = await runDeploymentNpmScript("main:deploy", {
+    logPrefix: "deploy:push",
+    captureReport: true,
+    env: {
+      ASOL_DEPLOYMENT_RUN_ID: `main-${input.revision.slice(0, 12)}`,
+      ASOL_DEPLOYMENT_REVISION: input.revision,
+      ASOL_DEPLOYMENT_COMMENT: input.comment,
+    },
   });
+  if (!report) throw new Error("main:deploy returned no deployment report.");
+  return report;
 }
 
 async function deploySelectedAccounts(input: {
@@ -675,8 +658,7 @@ async function runReleaseTransaction(input: {
       }),
     );
 
-    // Only now may the GitHub-linked gova build publish: the barrier it waits on
-    // is this state, and nothing else in this process may mark the SHA ready.
+    // Only now may the explicit gova deploy publish: all owned backends are READY.
     readinessPublished = true;
     await publishReleaseReadiness({
       revision: input.revision,
@@ -692,7 +674,7 @@ async function runReleaseTransaction(input: {
 
     // Sequential on purpose. Verifying main while the backends were still
     // deploying is what let a gova build publish against unfinished runtimes.
-    const mainReport = await verifyMainDeployment({
+    const mainReport = await deployMainRuntime({
       revision: input.revision,
       comment: input.mainComment,
     });
@@ -758,7 +740,6 @@ export async function deployExistingRevision(revision: string): Promise<void> {
   const targets = [...ALL_DEPLOY_PUSH_TARGETS];
   await ensureReleaseSecretsRestored("deploy:revision");
   assertMainDeploymentCredentials();
-  await assertMainGitDeploymentNotRejected(normalizedRevision);
   await assertVercelAccountsForTargets(targets);
 
   const timestamp = new Date().toISOString();
@@ -936,14 +917,6 @@ async function main(): Promise<void> {
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     fail(message);
-    return;
-  }
-
-  try {
-    await assertMainGitDeploymentNotRejected(revision);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    fail(message, revision);
     return;
   }
 

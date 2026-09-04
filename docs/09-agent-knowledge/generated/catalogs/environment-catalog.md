@@ -248,5 +248,5 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `VERCEL_SUBMAIN_ORG_ID` | server/tooling | 0 |  |
 | `VERCEL_SUBMAIN_TOKEN` | server/tooling | 1 | `scripts/recreate-submain-vercel-project.ts` |
 | `VERCEL_TEAM_ID` | server/tooling | 3 | `scripts/push-production-deploy-env.ts`, `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` |
-| `VERCEL_TOKEN` | server/tooling | 6 | `scripts/deploy-all.ts`, `scripts/deploy-push.ts`, `scripts/push-gova-cors-origins.ts`, `scripts/push-production-deploy-env.ts`, `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` |
+| `VERCEL_TOKEN` | server/tooling | 5 | `scripts/deploy-push.ts`, `scripts/push-gova-cors-origins.ts`, `scripts/push-production-deploy-env.ts`, `scripts/push-vercel-turso-env.ts`, `scripts/redeploy-main-vercel.ts` |
 | `WEB_PUSH_VAPID_PRIVATE_KEY` | server/tooling | 2 | `services/notifications/src/app/api/health/route.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` |

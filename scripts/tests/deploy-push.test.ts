@@ -124,7 +124,7 @@ await assert.doesNotReject(() =>
 const vercelConfig = JSON.parse(
   readFileSync(new URL("../../vercel.json", import.meta.url), "utf8"),
 ) as { git?: { deploymentEnabled?: Record<string, boolean> }; ignoreCommand?: unknown };
-assert.deepEqual(vercelConfig.git?.deploymentEnabled, { "*": false, main: true });
+assert.deepEqual(vercelConfig.git?.deploymentEnabled, { "*": false, main: false });
 assert.equal("ignoreCommand" in vercelConfig, false);
 const deployPushSource = readFileSync(new URL("../deploy-push.ts", import.meta.url), "utf8");
 
@@ -146,7 +146,7 @@ assert.match(
 );
 const maintenanceBody = deployPushSource.slice(
   deployPushSource.indexOf("async function runTargetedMaintenanceDeploy("),
-  deployPushSource.indexOf("async function verifyMainDeployment("),
+  deployPushSource.indexOf("async function deployMainRuntime("),
 );
 for (const forbidden of ["pushMainBranch(", "publishReleaseReadiness(", '"commit"']) {
   assert.ok(
@@ -212,8 +212,8 @@ assert.match(
 
 assert.ok(
   transactionBody.indexOf("publishReleaseReadiness(") <
-    transactionBody.indexOf("await verifyMainDeployment("),
-  "Readiness must be published before main verification waits for the gova deployment.",
+    transactionBody.indexOf("await deployMainRuntime("),
+  "Readiness must be published before the explicit gova deployment.",
 );
 
 /**
@@ -254,16 +254,6 @@ assert.ok(
 assert.ok(
   mainFn.indexOf("advanceToOriginMain()") < mainFn.indexOf('"git", ["add", "-A"]'),
   "deploy:push must advance HEAD to origin/main before it stages the tree.",
-);
-assert.ok(
-  mainFn.indexOf("verifyGitHubPush(revision)") <
-    mainFn.indexOf("await assertMainGitDeploymentNotRejected(revision)"),
-  "The early Vercel status gate must inspect the commit only after GitHub accepted the push.",
-);
-assert.ok(
-  mainFn.indexOf("await assertMainGitDeploymentNotRejected(revision)") <
-    mainFn.indexOf("runReleaseTransaction({"),
-  "A rejected main Git deployment must stop deploy:push before the release transaction mutates production.",
 );
 const advance = deployPushSource.slice(
   deployPushSource.indexOf("function advanceToOriginMain("),

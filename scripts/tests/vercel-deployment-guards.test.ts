@@ -49,7 +49,6 @@ const pkg = JSON.parse(read("package.json")) as {
 };
 const buildSource = read("scripts/vercel-deployment-build.ts");
 const guardSource = read("scripts/vercel-deployment-guards.ts");
-const deployWorkflowSource = read(".github/workflows/deploy-main.yml");
 
 assert.equal(
   vercelConfig.installCommand,
@@ -131,20 +130,6 @@ assert.throws(
 assert.throws(
   () => parseReleaseReadinessResponse(revision, { revision, status: "succeeded" }),
   /InvalidStatus/,
-);
-
-// The main-push dispatcher must talk only to the stable control alias. A
-// regression back to gova recreates the release race and keeps operational
-// Business API execution in the frontend deployment.
-assert.match(
-  deployWorkflowSource,
-  /ASOL_CONTROL_DEPLOY_ENDPOINT:\s*https:\/\/asol-control\.vercel\.app\/api\/super-admin\/production-deploy\/github/,
-);
-assert.doesNotMatch(deployWorkflowSource, /gova-swart\.vercel\.app\/api\/super-admin\/production-deploy\/github/);
-assert.equal(
-  [...deployWorkflowSource.matchAll(/const endpoint = process\.env\.ASOL_CONTROL_DEPLOY_ENDPOINT;/g)].length,
-  2,
-  "both self-hosted and GitHub-hosted paths must dispatch through ASOL Control.",
 );
 
 // ── Environment ownership is per runtime, never a union ──────────────────────
