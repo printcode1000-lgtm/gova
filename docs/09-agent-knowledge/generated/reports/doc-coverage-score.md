@@ -8,7 +8,7 @@
 Runtime coverage is inherited from each owner's owned source/test/script nodes, not only direct owner edges.
 
 Owners scored: **98**
-Average coverage: **82%**
+Average coverage: **83%**
 Weak owners (<70%): **11**
 
 | Owner | Kind | Owner | Docs | Tests | Runtime | Consumers | Dependencies | Cmd/Cfg/Env | Runtime tests | Score |
@@ -53,7 +53,6 @@ Weak owners (<70%): **11**
 | `src/features/product-search` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
 | `src/features/profile-products` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
 | `src/features/profile-working-hours` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
-| `src/features/seller-card` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
 | `src/features/settings` | feature | yes | yes | yes | yes | NO | yes | NO | yes | 75% |
 | `src/features/vehicle-catalog` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
 | `packages/account-bridge` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
@@ -93,6 +92,7 @@ Weak owners (<70%): **11**
 | `src/features/profile` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/qr-code` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/release-commands` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
+| `src/features/seller-card` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/seller-discounts` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/sharing` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/specialty-chat` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |

@@ -374,6 +374,13 @@ npm run release:check
 
 ### The gate that asks the eight deployed origins
 
+The command prints `All 9 deployed origin(s) answered…`. There are **eight**
+origins; the ninth entry is a second probe against `gova`, not a ninth account.
+`buildProbes()` returns `mainDeployedSmokeProbes()` (two: gova's own
+`/api/health`, plus a legacy Business API path that must answer `307` and hand
+the caller to its owner instead of executing it), then control, then the six
+workloads. The script's own message counts probes while calling them origins.
+
 `npm run smoke:deployed` (`scripts/check-deployed-origins.ts`) runs as the
 `deployed-smoke` branch of the `main` phase, right after `main-serving`.
 

@@ -55716,6 +55716,18 @@
       ]
     },
     {
+      "id": "test:src/features/seller-card/application/services/seller-card-presenter.test.ts",
+      "kind": "test",
+      "name": "seller-card-presenter.test.ts",
+      "path": "src/features/seller-card/application/services/seller-card-presenter.test.ts",
+      "tags": [
+        "src/features/seller-card/application/services/seller-card-presenter",
+        "src/features/seller-card/application/services/seller-card-presenter.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:src/features/seller-discounts/tests/seller-discount-engine.test.ts",
       "kind": "test",
       "name": "seller-discount-engine.test.ts",
@@ -97329,6 +97341,12 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "test:src/features/seller-card/application/services/seller-card-presenter.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "test:src/features/seller-discounts/tests/seller-discount-engine.test.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -98496,6 +98514,12 @@
       "to": "test:src/features/product/tests/products-service-module-contract.test.ts",
       "kind": "documents",
       "detail": "src/features/product/"
+    },
+    {
+      "from": "domain:products-and-commerce",
+      "to": "test:src/features/seller-card/application/services/seller-card-presenter.test.ts",
+      "kind": "documents",
+      "detail": "src/features/seller-card/"
     },
     {
       "from": "domain:products-and-commerce",
@@ -107158,6 +107182,12 @@
     {
       "from": "domain:ui-components",
       "to": "test:src/features/release-commands/tests/release-commands.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "test:src/features/seller-card/application/services/seller-card-presenter.test.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -119216,6 +119246,12 @@
     },
     {
       "from": "route:/api/profile/users-by-specialty:handler",
+      "to": "feature:storage",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/profile/users-by-specialty:handler",
       "to": "feature:system-logs",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -119295,6 +119331,12 @@
     {
       "from": "route:/api/profile/users-by-specialty:handler",
       "to": "package:@asol/product-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/profile/users-by-specialty:handler",
+      "to": "package:@asol/signed-token-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -182770,6 +182812,12 @@
       "to": "source:src/core/api/traced-route.ts",
       "kind": "imports",
       "detail": "@/core/api/traced-route"
+    },
+    {
+      "from": "source:src/app/api/profile/users-by-specialty/route.ts",
+      "to": "source:src/features/auth/server.ts",
+      "kind": "imports",
+      "detail": "@/features/auth/server"
     },
     {
       "from": "source:src/app/api/profile/users-by-specialty/route.ts",
@@ -249350,6 +249398,58 @@
     {
       "from": "test:src/features/release-commands/tests/release-commands.test.ts",
       "to": "source:src/core/config/test-env.ts",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/seller-card/application/services/seller-card-presenter.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/seller-card/application/services/seller-card-presenter.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/seller-card/application/services/seller-card-presenter.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/seller-card/application/services/seller-card-presenter.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/seller-card/application/services/seller-card-presenter.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/seller-card/application/services/seller-card-presenter.test.ts",
+      "to": "feature:seller-card",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:src/features/seller-card/application/services/seller-card-presenter.test.ts",
+      "to": "source:src/features/profile/index.ts",
+      "kind": "imports",
+      "detail": "@/features/profile"
+    },
+    {
+      "from": "test:src/features/seller-card/application/services/seller-card-presenter.test.ts",
+      "to": "source:src/features/seller-card/application/services/seller-card-presenter.ts",
+      "kind": "imports",
+      "detail": "./seller-card-presenter"
+    },
+    {
+      "from": "test:src/features/seller-card/application/services/seller-card-presenter.test.ts",
+      "to": "feature:profile",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/seller-card/application/services/seller-card-presenter.test.ts",
+      "to": "feature:seller-card",
       "kind": "tests"
     },
     {
