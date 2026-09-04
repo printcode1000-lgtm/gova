@@ -56,13 +56,6 @@ function actionClass(action: SellerCardAction) {
   return "bg-surface-container-low text-on-surface";
 }
 
-function badgeClass(tone: SellerCardViewModel["badges"][number]["tone"]) {
-  if (tone === "danger") return "bg-destructive/10 text-destructive";
-  if (tone === "primary") return "bg-primary/10 text-primary";
-  if (tone === "tertiary") return "bg-tertiary/15 text-tertiary";
-  return "bg-surface-container-high text-on-surface-variant";
-}
-
 export function SellerCard({ id,
   card,
   variant,
@@ -123,19 +116,9 @@ export function SellerCard({ id,
           {card.ratingText ? (
             <p id="features-seller-card-presentation-sellercard-text-9-yxq7sa" className="mt-1 text-[11px] font-medium text-tertiary">{card.ratingText}</p>
           ) : null}
-          {card.identityLabel || card.badges.length > 0 ? (
-            <div id="features-seller-card-presentation-sellercard-div-10-cduns8" className="mt-2 flex flex-wrap justify-center gap-1 text-[10px] text-on-surface-variant">
-              {card.identityLabel || null}
-              {card.badges.map((badge, badgeIndex) => (
-                <span
-                  key={badge.label}
-                  className={`rounded-full px-1.5 py-0.5 text-[10px] font-medium ${badgeClass(badge.tone)}`}
-                >
-                  {badge.label}
-                </span>
-              ))}
-            </div>
-          ) : null}
+          <div id="features-seller-card-presentation-sellercard-div-10-cduns8" className="mt-2 text-center text-[10px] text-on-surface-variant">
+            {card.identityLabel}
+          </div>
         </div>
       </button>
       {actions.length > 0 ? (

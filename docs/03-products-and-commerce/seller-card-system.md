@@ -92,10 +92,11 @@ interface SellerCardViewModel {
 
 The presenter safely derives:
 
-- `title` from the structured `storeName` field. A UID is never presented as a
-  store name; cards omit the title when the profile has no store name.
-- `identityLabel` from `storeName`, falling back to `primaryPhone` when the store
-  name is empty. The UID is never used as visible fallback identity text.
+- `title` from the structured `storeName` field and also accepts `store_name`
+  from raw `SELECT p.*` profile rows. A UID is never presented as a store name.
+- `identityLabel` from the normalized store name, falling back only to the
+  registration phone supplied as `registrationPhone` or `registration_phone`.
+  The UID and profile `primaryPhone` are never used as visible fallback identity text.
 - `description` from store description or story.
 - `avatarUrl` from available avatar URL fields when present.
 - `initials` from the display name when no image exists.
@@ -104,6 +105,18 @@ The presenter safely derives:
 ```text
 /profile?mode=view&uid=...
 ```
+
+`GET /api/profile/users-by-specialty` enriches each returned profile with
+`registrationPhone` from `authService.getUserPhone(uid)` before the client builds
+seller cards.
+
+## Identity Element Contract
+
+`features-seller-card-presentation-sellercard-div-10-cduns8` is always rendered
+inside `features-seller-card-presentation-sellercard-button-2-nwaag6`. It renders
+only `identityLabel`, never UID, badges, or any other secondary content. When no
+store alias/name or registration phone is available, the element stays mounted
+and remains empty instead of disappearing or substituting another identifier.
 
 ## Actions
 
@@ -140,17 +153,17 @@ The system is currently used by:
 The seller-card feature module is responsible for:
 
 - Safe JSON parsing.
-- Store/provider identity presentation using store name with primary-phone fallback, without exposing UID as display text.
+- Store/provider identity presentation using store name with registration-phone fallback, without exposing UID as display text.
 - Avatar fallback.
 - Canonical profile URL.
-- Optional badges.
+- Optional badge data in the view model.
 - Rating text when rating data is available.
 
 The UI component is responsible for:
 
 - Rendering layout variants.
 - Rendering image or initials fallback.
-- Rendering badges.
+- Keeping the identity element mounted inside the primary card button and rendering only `identityLabel` inside it.
 - Rendering context actions.
 - Avoiding nested interactive elements.
 
