@@ -13,6 +13,8 @@ import path from "node:path";
 const ROOT = process.cwd();
 const DOCS_WORKFLOW = "docs.yml";
 const LOCAL_AGENT_BOOTSTRAP_WORKFLOW = "local-agent-bootstrap.yml";
+const LOCAL_AGENT_PROJECT_WORKFLOW = "local-agent-project.yml";
+const LOCAL_AGENT_PROJECT_SCRIPT = path.join("tools", "local-agent", "project.sh");
 
 /**
  * Control-plane paths that must never trigger a production deployment. A
@@ -37,7 +39,7 @@ const RUNNER_SELECTOR_API = "listSelfHostedRunnersForRepo";
 const RUNNER_STATUS_SECRET = "secrets.GOVA_RUNNER_STATUS_TOKEN";
 export const RELEASE_OWNED_COMMIT_PREFIXES = ["deploy(push):", "deploy(main):"] as const;
 
-export const ALLOWED_WORKFLOW_FILES = [DOCS_WORKFLOW, LOCAL_AGENT_BOOTSTRAP_WORKFLOW] as const;
+export const ALLOWED_WORKFLOW_FILES = [DOCS_WORKFLOW, LOCAL_AGENT_BOOTSTRAP_WORKFLOW, LOCAL_AGENT_PROJECT_WORKFLOW] as const;
 
 const FORBIDDEN_EVENTS = [
   "pull_request_target",
@@ -160,6 +162,7 @@ export const DOCS_WORKFLOW_PATH_FILTERS = [
   "package-lock.json",
   ".github/workflows/docs.yml",
   ".github/workflows/local-agent-bootstrap.yml",
+  ".github/workflows/local-agent-project.yml",
   "tools/local-agent/**",
 ] as const;
 
@@ -419,6 +422,46 @@ export function localAgentBootstrapWorkflowViolations(source: string): string[] 
   return errors;
 }
 
+/**
+ * The cloud Mode-B projection workflow.
+ *
+ * It is a command channel, so its whole safety argument is that it carries no
+ * commands: the dispatch names an agent, a task, and a commit already published
+ * on `integration`, and every step of judging and applying that commit lives in
+ * `tools/local-agent/project.sh` inside the canonical checkout. A workflow that
+ * could run its own `npm` line, take a secret, or reach a GitHub-hosted runner
+ * would be a second, unreviewed way into `/home/hesham/gova`.
+ */
+export function localAgentProjectWorkflowViolations(source: string): string[] {
+  const errors: string[] = [];
+  const body = stripYamlComments(source);
+  if (!/^name:\s*local-agent-project\s*$/m.test(body)) errors.push("Local agent projection workflow name must be exactly `local-agent-project`.");
+  if (!/^ {2}workflow_dispatch:\s*$/m.test(body)) errors.push("Local agent projection workflow must be manually dispatched.");
+  if (/(^|\n)\s*(push|pull_request)\s*:/m.test(body)) errors.push("Local agent projection must not run on push or pull_request.");
+  for (const event of FORBIDDEN_EVENTS) {
+    const asKey = new RegExp(`(^|\\n)\\s*${event}\\s*:`, "m");
+    if (asKey.test(body)) errors.push(`GitHub event ${event} is forbidden for the local agent projection workflow.`);
+  }
+  for (const input of ["agent_id", "task_id", "goal", "integration_sha"]) {
+    if (!new RegExp(`^\\s{6}${input}:\\s*$`, "m").test(body)) errors.push(`Local agent projection must declare the ${input} workflow_dispatch input.`);
+  }
+  if (!body.includes("permissions:") || !body.includes("contents: read") || body.includes("contents: write")) errors.push("Local agent projection must be repository read-only.");
+  if (!body.includes(SELF_HOSTED_RUNNER) || body.includes(GITHUB_HOSTED_RUNNER)) errors.push("Local agent projection must run only on the gova self-hosted runner.");
+  if (body.includes("${{ secrets.")) errors.push("Local agent projection must not consume GitHub secrets.");
+  const reinstallSteps = ["actions/checkout@", "actions/setup-node@", "npm ci"].filter((step) => body.includes(step));
+  if (reinstallSteps.length > 0) errors.push(`Local agent projection must reuse the host checkout/toolchain. Forbidden step(s): ${reinstallSteps.join(", ")}.`);
+  if (!body.includes("GOVA_AGENT_REPO=/home/hesham/gova") || !body.includes("/home/hesham/gova/tools/local-agent/project.sh")) {
+    errors.push("Local agent projection must run tools/local-agent/project.sh from the canonical checkout `/home/hesham/gova`.");
+  }
+  if (/(^|\n)\s*(?:-\s*)?run:[\s\S]*?\bnpm\b/.test(body.replace("/home/hesham/gova/tools/local-agent/project.sh", ""))) {
+    errors.push("Local agent projection must not invoke npm directly; verification belongs to tools/local-agent/project.sh.");
+  }
+  if (body.includes("git push") || body.includes("refs/heads/main")) errors.push("Local agent projection must never push or address main.");
+  const jobIds = docsWorkflowJobIds(body);
+  if (jobIds.length !== 1 || jobIds[0] !== "project") errors.push(`Local agent projection must contain exactly one project job. Found: ${jobIds.join(", ") || "(none)"}.`);
+  return errors;
+}
+
 export function collectGithubCiPolicyErrors(root = ROOT): string[] {
   const errors: string[] = [];
   const workflowsDir = path.join(root, ".github", "workflows");
@@ -440,6 +483,16 @@ export function collectGithubCiPolicyErrors(root = ROOT): string[] {
   const bootstrapPath = path.join(workflowsDir, LOCAL_AGENT_BOOTSTRAP_WORKFLOW);
   if (existsSync(bootstrapPath)) errors.push(...localAgentBootstrapWorkflowViolations(readFileSync(bootstrapPath, "utf8")));
   else errors.push(`Missing .github/workflows/${LOCAL_AGENT_BOOTSTRAP_WORKFLOW}.`);
+  const projectPath = path.join(workflowsDir, LOCAL_AGENT_PROJECT_WORKFLOW);
+  if (existsSync(projectPath)) errors.push(...localAgentProjectWorkflowViolations(readFileSync(projectPath, "utf8")));
+  else errors.push(`Missing .github/workflows/${LOCAL_AGENT_PROJECT_WORKFLOW}.`);
+  const projectScriptPath = path.join(root, LOCAL_AGENT_PROJECT_SCRIPT);
+  if (!existsSync(projectScriptPath)) errors.push(`Missing ${LOCAL_AGENT_PROJECT_SCRIPT.replace(/\\/g, "/")}, which the projection workflow runs.`);
+  else {
+    const script = readFileSync(projectScriptPath, "utf8");
+    if (/\bgit\s+push\b/.test(script)) errors.push("Local agent projection script must never push a Git ref.");
+    if (!script.includes("merge-base --is-ancestor")) errors.push("Local agent projection script must reject a commit that is not published on origin/integration.");
+  }
   const blockBranchesPath = path.join(root, "scripts", "block-branch-creation.ts");
   if (existsSync(blockBranchesPath)) {
     const source = readFileSync(blockBranchesPath, "utf8");
@@ -475,6 +528,6 @@ if (executedDirectly) {
     for (const error of errors) console.error(`- ${error}`);
     process.exitCode = 1;
   } else {
-    console.log("GitHub CI policy passed: docs validation plus manual local-agent bootstrap; no automatic deployment.");
+    console.log("GitHub CI policy passed: docs validation, manual local-agent bootstrap, manual cloud Mode-B projection; no automatic deployment.");
   }
 }

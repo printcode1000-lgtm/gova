@@ -9,7 +9,7 @@ const packageJson = JSON.parse(read('package.json')) as { scripts?: Record<strin
 const workflows = readdirSync(path.join(root, '.github', 'workflows')).filter((file) => /\.ya?ml$/i.test(file)).sort();
 
 assert.deepEqual(vercel.git?.deploymentEnabled, { '*': false, main: false });
-assert.deepEqual(workflows, ['docs.yml', 'local-agent-bootstrap.yml']);
+assert.deepEqual(workflows, ['docs.yml', 'local-agent-bootstrap.yml', 'local-agent-project.yml']);
 assert.equal(existsSync(path.join(root, '.github', 'workflows', 'deploy-main.yml')), false);
 for (const script of ['deploy:revision', 'deploy:redeploy-main', 'deploy:push:main', 'deploy:push:all', 'deploy:all:services', 'deploy:all:main', 'deploy:all:preflight', 'deploy:all:publish', 'deploy:env:push']) {
   assert.equal(script in (packageJson.scripts ?? {}), false, `${script} must not be callable.`);

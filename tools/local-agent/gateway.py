@@ -348,6 +348,30 @@ def project_cloud_bridge_commit(agent_id, task_id, integration_sha):
     event('canonical-projected',agent_id,task_id,{'sha':integration_sha,'paths':sorted(paths)})
     return sorted(paths)
 
+def canonical_project(agent_id, task_id, integration_sha):
+    """Project an already published `integration` commit onto the canonical checkout.
+
+    This is the whole Gateway surface the cloud Mode-B path uses. The agent never
+    reaches this process over a network: it pushed its verified commit to
+    `integration`, and the self-hosted runner on this machine asks for the
+    projection from `127.0.0.1`. `require_mode_a_bootstrap` is deliberately not a
+    precondition here — the bootstrap guard exists to prove the managed runtime is
+    installed and running, and a request arriving from the local runner is that
+    same proof.
+
+    What is verified instead is the commit itself: only a full SHA that is an
+    ancestor of `origin/integration` may be projected, so nothing outside the
+    aggregation branch can reach `/home/hesham/gova` through this endpoint.
+    """
+    sha = str(integration_sha).strip().lower()
+    if not re.fullmatch(r'[0-9a-f]{40}', sha): raise RuntimeError('integration_sha must be a full 40-character commit SHA')
+    mode, transport = task_execution(task_id)
+    if mode != 'B' or transport != 'cloud-bridge': raise RuntimeError('canonical projection is available only for a cloud-bridge Mode B task')
+    run(['git', 'fetch', '--prune', 'origin', 'integration'], REPO)
+    if run(['git', 'merge-base', '--is-ancestor', sha, 'origin/integration'], REPO, check=False).returncode:
+        raise RuntimeError(f'{sha} is not published on origin/integration; only an integration commit may be projected')
+    return sha, project_cloud_bridge_commit(agent_id, task_id, sha)
+
 def integration_submit(agent_id, task_id, commit_sha, verification=None):
     require_mode_a_bootstrap(task_id)
     acquire_lock(agent_id,task_id,'ref','integration',600)
@@ -446,6 +470,8 @@ class H(BaseHTTPRequestHandler):
                 sender=safe(data['sender']); recipient=safe(data.get('recipient','all')) if data.get('recipient','all')!='all' else 'all'; kind=str(data.get('kind','note')); body=str(data['body']); c=db(); cur=c.execute('INSERT INTO messages(sender,recipient,kind,body,created_at) VALUES(?,?,?,?,?)',(sender,recipient,kind,body,now())); mid=cur.lastrowid; c.close(); event('message',sender,data.get('task_id'),{'to':recipient,'kind':kind}); return self.sendj(200,{'ok':True,'message_id':mid})
             if path=='/v1/integration/submit':
                 sha=integration_submit(safe(data['agent_id']),data['task_id'],data['commit_sha'],data.get('verification') or []); return self.sendj(200,{'ok':True,'integration_sha':sha})
+            if path=='/v1/canonical/project':
+                sha,paths=canonical_project(safe(data['agent_id']),data['task_id'],data['integration_sha']); return self.sendj(200,{'ok':True,'integration_sha':sha,'projected_paths':paths})
             return self.sendj(404,{'ok':False,'error':'not found'})
         except Exception as e: return self.sendj(409 if 'conflict' in str(e).lower() else 500,{'ok':False,'error':str(e)})
 

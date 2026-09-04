@@ -12344,12 +12344,15 @@
         "persistent",
         "persistent local agent runtime",
         "runtime",
+        "scripts/local-agent/related-core-tests",
+        "scripts/local-agent/related-core-tests.ts",
         "select",
         "selects",
         "task",
         "the",
         "through",
         "to",
+        "ts",
         "unless",
         "user",
         "workflow_dispatch"
@@ -13740,35 +13743,36 @@
       "kind": "document",
       "name": "GitHub CI Policy",
       "path": "docs/07-mobile-and-release/github-ci-policy.md",
-      "summary": "GitHub `workflow_dispatch` through `local-agent-bootstrap.yml` is the primary remote bootstrap/entry path for preparing or recovering the Gova local device. It does not select an agent execution mode. Before the first task action, every agent asks the user to select Mode A (Gatew",
+      "summary": "GitHub `workflow_dispatch` has exactly two uses. `local-agent-bootstrap.yml` is the primary remote bootstrap/entry path for preparing or recovering the Gova local device. `local-agent-project.yml` is the cloud Mode-B command channel: it carries no work, only the identity of a com",
       "tags": [
-        "action",
-        "agent",
-        "an",
-        "asks",
-        "before",
         "bootstrap/entry",
+        "carries",
+        "channel",
         "ci",
+        "cloud",
+        "com",
+        "command",
         "device",
         "docs/07-mobile-and-release/github-ci-policy",
         "docs/07-mobile-and-release/github-ci-policy.md",
-        "does",
-        "every",
-        "execution",
-        "first",
+        "exactly",
         "for",
-        "gatew",
         "github",
-        "github `workflow_dispatch` through `local-agent-bootstrap.yml` is the primary remote bootstrap/entry path for preparing or recovering the gova local device. it does not select an agent execution mode. before the first task action, every agent asks the user to select mode a (gatew",
+        "github `workflow_dispatch` has exactly two uses. `local-agent-bootstrap.yml` is the primary remote bootstrap/entry path for preparing or recovering the gova local device. `local-agent-project.yml` is the cloud mode-b command channel: it carries no work, only the identity of a com",
         "github ci policy",
         "gova",
+        "has",
+        "identity",
         "is",
         "it",
         "local",
         "local-agent-bootstrap",
+        "local-agent-project",
         "md",
-        "mode",
-        "not",
+        "mode-b",
+        "no",
+        "of",
+        "only",
         "or",
         "path",
         "policy",
@@ -13776,12 +13780,10 @@
         "primary",
         "recovering",
         "remote",
-        "select",
-        "task",
         "the",
-        "through",
-        "to",
-        "user",
+        "two",
+        "uses",
+        "work",
         "workflow_dispatch",
         "yml"
       ]
@@ -16237,48 +16239,52 @@
       "kind": "document",
       "name": "Gova Local Agent Public Tunnel",
       "path": "docs/09-agent-knowledge/public-agent-tunnel.md",
-      "summary": "This tunnel is infrastructure for explicitly requested gateway-controlled access. It does not make the gateway the default execution path for local agents. Normal local-agent work edits `/home/hesham/gova` directly and must not use the localhost gateway, create agent worktrees, o",
+      "summary": "**This tunnel is human observability infrastructure. No agent — cloud or local — may use it, look for it, or ask for it as a way to reach the Gateway.** A cloud agent delivers work through Git and the `local-agent-project.yml` dispatch, described in [GitHub CI Policy](../07-mobil",
       "tags": [
-        "/home/hesham/gova",
-        "access",
+        "**this tunnel is human observability infrastructure. no agent — cloud or local — may use it, look for it, or ask for it as a way to reach the gateway.** a cloud agent delivers work through git and the `local-agent-project.yml` dispatch, described in [github ci policy](../07-mobil",
+        "/07-mobil",
         "agent",
-        "agents",
         "and",
-        "create",
-        "default",
-        "directly",
+        "as",
+        "ask",
+        "ci",
+        "cloud",
+        "delivers",
+        "described",
+        "dispatch",
         "docs/09-agent-knowledge/public-agent-tunnel",
         "docs/09-agent-knowledge/public-agent-tunnel.md",
-        "does",
-        "edits",
-        "execution",
-        "explicitly",
         "for",
         "gateway",
-        "gateway-controlled",
+        "git",
+        "github",
         "gova",
         "gova local agent public tunnel",
+        "human",
+        "in",
         "infrastructure",
         "is",
         "it",
         "local",
-        "local-agent",
-        "localhost",
-        "make",
+        "local-agent-project",
+        "look",
+        "may",
         "md",
-        "must",
-        "normal",
-        "not",
-        "path",
+        "no",
+        "observability",
+        "or",
+        "policy",
         "public",
-        "requested",
+        "reach",
         "the",
         "this",
-        "this tunnel is infrastructure for explicitly requested gateway-controlled access. it does not make the gateway the default execution path for local agents. normal local-agent work edits `/home/hesham/gova` directly and must not use the localhost gateway, create agent worktrees, o",
+        "through",
+        "to",
         "tunnel",
         "use",
+        "way",
         "work",
-        "worktrees"
+        "yml"
       ]
     },
     {
@@ -27134,6 +27140,17 @@
       "tags": [
         "scripts/load-release-env",
         "scripts/load-release-env.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/local-agent/related-core-tests.ts",
+      "kind": "script",
+      "name": "related-core-tests.ts",
+      "path": "scripts/local-agent/related-core-tests.ts",
+      "tags": [
+        "scripts/local-agent/related-core-tests",
+        "scripts/local-agent/related-core-tests.ts",
         "ts"
       ]
     },
@@ -54779,6 +54796,18 @@
       ]
     },
     {
+      "id": "test:scripts/tests/local-agent-related-core-tests.test.ts",
+      "kind": "test",
+      "name": "local-agent-related-core-tests.test.ts",
+      "path": "scripts/tests/local-agent-related-core-tests.test.ts",
+      "tags": [
+        "scripts/tests/local-agent-related-core-tests",
+        "scripts/tests/local-agent-related-core-tests.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:scripts/tests/main-push-deployment-isolation.test.ts",
       "kind": "test",
       "name": "main-push-deployment-isolation.test.ts",
@@ -58625,6 +58654,11 @@
     {
       "from": "command:test:deployment-tools",
       "to": "test:scripts/tests/github-ci-policy.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:deployment-tools",
+      "to": "test:scripts/tests/local-agent-related-core-tests.test.ts",
       "kind": "invokes"
     },
     {
@@ -72712,6 +72746,12 @@
       "detail": "docs/06-super-admin-and-operations/local-agent-recovery.md"
     },
     {
+      "from": "document:docs/06-super-admin-and-operations/local-agent-runtime.md",
+      "to": "script:scripts/local-agent/related-core-tests.ts",
+      "kind": "references",
+      "detail": "scripts/local-agent/related-core-tests.ts"
+    },
+    {
       "from": "document:docs/06-super-admin-and-operations/notification-tests.md",
       "to": "domain:super-admin-and-operations",
       "kind": "belongs-to"
@@ -76328,6 +76368,12 @@
       "from": "document:docs/09-agent-knowledge/public-agent-tunnel.md",
       "to": "domain:agent-knowledge",
       "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/09-agent-knowledge/public-agent-tunnel.md",
+      "to": "document:docs/07-mobile-and-release/github-ci-policy.md",
+      "kind": "references",
+      "detail": "../07-mobile-and-release/github-ci-policy.md"
     },
     {
       "from": "document:docs/09-agent-knowledge/README.md",
@@ -86453,6 +86499,12 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "script:scripts/local-agent/related-core-tests.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "script:scripts/migrate-static-dom-ids.ts",
       "kind": "documents",
       "detail": "scripts/"
@@ -89898,6 +89950,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "test:scripts/tests/github-ci-policy.test.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "test:scripts/tests/local-agent-related-core-tests.test.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -136897,6 +136955,11 @@
       "to": "package:@asol/env-core",
       "kind": "imports",
       "detail": "@asol/env-core/process"
+    },
+    {
+      "from": "script:scripts/local-agent/related-core-tests.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
     },
     {
       "from": "script:scripts/migrate-static-dom-ids.ts",
@@ -245994,6 +246057,22 @@
     {
       "from": "test:scripts/tests/github-ci-policy.test.ts",
       "to": "script:scripts/github-ci-policy.ts",
+      "kind": "tests"
+    },
+    {
+      "from": "test:scripts/tests/local-agent-related-core-tests.test.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:scripts/tests/local-agent-related-core-tests.test.ts",
+      "to": "script:scripts/local-agent/related-core-tests.ts",
+      "kind": "imports",
+      "detail": "../local-agent/related-core-tests"
+    },
+    {
+      "from": "test:scripts/tests/local-agent-related-core-tests.test.ts",
+      "to": "script:scripts/local-agent/related-core-tests.ts",
       "kind": "tests"
     },
     {

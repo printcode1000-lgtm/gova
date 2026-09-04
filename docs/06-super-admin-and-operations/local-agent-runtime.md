@@ -33,6 +33,32 @@ Mode B does **not** register an agent with localhost control, create a task/work
 
 In Mode A, the Gateway listens on TCP port `8765`; `/health` is public and mutation/state APIs require the local key stored outside Git in `/home/hesham/.config/gova-agent/auth`. Create the Mode-A task, run `gova-agent mode-a-bootstrap <agent> <task>` once, then wait for the manual GitHub dispatch to run the self-hosted bootstrap and restart the persistent service. Gateway rejects a worktree, command, lock, or integration submission until that dispatch is recorded. The selected flow then creates its worktree under `/home/hesham/gova-agents/`, uses a local `agent/*` branch, and submits verified work through `integration-submit`.
 
+## Cloud Mode B: Git as transport, the runner as projector
+
+A cloud agent has no route to the Gateway: the service listens on the device, its key never leaves `/home/hesham/.config/gova-agent/auth`, and the public monitor tunnel is observability, not a work channel. So the cloud path delivers work through Git and asks the device to apply it.
+
+1. The agent edits in its own cloud checkout, based on `origin/integration`, and verifies there.
+2. It pushes exactly one verified commit to `integration`. No other remote ref is involved; `agent/*` branch creation is blocked by the repository ruleset.
+3. It dispatches `local-agent-project.yml` with `agent_id`, `task_id`, `goal`, and the full 40-character `integration_sha`.
+4. The self-hosted runner executes `tools/local-agent/project.sh` on the device. The script refuses a SHA that is not an ancestor of `origin/integration`, prepares a detached verification worktree at that commit (reusing the canonical `node_modules` by symlink), and runs `npm run architecture:check`, `npm run docs:ci`, and the `*-core` suites that `scripts/local-agent/related-core-tests.ts` resolves from the commit's own changed paths.
+5. On success the script registers the agent, creates the cloud-bridge Mode B task if it does not exist, and calls `gova-agent project`, which posts to `/v1/canonical/project`.
+6. The Gateway projects that commit onto `/home/hesham/gova` as an unstaged patch.
+
+Failure is closed at every step: verification failure stops before projection, an unpublished SHA is rejected, a non cloud-bridge task is rejected, and a projection whose paths overlap canonical uncommitted work — or whose patch does not apply — is refused and recorded as `canonical-projection-blocked`.
+
+`mode-a-bootstrap` is not part of this path. That guard exists to prove the managed runtime is installed and running; a request arriving from the local runner is the same proof.
+
+```bash
+git push origin HEAD:integration
+gh workflow run local-agent-project.yml -f agent_id=cloud-001 -f task_id=notifications-copy -f goal="Fix notification copy" -f integration_sha=<40-char-sha>
+```
+
+The device-side equivalent, when reproducing the same gate by hand:
+
+```bash
+AGENT_ID=cloud-001 TASK_ID=notifications-copy TASK_GOAL="Fix notification copy" INTEGRATION_SHA=<40-char-sha> bash tools/local-agent/project.sh
+```
+
 ## Unified local execution monitor
 
 `gova-agent-monitor` is a read-only observability surface for the complete local execution stack. It does not register agents, refresh heartbeats, acquire locks, mutate Git, restart services, or dispatch GitHub jobs.
@@ -108,6 +134,7 @@ gova-agent task-create agent-001 "Refactor notifications" --task-id notification
 gova-agent workspace-create agent-001 notifications-refactor
 gova-agent exec agent-001 'git status --short' --task-id notifications-refactor
 gova-agent messages --recipient agent-001
+gova-agent project cloud-001 notifications-copy <40-char-integration-sha>
 gova-agent locks
 gova-agent diagnostics
 ```

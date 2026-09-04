@@ -83,4 +83,46 @@ with tempfile.TemporaryDirectory() as temp:
         assert 'projection conflict' in str(error)
     assert (root / 'bridge.txt').read_text() == 'canonical local change\n'
 
+    # Canonical projection: the cloud Mode-B entry point the self-hosted runner
+    # calls. It must accept only a full SHA that is published on
+    # origin/integration, and only for a cloud-bridge Mode B task.
+    git('reset', '--hard', 'main')
+    origin = root / 'origin.git'
+    subprocess.run(['git', 'init', '--bare', '-b', 'main', str(origin)], check=True, capture_output=True)
+    git('remote', 'add', 'origin', str(origin))
+    git('push', '-q', 'origin', 'main', 'integration')
+
+    for bad in ('deadbeef', '', 'g' * 40, integration_sha[:39]):
+        try:
+            gateway.canonical_project('agent', 'mode-b-cloud', bad)
+            raise AssertionError(f'canonical projection accepted a malformed SHA: {bad!r}')
+        except RuntimeError as error:
+            assert '40-character' in str(error)
+
+    for wrong_task in ('mode-a', 'mode-b'):
+        try:
+            gateway.canonical_project('agent', wrong_task, integration_sha)
+            raise AssertionError(f'canonical projection accepted task {wrong_task}')
+        except RuntimeError as error:
+            assert 'cloud-bridge Mode B' in str(error)
+
+    git('checkout', '-b', 'unpublished')
+    (root / 'bridge.txt').write_text('never published\n')
+    git('commit', '-am', 'unpublished work')
+    unpublished_sha = git('rev-parse', 'HEAD')
+    git('checkout', 'main')
+    git('reset', '--hard', 'main')
+    try:
+        gateway.canonical_project('agent', 'mode-b-cloud', unpublished_sha)
+        raise AssertionError('canonical projection accepted a commit that is not on integration')
+    except RuntimeError as error:
+        assert 'not published on origin/integration' in str(error)
+    assert (root / 'bridge.txt').read_text() == 'base\n'
+
+    # An uppercase SHA is the same commit; it is normalized, not rejected.
+    sha, projected = gateway.canonical_project('agent', 'mode-b-cloud', integration_sha.upper())
+    assert sha == integration_sha
+    assert projected == ['bridge.txt']
+    assert (root / 'bridge.txt').read_text() == 'from cloud bridge\n'
+
 print('local-agent mode guard: PASS')

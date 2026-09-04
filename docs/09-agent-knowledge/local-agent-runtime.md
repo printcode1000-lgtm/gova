@@ -9,6 +9,7 @@ This section supersedes the older gateway-first migration notes below for normal
 - Do not automatically register with, send commands through, or otherwise use `gova-agent-gateway`/localhost agent control. Gateway-managed execution is opt-in and requires an explicit user request.
 - Do not automatically submit completed work to `integration`, commit, push, or deploy. Each of those actions requires explicit user intent.
 - GitHub `workflow_dispatch` through `.github/workflows/local-agent-bootstrap.yml` is the primary remote bootstrap/entry path for preparing or recovering the local device. Bootstrap may install or restart gateway infrastructure, but that infrastructure is not the default execution path for local agents.
+- GitHub `workflow_dispatch` through `.github/workflows/local-agent-project.yml` is the only cloud Mode-B command channel. The cloud agent pushes one verified commit to `integration` and dispatches that workflow; the self-hosted runner re-verifies the commit on the device and the local Gateway projects it, unstaged, into `/home/hesham/gova`. The Gateway is never reached from outside the device, and the public monitor tunnel is not a work channel.
 - Existing local modifications in `/home/hesham/gova` must be preserved. A local agent must not reset, replace, or relocate them merely to obtain isolation.
 
 The sections dated 2026-09-02 and 2026-09-03 below are retained as historical migration and verification records. Where they describe gateway-first normal execution, this current policy takes precedence.
@@ -20,7 +21,7 @@ The sections dated 2026-09-02 and 2026-09-03 below are retained as historical mi
 - Runtime state is SQLite WAL under `/home/hesham/.local/share/gova-agent-runtime/`.
 - Agent worktrees live under `/home/hesham/gova-agents/`; the shared integration worktree is `/home/hesham/gova-agents/integration`.
 - Historical state at that checkpoint: new task worktrees started from `origin/integration`. Current default local work does not create a task worktree.
-- The only Local Runner GitHub workflow is `local-agent-bootstrap.yml`, which is manual bootstrap/reinstall only.
+- Historical state at that checkpoint: the only Local Runner GitHub workflow was `local-agent-bootstrap.yml`. The manual `local-agent-project.yml` projection workflow was added later for the cloud Mode-B path described in the current policy above.
 - The retired request branch, dispatch workflows, `.agent-control`, `@asol/local-agent-core`, and `scripts/local-agent-*.ts` control plane have been removed.
 - Normal completion integrates local commits through the gateway into `integration`; promotion from `integration` to `main` is separate and deliberate.
 - Reinstalling the gateway always restarts the systemd service so the running process loads the newly installed runtime code.
