@@ -61,8 +61,7 @@ export function createSellerCardViewModel(
 ): SellerCardViewModel {
   const images = {} as StoreImagesLike;
   const title = sellerCardTitle(row);
-  const identityLabel =
-    title || text(getOptional(row, "registrationPhone")) || row.uid;
+  const identityLabel = title || text(row.primaryPhone);
   const rating = ratingValue(row);
   const badges: SellerCardBadge[] = [];
 

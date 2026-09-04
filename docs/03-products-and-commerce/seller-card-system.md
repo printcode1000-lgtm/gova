@@ -105,6 +105,13 @@ The presenter safely derives:
 /profile?mode=view&uid=...
 ```
 
+## Identity Element Contract
+
+`features-seller-card-presentation-sellercard-div-10-cduns8` renders exactly one
+visible value: `identityLabel`. It never renders UID, badges, or any other
+secondary content. When both `storeName` and `primaryPhone` are empty, the
+identity element is omitted.
+
 ## Actions
 
 Actions are passed by the host page because permissions and behavior differ by context.
@@ -143,14 +150,14 @@ The seller-card feature module is responsible for:
 - Store/provider identity presentation using store name with primary-phone fallback, without exposing UID as display text.
 - Avatar fallback.
 - Canonical profile URL.
-- Optional badges.
+- Optional badge data in the view model.
 - Rating text when rating data is available.
 
 The UI component is responsible for:
 
 - Rendering layout variants.
 - Rendering image or initials fallback.
-- Rendering badges.
+- Rendering only `identityLabel` inside the identity element.
 - Rendering context actions.
 - Avoiding nested interactive elements.
 
