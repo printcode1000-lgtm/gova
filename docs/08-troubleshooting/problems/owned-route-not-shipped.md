@@ -219,7 +219,8 @@ moved.
 `services:build` compiles each mirror the way Vercel does, so it catches this —
 but the no-gates publish path skipped it. It no longer does: `services:sync`,
 `services:build` and `control:build` run before the push in
-`assertServiceMirrorsBuild`. `deploy:push:fast` is the one exception, and it says
+`assertServiceMirrorsBuild`, which `deploy:all` and `deploy:push` both reach.
+`deploy:push:fast` is the one exception, and it says
 so: `--fast` skips the mirror builds by name, which is exactly the trade this
 incident priced.
 The rule that came out of it is narrow and worth keeping: a check may be skipped

@@ -1,9 +1,18 @@
 # Release Commands
 
-Only `deploy:all` and `deploy:push:fast` publish a release. They differ in
-which gates run, not in what publishing means: **every public path runs the
-same ordered transaction**, defined once in
+Three commands publish a release — `deploy:all`, `deploy:push` and
+`deploy:push:fast`. They differ in which gates run, not in what publishing
+means: **every public path runs the same ordered transaction**, defined once in
 `scripts/deploy-push.ts` as `runReleaseTransaction`.
+
+| Command | Correctness preflight | Publish gates | Use it when |
+| --- | --- | --- | --- |
+| `deploy:all` | lint, typecheck, `architecture:check`, tests, DB sync, builds, mirror sync/verify/build, service smoke | all | nothing has been proven yet |
+| `deploy:push` | none | all — account access, scratch/manifest/empty refusals, `secrets:backup`, mirror builds | the correctness gates already passed and you want the publish gates anyway |
+| `deploy:push:fast` | none | branch, secret restore, credentials only | you just ran the gates yourself and want the shortest publish |
+
+None of them is a substitute for the other two on correctness: only `deploy:all`
+runs lint, typecheck and the test suite.
 
 Vercel uploads retry at most three times only for transient transport failures
 such as `fetch failed` or connection resets. Build, environment, account, and
@@ -123,13 +132,45 @@ leaving those checkpoints in place makes the next resume skip the deployments
 that were just reverted and then fail with no deployment report — the release
 becomes unretryable without deleting state by hand.
 
+## `deploy:push` — publish with the gates, without the preflight
+
+```bash
+npm run deploy:push
+```
+
+Pinned to `--vercel-target=all`, exactly like the fast command; the only
+difference between them is `--fast`. Everything `--fast` skips, this runs before
+the first git write:
+
+| Gate | What it refuses |
+| --- | --- |
+| `assertVercelAccountsForTargets` | a missing or wrong token, before the push rather than after |
+| `assertNoScratchFiles` | `*.log`, `*.tmp`, `*.bak`, `scratchpad/` — waived by `--allow-scratch-files` |
+| `assertReleaseManifestNotDowngraded` | a lower `releaseId` / `version` / `minimumNativeVersion` — waived by `--allow-manifest-downgrade` |
+| `assertSomethingToPush` | an empty deployment — waived by `--allow-empty` |
+| `assertServiceMirrorsBuild` | a mirror that does not compile: `services:sync`, `services:build`, `control:build` |
+
+That last one is why this command exists. The root `typecheck` does not cover the
+service trees, so a type error inside a mirror is green locally and fails on
+Vercel as `Command "npm run build" exited with 1` — after `main` has already
+moved. `ActionInput` did exactly that.
+
+`secrets:backup` also runs here, so the encrypted archive matches what was
+published; the final line says `secrets backup completed`.
+
+Between 2026-09-04 and the re-enablement, `main()` refused every invocation
+without `--fast`. That did not merely hide the command — it made all five gates
+above unreachable, `assertServiceMirrorsBuild` included. `scripts/tests/deploy-push.test.ts`
+now fails if the disable guard returns, because a guard that disables the only
+caller of a safety check deletes the check.
+
 ## `deploy:push:fast` — the fast explicit release
 
 ```bash
 npm run deploy:push:fast
 ```
 
-This is the only public fast path. It runs `--fast --vercel-target=all`.
+The fast path, unchanged. It runs `--fast --vercel-target=all`.
 It skips account-access checks, publish refusals, `secrets:backup`, and local
 mirror builds. The branch check, secret restore, release credentials, exact-SHA
 deployment reports, and `VERCEL_TOKEN` remain mandatory.
@@ -172,8 +213,8 @@ same commit.
 
 The trade is intentional: a mirror error can surface only during the remote
 release after `main` has moved. Use this command only after the local gates have
-already passed. There is no public partial-target, revision, or generic
-`deploy:push` command.
+already passed — `deploy:push` is the same publish with those gates included.
+There is still no public partial-target or revision command.
 
 ## Deployment prerequisites
 
@@ -220,6 +261,22 @@ capability. Its `vercel.json` sets `outputDirectory` to `.next`.
 This failure could only appear once a SHA actually crossed the readiness
 barrier; every earlier attempt failed before the gova build was allowed to
 publish, which is why it surfaced late.
+
+Two commands own that view:
+
+```bash
+npm run gova:tree         # generate .tmp-gova-build/
+npm run gova:tree:check   # verify the classification, without reading the copy
+```
+
+`--check` is the drift gate, and it deliberately does **not** compare a
+previously written tree. The view is deterministic, so the question worth asking
+is not "does the copy match" but "does the classification still hold". It
+cross-checks the manifest against the canonical ownership registry in
+`@asol/account-bridge/routes`: every route gova omits must have an owner that
+will answer it, and every route gova keeps must be one no other runtime owns. A
+business route added without an owner fails here rather than shipping as a 404
+behind the compatibility boundary.
 
 **Delete the view after a local release.** `.tmp-gova-build/` is gitignored and
 disposable, but nothing removes it — not the uploader, not `deploy:all`. Left in

@@ -160,6 +160,7 @@
     "notifications:deploy": "npx tsx scripts/deploy-service.ts notifications",
     "notifications:tokens:dedupe": "npx tsx packages/data-core/src/tooling/enforce-notification-token-cardinality.ts",
     "deploy:all": "npx tsx scripts/deploy-all.ts",
+    "deploy:push": "npx tsx scripts/deploy-push.ts --vercel-target=all",
     "deploy:push:fast": "npx tsx scripts/deploy-push.ts --fast --vercel-target=all",
     "doctor:environment": "npx tsx scripts/check-environment-requirements.ts --scenario=all",
     "doctor:environment:production": "npx tsx scripts/check-environment-requirements.ts --scenario=production --skip-outdated",

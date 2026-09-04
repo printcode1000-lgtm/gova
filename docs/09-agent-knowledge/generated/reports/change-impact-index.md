@@ -56,7 +56,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `system-logs` | feature | 1 | 2 | 135 | 0 | 11 | 11 |
 | `vehicle-catalog` | feature | 2 | 0 | 2 | 0 | 1 | 1 |
 | `voice-input` | feature | 1 | 0 | 0 | 0 | 0 | 2 |
-| `@asol/account-bridge` | package | 16 | 8 | 26 | 0 | 25 | 4 |
+| `@asol/account-bridge` | package | 18 | 8 | 26 | 0 | 25 | 4 |
 | `@asol/account-declarations` | package | 14 | 9 | 12 | 0 | 37 | 0 |
 | `@asol/architecture-core` | package | 17 | 7 | 0 | 0 | 8 | 8 |
 | `@asol/auth-core` | package | 11 | 6 | 141 | 0 | 103 | 3 |

@@ -80,19 +80,20 @@ then sends the super-admin push notification and email. A docs
 change additionally runs the path-filtered docs workflow. See
 [github-ci-policy.md](./github-ci-policy.md).
 
-Two commands push `main` to production from a local `main` working tree:
+Three commands push `main` to production from a local `main` working tree:
 
 ```bash
 npm run deploy:all        # full preflight, then publish
+npm run deploy:push       # publish gates only — no lint/typecheck/tests
 npm run deploy:push:fast  # explicit fast publish after local verification
 ```
 
-Both publish through that same ordered transaction and explicitly deploy the gova
-project after release readiness. No other public deployment command is
-supported. Only the complete control + six workload proof may release the gova
-build barrier.
+All three publish through that same ordered transaction and explicitly deploy the
+gova project after release readiness. No other public deployment command is
+supported, and each is pinned to the complete set: only the complete control +
+six workload proof may release the gova build barrier.
 
-[release-commands.md](./release-commands.md) is the reference for both
+[release-commands.md](./release-commands.md) is the reference for all three
 commands, the transaction's ordering contract, the deployment commit's
 `[docs-contract-change]` stamping, and the deployment prerequisites.
 
@@ -540,11 +541,17 @@ The final console line is always explicit:
 the module does not deploy — the entrypoint is guarded so `npm test` can never
 become a release.
 
-### `deploy:push:fast` — explicit fast publish
+### `deploy:push` and `deploy:push:fast` — explicit publish
 
-`npm run deploy:push:fast` is the only public fast release path. It always
-publishes the complete transaction: control, six workloads, readiness, and
-gova. It has no account-selection, revision, or partial-target form.
+Both run `scripts/deploy-push.ts` pinned to `--vercel-target=all`, and both
+publish the complete transaction: control, six workloads, readiness, and gova.
+Neither has an account-selection, revision, or partial-target form.
+
+They differ only in `--fast`. `deploy:push` runs the publish gates first —
+Vercel account access, the scratch-file / manifest-downgrade / non-empty
+refusals, `secrets:backup`, and the mirror builds (`services:sync`,
+`services:build`, `control:build`). `deploy:push:fast` skips all of those and
+keeps only the branch check, secret restore and release credentials.
 
 Service deploy scripts emit `[ASOL_DEPLOY_REPORT]` on stdout. `deploy:push:fast`
 and `deploy:all` capture that line from the child npm process (stdout and stderr,

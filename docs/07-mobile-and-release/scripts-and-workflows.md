@@ -6,8 +6,11 @@
 
 ```bash
 # Development
-npm run dev                    # fast Next dev only
+npm run dev                    # fast Next dev only — gova alone on 3001
 npm run dev:checked            # slower startup with generation + catalog validation
+npm run dev:distributed        # all eight runtimes on 3001-3008, no gova fallback
+npm run dev:distributed:smoke  # start all eight, prove route ownership, exit
+npm run server:stop            # frees port 3001 only, not the distributed ports
 npm run db:create:sqlite
 npm run db:create:profile
 
@@ -63,7 +66,8 @@ npm run submain:deploy          # full app on submain (groupstenderximages@gmail
 npm run sub2main:deploy         # full app on sub2main (tenderx.engineer100@gmail.com)
 npm run vercel:accounts:check   # read-only check for all eight Vercel account tokens
 npm run deploy:all              # full gate: env/Vercel → checks/tests → DB → builds → services → readiness → gova
-npm run deploy:push:fast        # the only fast publish path; same transaction, no gates
+npm run deploy:push             # same transaction, publish gates, no correctness preflight
+npm run deploy:push:fast        # same transaction, no gates at all
 npm run deploy:all -- --list-phases           # the phase ids deploy:all accepts
 npm run deploy:all -- --phase=preflight       # preflight only, no commit/push/deploy
 npm run deploy:all -- --phase=publish         # commit + push main only
@@ -285,7 +289,7 @@ resolved by path. It is in `deploy:all` preflight and in `verify:all`.
 
 See [github-ci-policy.md](./github-ci-policy.md). GitHub Actions is not the command transport for local agents. The only local-agent workflow is the manual `local-agent-bootstrap.yml`, used for initial install/reinstall/recovery of `gova-agent-gateway.service`. Normal agent commands, reads, writes, locks, messages, checkpoints, handoffs, and streaming results travel directly through the persistent gateway and create no GitHub Actions run.
 
-There is no production deploy workflow. A push to `main` is Git-only; production deployment is available only through `deploy:all` and `deploy:push:fast`. Documentation validation remains path-filtered. Agent task work is isolated in local worktrees under `/home/hesham/gova-agents` and is submitted to `integration` only after verification.
+There is no production deploy workflow. A push to `main` is Git-only; production deployment is available only through `deploy:all`, `deploy:push` and `deploy:push:fast`. Documentation validation remains path-filtered. Agent task work is isolated in local worktrees under `/home/hesham/gova-agents` and is submitted to `integration` only after verification.
 
 
 ## Branch protection
@@ -366,7 +370,7 @@ branch would** — and the branch name is also what
 the concrete reason `main` is never renamed, on top of being one of only two
 branches this repository allows.
 
-Nothing in `deploy:all` or `deploy:push:fast` creates a branch, so no release
+Nothing in `deploy:all`, `deploy:push` or `deploy:push:fast` creates a branch, so no release
 path is affected either way.
 
 ## Retained local notes (not project documentation)

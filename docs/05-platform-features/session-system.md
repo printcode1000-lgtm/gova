@@ -109,7 +109,7 @@ On first load, `cleanLegacyStore()`:
 
 **Auth internals:** `src/features/auth/presentation/SessionProvider.tsx` exposes `useSession()`.
 
-**Other application features in the cycle subgraph** (profile, cart, product, page-snapshot, pharmacy-profile-catalog, profile-products) read session through `useSessionRuntime()` from `src/shared/session-runtime/`. That shared module is outside `APPLICATION_CYCLE_SUBGRAPH`, so those features do not import `@/features/auth` for session context.
+**Other application features in the cycle subgraph** (profile, cart, product, page-snapshot, pharmacy-profile-catalog, profile-products) read session through `useSessionRuntime()` from `src/shared/session-runtime/`. That shared module is outside the cycle baseline pinned as `KNOWN_APPLICATION_CYCLE_BASELINE` in `packages/architecture-core/src/checks/application-cycle-contract.ts`, so those features do not import `@/features/auth` for session context.
 
 `SessionProvider` also mounts `SessionRuntimeProvider` with the same value.
 

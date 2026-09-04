@@ -22,6 +22,8 @@ Read [Project Runtime Contract](../09-agent-knowledge/runtime-contract.md) befor
 - Resuming, retrying or speeding up `deploy:all` → [deploy:all Resume, Checkpoints and Parallel Preflight](./deploy-all-resume-and-checkpoints.md).
 - GitHub Actions / `main` push policy → [GitHub CI Policy](./github-ci-policy.md).
 - Cloud workspaces → [Cloud Environments](./cloud-environments.md).
+- Running the whole topology locally → [Distributed Local Development](./distributed-local-development.md).
+- Store lanes and their npm commands → [Fastlane Module](./capacitor/fastlane-module.md).
 
 ## Artifact Topology
 

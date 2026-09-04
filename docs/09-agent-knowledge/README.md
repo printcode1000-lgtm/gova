@@ -22,6 +22,7 @@ Gova has five application surfaces that every agent must consider on every chang
 | [Context Packs](./context-packs.md) | Bounded task-specific context instead of bulk documentation reads |
 | [Generation and Drift](./generation-and-drift.md) | Generated truth, deterministic generation, validation |
 | [Authoring Standard](./authoring-standard.md) | Rules for useful, non-duplicative hand-written docs |
+| [Project Intelligence](./project-intelligence.md) | The separate, unvalidated agent knowledge model under `.agents/` and how far to trust it |
 | `contracts/` | Protected agent contracts (API, writes, env, native, docs CI, runtime compatibility, update policy) |
 | `templates/` | Task templates for common change types |
 | `document-mutability.json` | Machine-readable mutability registry |

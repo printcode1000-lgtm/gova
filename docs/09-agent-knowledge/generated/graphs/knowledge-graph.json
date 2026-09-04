@@ -1076,6 +1076,20 @@
       ]
     },
     {
+      "id": "command:deploy:push",
+      "kind": "command",
+      "name": "npm run deploy:push",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "deploy",
+        "deploy:push",
+        "npm",
+        "npm run deploy:push",
+        "push",
+        "run"
+      ]
+    },
+    {
       "id": "command:deploy:push:fast",
       "kind": "command",
       "name": "npm run deploy:push:fast",
@@ -11055,13 +11069,8 @@
       "tags": [
         "@asol/catalog-core",
         "@asol/catalog-core/",
-        "@asol/catalog-core/contracts/catalog-v3",
-        "@asol/catalog-core/contracts/catalog-v3.contract.ts",
+        "@asol/catalog-core/...",
         "@asol/catalog-core/server",
-        "@asol/catalog-core/types/catalog-v3",
-        "@asol/catalog-core/types/catalog-v3.types.ts",
-        "@asol/catalog-core/utils/catalog-display",
-        "@asol/catalog-core/utils/catalog-display.ts",
         "`@asol/catalog-core` architecture & consolidation",
         "`@asol/catalog-core` is the sealed workspace package for catalog v3: shared types, zod contracts, display visibility rules, and the full-tree validator used by ci and catalog studio.",
         "and",
@@ -11087,6 +11096,13 @@
         "sealed",
         "shared",
         "src/features/",
+        "src/features/catalog-data/",
+        "src/features/catalog-data/contracts/catalog-v3",
+        "src/features/catalog-data/contracts/catalog-v3.contract.ts",
+        "src/features/catalog-data/types/catalog-v3",
+        "src/features/catalog-data/types/catalog-v3.types.ts",
+        "src/features/catalog-data/utils/catalog-display",
+        "src/features/catalog-data/utils/catalog-display.ts",
         "studio",
         "the",
         "ts",
@@ -11431,7 +11447,6 @@
       "tags": [
         "> **canonical path**: `packages/ota-core/` > **package name**: `@asol/ota-core`",
         "@asol/native-core",
-        "@asol/notifications",
         "@asol/ota-core",
         "@asol/ota-core/publishing",
         "`@asol/ota-core` — architecture reference",
@@ -11443,10 +11458,13 @@
         "name",
         "package",
         "packages/native-core/",
+        "packages/notifications-core/src/services/providers/fcm-http-v1",
+        "packages/notifications-core/src/services/providers/fcm-http-v1.server.ts",
         "packages/ota-core/",
         "packages/ota-core/src/tests/",
         "path",
         "reference",
+        "server",
         "src/index",
         "src/index.ts",
         "ts"
@@ -11789,6 +11807,8 @@
         "md",
         "notification-chat",
         "operations",
+        "packages/architecture-core/src/checks/application-cycle-contract",
+        "packages/architecture-core/src/checks/application-cycle-contract.ts",
         "protected",
         "session",
         "session system",
@@ -13641,6 +13661,8 @@
         "scripts/check-deployed-release.ts",
         "scripts/deploy-all",
         "scripts/deploy-all.ts",
+        "scripts/deploy-push",
+        "scripts/deploy-push.ts",
         "scripts/release-service-smoke-probes",
         "scripts/release-service-smoke-probes.ts",
         "scripts/tests/deploy-all",
@@ -13659,6 +13681,58 @@
         "test",
         "the",
         "ts"
+      ]
+    },
+    {
+      "id": "document:docs/07-mobile-and-release/distributed-local-development.md",
+      "kind": "document",
+      "name": "Distributed Local Development",
+      "path": "docs/07-mobile-and-release/distributed-local-development.md",
+      "summary": "`npm run dev:distributed` runs the **whole production topology on one machine**: eight Next.js processes on eight ports, with gova's client bridge pointed at the local origins exactly the way production points it at public ones.",
+      "tags": [
+        "@asol/account-bridge/routes",
+        "`npm run dev:distributed` runs the **whole production topology on one machine**: eight next.js processes on eight ports, with gova's client bridge pointed at the local origins exactly the way production points it at public ones.",
+        "at",
+        "bridge",
+        "client",
+        "dev",
+        "development",
+        "distributed",
+        "distributed local development",
+        "docs/07-mobile-and-release/distributed-local-development",
+        "docs/07-mobile-and-release/distributed-local-development.md",
+        "eight",
+        "exactly",
+        "gova",
+        "it",
+        "js",
+        "local",
+        "machine",
+        "md",
+        "next",
+        "npm",
+        "on",
+        "one",
+        "ones",
+        "origins",
+        "packages/account-declarations/src/accounts/local-development",
+        "packages/account-declarations/src/accounts/local-development.ts",
+        "pointed",
+        "points",
+        "ports",
+        "processes",
+        "production",
+        "public",
+        "run",
+        "runs",
+        "scripts/stop-dev-server",
+        "scripts/stop-dev-server.ts",
+        "the",
+        "topology",
+        "ts",
+        "way",
+        "whole",
+        "with"
       ]
     },
     {
@@ -13787,9 +13861,12 @@
         "repository-only",
         "runner",
         "sandbox",
+        "scripts/retrain-project-intelligence",
+        "scripts/retrain-project-intelligence.ts",
         "surface",
         "the",
-        "the gova local runner is an authenticated host-control execution surface, not a repository-only sandbox."
+        "the gova local runner is an authenticated host-control execution surface, not a repository-only sandbox.",
+        "ts"
       ]
     },
     {
@@ -13914,8 +13991,9 @@
       "kind": "document",
       "name": "Release Commands",
       "path": "docs/07-mobile-and-release/release-commands.md",
-      "summary": "Only `deploy:all` and `deploy:push:fast` publish a release. They differ in which gates run, not in what publishing means: **every public path runs the same ordered transaction**, defined once in `scripts/deploy-push.ts` as `runReleaseTransaction`.",
+      "summary": "Three commands publish a release — `deploy:all`, `deploy:push` and `deploy:push:fast`. They differ in which gates run, not in what publishing means: **every public path runs the same ordered transaction**, defined once in `scripts/deploy-push.ts` as `runReleaseTransaction`.",
       "tags": [
+        "@asol/account-bridge/routes",
         "all",
         "and",
         "as",
@@ -13933,8 +14011,6 @@
         "means",
         "not",
         "once",
-        "only",
-        "only `deploy:all` and `deploy:push:fast` publish a release. they differ in which gates run, not in what publishing means: **every public path runs the same ordered transaction**, defined once in `scripts/deploy-push.ts` as `runreleasetransaction`.",
         "ordered",
         "path",
         "public",
@@ -13949,8 +14025,13 @@
         "same",
         "scripts/deploy-push",
         "scripts/deploy-push.ts",
+        "scripts/tests/deploy-push",
+        "scripts/tests/deploy-push.test.ts",
+        "test",
         "the",
         "they",
+        "three",
+        "three commands publish a release — `deploy:all`, `deploy:push` and `deploy:push:fast`. they differ in which gates run, not in what publishing means: **every public path runs the same ordered transaction**, defined once in `scripts/deploy-push.ts` as `runreleasetransaction`.",
         "transaction",
         "ts",
         "what",
@@ -16104,6 +16185,51 @@
         "this section supersedes the older gateway-first migration notes below for normal local-agent work.",
         "ts",
         "work"
+      ]
+    },
+    {
+      "id": "document:docs/09-agent-knowledge/project-intelligence.md",
+      "kind": "document",
+      "name": "Project Intelligence",
+      "path": "docs/09-agent-knowledge/project-intelligence.md",
+      "summary": "`.agents/skills/project-intelligence/` holds a second, agent-owned knowledge model of this repository, separate from `docs/`. This document explains what it is, how it differs from the documentation system, and when to distrust it.",
+      "tags": [
+        "`.agents/skills/project-intelligence/` holds a second, agent-owned knowledge model of this repository, separate from `docs/`. this document explains what it is, how it differs from the documentation system, and when to distrust it.",
+        "agent-owned",
+        "agents/skills/project-intelligence/",
+        "and",
+        "differs",
+        "distrust",
+        "docs/",
+        "docs/09-agent-knowledge/project-intelligence",
+        "docs/09-agent-knowledge/project-intelligence.md",
+        "document",
+        "documentation",
+        "explains",
+        "from",
+        "holds",
+        "how",
+        "intelligence",
+        "is",
+        "it",
+        "knowledge",
+        "md",
+        "model",
+        "of",
+        "project",
+        "project intelligence",
+        "repository",
+        "scripts/retrain-project-intelligence",
+        "scripts/retrain-project-intelligence.ts",
+        "second",
+        "separate",
+        "system",
+        "the",
+        "this",
+        "to",
+        "ts",
+        "what",
+        "when"
       ]
     },
     {
@@ -56807,6 +56933,21 @@
       "kind": "targets-runtime"
     },
     {
+      "from": "command:deploy:push",
+      "to": "script:scripts/deploy-push.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:deploy:push",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:deploy:push",
+      "to": "runtime:web",
+      "kind": "targets-runtime"
+    },
+    {
       "from": "command:dev:checked",
       "to": "command:app:init",
       "kind": "invokes"
@@ -71075,31 +71216,13 @@
       "from": "document:docs/05-platform-features/sealed-packages/catalog-core-module.md",
       "to": "package:@asol/catalog-core",
       "kind": "references",
-      "detail": "@asol/catalog-core/"
-    },
-    {
-      "from": "document:docs/05-platform-features/sealed-packages/catalog-core-module.md",
-      "to": "package:@asol/catalog-core",
-      "kind": "references",
-      "detail": "@asol/catalog-core/contracts/catalog-v3.contract.ts"
+      "detail": "@asol/catalog-core/..."
     },
     {
       "from": "document:docs/05-platform-features/sealed-packages/catalog-core-module.md",
       "to": "package:@asol/catalog-core",
       "kind": "references",
       "detail": "@asol/catalog-core/server"
-    },
-    {
-      "from": "document:docs/05-platform-features/sealed-packages/catalog-core-module.md",
-      "to": "package:@asol/catalog-core",
-      "kind": "references",
-      "detail": "@asol/catalog-core/types/catalog-v3.types.ts"
-    },
-    {
-      "from": "document:docs/05-platform-features/sealed-packages/catalog-core-module.md",
-      "to": "package:@asol/catalog-core",
-      "kind": "references",
-      "detail": "@asol/catalog-core/utils/catalog-display.ts"
     },
     {
       "from": "document:docs/05-platform-features/sealed-packages/catalog-core-module.md",
@@ -71561,6 +71684,12 @@
       "to": "package:@asol/ota-core",
       "kind": "references",
       "detail": "packages/ota-core/src/tests/"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/ota-core-module.md",
+      "to": "source:packages/notifications-core/src/services/providers/fcm-http-v1.server.ts",
+      "kind": "references",
+      "detail": "packages/notifications-core/src/services/providers/fcm-http-v1.server.ts"
     },
     {
       "from": "document:docs/05-platform-features/sealed-packages/product-core-module.md",
@@ -72039,6 +72168,12 @@
       "to": "package:@asol/auth-core",
       "kind": "references",
       "detail": "@asol/auth-core/server"
+    },
+    {
+      "from": "document:docs/05-platform-features/session-system.md",
+      "to": "source:packages/architecture-core/src/checks/application-cycle-contract.ts",
+      "kind": "references",
+      "detail": "packages/architecture-core/src/checks/application-cycle-contract.ts"
     },
     {
       "from": "document:docs/05-platform-features/session-system.md",
@@ -74093,6 +74228,12 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/deployment-targets.md",
+      "to": "script:scripts/deploy-push.ts",
+      "kind": "references",
+      "detail": "scripts/deploy-push.ts"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/deployment-targets.md",
       "to": "script:scripts/release-service-smoke-probes.ts",
       "kind": "references",
       "detail": "scripts/release-service-smoke-probes.ts"
@@ -74164,6 +74305,59 @@
       "detail": "scripts/tests/vercelignore-contract.test.ts"
     },
     {
+      "from": "document:docs/07-mobile-and-release/distributed-local-development.md",
+      "to": "domain:mobile-and-release",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/distributed-local-development.md",
+      "to": "document:docs/01-architecture/02-packages/module-isolation-rules.md",
+      "kind": "references",
+      "detail": "../01-architecture/02-packages/module-isolation-rules.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/distributed-local-development.md",
+      "to": "document:docs/01-architecture/06-runtime-boundaries/service-boundaries.md",
+      "kind": "references",
+      "detail": "../01-architecture/06-runtime-boundaries/service-boundaries.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/distributed-local-development.md",
+      "to": "document:docs/07-mobile-and-release/deployment-targets.md",
+      "kind": "references",
+      "detail": "./deployment-targets.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/distributed-local-development.md",
+      "to": "document:docs/07-mobile-and-release/scripts-and-workflows.md",
+      "kind": "references",
+      "detail": "./scripts-and-workflows.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/distributed-local-development.md",
+      "to": "document:docs/09-agent-knowledge/runtime-contract.md",
+      "kind": "references",
+      "detail": "../09-agent-knowledge/runtime-contract.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/distributed-local-development.md",
+      "to": "package:@asol/account-bridge",
+      "kind": "references",
+      "detail": "@asol/account-bridge/routes"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/distributed-local-development.md",
+      "to": "script:scripts/stop-dev-server.ts",
+      "kind": "references",
+      "detail": "scripts/stop-dev-server.ts"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/distributed-local-development.md",
+      "to": "source:packages/account-declarations/src/accounts/local-development.ts",
+      "kind": "references",
+      "detail": "packages/account-declarations/src/accounts/local-development.ts"
+    },
+    {
       "from": "document:docs/07-mobile-and-release/github-ci-policy.md",
       "to": "domain:mobile-and-release",
       "kind": "belongs-to"
@@ -74185,6 +74379,12 @@
       "detail": "docs/07-mobile-and-release/local-server-filesystem-boundary.md"
     },
     {
+      "from": "document:docs/07-mobile-and-release/local-runner-full-host-control.md",
+      "to": "script:scripts/retrain-project-intelligence.ts",
+      "kind": "references",
+      "detail": "scripts/retrain-project-intelligence.ts"
+    },
+    {
       "from": "document:docs/07-mobile-and-release/local-server-filesystem-boundary.md",
       "to": "domain:mobile-and-release",
       "kind": "belongs-to"
@@ -74199,6 +74399,12 @@
       "from": "document:docs/07-mobile-and-release/README.md",
       "to": "domain:mobile-and-release",
       "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/README.md",
+      "to": "document:docs/07-mobile-and-release/capacitor/fastlane-module.md",
+      "kind": "references",
+      "detail": "./capacitor/fastlane-module.md"
     },
     {
       "from": "document:docs/07-mobile-and-release/README.md",
@@ -74217,6 +74423,12 @@
       "to": "document:docs/07-mobile-and-release/deployment-targets.md",
       "kind": "references",
       "detail": "./deployment-targets.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/README.md",
+      "to": "document:docs/07-mobile-and-release/distributed-local-development.md",
+      "kind": "references",
+      "detail": "./distributed-local-development.md"
     },
     {
       "from": "document:docs/07-mobile-and-release/README.md",
@@ -74380,9 +74592,21 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/release-commands.md",
+      "to": "package:@asol/account-bridge",
+      "kind": "references",
+      "detail": "@asol/account-bridge/routes"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/release-commands.md",
       "to": "script:scripts/deploy-push.ts",
       "kind": "references",
       "detail": "scripts/deploy-push.ts"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/release-commands.md",
+      "to": "test:scripts/tests/deploy-push.test.ts",
+      "kind": "references",
+      "detail": "scripts/tests/deploy-push.test.ts"
     },
     {
       "from": "document:docs/07-mobile-and-release/release-orchestration-hardening-2026-09-03.md",
@@ -76066,6 +76290,41 @@
       "kind": "belongs-to"
     },
     {
+      "from": "document:docs/09-agent-knowledge/project-intelligence.md",
+      "to": "domain:agent-knowledge",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/09-agent-knowledge/project-intelligence.md",
+      "to": "document:docs/07-mobile-and-release/local-runner-full-host-control.md",
+      "kind": "references",
+      "detail": "../07-mobile-and-release/local-runner-full-host-control.md"
+    },
+    {
+      "from": "document:docs/09-agent-knowledge/project-intelligence.md",
+      "to": "document:docs/09-agent-knowledge/agent-protocol.md",
+      "kind": "references",
+      "detail": "./agent-protocol.md"
+    },
+    {
+      "from": "document:docs/09-agent-knowledge/project-intelligence.md",
+      "to": "document:docs/09-agent-knowledge/document-mutability.md",
+      "kind": "references",
+      "detail": "./document-mutability.md"
+    },
+    {
+      "from": "document:docs/09-agent-knowledge/project-intelligence.md",
+      "to": "document:docs/09-agent-knowledge/generation-and-drift.md",
+      "kind": "references",
+      "detail": "./generation-and-drift.md"
+    },
+    {
+      "from": "document:docs/09-agent-knowledge/project-intelligence.md",
+      "to": "script:scripts/retrain-project-intelligence.ts",
+      "kind": "references",
+      "detail": "scripts/retrain-project-intelligence.ts"
+    },
+    {
       "from": "document:docs/09-agent-knowledge/public-agent-tunnel.md",
       "to": "domain:agent-knowledge",
       "kind": "belongs-to"
@@ -76116,6 +76375,12 @@
       "to": "document:docs/09-agent-knowledge/knowledge-schema.md",
       "kind": "references",
       "detail": "./knowledge-schema.md"
+    },
+    {
+      "from": "document:docs/09-agent-knowledge/README.md",
+      "to": "document:docs/09-agent-knowledge/project-intelligence.md",
+      "kind": "references",
+      "detail": "./project-intelligence.md"
     },
     {
       "from": "document:docs/09-agent-knowledge/README.md",

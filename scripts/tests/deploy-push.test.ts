@@ -160,6 +160,33 @@ for (const removed of ["runTargetedMaintenanceDeploy", "deployExistingRevision",
 }
 
 /**
+ * The gates must stay reachable.
+ *
+ * `deploy:push` was once refused outright unless `--fast` was passed, which made
+ * every check below the flag dead code — including `assertServiceMirrorsBuild`,
+ * the gate the owned-route incident added precisely because a mirror type error
+ * is invisible to the root typecheck and surfaces only after `main` has moved.
+ * A guard that disables the only caller of a safety check deletes the check.
+ */
+assert.ok(
+  !/if \(!flags\.fast\) \{\s*fail\(/.test(deployPushSource),
+  "deploy:push must not be disabled outright; that makes every non-fast gate unreachable.",
+);
+const readiness = deployPushSource.slice(
+  deployPushSource.indexOf("async function assertFastPublishReadiness("),
+  deployPushSource.indexOf("async function assertServiceMirrorsBuild("),
+);
+for (const gate of [
+  "assertVercelAccountsForTargets(",
+  "assertNoScratchFiles(",
+  "assertReleaseManifestNotDowngraded(",
+  "assertSomethingToPush(",
+  "assertServiceMirrorsBuild(",
+]) {
+  assert.ok(readiness.includes(gate), `The non-fast publish path must still run ${gate}.`);
+}
+
+/**
  * `--fast` skips `secrets:backup`, so the success line must not claim it ran.
  * A final line that names a skipped step teaches the wrong recovery.
  */

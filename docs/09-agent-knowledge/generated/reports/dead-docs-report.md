@@ -5,7 +5,7 @@
 
 # Dead Docs Report
 
-Findings: **61**
+Findings: **64**
 
 | Kind | Source | Reference | Detail |
 |---|---|---|---|
@@ -45,6 +45,10 @@ Findings: **61**
 | `missing-file` | `docs/05-platform-features/auth-core-module.md` | `src/features/auth/utils/password-hash.server.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/i18n-system.md` | `src/shared/locales/xx.json` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/notification-bridge-module.md` | `src/features/notification-bridge/` | documentation mentions a missing repository path |
+| `missing-file` | `docs/05-platform-features/sealed-packages/catalog-core-module.md` | `src/features/catalog-data/` | documentation mentions a missing repository path |
+| `missing-file` | `docs/05-platform-features/sealed-packages/catalog-core-module.md` | `src/features/catalog-data/contracts/catalog-v3.contract.ts` | documentation mentions a missing repository path |
+| `missing-file` | `docs/05-platform-features/sealed-packages/catalog-core-module.md` | `src/features/catalog-data/types/catalog-v3.types.ts` | documentation mentions a missing repository path |
+| `missing-file` | `docs/05-platform-features/sealed-packages/catalog-core-module.md` | `src/features/catalog-data/utils/catalog-display.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/sealed-packages/cors-module.md` | `src/apply.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/sealed-packages/cors-module.md` | `src/env.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/sealed-packages/cors-module.md` | `src/headers.ts` | documentation mentions a missing repository path |
@@ -68,5 +72,4 @@ Findings: **61**
 | `missing-file` | `docs/07-mobile-and-release/release-and-secrets.md` | `scripts/lib/` | documentation mentions a missing repository path |
 | `missing-file` | `docs/09-agent-knowledge/local-agent-runtime.md` | `scripts/local-agent-watch.ts` | documentation mentions a missing repository path |
 | `missing-package` | `docs/01-architecture/04-composition/dependency-wiring.md` | `@asol/my-feature-core` | documentation mentions unknown package @asol/my-feature-core |
-| `missing-package` | `docs/05-platform-features/sealed-packages/ota-core-module.md` | `@asol/notifications` | documentation mentions unknown package @asol/notifications |
 | `missing-package` | `docs/09-agent-knowledge/local-agent-runtime.md` | `@asol/local-agent-core` | documentation mentions unknown package @asol/local-agent-core |

@@ -402,6 +402,10 @@ async function assertVercelAccountsForTargets(targets: readonly DeployPushTarget
  * — the cost is a wasted publish cycle, not an outage. Use it when the
  * correctness gates already ran, which is exactly what `deploy:push` assumes of
  * its caller in the first place.
+ *
+ * Without `--fast` every gate below runs. That is the whole difference between
+ * the two commands: they publish through the same transaction, and neither runs
+ * `deploy:all`'s correctness preflight (lint, typecheck, tests, builds).
  */
 async function assertFastPublishReadiness(
   targets: readonly DeployPushTarget[],
@@ -753,20 +757,17 @@ export const __testables = {
 
 async function main(): Promise<void> {
   const { flags, targetArgs } = parseArgv(process.argv.slice(2));
-  if (!flags.fast) {
-    fail("Direct deploy:push is disabled. Use npm run deploy:all or npm run deploy:push:fast.");
-    return;
-  }
   const isolatedTargets = await resolveServiceDeployTargets(targetArgs);
 
   // Publishing is all-or-nothing: control, all six workloads, readiness and
   // main, or no push at all. A partial selection is refused rather than
-  // diverted: it would deploy from whatever branch the caller happened to be
-  // on, having written no git and therefore never checked the branch — the one
-  // path by which a publish could reach Vercel from something other than `main`.
+  // diverted: the old maintenance path deployed the named accounts from the
+  // current HEAD, and because it wrote no git it never checked the branch —
+  // the one route by which a publish could reach Vercel from something other
+  // than `main`. Deploy one account with its own `*:deploy` script instead.
   if (isolatedTargets.length !== ALL_DEPLOY_PUSH_TARGETS.length) {
     fail(
-      "deploy:push:fast publishes the complete set (control + six workloads + main). " +
+      "deploy:push publishes the complete set (control + six workloads + main). " +
         `Selected: ${isolatedTargets.join(", ") || "(none)"}. ` +
         "There is no partial-target deploy; use the account's own deploy script for maintenance.",
     );

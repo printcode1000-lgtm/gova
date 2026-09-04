@@ -15,7 +15,7 @@ The `@asol/native-core` package (`packages/native-core/`) is the single sealed b
 
 ## 2. Four Sealing Mechanisms
 
-1. **Package Exports**: `packages/native-core/package.json` maps only `"." -> "./src/index.ts"`. Deep imports (e.g. `@asol/native-core/adapters/...`) are forbidden.
+1. **Package Exports**: `packages/native-core/package.json` declares five doors and nothing else — `.` → `./src/index.ts`, plus `./platform-globals`, `./capability-keys`, `./scripts/validate-android-r8-policy` and `./scripts/android-build-preflight`. The two script doors exist so release tooling can call them without importing the runtime package. Every other path is a deep import and is forbidden (e.g. `@asol/native-core/adapters/...`).
 2. **ESLint `no-restricted-imports`**: Enforces that `@capacitor/*`, `@capawesome/*`, and `@capgo/*` can only be imported within `packages/native-core/src/adapters/**`.
 3. **Architecture Contract Engine**: `packages/architecture-core/src/checks/architecture-types.ts` holds `CAPACITOR_IMPORT_PATTERN` and `NATIVE_PLATFORM_ROOT`, and the engine applies them to every file during `architecture:check`, which runs inside `build` and `build:static`. This is the mechanism that scans the whole repository. (`checks/native-contract.ts` is a different check — it enforces the OTA native-surface contract, not vendor imports.)
 4. **Contract Tests**: `packages/native-core/src/tests/contract/` locks the *shape* of the boundary — `native-core-boundary.test.ts` pins the exported surface, and `native-core-ast-boundary.test.ts` checks the public entrypoint for leaked vendor types. These assert on the package itself; repo-wide scanning is mechanism 3's job.
