@@ -77,6 +77,15 @@ const identityElementStart = sellerCardSource.indexOf(
 assert.notEqual(identityElementStart, -1, "seller identity element must exist");
 const identityElementEnd = sellerCardSource.indexOf("</div>", identityElementStart);
 assert.notEqual(identityElementEnd, -1, "seller identity element must close");
+const identityElementPrelude = sellerCardSource.slice(
+  Math.max(0, identityElementStart - 100),
+  identityElementStart,
+);
+assert.doesNotMatch(
+  identityElementPrelude,
+  /card\.identityLabel\s*\?\s*\(\s*<div\s*$/,
+  "seller identity element must stay mounted even when identityLabel is empty",
+);
 const identityElementSource = sellerCardSource.slice(
   identityElementStart,
   identityElementEnd,

@@ -112,10 +112,11 @@ seller cards.
 
 ## Identity Element Contract
 
-`features-seller-card-presentation-sellercard-div-10-cduns8` renders exactly one
-visible value: `identityLabel`. It never renders UID, badges, or any other
-secondary content. When neither a store alias/name nor a registration phone is
-available, the identity element is omitted.
+`features-seller-card-presentation-sellercard-div-10-cduns8` is always rendered
+inside `features-seller-card-presentation-sellercard-button-2-nwaag6`. It renders
+only `identityLabel`, never UID, badges, or any other secondary content. When no
+store alias/name or registration phone is available, the element stays mounted
+and remains empty instead of disappearing or substituting another identifier.
 
 ## Actions
 
@@ -162,7 +163,7 @@ The UI component is responsible for:
 
 - Rendering layout variants.
 - Rendering image or initials fallback.
-- Rendering only `identityLabel` inside the identity element.
+- Keeping the identity element mounted inside the primary card button and rendering only `identityLabel` inside it.
 - Rendering context actions.
 - Avoiding nested interactive elements.
 
