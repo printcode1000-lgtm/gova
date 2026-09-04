@@ -1,7 +1,8 @@
 import { apiSuccess, mapServiceError } from "@/core/api/api-response";
+import { runTracedBusinessRoute } from '@/core/api/traced-route';
+import { authService } from "@/features/auth/server";
 import { parseUsersBySpecialtyQuery } from "@/features/profile";
 import { profileService } from "@/features/profile/server";
-import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export async function GET(request: Request) {
   return runTracedBusinessRoute("GET /api/profile/users-by-specialty", async () => {
@@ -18,8 +19,15 @@ export async function GET(request: Request) {
 
       const usersWithAvatarUrls = await Promise.all(
         users.map(async (user) => {
-          const images = await profileService.getStoreImages(user.uid);
-          return { ...user, avatarUrl: images.avatarUrl };
+          const [images, registrationPhone] = await Promise.all([
+            profileService.getStoreImages(user.uid),
+            authService.getUserPhone(user.uid),
+          ]);
+          return {
+            ...user,
+            avatarUrl: images.avatarUrl,
+            registrationPhone: registrationPhone ?? "",
+          };
         }),
       );
 
