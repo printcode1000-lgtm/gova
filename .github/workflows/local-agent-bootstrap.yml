@@ -1,11 +1,6 @@
 name: local-agent-bootstrap
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - integration
-    paths:
-      - ".github/workflows/local-agent-bootstrap.yml"
 permissions:
   contents: read
 jobs:
@@ -13,59 +8,9 @@ jobs:
     runs-on: [self-hosted, Linux, X64, gova]
     timeout-minutes: 15
     steps:
-      - name: Repair final bootstrap YAML formatting
+      - name: Bootstrap local-agent infrastructure from canonical checkout
         shell: bash
         run: |
           set -euo pipefail
-          ROOT=/home/hesham/gova
-          cat > "$ROOT/.github/workflows/local-agent-bootstrap.yml" <<'YAML'
-          name: local-agent-bootstrap
-          on:
-            workflow_dispatch:
-          permissions:
-            contents: read
-          jobs:
-            bootstrap:
-              runs-on: [self-hosted, Linux, X64, gova]
-              timeout-minutes: 15
-              steps:
-                - name: Bootstrap local-agent infrastructure from canonical checkout
-                  shell: bash
-                  run: |
-                    set -euo pipefail
-                    test -d /home/hesham/gova/.git
-                    GOVA_AGENT_REPO=/home/hesham/gova bash /home/hesham/gova/tools/local-agent/install.sh
-          YAML
-          cd "$ROOT"
-          python3 - <<'PY'
-          from pathlib import Path
-          p=Path('.github/workflows/local-agent-bootstrap.yml')
-          text=p.read_text()
-          assert '  workflow_dispatch:' in text
-          assert '        run: |\n          set -euo pipefail' in text
-          assert '/home/hesham/gova-agents/integration' not in text
-          print('STRUCTURAL_INDENT_ASSERTIONS=PASS')
-          PY
-          if python3 -c 'import yaml' >/dev/null 2>&1; then
-            python3 - <<'PY'
-          import yaml
-          from pathlib import Path
-          obj=yaml.safe_load(Path('.github/workflows/local-agent-bootstrap.yml').read_text())
-          assert isinstance(obj, dict)
-          assert 'jobs' in obj and 'bootstrap' in obj['jobs']
-          print('PYYAML_PARSE=PASS')
-          PY
-          elif node -e "require.resolve('yaml')" >/dev/null 2>&1; then
-            node - <<'NODE'
-          const fs=require('fs'); const YAML=require('yaml');
-          const obj=YAML.parse(fs.readFileSync('.github/workflows/local-agent-bootstrap.yml','utf8'));
-          if (!obj || !obj.jobs || !obj.jobs.bootstrap) process.exit(1);
-          console.log('NODE_YAML_PARSE=PASS');
-          NODE
-          else
-            echo 'No local YAML parser package found; structural assertions passed.'
-          fi
-          export DOCS_CONTRACT_CHANGE=1
-          npx tsx scripts/github-ci-policy.ts
-          git status --short --branch
-          echo LOCAL_BOOTSTRAP_YAML_FIX=PASS
+          test -d /home/hesham/gova/.git
+          GOVA_AGENT_REPO=/home/hesham/gova bash /home/hesham/gova/tools/local-agent/install.sh
