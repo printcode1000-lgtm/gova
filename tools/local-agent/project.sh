@@ -24,11 +24,16 @@ if ! [[ "$INTEGRATION_SHA" =~ ^[0-9a-f]{40}$ ]]; then
   exit 1
 fi
 
-git -C "$REPO" fetch --prune origin integration
+git -C "$REPO" fetch --prune origin main integration
 if ! git -C "$REPO" merge-base --is-ancestor "$INTEGRATION_SHA" origin/integration; then
   echo "$INTEGRATION_SHA is not published on origin/integration; push the verified commit there first" >&2
   exit 1
 fi
+
+# The task's boundary is the fork point with main, the same base the Gateway
+# projects from. Judging only the head commit would verify less than what lands.
+BASE="$(git -C "$REPO" merge-base origin/main "$INTEGRATION_SHA")"
+echo "verifying $BASE..$INTEGRATION_SHA"
 
 # A detached verification worktree keeps the canonical checkout — including the
 # user's uncommitted work — untouched while the commit is being judged. It reuses
@@ -45,7 +50,7 @@ if [ ! -e "$VERIFY_TREE/node_modules" ] && [ -d "$REPO/node_modules" ]; then
 fi
 
 cd "$VERIFY_TREE"
-export DOCS_CI_BASE_REF="${INTEGRATION_SHA}^"
+export DOCS_CI_BASE_REF="$BASE"
 npm run architecture:check
 npm run docs:ci
 
@@ -53,7 +58,7 @@ npm run docs:ci
 # judged: a commit must not get to decide which suites are run against it,
 # and a commit branched from an older `integration` would not carry the
 # resolver at all. The gate's own logic stays the reviewed version on `main`.
-suites="$(cd "$REPO" && npx tsx scripts/local-agent/related-core-tests.ts "${INTEGRATION_SHA}^" "$INTEGRATION_SHA")"
+suites="$(cd "$REPO" && npx tsx scripts/local-agent/related-core-tests.ts "$BASE" "$INTEGRATION_SHA")"
 echo "related core suites: ${suites:-(none)}"
 while IFS= read -r suite; do
   [ -n "$suite" ] || continue
