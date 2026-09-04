@@ -149,7 +149,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `NEXT_PUBLIC_ASOL_API_BASE_URL` | client-visible | 3 | `npm run build:static:local`, `packages/ota-core/scripts/serve-static.ts`, `src/core/config/public-env.ts` |
 | `NEXT_PUBLIC_ASOL_APP_STORE_URL` | client-visible | 1 | `src/core/config/public-env.ts` |
 | `NEXT_PUBLIC_ASOL_BASE_PATH` | client-visible | 1 | `src/core/config/public-env.ts` |
-| `NEXT_PUBLIC_ASOL_CONTROL_URL` | client-visible | 4 | `scripts/release-readiness-publish.ts`, `src/core/config/business-api-origins.ts`, `src/core/config/public-env.ts`, `src/core/api/tests/compatibility-boundary.test.ts` |
+| `NEXT_PUBLIC_ASOL_CONTROL_URL` | client-visible | 5 | `scripts/deploy-push.ts`, `scripts/release-readiness-publish.ts`, `src/core/config/business-api-origins.ts`, `src/core/config/public-env.ts`, `src/core/api/tests/compatibility-boundary.test.ts` |
 | `NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` | client-visible | 1 | `src/core/config/public-env.ts` |
 | `NEXT_PUBLIC_ASOL_MODE` | client-visible | 3 | `src/core/config/public-env.ts`, `src/core/config/runtime-context.server.ts`, `src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` |
 | `NEXT_PUBLIC_ASOL_NATIVE_VERSION` | client-visible | 1 | `src/core/config/public-env.ts` |

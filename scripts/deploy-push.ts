@@ -34,6 +34,10 @@ import {
   retractReleaseReadiness,
 } from "./release-readiness-publish";
 import {
+  parseReleaseReadinessResponse,
+  releaseReadinessUrl,
+} from "./release-readiness-barrier";
+import {
   captureReleaseRollbackBaseline,
   rollbackReleaseBaseline,
 } from "./release-rollback-baseline";
@@ -361,6 +365,46 @@ function assertSomethingToPush(flags: DeployPushFlags): void {
     throw new Error(
       `Nothing to push: the working tree is clean and HEAD already matches origin/${MAIN_BRANCH}.\n` +
         "Pass --allow-empty to redeploy the current commit anyway.",
+    );
+  }
+}
+
+/**
+ * A retracted readiness is permanent for its revision.  Reusing that SHA would
+ * deploy all backends again only for the gova build to fail with
+ * `releaseReadinessFailed`, then roll the release back.  A new release commit
+ * is required instead.
+ *
+ * This runs even for `--fast`: the check is a single control-plane read and the
+ * failure is otherwise unrecoverable after production mutations begin.
+ */
+async function assertReusableRevisionNotRetracted(
+  revision: string,
+  options: { fetchImpl?: typeof fetch; controlOrigin?: string } = {},
+): Promise<void> {
+  const controlOrigin = options.controlOrigin ?? process.env.NEXT_PUBLIC_ASOL_CONTROL_URL?.trim();
+  if (!controlOrigin) {
+    throw new Error(
+      "Cannot verify whether the reusable revision was retracted: NEXT_PUBLIC_ASOL_CONTROL_URL is missing. " +
+        "Refusing to reuse HEAD; pass --allow-empty after restoring the release environment.",
+    );
+  }
+  const response = await (options.fetchImpl ?? fetch)(releaseReadinessUrl(controlOrigin, revision), {
+    method: "GET",
+    headers: { Accept: "application/json" },
+    cache: "no-store",
+  });
+  if (!response.ok) {
+    throw new Error(
+      `Cannot verify whether reusable revision ${revision.slice(0, 12)} was retracted: control returned HTTP ${response.status}. ` +
+        "Refusing to reuse HEAD; pass --allow-empty after control is reachable.",
+    );
+  }
+  const status = parseReleaseReadinessResponse(revision, await response.json());
+  if (status === "failed") {
+    throw new Error(
+      `Reusable revision ${revision.slice(0, 12)} has permanently failed release readiness. ` +
+        "Refusing to repeat a release that will fail with releaseReadinessFailed; pass --allow-empty to create a new deployment SHA.",
     );
   }
 }
@@ -753,6 +797,7 @@ export const __testables = {
   hasStagedChanges,
   githubRepositoryFromRemote,
   assertMainGitDeploymentNotRejected,
+  assertReusableRevisionNotRetracted,
 };
 
 async function main(): Promise<void> {
@@ -820,6 +865,7 @@ async function main(): Promise<void> {
         stdio: "inherit",
       });
     } else {
+      await assertReusableRevisionNotRetracted(git(["rev-parse", "HEAD"]));
       console.log(
         "[deploy:push] No staged changes; reusing the current HEAD commit for this push.",
       );

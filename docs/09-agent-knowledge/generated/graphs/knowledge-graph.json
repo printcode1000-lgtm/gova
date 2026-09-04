@@ -136115,6 +136115,12 @@
     },
     {
       "from": "script:scripts/deploy-push.ts",
+      "to": "script:scripts/release-readiness-barrier.ts",
+      "kind": "imports",
+      "detail": "./release-readiness-barrier"
+    },
+    {
+      "from": "script:scripts/deploy-push.ts",
       "to": "script:scripts/release-readiness-publish.ts",
       "kind": "imports",
       "detail": "./release-readiness-publish"
@@ -136128,6 +136134,11 @@
     {
       "from": "script:scripts/deploy-push.ts",
       "to": "environment-key:GITHUB_REPOSITORY",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "script:scripts/deploy-push.ts",
+      "to": "environment-key:NEXT_PUBLIC_ASOL_CONTROL_URL",
       "kind": "uses-environment"
     },
     {

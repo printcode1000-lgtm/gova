@@ -77,6 +77,11 @@ and observed `READY` for control and all six workloads. The explicit gova
 deployment waits on this row before it generates the gova-only build view, so the
 frontend can never publish ahead of the runtimes it redirects to.
 
+A retracted revision remains `failed` permanently. Before `deploy:push` reuses a
+clean `HEAD`, including with `--fast`, it reads this barrier and refuses a failed
+SHA before any production mutation. The operator must use `--allow-empty` to
+create a new deployment SHA; an unavailable barrier also refuses reuse.
+
 ## The error contract is shared, not restated
 
 Control answers the same status and the same body the application answered for

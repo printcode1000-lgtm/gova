@@ -19,6 +19,7 @@ const {
   FAIL_PREFIX,
   githubRepositoryFromRemote,
   assertMainGitDeploymentNotRejected,
+  assertReusableRevisionNotRetracted,
 } = deployPushTestables;
 
 assert.ok(true, "Importing deploy-push must not trigger a deployment.");
@@ -119,6 +120,28 @@ await assert.doesNotReject(() =>
     fetchImpl: async () =>
       Response.json({ statuses: [{ context: "Vercel", state: "pending" }] }),
   }),
+);
+await assert.rejects(
+  () =>
+    assertReusableRevisionNotRetracted("c".repeat(40), {
+      controlOrigin: "https://asol-control.vercel.app",
+      fetchImpl: async () => Response.json({ revision: "c".repeat(40), status: "failed" }),
+    }),
+  /permanently failed release readiness.*--allow-empty/i,
+);
+await assert.doesNotReject(() =>
+  assertReusableRevisionNotRetracted("d".repeat(40), {
+    controlOrigin: "https://asol-control.vercel.app",
+    fetchImpl: async () => Response.json({ revision: "d".repeat(40), status: "pending" }),
+  }),
+);
+await assert.rejects(
+  () =>
+    assertReusableRevisionNotRetracted("e".repeat(40), {
+      controlOrigin: "https://asol-control.vercel.app",
+      fetchImpl: async () => new Response(null, { status: 503 }),
+    }),
+  /Cannot verify whether reusable revision.*HTTP 503.*--allow-empty/i,
 );
 
 const vercelConfig = JSON.parse(
@@ -270,6 +293,11 @@ assert.ok(
 assert.ok(
   mainFn.indexOf("advanceToOriginMain()") < mainFn.indexOf('"git", ["add", "-A"]'),
   "deploy:push must advance HEAD to origin/main before it stages the tree.",
+);
+assert.ok(
+  mainFn.indexOf("await assertReusableRevisionNotRetracted(") <
+    mainFn.indexOf("No staged changes; reusing the current HEAD commit"),
+  "A reused HEAD must be rejected when control records it as retracted.",
 );
 const advance = deployPushSource.slice(
   deployPushSource.indexOf("function advanceToOriginMain("),
