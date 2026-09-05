@@ -9,7 +9,7 @@ import { cn } from '@/shared/utils';
 import { useTranslation } from '@/shared/i18n';
 import { useResolvedColorScheme } from '@/shared/preferences';
 import { useNotificationBadge } from '@/features/notifications/ui';
-import { useFavorites } from '@/features/favorites';
+import { useFavorites } from '@asol/favorites-core/ui';
 
 export function BottomNavBar({ id }: { id?: string }) {
   const navRef = useRef<HTMLElement>(null);

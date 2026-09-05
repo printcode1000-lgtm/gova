@@ -2922,17 +2922,17 @@
       ]
     },
     {
-      "id": "command:test:favorites",
+      "id": "command:test:favorites-core",
       "kind": "command",
-      "name": "npm run test:favorites",
+      "name": "npm run test:favorites-core",
       "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
       "tags": [
-        "favorites",
+        "favorites-core",
         "npm",
-        "npm run test:favorites",
+        "npm run test:favorites-core",
         "run",
         "test",
-        "test:favorites"
+        "test:favorites-core"
       ]
     },
     {
@@ -3342,6 +3342,20 @@
       ]
     },
     {
+      "id": "command:test:product-card-core",
+      "kind": "command",
+      "name": "npm run test:product-card-core",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run test:product-card-core",
+        "product-card-core",
+        "run",
+        "test",
+        "test:product-card-core"
+      ]
+    },
+    {
       "id": "command:test:product-core",
       "kind": "command",
       "name": "npm run test:product-core",
@@ -3549,6 +3563,20 @@
         "secrets-core",
         "test",
         "test:secrets-core"
+      ]
+    },
+    {
+      "id": "command:test:seller-card-core",
+      "kind": "command",
+      "name": "npm run test:seller-card-core",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run test:seller-card-core",
+        "run",
+        "seller-card-core",
+        "test",
+        "test:seller-card-core"
       ]
     },
     {
@@ -5966,6 +5994,7 @@
         "@asol/data-core",
         "@asol/data-health-core",
         "@asol/dev-core",
+        "@asol/favorites-core",
         "@asol/featured-marquee-core",
         "@asol/google-play-store-assets-core",
         "@asol/hero-slider-core",
@@ -5976,9 +6005,11 @@
         "@asol/ota-core",
         "@asol/page-save-core",
         "@asol/page-snapshot-core",
+        "@asol/product-card-core",
         "@asol/product-core",
         "@asol/product-style-core",
         "@asol/release-core",
+        "@asol/seller-card-core",
         "@asol/storage-core",
         "@asol/storage-image-manager-core",
         "@asol/system-logs-core",
@@ -6043,7 +6074,6 @@
         "src/features/page-snapshot/",
         "src/features/password-recovery/",
         "src/features/pharmacy-profile-catalog/",
-        "src/features/product-card/",
         "src/features/product-search/",
         "src/features/product/",
         "src/features/profile-products/",
@@ -6051,7 +6081,6 @@
         "src/features/profile/",
         "src/features/qr-code/",
         "src/features/release-commands/",
-        "src/features/seller-card/",
         "src/features/seller-discounts/",
         "src/features/settings/",
         "src/features/sharing/",
@@ -6181,6 +6210,8 @@
         "@asol/env-core",
         "@asol/env-core/files",
         "@asol/env-core/process",
+        "@asol/favorites-core",
+        "@asol/favorites-core/ui",
         "@asol/featured-marquee-core",
         "@asol/featured-marquee-core/server",
         "@asol/format-core",
@@ -6216,6 +6247,8 @@
         "@asol/ota-core/server",
         "@asol/page-save-core",
         "@asol/page-snapshot-core",
+        "@asol/product-card-core",
+        "@asol/product-card-core/ui",
         "@asol/product-core",
         "@asol/product-core/server",
         "@asol/product-style-core",
@@ -6228,6 +6261,8 @@
         "@asol/release-core/console-server",
         "@asol/release-core/console/android-release-runbook",
         "@asol/secrets-core",
+        "@asol/seller-card-core",
+        "@asol/seller-card-core/ui",
         "@asol/service-mirror-core",
         "@asol/service-runtime-core",
         "@asol/signed-token-core",
@@ -6286,6 +6321,7 @@
         "packages/data-health-core/",
         "packages/dev-core/",
         "packages/env-core/",
+        "packages/favorites-core/",
         "packages/featured-marquee-core/",
         "packages/format-core/",
         "packages/google-play-store-assets-core/",
@@ -6301,12 +6337,14 @@
         "packages/ota-core/",
         "packages/page-save-core/",
         "packages/page-snapshot-core/",
+        "packages/product-card-core/",
         "packages/product-core/",
         "packages/product-style-core/",
         "packages/products-composition/",
         "packages/profiles-composition/",
         "packages/release-core/",
         "packages/secrets-core/",
+        "packages/seller-card-core/",
         "packages/service-mirror-core/",
         "packages/service-runtime-core/",
         "packages/signed-token-core/",
@@ -6356,6 +6394,7 @@
         "@asol/data-core/marketplace-orders",
         "@asol/data-core/notifications",
         "@asol/data-core/ota",
+        "@asol/data-core/profile",
         "@asol/data-core/telemetry",
         "@asol/data-health-core",
         "@asol/data-health-core/server",
@@ -6364,6 +6403,7 @@
         "@asol/env-core",
         "@asol/env-core/files",
         "@asol/env-core/process",
+        "@asol/favorites-core",
         "@asol/featured-marquee-core",
         "@asol/format-core",
         "@asol/google-play-store-assets-core",
@@ -6383,6 +6423,7 @@
         "@asol/ota-core/release-console",
         "@asol/page-save-core",
         "@asol/page-snapshot-core",
+        "@asol/product-card-core",
         "@asol/product-core",
         "@asol/product-core/server",
         "@asol/product-style-core",
@@ -6390,6 +6431,7 @@
         "@asol/profiles-composition",
         "@asol/release-core",
         "@asol/secrets-core",
+        "@asol/seller-card-core",
         "@asol/service-mirror-core",
         "@asol/service-runtime-core",
         "@asol/signed-token-core",
@@ -6520,6 +6562,7 @@
         "@asol/data-health-core",
         "@asol/dev-core",
         "@asol/env-core",
+        "@asol/favorites-core",
         "@asol/featured-marquee-core",
         "@asol/format-core",
         "@asol/google-play-store-assets-core",
@@ -6535,12 +6578,14 @@
         "@asol/ota-core",
         "@asol/page-save-core",
         "@asol/page-snapshot-core",
+        "@asol/product-card-core",
         "@asol/product-core",
         "@asol/product-style-core",
         "@asol/products-composition",
         "@asol/profiles-composition",
         "@asol/release-core",
         "@asol/secrets-core",
+        "@asol/seller-card-core",
         "@asol/service-mirror-core",
         "@asol/service-runtime-core",
         "@asol/signed-token-core",
@@ -6588,6 +6633,7 @@
         "packages/data-health-core/",
         "packages/dev-core/",
         "packages/env-core/",
+        "packages/favorites-core/",
         "packages/featured-marquee-core/",
         "packages/format-core/",
         "packages/google-play-store-assets-core/",
@@ -6603,12 +6649,14 @@
         "packages/ota-core/",
         "packages/page-save-core/",
         "packages/page-snapshot-core/",
+        "packages/product-card-core/",
         "packages/product-core/",
         "packages/product-style-core/",
         "packages/products-composition/",
         "packages/profiles-composition/",
         "packages/release-core/",
         "packages/secrets-core/",
+        "packages/seller-card-core/",
         "packages/service-mirror-core/",
         "packages/service-runtime-core/",
         "packages/signed-token-core/",
@@ -9094,6 +9142,8 @@
       "path": "docs/03-products-and-commerce/product-card-system.md",
       "summary": "The Product Card System is the single presentation source for product cards across ASOL. It prevents each page from rebuilding its own card logic for product name, image, price, badges, rating, and navigation.",
       "tags": [
+        "@asol/product-card-core",
+        "@asol/product-card-core/ui",
         "across",
         "and",
         "asol",
@@ -9114,6 +9164,18 @@
         "name",
         "navigation",
         "own",
+        "packages/product-card-core/src/application/product-card-presenter",
+        "packages/product-card-core/src/application/product-card-presenter.ts",
+        "packages/product-card-core/src/domain/product-card",
+        "packages/product-card-core/src/domain/product-card.types.ts",
+        "packages/product-card-core/src/index",
+        "packages/product-card-core/src/index.ts",
+        "packages/product-card-core/src/presentation/productcard",
+        "packages/product-card-core/src/presentation/productcard.tsx",
+        "packages/product-card-core/src/tests/index",
+        "packages/product-card-core/src/tests/index.test.ts",
+        "packages/product-card-core/src/ui",
+        "packages/product-card-core/src/ui.ts",
         "page",
         "presentation",
         "prevents",
@@ -9124,18 +9186,8 @@
         "rebuilding",
         "single",
         "source",
-        "src/features/favorites",
-        "src/features/product-card/application/services/product-card-presenter",
-        "src/features/product-card/application/services/product-card-presenter.ts",
-        "src/features/product-card/domain/product-card",
-        "src/features/product-card/domain/product-card.types.ts",
-        "src/features/product-card/index",
-        "src/features/product-card/index.ts",
-        "src/features/product-card/presentation/index",
-        "src/features/product-card/presentation/index.ts",
-        "src/features/product-card/presentation/productcard",
-        "src/features/product-card/presentation/productcard.tsx",
         "system",
+        "test",
         "the",
         "the product card system is the single presentation source for product cards across asol. it prevents each page from rebuilding its own card logic for product name, image, price, badges, rating, and navigation.",
         "ts",
@@ -9249,6 +9301,8 @@
       "path": "docs/03-products-and-commerce/seller-card-system.md",
       "summary": "The Seller Card System is the single presentation source for seller, doctor, service-provider, and delivery-provider cards across ASOL.",
       "tags": [
+        "@asol/seller-card-core",
+        "@asol/seller-card-core/ui",
         "across",
         "and",
         "asol",
@@ -9261,23 +9315,26 @@
         "for",
         "is",
         "md",
+        "packages/seller-card-core/src/application/seller-card-presenter",
+        "packages/seller-card-core/src/application/seller-card-presenter.ts",
+        "packages/seller-card-core/src/domain/seller-card",
+        "packages/seller-card-core/src/domain/seller-card.types.ts",
+        "packages/seller-card-core/src/index",
+        "packages/seller-card-core/src/index.ts",
+        "packages/seller-card-core/src/presentation/sellercard",
+        "packages/seller-card-core/src/presentation/sellercard.tsx",
+        "packages/seller-card-core/src/tests/index",
+        "packages/seller-card-core/src/tests/index.test.ts",
+        "packages/seller-card-core/src/ui",
+        "packages/seller-card-core/src/ui.ts",
         "presentation",
         "seller",
         "seller card system",
         "service-provider",
         "single",
         "source",
-        "src/features/seller-card/application/services/seller-card-presenter",
-        "src/features/seller-card/application/services/seller-card-presenter.ts",
-        "src/features/seller-card/domain/seller-card",
-        "src/features/seller-card/domain/seller-card.types.ts",
-        "src/features/seller-card/index",
-        "src/features/seller-card/index.ts",
-        "src/features/seller-card/presentation/index",
-        "src/features/seller-card/presentation/index.ts",
-        "src/features/seller-card/presentation/sellercard",
-        "src/features/seller-card/presentation/sellercard.tsx",
         "system",
+        "test",
         "the",
         "the seller card system is the single presentation source for seller, doctor, service-provider, and delivery-provider cards across asol.",
         "ts",
@@ -10193,6 +10250,8 @@
       "path": "docs/05-platform-features/favorites-system.md",
       "summary": "The Favorites module gives guests and signed-in users a private, device-local list of saved products and sellers. It works in the browser and in Capacitor WebViews on every supported platform. It does not call an API and never writes favorite data to Turso or any cloud service.",
       "tags": [
+        "@asol/favorites-core",
+        "@asol/favorites-core/ui",
         "an",
         "and",
         "any",
@@ -10224,6 +10283,20 @@
         "of",
         "on",
         "or",
+        "packages/favorites-core/src/application/favorite-card-adapter",
+        "packages/favorites-core/src/application/favorite-card-adapter.ts",
+        "packages/favorites-core/src/application/favorite-collection",
+        "packages/favorites-core/src/application/favorite-collection.ts",
+        "packages/favorites-core/src/application/favorite-storage",
+        "packages/favorites-core/src/application/favorite-storage.ts",
+        "packages/favorites-core/src/domain/favorite",
+        "packages/favorites-core/src/domain/favorite.entity.ts",
+        "packages/favorites-core/src/presentation/favoritebutton",
+        "packages/favorites-core/src/presentation/favoritebutton.tsx",
+        "packages/favorites-core/src/presentation/favoritesprovider",
+        "packages/favorites-core/src/presentation/favoritesprovider.tsx",
+        "packages/favorites-core/src/tests/index",
+        "packages/favorites-core/src/tests/index.test.ts",
         "platform",
         "private",
         "products",
@@ -10233,22 +10306,13 @@
         "signed-in",
         "src/app/favorites/page",
         "src/app/favorites/page.tsx",
-        "src/features/favorites/application/services/favorite-card-adapter",
-        "src/features/favorites/application/services/favorite-card-adapter.ts",
-        "src/features/favorites/application/services/favorite-collection",
-        "src/features/favorites/application/services/favorite-collection.ts",
-        "src/features/favorites/application/services/favorite-storage",
-        "src/features/favorites/application/services/favorite-storage.ts",
-        "src/features/favorites/domain/favorite",
-        "src/features/favorites/domain/favorite.entity.ts",
-        "src/features/favorites/presentation/favoritebutton",
-        "src/features/favorites/presentation/favoritebutton.tsx",
-        "src/features/favorites/presentation/hooks/favoritesprovider",
-        "src/features/favorites/presentation/hooks/favoritesprovider.tsx",
-        "src/features/favorites/tests/favorites",
-        "src/features/favorites/tests/favorites-local-storage-contract",
-        "src/features/favorites/tests/favorites-local-storage-contract.test.ts",
-        "src/features/favorites/tests/favorites.test.ts",
+        "src/features/favorites",
+        "src/features/favorites/presentation/favoriteshostprovider",
+        "src/features/favorites/presentation/favoriteshostprovider.tsx",
+        "src/features/favorites/presentation/productcardfavoriteslot",
+        "src/features/favorites/presentation/productcardfavoriteslot.tsx",
+        "src/features/favorites/presentation/sellercardfavoriteslot",
+        "src/features/favorites/presentation/sellercardfavoriteslot.tsx",
         "supported",
         "system",
         "test",
@@ -10271,6 +10335,7 @@
       "path": "docs/05-platform-features/follow-system.md",
       "summary": "The Follow System is a reusable module for following ASOL entities such as stores, products, and categories. It is designed as a real database-backed feature from the start, not a browser-only preference.",
       "tags": [
+        "@asol/favorites-core",
         "and",
         "as",
         "asol",
@@ -14380,9 +14445,10 @@
       "kind": "document",
       "name": "Favorites storage contract fails after feature-layer refactor",
       "path": "docs/08-troubleshooting/problems/favorites-storage-contract-stale-path.md",
-      "summary": "`npm run test:favorites` fails with `ENOENT` while reading:",
+      "summary": "`npm run test:favorites-core` fails with `ENOENT` while reading:",
       "tags": [
-        "`npm run test:favorites` fails with `enoent` while reading:",
+        "@asol/favorites-core",
+        "`npm run test:favorites-core` fails with `enoent` while reading:",
         "after",
         "contract",
         "docs/08-troubleshooting/problems/favorites-storage-contract-stale-path",
@@ -14391,6 +14457,7 @@
         "fails",
         "favorites",
         "favorites storage contract fails after feature-layer refactor",
+        "favorites-core",
         "feature-layer",
         "md",
         "npm",
@@ -16962,15 +17029,16 @@
       "tags": [
         "docs/03-products-and-commerce/",
         "packages/catalog-core/",
+        "packages/favorites-core/",
+        "packages/product-card-core/",
         "packages/product-core/",
+        "packages/seller-card-core/",
         "products-and-commerce",
         "src/features/cart/",
         "src/features/categories/",
         "src/features/orders/",
-        "src/features/product-card/",
         "src/features/product-search/",
         "src/features/product/",
-        "src/features/seller-card/",
         "src/features/seller-discounts/"
       ]
     },
@@ -22025,16 +22093,6 @@
       ]
     },
     {
-      "id": "feature:product-card",
-      "kind": "feature",
-      "name": "product-card",
-      "path": "src/features/product-card",
-      "tags": [
-        "product-card",
-        "src/features/product-card"
-      ]
-    },
-    {
       "id": "feature:product-search",
       "kind": "feature",
       "name": "product-search",
@@ -22092,16 +22150,6 @@
       "tags": [
         "release-commands",
         "src/features/release-commands"
-      ]
-    },
-    {
-      "id": "feature:seller-card",
-      "kind": "feature",
-      "name": "seller-card",
-      "path": "src/features/seller-card",
-      "tags": [
-        "seller-card",
-        "src/features/seller-card"
       ]
     },
     {
@@ -22571,6 +22619,31 @@
       ]
     },
     {
+      "id": "package:@asol/favorites-core",
+      "kind": "package",
+      "name": "@asol/favorites-core",
+      "path": "packages/favorites-core",
+      "summary": "Device-local favorites state, card adapters, and the favorite control; Layer: capability; Public exports: ., ./ui",
+      "tags": [
+        ".",
+        "./ui",
+        "/ui",
+        "@asol/favorites-core",
+        "adapters",
+        "and",
+        "capability",
+        "card",
+        "control",
+        "device-local",
+        "device-local favorites state, card adapters, and the favorite control",
+        "favorite",
+        "favorites",
+        "packages/favorites-core",
+        "state",
+        "the"
+      ]
+    },
+    {
       "id": "package:@asol/featured-marquee-core",
       "kind": "package",
       "name": "@asol/featured-marquee-core",
@@ -22926,6 +22999,29 @@
       ]
     },
     {
+      "id": "package:@asol/product-card-core",
+      "kind": "package",
+      "name": "@asol/product-card-core",
+      "path": "packages/product-card-core",
+      "summary": "Product card view model and reusable product card presentation; Layer: capability; Public exports: ., ./ui",
+      "tags": [
+        ".",
+        "./ui",
+        "/ui",
+        "@asol/product-card-core",
+        "and",
+        "capability",
+        "card",
+        "model",
+        "packages/product-card-core",
+        "presentation",
+        "product",
+        "product card view model and reusable product card presentation",
+        "reusable",
+        "view"
+      ]
+    },
+    {
       "id": "package:@asol/product-core",
       "kind": "package",
       "name": "@asol/product-core",
@@ -23045,6 +23141,29 @@
         "restore",
         "secrets",
         "secrets archive backup and restore"
+      ]
+    },
+    {
+      "id": "package:@asol/seller-card-core",
+      "kind": "package",
+      "name": "@asol/seller-card-core",
+      "path": "packages/seller-card-core",
+      "summary": "Seller card view model and reusable seller card presentation; Layer: capability; Public exports: ., ./ui",
+      "tags": [
+        ".",
+        "./ui",
+        "/ui",
+        "@asol/seller-card-core",
+        "and",
+        "capability",
+        "card",
+        "model",
+        "packages/seller-card-core",
+        "presentation",
+        "reusable",
+        "seller",
+        "seller card view model and reusable seller card presentation",
+        "view"
       ]
     },
     {
@@ -32604,6 +32723,128 @@
       ]
     },
     {
+      "id": "source:packages/favorites-core/src/application/favorite-card-adapter.ts",
+      "kind": "source",
+      "name": "favorite-card-adapter.ts",
+      "path": "packages/favorites-core/src/application/favorite-card-adapter.ts",
+      "tags": [
+        "packages/favorites-core/src/application/favorite-card-adapter",
+        "packages/favorites-core/src/application/favorite-card-adapter.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/favorites-core/src/application/favorite-collection.ts",
+      "kind": "source",
+      "name": "favorite-collection.ts",
+      "path": "packages/favorites-core/src/application/favorite-collection.ts",
+      "tags": [
+        "packages/favorites-core/src/application/favorite-collection",
+        "packages/favorites-core/src/application/favorite-collection.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/favorites-core/src/application/favorite-storage.ts",
+      "kind": "source",
+      "name": "favorite-storage.ts",
+      "path": "packages/favorites-core/src/application/favorite-storage.ts",
+      "tags": [
+        "packages/favorites-core/src/application/favorite-storage",
+        "packages/favorites-core/src/application/favorite-storage.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/favorites-core/src/domain/favorite.entity.ts",
+      "kind": "source",
+      "name": "favorite.entity.ts",
+      "path": "packages/favorites-core/src/domain/favorite.entity.ts",
+      "tags": [
+        "entity",
+        "packages/favorites-core/src/domain/favorite",
+        "packages/favorites-core/src/domain/favorite.entity.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/favorites-core/src/index.ts",
+      "kind": "source",
+      "name": "index.ts",
+      "path": "packages/favorites-core/src/index.ts",
+      "tags": [
+        "packages/favorites-core/src/index",
+        "packages/favorites-core/src/index.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/favorites-core/src/presentation/class-names.ts",
+      "kind": "source",
+      "name": "class-names.ts",
+      "path": "packages/favorites-core/src/presentation/class-names.ts",
+      "tags": [
+        "packages/favorites-core/src/presentation/class-names",
+        "packages/favorites-core/src/presentation/class-names.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/favorites-core/src/presentation/favorite-notice-toast.tsx",
+      "kind": "source",
+      "name": "favorite-notice-toast.tsx",
+      "path": "packages/favorites-core/src/presentation/favorite-notice-toast.tsx",
+      "tags": [
+        "packages/favorites-core/src/presentation/favorite-notice-toast",
+        "packages/favorites-core/src/presentation/favorite-notice-toast.tsx",
+        "tsx"
+      ]
+    },
+    {
+      "id": "source:packages/favorites-core/src/presentation/FavoriteButton.tsx",
+      "kind": "source",
+      "name": "FavoriteButton.tsx",
+      "path": "packages/favorites-core/src/presentation/FavoriteButton.tsx",
+      "tags": [
+        "packages/favorites-core/src/presentation/favoritebutton",
+        "packages/favorites-core/src/presentation/favoritebutton.tsx",
+        "tsx"
+      ]
+    },
+    {
+      "id": "source:packages/favorites-core/src/presentation/favorites-context.ts",
+      "kind": "source",
+      "name": "favorites-context.ts",
+      "path": "packages/favorites-core/src/presentation/favorites-context.ts",
+      "tags": [
+        "packages/favorites-core/src/presentation/favorites-context",
+        "packages/favorites-core/src/presentation/favorites-context.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/favorites-core/src/presentation/FavoritesProvider.tsx",
+      "kind": "source",
+      "name": "FavoritesProvider.tsx",
+      "path": "packages/favorites-core/src/presentation/FavoritesProvider.tsx",
+      "tags": [
+        "packages/favorites-core/src/presentation/favoritesprovider",
+        "packages/favorites-core/src/presentation/favoritesprovider.tsx",
+        "tsx"
+      ]
+    },
+    {
+      "id": "source:packages/favorites-core/src/ui.ts",
+      "kind": "source",
+      "name": "ui.ts",
+      "path": "packages/favorites-core/src/ui.ts",
+      "tags": [
+        "packages/favorites-core/src/ui",
+        "packages/favorites-core/src/ui.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/featured-marquee-core/src/domain/featured-marquee-normalize.ts",
       "kind": "source",
       "name": "featured-marquee-normalize.ts",
@@ -36474,6 +36715,62 @@
       ]
     },
     {
+      "id": "source:packages/product-card-core/src/application/product-card-presenter.ts",
+      "kind": "source",
+      "name": "product-card-presenter.ts",
+      "path": "packages/product-card-core/src/application/product-card-presenter.ts",
+      "tags": [
+        "packages/product-card-core/src/application/product-card-presenter",
+        "packages/product-card-core/src/application/product-card-presenter.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/product-card-core/src/domain/product-card.types.ts",
+      "kind": "source",
+      "name": "product-card.types.ts",
+      "path": "packages/product-card-core/src/domain/product-card.types.ts",
+      "tags": [
+        "packages/product-card-core/src/domain/product-card",
+        "packages/product-card-core/src/domain/product-card.types.ts",
+        "ts",
+        "types"
+      ]
+    },
+    {
+      "id": "source:packages/product-card-core/src/index.ts",
+      "kind": "source",
+      "name": "index.ts",
+      "path": "packages/product-card-core/src/index.ts",
+      "tags": [
+        "packages/product-card-core/src/index",
+        "packages/product-card-core/src/index.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/product-card-core/src/presentation/ProductCard.tsx",
+      "kind": "source",
+      "name": "ProductCard.tsx",
+      "path": "packages/product-card-core/src/presentation/ProductCard.tsx",
+      "tags": [
+        "packages/product-card-core/src/presentation/productcard",
+        "packages/product-card-core/src/presentation/productcard.tsx",
+        "tsx"
+      ]
+    },
+    {
+      "id": "source:packages/product-card-core/src/ui.ts",
+      "kind": "source",
+      "name": "ui.ts",
+      "path": "packages/product-card-core/src/ui.ts",
+      "tags": [
+        "packages/product-card-core/src/ui",
+        "packages/product-card-core/src/ui.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/product-core/src/domain/ids.ts",
       "kind": "source",
       "name": "ids.ts",
@@ -37032,6 +37329,62 @@
       "tags": [
         "packages/secrets-core/src/index",
         "packages/secrets-core/src/index.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/seller-card-core/src/application/seller-card-presenter.ts",
+      "kind": "source",
+      "name": "seller-card-presenter.ts",
+      "path": "packages/seller-card-core/src/application/seller-card-presenter.ts",
+      "tags": [
+        "packages/seller-card-core/src/application/seller-card-presenter",
+        "packages/seller-card-core/src/application/seller-card-presenter.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/seller-card-core/src/domain/seller-card.types.ts",
+      "kind": "source",
+      "name": "seller-card.types.ts",
+      "path": "packages/seller-card-core/src/domain/seller-card.types.ts",
+      "tags": [
+        "packages/seller-card-core/src/domain/seller-card",
+        "packages/seller-card-core/src/domain/seller-card.types.ts",
+        "ts",
+        "types"
+      ]
+    },
+    {
+      "id": "source:packages/seller-card-core/src/index.ts",
+      "kind": "source",
+      "name": "index.ts",
+      "path": "packages/seller-card-core/src/index.ts",
+      "tags": [
+        "packages/seller-card-core/src/index",
+        "packages/seller-card-core/src/index.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/seller-card-core/src/presentation/SellerCard.tsx",
+      "kind": "source",
+      "name": "SellerCard.tsx",
+      "path": "packages/seller-card-core/src/presentation/SellerCard.tsx",
+      "tags": [
+        "packages/seller-card-core/src/presentation/sellercard",
+        "packages/seller-card-core/src/presentation/sellercard.tsx",
+        "tsx"
+      ]
+    },
+    {
+      "id": "source:packages/seller-card-core/src/ui.ts",
+      "kind": "source",
+      "name": "ui.ts",
+      "path": "packages/seller-card-core/src/ui.ts",
+      "tags": [
+        "packages/seller-card-core/src/ui",
+        "packages/seller-card-core/src/ui.ts",
         "ts"
       ]
     },
@@ -44655,103 +45008,47 @@
       ]
     },
     {
-      "id": "source:src/features/favorites/application/services/favorite-card-adapter.ts",
+      "id": "source:src/features/favorites/presentation/FavoritesHostProvider.tsx",
       "kind": "source",
-      "name": "favorite-card-adapter.ts",
-      "path": "src/features/favorites/application/services/favorite-card-adapter.ts",
+      "name": "FavoritesHostProvider.tsx",
+      "path": "src/features/favorites/presentation/FavoritesHostProvider.tsx",
       "tags": [
-        "src/features/favorites/application/services/favorite-card-adapter",
-        "src/features/favorites/application/services/favorite-card-adapter.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:src/features/favorites/application/services/favorite-collection.ts",
-      "kind": "source",
-      "name": "favorite-collection.ts",
-      "path": "src/features/favorites/application/services/favorite-collection.ts",
-      "tags": [
-        "src/features/favorites/application/services/favorite-collection",
-        "src/features/favorites/application/services/favorite-collection.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:src/features/favorites/application/services/favorite-storage.ts",
-      "kind": "source",
-      "name": "favorite-storage.ts",
-      "path": "src/features/favorites/application/services/favorite-storage.ts",
-      "tags": [
-        "src/features/favorites/application/services/favorite-storage",
-        "src/features/favorites/application/services/favorite-storage.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:src/features/favorites/domain/favorite.entity.ts",
-      "kind": "source",
-      "name": "favorite.entity.ts",
-      "path": "src/features/favorites/domain/favorite.entity.ts",
-      "tags": [
-        "entity",
-        "src/features/favorites/domain/favorite",
-        "src/features/favorites/domain/favorite.entity.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:src/features/favorites/index.ts",
-      "kind": "source",
-      "name": "index.ts",
-      "path": "src/features/favorites/index.ts",
-      "tags": [
-        "src/features/favorites/index",
-        "src/features/favorites/index.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:src/features/favorites/presentation/FavoriteButton.tsx",
-      "kind": "source",
-      "name": "FavoriteButton.tsx",
-      "path": "src/features/favorites/presentation/FavoriteButton.tsx",
-      "tags": [
-        "src/features/favorites/presentation/favoritebutton",
-        "src/features/favorites/presentation/favoritebutton.tsx",
+        "src/features/favorites/presentation/favoriteshostprovider",
+        "src/features/favorites/presentation/favoriteshostprovider.tsx",
         "tsx"
       ]
     },
     {
-      "id": "source:src/features/favorites/presentation/hooks/favorite-notice-toast.tsx",
+      "id": "source:src/features/favorites/presentation/ProductCardFavoriteSlot.tsx",
       "kind": "source",
-      "name": "favorite-notice-toast.tsx",
-      "path": "src/features/favorites/presentation/hooks/favorite-notice-toast.tsx",
+      "name": "ProductCardFavoriteSlot.tsx",
+      "path": "src/features/favorites/presentation/ProductCardFavoriteSlot.tsx",
       "tags": [
-        "src/features/favorites/presentation/hooks/favorite-notice-toast",
-        "src/features/favorites/presentation/hooks/favorite-notice-toast.tsx",
+        "src/features/favorites/presentation/productcardfavoriteslot",
+        "src/features/favorites/presentation/productcardfavoriteslot.tsx",
         "tsx"
       ]
     },
     {
-      "id": "source:src/features/favorites/presentation/hooks/favorites-context.ts",
+      "id": "source:src/features/favorites/presentation/SellerCardFavoriteSlot.tsx",
       "kind": "source",
-      "name": "favorites-context.ts",
-      "path": "src/features/favorites/presentation/hooks/favorites-context.ts",
+      "name": "SellerCardFavoriteSlot.tsx",
+      "path": "src/features/favorites/presentation/SellerCardFavoriteSlot.tsx",
       "tags": [
-        "src/features/favorites/presentation/hooks/favorites-context",
-        "src/features/favorites/presentation/hooks/favorites-context.ts",
+        "src/features/favorites/presentation/sellercardfavoriteslot",
+        "src/features/favorites/presentation/sellercardfavoriteslot.tsx",
+        "tsx"
+      ]
+    },
+    {
+      "id": "source:src/features/favorites/ui.ts",
+      "kind": "source",
+      "name": "ui.ts",
+      "path": "src/features/favorites/ui.ts",
+      "tags": [
+        "src/features/favorites/ui",
+        "src/features/favorites/ui.ts",
         "ts"
-      ]
-    },
-    {
-      "id": "source:src/features/favorites/presentation/hooks/FavoritesProvider.tsx",
-      "kind": "source",
-      "name": "FavoritesProvider.tsx",
-      "path": "src/features/favorites/presentation/hooks/FavoritesProvider.tsx",
-      "tags": [
-        "src/features/favorites/presentation/hooks/favoritesprovider",
-        "src/features/favorites/presentation/hooks/favoritesprovider.tsx",
-        "tsx"
       ]
     },
     {
@@ -48318,73 +48615,6 @@
       ]
     },
     {
-      "id": "source:src/features/product-card/application/services/product-card-presenter.ts",
-      "kind": "source",
-      "name": "product-card-presenter.ts",
-      "path": "src/features/product-card/application/services/product-card-presenter.ts",
-      "tags": [
-        "src/features/product-card/application/services/product-card-presenter",
-        "src/features/product-card/application/services/product-card-presenter.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:src/features/product-card/domain/product-card.types.ts",
-      "kind": "source",
-      "name": "product-card.types.ts",
-      "path": "src/features/product-card/domain/product-card.types.ts",
-      "tags": [
-        "src/features/product-card/domain/product-card",
-        "src/features/product-card/domain/product-card.types.ts",
-        "ts",
-        "types"
-      ]
-    },
-    {
-      "id": "source:src/features/product-card/index.ts",
-      "kind": "source",
-      "name": "index.ts",
-      "path": "src/features/product-card/index.ts",
-      "tags": [
-        "src/features/product-card/index",
-        "src/features/product-card/index.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:src/features/product-card/presentation/index.ts",
-      "kind": "source",
-      "name": "index.ts",
-      "path": "src/features/product-card/presentation/index.ts",
-      "tags": [
-        "src/features/product-card/presentation/index",
-        "src/features/product-card/presentation/index.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:src/features/product-card/presentation/ProductCard.tsx",
-      "kind": "source",
-      "name": "ProductCard.tsx",
-      "path": "src/features/product-card/presentation/ProductCard.tsx",
-      "tags": [
-        "src/features/product-card/presentation/productcard",
-        "src/features/product-card/presentation/productcard.tsx",
-        "tsx"
-      ]
-    },
-    {
-      "id": "source:src/features/product-card/ui.ts",
-      "kind": "source",
-      "name": "ui.ts",
-      "path": "src/features/product-card/ui.ts",
-      "tags": [
-        "src/features/product-card/ui",
-        "src/features/product-card/ui.ts",
-        "ts"
-      ]
-    },
-    {
       "id": "source:src/features/product-search/application/config/product-search-fields.ts",
       "kind": "source",
       "name": "product-search-fields.ts",
@@ -50402,73 +50632,6 @@
       "tags": [
         "src/features/release-commands/ui",
         "src/features/release-commands/ui.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:src/features/seller-card/application/services/seller-card-presenter.ts",
-      "kind": "source",
-      "name": "seller-card-presenter.ts",
-      "path": "src/features/seller-card/application/services/seller-card-presenter.ts",
-      "tags": [
-        "src/features/seller-card/application/services/seller-card-presenter",
-        "src/features/seller-card/application/services/seller-card-presenter.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:src/features/seller-card/domain/seller-card.types.ts",
-      "kind": "source",
-      "name": "seller-card.types.ts",
-      "path": "src/features/seller-card/domain/seller-card.types.ts",
-      "tags": [
-        "src/features/seller-card/domain/seller-card",
-        "src/features/seller-card/domain/seller-card.types.ts",
-        "ts",
-        "types"
-      ]
-    },
-    {
-      "id": "source:src/features/seller-card/index.ts",
-      "kind": "source",
-      "name": "index.ts",
-      "path": "src/features/seller-card/index.ts",
-      "tags": [
-        "src/features/seller-card/index",
-        "src/features/seller-card/index.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:src/features/seller-card/presentation/index.ts",
-      "kind": "source",
-      "name": "index.ts",
-      "path": "src/features/seller-card/presentation/index.ts",
-      "tags": [
-        "src/features/seller-card/presentation/index",
-        "src/features/seller-card/presentation/index.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:src/features/seller-card/presentation/SellerCard.tsx",
-      "kind": "source",
-      "name": "SellerCard.tsx",
-      "path": "src/features/seller-card/presentation/SellerCard.tsx",
-      "tags": [
-        "src/features/seller-card/presentation/sellercard",
-        "src/features/seller-card/presentation/sellercard.tsx",
-        "tsx"
-      ]
-    },
-    {
-      "id": "source:src/features/seller-card/ui.ts",
-      "kind": "source",
-      "name": "ui.ts",
-      "path": "src/features/seller-card/ui.ts",
-      "tags": [
-        "src/features/seller-card/ui",
-        "src/features/seller-card/ui.ts",
         "ts"
       ]
     },
@@ -53536,6 +53699,42 @@
       ]
     },
     {
+      "id": "test:packages/favorites-core/src/tests/favorite-collection.test.ts",
+      "kind": "test",
+      "name": "favorite-collection.test.ts",
+      "path": "packages/favorites-core/src/tests/favorite-collection.test.ts",
+      "tags": [
+        "packages/favorites-core/src/tests/favorite-collection",
+        "packages/favorites-core/src/tests/favorite-collection.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/favorites-core/src/tests/favorites-local-storage-contract.test.ts",
+      "kind": "test",
+      "name": "favorites-local-storage-contract.test.ts",
+      "path": "packages/favorites-core/src/tests/favorites-local-storage-contract.test.ts",
+      "tags": [
+        "packages/favorites-core/src/tests/favorites-local-storage-contract",
+        "packages/favorites-core/src/tests/favorites-local-storage-contract.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/favorites-core/src/tests/index.test.ts",
+      "kind": "test",
+      "name": "index.test.ts",
+      "path": "packages/favorites-core/src/tests/index.test.ts",
+      "tags": [
+        "packages/favorites-core/src/tests/index",
+        "packages/favorites-core/src/tests/index.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/featured-marquee-core/src/tests/index.test.ts",
       "kind": "test",
       "name": "index.test.ts",
@@ -54184,6 +54383,18 @@
       ]
     },
     {
+      "id": "test:packages/product-card-core/src/tests/index.test.ts",
+      "kind": "test",
+      "name": "index.test.ts",
+      "path": "packages/product-card-core/src/tests/index.test.ts",
+      "tags": [
+        "packages/product-card-core/src/tests/index",
+        "packages/product-card-core/src/tests/index.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/product-core/src/tests/index.test.ts",
       "kind": "test",
       "name": "index.test.ts",
@@ -54275,6 +54486,30 @@
       "tags": [
         "packages/secrets-core/src/tests/index",
         "packages/secrets-core/src/tests/index.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/seller-card-core/src/tests/index.test.ts",
+      "kind": "test",
+      "name": "index.test.ts",
+      "path": "packages/seller-card-core/src/tests/index.test.ts",
+      "tags": [
+        "packages/seller-card-core/src/tests/index",
+        "packages/seller-card-core/src/tests/index.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/seller-card-core/src/tests/seller-card-presenter.test.ts",
+      "kind": "test",
+      "name": "seller-card-presenter.test.ts",
+      "path": "packages/seller-card-core/src/tests/seller-card-presenter.test.ts",
+      "tags": [
+        "packages/seller-card-core/src/tests/seller-card-presenter",
+        "packages/seller-card-core/src/tests/seller-card-presenter.test.ts",
         "test",
         "ts"
       ]
@@ -55176,30 +55411,6 @@
       ]
     },
     {
-      "id": "test:src/features/favorites/tests/favorites-local-storage-contract.test.ts",
-      "kind": "test",
-      "name": "favorites-local-storage-contract.test.ts",
-      "path": "src/features/favorites/tests/favorites-local-storage-contract.test.ts",
-      "tags": [
-        "src/features/favorites/tests/favorites-local-storage-contract",
-        "src/features/favorites/tests/favorites-local-storage-contract.test.ts",
-        "test",
-        "ts"
-      ]
-    },
-    {
-      "id": "test:src/features/favorites/tests/favorites.test.ts",
-      "kind": "test",
-      "name": "favorites.test.ts",
-      "path": "src/features/favorites/tests/favorites.test.ts",
-      "tags": [
-        "src/features/favorites/tests/favorites",
-        "src/features/favorites/tests/favorites.test.ts",
-        "test",
-        "ts"
-      ]
-    },
-    {
       "id": "test:src/features/feature-flags/tests/feature-flag-service.test.ts",
       "kind": "test",
       "name": "feature-flag-service.test.ts",
@@ -55711,18 +55922,6 @@
       "tags": [
         "src/features/release-commands/tests/release-commands",
         "src/features/release-commands/tests/release-commands.test.ts",
-        "test",
-        "ts"
-      ]
-    },
-    {
-      "id": "test:src/features/seller-card/application/services/seller-card-presenter.test.ts",
-      "kind": "test",
-      "name": "seller-card-presenter.test.ts",
-      "path": "src/features/seller-card/application/services/seller-card-presenter.test.ts",
-      "tags": [
-        "src/features/seller-card/application/services/seller-card-presenter",
-        "src/features/seller-card/application/services/seller-card-presenter.test.ts",
         "test",
         "ts"
       ]

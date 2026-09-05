@@ -164,6 +164,17 @@ ALLOWED_TO_IMPORT → `@asol/trending-ribbon-core`
 
 `@asol/env-core` has no production `@asol/*` imports.
 
+### @asol/favorites-core
+
+`@asol/favorites-core`
+ALLOWED_TO_IMPORT → `@asol/data-core/browser`
+
+`@asol/favorites-core`
+ALLOWED_TO_IMPORT → `@asol/product-card-core`
+
+`@asol/favorites-core`
+ALLOWED_TO_IMPORT → `@asol/seller-card-core`
+
 ### @asol/featured-marquee-core
 
 `@asol/featured-marquee-core` has no production `@asol/*` imports.
@@ -257,6 +268,14 @@ ALLOWED_TO_IMPORT → `@asol/native-core`
 
 `@asol/page-snapshot-core` has no production `@asol/*` imports.
 
+### @asol/product-card-core
+
+`@asol/product-card-core`
+ALLOWED_TO_IMPORT → `@asol/product-core`
+
+`@asol/product-card-core`
+ALLOWED_TO_IMPORT → `@asol/storage-core`
+
 ### @asol/product-core
 
 `@asol/product-core` has no production `@asol/*` imports.
@@ -289,6 +308,14 @@ ALLOWED_TO_IMPORT → `@asol/vercel-deploy-core`
 ### @asol/secrets-core
 
 `@asol/secrets-core` has no production `@asol/*` imports.
+
+### @asol/seller-card-core
+
+`@asol/seller-card-core`
+ALLOWED_TO_IMPORT → `@asol/data-core/profile`
+
+`@asol/seller-card-core`
+ALLOWED_TO_IMPORT → `@asol/storage-core`
 
 ### @asol/service-mirror-core
 
@@ -358,5 +385,5 @@ ALLOWED_TO_IMPORT → `@asol/account-declarations`
 
 | Metric | Value |
 |---|---|
-| Packages | 44 |
-| Import edges | 59 |
+| Packages | 47 |
+| Import edges | 66 |

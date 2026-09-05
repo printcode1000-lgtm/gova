@@ -235,7 +235,7 @@ const phaseBlocksSource = await readFile(
 );
 assert.match(phaseBlocksSource, /CascadeCheckbox/, "phase and section blocks must cascade parent checkboxes");
 assert.match(phaseBlocksSource, /CommandBranchCard/, "sections must render command branch cards with checkboxes");
-assert.equal(androidBranchIds.length, 359, "android release runbook must expose 359 selectable branches");
+assert.equal(androidBranchIds.length, 361, "android release runbook must expose 361 selectable branches");
 assert.equal(BUILD_COMMAND_CATALOG.filter((item) => item.script === "ota:publish").length, 1);
 const gradleRunnerSource = await readFile("scripts/android/gradle.ts", "utf8");
 assert.match(

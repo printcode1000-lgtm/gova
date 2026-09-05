@@ -10,20 +10,20 @@
 | Kind | Count |
 |---|---:|
 | artifact | 4 |
-| command | 272 |
+| command | 274 |
 | config | 12 |
 | document | 272 |
 | domain | 10 |
 | environment-key | 242 |
 | external-dependency | 107 |
-| feature | 47 |
-| package | 44 |
+| feature | 45 |
+| package | 47 |
 | route | 176 |
 | runtime | 7 |
 | script | 145 |
 | service | 7 |
-| source | 2228 |
-| test | 245 |
+| source | 2232 |
+| test | 248 |
 
 ## Domains
 
@@ -57,6 +57,7 @@
 | @asol/data-health-core | `packages/data-health-core` | Schema health and data integrity checks; Layer: capability; Public exports: ., ./server |
 | @asol/dev-core | `packages/dev-core` | Developer-only tooling surfaces; Layer: capability; Public exports: ., ./server |
 | @asol/env-core | `packages/env-core` | Environment variable reading rules; Layer: capability; Public exports: ., ./files, ./process |
+| @asol/favorites-core | `packages/favorites-core` | Device-local favorites state, card adapters, and the favorite control; Layer: capability; Public exports: ., ./ui |
 | @asol/featured-marquee-core | `packages/featured-marquee-core` | Featured marquee UI capability; Layer: capability; Public exports: ., ./server |
 | @asol/format-core | `packages/format-core` | Formatting helpers with a single owner; Layer: capability; Public exports: . |
 | @asol/google-play-store-assets-core | `packages/google-play-store-assets-core` | Google Play store listing image assets; Layer: capability; Public exports: ., ./images |
@@ -72,12 +73,14 @@
 | @asol/ota-core | `packages/ota-core` | OTA publishing and update runtime; Layer: capability; Public exports: ., ./admin, ./ports, ./publishing, ./release-console, ./server |
 | @asol/page-save-core | `packages/page-save-core` | Mandatory gateway for page-authored persistence; Layer: capability; Public exports: . |
 | @asol/page-snapshot-core | `packages/page-snapshot-core` | Page snapshot capture and restore; Layer: capability; Public exports: . |
+| @asol/product-card-core | `packages/product-card-core` | Product card view model and reusable product card presentation; Layer: capability; Public exports: ., ./ui |
 | @asol/product-core | `packages/product-core` | Product domain logic; Layer: capability; Public exports: ., ./server |
 | @asol/product-style-core | `packages/product-style-core` | Product presentation style rules; Layer: capability; Public exports: ., ./server |
 | @asol/products-composition | `packages/products-composition` | Composition root for the products account; Layer: composition; Public exports: . |
 | @asol/profiles-composition | `packages/profiles-composition` | Composition root for the profiles account; Layer: composition; Public exports: . |
 | @asol/release-core | `packages/release-core` | Release console and runbooks; Layer: capability; Public exports: ., ./console, ./console-artifacts, ./console-server, ./console/android-release-runbook |
 | @asol/secrets-core | `packages/secrets-core` | Secrets archive backup and restore; Layer: capability; Public exports: . |
+| @asol/seller-card-core | `packages/seller-card-core` | Seller card view model and reusable seller card presentation; Layer: capability; Public exports: ., ./ui |
 | @asol/service-mirror-core | `packages/service-mirror-core` | Service source mirroring into services/*; Layer: capability; Public exports: . |
 | @asol/service-runtime-core | `packages/service-runtime-core` | Shared service runtime helpers; Layer: capability; Public exports: . |
 | @asol/signed-token-core | `packages/signed-token-core` | Signed token create/verify; Layer: capability; Public exports: . |
@@ -122,14 +125,12 @@
 | password-recovery | `src/features/password-recovery` |  |
 | pharmacy-profile-catalog | `src/features/pharmacy-profile-catalog` |  |
 | product | `src/features/product` |  |
-| product-card | `src/features/product-card` |  |
 | product-search | `src/features/product-search` |  |
 | profile | `src/features/profile` |  |
 | profile-products | `src/features/profile-products` |  |
 | profile-working-hours | `src/features/profile-working-hours` |  |
 | qr-code | `src/features/qr-code` |  |
 | release-commands | `src/features/release-commands` |  |
-| seller-card | `src/features/seller-card` |  |
 | seller-discounts | `src/features/seller-discounts` |  |
 | settings | `src/features/settings` |  |
 | sharing | `src/features/sharing` |  |

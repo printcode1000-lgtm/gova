@@ -4,6 +4,22 @@
   "entries": [
     {
       "id": "${id}",
+      "source": "packages/product-card-core/src/presentation/ProductCard.tsx",
+      "line": 96,
+      "element": "article",
+      "semanticName": "explicit-prop-root",
+      "kind": "explicit-prop"
+    },
+    {
+      "id": "${id}",
+      "source": "packages/seller-card-core/src/presentation/SellerCard.tsx",
+      "line": 80,
+      "element": "article",
+      "semanticName": "explicit-prop-root",
+      "kind": "explicit-prop"
+    },
+    {
+      "id": "${id}",
       "source": "src/app/dev/monitor/SchemaSyncPanel.tsx",
       "line": 123,
       "element": "div",
@@ -524,14 +540,6 @@
     },
     {
       "id": "${id}",
-      "source": "src/features/product-card/presentation/ProductCard.tsx",
-      "line": 90,
-      "element": "article",
-      "semanticName": "explicit-prop-root",
-      "kind": "explicit-prop"
-    },
-    {
-      "id": "${id}",
       "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
       "line": 195,
       "element": "section",
@@ -565,7 +573,7 @@
     {
       "id": "${id}",
       "source": "src/features/product/presentation/ProductPageContent.tsx",
-      "line": 423,
+      "line": 424,
       "element": "div",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -573,7 +581,7 @@
     {
       "id": "${id}",
       "source": "src/features/product/presentation/ProductPageContent.tsx",
-      "line": 430,
+      "line": 431,
       "element": "p",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -581,7 +589,7 @@
     {
       "id": "${id}",
       "source": "src/features/product/presentation/ProductPageContent.tsx",
-      "line": 437,
+      "line": 438,
       "element": "div",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -589,7 +597,7 @@
     {
       "id": "${id}",
       "source": "src/features/product/presentation/ProductPageContent.tsx",
-      "line": 450,
+      "line": 451,
       "element": "p",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -597,7 +605,7 @@
     {
       "id": "${id}",
       "source": "src/features/product/presentation/ProductPageContent.tsx",
-      "line": 456,
+      "line": 457,
       "element": "main",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -711,14 +719,6 @@
       "source": "src/features/profile/presentation/ProfilePreviewSectionHeading.tsx",
       "line": 16,
       "element": "div",
-      "semanticName": "explicit-prop-root",
-      "kind": "explicit-prop"
-    },
-    {
-      "id": "${id}",
-      "source": "src/features/seller-card/presentation/SellerCard.tsx",
-      "line": 81,
-      "element": "article",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
     },
@@ -3661,7 +3661,7 @@
     {
       "id": "app-favorites-page-button-10-smeit7",
       "source": "src/app/favorites/page.tsx",
-      "line": 62,
+      "line": 66,
       "element": "button",
       "semanticName": "favorites-page-button-10",
       "kind": "literal"
@@ -3669,7 +3669,7 @@
     {
       "id": "app-favorites-page-button-13-kvatuw",
       "source": "src/app/favorites/page.tsx",
-      "line": 74,
+      "line": 78,
       "element": "button",
       "semanticName": "favorites-page-button-13",
       "kind": "literal"
@@ -3677,7 +3677,7 @@
     {
       "id": "app-favorites-page-div-1-lijkxc",
       "source": "src/app/favorites/page.tsx",
-      "line": 48,
+      "line": 52,
       "element": "div",
       "semanticName": "favorites-page-div-1",
       "kind": "literal"
@@ -3685,7 +3685,7 @@
     {
       "id": "app-favorites-page-div-16-zfka4k",
       "source": "src/app/favorites/page.tsx",
-      "line": 89,
+      "line": 93,
       "element": "div",
       "semanticName": "favorites-page-div-16",
       "kind": "literal"
@@ -3693,7 +3693,7 @@
     {
       "id": "app-favorites-page-div-23-rxrgeo",
       "source": "src/app/favorites/page.tsx",
-      "line": 107,
+      "line": 111,
       "element": "div",
       "semanticName": "favorites-page-div-23",
       "kind": "literal"
@@ -3701,7 +3701,7 @@
     {
       "id": "app-favorites-page-div-24-wxte0r",
       "source": "src/app/favorites/page.tsx",
-      "line": 121,
+      "line": 126,
       "element": "div",
       "semanticName": "favorites-page-div-24",
       "kind": "literal"
@@ -3709,7 +3709,7 @@
     {
       "id": "app-favorites-page-div-3-c5ycov",
       "source": "src/app/favorites/page.tsx",
-      "line": 50,
+      "line": 54,
       "element": "div",
       "semanticName": "favorites-page-div-3",
       "kind": "literal"
@@ -3717,7 +3717,7 @@
     {
       "id": "app-favorites-page-div-4-dqlxg6",
       "source": "src/app/favorites/page.tsx",
-      "line": 51,
+      "line": 55,
       "element": "div",
       "semanticName": "favorites-page-div-4",
       "kind": "literal"
@@ -3725,7 +3725,7 @@
     {
       "id": "app-favorites-page-div-6-ppctaf",
       "source": "src/app/favorites/page.tsx",
-      "line": 54,
+      "line": 58,
       "element": "div",
       "semanticName": "favorites-page-div-6",
       "kind": "literal"
@@ -3733,7 +3733,7 @@
     {
       "id": "app-favorites-page-div-9-g55fup",
       "source": "src/app/favorites/page.tsx",
-      "line": 61,
+      "line": 65,
       "element": "div",
       "semanticName": "favorites-page-div-9",
       "kind": "literal"
@@ -3741,7 +3741,7 @@
     {
       "id": "app-favorites-page-header-2-0r6sox",
       "source": "src/app/favorites/page.tsx",
-      "line": 49,
+      "line": 53,
       "element": "header",
       "semanticName": "favorites-page-header-2",
       "kind": "literal"
@@ -3749,7 +3749,7 @@
     {
       "id": "app-favorites-page-heading-7-bqer3x",
       "source": "src/app/favorites/page.tsx",
-      "line": 55,
+      "line": 59,
       "element": "h1",
       "semanticName": "favorites-page-heading-7",
       "kind": "literal"
@@ -3757,7 +3757,7 @@
     {
       "id": "app-favorites-page-section-18-fp4k7t",
       "source": "src/app/favorites/page.tsx",
-      "line": 93,
+      "line": 97,
       "element": "section",
       "semanticName": "favorites-page-section-18",
       "kind": "literal"
@@ -3765,7 +3765,7 @@
     {
       "id": "app-favorites-page-text-12-6mtyyf",
       "source": "src/app/favorites/page.tsx",
-      "line": 72,
+      "line": 76,
       "element": "span",
       "semanticName": "favorites-page-text-12",
       "kind": "literal"
@@ -3773,7 +3773,7 @@
     {
       "id": "app-favorites-page-text-15-ufvifd",
       "source": "src/app/favorites/page.tsx",
-      "line": 84,
+      "line": 88,
       "element": "span",
       "semanticName": "favorites-page-text-15",
       "kind": "literal"
@@ -3781,7 +3781,7 @@
     {
       "id": "app-favorites-page-text-21-9l6ihi",
       "source": "src/app/favorites/page.tsx",
-      "line": 99,
+      "line": 103,
       "element": "p",
       "semanticName": "favorites-page-text-21",
       "kind": "literal"
@@ -3789,7 +3789,7 @@
     {
       "id": "app-favorites-page-text-8-fx13ul",
       "source": "src/app/favorites/page.tsx",
-      "line": 56,
+      "line": 60,
       "element": "p",
       "semanticName": "favorites-page-text-8",
       "kind": "literal"
@@ -4196,7 +4196,7 @@
     },
     {
       "id": "favorites-presentation-hooks-favorite-notice-toast-button-3-nt9bef",
-      "source": "src/features/favorites/presentation/hooks/favorite-notice-toast.tsx",
+      "source": "packages/favorites-core/src/presentation/favorite-notice-toast.tsx",
       "line": 28,
       "element": "button",
       "semanticName": "presentation-hooks-favorite-notice-toast-button-3",
@@ -4204,7 +4204,7 @@
     },
     {
       "id": "favorites-presentation-hooks-favorite-notice-toast-div-1-shpuv1",
-      "source": "src/features/favorites/presentation/hooks/favorite-notice-toast.tsx",
+      "source": "packages/favorites-core/src/presentation/favorite-notice-toast.tsx",
       "line": 20,
       "element": "div",
       "semanticName": "presentation-hooks-favorite-notice-toast-div-1",
@@ -4212,7 +4212,7 @@
     },
     {
       "id": "favorites-presentation-hooks-favorite-notice-toast-text-2-96rsal",
-      "source": "src/features/favorites/presentation/hooks/favorite-notice-toast.tsx",
+      "source": "packages/favorites-core/src/presentation/favorite-notice-toast.tsx",
       "line": 26,
       "element": "span",
       "semanticName": "presentation-hooks-favorite-notice-toast-text-2",
@@ -7493,7 +7493,7 @@
     {
       "id": "features-categories-presentation-doctorappointmentsellerspagecontent-button-14-5ryzwo",
       "source": "src/features/categories/presentation/DoctorAppointmentSellersPageContent.tsx",
-      "line": 107,
+      "line": 109,
       "element": "button",
       "semanticName": "categories-presentation-doctorappointmentsellerspagecontent-button-14",
       "kind": "literal"
@@ -7501,7 +7501,7 @@
     {
       "id": "features-categories-presentation-doctorappointmentsellerspagecontent-div-1-k9xup1",
       "source": "src/features/categories/presentation/DoctorAppointmentSellersPageContent.tsx",
-      "line": 42,
+      "line": 43,
       "element": "div",
       "semanticName": "categories-presentation-doctorappointmentsellerspagecontent-div-1",
       "kind": "literal"
@@ -7509,7 +7509,7 @@
     {
       "id": "features-categories-presentation-doctorappointmentsellerspagecontent-div-12-tzhgek",
       "source": "src/features/categories/presentation/DoctorAppointmentSellersPageContent.tsx",
-      "line": 90,
+      "line": 91,
       "element": "div",
       "semanticName": "categories-presentation-doctorappointmentsellerspagecontent-div-12",
       "kind": "literal"
@@ -7517,7 +7517,7 @@
     {
       "id": "features-categories-presentation-doctorappointmentsellerspagecontent-div-13-mdbhzl",
       "source": "src/features/categories/presentation/DoctorAppointmentSellersPageContent.tsx",
-      "line": 106,
+      "line": 108,
       "element": "div",
       "semanticName": "categories-presentation-doctorappointmentsellerspagecontent-div-13",
       "kind": "literal"
@@ -7525,7 +7525,7 @@
     {
       "id": "features-categories-presentation-doctorappointmentsellerspagecontent-div-2-wmj2gq",
       "source": "src/features/categories/presentation/DoctorAppointmentSellersPageContent.tsx",
-      "line": 50,
+      "line": 51,
       "element": "div",
       "semanticName": "categories-presentation-doctorappointmentsellerspagecontent-div-2",
       "kind": "literal"
@@ -7533,7 +7533,7 @@
     {
       "id": "features-categories-presentation-doctorappointmentsellerspagecontent-div-3-pqz25n",
       "source": "src/features/categories/presentation/DoctorAppointmentSellersPageContent.tsx",
-      "line": 57,
+      "line": 58,
       "element": "div",
       "semanticName": "categories-presentation-doctorappointmentsellerspagecontent-div-3",
       "kind": "literal"
@@ -7541,7 +7541,7 @@
     {
       "id": "features-categories-presentation-doctorappointmentsellerspagecontent-div-4-duyzak",
       "source": "src/features/categories/presentation/DoctorAppointmentSellersPageContent.tsx",
-      "line": 58,
+      "line": 59,
       "element": "div",
       "semanticName": "categories-presentation-doctorappointmentsellerspagecontent-div-4",
       "kind": "literal"
@@ -7549,7 +7549,7 @@
     {
       "id": "features-categories-presentation-doctorappointmentsellerspagecontent-div-6-kbn2kd",
       "source": "src/features/categories/presentation/DoctorAppointmentSellersPageContent.tsx",
-      "line": 66,
+      "line": 67,
       "element": "div",
       "semanticName": "categories-presentation-doctorappointmentsellerspagecontent-div-6",
       "kind": "literal"
@@ -7557,7 +7557,7 @@
     {
       "id": "features-categories-presentation-doctorappointmentsellerspagecontent-div-8-gybd8t",
       "source": "src/features/categories/presentation/DoctorAppointmentSellersPageContent.tsx",
-      "line": 70,
+      "line": 71,
       "element": "div",
       "semanticName": "categories-presentation-doctorappointmentsellerspagecontent-div-8",
       "kind": "literal"
@@ -7565,7 +7565,7 @@
     {
       "id": "features-categories-presentation-doctorappointmentsellerspagecontent-heading-7-pa2kqx",
       "source": "src/features/categories/presentation/DoctorAppointmentSellersPageContent.tsx",
-      "line": 67,
+      "line": 68,
       "element": "h1",
       "semanticName": "categories-presentation-doctorappointmentsellerspagecontent-heading-7",
       "kind": "literal"
@@ -7573,7 +7573,7 @@
     {
       "id": "features-categories-presentation-doctorappointmentsellerspagecontent-input-10-4a8bax",
       "source": "src/features/categories/presentation/DoctorAppointmentSellersPageContent.tsx",
-      "line": 72,
+      "line": 73,
       "element": "input",
       "semanticName": "categories-presentation-doctorappointmentsellerspagecontent-input-10",
       "kind": "literal"
@@ -7581,7 +7581,7 @@
     {
       "id": "features-categories-presentation-doctorappointmentsellerspagecontent-text-11-frnrrf",
       "source": "src/features/categories/presentation/DoctorAppointmentSellersPageContent.tsx",
-      "line": 84,
+      "line": 85,
       "element": "p",
       "semanticName": "categories-presentation-doctorappointmentsellerspagecontent-text-11",
       "kind": "literal"
@@ -7589,7 +7589,7 @@
     {
       "id": "features-categories-presentation-sellerspagecontent-button-14-ej7tpk",
       "source": "src/features/categories/presentation/SellersPageContent.tsx",
-      "line": 110,
+      "line": 112,
       "element": "button",
       "semanticName": "categories-presentation-sellerspagecontent-button-14",
       "kind": "literal"
@@ -7597,7 +7597,7 @@
     {
       "id": "features-categories-presentation-sellerspagecontent-div-1-a59jcw",
       "source": "src/features/categories/presentation/SellersPageContent.tsx",
-      "line": 45,
+      "line": 46,
       "element": "div",
       "semanticName": "categories-presentation-sellerspagecontent-div-1",
       "kind": "literal"
@@ -7605,7 +7605,7 @@
     {
       "id": "features-categories-presentation-sellerspagecontent-div-12-efl9q8",
       "source": "src/features/categories/presentation/SellersPageContent.tsx",
-      "line": 93,
+      "line": 94,
       "element": "div",
       "semanticName": "categories-presentation-sellerspagecontent-div-12",
       "kind": "literal"
@@ -7613,7 +7613,7 @@
     {
       "id": "features-categories-presentation-sellerspagecontent-div-13-gwskmc",
       "source": "src/features/categories/presentation/SellersPageContent.tsx",
-      "line": 109,
+      "line": 111,
       "element": "div",
       "semanticName": "categories-presentation-sellerspagecontent-div-13",
       "kind": "literal"
@@ -7621,7 +7621,7 @@
     {
       "id": "features-categories-presentation-sellerspagecontent-div-2-ebbn3w",
       "source": "src/features/categories/presentation/SellersPageContent.tsx",
-      "line": 53,
+      "line": 54,
       "element": "div",
       "semanticName": "categories-presentation-sellerspagecontent-div-2",
       "kind": "literal"
@@ -7629,7 +7629,7 @@
     {
       "id": "features-categories-presentation-sellerspagecontent-div-3-dbu2zj",
       "source": "src/features/categories/presentation/SellersPageContent.tsx",
-      "line": 60,
+      "line": 61,
       "element": "div",
       "semanticName": "categories-presentation-sellerspagecontent-div-3",
       "kind": "literal"
@@ -7637,7 +7637,7 @@
     {
       "id": "features-categories-presentation-sellerspagecontent-div-4-khadrz",
       "source": "src/features/categories/presentation/SellersPageContent.tsx",
-      "line": 61,
+      "line": 62,
       "element": "div",
       "semanticName": "categories-presentation-sellerspagecontent-div-4",
       "kind": "literal"
@@ -7645,7 +7645,7 @@
     {
       "id": "features-categories-presentation-sellerspagecontent-div-6-cn12jg",
       "source": "src/features/categories/presentation/SellersPageContent.tsx",
-      "line": 69,
+      "line": 70,
       "element": "div",
       "semanticName": "categories-presentation-sellerspagecontent-div-6",
       "kind": "literal"
@@ -7653,7 +7653,7 @@
     {
       "id": "features-categories-presentation-sellerspagecontent-div-8-o5wq9o",
       "source": "src/features/categories/presentation/SellersPageContent.tsx",
-      "line": 73,
+      "line": 74,
       "element": "div",
       "semanticName": "categories-presentation-sellerspagecontent-div-8",
       "kind": "literal"
@@ -7661,7 +7661,7 @@
     {
       "id": "features-categories-presentation-sellerspagecontent-heading-7-g62xsa",
       "source": "src/features/categories/presentation/SellersPageContent.tsx",
-      "line": 70,
+      "line": 71,
       "element": "h1",
       "semanticName": "categories-presentation-sellerspagecontent-heading-7",
       "kind": "literal"
@@ -7669,7 +7669,7 @@
     {
       "id": "features-categories-presentation-sellerspagecontent-input-10-gmjdf8",
       "source": "src/features/categories/presentation/SellersPageContent.tsx",
-      "line": 75,
+      "line": 76,
       "element": "input",
       "semanticName": "categories-presentation-sellerspagecontent-input-10",
       "kind": "literal"
@@ -7677,7 +7677,7 @@
     {
       "id": "features-categories-presentation-sellerspagecontent-text-11-nq5d40",
       "source": "src/features/categories/presentation/SellersPageContent.tsx",
-      "line": 87,
+      "line": 88,
       "element": "p",
       "semanticName": "categories-presentation-sellerspagecontent-text-11",
       "kind": "literal"
@@ -9356,7 +9356,7 @@
     },
     {
       "id": "features-favorites-presentation-favoritebutton-button-1-0as0mw",
-      "source": "src/features/favorites/presentation/FavoriteButton.tsx",
+      "source": "packages/favorites-core/src/presentation/FavoriteButton.tsx",
       "line": 51,
       "element": "button",
       "semanticName": "favorites-presentation-favoritebutton-button-1",
@@ -9364,7 +9364,7 @@
     },
     {
       "id": "features-favorites-presentation-favoritebutton-text-2-soqmaz",
-      "source": "src/features/favorites/presentation/FavoriteButton.tsx",
+      "source": "packages/favorites-core/src/presentation/FavoriteButton.tsx",
       "line": 73,
       "element": "span",
       "semanticName": "favorites-presentation-favoritebutton-text-2",
@@ -11348,96 +11348,96 @@
     },
     {
       "id": "features-product-card-presentation-productcard-button-2-26q1ar",
-      "source": "src/features/product-card/presentation/ProductCard.tsx",
-      "line": 97,
+      "source": "packages/product-card-core/src/presentation/ProductCard.tsx",
+      "line": 98,
       "element": "button",
       "semanticName": "product-card-presentation-productcard-button-2",
       "kind": "literal"
     },
     {
       "id": "features-product-card-presentation-productcard-div-12-uqrfjm",
-      "source": "src/features/product-card/presentation/ProductCard.tsx",
-      "line": 150,
+      "source": "packages/product-card-core/src/presentation/ProductCard.tsx",
+      "line": 151,
       "element": "div",
       "semanticName": "product-card-presentation-productcard-div-12",
       "kind": "literal"
     },
     {
       "id": "features-product-card-presentation-productcard-div-13-b104bj",
-      "source": "src/features/product-card/presentation/ProductCard.tsx",
-      "line": 164,
+      "source": "packages/product-card-core/src/presentation/ProductCard.tsx",
+      "line": 165,
       "element": "div",
       "semanticName": "product-card-presentation-productcard-div-13",
       "kind": "literal"
     },
     {
       "id": "features-product-card-presentation-productcard-div-3-sqxkwb",
-      "source": "src/features/product-card/presentation/ProductCard.tsx",
-      "line": 103,
+      "source": "packages/product-card-core/src/presentation/ProductCard.tsx",
+      "line": 104,
       "element": "div",
       "semanticName": "product-card-presentation-productcard-div-3",
       "kind": "literal"
     },
     {
       "id": "features-product-card-presentation-productcard-div-4-etqpjb",
-      "source": "src/features/product-card/presentation/ProductCard.tsx",
-      "line": 119,
+      "source": "packages/product-card-core/src/presentation/ProductCard.tsx",
+      "line": 120,
       "element": "div",
       "semanticName": "product-card-presentation-productcard-div-4",
       "kind": "literal"
     },
     {
       "id": "features-product-card-presentation-productcard-div-8-vqimnm",
-      "source": "src/features/product-card/presentation/ProductCard.tsx",
-      "line": 135,
+      "source": "packages/product-card-core/src/presentation/ProductCard.tsx",
+      "line": 136,
       "element": "div",
       "semanticName": "product-card-presentation-productcard-div-8",
       "kind": "literal"
     },
     {
       "id": "features-product-card-presentation-productcard-text-10-cvmmoy",
-      "source": "src/features/product-card/presentation/ProductCard.tsx",
-      "line": 140,
+      "source": "packages/product-card-core/src/presentation/ProductCard.tsx",
+      "line": 141,
       "element": "p",
       "semanticName": "product-card-presentation-productcard-text-10",
       "kind": "literal"
     },
     {
       "id": "features-product-card-presentation-productcard-text-11-8rb2w3",
-      "source": "src/features/product-card/presentation/ProductCard.tsx",
-      "line": 143,
+      "source": "packages/product-card-core/src/presentation/ProductCard.tsx",
+      "line": 144,
       "element": "span",
       "semanticName": "product-card-presentation-productcard-text-11",
       "kind": "literal"
     },
     {
       "id": "features-product-card-presentation-productcard-text-5-r5f7gs",
-      "source": "src/features/product-card/presentation/ProductCard.tsx",
-      "line": 121,
+      "source": "packages/product-card-core/src/presentation/ProductCard.tsx",
+      "line": 122,
       "element": "p",
       "semanticName": "product-card-presentation-productcard-text-5",
       "kind": "literal"
     },
     {
       "id": "features-product-card-presentation-productcard-text-6-x9qfek",
-      "source": "src/features/product-card/presentation/ProductCard.tsx",
-      "line": 125,
+      "source": "packages/product-card-core/src/presentation/ProductCard.tsx",
+      "line": 126,
       "element": "p",
       "semanticName": "product-card-presentation-productcard-text-6",
       "kind": "literal"
     },
     {
       "id": "features-product-card-presentation-productcard-text-7-3wdnrz",
-      "source": "src/features/product-card/presentation/ProductCard.tsx",
-      "line": 131,
+      "source": "packages/product-card-core/src/presentation/ProductCard.tsx",
+      "line": 132,
       "element": "p",
       "semanticName": "product-card-presentation-productcard-text-7",
       "kind": "literal"
     },
     {
       "id": "features-product-card-presentation-productcard-text-9-3pfxek",
-      "source": "src/features/product-card/presentation/ProductCard.tsx",
-      "line": 137,
+      "source": "packages/product-card-core/src/presentation/ProductCard.tsx",
+      "line": 138,
       "element": "p",
       "semanticName": "product-card-presentation-productcard-text-9",
       "kind": "literal"
@@ -11445,7 +11445,7 @@
     {
       "id": "features-product-presentation-productpagecontent-div-10-5wcqum",
       "source": "src/features/product/presentation/ProductPageContent.tsx",
-      "line": 482,
+      "line": 483,
       "element": "div",
       "semanticName": "product-presentation-productpagecontent-div-10",
       "kind": "literal"
@@ -11453,7 +11453,7 @@
     {
       "id": "features-product-presentation-productpagecontent-div-8-zatlbb",
       "source": "src/features/product/presentation/ProductPageContent.tsx",
-      "line": 478,
+      "line": 479,
       "element": "div",
       "semanticName": "product-presentation-productpagecontent-div-8",
       "kind": "literal"
@@ -11461,7 +11461,7 @@
     {
       "id": "features-product-presentation-productpagecontent-heading-9-5dynra",
       "source": "src/features/product/presentation/ProductPageContent.tsx",
-      "line": 479,
+      "line": 480,
       "element": "h3",
       "semanticName": "product-presentation-productpagecontent-heading-9",
       "kind": "literal"
@@ -11469,7 +11469,7 @@
     {
       "id": "features-product-presentation-productpagecontent-text-4-hvmpoo",
       "source": "src/features/product/presentation/ProductPageContent.tsx",
-      "line": 438,
+      "line": 439,
       "element": "p",
       "semanticName": "product-presentation-productpagecontent-text-4",
       "kind": "literal"
@@ -11477,7 +11477,7 @@
     {
       "id": "features-product-presentation-productpagecontent-text-7-9m8xym",
       "source": "src/features/product/presentation/ProductPageContent.tsx",
-      "line": 473,
+      "line": 474,
       "element": "p",
       "semanticName": "product-presentation-productpagecontent-text-7",
       "kind": "literal"
@@ -12893,7 +12893,7 @@
     {
       "id": "features-profile-products-presentation-profileproductsgrid-div-1-m5jf20",
       "source": "src/features/profile-products/presentation/ProfileProductsGrid.tsx",
-      "line": 30,
+      "line": 31,
       "element": "div",
       "semanticName": "profile-products-presentation-profileproductsgrid-div-1",
       "kind": "literal"
@@ -13412,82 +13412,50 @@
     },
     {
       "id": "features-seller-card-presentation-sellercard-button-2-nwaag6",
-      "source": "src/features/seller-card/presentation/SellerCard.tsx",
-      "line": 89,
+      "source": "packages/seller-card-core/src/presentation/SellerCard.tsx",
+      "line": 82,
       "element": "button",
       "semanticName": "seller-card-presentation-sellercard-button-2",
       "kind": "literal"
     },
     {
       "id": "features-seller-card-presentation-sellercard-div-10-cduns8",
-      "source": "src/features/seller-card/presentation/SellerCard.tsx",
-      "line": 127,
+      "source": "packages/seller-card-core/src/presentation/SellerCard.tsx",
+      "line": 108,
       "element": "div",
       "semanticName": "seller-card-presentation-sellercard-div-10",
       "kind": "literal"
     },
     {
       "id": "features-seller-card-presentation-sellercard-div-12-4ndc3q",
-      "source": "src/features/seller-card/presentation/SellerCard.tsx",
-      "line": 142,
+      "source": "packages/seller-card-core/src/presentation/SellerCard.tsx",
+      "line": 115,
       "element": "div",
       "semanticName": "seller-card-presentation-sellercard-div-12",
       "kind": "literal"
     },
     {
       "id": "features-seller-card-presentation-sellercard-div-3-mohi8d",
-      "source": "src/features/seller-card/presentation/SellerCard.tsx",
-      "line": 95,
+      "source": "packages/seller-card-core/src/presentation/SellerCard.tsx",
+      "line": 88,
       "element": "div",
       "semanticName": "seller-card-presentation-sellercard-div-3",
       "kind": "literal"
     },
     {
       "id": "features-seller-card-presentation-sellercard-div-4-a8zanz",
-      "source": "src/features/seller-card/presentation/SellerCard.tsx",
-      "line": 108,
+      "source": "packages/seller-card-core/src/presentation/SellerCard.tsx",
+      "line": 101,
       "element": "div",
       "semanticName": "seller-card-presentation-sellercard-div-4",
       "kind": "literal"
     },
     {
       "id": "features-seller-card-presentation-sellercard-div-5-h5pjcl",
-      "source": "src/features/seller-card/presentation/SellerCard.tsx",
-      "line": 113,
+      "source": "packages/seller-card-core/src/presentation/SellerCard.tsx",
+      "line": 106,
       "element": "div",
       "semanticName": "seller-card-presentation-sellercard-div-5",
-      "kind": "literal"
-    },
-    {
-      "id": "features-seller-card-presentation-sellercard-text-6-wps3w8",
-      "source": "src/features/seller-card/presentation/SellerCard.tsx",
-      "line": 115,
-      "element": "p",
-      "semanticName": "seller-card-presentation-sellercard-text-6",
-      "kind": "literal"
-    },
-    {
-      "id": "features-seller-card-presentation-sellercard-text-7-5oubzx",
-      "source": "src/features/seller-card/presentation/SellerCard.tsx",
-      "line": 118,
-      "element": "p",
-      "semanticName": "seller-card-presentation-sellercard-text-7",
-      "kind": "literal"
-    },
-    {
-      "id": "features-seller-card-presentation-sellercard-text-8-dfwtzu",
-      "source": "src/features/seller-card/presentation/SellerCard.tsx",
-      "line": 121,
-      "element": "p",
-      "semanticName": "seller-card-presentation-sellercard-text-8",
-      "kind": "literal"
-    },
-    {
-      "id": "features-seller-card-presentation-sellercard-text-9-yxq7sa",
-      "source": "src/features/seller-card/presentation/SellerCard.tsx",
-      "line": 124,
-      "element": "p",
-      "semanticName": "seller-card-presentation-sellercard-text-9",
       "kind": "literal"
     },
     {
@@ -23997,7 +23965,7 @@
     {
       "id": "product-search-presentation-panel-productsearchresults-div-1-riavki",
       "source": "src/features/product-search/presentation/panel/ProductSearchResults.tsx",
-      "line": 26,
+      "line": 30,
       "element": "div",
       "semanticName": "search-presentation-panel-productsearchresults-div-1",
       "kind": "literal"
@@ -24005,7 +23973,7 @@
     {
       "id": "product-search-presentation-panel-productsearchresults-div-2-u98fnb",
       "source": "src/features/product-search/presentation/panel/ProductSearchResults.tsx",
-      "line": 43,
+      "line": 48,
       "element": "div",
       "semanticName": "search-presentation-panel-productsearchresults-div-2",
       "kind": "literal"

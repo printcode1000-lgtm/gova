@@ -2,9 +2,9 @@
 
 import { ChevronDown, Search, Truck } from "lucide-react";
 import { Input } from "@/shared/ui/input";
-import { SellerCard } from "@/features/seller-card/ui";
+import { SellerCard } from "@asol/seller-card-core/ui";
 import type { UserProfileRow } from "@/features/profile/application/services/profile-service.interface";
-import { createSellerCardViewModel, type SellerCardAction } from "@/features/seller-card";
+import { createSellerCardViewModel, type SellerCardAction } from "@asol/seller-card-core";
 import type { fulfillmentSettingsCopy } from "./fulfillment-settings-copy";
 
 export function FulfillmentCarrierSearch({

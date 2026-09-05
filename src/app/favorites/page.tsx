@@ -5,15 +5,19 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Heart, Package, Store } from "lucide-react";
 
-import { ProductCard } from "@/features/product-card/ui";
-import { SellerCard } from "@/features/seller-card/ui";
+import { ProductCard } from "@asol/product-card-core/ui";
+import { SellerCard } from "@asol/seller-card-core/ui";
 import { LoadingSpinner } from "@/shared/ui";
 import {
   productCardFromFavorite,
   sellerCardFromFavorite,
-  useFavorites,
   type FavoriteTargetType,
-} from "@/features/favorites";
+} from "@asol/favorites-core";
+import { useFavorites } from "@asol/favorites-core/ui";
+import {
+  ProductCardFavoriteSlot,
+  SellerCardFavoriteSlot,
+} from "@/features/favorites/ui";
 import { useTranslation } from "@/shared/i18n";
 import { cn } from "@/shared/utils";
 
@@ -112,6 +116,7 @@ export default function FavoritesPage() {
                 key={item.key}
                 card={card}
                 variant="search"
+                favoriteSlot={<ProductCardFavoriteSlot card={card} />}
                 onOpen={() => router.push(card.href || "/search")}
               />
             );
@@ -126,6 +131,7 @@ export default function FavoritesPage() {
                 key={item.key}
                 card={card}
                 variant="search"
+                favoriteSlot={<SellerCardFavoriteSlot card={card} />}
                 onOpen={() => router.push(card.href || "/search")}
               />
             );

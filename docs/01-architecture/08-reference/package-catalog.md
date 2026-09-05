@@ -11,7 +11,7 @@ Canonical inventory of every sealed `@asol/*` package in `packages/`.
 
 ## Scope
 
-Covers all 44 sealed packages under `packages/`. Does not cover `services/*/generated/` mirrors.
+Covers all 47 sealed packages under `packages/`. Does not cover `services/*/generated/` mirrors.
 
 ## Source of Truth
 
@@ -200,6 +200,20 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:env-core` |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+
+### @asol/favorites-core
+
+| Field | Value |
+|---|---|
+| **Package** | `@asol/favorites-core` |
+| **Folder** | `packages/favorites-core/` |
+| **Purpose** | Device-local favorites state, card adapters, and the favorite control |
+| **Architectural Layer** | capability |
+| **Public Exports** | `.` · `./ui` |
+| **Infrastructure Privileges** | none |
+| **May Import App (`@/`)** | no |
+| **Test Gate** | `npm run test:favorites-core` |
 | **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/featured-marquee-core
@@ -412,6 +426,20 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Test Gate** | `npm run test:page-snapshot-core` |
 | **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
+### @asol/product-card-core
+
+| Field | Value |
+|---|---|
+| **Package** | `@asol/product-card-core` |
+| **Folder** | `packages/product-card-core/` |
+| **Purpose** | Product card view model and reusable product card presentation |
+| **Architectural Layer** | capability |
+| **Public Exports** | `.` · `./ui` |
+| **Infrastructure Privileges** | none |
+| **May Import App (`@/`)** | no |
+| **Test Gate** | `npm run test:product-card-core` |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+
 ### @asol/product-core
 
 | Field | Value |
@@ -480,6 +508,20 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:release-core` |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+
+### @asol/seller-card-core
+
+| Field | Value |
+|---|---|
+| **Package** | `@asol/seller-card-core` |
+| **Folder** | `packages/seller-card-core/` |
+| **Purpose** | Seller card view model and reusable seller card presentation |
+| **Architectural Layer** | capability |
+| **Public Exports** | `.` · `./ui` |
+| **Infrastructure Privileges** | none |
+| **May Import App (`@/`)** | no |
+| **Test Gate** | `npm run test:seller-card-core` |
 | **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/secrets-core
@@ -640,4 +682,4 @@ This Markdown file is **generated** and verified by `architecture:check`.
 
 | Metric | Value |
 |---|---|
-| Packages | 44 |
+| Packages | 47 |

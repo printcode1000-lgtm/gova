@@ -6,13 +6,13 @@ The binding contract for every sealed package and every application file. Agents
 
 ## Scope
 
-All 41 packages in `CAPABILITY_PACKAGES`, all application layers under `src/`, service mirrors under `services/`, and scripts subject to architecture scan. Database operational procedures: [docs/02-data-and-storage/](../../02-data-and-storage/).
+All 47 packages in `CAPABILITY_PACKAGES`, all application layers under `src/`, service mirrors under `services/`, and scripts subject to architecture scan. Database operational procedures: [docs/02-data-and-storage/](../../02-data-and-storage/).
 
 ## Source Map
 
 | Artifact | Path |
 |---|---|
-| Registry (41 packages) | `packages/architecture-core/src/registry/capability-registry.ts` |
+| Registry (47 packages) | `packages/architecture-core/src/registry/capability-registry.ts` |
 | Application features | `packages/architecture-core/src/registry/application-features-registry.ts` |
 | Scan runner | `packages/architecture-core/src/runner.ts` |
 | CLI | `scripts/architecture-check.ts` |
@@ -79,7 +79,7 @@ Each capability lives in `packages/<name>/` as an independent npm package. Other
 
 Composition packages (`mayImportApp: true`) are the exception: they MAY import `@/features/*` to wire ports. The reverse — app reaching into composition internals — remains forbidden.
 
-**Six compositions with `mayImportApp: true`:** `notifications-composition`, `orders-composition`, `products-composition`, `profiles-composition`, `submain-composition`, `sub2main-composition`.
+**Seven compositions with `mayImportApp: true`:** `control-composition`, `notifications-composition`, `orders-composition`, `products-composition`, `profiles-composition`, `submain-composition`, `sub2main-composition`.
 
 ### Rule 8 — Single responsibility per file
 
@@ -97,12 +97,12 @@ Upgrading Capacitor, AWS SDK, Android Gradle, or similar MUST require changes on
 
 ## Package inventory (summary)
 
-**41 sealed packages** across five registry layers:
+**47 sealed packages** across five registry layers:
 
 | Layer | Count | Packages |
 |---|---|---|
-| `capability` | 33 | All `*-core` except `architecture-core` |
-| `composition` | 6 | `*-composition` |
+| `capability` | 37 | All `*-core` except `architecture-core` |
+| `composition` | 7 | `*-composition` |
 | `declarations` | 1 | `account-declarations` |
 | `bridge` | 1 | `account-bridge` |
 | `enforcement` | 1 | `architecture-core` |
@@ -118,8 +118,8 @@ Ownership statements: [capability-map.md](../08-reference/capability-map.md).
   enforcement   architecture-core     rules + scan
   bridge        account-bridge          device-only; knows multiple accounts
   declarations  account-declarations    pure data; imports NOTHING
-  composition   *-composition (×6)      wires account runtime; mayImportApp
-  capability    *-core (×33)            owns capabilities once
+  composition   *-composition (×7)      wires account runtime; mayImportApp
+  capability    *-core (×37)            owns capabilities once
 ```
 
 ### Critical edges

@@ -11,7 +11,7 @@ Machine-readable capability ownership reference. Each capability has exactly one
 
 ## Scope
 
-All 44 sealed `@asol/*` packages. Application-layer orchestration lives under `src/features/*` — see [application-feature-catalog.md](./application-feature-catalog.md).
+All 47 sealed `@asol/*` packages. Application-layer orchestration lives under `src/features/*` — see [application-feature-catalog.md](./application-feature-catalog.md).
 
 ## Source of Truth
 
@@ -251,6 +251,24 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 | **Canonical Documents** | [package-catalog.md](./package-catalog.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 **Source Map:** `packages/env-core/` · registry: `packages/architecture-core/src/registry/capability-registry.ts`
+
+---
+
+## Device-local favorites state, card adapters, and the favorite control
+
+| Field | Value |
+|---|---|
+| **Capability** | Device-local favorites state, card adapters, and the favorite control |
+| **Owner Package** | `@asol/favorites-core` |
+| **Architectural Layer** | capability |
+| **Public Gateway** | `@asol/favorites-core` · `@asol/favorites-core/ui` |
+| **Allowed Consumers** | Application via declared doors; composition packages wire ports |
+| **Composition Root** | `N/A` (capability must not import `@/`) |
+| **Infrastructure Owner** | none (pure logic or ports) |
+| **Status** | CLOSED (sealed package with registry entry) |
+| **Canonical Documents** | [package-catalog.md](./package-catalog.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+
+**Source Map:** `packages/favorites-core/` · registry: `packages/architecture-core/src/registry/capability-registry.ts`
 
 ---
 
@@ -524,6 +542,24 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 
 ---
 
+## Product card view model and reusable product card presentation
+
+| Field | Value |
+|---|---|
+| **Capability** | Product card view model and reusable product card presentation |
+| **Owner Package** | `@asol/product-card-core` |
+| **Architectural Layer** | capability |
+| **Public Gateway** | `@asol/product-card-core` · `@asol/product-card-core/ui` |
+| **Allowed Consumers** | Application via declared doors; composition packages wire ports |
+| **Composition Root** | `N/A` (capability must not import `@/`) |
+| **Infrastructure Owner** | none (pure logic or ports) |
+| **Status** | CLOSED (sealed package with registry entry) |
+| **Canonical Documents** | [package-catalog.md](./package-catalog.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+
+**Source Map:** `packages/product-card-core/` · registry: `packages/architecture-core/src/registry/capability-registry.ts`
+
+---
+
 ## Product domain logic
 
 | Field | Value |
@@ -611,6 +647,24 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 | **Canonical Documents** | [package-catalog.md](./package-catalog.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 **Source Map:** `packages/release-core/` · registry: `packages/architecture-core/src/registry/capability-registry.ts`
+
+---
+
+## Seller card view model and reusable seller card presentation
+
+| Field | Value |
+|---|---|
+| **Capability** | Seller card view model and reusable seller card presentation |
+| **Owner Package** | `@asol/seller-card-core` |
+| **Architectural Layer** | capability |
+| **Public Gateway** | `@asol/seller-card-core` · `@asol/seller-card-core/ui` |
+| **Allowed Consumers** | Application via declared doors; composition packages wire ports |
+| **Composition Root** | `N/A` (capability must not import `@/`) |
+| **Infrastructure Owner** | none (pure logic or ports) |
+| **Status** | CLOSED (sealed package with registry entry) |
+| **Canonical Documents** | [package-catalog.md](./package-catalog.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+
+**Source Map:** `packages/seller-card-core/` · registry: `packages/architecture-core/src/registry/capability-registry.ts`
 
 ---
 
@@ -816,9 +870,9 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 
 | Metric | Value |
 |---|---|
-| Sealed packages | 44 |
+| Sealed packages | 47 |
 | Layer `bridge` | 1 |
-| Layer `capability` | 34 |
+| Layer `capability` | 37 |
 | Layer `composition` | 7 |
 | Layer `declarations` | 1 |
 | Layer `enforcement` | 1 |

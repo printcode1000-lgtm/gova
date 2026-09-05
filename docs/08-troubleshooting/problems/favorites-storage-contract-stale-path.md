@@ -2,7 +2,7 @@
 
 ## Symptom
 
-`npm run test:favorites` fails with `ENOENT` while reading:
+`npm run test:favorites-core` fails with `ENOENT` while reading:
 
 ```text
 src/features/favorites/services/favorite-storage.ts
@@ -16,7 +16,7 @@ The favorites feature was reorganized into application/domain/presentation layer
 
 ## Fix
 
-The contract no longer depends on one internal directory. It scans the favorites feature for the single `favorite-storage.ts` implementation, asserts that exactly one exists, verifies that it uses `ASOL_DB_STORES.FAVORITES` and the scoped favorites key, and verifies that `FavoritesProvider` imports that storage implementation.
+The contract no longer depends on one internal directory. It scans `@asol/favorites-core` for the single `favorite-storage.ts` implementation, asserts that exactly one exists, verifies that it uses `ASOL_DB_STORES.FAVORITES` and the scoped favorites key, and verifies that `FavoritesProvider` imports that storage implementation.
 
 This preserves the architectural contract while allowing internal layer moves that keep the same responsibility and wiring.
 
@@ -25,6 +25,6 @@ This preserves the architectural contract while allowing internal layer moves th
 Run:
 
 ```bash
-npm run test:favorites
+npm run test:favorites-core
 npm run architecture:check
 ```

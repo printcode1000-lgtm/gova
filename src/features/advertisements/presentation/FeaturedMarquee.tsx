@@ -3,8 +3,8 @@
 import { Sparkles } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
-import { ProductCard } from '@/features/product-card/ui';
-import { createFeaturedProductCardViewModel } from '@/features/product-card';
+import { ProductCard } from '@asol/product-card-core/ui';
+import { createFeaturedProductCardViewModel } from '@asol/product-card-core';
 import { useTranslation } from '@/shared/i18n';
 
 export interface FeaturedMarqueeItem {

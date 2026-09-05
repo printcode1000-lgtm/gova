@@ -12,7 +12,7 @@ Supported targets:
 
 The first UI integration is the public profile preview page. Product and category integrations can use the same module and UI component later without changing the data model.
 
-A signed-in user adding a `seller` favorite (see `docs/05-platform-features/favorites-system.md`) also creates a `store` follow for that seller through `followApiService`, and removing the favorite removes the follow. That sync is fire-and-forget from `FavoritesProvider` and is subject to the same rules as any other follow mutation below (login required, self-follow rejected).
+A signed-in user adding a `seller` favorite (see `docs/05-platform-features/favorites-system.md`) also creates a `store` follow for that seller through `followApiService`, and removing the favorite removes the follow. That sync is fire-and-forget: `@asol/favorites-core` reports the change and `FavoritesHostProvider` performs the follow mutation and is subject to the same rules as any other follow mutation below (login required, self-follow rejected).
 
 ## Architecture
 

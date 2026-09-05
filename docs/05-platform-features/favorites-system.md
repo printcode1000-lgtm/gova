@@ -10,13 +10,35 @@ The Favorites module gives guests and signed-in users a private, device-local li
 ProductCard / SellerCard / BottomNavBar / FavoritesPage
                          |
                          v
-              src/features/favorites
+              @asol/favorites-core
                          |
                          v
               AsolDB `favorites` store
 ```
 
-The module owns the entity model, collection operations, AsolDB repository, React provider, card adapters, favorite button, feedback message, and undo behavior.
+The sealed package owns the entity model, collection operations, AsolDB
+repository, React provider, card adapters, favorite button, feedback message,
+and undo behavior. It knows nothing about sessions, the Follow System, or system
+logs: `src/features/favorites` wires those in as host-owned props.
+
+## Public Doors
+
+| Door | Contents |
+|---|---|
+| `@asol/favorites-core` | Favorite entity types, `favoriteKey`, and the product/seller card adapters |
+| `@asol/favorites-core/ui` | `FavoriteButton`, `FavoritesProvider`, `useFavorites` |
+
+## Host Wiring
+
+`FavoritesProvider` takes everything application-specific as props:
+
+- `viewerUid` / `isViewerLoading` — the signed-in viewer, or null for a guest.
+- `onSellerFollowChange` — the public Follow System mutation for seller favorites.
+- `onFailure` — failure reporting.
+
+`src/features/favorites` supplies all three from `FavoritesHostProvider`, and
+renders `ProductCardFavoriteSlot` / `SellerCardFavoriteSlot` for pages to pass
+into a card's `favoriteSlot` prop. Card packages never import favorites.
 
 ## Storage
 
@@ -50,7 +72,7 @@ Adding a seller favorite for a signed-in user also creates a Follow System recor
 - The bottom-navigation heart is filled whenever the active local collection contains at least one item, regardless of the current route.
 - Product favorites appear on public search and profile-preview cards. Featured-marquee cards intentionally hide the favorite control.
 - The product detail order section uses the same local favorite button and collection as product cards.
-- Seller favorites appear on public search, category-seller, and doctor-seller cards. Because favoriting a seller also follows them, `SellerCard` renders `FavoriteButton` with `variant="follow"` (a person icon, not a heart) to avoid implying a plain like/save; product cards keep the default heart.
+- Seller favorites appear on public search, category-seller, and doctor-seller cards. Because favoriting a seller also follows them, `SellerCardFavoriteSlot` renders `FavoriteButton` with `variant="follow"` (a person icon, not a heart) to avoid implying a plain like/save; product cards keep the default heart.
 - Favorites are hidden from product management, compact cards, and linked-provider selection cards.
 - The favorite control is a sibling of the card's open button, never a nested interactive element.
 - Adding and removing are optimistic and persisted to AsolDB. Removal offers a four-second undo action.
@@ -58,19 +80,21 @@ Adding a seller favorite for a signed-in user also creates a Follow System recor
 
 ## Files
 
-- `src/features/favorites/domain/favorite.entity.ts`
-- `src/features/favorites/application/services/favorite-collection.ts`
-- `src/features/favorites/application/services/favorite-storage.ts`
-- `src/features/favorites/application/services/favorite-card-adapter.ts`
-- `src/features/favorites/presentation/hooks/FavoritesProvider.tsx`
-- `src/features/favorites/presentation/FavoriteButton.tsx`
-- `src/features/favorites/tests/favorites.test.ts`
-- `src/features/favorites/tests/favorites-local-storage-contract.test.ts`
+- `packages/favorites-core/src/domain/favorite.entity.ts`
+- `packages/favorites-core/src/application/favorite-collection.ts`
+- `packages/favorites-core/src/application/favorite-storage.ts`
+- `packages/favorites-core/src/application/favorite-card-adapter.ts`
+- `packages/favorites-core/src/presentation/FavoritesProvider.tsx`
+- `packages/favorites-core/src/presentation/FavoriteButton.tsx`
+- `packages/favorites-core/src/tests/index.test.ts`
+- `src/features/favorites/presentation/FavoritesHostProvider.tsx`
+- `src/features/favorites/presentation/ProductCardFavoriteSlot.tsx`
+- `src/features/favorites/presentation/SellerCardFavoriteSlot.tsx`
 - `src/app/favorites/page.tsx`
 
 ## Verification
 
 ```bash
-npm run test:favorites
+npm run test:favorites-core
 npm run typecheck
 ```

@@ -13,7 +13,7 @@ const productGrid = source(
   "src/features/profile-products/presentation/ProfileProductsGrid.tsx",
 );
 const productCard = source(
-  "src/features/product-card/presentation/ProductCard.tsx",
+  "packages/product-card-core/src/presentation/ProductCard.tsx",
 );
 const sellerDiscounts = source(
   "src/features/seller-discounts/presentation/SellerDiscountsPreview.tsx",

@@ -172,4 +172,4 @@ Diagrams MUST be updated when layer model or gateway set changes.
 
 ## Invariants
 
-Diagrams reflect 41 packages, 6 compositions, 2 composition roots, 6 mandatory gateways.
+Diagrams reflect 47 packages, 7 compositions, 2 composition roots, 6 mandatory gateways.

@@ -6,7 +6,7 @@ Explain the five architectural layers in `PackageLayer` and how packages at each
 
 ## Scope
 
-Layer definitions for all 41 sealed packages. Inter-package dependency detail is in [dependency-map.md](../08-reference/dependency-map.md).
+Layer definitions for all 47 sealed packages. Inter-package dependency detail is in [dependency-map.md](../08-reference/dependency-map.md).
 
 ## Layer stack
 
@@ -14,7 +14,7 @@ Layer definitions for all 41 sealed packages. Inter-package dependency detail is
   enforcement   @asol/architecture-core          scan + contracts; no vendor ownership
   bridge        @asol/account-bridge               device-side cross-account bridging
   declarations  @asol/account-declarations         pure account metadata; imports nothing
-  composition   @asol/*-composition (×6)           per-account wiring; mayImportApp: true
+  composition   @asol/*-composition (×7)           per-account wiring; mayImportApp: true
   capability    all remaining @asol/*-core        domain + infrastructure owners
 ```
 

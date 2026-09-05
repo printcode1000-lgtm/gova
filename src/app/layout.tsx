@@ -27,7 +27,7 @@ import { SuperAdminErrorFloatingButton } from "@/features/system-logs/ui";
 import { SuperAdminImpersonationBanner } from "@/features/super-admin/ui";
 import { SuperAdminUiAttributeInspector } from "@/features/super-admin/ui";
 import { SnapshotProvider } from "@/features/page-snapshot";
-import { FavoritesProvider } from "@/features/favorites";
+import { FavoritesHostProvider } from "@/features/favorites/ui";
 import { FeatureFlagController } from "@/features/feature-flags";
 import { SpecialtyChatNotificationsController } from "@/features/specialty-chat";
 import { OrderNotificationsController } from "@/features/orders/ui";
@@ -91,7 +91,7 @@ export default function RootLayout({
               <PreferencesProvider>
                 <NotificationsFeatureBridge>
                   <AuthLoginBootstrapController />
-                  <FavoritesProvider>
+                  <FavoritesHostProvider>
                     <SystemLogCollector />
                     <FeatureFlagController />
                     <SpecialtyChatNotificationsController />
@@ -119,7 +119,7 @@ export default function RootLayout({
                         </OtaUpdateProvider>
                       </NetworkStatusProvider>
                     </SystemLogErrorBoundary>
-                  </FavoritesProvider>
+                  </FavoritesHostProvider>
                 </NotificationsFeatureBridge>
               </PreferencesProvider>
             </SessionProvider>

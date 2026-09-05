@@ -16,8 +16,9 @@ import type {
   ProductRecord,
 } from "@/features/product";
 import { productApiService } from "@/features/product/application/services/product-api-service";
-import { createProductCardViewModel } from "@/features/product-card";
-import { FavoriteButton, favoriteFromProductCard } from "@/features/favorites";
+import { createProductCardViewModel } from "@asol/product-card-core";
+import { favoriteFromProductCard } from "@asol/favorites-core";
+import { FavoriteButton } from "@asol/favorites-core/ui";
 import { specialtyChatClient } from "@/features/specialty-chat";
 import type { StorageImageManagerHandle } from "@/features/storage/ui";
 import { ProductComponentsRenderer } from "./ProductComponentsRenderer";

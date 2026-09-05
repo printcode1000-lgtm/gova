@@ -101,7 +101,11 @@ export const DEPLOY_PUSH_RUNBOOK: readonly DeployPushRunbookPhase[] = [
       {
         id: "push-readiness",
         label: "exact-SHA readiness",
-        branches: [branch("push-publish-readiness", "publish readiness so the gova build may publish", "release:readiness-publish", "npm", true)],
+        // Readiness is published from inside the run (deploy-push.ts calls
+        // publishReleaseReadiness after control and the six workloads), not by a
+        // separate npm script. Typed like its deploy-all counterpart so the
+        // console describes the stage without offering a button for it.
+        branches: [branch("push-publish-readiness", "publish readiness so the gova build may publish", "control:release-readiness", "vercel", true)],
       },
       {
         id: "push-main-verification",

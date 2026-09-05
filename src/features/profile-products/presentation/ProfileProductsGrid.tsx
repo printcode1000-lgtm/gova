@@ -1,9 +1,10 @@
-import { ProductCard } from "@/features/product-card/ui";
+import { ProductCard } from "@asol/product-card-core/ui";
+import { ProductCardFavoriteSlot } from "@/features/favorites/ui";
 import type { ProductRecord } from "@asol/product-core";
 import {
   createProductCardViewModel,
   type ProductCardAction,
-} from "@/features/product-card";
+} from "@asol/product-card-core";
 
 import type { ProfileProductsTabsLabels } from "./ProfileProductsTabs";
 
@@ -61,6 +62,7 @@ export function ProfileProductsGrid({
             key={product.id}
             card={card}
             variant={showManagement ? "profile-edit" : "profile-preview"}
+            favoriteSlot={<ProductCardFavoriteSlot card={card} />}
             className="min-w-0"
             actions={actions}
             onOpen={() => onViewProduct(product)}

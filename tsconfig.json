@@ -194,6 +194,12 @@
       "@asol/gova-deployment-core": [
         "./packages/gova-deployment-core/src/index.ts"
       ],
+      "@asol/favorites-core": [
+        "./packages/favorites-core/src/index.ts"
+      ],
+      "@asol/favorites-core/ui": [
+        "./packages/favorites-core/src/ui.ts"
+      ],
       "@asol/featured-marquee-core": [
         "./packages/featured-marquee-core/src/index.ts"
       ],
@@ -260,6 +266,12 @@
       "@asol/ota-core/server": [
         "./packages/ota-core/src/server.ts"
       ],
+      "@asol/product-card-core": [
+        "./packages/product-card-core/src/index.ts"
+      ],
+      "@asol/product-card-core/ui": [
+        "./packages/product-card-core/src/ui.ts"
+      ],
       "@asol/product-core": [
         "./packages/product-core/src/index.ts"
       ],
@@ -298,6 +310,12 @@
       ],
       "@asol/release-core/console/android-release-runbook": [
         "./packages/release-core/src/console/android-release-runbook.ts"
+      ],
+      "@asol/seller-card-core": [
+        "./packages/seller-card-core/src/index.ts"
+      ],
+      "@asol/seller-card-core/ui": [
+        "./packages/seller-card-core/src/ui.ts"
       ],
       "@asol/secrets-core": [
         "./packages/secrets-core/src/index.ts"

@@ -11,7 +11,7 @@ Canonical inventory of every application feature under `src/features/`.
 
 ## Scope
 
-All 47 registered features. Sealed packages are listed in [package-catalog.md](./package-catalog.md).
+All 45 registered features. Sealed packages are listed in [package-catalog.md](./package-catalog.md).
 
 ## Source of Truth
 
@@ -54,8 +54,8 @@ src/
 | **Owns** | Home advertisements surfaces (hero slider, featured marquee, trending ribbon) |
 | **Public Doors** | `@/features/advertisements` · `@/features/advertisements/ui` · `@/features/advertisements/server` |
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
-| **Capability Owners** | `@asol/hero-slider-core`, `@asol/featured-marquee-core`, `@asol/trending-ribbon-core`, `@asol/auth-core` |
-| **Permitted Feature Dependencies** | `product`, `product-card`, `storage` |
+| **Capability Owners** | `@asol/hero-slider-core`, `@asol/featured-marquee-core`, `@asol/trending-ribbon-core`, `@asol/auth-core`, `@asol/product-card-core` |
+| **Permitted Feature Dependencies** | `product`, `storage` |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### app-reset
@@ -119,8 +119,8 @@ src/
 | **Owns** | Category browsing and seller discovery presentation |
 | **Public Doors** | `@/features/categories` · `@/features/categories/ui` |
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
-| **Capability Owners** | `@asol/catalog-core` |
-| **Permitted Feature Dependencies** | `profile`, `seller-card` |
+| **Capability Owners** | `@asol/catalog-core`, `@asol/seller-card-core` |
+| **Permitted Feature Dependencies** | `favorites`, `profile` |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### contact
@@ -194,11 +194,11 @@ src/
 |---|---|
 | **Feature** | `favorites` |
 | **Source** | `src/features/favorites/` |
-| **Owns** | Favorites list and adapters |
-| **Public Doors** | `@/features/favorites` |
+| **Owns** | Application wiring and host slots for @asol/favorites-core |
+| **Public Doors** | `@/features/favorites/ui` |
 | **Runtime Targets** | `web`, `android`, `ios` |
-| **Capability Owners** | _(none)_ |
-| **Permitted Feature Dependencies** | `auth`, `follow`, `product-card`, `seller-card`, `system-logs` |
+| **Capability Owners** | `@asol/favorites-core`, `@asol/product-card-core`, `@asol/seller-card-core` |
+| **Permitted Feature Dependencies** | `auth`, `follow`, `system-logs` |
 | **Surfaces** | browser=true · server=false · ui=true |
 
 ### feature-flags
@@ -405,22 +405,9 @@ src/
 | **Owns** | Product detail, style editors, and product services |
 | **Public Doors** | `@/features/product` · `@/features/product/ui` · `@/features/product/server` |
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
-| **Capability Owners** | `@asol/product-core`, `@asol/product-style-core` |
-| **Permitted Feature Dependencies** | `cart`, `categories`, `favorites`, `location`, `page-save`, `product-card`, `sharing`, `specialty-chat`, `storage`, `system-logs`, `vehicle-catalog` |
+| **Capability Owners** | `@asol/product-core`, `@asol/product-style-core`, `@asol/product-card-core`, `@asol/favorites-core` |
+| **Permitted Feature Dependencies** | `cart`, `categories`, `location`, `page-save`, `sharing`, `specialty-chat`, `storage`, `system-logs`, `vehicle-catalog` |
 | **Surfaces** | browser=true · server=true · ui=true |
-
-### product-card
-
-| Field | Value |
-|---|---|
-| **Feature** | `product-card` |
-| **Source** | `src/features/product-card/` |
-| **Owns** | Product card view-model and presentation |
-| **Public Doors** | `@/features/product-card` · `@/features/product-card/ui` |
-| **Runtime Targets** | `web`, `android`, `ios` |
-| **Capability Owners** | _(none)_ |
-| **Permitted Feature Dependencies** | `favorites`, `product` |
-| **Surfaces** | browser=true · server=false · ui=true |
 
 ### product-search
 
@@ -431,8 +418,8 @@ src/
 | **Owns** | Product search panel and page |
 | **Public Doors** | `@/features/product-search` · `@/features/product-search/ui` · `@/features/product-search/server` |
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
-| **Capability Owners** | _(none)_ |
-| **Permitted Feature Dependencies** | `categories`, `product`, `product-card`, `profile`, `seller-card`, `storage` |
+| **Capability Owners** | `@asol/product-card-core`, `@asol/seller-card-core` |
+| **Permitted Feature Dependencies** | `categories`, `favorites`, `product`, `profile`, `storage` |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### profile
@@ -444,8 +431,8 @@ src/
 | **Owns** | Seller/user profile surfaces |
 | **Public Doors** | `@/features/profile` · `@/features/profile/ui` · `@/features/profile/server` |
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
-| **Capability Owners** | _(none)_ |
-| **Permitted Feature Dependencies** | `advertisements`, `auth`, `categories`, `follow`, `location`, `page-save`, `page-snapshot`, `product`, `profile-products`, `profile-working-hours`, `seller-card`, `seller-discounts`, `sharing`, `specialty-chat`, `storage`, `system-logs` |
+| **Capability Owners** | `@asol/seller-card-core` |
+| **Permitted Feature Dependencies** | `advertisements`, `auth`, `categories`, `follow`, `location`, `page-save`, `page-snapshot`, `product`, `profile-products`, `profile-working-hours`, `seller-discounts`, `sharing`, `specialty-chat`, `storage`, `system-logs` |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### profile-products
@@ -457,8 +444,8 @@ src/
 | **Owns** | Profile products tabs presentation |
 | **Public Doors** | `@/features/profile-products` · `@/features/profile-products/ui` |
 | **Runtime Targets** | `web`, `android`, `ios` |
-| **Capability Owners** | `@asol/product-core`, `@asol/data-core` |
-| **Permitted Feature Dependencies** | `categories`, `page-snapshot`, `pharmacy-profile-catalog`, `product`, `product-card`, `product-search` |
+| **Capability Owners** | `@asol/product-core`, `@asol/product-card-core`, `@asol/data-core` |
+| **Permitted Feature Dependencies** | `categories`, `favorites`, `page-snapshot`, `pharmacy-profile-catalog`, `product`, `product-search` |
 | **Surfaces** | browser=true · server=false · ui=true |
 
 ### profile-working-hours
@@ -499,19 +486,6 @@ src/
 | **Capability Owners** | `@asol/notifications-core`, `@asol/release-core`, `@asol/vercel-deploy-core` |
 | **Permitted Feature Dependencies** | `auth`, `google-play-console` |
 | **Surfaces** | browser=true · server=true · ui=true |
-
-### seller-card
-
-| Field | Value |
-|---|---|
-| **Feature** | `seller-card` |
-| **Source** | `src/features/seller-card/` |
-| **Owns** | Seller card view-model and presentation |
-| **Public Doors** | `@/features/seller-card` · `@/features/seller-card/ui` |
-| **Runtime Targets** | `web`, `android`, `ios` |
-| **Capability Owners** | _(none)_ |
-| **Permitted Feature Dependencies** | `favorites`, `profile` |
-| **Surfaces** | browser=true · server=false · ui=true |
 
 ### seller-discounts
 
@@ -647,7 +621,7 @@ src/
 
 | Metric | Value |
 |---|---|
-| Application features | 47 |
-| Features with UI door | 32 |
+| Application features | 45 |
+| Features with UI door | 31 |
 | Features with server door | 26 |
-| Sealed capability packages | 44 |
+| Sealed capability packages | 47 |

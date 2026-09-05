@@ -7,7 +7,7 @@
 
 Runtime coverage is inherited from each owner's owned source/test/script nodes, not only direct owner edges.
 
-Owners scored: **98**
+Owners scored: **99**
 Average coverage: **83%**
 Weak owners (<70%): **11**
 
@@ -46,10 +46,10 @@ Weak owners (<70%): **11**
 | `src/features/categories` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
 | `src/features/contact` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
 | `src/features/data` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
+| `src/features/favorites` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
 | `src/features/onboarding` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
 | `src/features/page-snapshot` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
 | `src/features/pharmacy-profile-catalog` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
-| `src/features/product-card` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
 | `src/features/product-search` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
 | `src/features/profile-products` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
 | `src/features/profile-working-hours` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
@@ -61,6 +61,7 @@ Weak owners (<70%): **11**
 | `packages/branding-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/control-composition` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/env-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
+| `packages/favorites-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/featured-marquee-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/gova-deployment-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/hero-slider-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
@@ -69,8 +70,10 @@ Weak owners (<70%): **11**
 | `packages/notifications-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/orders-composition` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/orders-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
+| `packages/product-card-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/products-composition` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/profiles-composition` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
+| `packages/seller-card-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/service-mirror-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/service-runtime-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/storage-image-manager-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
@@ -82,7 +85,6 @@ Weak owners (<70%): **11**
 | `src/features/advertisements` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/auth` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/cart` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
-| `src/features/favorites` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/feature-flags` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/follow` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/orders` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
@@ -92,7 +94,6 @@ Weak owners (<70%): **11**
 | `src/features/profile` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/qr-code` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/release-commands` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
-| `src/features/seller-card` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/seller-discounts` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/sharing` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/specialty-chat` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |

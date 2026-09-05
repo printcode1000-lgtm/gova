@@ -218,7 +218,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:dev-cloud-backup` | `cross-env NODE_OPTIONS=<redacted> npx tsx src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` |
 | `npm run test:dev-core` | `npx tsx packages/dev-core/src/tests/index.test.ts` |
 | `npm run test:env-core` | `npx tsx packages/env-core/src/tests/index.test.ts` |
-| `npm run test:favorites` | `npx tsx src/features/favorites/tests/favorites.test.ts && npx tsx src/features/favorites/tests/favorites-local-storage-contract.test.ts` |
+| `npm run test:favorites-core` | `npx tsx packages/favorites-core/src/tests/index.test.ts` |
 | `npm run test:feature-flags` | `npx tsx src/features/feature-flags/tests/feature-flag-service.test.ts` |
 | `npm run test:featured-marquee-core` | `npx tsx packages/featured-marquee-core/src/tests/index.test.ts` |
 | `npm run test:follow` | `cross-env NODE_OPTIONS=<redacted> ASOL_SESSION_SIGNING_SECRET=<redacted> ASOL_NOTIFICATION_GRANT_SECRET=<redacted> npx tsx src/features/follow/tests/follower-notification.test.ts` |
@@ -248,6 +248,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:password-recovery` | `npx tsx src/features/password-recovery/tests/password-recovery-policy.test.ts` |
 | `npm run test:phone-field` | `npx tsx src/shared/phone/tests/phone-field-model.test.ts` |
 | `npm run test:phone-verification-policy` | `npx tsx src/features/auth/tests/phone-verification-policy.test.ts` |
+| `npm run test:product-card-core` | `npx tsx packages/product-card-core/src/tests/index.test.ts` |
 | `npm run test:product-core` | `npx tsx packages/product-core/src/tests/index.test.ts` |
 | `npm run test:product-style-core` | `npx tsx packages/product-style-core/src/tests/index.test.ts` |
 | `npm run test:products-composition` | `cross-env NODE_OPTIONS=<redacted> npx tsx packages/products-composition/src/tests/index.test.ts` |
@@ -263,6 +264,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:runtime-compatibility` | `npx tsx scripts/tests/runtime-compatibility-reference.test.ts && npx tsx scripts/tests/runtime-compatibility-policy.test.ts` |
 | `npm run test:runtime-context` | `npx tsx scripts/test-runtime-context.ts && npx tsx packages/data-core/src/core/database-runtime-policy.test.ts` |
 | `npm run test:secrets-core` | `npx tsx packages/secrets-core/src/tests/index.test.ts` |
+| `npm run test:seller-card-core` | `npx tsx packages/seller-card-core/src/tests/index.test.ts` |
 | `npm run test:seller-discounts` | `npx tsx src/features/seller-discounts/tests/seller-discount-engine.test.ts` |
 | `npm run test:service-bridge` | `npx tsx packages/account-bridge/src/tests/service-bridge.client.test.ts` |
 | `npm run test:service-cors` | `npx tsx scripts/tests/service-cors-boundary.test.ts` |

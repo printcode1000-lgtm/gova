@@ -204,7 +204,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:dev-cloud-backup` | `Tooling` | 1 |  | 1 |
 | `npm run test:dev-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:env-core` | `Tooling` | 1 |  | 0 |
-| `npm run test:favorites` | `Tooling` | 2 |  | 0 |
+| `npm run test:favorites-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:feature-flags` | `Tooling` | 1 |  | 0 |
 | `npm run test:featured-marquee-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:follow` | `Tooling` | 1 |  | 3 |
@@ -234,6 +234,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:password-recovery` | `Tooling` | 1 |  | 0 |
 | `npm run test:phone-field` | `Tooling` | 1 |  | 0 |
 | `npm run test:phone-verification-policy` | `Tooling` | 1 |  | 0 |
+| `npm run test:product-card-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:product-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:product-style-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:products-composition` | `Tooling` | 1 |  | 1 |
@@ -249,6 +250,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:runtime-compatibility` | `Tooling` | 2 |  | 0 |
 | `npm run test:runtime-context` | `Tooling` | 2 |  | 0 |
 | `npm run test:secrets-core` | `Tooling` | 1 |  | 0 |
+| `npm run test:seller-card-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:seller-discounts` | `Tooling` | 1 |  | 0 |
 | `npm run test:service-bridge` | `Tooling` | 1 |  | 0 |
 | `npm run test:service-cors` | `Tooling` | 1 |  | 0 |

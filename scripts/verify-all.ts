@@ -53,7 +53,11 @@ const STEPS: readonly Step[] = [
   { script: "test:marketplace-orders" },
   { script: "test:notifications" },
   { script: "test:follow" },
-  { script: "test:favorites" },
+  // The card/favorites package seals: presenter policy plus the app-free
+  // boundary each package must keep (no `@/`, no deep package imports).
+  { script: "test:seller-card-core" },
+  { script: "test:product-card-core" },
+  { script: "test:favorites-core" },
   { script: "test:password-recovery" },
   { script: "test:image-upload-queue" },
   { script: "test:feature-flags" },

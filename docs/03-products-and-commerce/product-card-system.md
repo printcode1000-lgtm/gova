@@ -15,7 +15,10 @@ The system is used by:
 
 The card can be reused in future product strips, recommendations, cart suggestions, and seller dashboards without duplicating product display logic.
 
-Public product-card variants integrate with the device-local Favorites module. Search and profile-preview cards show a favorite control above the image. Featured-marquee, profile-edit, and compact variants keep that control hidden.
+Public product-card variants show a favorite control above the image on the
+search and profile-preview variants. The package never imports Favorites: the
+host page renders the control and passes it through the `favoriteSlot` prop.
+Featured-marquee, profile-edit, and compact variants keep that slot hidden.
 
 ## Architecture
 
@@ -23,33 +26,45 @@ Public product-card variants integrate with the device-local Favorites module. S
 ProductRecord / featured item
         |
         v
-src/features/product-card
+@asol/product-card-core
         |
         v
 ProductCardViewModel
         |
         v
-src/features/product-card/presentation/ProductCard
+@asol/product-card-core/ui → ProductCard
 ```
 
-The feature module prepares a display model. The UI component only renders the supplied model and actions.
+The sealed package prepares a display model. The UI component only renders the
+supplied model, actions, and slots.
+
+## Public Doors
+
+| Door | Contents |
+|---|---|
+| `@asol/product-card-core` | Card types, `createProductCardViewModel`, `createFeaturedProductCardViewModel`, and the field helpers |
+| `@asol/product-card-core/ui` | `ProductCard` |
 
 ## Files
 
-- `src/features/product-card/domain/product-card.types.ts`
+- `packages/product-card-core/src/domain/product-card.types.ts`
   Defines card variants, actions, badges, and the `ProductCardViewModel`.
 
-- `src/features/product-card/application/services/product-card-presenter.ts`
+- `packages/product-card-core/src/application/product-card-presenter.ts`
   Converts product data into a card view model.
 
-- `src/features/product-card/index.ts`
-  Public module exports.
+- `packages/product-card-core/src/index.ts`
+  Domain and view-model door.
 
-- `src/features/product-card/presentation/ProductCard.tsx`
+- `packages/product-card-core/src/presentation/ProductCard.tsx`
   The shared visual product card.
 
-- `src/features/product-card/presentation/index.ts`
-  Public UI export.
+- `packages/product-card-core/src/ui.ts`
+  Presentation door.
+
+- `packages/product-card-core/src/tests/index.test.ts`
+  Featured-card presenter checks plus the package boundary contract, gated by
+  `npm run test:product-card-core`.
 
 ## Data Flow
 
@@ -162,7 +177,7 @@ The shared card does not:
 - Save or mutate products.
 - Own search, filtering, sorting, or profile tab state.
 - Read route params directly.
-- Persist favorite data itself; it delegates that behavior to `src/features/favorites`.
+- Persist favorite data itself; the host passes a rendered favorite control into `favoriteSlot`.
 
 ## Integration Notes
 

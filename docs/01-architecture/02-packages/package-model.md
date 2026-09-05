@@ -6,7 +6,7 @@ Define what a sealed `@asol/*` package is, how it relates to the application, an
 
 ## Scope
 
-Covers the structural model for all 41 sealed packages registered in `packages/architecture-core/src/registry/capability-registry.ts`. Operational database or deployment procedures are out of scope — see [docs/02-data-and-storage/](../../02-data-and-storage/) and [docs/07-mobile-and-release/](../../07-mobile-and-release/).
+Covers the structural model for all 47 sealed packages registered in `packages/architecture-core/src/registry/capability-registry.ts`. Operational database or deployment procedures are out of scope — see [docs/02-data-and-storage/](../../02-data-and-storage/) and [docs/07-mobile-and-release/](../../07-mobile-and-release/).
 
 ## Package anatomy
 
@@ -24,8 +24,8 @@ Every sealed package lives at `packages/<folder>/` and publishes as `@asol/<fold
 
 | Layer | Count | Role | `mayImportApp` |
 |---|---|---|---|
-| `capability` | 33 | Owns one domain or infrastructure capability | `false` |
-| `composition` | 6 | Wires capabilities for one deployment account | `true` |
+| `capability` | 37 | Owns one domain or infrastructure capability | `false` |
+| `composition` | 7 | Wires capabilities for one deployment account | `true` |
 | `declarations` | 1 | Pure account metadata (`@asol/account-declarations`) | `false` |
 | `bridge` | 1 | Cross-account device bridging (`@asol/account-bridge`) | `false` |
 | `enforcement` | 1 | Architecture contracts and scan (`@asol/architecture-core`) | `false` |

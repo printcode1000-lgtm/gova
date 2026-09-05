@@ -5,9 +5,10 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 
-import { SellerCard } from "@/features/seller-card/ui";
+import { SellerCard } from "@asol/seller-card-core/ui";
+import { SellerCardFavoriteSlot } from "@/features/favorites/ui";
 import { useUsersBySpecialty } from "@/features/profile/ui";
-import { createSellerCardViewModel, sellerCardTitle } from "@/features/seller-card";
+import { createSellerCardViewModel, sellerCardTitle } from "@asol/seller-card-core";
 import { useTranslation } from "@/shared/i18n";
 
 interface DoctorAppointmentSellersPageContentProps {
@@ -95,6 +96,7 @@ export function DoctorAppointmentSellersPageContent({
                 key={user.uid}
                 card={card}
                 variant="doctor-sellers"
+                favoriteSlot={<SellerCardFavoriteSlot card={card} />}
                 onOpen={() => router.push(card.href)}
               />
             );

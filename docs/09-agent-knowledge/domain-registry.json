@@ -22,7 +22,7 @@
     {
       "id": "products-and-commerce",
       "docsPrefix": "docs/03-products-and-commerce/",
-      "sourcePrefixes": ["packages/product-core/", "packages/catalog-core/", "src/features/product/", "src/features/product-card/", "src/features/product-search/", "src/features/cart/", "src/features/categories/", "src/features/seller-card/", "src/features/seller-discounts/", "src/features/orders/"],
+      "sourcePrefixes": ["packages/product-core/", "packages/catalog-core/", "src/features/product/", "packages/product-card-core/", "src/features/product-search/", "src/features/cart/", "src/features/categories/", "packages/seller-card-core/", "packages/favorites-core/", "src/features/seller-discounts/", "src/features/orders/"],
       "readFirst": ["docs/03-products-and-commerce/README.md", "docs/09-agent-knowledge/runtime-contract.md"]
     },
     {
