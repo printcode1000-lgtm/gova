@@ -27,3 +27,6 @@ const http = createServiceHttp({
 export const corsHeaders = http.corsHeaders;
 export const preflight = http.preflight;
 export const profileErrorResponse = http.errorResponse;
+
+export const jsonResponse = http.jsonResponse;
+export const readJsonBody = http.readJsonBody;

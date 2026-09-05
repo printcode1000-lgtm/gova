@@ -235,6 +235,8 @@ const ALLOWED_APP_EDGES = new Set<string>([
 const DECLARED_PACKAGE_DOORS = new Set([
   // The database adapter implements backup-core's port without giving backup-core a data driver.
   '@asol/backup-core',
+  // Persistence DTO boundaries assert camelCase without changing keys.
+  '@asol/api-contract-core',
   // Shared cleanup vocabulary and policy. The runtime fact is supplied by a local adapter.
   '@asol/data-health-core',
   '@asol/data-health-core/server',
@@ -262,6 +264,8 @@ const DECLARED_PACKAGE_DOORS = new Set([
   '@asol/storage-core/server',
   '@asol/system-logs-core',
   '@asol/system-logs-core/server',
+  // Durable release-state SQL is implemented here; vercel-deploy-core owns only the port/vocabulary.
+  '@asol/vercel-deploy-core',
 ]);
 
 /** Inverted into `src/ports/telemetry.ts`. Re-importing one of these must fail loudly. */

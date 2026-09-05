@@ -1,10 +1,12 @@
 import 'server-only';
 
+import { readJsonContractBody } from '@asol/api-contract-core/server';
+
 import { extractSessionToken, registerSessionSigningSecret, verifySignedSessionToken, type SignedSessionClaims } from '@asol/auth-core/session';
 import { SUPER_ADMIN_PHONE, SUPER_ADMIN_UID } from '@asol/auth-core';
 import { isSuperAdminIdentity, registerSuperAdminIdentity } from '@asol/auth-core/super-admin';
 import { businessApiErrorStatus } from '@/core/api/business-api-error-status';
-import { controlCorsHeaders, withControlCors } from './operational-route';
+import { controlJson, withControlCors } from './operational-route';
 
 registerSessionSigningSecret(() => process.env.ASOL_SESSION_SIGNING_SECRET?.trim() ?? '');
 registerSuperAdminIdentity(() => ({ uid: SUPER_ADMIN_UID, phone: SUPER_ADMIN_PHONE }));
@@ -32,10 +34,7 @@ function authorized(request: Request): SignedSessionClaims {
 function failure(error: unknown, request?: Request): Response {
   const message = error instanceof Error ? error.message : 'Internal Server Error';
   const mapped = businessApiErrorStatus(message);
-  return Response.json(
-    { error: mapped.code },
-    { status: mapped.status, headers: request ? controlCorsHeaders(request) : undefined },
-  );
+  return controlJson({ error: mapped.code }, mapped.status, request);
 }
 
 export async function runControlSuperAdminRoute<T>(request: Request, handler: (context: Context) => Awaitable<T | Response>): Promise<Response> {
@@ -43,17 +42,17 @@ export async function runControlSuperAdminRoute<T>(request: Request, handler: (c
     const result = await handler({ admin: authorized(request) });
     return result instanceof Response
       ? withControlCors(request, result)
-      : Response.json(result, { headers: controlCorsHeaders(request) });
+      : controlJson(result, 200, request);
   } catch (error) { return failure(error, request); }
 }
 
 export async function runControlSuperAdminJsonRoute<TBody, TResult>(request: Request, handler: (context: JsonContext<TBody>) => Awaitable<TResult | Response>): Promise<Response> {
   try {
     const admin = authorized(request);
-    const body = await request.json() as TBody;
+    const body = await readJsonContractBody<TBody>(request);
     const result = await handler({ admin, body });
     return result instanceof Response
       ? withControlCors(request, result)
-      : Response.json(result, { headers: controlCorsHeaders(request) });
+      : controlJson(result, 200, request);
   } catch (error) { return failure(error, request); }
 }

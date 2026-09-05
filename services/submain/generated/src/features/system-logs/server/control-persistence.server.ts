@@ -5,7 +5,7 @@ import {
   DEFAULT_ALERT_WINDOW_MS,
   DEFAULT_RETENTION_DAYS,
 } from '@asol/system-logs-core/server';
-import { controlSystemLogsDataSource } from '@asol/data-core/control-system-logs';
+import { controlSystemLogsPersistence } from '@asol/data-core/control-system-logs';
 import { isSuperAdminIdentity } from '@asol/auth-core/super-admin';
 import {
   getSystemLogsAlertThreshold,
@@ -21,7 +21,7 @@ export function registerControlSystemLogPersistence(): void {
   if (configured) return;
   configured = true;
   configureSystemLogsCore({
-    database: { execute: (sql, params = []) => controlSystemLogsDataSource.execute(sql, params) },
+    persistence: controlSystemLogsPersistence,
     identity: { isSuperAdmin: isSuperAdminIdentity },
     environment: {
       retentionDays: () => getSystemLogsRetentionDays(DEFAULT_RETENTION_DAYS),

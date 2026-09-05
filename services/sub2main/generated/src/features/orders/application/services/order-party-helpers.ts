@@ -1,14 +1,14 @@
 interface SellerOrderRow {
-  seller_id?: unknown;
-  service_provider_id?: unknown;
+  sellerId?: unknown;
+  serviceProviderId?: unknown;
 }
 
 interface ShipmentRow {
-  carrier_id?: unknown;
+  carrierId?: unknown;
 }
 
 interface DeliveryPlanCandidateRow {
-  provider_id?: unknown;
+  providerId?: unknown;
 }
 
 export interface OrderPartySnapshot {
@@ -22,8 +22,8 @@ export function collectOrderPartyUids(sellerOrders: SellerOrderRow[]) {
   const sellerUids = new Set<string>();
   const providerUids = new Set<string>();
   for (const sellerOrder of sellerOrders) {
-    const sellerId = String(sellerOrder.seller_id ?? "").trim();
-    const providerId = String(sellerOrder.service_provider_id ?? "").trim();
+    const sellerId = String(sellerOrder.sellerId ?? "").trim();
+    const providerId = String(sellerOrder.serviceProviderId ?? "").trim();
     if (sellerId) sellerUids.add(sellerId);
     if (providerId) providerUids.add(providerId);
   }
@@ -38,10 +38,10 @@ export function collectAllOrderPartyUids(snapshot: OrderPartySnapshot): string[]
   const buyerUid = String(snapshot.buyerId ?? "").trim();
   const { sellerUids, providerUids } = collectOrderPartyUids(snapshot.sellerOrders);
   const carrierUids = (snapshot.shipments ?? [])
-    .map((row) => String(row.carrier_id ?? "").trim())
+    .map((row) => String(row.carrierId ?? "").trim())
     .filter(Boolean);
   const planProviderUids = (snapshot.deliveryPlanCandidates ?? [])
-    .map((row) => String(row.provider_id ?? "").trim())
+    .map((row) => String(row.providerId ?? "").trim())
     .filter(Boolean);
   return [
     ...new Set(

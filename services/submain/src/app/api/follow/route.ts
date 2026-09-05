@@ -1,7 +1,7 @@
 import { assertSubmainEnv, createSubmainRuntime } from '@asol/submain-composition';
 import type { FollowMutationInput, FollowTargetType } from '@/features/follow/domain/follow.types';
 
-import { businessErrorResponse, corsHeaders, preflight } from '../../lib/http';
+import { businessErrorResponse, corsHeaders, preflight, jsonResponse, readJsonBody } from '../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -11,9 +11,9 @@ export async function POST(request: Request): Promise<Response> {
     const { social } = createSubmainRuntime();
     assertSubmainEnv();
 
-    const body = (await request.json()) as FollowMutationInput;
+    const body = await readJsonBody<FollowMutationInput>(request);
     const result = await social.follow.follow(body);
-    return Response.json(result, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, result, 200);
   } catch (error) {
     return businessErrorResponse(request, error);
   }
@@ -31,7 +31,7 @@ export async function DELETE(request: Request): Promise<Response> {
       targetId: q.get('targetId') ?? '',
       targetOwnerUid: q.get('targetOwnerUid') ?? undefined,
     });
-    return Response.json(result, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, result, 200);
   } catch (error) {
     return businessErrorResponse(request, error);
   }

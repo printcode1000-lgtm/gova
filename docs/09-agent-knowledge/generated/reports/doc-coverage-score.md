@@ -7,7 +7,7 @@
 
 Runtime coverage is inherited from each owner's owned source/test/script nodes, not only direct owner edges.
 
-Owners scored: **99**
+Owners scored: **100**
 Average coverage: **83%**
 Weak owners (<70%): **11**
 
@@ -25,6 +25,7 @@ Weak owners (<70%): **11**
 | `src/features/splash` | feature | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
 | `src/features/voice-input` | feature | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
 | `packages/account-declarations` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
+| `packages/api-contract-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/cors` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/data-health-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/dev-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |

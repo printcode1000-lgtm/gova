@@ -3,7 +3,6 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 
 import {
-  DATA_HEALTH_IMAGE_SOURCES,
   resolveDataHealthExecutionContext,
 } from "../index";
 import {
@@ -27,7 +26,6 @@ assert.deepEqual(resolveDataHealthExecutionContext(true), {
 assert.equal(resolveDataHealthExecutionContext(false).databaseSource, "turso");
 assert.equal(DATA_HEALTH_POLICY.maxCleanupItems, 250);
 assert.equal(cleanupConfirmationText("production", 3), "تنظيف 3 عنصر في الإنتاج");
-assert.ok(DATA_HEALTH_IMAGE_SOURCES.some((source) => source.table === "products"));
 
 const issue = makeIssue({
   category: "product",
@@ -46,7 +44,7 @@ assert.equal(issue.canClean, true);
 assert.equal(issue.id, issue.fingerprint);
 assert.equal(issue.id.length, 64);
 
-for (const file of ["domain/types.ts", "domain/source-registry.ts", "domain/execution-context.ts", "index.ts"]) {
+for (const file of ["domain/types.ts", "domain/execution-context.ts", "index.ts"]) {
   const text = readFileSync(path.join(process.cwd(), "packages/data-health-core/src", file), "utf8");
   assert.doesNotMatch(text, /(?:node:|server-only|@\/|@asol\/)/, `${file} must stay browser-safe`);
 }

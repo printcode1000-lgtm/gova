@@ -1,4 +1,4 @@
-import { apiSuccess, mapServiceError } from "@/core/api/api-response";
+import { apiSuccess, mapServiceError, readJsonBody } from "@/core/api/api-response";
 import type {
   DiscountBuyerContext,
   DiscountCartItem,
@@ -9,7 +9,7 @@ import { runTracedBusinessRoute } from '@/core/api/traced-route';
 export async function POST(request: Request) {
   return runTracedBusinessRoute("POST /api/profile/discounts/quote", async () => {
     try {
-      const body = (await request.json()) as {
+      const body = (await readJsonBody<unknown>(request)) as {
         items: DiscountCartItem[];
         context?: DiscountBuyerContext;
       };

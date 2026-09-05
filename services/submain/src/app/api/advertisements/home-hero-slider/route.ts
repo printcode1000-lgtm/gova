@@ -1,7 +1,7 @@
 import { assertSubmainEnv, createSubmainRuntime } from '@asol/submain-composition';
 import type { HomeHeroConfig } from '@asol/hero-slider-core';
 
-import { advertisementsAdminErrorResponse, advertisementsSaveErrorResponse, corsHeaders, preflight } from '../../../lib/http';
+import { advertisementsAdminErrorResponse, advertisementsSaveErrorResponse, corsHeaders, preflight, jsonResponse, readJsonBody } from '../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -20,13 +20,13 @@ export async function GET(request: Request): Promise<Response> {
     const url = new URL(request.url);
     if (url.searchParams.get('admin') !== '1') {
       const current = await advertisements.homeHeroSlider.getCurrent();
-      return Response.json(current, { status: 200, headers: corsHeaders(request) });
+      return jsonResponse(request, current, 200);
     }
     const admin = await advertisements.homeHeroSlider.getAdmin({
       uid: url.searchParams.get('uid') ?? '',
       phone: url.searchParams.get('phone') ?? '',
     });
-    return Response.json(admin, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, admin, 200);
   } catch (error) {
     return advertisementsAdminErrorResponse(request, error);
   }
@@ -37,17 +37,17 @@ export async function PUT(request: Request): Promise<Response> {
     const { advertisements } = createSubmainRuntime();
     assertSubmainEnv();
 
-    const body = (await request.json()) as {
+    const body = await readJsonBody<{
       identity: { uid: string; phone: string };
       config: HomeHeroConfig;
       checkIntervalMinutes: number;
-    };
+    }>(request);
     const saved = await advertisements.homeHeroSlider.save(
       body.identity,
       body.config,
       body.checkIntervalMinutes,
     );
-    return Response.json(saved, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, saved, 200);
   } catch (error) {
     return advertisementsSaveErrorResponse(request, error, 'invalidHeroSliderConfig');
   }

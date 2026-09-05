@@ -19,7 +19,7 @@ import {
   severityRank,
 } from "@asol/data-health-core/server";
 import { resolveDataHealthExecutionContext } from "../../runtime-context.server";
-import { DATA_HEALTH_IMAGE_SOURCES } from "@asol/data-health-core";
+import { DATA_HEALTH_IMAGE_SOURCES } from "../../db/image-source-registry";
 import type {
   DataHealthAuditEntry,
   DataHealthCleanupAction,
@@ -27,11 +27,14 @@ import type {
   DataHealthHistoryEntry,
   DataHealthIssue,
   DataHealthQuarantineEntry,
+  DataHealthQuarantineRecordDto,
+  DataHealthCleanupPlanRecordDto,
   DataHealthReport,
   DataHealthTopology,
 } from "@asol/data-health-core";
 import { DATA_HEALTH_METADATA_STATEMENTS } from "../../db/metadata-schema";
 import { storageInventoryRepository } from "../storage-inventory.repository.server";
+import { mapDataHealthCleanupPlanRow } from "../data-health-record-mappers";
 type Row = Record<string, unknown>;
 export interface QuarantinedOriginalCleanupResult {
   deletedRecords: number;
@@ -142,13 +145,13 @@ export abstract class DataHealthPart1 {
     );
   }
 
-  async getCleanupPlan(planId: string): Promise<Row | undefined> {
+  async getCleanupPlan(planId: string): Promise<DataHealthCleanupPlanRecordDto | undefined> {
     await this.ensureMetadata();
     const rows = (await profilesDataSource.execute(
       "SELECT id, admin_uid, environment, issue_ids_json, snapshots_json, expires_at, consumed_at FROM data_health_cleanup_plans WHERE id=? LIMIT 1",
       [planId],
     )) as Row[];
-    return rows[0];
+    return rows[0] ? mapDataHealthCleanupPlanRow(rows[0]) : undefined;
   }
 
   async consumeCleanupPlan(planId: string, consumedAt: string) {
@@ -200,9 +203,9 @@ export abstract class DataHealthPart1 {
     audit: number;
 }>;
 
-  abstract getQuarantineEntry(id: string): Promise<Row | undefined>;
+  abstract getQuarantineEntry(id: string): Promise<DataHealthQuarantineRecordDto | undefined>;
 
-  abstract listActiveQuarantineEntries(): Promise<Row[]>;
+  abstract listActiveQuarantineEntries(): Promise<DataHealthQuarantineRecordDto[]>;
 
   abstract markQuarantineDeleted(id: string, deletedAt: string): any;
 
@@ -217,9 +220,9 @@ export abstract class DataHealthPart1 {
 
   abstract resetQuarantinedFindings(updatedAt: string): any;
 
-  abstract getQuarantinedOriginalCleanupTarget(entry: Row): Promise<QuarantinedOriginalCleanupResult>;
+  abstract getQuarantinedOriginalCleanupTarget(entry: DataHealthQuarantineRecordDto): Promise<QuarantinedOriginalCleanupResult>;
 
-  abstract deleteQuarantinedOriginalRecord(entry: Row): Promise<number>;
+  abstract deleteQuarantinedOriginalRecord(entry: DataHealthQuarantineRecordDto): Promise<number>;
 
   abstract addManualAudit(input: {
     adminUid: string;

@@ -4,13 +4,12 @@ import { calculateSellerShipping } from "@/features/cart";
 import { profileService } from "@/features/profile/server";
 import type { MarketplaceOrderService } from "@asol/data-core/marketplace-orders";
 import type { Actor } from "@asol/orders-core";
+import type { MarketplaceOrderDetailsDto } from "@asol/orders-core";
 
-interface OrderDetailsLike {
-  sellerOrders: Array<Record<string, unknown>>;
-  orderItems: Array<Record<string, unknown>>;
-  shippingQuotes: Array<Record<string, unknown>>;
-  deliveryPlans: Array<Record<string, unknown>>;
-}
+type OrderDetailsLike = Pick<
+  MarketplaceOrderDetailsDto,
+  "sellerOrders" | "orderItems" | "shippingQuotes" | "deliveryPlans"
+>;
 
 export async function bootstrapLocationShippingQuotes(
   orderId: string,
@@ -27,27 +26,27 @@ export async function bootstrapLocationShippingQuotes(
   const createdSellerOrderIds: string[] = [];
   for (const sellerOrder of details.sellerOrders) {
     const sellerOrderId = String(sellerOrder.id ?? "");
-    const sellerId = String(sellerOrder.seller_id ?? "");
+    const sellerId = String(sellerOrder.sellerId ?? "");
     if (!sellerOrderId || !sellerId) continue;
 
     const items = details.orderItems.filter(
-      (item) => String(item.seller_order_id) === sellerOrderId,
+      (item) => String(item.sellerOrderId) === sellerOrderId,
     );
     const subtotalMinor = items.reduce(
       (total, item) =>
-        total + Number(item.unit_price ?? 0) * Number(item.quantity ?? 0),
+        total + Number(item.unitPrice ?? 0) * Number(item.quantity ?? 0),
       0,
     );
     const settings = await profileService.getFulfillmentSettings(sellerId);
     const shipping = calculateSellerShipping(
       settings.shippingPricing,
       subtotalMinor,
-      items.some((item) => Number(item.requires_special_vehicle) > 0),
+      items.some((item) => Number(item.requiresSpecialVehicle) > 0),
     );
     if (!shipping.quoteRequired) continue;
 
     const hasQuote = details.shippingQuotes.some(
-      (quote) => String(quote.seller_order_id) === sellerOrderId,
+      (quote) => String(quote.sellerOrderId) === sellerOrderId,
     );
     if (hasQuote) continue;
 

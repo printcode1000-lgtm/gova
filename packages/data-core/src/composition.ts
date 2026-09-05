@@ -11,10 +11,9 @@ import "server-only";
  * every database in one import, through a declared door that every architecture
  * check accepts.
  *
- * Exactly one composition root needs a shard directly:
- * `src/core/config/system-logs.server.ts` wires `@asol/system-logs-core`'s
- * `database: { execute }` port to the profiles source. That is what this door
- * carries.
+ * The application composition root needs the System Logs persistence adapter,
+ * not a raw shard. The adapter keeps SQL and row mapping inside data-core and
+ * implements the port owned by `@asol/system-logs-core`.
  *
  * Repositories reach the registry through relative paths *inside* the package,
  * where it belongs. Those imports are deliberately untouched — rewriting them
@@ -23,5 +22,5 @@ import "server-only";
  *
  * Adding another shard here means naming it. Never the registry.
  */
-export { profilesDataSource } from "./core/data-source-registry";
+export { systemLogsRepository } from "./domains/system-logs/system-logs.repository.server";
 export type { IDatabaseClient } from "./core/database/database-client.interface";

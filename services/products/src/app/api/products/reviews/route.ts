@@ -1,5 +1,5 @@
 import { assertProductsEnv, createProductsRuntime } from '@asol/products-composition';
-import { corsHeaders, preflight, reviewErrorResponse } from '../../../lib/http';
+import { corsHeaders, preflight, reviewErrorResponse, jsonResponse } from '../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -25,7 +25,7 @@ export async function GET(request: Request): Promise<Response> {
       Number(q.get('limit') || 3),
       q.get('uid') ?? '',
     );
-    return Response.json(data, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, data, 200);
   } catch (error) {
     return reviewErrorResponse(request, error);
   }

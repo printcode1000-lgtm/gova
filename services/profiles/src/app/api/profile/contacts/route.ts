@@ -1,5 +1,5 @@
 import { assertProfilesEnv, createProfilesRuntime } from '@asol/profiles-composition';
-import { corsHeaders, preflight, profileErrorResponse } from '../../../lib/http';
+import { corsHeaders, preflight, profileErrorResponse, jsonResponse } from '../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -15,7 +15,7 @@ export async function GET(request: Request): Promise<Response> {
 
     const { searchParams } = new URL(request.url);
     const data = await database.profiles.getContacts(searchParams.get('uid') ?? '');
-    return Response.json(data, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, data, 200);
   } catch (error) {
     return profileErrorResponse(request, error);
   }

@@ -1,12 +1,13 @@
 "use client";
 
+import type { OrderDto } from "@asol/orders-core";
 import * as React from "react";
 import Link from "next/link";
 import { MapPin } from "lucide-react";
 import { useProfileContacts } from "@/features/profile/ui";
 import { OrderActionButton } from "../OrderActionButton";
 import { hasOrderDeliveryAddress, profileAddress } from "../order-labels";
-import type { DbRow } from "../order-types";
+
 import { RunAction, text } from "./OrderDetailsPageContent.navigation-summary";
 
 export function BuyerDeliveryAddressPanel({
@@ -15,7 +16,7 @@ export function BuyerDeliveryAddressPanel({
   busyAction,
   runAction,
 }: {
-  order: DbRow;
+  order: OrderDto;
   orderId: string;
   busyAction: string;
   runAction: RunAction;

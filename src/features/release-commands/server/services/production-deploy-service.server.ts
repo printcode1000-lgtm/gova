@@ -15,8 +15,8 @@ import {
   remoteDeployAllReadiness,
   startRemoteDeployAll,
 } from "@asol/vercel-deploy-core/remote-deploy-sandbox";
-import { controlReleaseStateDataSource } from "@asol/data-core/control-release-state";
-import { SqlReleaseStateStore, applyReleaseStateMutation } from "@asol/vercel-deploy-core";
+import { controlReleaseStateStore } from "@asol/data-core/control-release-state";
+import { applyReleaseStateMutation } from "@asol/vercel-deploy-core";
 
 import { SUPER_ADMIN_UID } from "@asol/auth-core";
 import { getProductionDeployCallbackSecret } from "@/core/config/control-env";
@@ -29,7 +29,7 @@ import {
 import { sendProductionDeployEmail } from "@/features/release-commands/server/services/production-deploy-email.server";
 import { deliverProductionDeployNotificationGrants } from "@/features/release-commands/server/services/production-deploy-notification-delivery.server";
 
-const releaseStateStore = new SqlReleaseStateStore(controlReleaseStateDataSource);
+const releaseStateStore = controlReleaseStateStore;
 
 /**
  * The super admin's production entry point to `deploy:all`.

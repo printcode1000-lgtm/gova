@@ -1,7 +1,7 @@
 import { assertSubmainEnv, createSubmainRuntime } from '@asol/submain-composition';
 import type { SendSpecialtyRequestInput } from '@/features/specialty-chat/domain/types';
 
-import { businessErrorResponse, corsHeaders, preflight } from '../../../lib/http';
+import { businessErrorResponse, corsHeaders, preflight, jsonResponse, readJsonBody } from '../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -11,8 +11,8 @@ export async function POST(request: Request): Promise<Response> {
     const { messaging } = createSubmainRuntime();
     assertSubmainEnv();
 
-    const result = await messaging.specialtyChat.sendRequest((await request.json()) as SendSpecialtyRequestInput);
-    return Response.json(result, { status: 200, headers: corsHeaders(request) });
+    const result = await messaging.specialtyChat.sendRequest(await readJsonBody<SendSpecialtyRequestInput>(request));
+    return jsonResponse(request, result, 200);
   } catch (error) {
     return businessErrorResponse(request, error);
   }

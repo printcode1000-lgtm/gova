@@ -1,5 +1,7 @@
+import { apiSuccess } from '@/core/api/api-response';
+
 export function GET() {
-  return Response.json({ status: 'ok' as const });
+  return apiSuccess({ status: 'ok' as const });
 }
 
 export function OPTIONS() {

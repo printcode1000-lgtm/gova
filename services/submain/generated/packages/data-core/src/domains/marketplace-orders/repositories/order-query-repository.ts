@@ -1,20 +1,13 @@
 import "server-only";
 
 import type { MarketplaceDb } from "../ports/marketplace-order-store";
+import { marketplaceOrderRowMappers as map } from "./order-transport-mappers";
+import type { MarketplaceOrderDetailsDto, OrderListPageDto, OrderDto } from "@asol/orders-core";
 
 type Row = Record<string, unknown>;
 
 export type OrderViewerRole = "buyer" | "seller" | "service_provider";
 
-export interface OrderListEntry {
-  order: Row;
-  viewerRoles: OrderViewerRole[];
-}
-
-export interface OrderListPage {
-  items: OrderListEntry[];
-  hasMore: boolean;
-}
 
 const VIEWER_ROLE_ORDER: OrderViewerRole[] = [
   "buyer",
@@ -75,7 +68,7 @@ export class OrderQueryRepository {
   async listForUser(
     userId: string,
     options: { limit?: number; offset?: number; isAdmin?: boolean } = {},
-  ): Promise<OrderListPage> {
+  ): Promise<OrderListPageDto> {
     const limit = Math.min(Math.max(Number(options.limit) || 5, 1), 50);
     const offset = Math.max(Number(options.offset) || 0, 0);
     const fetchLimit = limit + 1;
@@ -103,7 +96,7 @@ export class OrderQueryRepository {
 
     return {
       items: page.map((order) => ({
-        order,
+        order: map.orders(order),
         viewerRoles: roleMap.get(String(order.id)) ?? [],
       })),
       hasMore,
@@ -168,15 +161,15 @@ export class OrderQueryRepository {
 
   async listForActor(actor: { id: string; role: string }) {
     if (actor.role === "admin") {
-      return this.db.execute(
+      return (await this.db.execute(
         "SELECT * FROM orders ORDER BY created_at DESC LIMIT 100",
-      );
+      )).map(map.orders);
     }
     if (actor.role === "buyer") {
-      return this.db.execute(
+      return (await this.db.execute(
         "SELECT * FROM orders WHERE buyer_id=? ORDER BY created_at DESC LIMIT 100",
         [actor.id],
-      );
+      )).map(map.orders);
     }
     if (actor.role === "seller" || actor.role === "service_provider") {
       const sellerOrders = await this.db.execute(
@@ -200,10 +193,10 @@ export class OrderQueryRepository {
         ...planOrders.map((row) => row.order_id),
       ]);
       if (orderIds.length === 0) return [];
-      return this.db.execute(
+      return (await this.db.execute(
         `SELECT * FROM orders WHERE id IN (${placeholders(orderIds)}) ORDER BY created_at DESC LIMIT 100`,
         orderIds,
-      );
+      )).map(map.orders);
     }
     if (actor.role === "carrier") {
       const shipments = await this.db.execute(
@@ -212,23 +205,23 @@ export class OrderQueryRepository {
       );
       const orderIds = uniqueStrings(shipments.map((row) => row.order_id));
       if (orderIds.length === 0) return [];
-      return this.db.execute(
+      return (await this.db.execute(
         `SELECT * FROM orders WHERE id IN (${placeholders(orderIds)}) ORDER BY created_at DESC LIMIT 100`,
         orderIds,
-      );
+      )).map(map.orders);
     }
     return [];
   }
 
-  async getOrder(orderId: string) {
-    return (
-      await this.db.execute("SELECT * FROM orders WHERE id=? LIMIT 1", [
-        orderId,
-      ])
-    )[0] as Row | undefined;
+  async getOrder(orderId: string): Promise<OrderDto | undefined> {
+    const row = (await this.db.execute(
+      "SELECT * FROM orders WHERE id=? LIMIT 1",
+      [orderId],
+    ))[0];
+    return row ? map.orders(row) : undefined;
   }
 
-  async getDetails(orderId: string) {
+  async getDetails(orderId: string): Promise<MarketplaceOrderDetailsDto | null> {
     const order = await this.getOrder(orderId);
     if (!order) return null;
     const sellerOrders = await this.db.execute(
@@ -330,25 +323,25 @@ export class OrderQueryRepository {
 
     return {
       order,
-      sellerOrders,
-      orderItems,
-      customItems,
-      shipments,
-      shipmentItems,
-      shippingQuotes,
-      deliveryPlans,
-      deliveryPlanStops,
-      deliveryPlanCandidates,
-      deliveryPlanCandidateStops,
-      deliveryPlanQuotes,
-      deliveryPlanQuoteStops,
-      deliveryPlanShipments,
-      cancellations,
-      returns,
-      returnItems,
-      replacements,
-      disputes,
-      audit,
+      sellerOrders: sellerOrders.map(map.seller_orders),
+      orderItems: orderItems.map(map.order_items),
+      customItems: customItems.map(map.custom_request_items),
+      shipments: shipments.map(map.shipments),
+      shipmentItems: shipmentItems.map(map.shipment_items),
+      shippingQuotes: shippingQuotes.map(map.shipping_quotes),
+      deliveryPlans: deliveryPlans.map(map.delivery_plans),
+      deliveryPlanStops: deliveryPlanStops.map(map.delivery_plan_stops),
+      deliveryPlanCandidates: deliveryPlanCandidates.map(map.delivery_plan_candidates),
+      deliveryPlanCandidateStops: deliveryPlanCandidateStops.map(map.delivery_plan_candidate_stops),
+      deliveryPlanQuotes: deliveryPlanQuotes.map(map.delivery_plan_quotes),
+      deliveryPlanQuoteStops: deliveryPlanQuoteStops.map(map.delivery_plan_quote_stops),
+      deliveryPlanShipments: deliveryPlanShipments.map(map.delivery_plan_shipments),
+      cancellations: cancellations.map(map.cancellations),
+      returns: returns.map(map.return_requests),
+      returnItems: returnItems.map(map.return_request_items),
+      replacements: replacements.map(map.replacement_requests),
+      disputes: disputes.map(map.disputes),
+      audit: audit.map(map.audit_trail),
     };
   }
 
@@ -356,7 +349,7 @@ export class OrderQueryRepository {
     if (actor.role === "admin") return true;
     const order = await this.getOrder(orderId);
     if (!order) return false;
-    if (actor.role === "buyer") return order.buyer_id === actor.id;
+    if (actor.role === "buyer") return order.buyerId === actor.id;
     if (actor.role === "seller" || actor.role === "service_provider") {
       const sellerRows = await this.db.execute(
         "SELECT 1 ok FROM seller_orders WHERE order_id=? AND (seller_id=? OR service_provider_id=?) LIMIT 1",

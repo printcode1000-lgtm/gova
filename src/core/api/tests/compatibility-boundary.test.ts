@@ -175,6 +175,7 @@ assert.deepEqual(config.matcher, "/api/:path*");
     "@/core/config/business-api-origins",
     "@/core/config/cors-origins",
     "@asol/account-bridge/routes",
+    "@asol/api-contract-core/server",
     "@asol/cors",
     "next/server",
   ]);

@@ -1,12 +1,8 @@
 import assert from "node:assert/strict";
 import Database from "better-sqlite3";
 
-import {
-  configureSystemLogsCore,
-  resetSystemLogsCorePorts,
-  sanitizePersistentSystemLog,
-} from "@asol/system-logs-core";
-import { systemLogsRepository } from "@asol/system-logs-core/server";
+import { sanitizePersistentSystemLog } from "@asol/system-logs-core";
+import { SystemLogsRepository } from "../system-logs.repository.server";
 
 class MemoryDatabasePort {
   readonly db = new Database(":memory:");
@@ -21,8 +17,7 @@ class MemoryDatabasePort {
 
 async function main() {
   const database = new MemoryDatabasePort();
-  resetSystemLogsCorePorts();
-  configureSystemLogsCore({ database });
+  const systemLogsRepository = new SystemLogsRepository(database);
 
   database.db.exec(`
   CREATE TABLE system_logs (
@@ -103,7 +98,6 @@ async function main() {
   assert.equal(latest?.message.includes("private-token"), false);
   assert.equal(latest?.correlationId, "corr-test");
 
-  resetSystemLogsCorePorts();
   console.log("Persistent system log repository tests passed.");
 }
 

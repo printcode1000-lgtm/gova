@@ -2,9 +2,7 @@ import type { ProfileContactsData } from "../entities";
 import type { StoreDetailsData } from "../entities";
 import type { ProfileSpecialtiesSelection } from "../entities";
 import type { ProfileFulfillmentSettings } from "../entities";
-import type { UserProfileRow } from "../../../core/database/profile/profile.schema";
-export type { UserProfileRow };
-
+import type { ProfileDirectoryEntry } from "../entities";
 
 export interface ProfileImageKeys {
   avatarImageKey: string | null;
@@ -38,5 +36,5 @@ export interface IProfileRepository {
     limit: number,
     search?: string,
     minRating?: number,
-  ): Promise<UserProfileRow[]>;
+  ): Promise<ProfileDirectoryEntry[]>;
 }

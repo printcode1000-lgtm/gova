@@ -1,17 +1,17 @@
 "use client";
 
-import type { DbRow } from "./order-types";
+import type { AuditTrailDto } from "@asol/orders-core";
 import { actionLabel, statusLabel } from "./order-labels";
 
-function auditTitle(entry: DbRow) {
-  const nextStatus = entry.new_status;
+function auditTitle(entry: AuditTrailDto) {
+  const nextStatus = entry.newStatus;
   if (typeof nextStatus === "string" && nextStatus.trim()) {
     return statusLabel(nextStatus);
   }
   return actionLabel(entry.action);
 }
 
-export function OrderAuditTrail({ audit }: { audit: DbRow[] }) {
+export function OrderAuditTrail({ audit }: { audit: AuditTrailDto[] }) {
   return (
     <section id='features-orders-presentation-orderaudittrail-section-1-wphwjn' className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm">
       <h2 id='features-orders-presentation-orderaudittrail-heading-2-yw9wkk' className="font-bold">سجل مختصر</h2>
@@ -22,7 +22,7 @@ export function OrderAuditTrail({ audit }: { audit: DbRow[] }) {
           {audit.slice(0, 8).map((entry) => (
             <div key={String(entry.id)} className="text-sm">
               <p className="font-semibold">{auditTitle(entry)}</p>
-              {entry.new_status ? (
+              {entry.newStatus ? (
                 <p className="text-xs text-muted-foreground">
                   {actionLabel(entry.action)}
                 </p>

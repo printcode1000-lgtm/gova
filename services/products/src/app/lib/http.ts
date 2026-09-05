@@ -40,6 +40,8 @@ const http = createServiceHttp({
 
 export const corsHeaders = http.corsHeaders;
 export const preflight = http.preflight;
+export const jsonResponse = http.jsonResponse;
+export const readJsonBody = http.readJsonBody;
 export const errorResponse = http.errorResponse;
 
 export function reviewErrorResponse(request: Request, error: unknown): Response {
@@ -48,4 +50,9 @@ export function reviewErrorResponse(request: Request, error: unknown): Response 
 
 export function searchErrorResponse(request: Request, error: unknown): Response {
   return http.errorResponse(request, error, SEARCH_ERROR_RULES);
+}
+/** Mirrors pharmacy-profile-catalog: validation is inline; unexpected failures are always 500. */
+export function pharmacyCatalogErrorResponse(request: Request, error: unknown): Response {
+  const message = error instanceof Error ? error.message : String(error);
+  return http.jsonResponse(request, { error: message }, 500);
 }

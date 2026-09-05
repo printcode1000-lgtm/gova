@@ -59,16 +59,18 @@ These stay in the CLI because `@asol/architecture-core` MUST NOT import applicat
 | 10 | `checkFeatureDependencyContract` | Actual vs declared feature deps; no stale/unknown edges |
 | 11 | `checkFeatureApplicationDoorPurityContract` | Application doors stay isomorphic (no browser/server poison) |
 | 12 | `checkArchitectureDocsDriftContract` | Generated reference docs match registries |
-| 13 | `checkVendorOwnershipContract` | Root vendor-owned files (`capacitor.config.ts`) |
-| 14 | Walk `src/` → `checkFile`, seal, system-logs, vendor | Application source |
-| 15 | Walk `packages/` → seal, app-import ban, vendor | Package source |
-| 16 | Walk `scripts/` → data-access ownership, account-bridge, seal, vendor | Tooling |
-| 17 | `checkTouchInteractionContract`, `checkMapLibreWorkerContract` | UI policy |
-| 18 | `checkGeneratedDataAccessArtifacts` | Generated data-access artifacts |
-| 19 | `checkSystemLogsBootstrapContract` | Logging bootstrap |
-| 20 | `checkDeadContractRules` | Rules whose subject no longer exists |
-| 21 | Walk `services/` → bridge, seal, vendor, notification contract | Account services (skips `generated/`) |
-| 22 | `printReport`, then `reportNativeSurface` | Verdict, then store-release cost |
+| 13 | `checkCorsContract` | Central CORS ownership and policy boundary |
+| 14 | `checkApiTransportContract` | Project-wide owned JSON camelCase, contract-wrapper coverage, raw-row/SQL leakage, and explicit provider-protocol allowlists |
+| 15 | `checkVendorOwnershipContract` | Root vendor-owned files (`capacitor.config.ts`) |
+| 16 | Walk `src/` → `checkFile`, seal, system-logs, vendor | Application source |
+| 17 | Walk `packages/` → seal, app-import ban, vendor | Package source |
+| 18 | Walk `scripts/` → data-access ownership, account-bridge, seal, vendor | Tooling |
+| 19 | `checkTouchInteractionContract`, `checkMapLibreWorkerContract` | UI policy |
+| 20 | `checkGeneratedDataAccessArtifacts` | Generated data-access artifacts |
+| 21 | `checkSystemLogsBootstrapContract` | Logging bootstrap |
+| 22 | `checkDeadContractRules` | Rules whose subject no longer exists |
+| 23 | Walk `services/` → bridge, seal, vendor, notification contract | Account services (skips `generated/`) |
+| 24 | `printReport`, then `reportNativeSurface` | Verdict, then store-release cost |
 
 SOURCE_OF_TRUTH → `packages/architecture-core/src/runner.ts`. Every check above is
 named exactly as it is exported, so an agent can search for it directly.

@@ -1,6 +1,6 @@
 import { assertSub2mainEnv, createSub2mainRuntime } from '@asol/sub2main-composition';
 
-import { reviewActionErrorResponse, corsHeaders, preflight } from '../../../../lib/http';
+import { reviewActionErrorResponse, corsHeaders, preflight, jsonResponse, readJsonBody } from '../../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -11,9 +11,9 @@ export async function POST(request: Request): Promise<Response> {
     const { profile } = createSub2mainRuntime();
     assertSub2mainEnv();
 
-    const body = (await request.json()) as { reviewId: string; uid: string };
+    const body = await readJsonBody<{ reviewId: string; uid: string }>(request);
     const result = await profile.reviews.helpful(body.reviewId, body.uid);
-    return Response.json(result, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, result, 200);
   } catch (error) {
     return reviewActionErrorResponse(request, error);
   }

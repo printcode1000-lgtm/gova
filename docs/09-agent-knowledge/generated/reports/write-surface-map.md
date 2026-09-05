@@ -5,7 +5,7 @@
 
 # Write Surface Map
 
-Detected write-like surfaces: **378**
+Detected write-like surfaces: **380**
 Unproven gateway paths: **146**
 
 | Source | Owner | Operations | Gateway | Proven | Route | Runtimes | Risk |
@@ -16,6 +16,7 @@ Unproven gateway paths: **146**
 | `packages/account-declarations/src/accounts/profiles.ts` | `@asol/account-declarations` | write-like | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/account-declarations/src/accounts/sub2main.ts` | `@asol/account-declarations` | upload | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/account-declarations/src/accounts/submain.ts` | `@asol/account-declarations` | write-like | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
+| `packages/architecture-core/src/checks/api-transport-contract.ts` | `@asol/architecture-core` | create, delete, insert, update | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/architecture-core/src/checks/application-cycle-contract.ts` | `@asol/architecture-core` | delete, save, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/architecture-core/src/checks/feature-application-door-purity-contract.ts` | `@asol/architecture-core` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/architecture-core/src/checks/native-contract.ts` | `@asol/architecture-core` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
@@ -117,6 +118,7 @@ Unproven gateway paths: **146**
 | `packages/observability-core/src/traces/dev-trace-types.ts` | `@asol/observability-core` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/orders-composition/src/index.ts` | `@asol/orders-composition` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/orders-composition/src/tests/index.test.ts` | `@asol/orders-composition` | write-like | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
+| `packages/orders-core/src/domain/transport-contract.ts` | `@asol/orders-core` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/orders-core/src/index.ts` | `@asol/orders-core` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/orders-core/src/tests/orders-service-module-contract.test.ts` | `@asol/orders-core` | delete, patch, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/ota-core/scripts/ota-revoke.ts` | `@asol/ota-core` | delete, publish | `unproven` | NO | `` | android, development, ios, static-out, tooling, web | high |
@@ -181,7 +183,6 @@ Unproven gateway paths: **146**
 | `packages/system-logs-core/src/browser/memory-store.ts` | `@asol/system-logs-core` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/system-logs-core/src/server/persistent-log-service.ts` | `@asol/system-logs-core` | delete | `unproven` | NO | `` | development, web | high |
 | `packages/system-logs-core/src/server/stream-hub.ts` | `@asol/system-logs-core` | delete | `unproven` | NO | `` | development, web | high |
-| `packages/system-logs-core/src/tests/index.test.ts` | `@asol/system-logs-core` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/trending-ribbon-core/src/server/trending-ribbon-service.ts` | `@asol/trending-ribbon-core` | save | `unproven` | NO | `` | development, web | high |
 | `packages/trending-ribbon-core/src/tests/index.test.ts` | `@asol/trending-ribbon-core` | save | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/app/api/account/delete/route.ts` | `unknown` | delete | `unproven` | NO | `/api/account/delete` | development, web | high |
@@ -342,12 +343,12 @@ Unproven gateway paths: **146**
 | `src/features/profile-working-hours/domain/profile-working-hours.types.ts` | `profile-working-hours` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/profile/application/services/profile-edit-tab-storage.ts` | `profile` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/profile/domain/profile-contacts.entity.ts` | `profile` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
+| `src/features/profile/domain/profile-directory-entry.entity.ts` | `profile` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/profile/domain/profile-editor.entity.ts` | `profile` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/profile/domain/profile-fulfillment-settings.entity.ts` | `profile` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/profile/domain/profile-review.entity.ts` | `profile` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/profile/domain/profile-specialties.entity.ts` | `profile` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/profile/domain/store-details.entity.ts` | `profile` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
-| `src/features/profile/domain/user-profile-row.entity.ts` | `profile` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/profile/presentation/CustomRequestPageContent.tsx` | `profile` | save | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/profile/presentation/FulfillmentSettingsCard.tsx` | `profile` | delete, save | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/features/profile/presentation/hooks/store-name-draft.ts` | `profile` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |
@@ -355,6 +356,7 @@ Unproven gateway paths: **146**
 | `src/features/profile/presentation/store-identity/StoreIdentityImagesEditor.tsx` | `profile` | write-like | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/profile/presentation/StoreIdentityCard.tsx` | `profile` | delete, save, upload | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/profile/presentation/use-profile-save.ts` | `profile` | save | `unproven` | NO | `` | android, development, ios, static-out, web | high |
+| `src/features/profile/server/mappers/profile-directory-entry.mapper.server.ts` | `profile` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/features/profile/server/services/profile-review-service.server.ts` | `profile` | create, delete, update | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/features/profile/server/services/profile-service.bootstrap.server.ts` | `profile` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/features/profile/server/services/profile-service.server.ts` | `profile` | write-like | `@asol/data-core, @asol/storage-core` | yes | `` | development, web | medium |

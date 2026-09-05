@@ -7,7 +7,7 @@ import {
   type SellerSearchRequest,
   type SellerSearchSort,
 } from "@/features/product-search";
-import type { UserProfileRow } from "@/features/profile";
+import type { ProfileDirectoryEntry } from "@/features/profile";
 
 export async function runProductSearchPanelRequest({
   activeMode,
@@ -34,7 +34,7 @@ export async function runProductSearchPanelRequest({
   sellerMinRating: SellerSearchRequest["minRating"];
   isCompact: boolean;
 }): Promise<
-  | { mode: "sellers"; items: UserProfileRow[]; total: number }
+  | { mode: "sellers"; items: ProfileDirectoryEntry[]; total: number }
   | { mode: "products"; items: ProductRecord[]; total: number }
 > {
   if (activeMode === "sellers") {

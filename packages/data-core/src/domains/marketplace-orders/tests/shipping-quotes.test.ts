@@ -34,7 +34,7 @@ async function main() {
     },
     buyer,
   );
-  const sellerOrderId = String(item.seller_order_id);
+  const sellerOrderId = String(item.sellerOrderId);
 
   await assert.rejects(
     () =>

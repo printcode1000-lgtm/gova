@@ -8,7 +8,7 @@ import type { ProductRecord } from "@/features/product";
 import { createProductCardViewModel } from "@asol/product-card-core";
 import { createSellerCardViewModel } from "@asol/seller-card-core";
 import type { ProductSearchMode } from "@/features/product-search";
-import type { UserProfileRow } from "@/features/profile";
+import type { ProfileDirectoryEntry } from "@/features/profile";
 
 export function ProductSearchResults({
   activeMode,
@@ -20,7 +20,7 @@ export function ProductSearchResults({
   activeMode: ProductSearchMode;
   isCompact: boolean;
   products: ProductRecord[];
-  sellers: UserProfileRow[];
+  sellers: ProfileDirectoryEntry[];
   onOpen: (href: string) => void;
 }) {
   if (isCompact) return null;

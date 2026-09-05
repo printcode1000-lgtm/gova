@@ -133,14 +133,14 @@ export function OrdersPageContent() {
                     <div>
                       <p className="text-xs text-muted-foreground">{copy.orderNumber}</p>
                       <h2 className="font-bold">
-                        {String(order.order_number ?? id)}
+                        {String(order.orderNumber ?? id)}
                       </h2>
                       <p className="mt-1 text-xs text-muted-foreground">
-                        {copy.orderDate}: {formatOrderDate(order.created_at, locale)}
+                        {copy.orderDate}: {formatOrderDate(order.createdAt, locale)}
                       </p>
                     </div>
                     <span className="rounded-full bg-muted px-3 py-1 text-xs font-semibold">
-                      {statusLabel(order.calculated_status, locale)}
+                      {statusLabel(order.calculatedStatus, locale)}
                     </span>
                   </div>
 
@@ -165,7 +165,7 @@ export function OrdersPageContent() {
                       <p className="text-muted-foreground">{copy.total}</p>
                       <p className="font-bold">
                         {formatMoney(
-                          order.grand_total,
+                          order.grandTotal,
                           String(order.currency ?? "EGP"),
                           locale,
                         )}
@@ -175,7 +175,7 @@ export function OrdersPageContent() {
                       <p className="text-muted-foreground">{copy.remaining}</p>
                       <p className="font-bold">
                         {formatMoney(
-                          order.remaining_total,
+                          order.remainingTotal,
                           String(order.currency ?? "EGP"),
                           locale,
                         )}

@@ -5,52 +5,52 @@ import { filterOrderDetailsForActor } from "@asol/orders-core";
 const details = {
   order: { id: "order-1" },
   sellerOrders: [
-    { id: "so-a", seller_id: "seller-a", service_provider_id: "provider-a" },
-    { id: "so-b", seller_id: "seller-b", service_provider_id: "provider-b" },
+    { id: "so-a", sellerId: "seller-a", serviceProviderId: "provider-a" },
+    { id: "so-b", sellerId: "seller-b", serviceProviderId: "provider-b" },
   ],
   orderItems: [
-    { id: "item-a", seller_order_id: "so-a" },
-    { id: "item-b", seller_order_id: "so-b" },
+    { id: "item-a", sellerOrderId: "so-a" },
+    { id: "item-b", sellerOrderId: "so-b" },
   ],
   customItems: [],
   shippingQuotes: [
-    { id: "sq-a", seller_order_id: "so-a" },
-    { id: "sq-b", seller_order_id: "so-b" },
+    { id: "sq-a", sellerOrderId: "so-a" },
+    { id: "sq-b", sellerOrderId: "so-b" },
   ],
   deliveryPlans: [
     {
       id: "plan-1",
-      fallback_confirmed_price: 9_000,
-      fallback_has_pending_quotes: 0,
+      fallbackConfirmedPrice: 9_000,
+      fallbackHasPendingQuotes: 0,
     },
   ],
   deliveryPlanStops: [
-    { id: "stop-a", seller_order_id: "so-a" },
-    { id: "stop-b", seller_order_id: "so-b" },
+    { id: "stop-a", sellerOrderId: "so-a" },
+    { id: "stop-b", sellerOrderId: "so-b" },
   ],
   deliveryPlanCandidates: [
-    { plan_id: "plan-1", provider_id: "provider-a" },
-    { plan_id: "plan-1", provider_id: "provider-b" },
+    { planId: "plan-1", providerId: "provider-a" },
+    { planId: "plan-1", providerId: "provider-b" },
   ],
   deliveryPlanCandidateStops: [
     {
-      plan_id: "plan-1",
-      provider_id: "provider-a",
-      stop_id: "stop-a",
+      planId: "plan-1",
+      providerId: "provider-a",
+      stopId: "stop-a",
     },
     {
-      plan_id: "plan-1",
-      provider_id: "provider-b",
-      stop_id: "stop-b",
+      planId: "plan-1",
+      providerId: "provider-b",
+      stopId: "stop-b",
     },
   ],
   deliveryPlanQuotes: [
-    { id: "quote-a", provider_id: "provider-a" },
-    { id: "quote-b", provider_id: "provider-b" },
+    { id: "quote-a", providerId: "provider-a" },
+    { id: "quote-b", providerId: "provider-b" },
   ],
   deliveryPlanQuoteStops: [
-    { quote_id: "quote-a", stop_id: "stop-a" },
-    { quote_id: "quote-b", stop_id: "stop-b" },
+    { quoteId: "quote-a", stopId: "stop-a" },
+    { quoteId: "quote-b", stopId: "stop-b" },
   ],
 };
 
@@ -81,11 +81,11 @@ assert.deepEqual(
   ["quote-a"],
 );
 assert.deepEqual(
-  providerView.deliveryPlanCandidates.map((row) => row.provider_id),
+  providerView.deliveryPlanCandidates.map((row) => row.providerId),
   ["provider-a"],
 );
-assert.equal(providerView.deliveryPlans[0].fallback_confirmed_price, 0);
-assert.equal(providerView.deliveryPlans[0].fallback_has_pending_quotes, 1);
+assert.equal(providerView.deliveryPlans[0].fallbackConfirmedPrice, 0);
+assert.equal(providerView.deliveryPlans[0].fallbackHasPendingQuotes, 1);
 
 console.log(
   "order details visibility: buyer completeness and provider stop/quote isolation verified",

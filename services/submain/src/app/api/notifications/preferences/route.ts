@@ -1,6 +1,6 @@
 import { assertSubmainEnv, createSubmainRuntime } from '@asol/submain-composition';
 
-import { businessErrorResponse, corsHeaders, preflight } from '../../../lib/http';
+import { businessErrorResponse, corsHeaders, preflight, jsonResponse, readJsonBody } from '../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -24,7 +24,7 @@ export async function GET(request: Request): Promise<Response> {
       query.get('uid') ?? '',
       query.get('phone') ?? '',
     );
-    return Response.json(preference, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, preference, 200);
   } catch (error) {
     return businessErrorResponse(request, error);
   }
@@ -36,11 +36,11 @@ export async function POST(request: Request): Promise<Response> {
     const { devices } = createSubmainRuntime();
     assertSubmainEnv();
 
-    const body = (await request.json()) as {
+    const body = await readJsonBody<{
       uid: string;
       phone: string;
       pushEnabled: boolean;
-    };
+    }>(request);
     // A mapped business code: an unmapped one falls through as a 500, which
     // would report a malformed request as a server fault.
     if (typeof body.pushEnabled !== 'boolean') {
@@ -52,7 +52,7 @@ export async function POST(request: Request): Promise<Response> {
       body.phone,
       body.pushEnabled,
     );
-    return Response.json(preference, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, preference, 200);
   } catch (error) {
     return businessErrorResponse(request, error);
   }

@@ -19,6 +19,8 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run android:r8:validate` | `Android`, `Tooling` | 1 |  | 0 |
 | `npm run android:r8:verify-release` | `Android`, `Tooling` | 5 |  | 0 |
 | `npm run api:inventory` | `Tooling` | 1 |  | 0 |
+| `npm run api:transport:check` | `Tooling` | 1 |  | 0 |
+| `npm run api:transport:inventory` | `Tooling` | 1 |  | 0 |
 | `npm run app:init` | `Tooling` | 3 |  | 0 |
 | `npm run architecture:check` | `Tooling` | 1 |  | 0 |
 | `npm run architecture:docs` | `Tooling` | 1 |  | 0 |
@@ -177,6 +179,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:account-declarations` | `Tooling` | 1 |  | 0 |
 | `npm run test:account-deletion-registry` | `Tooling` | 1 |  | 0 |
 | `npm run test:account-deletion-schema` | `Tooling` | 1 |  | 1 |
+| `npm run test:api-contract-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:api-core` | `Tooling` | 3 |  | 0 |
 | `npm run test:architecture-core` | `Tooling` | 2 |  | 0 |
 | `npm run test:auth-core` | `Tooling` | 1 |  | 0 |

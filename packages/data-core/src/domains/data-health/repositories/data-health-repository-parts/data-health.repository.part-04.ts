@@ -19,7 +19,7 @@ import {
   severityRank,
 } from "@asol/data-health-core/server";
 import { resolveDataHealthExecutionContext } from "../../runtime-context.server";
-import { DATA_HEALTH_IMAGE_SOURCES } from "@asol/data-health-core";
+import { DATA_HEALTH_IMAGE_SOURCES } from "../../db/image-source-registry";
 import type {
   DataHealthAuditEntry,
   DataHealthCleanupAction,
@@ -27,11 +27,13 @@ import type {
   DataHealthHistoryEntry,
   DataHealthIssue,
   DataHealthQuarantineEntry,
+  DataHealthQuarantineRecordDto,
   DataHealthReport,
   DataHealthTopology,
 } from "@asol/data-health-core";
 import { DATA_HEALTH_METADATA_STATEMENTS } from "../../db/metadata-schema";
 import { storageInventoryRepository } from "../storage-inventory.repository.server";
+import { mapDataHealthQuarantineRow } from "../data-health-record-mappers";
 import { DataHealthPart3 } from "./data-health.repository.part-03";
 type Row = Record<string, unknown>;
 export interface QuarantinedOriginalCleanupResult {
@@ -126,20 +128,21 @@ export abstract class DataHealthPart4 extends DataHealthPart3 {
     return { audit: rows.length };
   }
 
-  async getQuarantineEntry(id: string): Promise<Row | undefined> {
+  async getQuarantineEntry(id: string): Promise<DataHealthQuarantineRecordDto | undefined> {
     await this.ensureMetadata();
     const rows = (await profilesDataSource.execute(
       "SELECT id, fingerprint, resource_type, storage_profile_id, resource_key, database_name, table_name, record_id, eligible_for_deletion_at, released_at, deleted_at FROM data_health_quarantine WHERE id=? LIMIT 1",
       [id],
     )) as Row[];
-    return rows[0];
+    return rows[0] ? mapDataHealthQuarantineRow(rows[0]) : undefined;
   }
 
-  async listActiveQuarantineEntries(): Promise<Row[]> {
+  async listActiveQuarantineEntries(): Promise<DataHealthQuarantineRecordDto[]> {
     await this.ensureMetadata();
-    return (await profilesDataSource.execute(
+    const rows = (await profilesDataSource.execute(
       "SELECT id, fingerprint, resource_type, storage_profile_id, resource_key, database_name, table_name, record_id, eligible_for_deletion_at, released_at, deleted_at FROM data_health_quarantine WHERE COALESCE(released_at, '')='' AND COALESCE(deleted_at, '')='' ORDER BY quarantined_at ASC",
     )) as Row[];
+    return rows.map(mapDataHealthQuarantineRow);
   }
 
   async markQuarantineDeleted(id: string, deletedAt: string) {
@@ -202,11 +205,11 @@ export abstract class DataHealthPart4 extends DataHealthPart3 {
   }
 
   async getQuarantinedOriginalCleanupTarget(
-    entry: Row,
+    entry: DataHealthQuarantineRecordDto,
   ): Promise<QuarantinedOriginalCleanupResult> {
-    const database = text(entry.database_name);
-    const table = text(entry.table_name);
-    const id = text(entry.record_id);
+    const database = text(entry.databaseName);
+    const table = text(entry.tableName);
+    const id = text(entry.recordId);
     const storageObjects: Array<{
       storageProfileId: string;
       imageKey: string;
@@ -274,10 +277,10 @@ export abstract class DataHealthPart4 extends DataHealthPart3 {
     throw new Error(`unsupportedQuarantineRecord:${database}.${table}`);
   }
 
-  async deleteQuarantinedOriginalRecord(entry: Row): Promise<number> {
-    const database = text(entry.database_name);
-    const table = text(entry.table_name);
-    const id = text(entry.record_id);
+  async deleteQuarantinedOriginalRecord(entry: DataHealthQuarantineRecordDto): Promise<number> {
+    const database = text(entry.databaseName);
+    const table = text(entry.tableName);
+    const id = text(entry.recordId);
     if (!database || !table || !id) return 0;
 
     if (database === "profile" && table === "profile_images") {

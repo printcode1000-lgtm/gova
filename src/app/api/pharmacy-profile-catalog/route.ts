@@ -1,4 +1,4 @@
-import { apiError, apiSuccess } from "@/core/api/api-response";
+import { apiError, apiSuccess, readJsonBody } from "@/core/api/api-response";
 import { pharmacyProfileCatalogService } from "@/features/pharmacy-profile-catalog/server";
 import type { PharmacyOverrideStatus } from "@/features/pharmacy-profile-catalog";
 
@@ -26,7 +26,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json() as Record<string, unknown>;
+    const body = await readJsonBody<Record<string, unknown>>(request);
     const uid = cleanText(body.uid);
     const action = cleanText(body.action);
     if (!uid) return apiError("uid is required", 400);

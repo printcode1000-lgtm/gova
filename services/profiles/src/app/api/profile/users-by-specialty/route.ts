@@ -1,6 +1,7 @@
 import { assertProfilesEnv, createProfilesRuntime } from '@asol/profiles-composition';
 import { parseUsersBySpecialtyQuery } from '@/features/profile/domain/profile-query-requests';
-import { corsHeaders, preflight, profileErrorResponse } from '../../../lib/http';
+import { toProfileDirectoryEntry } from '@/features/profile/domain/profile-directory-entry.entity';
+import { jsonResponse, preflight, profileErrorResponse } from '../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -31,12 +32,13 @@ export async function GET(request: Request): Promise<Response> {
       query.minRating,
     );
     const data = await Promise.all(
-      users.map(async (user) => ({
-        ...user,
-        avatarUrl: (await database.profiles.getStoreImages(user.uid)).avatarUrl,
-      })),
+      users.map(async (user) =>
+        toProfileDirectoryEntry(user, {
+          avatarUrl: (await database.profiles.getStoreImages(user.uid)).avatarUrl,
+        }),
+      ),
     );
-    return Response.json(data, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, data);
   } catch (error) {
     return profileErrorResponse(request, error);
   }

@@ -100,12 +100,16 @@ export async function POST(request: Request) {
         const authoritative = catalogue.get(item.productId.trim());
         if (!authoritative) throw new Error("productUnavailable");
         return {
-          ...item,
-          unitPriceMinor: authoritative.unitPriceMinor,
-          priceLabel: authoritative.priceLabel,
+          productId: item.productId,
           sellerId: authoritative.sellerId,
           name: authoritative.name,
+          description: item.description,
+          imageUrl: item.imageUrl,
+          quantity: item.quantity,
+          unitPriceMinor: authoritative.unitPriceMinor,
+          priceLabel: authoritative.priceLabel,
           requiresSpecialVehicle: authoritative.requiresSpecialVehicle,
+          mainCategoryId: item.mainCategoryId,
         };
       });
 
@@ -291,7 +295,7 @@ export async function POST(request: Request) {
             },
             actor,
           );
-          sellerOrderId = String(createdItem.seller_order_id ?? sellerOrderId);
+          sellerOrderId = String(createdItem.sellerOrderId ?? sellerOrderId);
           shippingAssigned = true;
         }
         if (sellerOrderId) {

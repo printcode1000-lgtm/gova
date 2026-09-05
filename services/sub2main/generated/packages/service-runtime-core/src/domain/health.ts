@@ -1,3 +1,4 @@
+import { jsonContractResponse } from '@asol/api-contract-core/server';
 /**
  * Liveness for a service deployment.
  *
@@ -64,9 +65,9 @@ export function shardHealthReport(options: ShardHealthOptions): ShardHealthRepor
 
 /** The route body itself. Always HTTP 200: liveness answers, it does not gate. */
 export function shardHealthResponse(options: ShardHealthOptions): Response {
-  return Response.json(shardHealthReport(options));
+  return jsonContractResponse(shardHealthReport(options));
 }
 
 export function credentialHealthResponse(options: CredentialHealthOptions): Response {
-  return Response.json(credentialHealthReport(options));
+  return jsonContractResponse(credentialHealthReport(options));
 }

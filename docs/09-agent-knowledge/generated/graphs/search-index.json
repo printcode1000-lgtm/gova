@@ -262,6 +262,36 @@
       ]
     },
     {
+      "id": "command:api:transport:check",
+      "kind": "command",
+      "name": "npm run api:transport:check",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "api",
+        "api:transport:check",
+        "check",
+        "npm",
+        "npm run api:transport:check",
+        "run",
+        "transport"
+      ]
+    },
+    {
+      "id": "command:api:transport:inventory",
+      "kind": "command",
+      "name": "npm run api:transport:inventory",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "api",
+        "api:transport:inventory",
+        "inventory",
+        "npm",
+        "npm run api:transport:inventory",
+        "run",
+        "transport"
+      ]
+    },
+    {
       "id": "command:app:init",
       "kind": "command",
       "name": "npm run app:init",
@@ -2541,6 +2571,20 @@
         "run",
         "test",
         "test:account-deletion-schema"
+      ]
+    },
+    {
+      "id": "command:test:api-contract-core",
+      "kind": "command",
+      "name": "npm run test:api-contract-core",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "api-contract-core",
+        "npm",
+        "npm run test:api-contract-core",
+        "run",
+        "test",
+        "test:api-contract-core"
       ]
     },
     {
@@ -6152,6 +6196,8 @@
         "@asol/account-declarations/profiles",
         "@asol/account-declarations/sub2main",
         "@asol/account-declarations/submain",
+        "@asol/api-contract-core",
+        "@asol/api-contract-core/server",
         "@asol/architecture-core",
         "@asol/auth-core",
         "@asol/auth-core/phone",
@@ -6250,7 +6296,6 @@
         "@asol/product-card-core",
         "@asol/product-card-core/ui",
         "@asol/product-core",
-        "@asol/product-core/server",
         "@asol/product-style-core",
         "@asol/product-style-core/server",
         "@asol/products-composition",
@@ -6307,6 +6352,7 @@
         "npm",
         "packages/account-bridge/",
         "packages/account-declarations/",
+        "packages/api-contract-core/",
         "packages/architecture-core",
         "packages/architecture-core/",
         "packages/architecture-core/src/registry/capability-registry",
@@ -6380,6 +6426,8 @@
         "@asol/account-declarations/profiles",
         "@asol/account-declarations/sub2main",
         "@asol/account-declarations/submain",
+        "@asol/api-contract-core",
+        "@asol/api-contract-core/server",
         "@asol/architecture-core",
         "@asol/auth-core",
         "@asol/auth-core/phone",
@@ -6394,7 +6442,7 @@
         "@asol/data-core/marketplace-orders",
         "@asol/data-core/notifications",
         "@asol/data-core/ota",
-        "@asol/data-core/profile",
+        "@asol/data-core/profile/entities",
         "@asol/data-core/telemetry",
         "@asol/data-health-core",
         "@asol/data-health-core/server",
@@ -6425,7 +6473,6 @@
         "@asol/page-snapshot-core",
         "@asol/product-card-core",
         "@asol/product-core",
-        "@asol/product-core/server",
         "@asol/product-style-core",
         "@asol/products-composition",
         "@asol/profiles-composition",
@@ -6442,7 +6489,6 @@
         "@asol/sub2main-composition",
         "@asol/submain-composition",
         "@asol/system-logs-core",
-        "@asol/system-logs-core/server",
         "@asol/trending-ribbon-core",
         "@asol/vercel-deploy-core",
         "application_features",
@@ -6551,6 +6597,7 @@
         "<!-- generated file. do not edit by hand. source: packages/architecture-core registries (capability_packages, application_features). regenerate: npm run architecture:docs drift fails: npm run architecture:check -->",
         "@asol/account-bridge",
         "@asol/account-declarations",
+        "@asol/api-contract-core",
         "@asol/architecture-core",
         "@asol/auth-core",
         "@asol/backup-core",
@@ -6619,6 +6666,7 @@
         "package catalog",
         "packages/account-bridge/",
         "packages/account-declarations/",
+        "packages/api-contract-core/",
         "packages/architecture-core",
         "packages/architecture-core/",
         "packages/architecture-core/src/registry/capability-registry",
@@ -6986,6 +7034,8 @@
       "path": "docs/01-architecture/10-application-layers/business-api-layer.md",
       "summary": "Next.js route handlers and server entry points that receive HTTP requests and delegate to server services.",
       "tags": [
+        "@asol/api-contract-core",
+        "@asol/data-core",
         "and",
         "api",
         "business",
@@ -22311,6 +22361,29 @@
       ]
     },
     {
+      "id": "package:@asol/api-contract-core",
+      "kind": "package",
+      "name": "@asol/api-contract-core",
+      "path": "packages/api-contract-core",
+      "summary": "Application-owned JSON transport naming and validation contracts; Layer: capability; Public exports: ., ./server",
+      "tags": [
+        ".",
+        "./server",
+        "/server",
+        "@asol/api-contract-core",
+        "and",
+        "application-owned",
+        "application-owned json transport naming and validation contracts",
+        "capability",
+        "contracts",
+        "json",
+        "naming",
+        "packages/api-contract-core",
+        "transport",
+        "validation"
+      ]
+    },
+    {
       "id": "package:@asol/architecture-core",
       "kind": "package",
       "name": "@asol/architecture-core",
@@ -23026,11 +23099,9 @@
       "kind": "package",
       "name": "@asol/product-core",
       "path": "packages/product-core",
-      "summary": "Product domain logic; Layer: capability; Public exports: ., ./server",
+      "summary": "Product domain logic; Layer: capability; Public exports: .",
       "tags": [
         ".",
-        "./server",
-        "/server",
         "@asol/product-core",
         "capability",
         "domain",
@@ -26438,6 +26509,28 @@
       ]
     },
     {
+      "id": "script:scripts/api-transport-contract-check.ts",
+      "kind": "script",
+      "name": "api-transport-contract-check.ts",
+      "path": "scripts/api-transport-contract-check.ts",
+      "tags": [
+        "scripts/api-transport-contract-check",
+        "scripts/api-transport-contract-check.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/api-transport-inventory.ts",
+      "kind": "script",
+      "name": "api-transport-inventory.ts",
+      "path": "scripts/api-transport-inventory.ts",
+      "tags": [
+        "scripts/api-transport-inventory",
+        "scripts/api-transport-inventory.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/architecture-check.ts",
       "kind": "script",
       "name": "architecture-check.ts",
@@ -28735,6 +28828,28 @@
       ]
     },
     {
+      "id": "source:packages/api-contract-core/src/index.ts",
+      "kind": "source",
+      "name": "index.ts",
+      "path": "packages/api-contract-core/src/index.ts",
+      "tags": [
+        "packages/api-contract-core/src/index",
+        "packages/api-contract-core/src/index.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/api-contract-core/src/server.ts",
+      "kind": "source",
+      "name": "server.ts",
+      "path": "packages/api-contract-core/src/server.ts",
+      "tags": [
+        "packages/api-contract-core/src/server",
+        "packages/api-contract-core/src/server.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/architecture-core/src/checks/account-bridge-contract.ts",
       "kind": "source",
       "name": "account-bridge-contract.ts",
@@ -28742,6 +28857,17 @@
       "tags": [
         "packages/architecture-core/src/checks/account-bridge-contract",
         "packages/architecture-core/src/checks/account-bridge-contract.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/architecture-core/src/checks/api-transport-contract.ts",
+      "kind": "source",
+      "name": "api-transport-contract.ts",
+      "path": "packages/architecture-core/src/checks/api-transport-contract.ts",
+      "tags": [
+        "packages/architecture-core/src/checks/api-transport-contract",
+        "packages/architecture-core/src/checks/api-transport-contract.ts",
         "ts"
       ]
     },
@@ -30268,6 +30394,18 @@
       ]
     },
     {
+      "id": "source:packages/data-core/src/domains/account-deletion/account-deletion-registry.persistence.ts",
+      "kind": "source",
+      "name": "account-deletion-registry.persistence.ts",
+      "path": "packages/data-core/src/domains/account-deletion/account-deletion-registry.persistence.ts",
+      "tags": [
+        "packages/data-core/src/domains/account-deletion/account-deletion-registry",
+        "packages/data-core/src/domains/account-deletion/account-deletion-registry.persistence.ts",
+        "persistence",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/data-core/src/domains/account-deletion/index.server.ts",
       "kind": "source",
       "name": "index.server.ts",
@@ -30505,6 +30643,17 @@
       ]
     },
     {
+      "id": "source:packages/data-core/src/domains/data-health/db/image-source-registry.ts",
+      "kind": "source",
+      "name": "image-source-registry.ts",
+      "path": "packages/data-core/src/domains/data-health/db/image-source-registry.ts",
+      "tags": [
+        "packages/data-core/src/domains/data-health/db/image-source-registry",
+        "packages/data-core/src/domains/data-health/db/image-source-registry.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/data-core/src/domains/data-health/db/metadata-schema.ts",
       "kind": "source",
       "name": "metadata-schema.ts",
@@ -30524,6 +30673,17 @@
         "packages/data-core/src/domains/data-health/index",
         "packages/data-core/src/domains/data-health/index.server.ts",
         "server",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/domains/data-health/repositories/data-health-record-mappers.ts",
+      "kind": "source",
+      "name": "data-health-record-mappers.ts",
+      "path": "packages/data-core/src/domains/data-health/repositories/data-health-record-mappers.ts",
+      "tags": [
+        "packages/data-core/src/domains/data-health/repositories/data-health-record-mappers",
+        "packages/data-core/src/domains/data-health/repositories/data-health-record-mappers.ts",
         "ts"
       ]
     },
@@ -30880,6 +31040,18 @@
       ]
     },
     {
+      "id": "source:packages/data-core/src/domains/marketplace-orders/application/service-result-boundary.server.ts",
+      "kind": "source",
+      "name": "service-result-boundary.server.ts",
+      "path": "packages/data-core/src/domains/marketplace-orders/application/service-result-boundary.server.ts",
+      "tags": [
+        "packages/data-core/src/domains/marketplace-orders/application/service-result-boundary",
+        "packages/data-core/src/domains/marketplace-orders/application/service-result-boundary.server.ts",
+        "server",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/data-core/src/domains/marketplace-orders/commands/marketplace-order-service-parts/marketplace-order-service.part-01.ts",
       "kind": "source",
       "name": "marketplace-order-service.part-01.ts",
@@ -31203,6 +31375,17 @@
       "tags": [
         "packages/data-core/src/domains/marketplace-orders/repositories/order-query-repository",
         "packages/data-core/src/domains/marketplace-orders/repositories/order-query-repository.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/domains/marketplace-orders/repositories/order-transport-mappers.ts",
+      "kind": "source",
+      "name": "order-transport-mappers.ts",
+      "path": "packages/data-core/src/domains/marketplace-orders/repositories/order-transport-mappers.ts",
+      "tags": [
+        "packages/data-core/src/domains/marketplace-orders/repositories/order-transport-mappers",
+        "packages/data-core/src/domains/marketplace-orders/repositories/order-transport-mappers.ts",
         "ts"
       ]
     },
@@ -31568,6 +31751,17 @@
       ]
     },
     {
+      "id": "source:packages/data-core/src/domains/product/repositories/product-persistence.ts",
+      "kind": "source",
+      "name": "product-persistence.ts",
+      "path": "packages/data-core/src/domains/product/repositories/product-persistence.ts",
+      "tags": [
+        "packages/data-core/src/domains/product/repositories/product-persistence",
+        "packages/data-core/src/domains/product/repositories/product-persistence.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/data-core/src/domains/product/repositories/product-repository.ts",
       "kind": "source",
       "name": "product-repository.ts",
@@ -31620,6 +31814,18 @@
         "entity",
         "packages/data-core/src/domains/profile/entities/profile-contacts",
         "packages/data-core/src/domains/profile/entities/profile-contacts.entity.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/domains/profile/entities/profile-directory-entry.entity.ts",
+      "kind": "source",
+      "name": "profile-directory-entry.entity.ts",
+      "path": "packages/data-core/src/domains/profile/entities/profile-directory-entry.entity.ts",
+      "tags": [
+        "entity",
+        "packages/data-core/src/domains/profile/entities/profile-directory-entry",
+        "packages/data-core/src/domains/profile/entities/profile-directory-entry.entity.ts",
         "ts"
       ]
     },
@@ -31703,18 +31909,6 @@
         "entity",
         "packages/data-core/src/domains/profile/entities/store-details",
         "packages/data-core/src/domains/profile/entities/store-details.entity.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/data-core/src/domains/profile/entities/user-profile-row.entity.ts",
-      "kind": "source",
-      "name": "user-profile-row.entity.ts",
-      "path": "packages/data-core/src/domains/profile/entities/user-profile-row.entity.ts",
-      "tags": [
-        "entity",
-        "packages/data-core/src/domains/profile/entities/user-profile-row",
-        "packages/data-core/src/domains/profile/entities/user-profile-row.entity.ts",
         "ts"
       ]
     },
@@ -32080,6 +32274,19 @@
       "tags": [
         "packages/data-core/src/domains/system-logs/index",
         "packages/data-core/src/domains/system-logs/index.server.ts",
+        "server",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/domains/system-logs/system-logs.repository.server.ts",
+      "kind": "source",
+      "name": "system-logs.repository.server.ts",
+      "path": "packages/data-core/src/domains/system-logs/system-logs.repository.server.ts",
+      "tags": [
+        "packages/data-core/src/domains/system-logs/system-logs",
+        "packages/data-core/src/domains/system-logs/system-logs.repository.server.ts",
+        "repository",
         "server",
         "ts"
       ]
@@ -32543,17 +32750,6 @@
       "tags": [
         "packages/data-health-core/src/domain/execution-context",
         "packages/data-health-core/src/domain/execution-context.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/data-health-core/src/domain/source-registry.ts",
-      "kind": "source",
-      "name": "source-registry.ts",
-      "path": "packages/data-health-core/src/domain/source-registry.ts",
-      "tags": [
-        "packages/data-health-core/src/domain/source-registry",
-        "packages/data-health-core/src/domain/source-registry.ts",
         "ts"
       ]
     },
@@ -35803,6 +35999,17 @@
       ]
     },
     {
+      "id": "source:packages/orders-core/src/domain/transport-contract.ts",
+      "kind": "source",
+      "name": "transport-contract.ts",
+      "path": "packages/orders-core/src/domain/transport-contract.ts",
+      "tags": [
+        "packages/orders-core/src/domain/transport-contract",
+        "packages/orders-core/src/domain/transport-contract.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/orders-core/src/domain/types/index.ts",
       "kind": "source",
       "name": "index.ts",
@@ -36812,28 +37019,6 @@
       "tags": [
         "packages/product-core/src/index",
         "packages/product-core/src/index.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/product-core/src/server.ts",
-      "kind": "source",
-      "name": "server.ts",
-      "path": "packages/product-core/src/server.ts",
-      "tags": [
-        "packages/product-core/src/server",
-        "packages/product-core/src/server.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/product-core/src/server/product-row.ts",
-      "kind": "source",
-      "name": "product-row.ts",
-      "path": "packages/product-core/src/server/product-row.ts",
-      "tags": [
-        "packages/product-core/src/server/product-row",
-        "packages/product-core/src/server/product-row.ts",
         "ts"
       ]
     },
@@ -38212,17 +38397,6 @@
       "tags": [
         "packages/system-logs-core/src/server/persistent-log-service",
         "packages/system-logs-core/src/server/persistent-log-service.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/system-logs-core/src/server/repository.ts",
-      "kind": "source",
-      "name": "repository.ts",
-      "path": "packages/system-logs-core/src/server/repository.ts",
-      "tags": [
-        "packages/system-logs-core/src/server/repository",
-        "packages/system-logs-core/src/server/repository.ts",
         "ts"
       ]
     },
@@ -49619,6 +49793,18 @@
       ]
     },
     {
+      "id": "source:src/features/profile/domain/profile-directory-entry.entity.ts",
+      "kind": "source",
+      "name": "profile-directory-entry.entity.ts",
+      "path": "src/features/profile/domain/profile-directory-entry.entity.ts",
+      "tags": [
+        "entity",
+        "src/features/profile/domain/profile-directory-entry",
+        "src/features/profile/domain/profile-directory-entry.entity.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/profile/domain/profile-editor.entity.ts",
       "kind": "source",
       "name": "profile-editor.entity.ts",
@@ -49698,18 +49884,6 @@
         "entity",
         "src/features/profile/domain/store-images",
         "src/features/profile/domain/store-images.entity.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:src/features/profile/domain/user-profile-row.entity.ts",
-      "kind": "source",
-      "name": "user-profile-row.entity.ts",
-      "path": "src/features/profile/domain/user-profile-row.entity.ts",
-      "tags": [
-        "entity",
-        "src/features/profile/domain/user-profile-row",
-        "src/features/profile/domain/user-profile-row.entity.ts",
         "ts"
       ]
     },
@@ -50392,6 +50566,19 @@
       "tags": [
         "src/features/profile/server",
         "src/features/profile/server.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/profile/server/mappers/profile-directory-entry.mapper.server.ts",
+      "kind": "source",
+      "name": "profile-directory-entry.mapper.server.ts",
+      "path": "src/features/profile/server/mappers/profile-directory-entry.mapper.server.ts",
+      "tags": [
+        "mapper",
+        "server",
+        "src/features/profile/server/mappers/profile-directory-entry",
+        "src/features/profile/server/mappers/profile-directory-entry.mapper.server.ts",
         "ts"
       ]
     },
@@ -53236,6 +53423,18 @@
       "tags": [
         "packages/account-declarations/src/tests/index",
         "packages/account-declarations/src/tests/index.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/api-contract-core/src/tests/index.test.ts",
+      "kind": "test",
+      "name": "index.test.ts",
+      "path": "packages/api-contract-core/src/tests/index.test.ts",
+      "tags": [
+        "packages/api-contract-core/src/tests/index",
+        "packages/api-contract-core/src/tests/index.test.ts",
         "test",
         "ts"
       ]

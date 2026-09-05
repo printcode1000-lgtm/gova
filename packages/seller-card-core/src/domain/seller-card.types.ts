@@ -1,4 +1,4 @@
-import type { UserProfileRow } from "@asol/data-core/profile";
+import type { ProfileDirectoryEntry } from "@asol/data-core/profile/entities";
 
 export type SellerCardVariant =
   | "search"
@@ -38,7 +38,7 @@ export interface SellerCardViewModel {
   ratingText: string;
   ratingValue: number | null;
   badges: SellerCardBadge[];
-  profile?: UserProfileRow;
+  profile?: ProfileDirectoryEntry;
 }
 
 export interface SellerCardAction {

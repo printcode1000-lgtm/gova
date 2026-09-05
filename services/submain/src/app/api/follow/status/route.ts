@@ -1,7 +1,7 @@
 import { assertSubmainEnv, createSubmainRuntime } from '@asol/submain-composition';
 import type { FollowTargetType } from '@/features/follow/domain/follow.types';
 
-import { businessErrorResponse, corsHeaders, preflight } from '../../../lib/http';
+import { businessErrorResponse, corsHeaders, preflight, jsonResponse } from '../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -19,7 +19,7 @@ export async function GET(request: Request): Promise<Response> {
       viewerUid: q.get('viewerUid') ?? undefined,
       targetOwnerUid: q.get('targetOwnerUid') ?? undefined,
     });
-    return Response.json(status, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, status, 200);
   } catch (error) {
     return businessErrorResponse(request, error);
   }

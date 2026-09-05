@@ -1,4 +1,4 @@
-import { apiSuccess, mapServiceError } from "@/core/api/api-response";
+import { apiSuccess, mapServiceError, readJsonBody } from "@/core/api/api-response";
 import {
   notificationsServer,
   type BroadcastNotificationInput,
@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     "POST /api/notifications/broadcast/send",
     async () => {
       try {
-        const body = (await request.json()) as BroadcastNotificationInput;
+        const body = (await readJsonBody<unknown>(request)) as BroadcastNotificationInput;
         return apiSuccess(await notificationsServer.sendBroadcast(body));
       } catch (error) {
         return mapServiceError(error);

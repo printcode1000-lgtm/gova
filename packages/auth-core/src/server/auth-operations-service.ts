@@ -36,10 +36,10 @@ export class AuthOperationsService {
       phone,
       email,
       password: hashedPassword,
-      last_login_at: null,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      deleted_at: null,
+      lastLoginAt: null,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      deletedAt: null,
     });
 
     const storeName = formData.storeName?.trim();

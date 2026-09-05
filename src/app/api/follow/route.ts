@@ -1,4 +1,4 @@
-import { apiSuccess, mapServiceError } from "@/core/api/api-response";
+import { apiSuccess, mapServiceError, readJsonBody } from "@/core/api/api-response";
 import { followService } from "@/features/follow/server";
 import type { FollowMutationInput, FollowTargetType } from "@/features/follow";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
@@ -6,7 +6,7 @@ import { runTracedBusinessRoute } from '@/core/api/traced-route';
 export async function POST(request: Request) {
   return runTracedBusinessRoute("POST /api/follow", async () => {
     try {
-      const body = (await request.json()) as FollowMutationInput;
+      const body = (await readJsonBody<unknown>(request)) as FollowMutationInput;
       return apiSuccess(await followService.follow(body));
     } catch (error) {
       return mapServiceError(error);

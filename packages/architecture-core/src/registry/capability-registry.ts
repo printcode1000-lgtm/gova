@@ -55,6 +55,14 @@ export const CAPABILITY_PACKAGES: readonly CapabilityPackage[] = [
     mayImportApp: false,
   },
   {
+    folder: 'api-contract-core',
+    name: '@asol/api-contract-core',
+    owns: 'Application-owned JSON transport naming and validation contracts',
+    layer: 'capability',
+    vendorModules: [],
+    mayImportApp: false,
+  },
+  {
     folder: 'account-declarations',
     name: '@asol/account-declarations',
     owns: 'Deployment account declarations and routing metadata',

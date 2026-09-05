@@ -1,7 +1,8 @@
-import { apiSuccess, mapServiceError } from "@/core/api/api-response";
+import { apiSuccess, mapServiceError, readJsonBody } from "@/core/api/api-response";
 import { assertSuperAdminRequest } from "@/features/super-admin/server";
 import { listBuildJobs, startBuildJob } from "@/features/release-commands/server";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
+import type { StartBuildJobInput } from "@asol/release-core/console";
 
 export async function GET(request: Request) {
   return runTracedBusinessRoute("GET /api/super-admin/build-jobs", async () => {
@@ -19,7 +20,7 @@ export async function POST(request: Request) {
   return runTracedBusinessRoute("POST /api/super-admin/build-jobs", async () => {
     try {
       assertSuperAdminRequest(request);
-      return apiSuccess(await startBuildJob(await request.json()));
+      return apiSuccess(await startBuildJob(await readJsonBody<StartBuildJobInput>(request)));
     } catch (error) {
       return mapServiceError(error);
     }

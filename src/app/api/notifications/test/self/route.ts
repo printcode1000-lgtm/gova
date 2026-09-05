@@ -1,4 +1,4 @@
-import { apiSuccess, mapServiceError } from "@/core/api/api-response";
+import { apiSuccess, mapServiceError, readJsonBody } from "@/core/api/api-response";
 import { notificationsServer } from "@/features/notifications/server";
 import { assertSignedInRequest } from "@/features/auth/server";
 import { runTracedBusinessRoute } from "@/core/api/traced-route";
@@ -18,7 +18,7 @@ export async function POST(request: Request) {
     async () => {
       try {
         const claims = assertSignedInRequest(request);
-        const body = (await request.json().catch(() => ({}))) as {
+        const body = (await readJsonBody<unknown>(request).catch(() => ({}))) as {
           locale?: unknown;
           requestId?: unknown;
         };

@@ -2,7 +2,7 @@ import { assertSubmainEnv, createSubmainRuntime } from '@asol/submain-compositio
 import type { UpdateProfileInput } from '@/features/auth/domain/profile.entity';
 import { extractSessionToken } from '@asol/auth-core/server';
 
-import { businessErrorResponse, corsHeaders, preflight } from '../../../lib/http';
+import { businessErrorResponse, corsHeaders, preflight, jsonResponse, readJsonBody } from '../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -13,10 +13,17 @@ export async function PUT(request: Request): Promise<Response> {
     const { auth } = createSubmainRuntime();
     assertSubmainEnv();
 
-    const body = (await request.json()) as UpdateProfileInput;
+    const body = await readJsonBody<UpdateProfileInput>(request);
     const sessionToken = extractSessionToken(request, body);
-    const profile = await auth.updateProfile({ ...body, sessionToken });
-    return Response.json(profile, { status: 200, headers: corsHeaders(request) });
+    const profile = await auth.updateProfile({
+      uid: body.uid,
+      phone: body.phone,
+      email: body.email,
+      currentPassword: body.currentPassword,
+      newPassword: body.newPassword,
+      sessionToken,
+    });
+    return jsonResponse(request, profile, 200);
   } catch (error) {
     return businessErrorResponse(request, error);
   }

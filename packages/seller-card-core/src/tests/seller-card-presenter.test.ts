@@ -1,17 +1,22 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
-import type { UserProfileRow } from "@asol/data-core/profile";
+import type { ProfileDirectoryEntry } from "@asol/data-core/profile/entities";
 import { createSellerCardViewModel } from "../application/seller-card-presenter";
 
-function sellerRow(overrides: Record<string, unknown> = {}): UserProfileRow {
+function sellerRow(overrides: Partial<ProfileDirectoryEntry> & Record<string, unknown> = {}): ProfileDirectoryEntry {
   return {
     uid: "seller-registration-uid",
     storeName: "",
     storeDescription: "",
     storeStory: "",
+    customRequestEnabled: true,
+    trendingLabel: "",
+    primaryPhone: "",
+    ratingAverage: 0,
+    ratingCount: 0,
     ...overrides,
-  } as unknown as UserProfileRow;
+  } as ProfileDirectoryEntry;
 }
 
 assert.equal(
@@ -26,31 +31,31 @@ assert.equal(
 );
 
 const profilesServiceRow = sellerRow({
-  store_name: "حساب السوبر ادمن 1",
-  store_description: "وصف المتجر",
-  primary_phone: "01026546550",
-  rating_average: 450,
+  storeName: "حساب السوبر ادمن 1",
+  storeDescription: "وصف المتجر",
+  primaryPhone: "01026546550",
+  ratingAverage: 450,
 });
 const profilesServiceCard = createSellerCardViewModel(profilesServiceRow);
 assert.equal(
   profilesServiceCard.title,
   "حساب السوبر ادمن 1",
-  "profiles service store_name must render as the card title",
+  "profiles service storeName must render as the card title",
 );
 assert.equal(
   profilesServiceCard.identityLabel,
   "حساب السوبر ادمن 1",
-  "profiles service store_name must win over its phone",
+  "profiles service storeName must win over its phone",
 );
 assert.equal(
   profilesServiceCard.description,
   "وصف المتجر",
-  "profiles service store_description must render on the card",
+  "profiles service storeDescription must render on the card",
 );
 assert.equal(
   profilesServiceCard.ratingText,
   "4.5 / 5",
-  "profiles service rating_average must render on the card",
+  "profiles service ratingAverage must render on the card",
 );
 
 assert.equal(

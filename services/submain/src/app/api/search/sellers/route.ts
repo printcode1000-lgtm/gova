@@ -1,7 +1,7 @@
 import { assertSubmainEnv, createSubmainRuntime } from '@asol/submain-composition';
 import { parseSellerSearchRequest } from '@/features/product-search/domain/product-search.request';
 
-import { corsHeaders, preflight, searchErrorResponse } from '../../../lib/http';
+import { corsHeaders, preflight, searchErrorResponse, jsonResponse } from '../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -12,7 +12,7 @@ export async function GET(request: Request): Promise<Response> {
     assertSubmainEnv();
 
     const data = await search.sellers(parseSellerSearchRequest(new URL(request.url).searchParams));
-    return Response.json(data, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, data, 200);
   } catch (error) {
     return searchErrorResponse(request, error);
   }

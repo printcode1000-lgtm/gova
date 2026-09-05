@@ -4,7 +4,7 @@ import {
   type ActionInput,
 } from '@asol/submain-composition';
 
-import { corsHeaders, orderDetailErrorResponse, preflight } from '../../../../lib/http';
+import { corsHeaders, orderDetailErrorResponse, preflight, jsonResponse, readJsonBody } from '../../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -19,9 +19,9 @@ export async function POST(
     assertSubmainEnv();
 
     const { orderId } = await params;
-    const body = (await request.json()) as ActionInput;
+    const body = await readJsonBody<ActionInput>(request);
     const result = await orders.executeAction(orderId, body);
-    return Response.json(result, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, result, 200);
   } catch (error) {
     return orderDetailErrorResponse(request, error);
   }

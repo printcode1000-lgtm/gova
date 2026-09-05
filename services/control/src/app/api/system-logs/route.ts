@@ -1,3 +1,4 @@
+import { jsonContractResponse } from '@asol/api-contract-core/server';
 import { controlPreflight } from '@/control/operational-route';
 import { assertControlSystemLogAccess, persistentSystemLogService, systemLogError } from '@/control/system-logs';
 
@@ -14,7 +15,7 @@ function options(params: URLSearchParams) {
 }
 
 export async function GET(request: Request): Promise<Response> {
-  try { assertControlSystemLogAccess(request); return Response.json(await persistentSystemLogService.list(options(new URL(request.url).searchParams))); }
+  try { assertControlSystemLogAccess(request); return jsonContractResponse(await persistentSystemLogService.list(options(new URL(request.url).searchParams))); }
   catch (error) { return systemLogError(error); }
 }
 
@@ -22,8 +23,8 @@ export async function DELETE(request: Request): Promise<Response> {
   try {
     assertControlSystemLogAccess(request);
     const level = new URL(request.url).searchParams.get('level');
-    if (level && level !== 'normal' && level !== 'warning' && level !== 'error') return Response.json({ error: 'invalidSystemLogLevel' }, { status: 400 });
-    await persistentSystemLogService.clear(level ?? undefined); return Response.json({ ok: true });
+    if (level && level !== 'normal' && level !== 'warning' && level !== 'error') return jsonContractResponse({ error: 'invalidSystemLogLevel' }, { status: 400 });
+    await persistentSystemLogService.clear(level ?? undefined); return jsonContractResponse({ ok: true });
   } catch (error) { return systemLogError(error); }
 }
 

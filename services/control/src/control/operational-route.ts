@@ -1,5 +1,7 @@
 import 'server-only';
 
+import { jsonContractResponse } from '@asol/api-contract-core/server';
+
 import {
   BROWSER_REQUEST_HEADERS,
   BROWSER_REQUEST_METHODS,
@@ -55,7 +57,7 @@ export function withControlCors(request: Request, response: Response): Response 
 }
 
 export function controlJson(body: unknown, status = 200, request?: Request): Response {
-  return Response.json(body, {
+  return jsonContractResponse(body, {
     status,
     headers: request ? controlCorsHeaders(request) : undefined,
   });
@@ -74,9 +76,6 @@ export function controlJson(body: unknown, status = 200, request?: Request): Res
 export function controlError(error: unknown, request?: Request): Response {
   const message = error instanceof Error ? error.message : 'Internal Server Error';
   const mapped = businessApiErrorStatus(message);
-  return Response.json(
-    { error: mapped.code },
-    { status: mapped.status, headers: request ? controlCorsHeaders(request) : undefined },
-  );
+  return controlJson({ error: mapped.code }, mapped.status, request);
 }
 

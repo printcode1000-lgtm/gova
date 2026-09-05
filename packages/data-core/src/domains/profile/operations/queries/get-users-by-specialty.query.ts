@@ -1,4 +1,5 @@
-import type { IProfileRepository, UserProfileRow } from "../../repositories/profile-repository.interface";
+import type { IProfileRepository } from "../../repositories/profile-repository.interface";
+import type { ProfileDirectoryEntry } from "../../entities";
 
 export class GetUsersBySpecialtyQuery {
   constructor(private repository: IProfileRepository) {}
@@ -9,7 +10,7 @@ export class GetUsersBySpecialtyQuery {
     limit: number,
     search?: string,
     minRating?: number,
-  ): Promise<UserProfileRow[]> {
+  ): Promise<ProfileDirectoryEntry[]> {
     return this.repository.getUsersBySpecialty(categoryId, subcategoryId, offset, limit, search, minRating);
   }
 }

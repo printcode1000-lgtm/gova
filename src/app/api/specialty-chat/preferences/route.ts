@@ -1,4 +1,4 @@
-import { apiSuccess, mapServiceError } from "@/core/api/api-response";
+import { apiSuccess, mapServiceError, readJsonBody } from "@/core/api/api-response";
 import type {
   SpecialtyChatIdentity,
   SpecialtyChatPreferenceChanges,
@@ -8,7 +8,7 @@ import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 function preferenceChanges(value: unknown): SpecialtyChatPreferenceChanges {
   if (!value || typeof value !== "object" || Array.isArray(value)) return {};
-  const input = value as Record<string, unknown>;
+  const input = value as { specialtyRequestsEnabled?: unknown; productConversationsEnabled?: unknown };
   return {
     ...(typeof input.specialtyRequestsEnabled === "boolean"
       ? { specialtyRequestsEnabled: input.specialtyRequestsEnabled }
@@ -24,10 +24,10 @@ export async function POST(request: Request) {
     "POST /api/specialty-chat/preferences",
     async () => {
       try {
-        const body = (await request.json()) as {
+        const body = await readJsonBody<{
           identity: SpecialtyChatIdentity;
           changes?: unknown;
-        };
+        }>(request);
         return apiSuccess(
           body.changes === undefined
             ? await specialtyChatService.getPreferences(body.identity)

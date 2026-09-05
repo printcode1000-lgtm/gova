@@ -1,8 +1,9 @@
 "use client";
 
+import type { CustomRequestItemDto } from "@asol/orders-core";
 import { OrderActionButton } from "../OrderActionButton";
 import { canCancelStatus } from "../order-labels";
-import type { DbRow } from "../order-types";
+
 import {
   type RunAction,
   isPendingSellerResponse,
@@ -16,7 +17,7 @@ export function CustomRequestActions({
   busyAction,
   runAction,
 }: {
-  item: DbRow;
+  item: CustomRequestItemDto;
   itemId: string;
   isSeller: boolean;
   isBuyer: boolean;

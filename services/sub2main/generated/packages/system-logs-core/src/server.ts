@@ -8,7 +8,6 @@ export {
   requestClientKey,
 } from './server/persistent-log-service';
 
-export { systemLogsRepository, SystemLogsRepository } from './server/repository';
 export { emitTerminalSystemLog } from './server/terminal-logger';
 export { evaluateAlerts } from './server/alert-evaluator';
 export {
@@ -40,7 +39,7 @@ export {
 export {
   configureSystemLogsCore,
   resetSystemLogsCorePorts,
-  systemLogsDatabase,
+  systemLogsPersistence,
   systemLogsEnvironment,
   systemLogsIdentity,
   systemLogsMonitor,

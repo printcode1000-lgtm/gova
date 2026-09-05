@@ -39,7 +39,7 @@ import {
   resolveBuyerDeliveryDisplay,
   statusLabel,
 } from "./order-labels";
-import type { DbRow, OrderDetails, OrderRole } from "./order-types";
+import type { OrderDetails, OrderRole } from "./order-types";
 
 import { RunAction, text, BackToOrders, OrderSummary } from "./order-details/OrderDetailsPageContent.navigation-summary";
 import { useTranslation } from "@/shared/i18n";
@@ -143,7 +143,7 @@ export function OrderDetailsPageContent({ id, orderId }: { orderId: string } & {
   }
 
   const order = details.order;
-  const buyerId = String(order.buyer_id ?? "");
+  const buyerId = String(order.buyerId ?? "");
   const buyer = details.profiles[buyerId];
   const buyerLocation = resolveBuyerDeliveryDisplay(order, buyer);
   const currency = String(order.currency ?? "EGP");
@@ -159,10 +159,10 @@ export function OrderDetailsPageContent({ id, orderId }: { orderId: string } & {
         <div id="features-orders-presentation-orderdetailspagecontent-div-9-hufad4">
           <BackToOrders />
           <h1 id="features-orders-presentation-orderdetailspagecontent-heading-10-giiyco" className="mt-3 text-2xl font-bold">
-            {text.order} {String(order.order_number ?? order.id)}
+            {text.order} {String(order.orderNumber ?? order.id)}
           </h1>
           <p id="features-orders-presentation-orderdetailspagecontent-text-11-0emeve" className="mt-1 text-sm text-muted-foreground">
-            {text.status}: {statusLabel(order.calculated_status)} - {text.cod}
+            {text.status}: {statusLabel(order.calculatedStatus)} - {text.cod}
           </p>
         </div>
         {admin ? (

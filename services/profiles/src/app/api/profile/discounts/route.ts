@@ -1,6 +1,6 @@
 import { assertProfilesEnv, createProfilesRuntime } from '@asol/profiles-composition';
 
-import { corsHeaders, preflight, profileErrorResponse } from '../../../lib/http';
+import { corsHeaders, preflight, profileErrorResponse, jsonResponse } from '../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -21,7 +21,7 @@ export async function GET(request: Request): Promise<Response> {
     const sellerUid = searchParams.get('sellerUid') ?? '';
     const includeInactive = searchParams.get('includeInactive') !== '0';
     const discounts = await database.sellerDiscounts.listSellerDiscounts(sellerUid, includeInactive);
-    return Response.json(discounts, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, discounts, 200);
   } catch (error) {
     return profileErrorResponse(request, error);
   }

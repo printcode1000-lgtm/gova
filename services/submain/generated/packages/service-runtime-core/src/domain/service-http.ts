@@ -1,3 +1,4 @@
+import { jsonContractResponse, readJsonContractBody } from '@asol/api-contract-core/server';
 import {
   handleCorsPreflight,
   resolveCorsHeaders,
@@ -29,6 +30,8 @@ export interface ServiceHttp {
   errorResponse(request: Request, error: unknown, rules?: readonly ErrorStatusRule[]): Response;
   /** JSON success body with this deployment's CORS headers. */
   jsonResponse(request: Request, data: unknown, status?: number): Response;
+  /** Parse and validate owned JSON request naming before the service sees it. */
+  readJsonBody<T>(request: Request): Promise<T>;
 }
 
 export interface ServiceHttpOptions {
@@ -48,13 +51,20 @@ export function createServiceHttp(options: ServiceHttpOptions): ServiceHttp {
     withCors: (request, response) => withCorsHeaders(response, policy, request),
     errorResponse(request, error, rules = defaults) {
       const message = errorMessageOf(error);
-      return Response.json(
+      return jsonContractResponse(
         { error: message },
         { status: mapErrorStatus(message, rules), headers: resolveCorsHeaders(policy, request) },
       );
     },
     jsonResponse(request, data, status = 200) {
-      return Response.json(data, { status, headers: resolveCorsHeaders(policy, request) });
+      return jsonContractResponse(data, { status, headers: resolveCorsHeaders(policy, request) });
+    },
+    async readJsonBody<T>(request: Request) {
+      try {
+        return await readJsonContractBody<T>(request);
+      } catch {
+        throw new Error('invalidJsonBody');
+      }
     },
   };
 }

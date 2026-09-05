@@ -1,4 +1,4 @@
-import { apiSuccess, mapServiceError } from "@/core/api/api-response";
+import { apiSuccess, mapServiceError, readJsonBody } from "@/core/api/api-response";
 import {
   notificationsServer,
   type DeleteNotificationTokenInput,
@@ -11,7 +11,7 @@ export async function POST(request: Request) {
     "POST /api/notifications/device-token",
     async () => {
       try {
-        const body = (await request.json()) as RegisterNotificationTokenInput;
+        const body = (await readJsonBody<unknown>(request)) as RegisterNotificationTokenInput;
         const token = await notificationsServer.registerDeviceToken(body);
         return apiSuccess(token);
       } catch (error) {

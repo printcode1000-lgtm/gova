@@ -23,6 +23,8 @@ const http = createServiceHttp({
 
 export const corsHeaders = http.corsHeaders;
 export const preflight = http.preflight;
+export const jsonResponse = http.jsonResponse;
+export const readJsonBody = http.readJsonBody;
 export const withCors = http.withCors;
 export const sellerErrorResponse = http.errorResponse;
 
@@ -46,10 +48,7 @@ export function businessErrorResponse(request: Request, error: unknown): Respons
       error instanceof Error ? (error.stack ?? error.message) : String(error),
     );
   }
-  return Response.json(
-    { error: mapped.code },
-    { status: mapped.status, headers: corsHeaders(request) },
-  );
+  return http.jsonResponse(request, { error: mapped.code }, mapped.status);
 }
 
 /**
@@ -80,11 +79,11 @@ export function reviewErrorResponse(request: Request, error: unknown): Response 
       error instanceof Error ? (error.stack ?? error.message) : String(error),
     );
   }
-  return Response.json({ error: message }, { status, headers: corsHeaders(request) });
+  return http.jsonResponse(request, { error: message }, status);
 }
 
 /** Helpful votes and seller replies answer every failure as a 400, as the application does. */
 export function reviewActionErrorResponse(request: Request, error: unknown): Response {
   const message = error instanceof Error ? error.message : 'Internal Server Error';
-  return Response.json({ error: message }, { status: 400, headers: corsHeaders(request) });
+  return http.jsonResponse(request, { error: message }, 400);
 }

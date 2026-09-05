@@ -1,4 +1,4 @@
-import { apiError, apiSuccess } from "@/core/api/api-response";
+import { apiError, apiSuccess, readJsonBody } from "@/core/api/api-response";
 import type { ReviewSort } from "@/features/product";
 import type {
   SaveProfileReviewInput,
@@ -47,7 +47,7 @@ export async function POST(request: Request) {
   try {
     return apiSuccess(
       await profileReviewService.create(
-        (await request.json()) as SaveProfileReviewInput,
+        (await readJsonBody<unknown>(request)) as SaveProfileReviewInput,
       ),
       201,
     );
@@ -60,7 +60,7 @@ export async function PUT(request: Request) {
   try {
     return apiSuccess(
       await profileReviewService.update(
-        (await request.json()) as UpdateProfileReviewInput,
+        (await readJsonBody<unknown>(request)) as UpdateProfileReviewInput,
       ),
     );
   } catch (error) {

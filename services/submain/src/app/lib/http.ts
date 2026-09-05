@@ -37,6 +37,8 @@ const http = createServiceHttp({
 
 export const corsHeaders = http.corsHeaders;
 export const preflight = http.preflight;
+export const jsonResponse = http.jsonResponse;
+export const readJsonBody = http.readJsonBody;
 export const withCors = http.withCors;
 export const searchErrorResponse = http.errorResponse;
 
@@ -67,10 +69,7 @@ export function businessErrorResponse(request: Request, error: unknown): Respons
       error instanceof Error ? (error.stack ?? error.message) : String(error),
     );
   }
-  return Response.json(
-    { error: mapped.code },
-    { status: mapped.status, headers: corsHeaders(request) },
-  );
+  return http.jsonResponse(request, { error: mapped.code }, mapped.status);
 }
 
 /**
@@ -84,7 +83,7 @@ export function businessErrorResponse(request: Request, error: unknown): Respons
  */
 export function advertisementsAdminErrorResponse(request: Request, error: unknown): Response {
   const message = error instanceof Error ? error.message : 'forbidden';
-  return Response.json({ error: message }, { status: 403, headers: corsHeaders(request) });
+  return http.jsonResponse(request, { error: message }, 403);
 }
 
 export function advertisementsSaveErrorResponse(
@@ -93,10 +92,7 @@ export function advertisementsSaveErrorResponse(
   fallbackCode: string,
 ): Response {
   const message = error instanceof Error ? error.message : fallbackCode;
-  return Response.json(
-    { error: message },
-    { status: message === 'forbidden' ? 403 : 400, headers: corsHeaders(request) },
-  );
+  return http.jsonResponse(request, { error: message }, message === 'forbidden' ? 403 : 400);
 }
 
 /**
@@ -113,7 +109,7 @@ export function featureFlagErrorResponse(request: Request, error: unknown): Resp
       error instanceof Error ? (error.stack ?? error.message) : String(error),
     );
   }
-  return Response.json({ error: message }, { status, headers: corsHeaders(request) });
+  return http.jsonResponse(request, { error: message }, status);
 }
 
 /**
@@ -135,7 +131,7 @@ export function orderDetailErrorResponse(request: Request, error: unknown): Resp
       error instanceof Error ? (error.stack ?? error.message) : String(error),
     );
   }
-  return Response.json({ error: message }, { status, headers: corsHeaders(request) });
+  return http.jsonResponse(request, { error: message }, status);
 }
 
 function orderErrorStatus(message: string): number {
@@ -164,4 +160,12 @@ function orderErrorStatus(message: string): number {
     return 400;
   }
   return 500;
+}
+/** Mirrors auth/check-phone: validation is inline; downstream failures remain server faults. */
+export function checkPhoneErrorResponse(request: Request, error: unknown): Response {
+  console.error(
+    `[${new URL(request.url).pathname}] check-phone failure:`,
+    error instanceof Error ? (error.stack ?? error.message) : String(error),
+  );
+  return http.jsonResponse(request, { error: 'internalServerError' }, 500);
 }

@@ -5,7 +5,7 @@ import {
   type RegisterNotificationTokenInput,
 } from '@asol/submain-composition';
 
-import { businessErrorResponse, corsHeaders, preflight } from '../../../lib/http';
+import { businessErrorResponse, corsHeaders, preflight, jsonResponse, readJsonBody } from '../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -23,9 +23,9 @@ export async function POST(request: Request): Promise<Response> {
     const { devices } = createSubmainRuntime();
     assertSubmainEnv();
 
-    const body = (await request.json()) as RegisterNotificationTokenInput;
+    const body = await readJsonBody<RegisterNotificationTokenInput>(request);
     const token = await devices.registerDeviceToken(body);
-    return Response.json(token, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, token, 200);
   } catch (error) {
     return businessErrorResponse(request, error);
   }
@@ -44,7 +44,7 @@ export async function DELETE(request: Request): Promise<Response> {
       tokenId: q.get('tokenId') ?? undefined,
     };
     await devices.removeDeviceToken(input);
-    return Response.json({ deleted: true }, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, { deleted: true }, 200);
   } catch (error) {
     return businessErrorResponse(request, error);
   }

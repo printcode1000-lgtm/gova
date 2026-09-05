@@ -1,7 +1,7 @@
 import { assertSub2mainEnv, createSub2mainRuntime } from '@asol/sub2main-composition';
 import type { SaveReviewInput, UpdateReviewInput } from '@/features/product/domain/product-review.entity';
 
-import { reviewErrorResponse, corsHeaders, preflight } from '../../../lib/http';
+import { reviewErrorResponse, corsHeaders, preflight, jsonResponse, readJsonBody } from '../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -28,7 +28,7 @@ export async function GET(request: Request): Promise<Response> {
       Number(q.get('limit') || 3),
       q.get('uid') ?? '',
     );
-    return Response.json(data, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, data, 200);
   } catch (error) {
     return reviewErrorResponse(request, error);
   }
@@ -39,8 +39,8 @@ export async function POST(request: Request): Promise<Response> {
     const { products } = createSub2mainRuntime();
     assertSub2mainEnv();
 
-    const created = await products.reviews.create((await request.json()) as SaveReviewInput);
-    return Response.json(created, { status: 201, headers: corsHeaders(request) });
+    const created = await products.reviews.create(await readJsonBody<SaveReviewInput>(request));
+    return jsonResponse(request, created, 201);
   } catch (error) {
     return reviewErrorResponse(request, error);
   }
@@ -51,8 +51,8 @@ export async function PUT(request: Request): Promise<Response> {
     const { products } = createSub2mainRuntime();
     assertSub2mainEnv();
 
-    const updated = await products.reviews.update((await request.json()) as UpdateReviewInput);
-    return Response.json(updated, { status: 200, headers: corsHeaders(request) });
+    const updated = await products.reviews.update(await readJsonBody<UpdateReviewInput>(request));
+    return jsonResponse(request, updated, 200);
   } catch (error) {
     return reviewErrorResponse(request, error);
   }
@@ -65,7 +65,7 @@ export async function DELETE(request: Request): Promise<Response> {
 
     const q = new URL(request.url).searchParams;
     await products.reviews.delete(q.get('reviewId') ?? '', q.get('uid') ?? '');
-    return Response.json({ deleted: true }, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, { deleted: true }, 200);
   } catch (error) {
     return reviewErrorResponse(request, error);
   }

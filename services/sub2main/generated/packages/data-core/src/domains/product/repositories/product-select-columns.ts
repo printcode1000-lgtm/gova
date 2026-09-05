@@ -1,4 +1,4 @@
-import { PRODUCT_COLUMNS } from "@asol/product-core/server";
+import { PRODUCT_COLUMNS } from "./product-persistence";
 
 const PRODUCT_COLUMN_FALLBACKS: Partial<Record<(typeof PRODUCT_COLUMNS)[number], string>> = {
   main_available: "1",

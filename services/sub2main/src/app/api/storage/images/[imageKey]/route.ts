@@ -1,6 +1,6 @@
 import { assertSub2mainEnv, createSub2mainRuntime } from '@asol/sub2main-composition';
 
-import { businessErrorResponse, corsHeaders, preflight } from '../../../../lib/http';
+import { businessErrorResponse, corsHeaders, preflight, jsonResponse } from '../../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -25,7 +25,7 @@ export async function DELETE(
     if (!storageProfileId) throw new Error('storageProfileId is required');
 
     await storage.images.deleteImage(storageProfileId, imageKey);
-    return Response.json({ deleted: true }, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, { deleted: true }, 200);
   } catch (error) {
     return businessErrorResponse(request, error);
   }

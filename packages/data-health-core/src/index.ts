@@ -6,5 +6,4 @@
  * reaches into the other's internal tree.
  */
 export * from "./domain/types";
-export * from "./domain/source-registry";
 export * from "./domain/execution-context";

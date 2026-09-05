@@ -28,4 +28,6 @@ const http = createServiceHttp({
 
 export const corsHeaders = http.corsHeaders;
 export const preflight = http.preflight;
+export const jsonResponse = http.jsonResponse;
+export const readJsonBody = http.readJsonBody;
 export const orderErrorResponse = http.errorResponse;

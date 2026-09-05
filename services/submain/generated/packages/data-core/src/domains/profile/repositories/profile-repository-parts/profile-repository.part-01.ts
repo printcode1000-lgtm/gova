@@ -1,7 +1,6 @@
 import { productsDataSource, profilesDataSource } from "../../../../core";
 import "server-only";
 import type { IDatabaseClient } from "../../../../core/database/database-client.interface";
-import type { UserProfileRow } from "../../../../core/database/profile/profile.schema";
 import type {
   ProfileContactPointRow,
   ProfileDeliveryCarrierRow,
@@ -10,7 +9,7 @@ import type {
   ProfileTrendingItemRow,
   ProfileWorkingHourRow,
 } from "../../../../core/database/profile/profile.schema";
-import type { ProfileContactsData } from "../../entities";
+import type { ProfileContactsData, ProfileDirectoryEntry } from "../../entities";
 import {
   EMPTY_PROFILE_SHOWCASE,
   EMPTY_STORE_DETAILS,
@@ -177,7 +176,7 @@ export abstract class ProfilePart1 implements IProfileRepository {
 
   abstract upsertSpecialties(uid: string, selection: ProfileSpecialtiesSelection): Promise<void>;
 
-  abstract getUsersBySpecialty(categoryId: number, subcategoryId: number, offset: number, limit: number, search?: string, minRating?: number): Promise<UserProfileRow[]>;
+  abstract getUsersBySpecialty(categoryId: number, subcategoryId: number, offset: number, limit: number, search?: string, minRating?: number): Promise<ProfileDirectoryEntry[]>;
 
   protected abstract saveDeliveryCarriers(uid: string, carrierUids: string[]): Promise<void>;
 

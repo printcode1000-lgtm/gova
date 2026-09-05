@@ -4,6 +4,7 @@ import { MarketplaceOrderService } from "../commands/marketplace-order-service";
 import { createMarketplaceOrdersDb } from "../db/client";
 import type { MarketplaceDb } from "../ports/marketplace-order-store";
 import { OrderQueryRepository } from "../repositories/order-query-repository";
+import { mapMarketplaceOrderServiceResult } from "./service-result-boundary.server";
 
 let service: MarketplaceOrderService | undefined;
 let queries: OrderQueryRepository | undefined;
@@ -23,7 +24,8 @@ function createTransactionalMarketplaceOrderService(
           if (typeof operation !== "function") {
             throw new Error(`Unknown marketplace order operation: ${String(property)}`);
           }
-          return Reflect.apply(operation, scoped, args);
+          const result = await Reflect.apply(operation, scoped, args);
+          return mapMarketplaceOrderServiceResult(String(property), result);
         });
     },
   });

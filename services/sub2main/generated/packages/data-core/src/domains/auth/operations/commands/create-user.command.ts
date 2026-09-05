@@ -1,11 +1,22 @@
 import type { IUserRepository } from '../../repositories/user-repository.interface';
 import type { User } from '../../entities';
+
+export interface CreateAuthUserInput {
+  uid: string;
+  phone: string;
+  email: string | null;
+  password: string;
+  lastLoginAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+}
 import { traceServerLayer } from '../../../../ports/telemetry';
 
 export class CreateUserCommand {
   constructor(private userRepository: IUserRepository) {}
 
-  async execute(user: Omit<User, 'id'>): Promise<void> {
+  async execute(user: CreateAuthUserInput): Promise<void> {
     return traceServerLayer('query-command', 'CreateUserCommand', async () => {
       if (!user.phone || !user.password) {
         throw new Error('Phone and password are required');
@@ -24,7 +35,16 @@ export class CreateUserCommand {
       }
 
       try {
-        await this.userRepository.create(user);
+        await this.userRepository.create({
+          uid: user.uid,
+          phone: user.phone,
+          email: user.email,
+          password: user.password,
+          last_login_at: user.lastLoginAt,
+          created_at: user.createdAt,
+          updated_at: user.updatedAt,
+          deleted_at: user.deletedAt,
+        });
       } catch (error) {
         // Preserve domain errors when two registrations race past the pre-checks.
         if (user.email && await this.userRepository.getByEmail(user.email)) {

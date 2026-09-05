@@ -108,14 +108,14 @@ interface SellerCardViewModel {
 
 The presenter safely derives:
 
-- `title` from the structured store-name field, accepting both `storeName` and
-  the profiles-service `store_name` transport field. A UID is never presented
-  as a store name; cards omit the title when the profile has no store name.
+- `title` from the canonical `storeName` field. Owned application and JSON
+  transport contracts are camelCase-only; persistence column names never reach
+  this presenter. A UID is never presented as a store name; cards omit the title
+  when the profile has no store name.
 - `identityLabel` from the store name, falling back to the original registration
   phone, then an available primary-phone field. The UID is never used as visible
   fallback identity text.
-- `description` from store description or story, including their
-  profiles-service transport names.
+- `description` from the canonical `storeDescription` or `storeStory` fields.
 - `avatarUrl` from available avatar URL fields when present.
 - `initials` from the display name when no image exists.
 - `href` as the canonical public profile URL:

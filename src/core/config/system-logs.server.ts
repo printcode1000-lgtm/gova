@@ -6,7 +6,7 @@ import {
   DEFAULT_ALERT_WINDOW_MS,
   DEFAULT_RETENTION_DAYS,
 } from '@asol/system-logs-core/server';
-import { profilesDataSource } from '@asol/data-core/composition';
+import { systemLogsRepository } from '@asol/data-core/composition';
 import { isSuperAdminIdentity } from '@/features/auth';
 
 function retentionDays() {
@@ -32,9 +32,7 @@ export function registerSystemLogsCoreServerPorts(): void {
   configured = true;
 
   configureSystemLogsCore({
-    database: {
-      execute: (sql, params = []) => profilesDataSource.execute(sql, params),
-    },
+    persistence: systemLogsRepository,
     identity: {
       isSuperAdmin: isSuperAdminIdentity,
     },

@@ -180,7 +180,7 @@ export function runPublicSurfaceTest() {
   assert.equal(typeof runtimeApi.phoneCountryOptions, 'function');
   assert.equal(typeof runtimeApi.toAsciiDigits, 'function');
   assert.equal(typeof runtimeApi.isAccountDeletionPhraseValid, 'function');
-  assert.equal(typeof runtimeApi.ACCOUNT_DELETION_TABLE_REGISTRY, 'object');
+  assert.equal('ACCOUNT_DELETION_TABLE_REGISTRY' in runtimeApi, false);
   assert.equal(typeof serverApi.AuthOperationsService, 'function');
   assert.equal(typeof serverApi.AccountDeletionService, 'function');
   assert.equal(typeof serverApi.deleteImagesWithRetry, 'function');

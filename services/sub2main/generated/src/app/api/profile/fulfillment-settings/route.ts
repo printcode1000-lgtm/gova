@@ -1,4 +1,4 @@
-import { apiSuccess, mapServiceError } from "@/core/api/api-response";
+import { apiSuccess, mapServiceError, readJsonBody } from "@/core/api/api-response";
 import { notificationsServer } from "@/features/notifications/server";
 import { profileService } from "@/features/profile/server";
 import { getMarketplaceOrderService } from "@asol/data-core/marketplace-orders";
@@ -27,7 +27,7 @@ export async function PUT(request: Request) {
     async () => {
       try {
         const body =
-          (await request.json()) as SaveProfileFulfillmentSettingsInput;
+          (await readJsonBody<unknown>(request)) as SaveProfileFulfillmentSettingsInput;
         const saved = await profileService.saveFulfillmentSettings(body);
         const notificationGrants = notificationsServer.createGrantIssuer(
           body.uid,

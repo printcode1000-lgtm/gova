@@ -1,4 +1,4 @@
-import { apiError, apiSuccess } from "@/core/api/api-response";
+import { apiError, apiSuccess, readJsonBody } from "@/core/api/api-response";
 import type {
   ReviewSort,
   SaveReviewInput,
@@ -45,7 +45,7 @@ export async function POST(request: Request) {
   try {
     return apiSuccess(
       await productReviewService.create(
-        (await request.json()) as SaveReviewInput,
+        (await readJsonBody<unknown>(request)) as SaveReviewInput,
       ),
       201,
     );
@@ -57,7 +57,7 @@ export async function PUT(request: Request) {
   try {
     return apiSuccess(
       await productReviewService.update(
-        (await request.json()) as UpdateReviewInput,
+        (await readJsonBody<unknown>(request)) as UpdateReviewInput,
       ),
     );
   } catch (error) {

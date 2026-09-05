@@ -8,6 +8,7 @@ import {
   getMarketplaceOrderQueries,
 } from "@asol/data-core/marketplace-orders";
 import type { Actor } from "@asol/orders-core";
+import type { OrderDto } from "@asol/orders-core";
 import { fulfillmentSettingsToSnapshot } from "@asol/orders-core";
 
 import { bootstrapLocationShippingQuotes } from "./order-shipping-bootstrap.server";
@@ -22,12 +23,12 @@ import {
 type MarketplaceOrderQueries = ReturnType<typeof getMarketplaceOrderQueries>;
 type OrderDetails = NonNullable<Awaited<ReturnType<MarketplaceOrderQueries["getDetails"]>>>;
 
-function hasDeliveryAddress(order: Record<string, unknown>) {
+function hasDeliveryAddress(order: OrderDto) {
   try {
     const raw =
-      typeof order.delivery_address_snapshot_json === "string"
-        ? JSON.parse(order.delivery_address_snapshot_json)
-        : order.delivery_address_snapshot_json;
+      typeof order.deliveryAddressSnapshotJson === "string"
+        ? JSON.parse(order.deliveryAddressSnapshotJson)
+        : order.deliveryAddressSnapshotJson;
     return Boolean(String((raw as { address?: string })?.address ?? "").trim());
   } catch {
     return false;
@@ -49,8 +50,8 @@ export async function issueShippingQuoteBootstrapGrants(
     grantShippingQuoteRequested(grants, {
       orderId,
       sellerOrderId,
-      sellerUid: String(sellerOrder.seller_id ?? ""),
-      providerUid: String(sellerOrder.service_provider_id ?? "") || undefined,
+      sellerUid: String(sellerOrder.sellerId ?? ""),
+      providerUid: String(sellerOrder.serviceProviderId ?? "") || undefined,
       actorUid,
     });
   }
@@ -139,7 +140,7 @@ export async function applyCarrierToOrder(
 
   grantCarrierLinkedToOrder(grants, {
     orderId,
-    buyerUid: String(details.order.buyer_id ?? ""),
+    buyerUid: String(details.order.buyerId ?? ""),
     carrierUid,
     sellerOrderId,
     actorUid: actor.id,
@@ -147,7 +148,7 @@ export async function applyCarrierToOrder(
 
   details = (await queries.getDetails(orderId)) ?? details;
   const createdSellerOrderIds = hasDeliveryAddress(
-    details.order as Record<string, unknown>,
+    details.order,
   )
     ? await bootstrapLocationShippingQuotes(orderId, details, service, actor)
     : [];

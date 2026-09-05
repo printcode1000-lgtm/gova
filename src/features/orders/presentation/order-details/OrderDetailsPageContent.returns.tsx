@@ -39,7 +39,7 @@ import {
   queryWithActor,
   statusLabel,
 } from "../order-labels";
-import type { DbRow, OrderDetails, OrderRole } from "../order-types";
+import type { OrderDetails, OrderRole } from "../order-types";
 
 import { RunAction, text } from "./OrderDetailsPageContent.navigation-summary";
 
@@ -66,21 +66,21 @@ export function ReturnsPanel({
           {details.returns.map((returnRequest) => {
             const requestItems = details.returnItems.filter(
               (item) =>
-                String(item.return_request_id) === String(returnRequest.id),
+                String(item.returnRequestId) === String(returnRequest.id),
             );
             const firstOrderItem = details.orderItems.find((orderItem) =>
               requestItems.some(
-                (item) => String(item.order_item_id) === String(orderItem.id),
+                (item) => String(item.orderItemId) === String(orderItem.id),
               ),
             );
             const sellerOrder = details.sellerOrders.find(
               (order) =>
-                String(order.id) === String(returnRequest.seller_order_id) ||
-                String(order.id) === String(firstOrderItem?.seller_order_id),
+                String(order.id) === String(returnRequest.sellerOrderId) ||
+                String(order.id) === String(firstOrderItem?.sellerOrderId),
             );
             const isSeller =
               admin ||
-              (sellerOrder && sessionUid === String(sellerOrder.seller_id));
+              (sellerOrder && sessionUid === String(sellerOrder.sellerId));
             const returnRequestId = String(returnRequest.id);
             const canDecide =
               isSeller && String(returnRequest.status) === "requested";
@@ -102,7 +102,7 @@ export function ReturnsPanel({
                     {requestItems.map((requestItem) => {
                       const orderItem = details.orderItems.find(
                         (item) =>
-                          String(item.id) === String(requestItem.order_item_id),
+                          String(item.id) === String(requestItem.orderItemId),
                       );
                       return (
                         <p
@@ -110,7 +110,7 @@ export function ReturnsPanel({
                           className="text-xs text-muted-foreground"
                         >
                           {String(
-                            orderItem?.product_name_snapshot ?? text.product,
+                            orderItem?.productNameSnapshot ?? text.product,
                           )}{" "}
                           - {text.quantity}: {String(requestItem.quantity ?? 1)}
                         </p>

@@ -1,4 +1,4 @@
-import { apiSuccess, mapServiceError } from "@/core/api/api-response";
+import { apiSuccess, mapServiceError, readJsonBody } from "@/core/api/api-response";
 import { assertSuperAdminRequest } from "@/features/super-admin/server";
 import { superAdminUserService } from "@/features/super-admin/server";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
@@ -10,7 +10,7 @@ interface ImpersonateBody {
 export async function POST(request: Request) {
   return runTracedBusinessRoute("POST /api/super-admin/impersonate", async () => {
     try {
-      const body = (await request.json()) as ImpersonateBody;
+      const body = (await readJsonBody<unknown>(request)) as ImpersonateBody;
       const admin = assertSuperAdminRequest(request);
       if (!body.targetUid || body.targetUid === admin.uid) {
         throw new Error("invalidImpersonationTarget");

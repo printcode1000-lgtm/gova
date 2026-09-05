@@ -1,6 +1,6 @@
 import { assertSub2mainEnv, createSub2mainRuntime } from '@asol/sub2main-composition';
 
-import { reviewActionErrorResponse, corsHeaders, preflight } from '../../../../lib/http';
+import { reviewActionErrorResponse, corsHeaders, preflight, jsonResponse, readJsonBody } from '../../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -11,9 +11,9 @@ export async function POST(request: Request): Promise<Response> {
     const { products } = createSub2mainRuntime();
     assertSub2mainEnv();
 
-    const body = (await request.json()) as { reviewId: string; uid: string; text: string };
+    const body = await readJsonBody<{ reviewId: string; uid: string; text: string }>(request);
     const result = await products.reviews.saveReply(body.reviewId, body.uid, body.text);
-    return Response.json(result, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, result, 200);
   } catch (error) {
     return reviewActionErrorResponse(request, error);
   }
@@ -26,7 +26,7 @@ export async function DELETE(request: Request): Promise<Response> {
 
     const q = new URL(request.url).searchParams;
     await products.reviews.deleteReply(q.get('reviewId') ?? '', q.get('uid') ?? '');
-    return Response.json({ deleted: true }, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, { deleted: true }, 200);
   } catch (error) {
     return reviewActionErrorResponse(request, error);
   }

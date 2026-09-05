@@ -1,5 +1,7 @@
 import "server-only";
 
+import { jsonContractResponse, readJsonContractBody } from "@asol/api-contract-core/server";
+
 import { createCorsPolicy, reflectRequestOrigin, resolveCorsHeaders } from "@asol/cors";
 
 import { isDevRuntime } from "@/core/config/runtime-context.server";
@@ -51,27 +53,27 @@ export async function handleDevNotificationSendPost(
   const headers = { ...corsHeaders(request), "Content-Type": "application/json" };
 
   if (!isDevNotificationSendEnabled()) {
-    return Response.json({ error: "notFound" }, { status: 404, headers });
+    return jsonContractResponse({ error: "notFound" }, { status: 404, headers });
   }
 
   let grants: string[];
   try {
-    grants = readGrantsFromRequestBody(await request.json()).slice(
+    grants = readGrantsFromRequestBody(await readJsonContractBody<unknown>(request)).slice(
       0,
       MAX_GRANTS_PER_REQUEST,
     );
   } catch {
-    return Response.json({ error: "invalidJsonBody" }, { status: 400, headers });
+    return jsonContractResponse({ error: "invalidJsonBody" }, { status: 400, headers });
   }
 
   if (grants.length === 0) {
-    return Response.json(
+    return jsonContractResponse(
       { error: "notificationGrantRequired" },
       { status: 400, headers },
     );
   }
 
-  return Response.json(await deliverNotificationGrants(grants), {
+  return jsonContractResponse(await deliverNotificationGrants(grants), {
     status: 200,
     headers,
   });

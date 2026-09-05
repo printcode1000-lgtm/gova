@@ -382,6 +382,15 @@
       ],
       "@asol/data-core/seller-discounts/entities": [
         "./packages/data-core/src/domains/seller-discounts/entities/index.ts"
+      ],
+      "@asol/api-contract-core": [
+        "./packages/api-contract-core/src/index.ts"
+      ],
+      "@asol/api-contract-core/server": [
+        "./packages/api-contract-core/src/server.ts"
+      ],
+      "@asol/orders-core/transport": [
+        "./packages/orders-core/src/domain/transport-contract.ts"
       ]
     }
   },

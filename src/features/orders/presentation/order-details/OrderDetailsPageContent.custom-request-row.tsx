@@ -1,9 +1,10 @@
 "use client";
 
+import type { CustomRequestItemDto } from "@asol/orders-core";
 import { PackageCheck } from "lucide-react";
 
 import { formatMoney, statusLabel } from "../order-labels";
-import type { DbRow } from "../order-types";
+
 import {
   type RunAction,
   text,
@@ -18,7 +19,7 @@ export function CustomRequestRow({
   busyAction,
   runAction,
 }: {
-  item: DbRow;
+  item: CustomRequestItemDto;
   isSeller: boolean;
   isBuyer: boolean;
   currency: string;
@@ -41,14 +42,14 @@ export function CustomRequestRow({
               <p id='orders-presentation-order-details-orderdetailspagecontent-custom-request-row-text-9-zlf8eb' className="text-xs text-muted-foreground">
                 {text.itemStatus}: {statusLabel(item.status)}
               </p>
-              {item.buyer_description ? (
+              {item.buyerDescription ? (
                 <p id='orders-presentation-order-details-orderdetailspagecontent-custom-request-row-text-10-q7yzcv' className="mt-1 line-clamp-2 text-xs text-muted-foreground">
-                  {String(item.buyer_description)}
+                  {String(item.buyerDescription)}
                 </p>
               ) : null}
             </div>
             <p id='orders-presentation-order-details-orderdetailspagecontent-custom-request-row-text-11-glmjaq' className="font-bold">
-              {formatMoney(item.total_price, currency)}
+              {formatMoney(item.totalPrice, currency)}
             </p>
           </div>
           <CustomRequestActions

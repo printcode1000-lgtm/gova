@@ -1,4 +1,4 @@
-import { apiSuccess, mapServiceError } from '@/core/api/api-response';
+import { apiSuccess, mapServiceError, readJsonBody } from '@/core/api/api-response';
 import { profileService } from '@/features/profile/server';
 import type { SaveStoreDetailsInput } from '@/features/profile';
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
@@ -19,7 +19,7 @@ export async function GET(request: Request) {
 export async function PUT(request: Request) {
   return runTracedBusinessRoute('PUT /api/profile/store-details', async () => {
     try {
-      const body = (await request.json()) as SaveStoreDetailsInput;
+      const body = (await readJsonBody<unknown>(request)) as SaveStoreDetailsInput;
       const details = await profileService.saveStoreDetails(body);
       return apiSuccess(details);
     } catch (error) {

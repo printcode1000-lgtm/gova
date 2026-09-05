@@ -1,3 +1,4 @@
+import { jsonContract, readJsonContractBody } from '@asol/api-contract-core/server';
 import { NextResponse } from 'next/server';
 import { isDevelopment } from '@/core/config';
 import { DEV_TRACE_HEADER } from '@asol/observability-core/dev-trace';
@@ -21,7 +22,7 @@ function attachDevTraceHeaders(response: NextResponse): NextResponse {
 }
 
 export function apiSuccess<T>(data: T, status = 200): NextResponse {
-  return attachDevTraceHeaders(NextResponse.json(data, { status }));
+  return attachDevTraceHeaders(NextResponse.json(jsonContract(data), { status }));
 }
 
 export function apiError(
@@ -52,7 +53,7 @@ export function apiError(
     });
   }
   return attachDevTraceHeaders(
-    NextResponse.json({ error: clientMessage }, { status }),
+    NextResponse.json(jsonContract({ error: clientMessage }), { status }),
   );
 }
 
@@ -74,7 +75,7 @@ export class InvalidJsonBodyError extends Error {
  */
 export async function readJsonBody<T>(request: Request): Promise<T> {
   try {
-    return (await request.json()) as T;
+    return await readJsonContractBody<T>(request);
   } catch {
     throw new InvalidJsonBodyError();
   }

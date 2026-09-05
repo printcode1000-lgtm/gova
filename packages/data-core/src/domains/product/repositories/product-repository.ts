@@ -8,7 +8,7 @@ import {
   PRODUCT_COLUMNS,
   productRowValues,
   type ProductRow,
-} from "@asol/product-core/server";
+} from "./product-persistence";
 import type {
   ProductDetails,
   ProductRecord,
@@ -22,7 +22,7 @@ import {
 export {
   mapProductRow,
   PRODUCT_COLUMNS,
-} from "@asol/product-core/server";
+} from "./product-persistence";
 
 export class ProductRepository {
   private async productTableColumns(): Promise<Set<string>> {

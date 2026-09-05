@@ -1,5 +1,6 @@
 "use client";
 
+import type { DeliveryPlanDto } from "@asol/orders-core";
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -39,7 +40,7 @@ import {
   queryWithActor,
   statusLabel,
 } from "../order-labels";
-import type { DbRow, OrderDetails, OrderRole } from "../order-types";
+import type { OrderDetails, OrderRole } from "../order-types";
 
 import { RunAction, text } from "./OrderDetailsPageContent.navigation-summary";
 import { deliveryStopAddress } from "./OrderDetailsPageContent.seller-orders";
@@ -57,7 +58,7 @@ export function UnifiedDeliveryPlanPanel({
   busyAction,
   runAction,
 }: {
-  plan: DbRow;
+  plan: DeliveryPlanDto;
   details: OrderDetails;
   sessionUid: string;
   currency: string;
@@ -68,37 +69,37 @@ export function UnifiedDeliveryPlanPanel({
 }) {
   const planId = String(plan.id);
   const quotes = details.deliveryPlanQuotes.filter(
-    (quote) => String(quote.plan_id) === planId,
+    (quote) => String(quote.planId) === planId,
   );
   const candidates = details.deliveryPlanCandidates.filter(
-    (candidate) => String(candidate.plan_id) === planId,
+    (candidate) => String(candidate.planId) === planId,
   );
   const activeStops = details.deliveryPlanStops.filter(
     (stop) =>
-      String(stop.plan_id) === planId && String(stop.status) !== "cancelled",
+      String(stop.planId) === planId && String(stop.status) !== "cancelled",
   );
   const candidateStopIds = new Set(
     details.deliveryPlanCandidateStops
       .filter(
         (entry) =>
-          String(entry.plan_id) === planId &&
-          String(entry.provider_id) === sessionUid,
+          String(entry.planId) === planId &&
+          String(entry.providerId) === sessionUid,
       )
-      .map((entry) => String(entry.stop_id)),
+      .map((entry) => String(entry.stopId)),
   );
   const candidateSellerOrderIds = new Set(
     activeStops
       .filter((stop) => admin || candidateStopIds.has(String(stop.id)))
-      .map((stop) => String(stop.seller_order_id)),
+      .map((stop) => String(stop.sellerOrderId)),
   );
   const isCandidate =
     admin ||
     candidates.some(
-      (candidate) => String(candidate.provider_id) === sessionUid,
+      (candidate) => String(candidate.providerId) === sessionUid,
     );
   const ownPending = quotes.some(
     (quote) =>
-      String(quote.provider_id) === sessionUid &&
+      String(quote.providerId) === sessionUid &&
       quote.status === "pending_buyer",
   );
   const canQuote =
@@ -108,15 +109,15 @@ export function UnifiedDeliveryPlanPanel({
       String(plan.status),
     );
   const acceptedQuote = quotes.find((quote) => quote.status === "accepted");
-  const fallbackKnown = Number(plan.fallback_has_pending_quotes ?? 0) === 0;
-  const fallbackAvailable = Number(plan.fallback_available ?? 1) === 1;
+  const fallbackKnown = Number(plan.fallbackHasPendingQuotes ?? 0) === 0;
+  const fallbackAvailable = Number(plan.fallbackAvailable ?? 1) === 1;
   const candidateRequiresSpecialVehicle = details.orderItems.some(
     (item) =>
-      (admin || candidateSellerOrderIds.has(String(item.seller_order_id))) &&
-      Number(item.requires_special_vehicle ?? 0) === 1,
+      (admin || candidateSellerOrderIds.has(String(item.sellerOrderId))) &&
+      Number(item.requiresSpecialVehicle ?? 0) === 1,
   );
   const shipmentExists = details.deliveryPlanShipments.some(
-    (entry) => String(entry.plan_id) === planId,
+    (entry) => String(entry.planId) === planId,
   );
   const activeItems = details.orderItems.filter(
     (item) =>
@@ -163,7 +164,7 @@ export function UnifiedDeliveryPlanPanel({
         <div id='orders-presentation-order-details-orderdetailspagecontent-delivery-plan-div-9-y6wdkf' className="flex flex-wrap gap-2 text-xs font-semibold">
           <span id='orders-presentation-order-details-orderdetailspagecontent-delivery-plan-text-10-40omrp' className="inline-flex items-center gap-1 rounded-full bg-surface px-3 py-1.5">
             <Users id='orders-presentation-order-details-orderdetailspagecontent-delivery-plan-users-11-iomlne' className="h-3.5 w-3.5 text-primary" />
-            {String(plan.seller_count)} بائعين
+            {String(plan.sellerCount)} بائعين
           </span>
           <span id='orders-presentation-order-details-orderdetailspagecontent-delivery-plan-text-12-8aqtsk' className="inline-flex items-center gap-1 rounded-full bg-surface px-3 py-1.5">
             <Truck id='orders-presentation-order-details-orderdetailspagecontent-delivery-plan-truck-13-zibfxb' className="h-3.5 w-3.5 text-primary" />
@@ -177,7 +178,7 @@ export function UnifiedDeliveryPlanPanel({
           <>
             <QuoteAmount id='orders-presentation-order-details-orderdetailspagecontent-delivery-plan-quoteamount-15-o8xkv1'
               label="مرجع التوصيل المنفصل المؤكد"
-              value={plan.fallback_confirmed_price}
+              value={plan.fallbackConfirmedPrice}
               currency={currency}
             />
             <div id='orders-presentation-order-details-orderdetailspagecontent-delivery-plan-div-16-nigncb' className="rounded-lg bg-surface px-3 py-2">
@@ -213,12 +214,12 @@ export function UnifiedDeliveryPlanPanel({
               <p className="text-xs font-bold">
                 {index + 1}.{" "}
                 {profileName(
-                  details.profiles[String(stop.seller_id)],
-                  String(stop.seller_id),
+                  details.profiles[String(stop.sellerId)],
+                  String(stop.sellerId),
                 )}
               </p>
               <p className="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">
-                {deliveryStopAddress(stop.pickup_address_snapshot_json)}
+                {deliveryStopAddress(stop.pickupAddressSnapshotJson)}
               </p>
             </div>
           ))}
@@ -230,14 +231,14 @@ export function UnifiedDeliveryPlanPanel({
           <h3 id='orders-presentation-order-details-orderdetailspagecontent-delivery-plan-heading-26-c3gb6n' className="text-sm font-bold">العروض المتاحة</h3>
           <div id='orders-presentation-order-details-orderdetailspagecontent-delivery-plan-div-27-quywr6' className="mt-3 grid gap-3 md:grid-cols-2">
             {quotes.map((quote) => {
-              const providerId = String(quote.provider_id);
+              const providerId = String(quote.providerId);
               const coveredStopCount = details.deliveryPlanQuoteStops.filter(
-                (entry) => String(entry.quote_id) === String(quote.id),
+                (entry) => String(entry.quoteId) === String(quote.id),
               ).length;
               const coversWholePlan = coveredStopCount === activeStops.length;
               const saving =
-                Number(plan.fallback_confirmed_price) -
-                Number(quote.total_shipping_price);
+                Number(plan.fallbackConfirmedPrice) -
+                Number(quote.totalShippingPrice);
               return (
                 <article
                   key={String(quote.id)}
@@ -266,18 +267,18 @@ export function UnifiedDeliveryPlanPanel({
                       </p>
                     </div>
                     <p className="font-bold text-primary">
-                      {formatMoney(quote.total_shipping_price, currency)}
+                      {formatMoney(quote.totalShippingPrice, currency)}
                     </p>
                   </div>
                   <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
                     <QuoteAmount
                       label="التوصيل"
-                      value={quote.base_shipping_price}
+                      value={quote.baseShippingPrice}
                       currency={currency}
                     />
                     <QuoteAmount
                       label="سيارة النقل"
-                      value={quote.special_vehicle_fee}
+                      value={quote.specialVehicleFee}
                       currency={currency}
                     />
                   </div>

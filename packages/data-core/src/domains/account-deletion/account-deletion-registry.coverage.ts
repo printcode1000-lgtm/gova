@@ -4,7 +4,7 @@ import {
   ACCOUNT_DELETION_REGISTRY_EXEMPT_TABLES,
   ACCOUNT_DELETION_TABLE_REGISTRY,
   type AccountDeletionDatabase,
-} from '@asol/auth-core';
+} from './account-deletion-registry.persistence';
 
 const USER_OWNED_COLUMN_PATTERN =
   /\b(uid|buyer_id|seller_id|buyer_uid|seller_uid|follower_uid|target_uid|target_owner_uid|carrier_uid|carrier_id|service_provider_id|uploaded_by|performed_by|opened_by|sender_id|cancelled_by|proposed_by|provider_id|original_carrier_id|actor_uid|approved_by_uid|revoked_by_uid)\b/i;

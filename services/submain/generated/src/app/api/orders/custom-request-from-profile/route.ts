@@ -110,7 +110,7 @@ export async function POST(request: Request) {
         );
       }
 
-      const sellerOrderId = String(item.seller_order_id ?? "");
+      const sellerOrderId = String(item.sellerOrderId ?? "");
       if (sellerOrderId) {
         await service.stampSellerOrderFulfillmentSnapshot(
           sellerOrderId,

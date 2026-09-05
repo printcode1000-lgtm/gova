@@ -10,20 +10,20 @@
 | Kind | Count |
 |---|---:|
 | artifact | 4 |
-| command | 274 |
+| command | 277 |
 | config | 12 |
 | document | 272 |
 | domain | 10 |
 | environment-key | 242 |
 | external-dependency | 107 |
 | feature | 45 |
-| package | 47 |
+| package | 48 |
 | route | 176 |
 | runtime | 7 |
-| script | 145 |
+| script | 147 |
 | service | 7 |
-| source | 2232 |
-| test | 248 |
+| source | 2240 |
+| test | 249 |
 
 ## Domains
 
@@ -46,6 +46,7 @@
 |---|---|---|
 | @asol/account-bridge | `packages/account-bridge` | Cross-account notification and identity bridging; Layer: bridge; Public exports: ., ./notifications, ./routes |
 | @asol/account-declarations | `packages/account-declarations` | Deployment account declarations and routing metadata; Layer: declarations; Public exports: ., ./control, ./gova, ./notifications, ./orders, ./products, ./profiles, ./sub2main, ./submain |
+| @asol/api-contract-core | `packages/api-contract-core` | Application-owned JSON transport naming and validation contracts; Layer: capability; Public exports: ., ./server |
 | @asol/architecture-core | `packages/architecture-core` | Repository architecture contracts and static enforcement; Layer: enforcement; Public exports: . |
 | @asol/auth-core | `packages/auth-core` | Authentication and session identity; Layer: capability; Public exports: ., ./phone, ./server, ./session, ./super-admin |
 | @asol/backup-core | `packages/backup-core` | Backup orchestration over storage ports; Layer: capability; Public exports: ., ./server |
@@ -74,7 +75,7 @@
 | @asol/page-save-core | `packages/page-save-core` | Mandatory gateway for page-authored persistence; Layer: capability; Public exports: . |
 | @asol/page-snapshot-core | `packages/page-snapshot-core` | Page snapshot capture and restore; Layer: capability; Public exports: . |
 | @asol/product-card-core | `packages/product-card-core` | Product card view model and reusable product card presentation; Layer: capability; Public exports: ., ./ui |
-| @asol/product-core | `packages/product-core` | Product domain logic; Layer: capability; Public exports: ., ./server |
+| @asol/product-core | `packages/product-core` | Product domain logic; Layer: capability; Public exports: . |
 | @asol/product-style-core | `packages/product-style-core` | Product presentation style rules; Layer: capability; Public exports: ., ./server |
 | @asol/products-composition | `packages/products-composition` | Composition root for the products account; Layer: composition; Public exports: . |
 | @asol/profiles-composition | `packages/profiles-composition` | Composition root for the profiles account; Layer: composition; Public exports: . |

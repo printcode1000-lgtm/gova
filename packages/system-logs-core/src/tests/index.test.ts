@@ -2,7 +2,6 @@ import assert from 'node:assert/strict';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readFileSync } from 'node:fs';
-import { DatabaseSync } from 'node:sqlite';
 
 import {
   redactSystemLogText,
@@ -21,7 +20,6 @@ import {
 } from '../index';
 import {
   persistentSystemLogService,
-  systemLogsRepository,
   normalizeIngestPayload,
   validateIngestBatchSize,
 } from '../server';
@@ -31,29 +29,6 @@ const workspaceRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   '../../../..',
 );
-
-/**
- * In-memory SQLite port for repository integration tests.
- * Uses Node's built-in `node:sqlite` so this package never imports the
- * `better-sqlite3` vendor owned by `@asol/data-core`.
- */
-class MemoryDatabasePort {
-  readonly db = new DatabaseSync(':memory:');
-
-  async execute(sql: string, params: unknown[] = []) {
-    const statement = this.db.prepare(sql);
-    const head = sql.trimStart().slice(0, 6).toLowerCase();
-    // node:sqlite does not always mark PRAGMA as a reader; treat read-shaped
-    // statements as queries so callers receive a row array (better-sqlite3 shape).
-    const isQuery =
-      statement.reader ||
-      head.startsWith('select') ||
-      head.startsWith('pragma') ||
-      head.startsWith('with');
-    if (isQuery) return statement.all(...(params as never[]));
-    return statement.run(...(params as never[]));
-  }
-}
 
 function runSanitizerTest() {
   const base: SystemLogInput = {
@@ -88,43 +63,45 @@ function runSanitizerTest() {
   console.log('✅ system-logs-core sanitizer test passed');
 }
 
-async function runRepositoryIntegrationTest() {
-  const database = new MemoryDatabasePort();
+async function runPersistencePortIntegrationTest() {
+  const stored: import('../domain/entities').PersistentSystemLogEntry[] = [];
   resetSystemLogsCorePorts();
-  configureSystemLogsCore({ database });
-
-  await systemLogsRepository.add(
-    sanitizePersistentSystemLog(
-      {
-        level: 'error',
-        source: 'api',
-        consoleMethod: 'server.error',
-        message: 'authorization: Bearer private-token',
-        page: '/api/orders',
-        platform: 'server',
-        routeName: 'POST /api/orders',
-        statusCode: 500,
-        requestMethod: 'POST',
-        stack: 'x'.repeat(12_100),
-        correlationId: createCorrelationId(),
+  configureSystemLogsCore({
+    persistence: {
+      add: async (input) => {
+        const entry = {
+          ...input,
+          id: 'syslog-test',
+          fingerprint: buildSystemLogFingerprint(input),
+          occurrences: 1,
+          firstOccurredAt: new Date().toISOString(),
+          lastOccurredAt: new Date().toISOString(),
+          messageTruncated: false,
+          stackTruncated: false,
+        };
+        stored.unshift(entry);
+        return entry.id;
       },
-      'trusted-server',
-    ),
-  );
-
-  const page = await systemLogsRepository.list({ origin: 'cloud', level: 'error' });
+      addBatch: async () => undefined,
+      list: async () => ({ items: stored, nextCursor: null, totalInPage: stored.length }),
+      summary: async () => ({ totalErrors: stored.length, totalWarnings: 0, lastHourErrors: stored.length, topFeatures: [], topFingerprints: [], byPlatform: {} }),
+      clear: async () => { stored.length = 0; },
+      pruneOlderThan: async () => 0,
+    },
+  });
+  const id = await persistentSystemLogService.add({
+    level: 'error', source: 'api', consoleMethod: 'server.error',
+    message: 'authorization: Bearer private-token', page: '/api/orders',
+    platform: 'server', routeName: 'POST /api/orders', statusCode: 500, requestMethod: 'POST',
+  });
+  assert.equal(id, 'syslog-test');
+  const page = await persistentSystemLogService.list({ origin: 'cloud', level: 'error' });
   assert.equal(page.items.length, 1);
   assert.equal(page.items[0]?.trustLevel, 'trusted-server');
-  assert.equal(page.items[0]?.stackTruncated, true);
   assert.equal(page.items[0]?.message.includes('private-token'), false);
-
-  const summary = await systemLogsRepository.summary();
-  assert.ok(summary.totalErrors >= 1);
-
   resetSystemLogsCorePorts();
-  console.log('✅ system-logs-core repository integration test passed');
+  console.log('✅ system-logs-core persistence port integration test passed');
 }
-
 function runFingerprintDedupTest() {
   const input: SystemLogInput = {
     level: 'error',
@@ -220,7 +197,7 @@ async function main() {
   runCountMergeTest();
   runPackageSealTest();
   runScenarioCoverageTest();
-  await runRepositoryIntegrationTest();
+  await runPersistencePortIntegrationTest();
   console.log('\n🎉 All @asol/system-logs-core tests passed successfully!');
 }
 

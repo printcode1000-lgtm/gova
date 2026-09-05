@@ -1,7 +1,7 @@
 import { assertSubmainEnv, createSubmainRuntime } from '@asol/submain-composition';
 import type { SendFollowerNotificationInput } from '@/features/follow/domain/follow.types';
 
-import { businessErrorResponse, corsHeaders, preflight } from '../../../lib/http';
+import { businessErrorResponse, corsHeaders, preflight, jsonResponse, readJsonBody } from '../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -16,9 +16,9 @@ export async function POST(request: Request): Promise<Response> {
     assertSubmainEnv();
 
     const sessionToken = request.headers.get('x-asol-session-token') ?? '';
-    const body = (await request.json()) as SendFollowerNotificationInput;
+    const body = await readJsonBody<SendFollowerNotificationInput>(request);
     const result = await social.follow.notifyFollowers(body, sessionToken);
-    return Response.json(result, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, result, 200);
   } catch (error) {
     return businessErrorResponse(request, error);
   }

@@ -1,6 +1,6 @@
 import { assertSubmainEnv, createSubmainRuntime } from '@asol/submain-composition';
 
-import { featureFlagErrorResponse, corsHeaders, preflight } from '../../lib/http';
+import { featureFlagErrorResponse, corsHeaders, preflight, jsonResponse, readJsonBody } from '../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -24,10 +24,10 @@ export async function GET(request: Request): Promise<Response> {
     const phone = query.get('phone');
     if (!uid || !phone) {
       const values = await social.featureFlags.getPublicValues();
-      return Response.json(values, { status: 200, headers: corsHeaders(request) });
+      return jsonResponse(request, values, 200);
     }
     const flags = await social.featureFlags.listForAdmin({ uid, phone });
-    return Response.json(flags, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, flags, 200);
   } catch (error) {
     return featureFlagErrorResponse(request, error);
   }
@@ -38,14 +38,14 @@ export async function PUT(request: Request): Promise<Response> {
     const { social } = createSubmainRuntime();
     assertSubmainEnv();
 
-    const body = (await request.json()) as {
+    const body = await readJsonBody<{
       identity?: { uid: string; phone: string };
       key?: string;
       enabled?: boolean;
       notes?: string;
-    };
+    }>(request);
     if (!body.identity || typeof body.key !== 'string' || typeof body.enabled !== 'boolean') {
-      return Response.json({ error: 'invalidRequest' }, { status: 400, headers: corsHeaders(request) });
+      return jsonResponse(request, { error: 'invalidRequest' }, 400);
     }
 
     const updated = await social.featureFlags.setFlag({
@@ -54,7 +54,7 @@ export async function PUT(request: Request): Promise<Response> {
       enabled: body.enabled,
       notes: body.notes,
     });
-    return Response.json(updated, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, updated, 200);
   } catch (error) {
     return featureFlagErrorResponse(request, error);
   }

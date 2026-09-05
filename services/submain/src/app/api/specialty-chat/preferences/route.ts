@@ -4,7 +4,7 @@ import type {
   SpecialtyChatPreferenceChanges,
 } from '@/features/specialty-chat/domain/types';
 
-import { businessErrorResponse, corsHeaders, preflight } from '../../../lib/http';
+import { businessErrorResponse, corsHeaders, preflight, jsonResponse, readJsonBody } from '../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -18,7 +18,7 @@ export const dynamic = 'force-dynamic';
  */
 function preferenceChanges(value: unknown): SpecialtyChatPreferenceChanges {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
-  const input = value as Record<string, unknown>;
+  const input = value as { specialtyRequestsEnabled?: unknown; productConversationsEnabled?: unknown };
   return {
     ...(typeof input.specialtyRequestsEnabled === 'boolean'
       ? { specialtyRequestsEnabled: input.specialtyRequestsEnabled }
@@ -35,10 +35,10 @@ export async function POST(request: Request): Promise<Response> {
     const { messaging } = createSubmainRuntime();
     assertSubmainEnv();
 
-    const body = (await request.json()) as {
+    const body = await readJsonBody<{
       identity: SpecialtyChatIdentity;
       changes?: unknown;
-    };
+    }>(request);
     const result =
       body.changes === undefined
         ? await messaging.specialtyChat.getPreferences(body.identity)
@@ -46,7 +46,7 @@ export async function POST(request: Request): Promise<Response> {
             body.identity,
             preferenceChanges(body.changes),
           );
-    return Response.json(result, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, result, 200);
   } catch (error) {
     return businessErrorResponse(request, error);
   }

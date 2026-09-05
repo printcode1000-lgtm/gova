@@ -1,4 +1,4 @@
-import { apiSuccess, mapServiceError } from "@/core/api/api-response";
+import { apiSuccess, mapServiceError, readJsonBody } from "@/core/api/api-response";
 import type { StartProductConversationInput } from "@/features/specialty-chat";
 import { specialtyChatService } from "@/features/specialty-chat/server";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
@@ -10,7 +10,7 @@ export async function POST(request: Request) {
       try {
         return apiSuccess(
           await specialtyChatService.startProductConversation(
-            (await request.json()) as StartProductConversationInput,
+            (await readJsonBody<unknown>(request)) as StartProductConversationInput,
           ),
         );
       } catch (error) {

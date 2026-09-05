@@ -59,6 +59,10 @@ ALLOWED_TO_IMPORT → `@asol/notifications-core/builder`
 
 `@asol/account-declarations` has no production `@asol/*` imports.
 
+### @asol/api-contract-core
+
+`@asol/api-contract-core` has no production `@asol/*` imports.
+
 ### @asol/architecture-core
 
 `@asol/architecture-core`
@@ -91,6 +95,9 @@ ALLOWED_TO_IMPORT → `@asol/storage-core/server`
 `@asol/cors` has no production `@asol/*` imports.
 
 ### @asol/data-core
+
+`@asol/data-core`
+ALLOWED_TO_IMPORT → `@asol/api-contract-core`
 
 `@asol/data-core`
 ALLOWED_TO_IMPORT → `@asol/auth-core`
@@ -135,9 +142,6 @@ ALLOWED_TO_IMPORT → `@asol/orders-core`
 ALLOWED_TO_IMPORT → `@asol/product-core`
 
 `@asol/data-core`
-ALLOWED_TO_IMPORT → `@asol/product-core/server`
-
-`@asol/data-core`
 ALLOWED_TO_IMPORT → `@asol/storage-core`
 
 `@asol/data-core`
@@ -147,10 +151,13 @@ ALLOWED_TO_IMPORT → `@asol/storage-core/profiles-config`
 ALLOWED_TO_IMPORT → `@asol/storage-core/server`
 
 `@asol/data-core`
-ALLOWED_TO_IMPORT → `@asol/system-logs-core/server`
+ALLOWED_TO_IMPORT → `@asol/system-logs-core`
 
 `@asol/data-core`
 ALLOWED_TO_IMPORT → `@asol/trending-ribbon-core`
+
+`@asol/data-core`
+ALLOWED_TO_IMPORT → `@asol/vercel-deploy-core`
 
 ### @asol/data-health-core
 
@@ -312,7 +319,7 @@ ALLOWED_TO_IMPORT → `@asol/vercel-deploy-core`
 ### @asol/seller-card-core
 
 `@asol/seller-card-core`
-ALLOWED_TO_IMPORT → `@asol/data-core/profile`
+ALLOWED_TO_IMPORT → `@asol/data-core/profile/entities`
 
 `@asol/seller-card-core`
 ALLOWED_TO_IMPORT → `@asol/storage-core`
@@ -322,6 +329,9 @@ ALLOWED_TO_IMPORT → `@asol/storage-core`
 `@asol/service-mirror-core` has no production `@asol/*` imports.
 
 ### @asol/service-runtime-core
+
+`@asol/service-runtime-core`
+ALLOWED_TO_IMPORT → `@asol/api-contract-core/server`
 
 `@asol/service-runtime-core`
 ALLOWED_TO_IMPORT → `@asol/cors`
@@ -385,5 +395,5 @@ ALLOWED_TO_IMPORT → `@asol/account-declarations`
 
 | Metric | Value |
 |---|---|
-| Packages | 47 |
-| Import edges | 66 |
+| Packages | 48 |
+| Import edges | 68 |

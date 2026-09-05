@@ -2,7 +2,7 @@ import { assertSubmainEnv, createSubmainRuntime } from '@asol/submain-compositio
 import type { DeleteAccountInput } from '@asol/auth-core';
 import { extractSessionToken } from '@asol/auth-core/server';
 
-import { businessErrorResponse, corsHeaders, preflight } from '../../../lib/http';
+import { businessErrorResponse, corsHeaders, preflight, jsonResponse, readJsonBody } from '../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -18,10 +18,15 @@ export async function POST(request: Request): Promise<Response> {
     const { account } = createSubmainRuntime();
     assertSubmainEnv();
 
-    const body = (await request.json()) as DeleteAccountInput;
+    const body = await readJsonBody<DeleteAccountInput>(request);
     const sessionToken = extractSessionToken(request, body);
-    const result = await account.delete({ ...body, sessionToken });
-    return Response.json(result, { status: 200, headers: corsHeaders(request) });
+    const result = await account.delete({
+      uid: body.uid,
+      currentPassword: body.currentPassword,
+      confirmation: body.confirmation,
+      sessionToken,
+    });
+    return jsonResponse(request, result, 200);
   } catch (error) {
     return businessErrorResponse(request, error);
   }

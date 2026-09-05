@@ -10,6 +10,7 @@ import {
   classifyLayer,
   normalizePath,
   runArchitectureCheck,
+  scanApiTransportContract,
   violations,
 } from '../index';
 import './application-cycle-contract.test';
@@ -163,6 +164,37 @@ assert.ok(
   } finally {
     rmSync(probe, { force: true });
     violations.length = 0;
+  }
+}
+
+// ── Transport contract negative probes ──────────────────────────────────────
+{
+  const routeDir = path.join(ROOT, 'src/app/api/__transport_contract_attack');
+  const routeProbe = path.join(routeDir, 'route.ts');
+  const sourceProbe = path.join(ROOT, PACKAGE, 'src/__transport_contract_attack.ts');
+  const { mkdirSync } = await import('node:fs');
+  mkdirSync(routeDir, { recursive: true });
+  writeFileSync(
+    routeProbe,
+    "export async function POST(request: Request) { const body = await request.json(); const row = body as SellerOrderRow; return Response.json({ ...row, seller_order_id: row.seller_order_id }); }\n",
+  );
+  writeFileSync(
+    sourceProbe,
+    "export const read = (row: { seller_order_id: string }) => row.seller_order_id; export const sql = 'SELECT seller_order_id FROM seller_orders';\n",
+  );
+  try {
+    const findings = scanApiTransportContract();
+    const types = new Set(findings.map((finding) => finding.type));
+    assert.ok(types.has('direct-json-response'), 'Direct JSON serializer probe must fail.');
+    assert.ok(types.has('direct-json-request'), 'Direct JSON request probe must fail.');
+    assert.ok(types.has('snake-case-route-key'), 'Route snake_case probe must fail.');
+    assert.ok(types.has('raw-route-spread'), 'Raw route spread probe must fail.');
+    assert.ok(types.has('row-cast-at-route-boundary'), 'Row cast probe must fail.');
+    assert.ok(types.has('snake-case-owned-key'), 'Project-wide snake_case property probe must fail.');
+    assert.ok(types.has('sql-outside-data-core'), 'SQL outside data-core probe must fail.');
+  } finally {
+    rmSync(routeDir, { recursive: true, force: true });
+    rmSync(sourceProbe, { force: true });
   }
 }
 

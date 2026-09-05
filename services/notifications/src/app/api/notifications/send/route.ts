@@ -1,3 +1,4 @@
+import { jsonContractResponse, readJsonContractBody } from '@asol/api-contract-core/server';
 import { createCorsPolicy, reflectRequestOrigin, resolveCorsHeaders } from '@asol/cors';
 import { assertNotificationsEnv, createNotificationsRuntime } from '@asol/notifications-composition';
 
@@ -56,7 +57,7 @@ export async function POST(request: Request): Promise<Response> {
     // `next build`, where no account credential exists.
     const { crypto } = createNotificationsRuntime();
     assertNotificationsEnv();
-    grants = crypto.readGrants(await request.json()).slice(0, crypto.maxGrantsPerRequest);
+    grants = crypto.readGrants(await readJsonContractBody<unknown>(request)).slice(0, crypto.maxGrantsPerRequest);
   } catch (error) {
     // Say why. This catch spans three very different failures — a malformed
     // body, missing account credentials, and a port that was never registered —
@@ -67,17 +68,17 @@ export async function POST(request: Request): Promise<Response> {
       '[notifications/send] rejected before delivery:',
       error instanceof Error ? error.message : error,
     );
-    return Response.json({ error: 'invalidJsonBody' }, { status: 400, headers });
+    return jsonContractResponse({ error: 'invalidJsonBody' }, { status: 400, headers });
   }
 
   if (grants.length === 0) {
-    return Response.json({ error: 'notificationGrantRequired' }, { status: 400, headers });
+    return jsonContractResponse({ error: 'notificationGrantRequired' }, { status: 400, headers });
   }
 
   // 200 even with rejections: the request itself was well formed, and the
   // per-grant outcome is in the body. The browser cannot act on a 4xx here
   // anyway — the grants are already spent.
-  return Response.json(await createNotificationsRuntime().delivery.deliverGrants(grants), { status: 200, headers });
+  return jsonContractResponse(await createNotificationsRuntime().delivery.deliverGrants(grants), { status: 200, headers });
 }
 
 export async function OPTIONS(request: Request): Promise<Response> {

@@ -19,7 +19,7 @@ import {
   severityRank,
 } from "@asol/data-health-core/server";
 import { resolveDataHealthExecutionContext } from "../../runtime-context.server";
-import { DATA_HEALTH_IMAGE_SOURCES } from "@asol/data-health-core";
+import { DATA_HEALTH_IMAGE_SOURCES } from "../../db/image-source-registry";
 import type {
   DataHealthAuditEntry,
   DataHealthCleanupAction,

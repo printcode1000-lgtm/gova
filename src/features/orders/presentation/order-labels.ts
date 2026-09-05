@@ -1,6 +1,7 @@
 "use client";
 
-import type { DbRow, OrderRole, OrderViewerRole } from "./order-types";
+import type { OrderDto, SellerOrderDto } from "@asol/orders-core";
+import type { OrderRole, OrderViewerRole } from "./order-types";
 import { formatCurrencyMinor, formatDateTime } from "@asol/format-core";
 import {
   parseSellerFulfillmentSnapshot,
@@ -199,9 +200,9 @@ export function profileAddress(profile: unknown) {
 }
 
 export function parseSellerOrderFulfillmentSnapshot(
-  sellerOrder: DbRow,
+  sellerOrder: SellerOrderDto,
 ): SellerFulfillmentSnapshot {
-  return parseSellerFulfillmentSnapshot(sellerOrder.fulfillment_snapshot_json);
+  return parseSellerFulfillmentSnapshot(sellerOrder.fulfillmentSnapshotJson);
 }
 
 export function sellerFulfillmentShippingSummary(
@@ -331,15 +332,15 @@ export interface OrderDeliveryAddress {
   longitude: number | null;
 }
 
-export function parseOrderDeliveryAddress(order: DbRow): OrderDeliveryAddress {
+export function parseOrderDeliveryAddress(order: OrderDto): OrderDeliveryAddress {
   try {
     const raw =
-      typeof order.delivery_address_snapshot_json === "string"
-        ? (JSON.parse(order.delivery_address_snapshot_json) as Record<
+      typeof order.deliveryAddressSnapshotJson === "string"
+        ? (JSON.parse(order.deliveryAddressSnapshotJson) as Record<
             string,
             unknown
           >)
-        : ((order.delivery_address_snapshot_json as Record<string, unknown>) ??
+        : ((order.deliveryAddressSnapshotJson as Record<string, unknown>) ??
           {});
     return {
       address: String(raw.address ?? "").trim(),
@@ -356,12 +357,12 @@ export function parseOrderDeliveryAddress(order: DbRow): OrderDeliveryAddress {
   }
 }
 
-export function hasOrderDeliveryAddress(order: DbRow) {
+export function hasOrderDeliveryAddress(order: OrderDto) {
   return Boolean(parseOrderDeliveryAddress(order).address);
 }
 
 export function resolveBuyerDeliveryDisplay(
-  order: DbRow,
+  order: OrderDto,
   profile: unknown,
 ): OrderDeliveryAddress {
   const snapshot = parseOrderDeliveryAddress(order);
@@ -374,12 +375,15 @@ export function resolveBuyerDeliveryDisplay(
   };
 }
 
-export function carrierFromSellerOrder(sellerOrder: DbRow, items: DbRow[]) {
-  const direct = String(sellerOrder.service_provider_id ?? "");
+export function carrierFromSellerOrder(
+  sellerOrder: SellerOrderDto,
+  items: Array<{ sellerOrderId: string; shippingNotes: string | null }>,
+) {
+  const direct = String(sellerOrder.serviceProviderId ?? "");
   if (direct) return direct;
   const note = String(
-    items.find((item) => item.seller_order_id === sellerOrder.id)
-      ?.shipping_notes ?? "",
+    items.find((item) => item.sellerOrderId === sellerOrder.id)
+      ?.shippingNotes ?? "",
   );
   return note.startsWith("carrier:") ? note.slice("carrier:".length) : "";
 }

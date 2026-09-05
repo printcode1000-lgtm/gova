@@ -1,7 +1,7 @@
 import { assertSubmainEnv, createSubmainRuntime } from '@asol/submain-composition';
 import { isValidPhone } from '@asol/auth-core/server';
 
-import { businessErrorResponse, corsHeaders, preflight } from '../../../lib/http';
+import { checkPhoneErrorResponse, corsHeaders, preflight, jsonResponse } from '../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -19,13 +19,13 @@ export async function GET(request: Request): Promise<Response> {
 
     const phone = new URL(request.url).searchParams.get('phone')?.trim() ?? '';
     if (!isValidPhone(phone)) {
-      return Response.json({ error: 'invalidPhone' }, { status: 400, headers: corsHeaders(request) });
+      return jsonResponse(request, { error: 'invalidPhone' }, 400);
     }
 
     const result = await auth.checkPhone(phone);
-    return Response.json(result, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, result, 200);
   } catch (error) {
-    return businessErrorResponse(request, error);
+    return checkPhoneErrorResponse(request, error);
   }
 }
 

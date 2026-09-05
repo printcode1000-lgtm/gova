@@ -22,9 +22,9 @@ const manifest = JSON.parse(
 assert.deepEqual(Object.keys(manifest.exports), ['.'], 'One door.');
 
 // Every deployment builds this into its own bundle, so a dependency here is a dependency in six
-// uploads. `Request`/`Response` are the whole contract, plus `@asol/cors` — which is itself
-// dependency-free and owns every `Access-Control-*` header in the repository.
-const ALLOWED_DEPENDENCIES = new Set(['@asol/cors']);
+// uploads. `Request`/`Response` are the whole contract, plus `@asol/cors` for headers and
+// `@asol/api-contract-core/server` for the application-owned JSON transport invariant.
+const ALLOWED_DEPENDENCIES = new Set(['@asol/cors', '@asol/api-contract-core/server']);
 for (const file of ['domain/error-status.ts', 'domain/service-http.ts', 'domain/service-proxy.ts', 'domain/health.ts', 'index.ts']) {
   const text = readFileSync(path.join(ROOT, 'packages/service-runtime-core/src', file), 'utf8');
   for (const match of text.matchAll(/from\s+'([^']+)'/g)) {
@@ -115,6 +115,11 @@ assert.equal(errorMessageOf(null), 'Internal Server Error');
 
 const errored = http.errorResponse(withOrigin, new Error('missing'));
 assert.equal(errored.status, 404);
+assert.throws(
+  () => http.jsonResponse(withOrigin, { legacy_key: true }),
+  /legacy_key/,
+  'A service cannot serialize snake_case application-owned JSON.',
+);
 assert.equal(errored.headers.get('Access-Control-Allow-Origin'), 'https://app.example',
   'An error response carries CORS too, or the browser reports a CORS failure instead of the error.');
 
@@ -212,5 +217,5 @@ for (const file of [
 }
 
 console.log(
-  `@asol/service-runtime-core contract: 1 door, CORS delegated to @asol/cors, ${deployments.length} deployments on the shared runtime.`,
+  `@asol/service-runtime-core contract: 1 door, CORS + JSON transport delegated, ${deployments.length} deployments on the shared runtime.`,
 );

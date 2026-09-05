@@ -234,3 +234,26 @@ export interface DataHealthQuarantineEntry {
   lastVerifiedAt: string;
   eligible: boolean;
 }
+
+export interface DataHealthQuarantineRecordDto {
+  id: string; fingerprint: string; resourceType: string; storageProfileId: string;
+  resourceKey: string; databaseName: string; tableName: string; recordId: string;
+  eligibleForDeletionAt: string; releasedAt: string; deletedAt: string;
+}
+
+export interface DataHealthCleanupPlanRecordDto {
+  id: string; adminUid: string; environment: string; issueIdsJson: string;
+  snapshotsJson: string; expiresAt: string; consumedAt: string;
+}
+
+export interface DataHealthOrderPurgePlanRecordDto {
+  id: string; adminUid: string; environment: string; orderCount: number;
+  tableCountsJson: string; imagesJson: string; snapshotHash: string;
+  confirmationText: string; createdAt: string; expiresAt: string; consumedAt: string;
+  status: string; errorMessage: string;
+}
+
+export interface DataHealthStorageDeletionTaskDto {
+  id: string; purgeId: string; storageProfileId: string; imageKey: string; status: string;
+  attempts: number; lastError: string; createdAt: string; updatedAt: string; deletedAt: string;
+}

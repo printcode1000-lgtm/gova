@@ -1,5 +1,5 @@
 import { assertProductsEnv, createProductsRuntime } from '@asol/products-composition';
-import { corsHeaders, preflight, searchErrorResponse } from '../../lib/http';
+import { corsHeaders, preflight, pharmacyCatalogErrorResponse, jsonResponse } from '../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -20,16 +20,13 @@ export async function GET(request: Request): Promise<Response> {
 
     const uid = (new URL(request.url).searchParams.get('uid') ?? '').trim().slice(0, 200);
     if (!uid) {
-      return Response.json(
-        { error: 'uid is required' },
-        { status: 400, headers: corsHeaders(request) },
-      );
+      return jsonResponse(request, { error: 'uid is required' }, 400);
     }
     const includeHidden = new URL(request.url).searchParams.get('includeHidden') === 'true';
     const data = await database.pharmacyProfileCatalog.getCatalogView(uid, includeHidden);
-    return Response.json(data, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, data, 200);
   } catch (error) {
-    return searchErrorResponse(request, error);
+    return pharmacyCatalogErrorResponse(request, error);
   }
 }
 

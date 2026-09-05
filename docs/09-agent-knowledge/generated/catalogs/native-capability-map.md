@@ -28,7 +28,7 @@ Entries: **28**
 | ios | `aps-environment` | `ios/App/App/App.entitlements` | unknown | `@asol/env-core` | entitlement key |
 | ios | `CFBundleURLTypes` | `ios/App/App/Info.plist` | unknown | unknown | Info.plist capability/usage key |
 | ios | `com.apple.developer.associated-domains` | `ios/App/App/App.entitlements` | unknown | `@asol/dev-core` | entitlement key |
-| ios | `com.apple.security.application-groups` | `ios/App/App/App.entitlements` | unknown | unknown | entitlement key |
+| ios | `com.apple.security.application-groups` | `ios/App/App/App.entitlements` | unknown | `@asol/api-contract-core` | entitlement key |
 | ios | `NSCameraUsageDescription` | `ios/App/App/Info.plist` | unknown | unknown | Info.plist capability/usage key |
 | ios | `NSDocumentsFolderUsageDescription` | `ios/App/App/Info.plist` | unknown | unknown | Info.plist capability/usage key |
 | ios | `NSLocationWhenInUseUsageDescription` | `ios/App/App/Info.plist` | unknown | unknown | Info.plist capability/usage key |

@@ -3,7 +3,7 @@
 import { ChevronDown, Search, Truck } from "lucide-react";
 import { Input } from "@/shared/ui/input";
 import { SellerCard } from "@asol/seller-card-core/ui";
-import type { UserProfileRow } from "@/features/profile/application/services/profile-service.interface";
+import type { ProfileDirectoryEntry } from "@/features/profile/application/services/profile-service.interface";
 import { createSellerCardViewModel, type SellerCardAction } from "@asol/seller-card-core";
 import type { fulfillmentSettingsCopy } from "./fulfillment-settings-copy";
 
@@ -27,7 +27,7 @@ export function FulfillmentCarrierSearch({
   setSearchText: (value: string) => void;
   submitSearch: () => void;
   isLoadingDeliveryUsers: boolean;
-  displayedUsers: UserProfileRow[];
+  displayedUsers: ProfileDirectoryEntry[];
   emptyDeliveryProvidersMessage: string;
   selected: Set<string>;
   toggleCarrier: (uid: string) => void;

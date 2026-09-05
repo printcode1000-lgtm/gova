@@ -1,6 +1,7 @@
 import { handleProductionDeployCallback } from '@/features/release-commands/server/services/production-deploy-service.server';
 import { controlError, controlJson } from '@/control/operational-route';
 import type { RemoteDeployAllCallbackInput } from '@asol/vercel-deploy-core/remote-deploy-contracts';
+import { readJsonContractBody } from '@asol/api-contract-core/server';
 
 /**
  * A malformed body is the caller's fault, not the server's.
@@ -11,7 +12,7 @@ import type { RemoteDeployAllCallbackInput } from '@asol/vercel-deploy-core/remo
  */
 async function readCallbackBody(request: Request): Promise<RemoteDeployAllCallbackInput> {
   try {
-    return await request.json() as RemoteDeployAllCallbackInput;
+    return await readJsonContractBody<RemoteDeployAllCallbackInput>(request);
   } catch {
     throw new Error('invalidJsonBody');
   }

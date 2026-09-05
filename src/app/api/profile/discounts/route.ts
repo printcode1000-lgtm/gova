@@ -1,4 +1,4 @@
-import { apiSuccess, mapServiceError } from "@/core/api/api-response";
+import { apiSuccess, mapServiceError, readJsonBody } from "@/core/api/api-response";
 import type { SaveSellerDiscountInput } from "@/features/seller-discounts";
 import { sellerDiscountService } from "@/features/seller-discounts/server";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
@@ -23,7 +23,7 @@ export async function GET(request: Request) {
 export async function PUT(request: Request) {
   return runTracedBusinessRoute("PUT /api/profile/discounts", async () => {
     try {
-      const body = (await request.json()) as {
+      const body = (await readJsonBody<unknown>(request)) as {
         sellerUid: string;
         discounts: SaveSellerDiscountInput[];
       };

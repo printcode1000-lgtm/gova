@@ -11,7 +11,7 @@ Canonical inventory of every sealed `@asol/*` package in `packages/`.
 
 ## Scope
 
-Covers all 47 sealed packages under `packages/`. Does not cover `services/*/generated/` mirrors.
+Covers all 48 sealed packages under `packages/`. Does not cover `services/*/generated/` mirrors.
 
 ## Source of Truth
 
@@ -32,6 +32,20 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:architecture-core` |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+
+### @asol/api-contract-core
+
+| Field | Value |
+|---|---|
+| **Package** | `@asol/api-contract-core` |
+| **Folder** | `packages/api-contract-core/` |
+| **Purpose** | Application-owned JSON transport naming and validation contracts |
+| **Architectural Layer** | capability |
+| **Public Exports** | `.` · `./server` |
+| **Infrastructure Privileges** | none |
+| **May Import App (`@/`)** | no |
+| **Test Gate** | `npm run test:api-contract-core` |
 | **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/account-declarations
@@ -448,7 +462,7 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Folder** | `packages/product-core/` |
 | **Purpose** | Product domain logic |
 | **Architectural Layer** | capability |
-| **Public Exports** | `.` · `./server` |
+| **Public Exports** | `.` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:product-core` |
@@ -682,4 +696,4 @@ This Markdown file is **generated** and verified by `architecture:check`.
 
 | Metric | Value |
 |---|---|
-| Packages | 47 |
+| Packages | 48 |

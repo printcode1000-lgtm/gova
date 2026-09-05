@@ -86,3 +86,5 @@ export {
   type StaticDomComponentRepeatabilityViolation,
   type StaticDomComponentRepeatabilityViolationType,
 } from './checks/static-dom-component-repeatability-contract';
+
+export { checkApiTransportContract, scanApiTransportContract, type ApiTransportViolation, type ApiTransportViolationType } from './checks/api-transport-contract';

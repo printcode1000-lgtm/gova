@@ -16,7 +16,7 @@ import {
   type SellerSearchRequest,
   type SellerSearchSort,
 } from "@/features/product-search";
-import type { UserProfileRow } from "@/features/profile";
+import type { ProfileDirectoryEntry } from "@/features/profile";
 import { ProductSearchFieldSelector } from "./ProductSearchFieldSelector";
 import { ProductSearchResults } from "./ProductSearchResults";
 import { defaultFieldKeys } from "./product-search-fields";
@@ -56,7 +56,7 @@ export function ProductSearchPanel({ id,
   const [sellerMinRating, setSellerMinRating] =
     React.useState<SellerSearchRequest["minRating"]>("");
   const [products, setProducts] = React.useState<ProductRecord[]>([]);
-  const [sellers, setSellers] = React.useState<UserProfileRow[]>([]);
+  const [sellers, setSellers] = React.useState<ProfileDirectoryEntry[]>([]);
   const [total, setTotal] = React.useState(0);
   const [isLoading, setIsLoading] = React.useState(false);
   const [hasSearched, setHasSearched] = React.useState(false);

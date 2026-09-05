@@ -5,7 +5,7 @@
 
 # Dead Docs Report
 
-Findings: **64**
+Findings: **65**
 
 | Kind | Source | Reference | Detail |
 |---|---|---|---|
@@ -68,6 +68,7 @@ Findings: **64**
 | `missing-file` | `docs/05-platform-features/sealed-packages/ota-core-module.md` | `src/index.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/sealed-packages/service-runtime-core-module.md` | `src/app/lib/http.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/service-bridge-module.md` | `src/features/service-bridge/` | documentation mentions a missing repository path |
+| `missing-file` | `docs/06-super-admin-and-operations/data-health-module.md` | `packages/data-health-core/src/domain/source-registry.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/07-mobile-and-release/deployment-targets.md` | `packages/native-core/android/build/` | documentation mentions a missing repository path |
 | `missing-file` | `docs/07-mobile-and-release/release-and-secrets.md` | `scripts/lib/` | documentation mentions a missing repository path |
 | `missing-file` | `docs/09-agent-knowledge/local-agent-runtime.md` | `scripts/local-agent-watch.ts` | documentation mentions a missing repository path |

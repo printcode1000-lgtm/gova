@@ -82,22 +82,22 @@ export class OrderPurgeService {
     assertDataHealthAllowed();
     const execution = resolveDataHealthExecutionContext();
     const plan = await orderPurgeRepository.getPlan(input.planId);
-    if (!plan || text(plan.admin_uid) !== input.adminUid) {
+    if (!plan || text(plan.adminUid) !== input.adminUid) {
       throw new Error("dataHealthOrderPurgePlanInvalid");
     }
-    if (text(plan.consumed_at)) {
+    if (text(plan.consumedAt)) {
       throw new Error("dataHealthOrderPurgePlanConsumed");
     }
-    if (Date.parse(text(plan.expires_at)) <= Date.now()) {
+    if (Date.parse(text(plan.expiresAt)) <= Date.now()) {
       throw new Error("dataHealthOrderPurgePlanExpired");
     }
     if (text(plan.environment) !== execution.environment) {
       throw new Error("dataHealthEnvironmentChanged");
     }
     if (
-      input.confirmationText !== text(plan.confirmation_text) ||
+      input.confirmationText !== text(plan.confirmationText) ||
       input.confirmationText !==
-        confirmationText(execution.environment, number(plan.order_count))
+        confirmationText(execution.environment, number(plan.orderCount))
     ) {
       throw new Error("dataHealthOrderPurgeConfirmationRequired");
     }
@@ -118,8 +118,8 @@ export class OrderPurgeService {
     try {
       snapshot = await orderPurgeRepository.snapshot();
       if (
-        snapshot.snapshotHash !== text(plan.snapshot_hash) ||
-        snapshot.orderCount !== number(plan.order_count)
+        snapshot.snapshotHash !== text(plan.snapshotHash) ||
+        snapshot.orderCount !== number(plan.orderCount)
       ) {
         throw new Error("dataHealthOrderPurgeSelectionChanged");
       }
@@ -207,12 +207,12 @@ export class OrderPurgeService {
   private async reconcilePreparedImages() {
     for (const task of await orderPurgeRepository.preparedStorageTasks()) {
       const stillReferenced = await orderPurgeRepository.imageReferenceExists(
-        text(task.storage_profile_id),
-        text(task.image_key),
+        text(task.storageProfileId),
+        text(task.imageKey),
       );
       if (!stillReferenced) {
         await orderPurgeRepository.activateStorageTasks(
-          text(task.purge_id),
+          text(task.purgeId),
           new Date().toISOString(),
         );
       }
@@ -229,8 +229,8 @@ export class OrderPurgeService {
       const taskId = text(task.id);
       try {
         await imageStorageOrchestrator.deleteByKey(
-          text(task.storage_profile_id),
-          text(task.image_key),
+          text(task.storageProfileId),
+          text(task.imageKey),
         );
         await orderPurgeRepository.markStorageTask(
           taskId,

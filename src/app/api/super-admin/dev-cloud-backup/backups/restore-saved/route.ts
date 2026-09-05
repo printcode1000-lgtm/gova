@@ -1,4 +1,4 @@
-import { apiSuccess, mapServiceError } from "@/core/api/api-response";
+import { apiSuccess, mapServiceError, readJsonBody } from "@/core/api/api-response";
 import { assertSuperAdminRequest } from "@/features/super-admin/server";
 import { devCloudBackupService } from "@/features/dev-cloud-backup/server";
 import type { DevCloudBackupRestoreMode } from "@/features/dev-cloud-backup";
@@ -10,7 +10,7 @@ export async function POST(request: Request) {
     async () => {
       try {
         assertSuperAdminRequest(request);
-        const body = (await request.json().catch(() => ({}))) as {
+        const body = (await readJsonBody<unknown>(request).catch(() => ({}))) as {
           fileName?: string;
           mode?: DevCloudBackupRestoreMode;
           confirmationText?: string;

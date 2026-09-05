@@ -1,5 +1,6 @@
 "use client";
 
+import type { ShippingQuoteDto } from "@asol/orders-core";
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -39,7 +40,7 @@ import {
   queryWithActor,
   statusLabel,
 } from "../order-labels";
-import type { DbRow, OrderDetails, OrderRole } from "../order-types";
+import type { OrderDetails, OrderRole } from "../order-types";
 
 import { RunAction, text } from "./OrderDetailsPageContent.navigation-summary";
 import { CustomRequestRow } from "./OrderDetailsPageContent.custom-request-row";
@@ -54,7 +55,7 @@ export function ShippingQuotePanel({ id,
   runAction,
 }: {
   sellerOrderId: string;
-  quotes: DbRow[];
+  quotes: ShippingQuoteDto[];
   currency: string;
   canPropose: boolean;
   isBuyer: boolean;
@@ -111,17 +112,17 @@ export function ShippingQuotePanel({ id,
         <div id="orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-div-8-fqeioe" className="grid gap-2 px-3 py-3 text-sm sm:grid-cols-3">
           <QuoteAmount id="order-details-page-content-shipping-quotes-shipping-quote-panel-quote-amount-ed63fe"
             label="الشحن الأساسي"
-            value={latest.base_shipping_price}
+            value={latest.baseShippingPrice}
             currency={currency}
           />
           <QuoteAmount id="order-details-page-content-shipping-quotes-shipping-quote-panel-quote-amount-1b972f"
             label="سيارة النقل عند الحاجة"
-            value={latest.special_vehicle_fee}
+            value={latest.specialVehicleFee}
             currency={currency}
           />
           <QuoteAmount id="order-details-page-content-shipping-quotes-shipping-quote-panel-quote-amount-94755a"
             label="إجمالي العرض"
-            value={latest.total_shipping_price}
+            value={latest.totalShippingPrice}
             currency={currency}
             emphasized
           />

@@ -1,9 +1,5 @@
 import type { SystemLogInput } from '../domain/entities';
 
-export interface SystemLogsDatabasePort {
-  execute(sql: string, params?: unknown[]): Promise<unknown>;
-}
-
 export interface SystemLogsIdentityPort {
   isSuperAdmin(uid: string, phone: string): boolean;
 }
@@ -42,7 +38,7 @@ export interface SystemLogsClientSubmitPort {
 }
 
 export interface SystemLogsCorePorts {
-  database: SystemLogsDatabasePort;
+  persistence: SystemLogsPersistencePort;
   identity: SystemLogsIdentityPort;
   environment: SystemLogsEnvironmentPort;
   monitor: SystemLogsMonitorPort;
@@ -54,7 +50,14 @@ const noop = () => undefined;
 const noopUnsub = () => undefined;
 
 const defaultPorts: SystemLogsCorePorts = {
-  database: { execute: async () => [] },
+  persistence: {
+    add: async () => '',
+    addBatch: async () => undefined,
+    list: async () => ({ items: [], nextCursor: null, totalInPage: 0 }),
+    summary: async () => ({ totalErrors: 0, totalWarnings: 0, lastHourErrors: 0, topFeatures: [], topFingerprints: [], byPlatform: {} }),
+    clear: async () => undefined,
+    pruneOlderThan: async () => 0,
+  },
   identity: { isSuperAdmin: () => false },
   environment: {
     retentionDays: () => 90,
@@ -103,7 +106,7 @@ function setPortsState(next: SystemLogsCorePorts): void {
 
 export function configureSystemLogsCore(next: Partial<SystemLogsCorePorts>): void {
   setPortsState({
-    database: next.database ?? portsState().database,
+    persistence: next.persistence ?? portsState().persistence,
     identity: next.identity ?? portsState().identity,
     environment: next.environment ?? portsState().environment,
     monitor: next.monitor ?? portsState().monitor,
@@ -112,8 +115,9 @@ export function configureSystemLogsCore(next: Partial<SystemLogsCorePorts>): voi
   });
 }
 
-export function systemLogsDatabase(): SystemLogsDatabasePort {
-  return portsState().database;
+
+export function systemLogsPersistence(): SystemLogsPersistencePort {
+  return portsState().persistence;
 }
 
 export function systemLogsIdentity(): SystemLogsIdentityPort {

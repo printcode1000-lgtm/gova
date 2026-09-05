@@ -1,6 +1,6 @@
 import { assertSubmainEnv, createSubmainRuntime } from '@asol/submain-composition';
 
-import { businessErrorResponse, corsHeaders, preflight } from '../../../../lib/http';
+import { businessErrorResponse, corsHeaders, preflight, jsonResponse, readJsonBody } from '../../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -18,16 +18,13 @@ export async function POST(request: Request): Promise<Response> {
     assertSubmainEnv();
 
     const claims = account.assertSignedIn(request);
-    const body = (await request.json().catch(() => ({}))) as {
-      locale?: unknown;
-      requestId?: unknown;
-    };
+    const body = await readJsonBody<{ locale?: unknown; requestId?: unknown }>(request).catch(() => ({}));
     const result = await devices.sendSelfTest({
       identity: { uid: claims.uid, phone: claims.phone },
       locale: body?.locale === 'en' ? 'en' : 'ar',
       ...(typeof body?.requestId === 'string' ? { requestId: body.requestId } : {}),
     });
-    return Response.json(result, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, result, 200);
   } catch (error) {
     return businessErrorResponse(request, error);
   }

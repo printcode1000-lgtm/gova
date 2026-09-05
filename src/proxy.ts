@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { jsonContractResponse } from '@asol/api-contract-core/server';
 import { businessApiOrigins } from '@/core/config/business-api-origins';
 import { getCorsOrigins } from '@/core/config/cors-origins';
 import {
@@ -66,7 +67,7 @@ export function proxy(request: NextRequest) {
   if (owner) {
     const businessOrigin = businessApiOrigins()[owner];
     if (!businessOrigin) {
-      return NextResponse.json(
+      return jsonContractResponse(
         { error: 'businessApiOwnerOriginNotConfigured', owner },
         { status: 502, headers },
       );
@@ -82,7 +83,7 @@ export function proxy(request: NextRequest) {
   }
 
   if (isBusinessApiPath(pathname)) {
-    return NextResponse.json(
+    return jsonContractResponse(
       { error: 'businessApiRouteHasNoOwner', route: normalizeApiPath(pathname) },
       { status: 502, headers },
     );

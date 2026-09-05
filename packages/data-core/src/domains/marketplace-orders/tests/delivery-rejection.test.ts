@@ -30,7 +30,7 @@ async function main() {
   await service.sellerAcceptItem(item.id, seller);
   const shipment = await service.createSellerOrderShipment(
     order.id,
-    { sellerOrderId: item.seller_order_id },
+    { sellerOrderId: item.sellerOrderId },
     admin,
   );
   await service.setShipmentItemsStatus(shipment.id, "received_by_carrier", carrier);
@@ -47,7 +47,7 @@ async function main() {
   )[0];
   const sellerOrder = (
     await db.execute("SELECT status FROM seller_orders WHERE id=?", [
-      item.seller_order_id,
+      item.sellerOrderId,
     ])
   )[0];
   const refreshedOrder = (

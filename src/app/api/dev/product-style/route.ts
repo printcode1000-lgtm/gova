@@ -1,4 +1,4 @@
-import { apiError, apiSuccess } from "@/core/api/api-response";
+import { apiError, apiSuccess, readJsonBody } from "@/core/api/api-response";
 import { isDevelopment } from "@/core/config";
 import { categoryService } from "@/features/categories";
 import {
@@ -55,7 +55,7 @@ export async function PUT(request: Request) {
   if (!isDevelopment) return apiError("Not found", 404);
 
   try {
-    const settings = parseProductStyleSettings(await request.json());
+    const settings = parseProductStyleSettings(await readJsonBody<unknown>(request));
     if (!settings) {
       return apiError("Invalid product style settings", 400);
     }

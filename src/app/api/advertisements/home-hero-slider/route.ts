@@ -1,4 +1,4 @@
-import { apiError, apiSuccess } from "@/core/api/api-response";
+import { apiError, apiSuccess, readJsonBody } from "@/core/api/api-response";
 import type { HomeHeroConfig } from "@asol/hero-slider-core";
 import { homeHeroSliderService } from "@/features/advertisements/server";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
@@ -33,7 +33,7 @@ export async function PUT(request: Request) {
     "PUT /api/advertisements/home-hero-slider",
     async () => {
       try {
-        const body = (await request.json()) as {
+        const body = (await readJsonBody<unknown>(request)) as {
           identity: { uid: string; phone: string };
           config: HomeHeroConfig;
           checkIntervalMinutes: number;

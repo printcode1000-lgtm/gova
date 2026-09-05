@@ -53,6 +53,12 @@
       "@asol/account-declarations/sub2main": [
         "./generated/packages/account-declarations/src/accounts/sub2main.ts"
       ],
+      "@asol/api-contract-core": [
+        "./generated/packages/api-contract-core/src/index.ts"
+      ],
+      "@asol/api-contract-core/server": [
+        "./generated/packages/api-contract-core/src/server.ts"
+      ],
       "@asol/auth-core": [
         "./generated/packages/auth-core/src/index.ts"
       ],

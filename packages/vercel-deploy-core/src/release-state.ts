@@ -53,10 +53,6 @@ export interface ReleaseStateStore {
   write(state: DurableReleaseState, expectedVersion: number | null): Promise<DurableReleaseState>;
 }
 
-export interface SqlReleaseStateDataSource {
-  execute(sql: string, params?: unknown[]): Promise<unknown>;
-}
-
 export interface ReleaseStateMutation {
   readonly revision: string;
   readonly runId: string;
@@ -196,56 +192,4 @@ export async function releaseReadinessStatusFromStore(
   if (state.status === "ready" && releaseStateIsReady(state)) return "ready";
   if (state.status === "failed" || state.status === "rolled_back") return "failed";
   return "pending";
-}
-
-function rowsOf(result: unknown): Record<string, unknown>[] {
-  if (Array.isArray(result)) return result as Record<string, unknown>[];
-  const rows = (result as { rows?: unknown } | null)?.rows;
-  return Array.isArray(rows) ? (rows as Record<string, unknown>[]) : [];
-}
-
-export class SqlReleaseStateStore implements ReleaseStateStore {
-  constructor(private readonly dataSource: SqlReleaseStateDataSource) {}
-
-  private async ensureSchema(): Promise<void> {
-    await this.dataSource.execute(
-      `CREATE TABLE IF NOT EXISTS control_release_state (
-        revision TEXT PRIMARY KEY NOT NULL,
-        version INTEGER NOT NULL,
-        state_json TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-      )`,
-    );
-  }
-
-  async read(revision: string): Promise<DurableReleaseState | null> {
-    assertSha(revision);
-    await this.ensureSchema();
-    const rows = rowsOf(
-      await this.dataSource.execute(
-        "SELECT state_json FROM control_release_state WHERE revision = ? LIMIT 1",
-        [revision],
-      ),
-    );
-    const raw = rows[0]?.state_json;
-    if (typeof raw !== "string") return null;
-    return JSON.parse(raw) as DurableReleaseState;
-  }
-
-  async write(state: DurableReleaseState, expectedVersion: number | null): Promise<DurableReleaseState> {
-    assertSha(state.revision);
-    await this.ensureSchema();
-    const current = await this.read(state.revision);
-    if ((current?.version ?? null) !== expectedVersion) throw new Error("releaseStateVersionConflict");
-    await this.dataSource.execute(
-      `INSERT INTO control_release_state (revision, version, state_json, updated_at)
-       VALUES (?, ?, ?, ?)
-       ON CONFLICT(revision) DO UPDATE SET
-         version = excluded.version,
-         state_json = excluded.state_json,
-         updated_at = excluded.updated_at`,
-      [state.revision, state.version, JSON.stringify(state), state.updatedAt],
-    );
-    return state;
-  }
 }

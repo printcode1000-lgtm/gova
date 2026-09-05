@@ -30,7 +30,7 @@ function uniqueUids(values: unknown[], actorUid: string) {
 }
 
 function orderNumber(details: OrderDetails) {
-  return String(details.order.order_number ?? details.order.id ?? "");
+  return String(details.order.orderNumber ?? details.order.id ?? "");
 }
 
 function partiesForSellerOrder(details: OrderDetails, sellerOrderId?: string) {
@@ -39,14 +39,14 @@ function partiesForSellerOrder(details: OrderDetails, sellerOrderId?: string) {
     (row) => String(row.id) === sellerOrderId,
   );
   return {
-    sellerUid: String(sellerOrder?.seller_id ?? ""),
-    providerUid: String(sellerOrder?.service_provider_id ?? ""),
+    sellerUid: String(sellerOrder?.sellerId ?? ""),
+    providerUid: String(sellerOrder?.serviceProviderId ?? ""),
   };
 }
 
 function itemProductName(details: OrderDetails, itemId?: string) {
   const item = details.orderItems.find((row) => String(row.id) === itemId);
-  return String(item?.product_name ?? "منتج");
+  return String(item?.productNameSnapshot ?? "منتج");
 }
 
 function customItemTitle(details: OrderDetails, customItemId?: string) {
@@ -56,36 +56,36 @@ function customItemTitle(details: OrderDetails, customItemId?: string) {
 
 function sellerOrderIdForItem(details: OrderDetails, itemId?: string) {
   const item = details.orderItems.find((row) => String(row.id) === itemId);
-  return String(item?.seller_order_id ?? "");
+  return String(item?.sellerOrderId ?? "");
 }
 
 function sellerOrderIdForCustomItem(details: OrderDetails, customItemId?: string) {
   const item = details.customItems.find((row) => String(row.id) === customItemId);
-  return String(item?.seller_order_id ?? "");
+  return String(item?.sellerOrderId ?? "");
 }
 
 function shipmentPartyUids(details: OrderDetails, shipmentId?: string) {
   const shipment = details.shipments.find((row) => String(row.id) === shipmentId);
   if (!shipment) {
     return {
-      buyerUid: String(details.order.buyer_id ?? ""),
+      buyerUid: String(details.order.buyerId ?? ""),
       carrierUid: "",
       sellerUids: [] as string[],
       providerUids: [] as string[],
     };
   }
   const shipmentItemIds = details.shipmentItems
-    .filter((row) => String(row.shipment_id) === String(shipment.id))
-    .map((row) => String(row.order_item_id ?? row.custom_request_item_id ?? ""));
+    .filter((row) => String(row.shipmentId) === String(shipment.id))
+    .map((row) => String(row.orderItemId ?? row.customRequestItemId ?? ""));
   const sellerOrderIds = new Set<string>();
   for (const item of details.orderItems) {
     if (shipmentItemIds.includes(String(item.id))) {
-      sellerOrderIds.add(String(item.seller_order_id ?? ""));
+      sellerOrderIds.add(String(item.sellerOrderId ?? ""));
     }
   }
   for (const item of details.customItems) {
     if (shipmentItemIds.includes(String(item.id))) {
-      sellerOrderIds.add(String(item.seller_order_id ?? ""));
+      sellerOrderIds.add(String(item.sellerOrderId ?? ""));
     }
   }
   const sellerUids: string[] = [];
@@ -96,8 +96,8 @@ function shipmentPartyUids(details: OrderDetails, shipmentId?: string) {
     if (parties.providerUid) providerUids.push(parties.providerUid);
   }
   return {
-    buyerUid: String(details.order.buyer_id ?? ""),
-    carrierUid: String(shipment.carrier_id ?? ""),
+    buyerUid: String(details.order.buyerId ?? ""),
+    carrierUid: String(shipment.carrierId ?? ""),
     sellerUids,
     providerUids,
   };
@@ -131,7 +131,7 @@ export async function issueOrderActionNotifications(input: {
   const actorUid = input.actorUid;
   const ctx = input.context ?? {};
   const grants = input.grants;
-  const buyerUid = String(details.order.buyer_id ?? "");
+  const buyerUid = String(details.order.buyerId ?? "");
   const parties = collectOrderPartyUids(details.sellerOrders);
   const number = orderNumber(details);
 
@@ -418,9 +418,9 @@ export async function issueOrderActionNotifications(input: {
       let shipmentId = ctx.shipmentId;
       if (!shipmentId && ctx.shipmentItemId) {
         const shipmentItem = details.shipmentItems.find(
-          (row: Record<string, unknown>) => String(row.id) === ctx.shipmentItemId,
+          (row) => String(row.id) === ctx.shipmentItemId,
         );
-        shipmentId = String(shipmentItem?.shipment_id ?? "");
+        shipmentId = String(shipmentItem?.shipmentId ?? "");
       }
       const shipmentParties = shipmentPartyUids(details, shipmentId);
       const templateByAction: Record<string, string> = {

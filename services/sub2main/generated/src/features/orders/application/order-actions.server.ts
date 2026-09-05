@@ -92,7 +92,7 @@ export async function executeOrderAction(orderId: string, body: ActionInput): Pr
     if (!details) return [] as string[];
     return resolveOrderUpdateRecipients(
       {
-        buyerId: details.order.buyer_id,
+        buyerId: details.order.buyerId,
         sellerOrders: details.sellerOrders,
         shipments: details.shipments,
         deliveryPlanCandidates: details.deliveryPlanCandidates,
@@ -222,7 +222,7 @@ export async function executeOrderAction(orderId: string, body: ActionInput): Pr
         orderId,
         quoteId: String(quote.id),
         status: "pending_buyer",
-        amount: Number(quote.total_shipping_price),
+        amount: Number(quote.totalShippingPrice),
         actorUid: body.uid,
       });
       return (
@@ -250,7 +250,7 @@ export async function executeOrderAction(orderId: string, body: ActionInput): Pr
         uids: details
           ? resolveOrderUpdateRecipients(
               {
-                buyerId: details.order.buyer_id,
+                buyerId: details.order.buyerId,
                 sellerOrders: details.sellerOrders,
                 shipments: details.shipments,
                 deliveryPlanCandidates: details.deliveryPlanCandidates,
@@ -262,7 +262,7 @@ export async function executeOrderAction(orderId: string, body: ActionInput): Pr
         planId: body.deliveryPlanId,
         quoteId: String(quote.id),
         status: "new_quote",
-        amount: Number(quote.total_shipping_price),
+        amount: Number(quote.totalShippingPrice),
         actorUid: body.uid,
       });
       return (
@@ -290,7 +290,7 @@ export async function executeOrderAction(orderId: string, body: ActionInput): Pr
         planId: String(plan.id),
         quoteId: body.deliveryPlanQuoteId,
         status: "accepted",
-        amount: Number(quote?.total_shipping_price ?? 0),
+        amount: Number(quote?.totalShippingPrice ?? 0),
         actorUid: body.uid,
       });
       return (
@@ -310,10 +310,10 @@ export async function executeOrderAction(orderId: string, body: ActionInput): Pr
       grantDeliveryPlan(notificationGrants, {
         uids: await recipientsForOrderUpdate(),
         orderId,
-        planId: String(quote.plan_id),
+        planId: String(quote.planId),
         quoteId: body.deliveryPlanQuoteId,
         status: "rejected",
-        amount: Number(quote.total_shipping_price),
+        amount: Number(quote.totalShippingPrice),
         actorUid: body.uid,
       });
       return (
@@ -336,7 +336,7 @@ export async function executeOrderAction(orderId: string, body: ActionInput): Pr
         uids: details
           ? resolveOrderUpdateRecipients(
               {
-                buyerId: details.order.buyer_id,
+                buyerId: details.order.buyerId,
                 sellerOrders: details.sellerOrders,
                 shipments: details.shipments,
                 deliveryPlanCandidates: details.deliveryPlanCandidates,
@@ -381,7 +381,7 @@ export async function executeOrderAction(orderId: string, body: ActionInput): Pr
         orderId,
         quoteId: String(quote.id),
         status: "accepted",
-        amount: Number(quote.total_shipping_price),
+        amount: Number(quote.totalShippingPrice),
         actorUid: body.uid,
       });
       return (
@@ -403,7 +403,7 @@ export async function executeOrderAction(orderId: string, body: ActionInput): Pr
         orderId,
         quoteId: String(quote.id),
         status: "rejected",
-        amount: Number(quote.total_shipping_price),
+        amount: Number(quote.totalShippingPrice),
         actorUid: body.uid,
       });
       return (

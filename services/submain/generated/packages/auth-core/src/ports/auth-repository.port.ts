@@ -13,10 +13,10 @@ export interface AuthUserRepositoryPort {
     phone: string;
     email: string | null;
     password: string;
-    last_login_at: string | null;
-    created_at: string;
-    updated_at: string;
-    deleted_at: string | null;
+    lastLoginAt: string | null;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string | null;
   }): Promise<void>;
   getByPhone(phone: string): Promise<AuthUserRecord | null>;
   getByUid(uid: string): Promise<AuthUserRecord | null>;

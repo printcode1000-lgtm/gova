@@ -1,14 +1,11 @@
 import 'server-only';
 
-import { controlReleaseStateDataSource } from '@asol/data-core/control-release-state';
-import {
-  SqlReleaseStateStore,
-  releaseReadinessStatusFromStore,
-} from '@asol/vercel-deploy-core';
+import { controlReleaseStateStore } from '@asol/data-core/control-release-state';
+import { releaseReadinessStatusFromStore } from '@asol/vercel-deploy-core';
 
 export type ReleaseReadinessStatus = 'pending' | 'ready' | 'failed';
 
-const store = new SqlReleaseStateStore(controlReleaseStateDataSource);
+const store = controlReleaseStateStore;
 
 /**
  * Whether one exact commit has finished deploying.

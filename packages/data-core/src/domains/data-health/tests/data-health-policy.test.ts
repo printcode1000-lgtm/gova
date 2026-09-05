@@ -18,7 +18,7 @@ import {
   stableHash,
 } from "@asol/data-health-core/server";
 import { DATA_HEALTH_METADATA_STATEMENTS } from "../db/metadata-schema";
-import { DATA_HEALTH_IMAGE_SOURCES } from "@asol/data-health-core";
+import { DATA_HEALTH_IMAGE_SOURCES } from "../db/image-source-registry";
 
 const base = {
   category: "image" as const,

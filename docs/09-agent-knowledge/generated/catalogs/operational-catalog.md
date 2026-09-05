@@ -33,6 +33,8 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run android:r8:validate` | `npx tsx packages/native-core/scripts/validate-android-r8-policy.ts` |
 | `npm run android:r8:verify-release` | `npm run android:preflight && npm run android:push:sync-assets && npm run android:backup:validate && npm run android:r8:validate && npx tsx packages/native-core/scripts/verify-android-r8-release.ts` |
 | `npm run api:inventory` | `npx tsx scripts/api-route-inventory.ts` |
+| `npm run api:transport:check` | `npx tsx scripts/api-transport-contract-check.ts` |
+| `npm run api:transport:inventory` | `npx tsx scripts/api-transport-inventory.ts` |
 | `npm run app:init` | `npx tsx scripts/generate-app-init-public.ts && npm run data-access:sync-public && npm run maplibre:sync` |
 | `npm run architecture:check` | `npx tsx scripts/architecture-check.ts` |
 | `npm run architecture:docs` | `npx tsx scripts/architecture/generate-architecture-docs.ts` |
@@ -191,6 +193,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:account-declarations` | `npx tsx packages/account-declarations/src/tests/index.test.ts` |
 | `npm run test:account-deletion-registry` | `npx tsx packages/data-core/src/domains/account-deletion/tests/account-deletion-registry.contract.test.ts` |
 | `npm run test:account-deletion-schema` | `cross-env NODE_OPTIONS=<redacted> npx tsx packages/data-core/src/domains/account-deletion/tests/account-deletion-query-schema.contract.test.ts` |
+| `npm run test:api-contract-core` | `npx tsx packages/api-contract-core/src/tests/index.test.ts` |
 | `npm run test:api-core` | `npx tsx src/core/api/tests/user-facing-api-error.test.ts && npx tsx src/core/api/tests/production-deploy-concurrency-logging.test.ts && npx tsx src/core/api/tests/compatibility-boundary.test.ts` |
 | `npm run test:architecture-core` | `npx tsx packages/architecture-core/src/tests/index.test.ts && npx tsx scripts/architecture/application-features-attack.test.ts` |
 | `npm run test:auth-core` | `npx tsx packages/auth-core/src/tests/index.test.ts` |

@@ -1,5 +1,5 @@
 import { assertProductsEnv, createProductsRuntime } from '@asol/products-composition';
-import { corsHeaders, errorResponse, preflight } from '../../lib/http';
+import { corsHeaders, errorResponse, preflight, jsonResponse } from '../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -29,7 +29,7 @@ export async function GET(request: Request): Promise<Response> {
           searchParams.get('mainCategoryId') ?? '',
           searchParams.get('subcategoryId') ?? '',
         );
-    return Response.json(data, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, data, 200);
   } catch (error) {
     return errorResponse(request, error);
   }

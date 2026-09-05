@@ -1,4 +1,4 @@
-import { apiSuccess, mapServiceError } from "@/core/api/api-response";
+import { apiSuccess, mapServiceError, readJsonBody } from "@/core/api/api-response";
 import {
   notificationsServer,
   type NotificationTestInput,
@@ -14,11 +14,15 @@ export async function POST(request: Request) {
     async () => {
       try {
         const claims = assertSuperAdminRequest(request);
-        const body = (await request.json()) as NotificationTestInput;
+        const body = (await readJsonBody<unknown>(request)) as NotificationTestInput;
         return apiSuccess(
           await notificationsServer.sendTestNotification({
-            ...body,
             identity: { uid: claims.uid, phone: claims.phone },
+            requestId: body.requestId,
+            scenarioId: body.scenarioId,
+            title: body.title,
+            body: body.body,
+            routeHref: body.routeHref,
           }),
         );
       } catch (error) {

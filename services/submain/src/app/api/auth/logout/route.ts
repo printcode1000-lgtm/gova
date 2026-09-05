@@ -1,6 +1,6 @@
 import { assertSubmainEnv, createSubmainRuntime } from '@asol/submain-composition';
 
-import { businessErrorResponse, corsHeaders, preflight } from '../../../lib/http';
+import { businessErrorResponse, corsHeaders, preflight, jsonResponse } from '../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -11,7 +11,7 @@ export async function POST(request: Request): Promise<Response> {
     assertSubmainEnv();
 
     await auth.logout();
-    return Response.json({ ok: true }, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, { ok: true }, 200);
   } catch (error) {
     return businessErrorResponse(request, error);
   }

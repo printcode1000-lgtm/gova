@@ -31,7 +31,7 @@ import type {
   ProfileFulfillmentSettings,
   SaveProfileFulfillmentSettingsInput,
 } from "../../domain/profile-fulfillment-settings.entity";
-import type { UserProfileRow } from "./profile-service.interface";
+import type { ProfileDirectoryEntry } from "./profile-service.interface";
 
 export class ProfileApiService implements IProfileService {
   async getContacts(uid: string): Promise<ProfileContactsData> {
@@ -98,7 +98,7 @@ export class ProfileApiService implements IProfileService {
     limit: number,
     search?: string,
     minRating?: number,
-  ): Promise<UserProfileRow[]> {
+  ): Promise<ProfileDirectoryEntry[]> {
     const q = new URLSearchParams({
       categoryId: String(categoryId),
       subcategoryId: String(subcategoryId),
@@ -110,7 +110,7 @@ export class ProfileApiService implements IProfileService {
       q.set("minRating", String(minRating));
     }
     const route = `${ASOL_API_ROUTES.profile.usersBySpecialty}?${q}`;
-    return asolApi.get<UserProfileRow[]>(route);
+    return asolApi.get<ProfileDirectoryEntry[]>(route);
   }
 
   async getFulfillmentSettings(

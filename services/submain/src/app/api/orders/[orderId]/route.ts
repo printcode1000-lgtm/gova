@@ -1,6 +1,6 @@
 import { assertSubmainEnv, createSubmainRuntime } from '@asol/submain-composition';
 
-import { corsHeaders, orderDetailErrorResponse, preflight } from '../../../lib/http';
+import { corsHeaders, orderDetailErrorResponse, preflight, jsonResponse } from '../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -23,7 +23,7 @@ export async function GET(
     const { orderId } = await params;
     const { searchParams } = new URL(request.url);
     const detail = await orders.loadDetail(orderId, searchParams);
-    return Response.json(detail, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, detail, 200);
   } catch (error) {
     return orderDetailErrorResponse(request, error);
   }

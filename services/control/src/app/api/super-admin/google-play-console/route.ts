@@ -1,5 +1,6 @@
 import { googlePlayConsoleEnvironment, googlePlayConsoleService } from '@/control/google-play';
 import { runControlSuperAdminRoute } from '@/control/super-admin-route';
+import { controlJson } from '@/control/operational-route';
 
 /**
  * The disallowed-environment payload, byte for byte as the application sent it.
@@ -40,7 +41,7 @@ function unavailableSnapshot() {
 
 export async function GET(request: Request) {
   return runControlSuperAdminRoute(request, () => {
-    if (!googlePlayConsoleEnvironment().allowed) return Response.json(unavailableSnapshot());
+    if (!googlePlayConsoleEnvironment().allowed) return controlJson(unavailableSnapshot());
     return googlePlayConsoleService.snapshot();
   });
 }

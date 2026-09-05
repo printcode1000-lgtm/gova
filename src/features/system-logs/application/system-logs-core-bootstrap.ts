@@ -33,9 +33,6 @@ export function registerSystemLogsCoreBrowserPorts(): void {
         return () => window.removeEventListener('asol:native-crash', listener);
       },
     },
-    database: {
-      execute: async () => [],
-    },
     identity: {
       isSuperAdmin: () => false,
     },

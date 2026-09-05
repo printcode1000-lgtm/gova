@@ -1,6 +1,6 @@
 import { assertProfilesEnv, createProfilesRuntime } from '@asol/profiles-composition';
 
-import { corsHeaders, preflight, profileErrorResponse } from '../../../lib/http';
+import { corsHeaders, preflight, profileErrorResponse, jsonResponse } from '../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -13,7 +13,7 @@ export async function GET(request: Request): Promise<Response> {
 
     const uid = new URL(request.url).searchParams.get('uid') ?? '';
     const images = await database.profiles.getStoreImages(uid);
-    return Response.json(images, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, images, 200);
   } catch (error) {
     return profileErrorResponse(request, error);
   }

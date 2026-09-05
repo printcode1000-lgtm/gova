@@ -1,7 +1,6 @@
 import { productsDataSource, profilesDataSource } from "../../../../core";
 import "server-only";
 import type { IDatabaseClient } from "../../../../core/database/database-client.interface";
-import type { UserProfileRow } from "../../../../core/database/profile/profile.schema";
 import type {
   ProfileContactPointRow,
   ProfileDeliveryCarrierRow,
@@ -10,7 +9,7 @@ import type {
   ProfileTrendingItemRow,
   ProfileWorkingHourRow,
 } from "../../../../core/database/profile/profile.schema";
-import type { ProfileContactsData } from "../../entities";
+import type { ProfileContactsData, ProfileDirectoryEntry } from "../../entities";
 import {
   EMPTY_PROFILE_SHOWCASE,
   EMPTY_STORE_DETAILS,
@@ -42,6 +41,33 @@ import {
 } from "../specialty-columns.server";
 import { ProfilePart3 } from "./profile-repository.part-03";
 import { phoneSearchKey } from "@asol/auth-core/phone";
+
+interface ProfileDirectoryPersistenceRow {
+  uid: string;
+  store_name: string;
+  store_description: string;
+  store_story: string;
+  custom_request_enabled: number | boolean;
+  trending_label: string;
+  primary_phone: string;
+  rating_average: number;
+  rating_count: number;
+}
+
+function mapProfileDirectoryRow(row: ProfileDirectoryPersistenceRow): ProfileDirectoryEntry {
+  return {
+    uid: String(row.uid ?? ""),
+    storeName: String(row.store_name ?? ""),
+    storeDescription: String(row.store_description ?? ""),
+    storeStory: String(row.store_story ?? ""),
+    customRequestEnabled: Boolean(row.custom_request_enabled),
+    trendingLabel: String(row.trending_label ?? ""),
+    primaryPhone: String(row.primary_phone ?? ""),
+    ratingAverage: Number(row.rating_average ?? 0),
+    ratingCount: Number(row.rating_count ?? 0),
+  };
+}
+
 const DAY_TO_INDEX = new Map<WorkingDayId, number>(
   WORKING_DAY_LABELS.map((day, index) => [day.id, index]),
 );
@@ -220,7 +246,7 @@ export abstract class ProfilePart4 extends ProfilePart3 {
     limit: number,
     search?: string,
     minRating?: number,
-  ): Promise<UserProfileRow[]> {
+  ): Promise<ProfileDirectoryEntry[]> {
     const searchText = normalizeSearchText(search ?? "");
     const categoryRows = (await this.database.execute(
       `SELECT DISTINCT uid FROM profile_search_categories c
@@ -253,14 +279,24 @@ export abstract class ProfilePart4 extends ProfilePart3 {
       profileParams.push(minRating * 100);
     }
     profileParams.push(Math.max(1, limit), Math.max(0, offset));
-    return (await this.database.execute(
-      `SELECT p.*
+    const rows = (await this.database.execute(
+      `SELECT
+         p.uid,
+         p.store_name,
+         p.store_description,
+         p.store_story,
+         p.custom_request_enabled,
+         p.trending_label,
+         p.primary_phone,
+         p.rating_average,
+         p.rating_count
        FROM user_profiles p
        WHERE ${profileWhere.join(" AND ")}
        ORDER BY p.store_name COLLATE NOCASE ASC, p.uid ASC
        LIMIT ? OFFSET ?`,
       profileParams,
-    )) as UserProfileRow[];
+    )) as ProfileDirectoryPersistenceRow[];
+    return rows.map(mapProfileDirectoryRow);
   }
 
   protected async saveDeliveryCarriers(

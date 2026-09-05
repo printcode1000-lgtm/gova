@@ -11,7 +11,7 @@ Machine-readable capability ownership reference. Each capability has exactly one
 
 ## Scope
 
-All 47 sealed `@asol/*` packages. Application-layer orchestration lives under `src/features/*` — see [application-feature-catalog.md](./application-feature-catalog.md).
+All 48 sealed `@asol/*` packages. Application-layer orchestration lives under `src/features/*` — see [application-feature-catalog.md](./application-feature-catalog.md).
 
 ## Source of Truth
 
@@ -35,6 +35,24 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 | **Canonical Documents** | [package-catalog.md](./package-catalog.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 **Source Map:** `packages/architecture-core/` · registry: `packages/architecture-core/src/registry/capability-registry.ts`
+
+---
+
+## Application-owned JSON transport naming and validation contracts
+
+| Field | Value |
+|---|---|
+| **Capability** | Application-owned JSON transport naming and validation contracts |
+| **Owner Package** | `@asol/api-contract-core` |
+| **Architectural Layer** | capability |
+| **Public Gateway** | `@asol/api-contract-core` · `@asol/api-contract-core/server` |
+| **Allowed Consumers** | Application via declared doors; composition packages wire ports |
+| **Composition Root** | `N/A` (capability must not import `@/`) |
+| **Infrastructure Owner** | none (pure logic or ports) |
+| **Status** | CLOSED (sealed package with registry entry) |
+| **Canonical Documents** | [package-catalog.md](./package-catalog.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+
+**Source Map:** `packages/api-contract-core/` · registry: `packages/architecture-core/src/registry/capability-registry.ts`
 
 ---
 
@@ -567,7 +585,7 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 | **Capability** | Product domain logic |
 | **Owner Package** | `@asol/product-core` |
 | **Architectural Layer** | capability |
-| **Public Gateway** | `@asol/product-core` · `@asol/product-core/server` |
+| **Public Gateway** | `@asol/product-core` |
 | **Allowed Consumers** | Application via declared doors; composition packages wire ports |
 | **Composition Root** | `N/A` (capability must not import `@/`) |
 | **Infrastructure Owner** | none (pure logic or ports) |
@@ -870,9 +888,9 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 
 | Metric | Value |
 |---|---|
-| Sealed packages | 47 |
+| Sealed packages | 48 |
 | Layer `bridge` | 1 |
-| Layer `capability` | 37 |
+| Layer `capability` | 38 |
 | Layer `composition` | 7 |
 | Layer `declarations` | 1 |
 | Layer `enforcement` | 1 |

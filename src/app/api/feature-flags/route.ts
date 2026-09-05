@@ -1,4 +1,4 @@
-import { apiError, apiSuccess } from "@/core/api/api-response";
+import { apiError, apiSuccess, readJsonBody } from "@/core/api/api-response";
 import { featureFlagService } from "@/features/feature-flags/server";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
@@ -33,7 +33,7 @@ export async function GET(request: Request) {
 
 export async function PUT(request: Request) {
   return runTracedBusinessRoute("PUT /api/feature-flags", async () => {
-    const body = (await request.json()) as {
+    const body = (await readJsonBody<unknown>(request)) as {
       identity?: { uid: string; phone: string };
       key?: string;
       enabled?: boolean;

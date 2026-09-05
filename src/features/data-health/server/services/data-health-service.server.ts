@@ -13,6 +13,7 @@ import type {
   DataHealthCleanupResult,
   DataHealthReport,
   DataHealthSchemaComparison,
+  DataHealthQuarantineRecordDto,
 } from "@asol/data-health-core";
 import { dataHealthRepository } from "@asol/data-core/data-health";
 import { schemaComparisonRepository } from "@asol/data-core/data-health";
@@ -21,11 +22,11 @@ function text(value: unknown): string {
   return String(value ?? "").trim();
 }
 
-function quarantineEntryResourceType(entry: Record<string, unknown>) {
+function quarantineEntryResourceType(entry: DataHealthQuarantineRecordDto) {
   if (
-    text(entry.resource_type) === "record" ||
-    (text(entry.database_name) === "profile" &&
-      text(entry.table_name) === "profile_images")
+    text(entry.resourceType) === "record" ||
+    (text(entry.databaseName) === "profile" &&
+      text(entry.tableName) === "profile_images")
   ) {
     return "record" as const;
   }
@@ -58,13 +59,13 @@ export class DataHealthService {
     );
     if (
       !entry ||
-      text(entry.released_at) ||
-      text(entry.deleted_at) ||
-      text(entry.resource_type) !== "image"
+      text(entry.releasedAt) ||
+      text(entry.deletedAt) ||
+      text(entry.resourceType) !== "image"
     ) {
       throw new Error("dataHealthQuarantineInvalid");
     }
-    if (Date.parse(text(entry.eligible_for_deletion_at)) > Date.now()) {
+    if (Date.parse(text(entry.eligibleForDeletionAt)) > Date.now()) {
       throw new Error("dataHealthQuarantineNotEligible");
     }
     const report = await dataHealthRepository.scan();
@@ -75,15 +76,15 @@ export class DataHealthService {
     );
     if (!finding) throw new Error("dataHealthQuarantineNoLongerOrphan");
     await imageStorageOrchestrator.deleteByKey(
-      text(entry.storage_profile_id),
-      text(entry.resource_key),
+      text(entry.storageProfileId),
+      text(entry.resourceKey),
     );
     const now = new Date().toISOString();
     await dataHealthRepository.markQuarantineDeleted(input.quarantineId, now);
     await dataHealthRepository.addManualAudit({
       adminUid: input.adminUid,
       action: "delete-storage-object",
-      recordId: text(entry.resource_key),
+      recordId: text(entry.resourceKey),
       fingerprint: text(entry.fingerprint),
       status: "cleaned",
     });
@@ -95,7 +96,7 @@ export class DataHealthService {
     const entry = await dataHealthRepository.getQuarantineEntry(
       input.quarantineId,
     );
-    if (!entry || text(entry.released_at) || text(entry.deleted_at)) {
+    if (!entry || text(entry.releasedAt) || text(entry.deletedAt)) {
       throw new Error("dataHealthQuarantineInvalid");
     }
     const now = new Date().toISOString();
@@ -103,7 +104,7 @@ export class DataHealthService {
     await dataHealthRepository.addManualAudit({
       adminUid: input.adminUid,
       action: "release-quarantine",
-      recordId: text(entry.resource_key) || input.quarantineId,
+      recordId: text(entry.resourceKey) || input.quarantineId,
       fingerprint: text(entry.fingerprint),
       status: "cleaned",
     });
@@ -126,12 +127,12 @@ export class DataHealthService {
       const id = text(entry.id);
       const fingerprint = text(entry.fingerprint);
       const resourceType = quarantineEntryResourceType(entry);
-      const recordId = text(entry.record_id) || text(entry.resource_key) || id;
+      const recordId = text(entry.recordId) || text(entry.resourceKey) || id;
       try {
         if (resourceType === "image") {
           await imageStorageOrchestrator.deleteByKey(
-            text(entry.storage_profile_id),
-            text(entry.resource_key),
+            text(entry.storageProfileId),
+            text(entry.resourceKey),
           );
           deletedStorageObjects += 1;
         } else if (resourceType === "record") {
@@ -317,11 +318,11 @@ export class DataHealthService {
   }): Promise<DataHealthCleanupResult> {
     assertDataHealthAllowed();
     const plan = await dataHealthRepository.getCleanupPlan(input.planId);
-    if (!plan || text(plan.admin_uid) !== input.adminUid) {
+    if (!plan || text(plan.adminUid) !== input.adminUid) {
       throw new Error("dataHealthPlanInvalid");
     }
-    if (text(plan.consumed_at)) throw new Error("dataHealthPlanConsumed");
-    if (Date.parse(text(plan.expires_at)) <= Date.now()) {
+    if (text(plan.consumedAt)) throw new Error("dataHealthPlanConsumed");
+    if (Date.parse(text(plan.expiresAt)) <= Date.now()) {
       throw new Error("dataHealthPlanExpired");
     }
     const environment = resolveDataHealthExecutionContext().environment;
@@ -329,14 +330,14 @@ export class DataHealthService {
       throw new Error("dataHealthEnvironmentChanged");
     }
 
-    const issueIds = JSON.parse(text(plan.issue_ids_json)) as string[];
+    const issueIds = JSON.parse(text(plan.issueIdsJson)) as string[];
     if (
       input.confirmationText !==
       cleanupConfirmationText(environment, issueIds.length)
     ) {
       throw new Error("dataHealthCleanupConfirmationRequired");
     }
-    const snapshots = JSON.parse(text(plan.snapshots_json)) as Record<
+    const snapshots = JSON.parse(text(plan.snapshotsJson)) as Record<
       string,
       string
     >;

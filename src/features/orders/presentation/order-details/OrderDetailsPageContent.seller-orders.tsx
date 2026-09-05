@@ -1,5 +1,6 @@
 "use client";
 
+import type { SellerOrderDto } from "@asol/orders-core";
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -40,7 +41,7 @@ import {
   sellerFulfillmentShippingSummary,
   statusLabel,
 } from "../order-labels";
-import type { DbRow, OrderDetails, OrderRole } from "../order-types";
+import type { OrderDetails, OrderRole } from "../order-types";
 
 import { RunAction, text, isPendingSellerResponse } from "./OrderDetailsPageContent.navigation-summary";
 import { ShippingQuotePanel, CustomRequestRow } from "./OrderDetailsPageContent.shipping-quotes";
@@ -63,7 +64,7 @@ export function SellerOrderCard({ id,
   busyAction,
   runAction,
 }: {
-  sellerOrder: DbRow;
+  sellerOrder: SellerOrderDto;
   details: OrderDetails;
   sessionUid: string;
   currency: string;
@@ -72,26 +73,26 @@ export function SellerOrderCard({ id,
   busyAction: string;
   runAction: RunAction;
 } & { id?: string }) {
-  const sellerId = String(sellerOrder.seller_id ?? "");
+  const sellerId = String(sellerOrder.sellerId ?? "");
   const carrierId = carrierFromSellerOrder(sellerOrder, [
     ...details.orderItems,
     ...details.customItems,
   ]);
   const sellerItems = details.orderItems.filter(
-    (item) => String(item.seller_order_id) === String(sellerOrder.id),
+    (item) => String(item.sellerOrderId) === String(sellerOrder.id),
   );
   const customItems = details.customItems.filter(
-    (item) => String(item.seller_order_id) === String(sellerOrder.id),
+    (item) => String(item.sellerOrderId) === String(sellerOrder.id),
   );
   const sellerProfile = details.profiles[sellerId];
   const carrierProfile = carrierId ? details.profiles[carrierId] : null;
   const isSeller = admin || sessionUid === sellerId;
   const isCarrier = admin || (Boolean(carrierId) && sessionUid === carrierId);
   const shippingQuotes = details.shippingQuotes.filter(
-    (quote) => String(quote.seller_order_id) === String(sellerOrder.id),
+    (quote) => String(quote.sellerOrderId) === String(sellerOrder.id),
   );
   const shipmentExists = details.shipments.some(
-    (shipment) => String(shipment.carrier_id ?? "") === carrierId,
+    (shipment) => String(shipment.carrierId ?? "") === carrierId,
   );
   const unifiedPlan = details.deliveryPlans[0];
   const unifiedPlanActive =
@@ -106,7 +107,7 @@ export function SellerOrderCard({ id,
   const needsCarrierLink = isSeller && !carrierId && !unifiedPlanActive;
   const showFulfillmentEdit =
     isSeller && !["cancelled", "closed"].includes(String(sellerOrder.status));
-  const orderId = String(details.order.id ?? sellerOrder.order_id ?? "");
+  const orderId = String(details.order.id ?? sellerOrder.orderId ?? "");
   const fulfillmentSnapshot = parseSellerOrderFulfillmentSnapshot(sellerOrder);
 
   return (

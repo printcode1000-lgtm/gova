@@ -22,8 +22,8 @@ import type {
   ProfileFulfillmentSettings,
   SaveProfileFulfillmentSettingsInput,
 } from "../../domain/profile-fulfillment-settings.entity";
-import type { UserProfileRow } from "../../domain/user-profile-row.entity";
-export type { UserProfileRow };
+import type { ProfileDirectoryEntry } from "../../domain/profile-directory-entry.entity";
+export type { ProfileDirectoryEntry };
 
 
 export interface IProfileService {
@@ -49,5 +49,5 @@ export interface IProfileService {
     limit: number,
     search?: string,
     minRating?: number,
-  ): Promise<UserProfileRow[]>;
+  ): Promise<ProfileDirectoryEntry[]>;
 }

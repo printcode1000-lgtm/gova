@@ -7,8 +7,7 @@ import {
 } from '../domain/constants';
 import type { SystemLogInput } from '../domain/entities';
 import { sanitizePersistentSystemLog } from '../sanitization/sanitizer';
-import { systemLogsEnvironment } from '../ports';
-import { systemLogsRepository } from './repository';
+import { systemLogsEnvironment, systemLogsPersistence } from '../ports';
 import { emitTerminalSystemLog } from './terminal-logger';
 import { evaluateAlerts } from './alert-evaluator';
 import { publishSystemLogEvent } from './stream-hub';
@@ -155,9 +154,9 @@ export class PersistentSystemLogService {
   ) {
     const sanitized = sanitizePersistentSystemLog(input, provenance);
     emitTerminalSystemLog(sanitized, true);
-    const id = await systemLogsRepository.add(sanitized);
+    const id = await systemLogsPersistence().add(sanitized);
     await this.applyRetention();
-    const page = await systemLogsRepository.list({ limit: 1 });
+    const page = await systemLogsPersistence().list({ limit: 1 });
     const entry = page.items.find((item) => item.id === id) ?? page.items[0];
     if (entry) {
       publishSystemLogEvent(entry);
@@ -174,21 +173,21 @@ export class PersistentSystemLogService {
   }
 
   async list(options = {}) {
-    return systemLogsRepository.list(options);
+    return systemLogsPersistence().list(options);
   }
 
   async summary() {
-    return systemLogsRepository.summary();
+    return systemLogsPersistence().summary();
   }
 
   async clear(level?: string) {
-    return systemLogsRepository.clear(level);
+    return systemLogsPersistence().clear(level);
   }
 
   async applyRetention() {
     const days = systemLogsEnvironment().retentionDays();
     const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1_000).toISOString();
-    await systemLogsRepository.pruneOlderThan(cutoff);
+    await systemLogsPersistence().pruneOlderThan(cutoff);
   }
 }
 

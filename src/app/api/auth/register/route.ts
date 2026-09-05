@@ -1,4 +1,4 @@
-import { apiSuccess, mapServiceError } from '@/core/api/api-response';
+import { apiSuccess, mapServiceError, readJsonBody } from '@/core/api/api-response';
 import { authService } from '@/features/auth/server';
 import type { RegistrationFormData } from '@asol/auth-core';
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
@@ -6,7 +6,7 @@ import { runTracedBusinessRoute } from '@/core/api/traced-route';
 export async function POST(request: Request) {
   return runTracedBusinessRoute('POST /api/auth/register', async () => {
     try {
-      const body = (await request.json()) as RegistrationFormData;
+      const body = (await readJsonBody<unknown>(request)) as RegistrationFormData;
       const result = await authService.register(body);
       return apiSuccess(result);
     } catch (error) {

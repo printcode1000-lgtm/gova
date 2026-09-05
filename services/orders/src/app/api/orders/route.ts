@@ -1,6 +1,6 @@
 import { assertOrdersEnv, createOrdersRuntime } from '@asol/orders-composition';
 import { parseOrderListQuery } from '@asol/orders-core';
-import { corsHeaders, orderErrorResponse, preflight } from '../../lib/http';
+import { corsHeaders, orderErrorResponse, preflight, jsonResponse } from '../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -40,7 +40,7 @@ export async function GET(request: Request): Promise<Response> {
       offset,
       isAdmin: actor.role === 'admin',
     });
-    return Response.json(data, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, data, 200);
   } catch (error) {
     return orderErrorResponse(request, error);
   }

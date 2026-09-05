@@ -1,5 +1,6 @@
 "use client";
 
+import type { OrderDto, ShipmentDto, ShipmentItemDto } from "@asol/orders-core";
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -39,7 +40,7 @@ import {
   queryWithActor,
   statusLabel,
 } from "../order-labels";
-import type { DbRow, OrderDetails, OrderRole } from "../order-types";
+import type { OrderDetails, OrderRole } from "../order-types";
 
 import { RunAction, text } from "./OrderDetailsPageContent.navigation-summary";
 import { shipmentActionAvailability } from "./shipment-action-model";
@@ -51,7 +52,7 @@ export function OrderLevelActions({ id,
   busyAction,
   runAction,
 }: {
-  order: DbRow;
+  order: OrderDto;
   isBuyer: boolean;
   canRejectAnyDelivery: boolean;
   busyAction: string;
@@ -61,7 +62,7 @@ export function OrderLevelActions({ id,
     <section id={id} className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm">
       <h2 id="orders-presentation-order-details-orderdetailspagecontent-shipments-heading-2-stivmh" className="font-bold">{text.orderActions}</h2>
       <div id="orders-presentation-order-details-orderdetailspagecontent-shipments-div-3-a89d4p" className="mt-3 space-y-2">
-        {isBuyer && canCancelStatus(order.calculated_status) ? (
+        {isBuyer && canCancelStatus(order.calculatedStatus) ? (
           <OrderActionButton elementScope="order-details-page-content-shipments-order-level-actions-order-action-button-e82367"
             action="buyer_cancel_order"
             busyAction={busyAction}
@@ -131,7 +132,7 @@ export function ShipmentCard({ id,
   busyAction,
   runAction,
 }: {
-  shipment: DbRow;
+  shipment: ShipmentDto;
   details: OrderDetails;
   sessionUid: string;
   admin: boolean;
@@ -139,10 +140,10 @@ export function ShipmentCard({ id,
   runAction: RunAction;
 } & { id?: string }) {
   const shipmentId = String(shipment.id);
-  const carrierId = String(shipment.carrier_id ?? "");
+  const carrierId = String(shipment.carrierId ?? "");
   const isCarrier = admin || sessionUid === carrierId;
   const shipmentItems = details.shipmentItems.filter(
-    (item) => String(item.shipment_id) === shipmentId,
+    (item) => String(item.shipmentId) === shipmentId,
   );
   const {
     canReceive,
@@ -240,7 +241,7 @@ export function ShipmentItemRow({ id,
   busyAction,
   runAction,
 }: {
-  shipmentItem: DbRow;
+  shipmentItem: ShipmentItemDto;
   details: OrderDetails;
   isCarrier: boolean;
   busyAction: string;
@@ -248,9 +249,9 @@ export function ShipmentItemRow({ id,
 } & { id?: string }) {
   const shipmentItemId = String(shipmentItem.id);
   const orderItem = details.orderItems.find(
-    (item) => String(item.id) === String(shipmentItem.order_item_id),
+    (item) => String(item.id) === String(shipmentItem.orderItemId),
   );
-  const title = String(orderItem?.product_name_snapshot ?? text.product);
+  const title = String(orderItem?.productNameSnapshot ?? text.product);
   return (
     <div id={id} className="rounded-lg bg-background p-2 text-sm">
       <div className="flex flex-wrap items-center justify-between gap-2">

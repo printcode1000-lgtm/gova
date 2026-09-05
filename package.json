@@ -284,7 +284,10 @@
     "test:route-ownership": "npx tsx scripts/tests/route-ownership-coverage.test.ts",
     "smoke:owned-reads": "npx tsx scripts/check-owned-route-reads.ts",
     "test:mirror-status-parity": "npx tsx scripts/tests/mirror-status-parity.test.ts",
-    "test:service-cors": "npx tsx scripts/tests/service-cors-boundary.test.ts"
+    "test:service-cors": "npx tsx scripts/tests/service-cors-boundary.test.ts",
+    "test:api-contract-core": "npx tsx packages/api-contract-core/src/tests/index.test.ts",
+    "api:transport:inventory": "npx tsx scripts/api-transport-inventory.ts",
+    "api:transport:check": "npx tsx scripts/api-transport-contract-check.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1075.0",

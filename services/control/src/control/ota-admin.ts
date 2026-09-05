@@ -1,5 +1,7 @@
 import 'server-only';
 
+import { jsonContractResponse } from '@asol/api-contract-core/server';
+
 import { configureOtaCore, otaReleaseService } from '@asol/ota-core/admin';
 import { createControlOtaReleaseRepository } from '@asol/data-core/control-ota';
 import { persistentSystemLogService } from '@/features/system-logs/server/services/persistent-system-log-service.server';
@@ -19,5 +21,5 @@ export { otaReleaseService };
 export function otaError(error: unknown): Response {
   const message = error instanceof Error ? error.message : 'Internal Server Error';
   const mapped = businessApiErrorStatus(message);
-  return Response.json({ error: mapped.code }, { status: mapped.status });
+  return jsonContractResponse({ error: mapped.code }, { status: mapped.status });
 }

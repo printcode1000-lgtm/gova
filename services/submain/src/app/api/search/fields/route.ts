@@ -1,7 +1,7 @@
 import { assertSubmainEnv, createSubmainRuntime } from '@asol/submain-composition';
 import { isSearchCategorySelectionShaped } from '@/features/product-search/domain/product-search.request';
 
-import { corsHeaders, preflight, searchErrorResponse } from '../../../lib/http';
+import { corsHeaders, preflight, searchErrorResponse, jsonResponse } from '../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -18,13 +18,10 @@ export async function GET(request: Request): Promise<Response> {
       !isSearchCategorySelectionShaped(mainCategoryId, subcategoryId) ||
       !catalog.categories.resolveProductSelection(mainCategoryId, subcategoryId).valid
     ) {
-      return Response.json(
-        { error: 'invalidSearchCategory' },
-        { status: 400, headers: corsHeaders(request) },
-      );
+      return jsonResponse(request, { error: 'invalidSearchCategory' }, 400);
     }
     const fields = await search.fields(mainCategoryId, subcategoryId);
-    return Response.json({ fields }, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, { fields }, 200);
   } catch (error) {
     return searchErrorResponse(request, error);
   }

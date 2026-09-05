@@ -1,8 +1,8 @@
-import { apiError, apiSuccess } from "@/core/api/api-response";
+import { apiError, apiSuccess, readJsonBody } from "@/core/api/api-response";
 import { productReviewService } from "@/features/product/server";
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as { reviewId: string; uid: string };
+    const body = (await readJsonBody<unknown>(request)) as { reviewId: string; uid: string };
     return apiSuccess(
       await productReviewService.helpful(body.reviewId, body.uid),
     );

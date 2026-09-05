@@ -1,4 +1,4 @@
-import { apiSuccess, mapServiceError } from "@/core/api/api-response";
+import { apiSuccess, mapServiceError, readJsonBody } from "@/core/api/api-response";
 import { notificationsServer } from "@/features/notifications/server";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
@@ -25,7 +25,7 @@ export async function POST(request: Request) {
     "POST /api/notifications/preferences",
     async () => {
       try {
-        const body = (await request.json()) as {
+        const body = (await readJsonBody<unknown>(request)) as {
           uid: string;
           phone: string;
           pushEnabled: boolean;

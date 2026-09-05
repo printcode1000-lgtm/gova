@@ -1,4 +1,4 @@
-import { apiSuccess, mapServiceError } from "@/core/api/api-response";
+import { apiSuccess, mapServiceError, readJsonBody } from "@/core/api/api-response";
 import type { SaveProfileSpecialtiesInput } from "@/features/profile";
 import { profileService } from "@/features/profile/server";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
@@ -17,7 +17,7 @@ export async function GET(request: Request) {
 export async function PUT(request: Request) {
   return runTracedBusinessRoute("PUT /api/profile/specialties", async () => {
     try {
-      const body = (await request.json()) as SaveProfileSpecialtiesInput;
+      const body = (await readJsonBody<unknown>(request)) as SaveProfileSpecialtiesInput;
       return apiSuccess(await profileService.saveSpecialties(body));
     } catch (error) {
       return mapServiceError(error);

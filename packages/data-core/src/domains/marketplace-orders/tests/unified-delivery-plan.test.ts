@@ -70,8 +70,8 @@ async function main() {
     {
       stops: [
         {
-          sellerOrderId: first.seller_order_id,
-          sellerId: first.seller_id,
+          sellerOrderId: first.sellerOrderId,
+          sellerId: first.sellerId,
           originalCarrierId: "original-a-main",
           pickupAddress: { address: "A" },
           requiresLocationQuote: false,
@@ -80,8 +80,8 @@ async function main() {
           requiresSpecialVehicle: false,
         },
         {
-          sellerOrderId: second.seller_order_id,
-          sellerId: second.seller_id,
+          sellerOrderId: second.sellerOrderId,
+          sellerId: second.sellerId,
           originalCarrierId: "original-b-main",
           pickupAddress: { address: "B" },
           requiresLocationQuote: true,
@@ -134,13 +134,13 @@ async function main() {
   );
 
   await service.sellerAcceptItem(String(first.id), {
-    id: String(first.seller_id),
+    id: String(first.sellerId),
     role: "seller",
   });
   await assert.rejects(
     () =>
       service.sellerMarkItemPreparing(String(first.id), {
-        id: String(first.seller_id),
+        id: String(first.sellerId),
         role: "seller",
       }),
     /Unified delivery plan must be accepted/,
@@ -222,30 +222,30 @@ async function main() {
   );
 
   await service.sellerMarkItemPreparing(String(first.id), {
-    id: String(first.seller_id),
+    id: String(first.sellerId),
     role: "seller",
   });
   await service.sellerMarkItemReadyForShipping(String(first.id), {
-    id: String(first.seller_id),
+    id: String(first.sellerId),
     role: "seller",
   });
   await service.sellerAcceptItem(String(second.id), {
-    id: String(second.seller_id),
+    id: String(second.sellerId),
     role: "seller",
   });
   await service.sellerMarkItemPreparing(String(second.id), {
-    id: String(second.seller_id),
+    id: String(second.sellerId),
     role: "seller",
   });
   await service.sellerMarkItemReadyForShipping(String(second.id), {
-    id: String(second.seller_id),
+    id: String(second.sellerId),
     role: "seller",
   });
   await assert.rejects(
     () =>
       service.createSellerOrderShipment(
         String(order.id),
-        { sellerOrderId: String(first.seller_order_id) },
+        { sellerOrderId: String(first.sellerOrderId) },
         admin,
       ),
     /unified delivery shipment/,
@@ -279,8 +279,8 @@ async function main() {
     {
       stops: [
         {
-          sellerOrderId: fallbackOrder.first.seller_order_id,
-          sellerId: fallbackOrder.first.seller_id,
+          sellerOrderId: fallbackOrder.first.sellerOrderId,
+          sellerId: fallbackOrder.first.sellerId,
           originalCarrierId: "original-a-fallback",
           pickupAddress: { address: "A" },
           requiresLocationQuote: false,
@@ -288,8 +288,8 @@ async function main() {
           fallbackSpecialVehicleFee: 0,
         },
         {
-          sellerOrderId: fallbackOrder.second.seller_order_id,
-          sellerId: fallbackOrder.second.seller_id,
+          sellerOrderId: fallbackOrder.second.sellerOrderId,
+          sellerId: fallbackOrder.second.sellerId,
           originalCarrierId: "original-b-fallback",
           pickupAddress: { address: "B" },
           requiresLocationQuote: true,
@@ -335,8 +335,8 @@ async function main() {
     {
       stops: [
         {
-          sellerOrderId: changedOrder.first.seller_order_id,
-          sellerId: changedOrder.first.seller_id,
+          sellerOrderId: changedOrder.first.sellerOrderId,
+          sellerId: changedOrder.first.sellerId,
           originalCarrierId: "original-a-changed",
           pickupAddress: { address: "A" },
           requiresLocationQuote: false,
@@ -344,8 +344,8 @@ async function main() {
           fallbackSpecialVehicleFee: 0,
         },
         {
-          sellerOrderId: changedOrder.second.seller_order_id,
-          sellerId: changedOrder.second.seller_id,
+          sellerOrderId: changedOrder.second.sellerOrderId,
+          sellerId: changedOrder.second.sellerId,
           originalCarrierId: "original-b-changed",
           pickupAddress: { address: "B" },
           requiresLocationQuote: false,
@@ -414,8 +414,8 @@ async function main() {
     {
       stops: [
         {
-          sellerOrderId: hybridOrder.first.seller_order_id,
-          sellerId: hybridOrder.first.seller_id,
+          sellerOrderId: hybridOrder.first.sellerOrderId,
+          sellerId: hybridOrder.first.sellerId,
           originalCarrierId: provider.id,
           pickupAddress: { address: "A" },
           requiresLocationQuote: false,
@@ -424,8 +424,8 @@ async function main() {
           requiresSpecialVehicle: false,
         },
         {
-          sellerOrderId: hybridOrder.second.seller_order_id,
-          sellerId: hybridOrder.second.seller_id,
+          sellerOrderId: hybridOrder.second.sellerOrderId,
+          sellerId: hybridOrder.second.sellerId,
           originalCarrierId: providerTwo.id,
           pickupAddress: { address: "B" },
           requiresLocationQuote: false,
@@ -439,13 +439,13 @@ async function main() {
           providerId: provider.id,
           source: "linked",
           coverageScore: 1,
-          sellerIds: [hybridOrder.first.seller_id],
+          sellerIds: [hybridOrder.first.sellerId],
         },
         {
           providerId: providerTwo.id,
           source: "linked",
           coverageScore: 1,
-          sellerIds: [hybridOrder.second.seller_id],
+          sellerIds: [hybridOrder.second.sellerId],
         },
       ],
     },
@@ -501,7 +501,7 @@ async function main() {
     7_000,
   );
   for (const item of [hybridOrder.first, hybridOrder.second]) {
-    const seller = { id: String(item.seller_id), role: "seller" as const };
+    const seller = { id: String(item.sellerId), role: "seller" as const };
     await service.sellerAcceptItem(String(item.id), seller);
     await service.sellerMarkItemPreparing(String(item.id), seller);
     await service.sellerMarkItemReadyForShipping(String(item.id), seller);

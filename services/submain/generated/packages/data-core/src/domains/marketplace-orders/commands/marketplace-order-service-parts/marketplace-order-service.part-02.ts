@@ -135,7 +135,16 @@ export abstract class MarketplaceOrderPart2 extends MarketplaceOrderPart1 {
     );
     await this.audit(orderId, "order_item", iid, "created", actor, null, "new");
     await this.recalculateAll(orderId);
-    return this.one("SELECT * FROM order_items WHERE id=?", [iid]);
+    const created = await this.one(
+      "SELECT id,seller_order_id,seller_id,shipping_price FROM order_items WHERE id=?",
+      [iid],
+    );
+    return {
+      id: String(created.id),
+      sellerOrderId: String(created.seller_order_id),
+      sellerId: String(created.seller_id),
+      shippingPrice: Number(created.shipping_price ?? 0),
+    };
   }
 
   async addCustomRequestItem(orderId: string, input: any, actor: Actor) {
@@ -194,7 +203,15 @@ export abstract class MarketplaceOrderPart2 extends MarketplaceOrderPart1 {
       "waiting_for_seller_response",
     );
     await this.recalculateAll(orderId);
-    return this.one("SELECT * FROM custom_request_items WHERE id=?", [iid]);
+    const created = await this.one(
+      "SELECT id,seller_order_id,seller_id FROM custom_request_items WHERE id=?",
+      [iid],
+    );
+    return {
+      id: String(created.id),
+      sellerOrderId: String(created.seller_order_id),
+      sellerId: created.seller_id == null ? null : String(created.seller_id),
+    };
   }
 
   async addCustomRequestImage(itemId: string, input: any, actor: Actor) {

@@ -160,10 +160,11 @@
     "tsx": "4.23.12",
     "typescript": "5.9.3"
   },
-  "packageLockDigest": "610e74167169dde990d0ed2f5f6e3fd51152292fdb295f9b94796a39903b9b41",
+  "packageLockDigest": "055a36ca3086d9d2803f31a835a943afe1c5d6fb8ed235c6018f676f6e02aa22",
   "workspacePackages": {
     "account-bridge": "@asol/account-bridge@0.1.0",
     "account-declarations": "@asol/account-declarations@0.1.0",
+    "api-contract-core": "@asol/api-contract-core@0.1.0",
     "architecture-core": "@asol/architecture-core@0.1.0",
     "auth-core": "@asol/auth-core@0.1.0",
     "backup-core": "@asol/backup-core@0.1.0",

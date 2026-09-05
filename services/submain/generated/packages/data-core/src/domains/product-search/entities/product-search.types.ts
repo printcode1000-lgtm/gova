@@ -1,5 +1,5 @@
 import type { ProductRecord } from "@asol/product-core";
-import type { UserProfileRow } from "../../profile/entities/user-profile-row.entity";
+import type { ProfileDirectoryEntry } from "../../profile/entities/profile-directory-entry.entity";
 
 export type ProductSearchMode = "products" | "sellers";
 
@@ -77,7 +77,7 @@ export interface SellerSearchRequest {
 }
 
 export interface SellerSearchResult {
-  items: UserProfileRow[];
+  items: ProfileDirectoryEntry[];
   total: number;
   offset: number;
   limit: number;

@@ -8,6 +8,8 @@ import type { MarketplaceDb } from "../../marketplace-orders/ports/marketplace-o
 
 import { DATA_HEALTH_METADATA_STATEMENTS } from "../db/metadata-schema";
 import { stableHash } from "@asol/data-health-core/server";
+import type { DataHealthOrderPurgePlanRecordDto, DataHealthStorageDeletionTaskDto } from "@asol/data-health-core";
+import { mapOrderPurgePlanRow, mapStorageDeletionTaskRow } from "./data-health-record-mappers";
 
 type Row = Record<string, unknown>;
 
@@ -175,13 +177,13 @@ export class OrderPurgeRepository {
     );
   }
 
-  async getPlan(id: string): Promise<Row | null> {
+  async getPlan(id: string): Promise<DataHealthOrderPurgePlanRecordDto | null> {
     await this.ensureMetadata();
     const rows = (await profilesDataSource.execute(
       "SELECT * FROM data_health_order_purge_plans WHERE id=? LIMIT 1",
       [id],
     )) as Row[];
-    return rows[0] ?? null;
+    return rows[0] ? mapOrderPurgePlanRow(rows[0]) : null;
   }
 
   async createStorageTasks(
@@ -227,24 +229,26 @@ export class OrderPurgeRepository {
     });
   }
 
-  async pendingStorageTasks(purgeId?: string): Promise<Row[]> {
+  async pendingStorageTasks(purgeId?: string): Promise<DataHealthStorageDeletionTaskDto[]> {
     await this.ensureMetadata();
-    return (await profilesDataSource.execute(
+    const rows = (await profilesDataSource.execute(
       purgeId
         ? "SELECT * FROM data_health_storage_deletion_tasks WHERE purge_id=? AND status='pending' ORDER BY created_at"
         : "SELECT * FROM data_health_storage_deletion_tasks WHERE status='pending' ORDER BY created_at",
       purgeId ? [purgeId] : [],
     )) as Row[];
+    return rows.map(mapStorageDeletionTaskRow);
   }
 
-  async preparedStorageTasks(purgeId?: string): Promise<Row[]> {
+  async preparedStorageTasks(purgeId?: string): Promise<DataHealthStorageDeletionTaskDto[]> {
     await this.ensureMetadata();
-    return (await profilesDataSource.execute(
+    const rows = (await profilesDataSource.execute(
       purgeId
         ? "SELECT * FROM data_health_storage_deletion_tasks WHERE purge_id=? AND status='prepared' ORDER BY created_at"
         : "SELECT * FROM data_health_storage_deletion_tasks WHERE status='prepared' ORDER BY created_at",
       purgeId ? [purgeId] : [],
     )) as Row[];
+    return rows.map(mapStorageDeletionTaskRow);
   }
 
   async activateStorageTasks(purgeId: string, now: string) {

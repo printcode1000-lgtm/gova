@@ -1,4 +1,4 @@
-import type { UserProfileRow } from "@asol/data-core/profile";
+import type { ProfileDirectoryEntry } from "@asol/data-core/profile/entities";
 import type {
   SellerCardBadge,
   SellerCardViewModel,
@@ -13,7 +13,7 @@ function text(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";
 }
 
-function getOptional(row: UserProfileRow, key: string): unknown {
+function getOptional(row: ProfileDirectoryEntry, key: string): unknown {
   return (row as unknown as Record<string, unknown>)[key];
 }
 
@@ -30,35 +30,33 @@ function profileUrl(uid: string) {
   return `/profile?mode=view&uid=${encodeURIComponent(uid)}`;
 }
 
-function ratingValue(row: UserProfileRow): number | null {
+function ratingValue(row: ProfileDirectoryEntry): number | null {
   const directValue =
     getOptional(row, "averageRating") ??
-    getOptional(row, "avgRating") ??
-    getOptional(row, "avg_rating");
+    getOptional(row, "avgRating");
   const directParsed = Number(directValue);
   if (Number.isFinite(directParsed) && directParsed > 0) return directParsed;
 
-  const storedValue = getOptional(row, "ratingAverage") ?? getOptional(row, "rating_average");
+  const storedValue = row.ratingAverage;
   const parsed = Number(storedValue);
   if (Number.isFinite(parsed) && parsed > 0) return parsed / 100;
   return null;
 }
 
-export function sellerCardTitle(row: UserProfileRow): string {
-  return text(row.storeName) || text(getOptional(row, "store_name"));
+export function sellerCardTitle(row: ProfileDirectoryEntry): string {
+  return text(row.storeName);
 }
 
-export function sellerCardAvatar(row: UserProfileRow): string {
+export function sellerCardAvatar(row: ProfileDirectoryEntry): string {
   const images = {} as StoreImagesLike;
   return (
     text(getOptional(row, "avatarUrl")) ||
-    text(images.avatarUrl) ||
-    text(getOptional(row, "avatar_url"))
+    text(images.avatarUrl)
   );
 }
 
 export function createSellerCardViewModel(
-  row: UserProfileRow,
+  row: ProfileDirectoryEntry,
   options: {
     badge?: string;
     subtitle?: string;
@@ -69,8 +67,7 @@ export function createSellerCardViewModel(
   const identityLabel =
     title ||
     text(getOptional(row, "registrationPhone")) ||
-    text(row.primaryPhone) ||
-    text(getOptional(row, "primary_phone"));
+    text(row.primaryPhone);
   const rating = ratingValue(row);
   const badges: SellerCardBadge[] = [];
 
@@ -83,9 +80,7 @@ export function createSellerCardViewModel(
     subtitle: options.subtitle ?? "",
     description:
       text(row.storeDescription) ||
-      text(getOptional(row, "store_description")) ||
-      text(row.storeStory) ||
-      text(getOptional(row, "store_story")),
+      text(row.storeStory),
     avatarUrl: sellerCardAvatar(row),
     coverUrl: text(getOptional(row, "coverUrl")) || text(images.coverUrl),
     initials: initialsFromName(title),

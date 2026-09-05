@@ -1,5 +1,6 @@
 "use client";
 
+import type { OrderDto } from "@asol/orders-core";
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -39,7 +40,7 @@ import {
   queryWithActor,
   statusLabel,
 } from "../order-labels";
-import type { DbRow, OrderDetails, OrderRole } from "../order-types";
+import type { OrderDetails, OrderRole } from "../order-types";
 
 export type RunAction = (
   action: string,
@@ -120,7 +121,7 @@ export function OrderSummary({ id,
   currency,
   hasPendingShippingQuote,
 }: {
-  order: DbRow;
+  order: OrderDto;
   buyerAddress: string;
   buyerPhone: string;
   currency: string;
@@ -131,7 +132,7 @@ export function OrderSummary({ id,
       <div id="orders-presentation-order-details-orderdetailspagecontent-navigation-summary-div-3-bbu7vq" className="rounded-xl border border-outline-variant bg-surface p-4">
         <p id="orders-presentation-order-details-orderdetailspagecontent-navigation-summary-text-4-u6ivo2" className="text-sm text-muted-foreground">{text.total}</p>
         <p id="orders-presentation-order-details-orderdetailspagecontent-navigation-summary-text-5-6pe0uw" className="mt-1 text-xl font-bold">
-          {formatMoney(order.grand_total, currency)}
+          {formatMoney(order.grandTotal, currency)}
         </p>
         {hasPendingShippingQuote ? (
           <p id="orders-presentation-order-details-orderdetailspagecontent-navigation-summary-text-6-d9duma" className="mt-2 text-xs leading-5 text-warning">
@@ -142,7 +143,7 @@ export function OrderSummary({ id,
       <div id="orders-presentation-order-details-orderdetailspagecontent-navigation-summary-div-7-f99vap" className="rounded-xl border border-outline-variant bg-surface p-4">
         <p id="orders-presentation-order-details-orderdetailspagecontent-navigation-summary-text-8-zbgg3g" className="text-sm text-muted-foreground">{text.remaining}</p>
         <p id="orders-presentation-order-details-orderdetailspagecontent-navigation-summary-text-9-uknmyl" className="mt-1 text-xl font-bold">
-          {formatMoney(order.remaining_total, currency)}
+          {formatMoney(order.remainingTotal, currency)}
         </p>
       </div>
       <div id="orders-presentation-order-details-orderdetailspagecontent-navigation-summary-div-10-ja0dbh" className="rounded-xl border border-outline-variant bg-surface p-4">

@@ -1,6 +1,6 @@
 import { assertProfilesEnv, createProfilesRuntime } from '@asol/profiles-composition';
 
-import { corsHeaders, preflight, profileErrorResponse } from '../../../../lib/http';
+import { corsHeaders, preflight, profileErrorResponse, jsonResponse } from '../../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -16,7 +16,7 @@ export async function GET(
 
     const { profileId } = await context.params;
     const limits = images.getProfile(profileId);
-    return Response.json(limits, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, limits, 200);
   } catch (error) {
     return profileErrorResponse(request, error);
   }

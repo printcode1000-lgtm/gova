@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 import {
   ACCOUNT_DELETION_IMAGE_SOURCES,
   ACCOUNT_DELETION_REGISTRY_VERSION,
-} from '@asol/auth-core';
+} from '../account-deletion-registry.persistence';
 import {
   DEFAULT_MIGRATION_SCAN_SOURCES,
   evaluateRegistryCoverage,

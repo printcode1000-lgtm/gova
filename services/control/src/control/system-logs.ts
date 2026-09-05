@@ -1,5 +1,7 @@
 import 'server-only';
 
+import { jsonContractResponse } from '@asol/api-contract-core/server';
+
 import { createSseStream, isIngestRateLimited, normalizeIngestPayload, persistentSystemLogService, readBoundedJsonBody, validateIngestBatchSize } from '@asol/system-logs-core/server';
 import { registerControlSystemLogPersistence } from '@/features/system-logs/server/control-persistence.server';
 import { extractSessionToken, verifySignedSessionToken } from '@asol/auth-core/session';
@@ -28,10 +30,10 @@ export function assertControlSystemLogAccess(request: Request): void {
  */
 export function systemLogError(error: unknown): Response {
   const message = error instanceof Error ? error.message : 'Internal Server Error';
-  if (message === 'forbidden') return Response.json({ error: 'forbidden' }, { status: 403 });
+  if (message === 'forbidden') return jsonContractResponse({ error: 'forbidden' }, { status: 403 });
   if (message === 'sessionTokenInvalid' || message === 'sessionTokenExpired') {
-    return Response.json({ error: message }, { status: 401 });
+    return jsonContractResponse({ error: message }, { status: 401 });
   }
   const mapped = businessApiErrorStatus(message);
-  return Response.json({ error: mapped.code }, { status: mapped.status });
+  return jsonContractResponse({ error: mapped.code }, { status: mapped.status });
 }

@@ -2,7 +2,7 @@ import { apiSuccess, mapServiceError } from "@/core/api/api-response";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 import { authService } from "@/features/auth/server";
 import { parseUsersBySpecialtyQuery } from "@/features/profile";
-import { profileService } from "@/features/profile/server";
+import { profileService, toProfileDirectoryEntry } from "@/features/profile/server";
 
 export async function GET(request: Request) {
   return runTracedBusinessRoute("GET /api/profile/users-by-specialty", async () => {
@@ -23,11 +23,10 @@ export async function GET(request: Request) {
             profileService.getStoreImages(user.uid),
             authService.getUserPhone(user.uid),
           ]);
-          return {
-            ...user,
-            avatarUrl: images.avatarUrl,
+          return toProfileDirectoryEntry(user, {
+            avatarUrl: images.avatarUrl ?? undefined,
             registrationPhone: registrationPhone ?? "",
-          };
+          });
         }),
       );
 

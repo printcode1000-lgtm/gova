@@ -1,6 +1,6 @@
 import { assertSubmainEnv, createSubmainRuntime } from '@asol/submain-composition';
 
-import { businessErrorResponse, corsHeaders, preflight } from '../../../../lib/http';
+import { businessErrorResponse, corsHeaders, preflight, jsonResponse } from '../../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -12,7 +12,7 @@ export async function GET(request: Request): Promise<Response> {
     assertSubmainEnv();
 
     const version = await advertisements.trendingRibbon.getVersion();
-    return Response.json(version, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, version, 200);
   } catch (error) {
     return businessErrorResponse(request, error);
   }

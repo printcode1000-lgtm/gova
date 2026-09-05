@@ -1,4 +1,4 @@
-import { apiSuccess, mapServiceError } from '@/core/api/api-response';
+import { apiSuccess, mapServiceError, readJsonBody } from '@/core/api/api-response';
 import { otaReleaseService } from '@asol/ota-core/server';
 import type { SetOtaReleaseApprovalInput } from '@asol/ota-core';
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
@@ -29,7 +29,7 @@ export async function PUT(request: Request) {
     try {
       return apiSuccess(
         await otaReleaseService.setApproval(
-          (await request.json()) as SetOtaReleaseApprovalInput,
+          (await readJsonBody<unknown>(request)) as SetOtaReleaseApprovalInput,
         ),
       );
     } catch (error) {

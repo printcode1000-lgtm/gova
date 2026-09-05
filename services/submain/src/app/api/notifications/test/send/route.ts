@@ -1,7 +1,7 @@
 import { assertSubmainEnv, createSubmainRuntime } from '@asol/submain-composition';
 import type { NotificationTestInput } from '@asol/notifications-core';
 
-import { businessErrorResponse, corsHeaders, preflight } from '../../../../lib/http';
+import { businessErrorResponse, corsHeaders, preflight, jsonResponse, readJsonBody } from '../../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -19,12 +19,16 @@ export async function POST(request: Request): Promise<Response> {
     assertSubmainEnv();
 
     const claims = devices.assertSuperAdmin(request);
-    const body = (await request.json()) as NotificationTestInput;
+    const body = await readJsonBody<NotificationTestInput>(request);
     const result = await devices.sendBroadcastTest({
-      ...body,
       identity: { uid: claims.uid, phone: claims.phone },
+      requestId: body.requestId,
+      scenarioId: body.scenarioId,
+      title: body.title,
+      body: body.body,
+      routeHref: body.routeHref,
     });
-    return Response.json(result, { status: 200, headers: corsHeaders(request) });
+    return jsonResponse(request, result, 200);
   } catch (error) {
     return businessErrorResponse(request, error);
   }

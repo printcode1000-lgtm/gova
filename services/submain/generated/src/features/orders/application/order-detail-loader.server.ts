@@ -2,6 +2,7 @@ import "server-only";
 
 import { getMarketplaceOrderQueries } from "@asol/data-core/marketplace-orders";
 import { actorFromInput, filterOrderDetailsForActor } from "@asol/orders-core";
+import type { MarketplaceOrderDetailsDto } from "@asol/orders-core";
 import { profileService } from "@/features/profile/server";
 import { logServerSystemIssue } from "@/features/system-logs/server";
 
@@ -53,7 +54,7 @@ async function profileSnapshot(uid: string) {
 export async function loadOrderDetailForActor(
   orderId: string,
   searchParams: URLSearchParams,
-): Promise<Record<string, unknown>> {
+): Promise<MarketplaceOrderDetailsDto & { profiles: Record<string, unknown> }> {
 
     const actor = actorFromInput(
       {
@@ -68,20 +69,20 @@ export async function loadOrderDetailForActor(
     let details = await repo.getDetails(orderId);
     if (!details) throw new Error("Order not found");
     details = filterOrderDetailsForActor(details, actor);
-    const order = details.order as Record<string, unknown>;
+    const order = details.order;
     const sellerIds = Array.from(
-      new Set(details.sellerOrders.map((row) => String(row.seller_id))),
+      new Set(details.sellerOrders.map((row) => String(row.sellerId))),
     );
     const carrierIds = Array.from(
       new Set(
         details.sellerOrders
           .map(
             (row) =>
-              String(row.service_provider_id ?? "") ||
+              String(row.serviceProviderId ?? "") ||
               String(
                 details.orderItems.find(
-                  (item) => item.seller_order_id === row.id,
-                )?.shipping_notes ?? "",
+                  (item) => item.sellerOrderId === row.id,
+                )?.shippingNotes ?? "",
               ).replace(/^carrier:/, ""),
           )
           .filter(Boolean),
@@ -90,14 +91,14 @@ export async function loadOrderDetailForActor(
     const candidateProviderIds = Array.from(
       new Set(
         details.deliveryPlanCandidates
-          .map((row) => String(row.provider_id ?? ""))
+          .map((row) => String(row.providerId ?? ""))
           .filter(Boolean),
       ),
     );
     const profileEntries = await Promise.all(
       Array.from(
         new Set([
-          String(order.buyer_id),
+          String(order.buyerId),
           ...sellerIds,
           ...carrierIds,
           ...candidateProviderIds,

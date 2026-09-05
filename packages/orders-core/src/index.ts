@@ -15,6 +15,7 @@ export * from "./domain/actor-from-input";
 export * from "./domain/order-list-request";
 export * from "./domain/fulfillment-snapshot";
 export * from "./domain/order-details-visibility";
+export * from "./domain/transport-contract";
 export * from "./validators";
 export * from "./permissions";
 export * from "./calculators/pricing-calculator";

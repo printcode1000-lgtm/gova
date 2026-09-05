@@ -1,6 +1,7 @@
 import 'server-only';
 
 import { ProfileShardedDatabaseClient } from './core/database/profile-sharded-db-client';
+import { SystemLogsRepository } from './domains/system-logs/system-logs.repository.server';
 
 /**
  * Exact data adapter for the control-owned System Logs capability.
@@ -14,9 +15,12 @@ import { ProfileShardedDatabaseClient } from './core/database/profile-sharded-db
  */
 let client: ProfileShardedDatabaseClient | null = null;
 
-export const controlSystemLogsDataSource = {
+const controlSystemLogsDataSource = {
   execute(sql: string, params: unknown[] = []): Promise<Record<string, unknown>[]> {
     client ??= new ProfileShardedDatabaseClient();
     return client.execute(sql, params);
   },
 };
+
+/** Persistence port for the control deployment; SQL remains inside data-core. */
+export const controlSystemLogsPersistence = new SystemLogsRepository(controlSystemLogsDataSource);

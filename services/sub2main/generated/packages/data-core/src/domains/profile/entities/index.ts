@@ -1,3 +1,4 @@
+export type { ProfileDirectoryEntry } from "./profile-directory-entry.entity";
 export type { PhoneLink, EmailLink, WebsiteLink, SocialLink, LocationEntry, ProfileContactsData, GetProfileContactsInput, SaveProfileContactsInput } from "./profile-contacts.entity";
 export { EMPTY_PROFILE_CONTACTS } from "./profile-contacts.entity";
 export type { ProfileShowcaseTrendingItem, ProfileShowcaseSettings, StoreDetailsData, SaveStoreDetailsInput } from "./store-details.entity";

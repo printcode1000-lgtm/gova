@@ -18,7 +18,7 @@ import { CATEGORY_CONSTANTS } from "@/features/categories";
 import { normalizeProfileFulfillmentSettings } from "@/features/profile/domain/profile-fulfillment-settings.entity";
 import { useProfileFulfillmentSettings } from "@/features/profile/presentation/hooks/use-profile-fulfillment-settings";
 import { useUsersBySpecialty } from "@/features/profile/presentation/hooks/use-users-by-specialty";
-import type { UserProfileRow } from "@/features/profile/application/services/profile-service.interface";
+import type { ProfileDirectoryEntry } from "@/features/profile/application/services/profile-service.interface";
 import { useTranslation } from "@/shared/i18n";
 import type {
   ProfileFulfillmentController,
@@ -103,7 +103,7 @@ export const FulfillmentSettingsCard = React.forwardRef<
     shippingSectionRef,
   });
 
-  const users = (deliveryUsers ?? []) as UserProfileRow[];
+  const users = (deliveryUsers ?? []) as ProfileDirectoryEntry[];
   const safeSettings = normalizeProfileFulfillmentSettings(settings);
   const selected = new Set(safeSettings.carrierUids);
   const displayedUsers = users;

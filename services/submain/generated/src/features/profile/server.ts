@@ -7,3 +7,4 @@
 export * from './server/services/profile-review-service.server';
 export * from './server/services/profile-service.bootstrap.server';
 /* END GENERATED FEATURE DOOR EXPORTS */
+export { toProfileDirectoryEntry } from './server/mappers/profile-directory-entry.mapper.server';

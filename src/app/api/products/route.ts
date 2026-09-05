@@ -1,4 +1,4 @@
-import { apiError, apiSuccess } from '@/core/api/api-response';
+import { apiError, apiSuccess, readJsonBody } from '@/core/api/api-response';
 import type { CreateProductInput, UpdateProductInput } from '@/features/product';
 import { productService } from '@/features/product/server';
 
@@ -22,12 +22,12 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  try { return apiSuccess(await productService.create(await request.json() as CreateProductInput), 201); }
+  try { return apiSuccess(await productService.create(await readJsonBody<unknown>(request) as CreateProductInput), 201); }
   catch (error) { return errorResponse(error); }
 }
 
 export async function PUT(request: Request) {
-  try { return apiSuccess(await productService.update(await request.json() as UpdateProductInput)); }
+  try { return apiSuccess(await productService.update(await readJsonBody<unknown>(request) as UpdateProductInput)); }
   catch (error) { return errorResponse(error); }
 }
 

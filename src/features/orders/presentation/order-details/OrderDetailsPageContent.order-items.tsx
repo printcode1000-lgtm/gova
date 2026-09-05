@@ -1,5 +1,6 @@
 "use client";
 
+import type { OrderItemDto } from "@asol/orders-core";
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -39,7 +40,7 @@ import {
   queryWithActor,
   statusLabel,
 } from "../order-labels";
-import type { DbRow, OrderDetails, OrderRole } from "../order-types";
+import type { OrderDetails, OrderRole } from "../order-types";
 
 import { RunAction, text, isPendingSellerResponse } from "./OrderDetailsPageContent.navigation-summary";
 import { CustomRequestActions } from "./OrderDetailsPageContent.custom-request-actions";
@@ -83,7 +84,7 @@ export function OrderItemRow({ id,
   busyAction,
   runAction,
 }: {
-  item: DbRow;
+  item: OrderItemDto;
   isSeller: boolean;
   isBuyer: boolean;
   currency: string;
@@ -95,10 +96,10 @@ export function OrderItemRow({ id,
     <div id={id} className="rounded-xl border border-outline-variant bg-background p-3">
       <div id="orders-presentation-order-details-orderdetailspagecontent-order-items-div-3-jgjkk2" className="flex gap-3">
         <div id="orders-presentation-order-details-orderdetailspagecontent-order-items-div-4-ca23g7" className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-muted">
-          {item.product_image_snapshot ? (
+          {item.productImageSnapshot ? (
             <Image
-              src={String(item.product_image_snapshot)}
-              alt={String(item.product_name_snapshot ?? "")}
+              src={String(item.productImageSnapshot)}
+              alt={String(item.productNameSnapshot ?? "")}
               fill
               sizes="64px"
               className="object-cover"
@@ -111,7 +112,7 @@ export function OrderItemRow({ id,
           <div id="orders-presentation-order-details-orderdetailspagecontent-order-items-div-6-chpvlm" className="flex flex-wrap items-start justify-between gap-2">
             <div id="orders-presentation-order-details-orderdetailspagecontent-order-items-div-7-djb797">
               <h3 id="orders-presentation-order-details-orderdetailspagecontent-order-items-heading-8-a6hfyw" className="font-semibold">
-                {String(item.product_name_snapshot ?? text.product)}
+                {String(item.productNameSnapshot ?? text.product)}
               </h3>
               <p id="orders-presentation-order-details-orderdetailspagecontent-order-items-text-9-yp0zy8" className="text-xs text-muted-foreground">
                 {text.quantity}: {String(item.quantity ?? 1)} -{" "}
@@ -119,7 +120,7 @@ export function OrderItemRow({ id,
               </p>
             </div>
             <p id="orders-presentation-order-details-orderdetailspagecontent-order-items-text-10-zmkm04" className="font-bold">
-              {formatMoney(item.total_price, currency)}
+              {formatMoney(item.totalPrice, currency)}
             </p>
           </div>
           <ItemActions
@@ -144,7 +145,7 @@ export function ItemActions({
   busyAction,
   runAction,
 }: {
-  item: DbRow;
+  item: OrderItemDto;
   itemId: string;
   isSeller: boolean;
   isBuyer: boolean;

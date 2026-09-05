@@ -1,10 +1,10 @@
-import { apiSuccess, mapServiceError } from "@/core/api/api-response";
+import { apiSuccess, mapServiceError, readJsonBody } from "@/core/api/api-response";
 import { contactService } from "@/features/contact/server";
 import type { ContactMessageInput } from "@/features/contact";
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as ContactMessageInput;
+    const body = (await readJsonBody<unknown>(request)) as ContactMessageInput;
     const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
     return apiSuccess(await contactService.send(body, ip));
   } catch (error) { return mapServiceError(error); }
