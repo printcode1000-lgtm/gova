@@ -8,9 +8,9 @@
 
 Three preview bugs stacked:
 
-1. Admin-edit used a full-carousel skeleton until `next/image` fired `onLoad`. Failed or optimizer-skipped URLs never dismissed it.
+1. Admin-edit used a full-carousel skeleton until `next/image` fired `onLoad`. Failed image URLs could leave it visible.
 2. Slide transition class names were concatenated without spaces (`inset-0transition-transform…`), so the `fill` image parent had no size.
-3. Local uploaded files use `/sync_data/sync_file/...`. The Next.js optimizer does not reliably serve newly written files in that tree.
+3. Local uploaded files use `/sync_data/sync_file/...`; routing them through an image transformation layer made live-preview behavior fragile.
 
 Selecting a file is not enough: `confirmUpload` keeps the picker preview inside `StorageImageManager` until the user confirms Upload. The carousel reads `slide.image` only after that.
 
@@ -18,7 +18,7 @@ Selecting a file is not enough: `confirmUpload` keeps the picker preview inside 
 
 - Admin-edit no longer uses the blocking skeleton; it shows the slide or the unavailable placeholder.
 - Slide layout classes stay space-separated.
-- `shouldUseUnoptimizedImage` includes `blob:`, `data:`, and `/sync_data/sync_file/`.
+- The project now disables the Next.js Image Optimizer globally, so preview URLs are requested directly.
 - Confirm Upload (and Save, which uploads pending drafts first) before expecting the live preview URL to change.
 
 See [HeroSlider Developer Guide](../../04-ui-components/guides/hero-slider-guide.md).

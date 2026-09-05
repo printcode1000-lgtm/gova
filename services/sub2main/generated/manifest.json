@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-05T05:04:43.825Z",
+  "generatedAt": "2026-09-05T15:18:24.996Z",
   "entryPoints": [
     "features/product/server/services/product-service.server.ts",
     "features/profile/server/services/profile-service.bootstrap.server.ts",
@@ -19,7 +19,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 449,
+  "fileCount": 448,
   "files": [
     "packages/account-declarations/src/accounts/products.ts",
     "packages/account-declarations/src/accounts/profiles.ts",
@@ -288,7 +288,6 @@
     "packages/storage-core/src/domain/accounts/account-id.ts",
     "packages/storage-core/src/domain/accounts/account-registry.ts",
     "packages/storage-core/src/domain/accounts/account-registry.types.ts",
-    "packages/storage-core/src/domain/images/external-image.ts",
     "packages/storage-core/src/domain/images/image-key-generator.ts",
     "packages/storage-core/src/domain/images/image-path.ts",
     "packages/storage-core/src/domain/images/image-rules.ts",

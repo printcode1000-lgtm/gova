@@ -16,8 +16,6 @@ import {
   X,
 } from "lucide-react";
 
-import { shouldUseUnoptimizedImage } from "@asol/storage-core";
-
 import type {
   SellerCardAction,
   SellerCardVariant,
@@ -129,7 +127,6 @@ export function SellerCard({ id,
               fill
               className="object-cover"
               sizes={horizontal ? "48px" : "96px"}
-              unoptimized={shouldUseUnoptimizedImage(card.avatarUrl)}
             />
           ) : (
             <div id="features-seller-card-presentation-sellercard-div-4-a8zanz" className="flex h-full w-full items-center justify-center text-on-surface-variant" aria-hidden="true">

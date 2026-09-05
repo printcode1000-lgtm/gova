@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-05T05:04:42.778Z",
+  "generatedAt": "2026-09-05T15:18:23.612Z",
   "entryPoints": [
     "features/product-search/server/services/product-search-service.server.ts",
     "features/product-search/server/services/product-search-products.server.ts",
@@ -10,7 +10,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 492,
+  "fileCount": 491,
   "files": [
     "packages/account-declarations/src/accounts/gova-runtime-env-keys.ts",
     "packages/account-declarations/src/accounts/submain-runtime-env-keys.ts",
@@ -316,7 +316,6 @@
     "packages/storage-core/src/domain/accounts/account-id.ts",
     "packages/storage-core/src/domain/accounts/account-registry.ts",
     "packages/storage-core/src/domain/accounts/account-registry.types.ts",
-    "packages/storage-core/src/domain/images/external-image.ts",
     "packages/storage-core/src/domain/images/image-key-generator.ts",
     "packages/storage-core/src/domain/images/image-path.ts",
     "packages/storage-core/src/domain/images/image-rules.ts",

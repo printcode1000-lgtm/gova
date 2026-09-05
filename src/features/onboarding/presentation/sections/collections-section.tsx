@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Image from 'next/image';
 import { FolderOpen, Plus, X, Package } from 'lucide-react';
-import { shouldUseUnoptimizedImage, StorageProfiles, type StoredImage } from '@asol/storage-core';
+import { StorageProfiles, type StoredImage } from '@asol/storage-core';
 import { useOnboardingStore } from '@/features/onboarding/domain';
 import { useTranslation } from '@/shared/i18n';
 import { FormField, FormInput, FormTextarea } from '../form-components';
@@ -186,7 +186,6 @@ export function CollectionsSection() {
                           fill
                           sizes="(max-width: 640px) 100vw, 50vw"
                           className="object-cover"
-                          unoptimized={shouldUseUnoptimizedImage(collection.coverImage.url)}
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent" />
                         <div className="absolute bottom-0 left-0 right-0 p-4">

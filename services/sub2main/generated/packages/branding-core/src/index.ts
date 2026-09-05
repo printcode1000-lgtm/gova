@@ -3,9 +3,8 @@
  * transports. Asset generation stays behind the `./tooling` door.
  */
 /**
- * The full-resolution icon, 1024px. For surfaces that want the large original:
- * the Open Graph share image, and `next/image` consumers, which resize on the
- * server and so pay for the source only once at build time.
+ * The full-resolution icon, 1024px. Used by the Open Graph share image and
+ * application image surfaces that intentionally consume the original asset.
  */
 export const BRANDING_WEB_APP_ICON_PATH = "/logo.png";
 

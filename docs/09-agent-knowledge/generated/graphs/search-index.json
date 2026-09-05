@@ -37840,17 +37840,6 @@
       ]
     },
     {
-      "id": "source:packages/storage-core/src/domain/images/external-image.ts",
-      "kind": "source",
-      "name": "external-image.ts",
-      "path": "packages/storage-core/src/domain/images/external-image.ts",
-      "tags": [
-        "packages/storage-core/src/domain/images/external-image",
-        "packages/storage-core/src/domain/images/external-image.ts",
-        "ts"
-      ]
-    },
-    {
       "id": "source:packages/storage-core/src/domain/images/image-key-generator.ts",
       "kind": "source",
       "name": "image-key-generator.ts",
@@ -55000,18 +54989,6 @@
       "tags": [
         "packages/storage-core/src/tests/unit/account-registry",
         "packages/storage-core/src/tests/unit/account-registry.test.ts",
-        "test",
-        "ts"
-      ]
-    },
-    {
-      "id": "test:packages/storage-core/src/tests/unit/external-image.test.ts",
-      "kind": "test",
-      "name": "external-image.test.ts",
-      "path": "packages/storage-core/src/tests/unit/external-image.test.ts",
-      "tags": [
-        "packages/storage-core/src/tests/unit/external-image",
-        "packages/storage-core/src/tests/unit/external-image.test.ts",
         "test",
         "ts"
       ]

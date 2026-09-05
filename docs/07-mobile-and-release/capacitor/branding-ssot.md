@@ -22,8 +22,8 @@ The source must be a square PNG at least 500x500. Its original background is pre
 
 - `public/logo.png`, the full-resolution 1024px icon, for the Open Graph share
   image and the React `AppIcon` component. `AppIcon` renders through
-  `next/image`, which resizes on the server, so the large source costs nothing
-  at request time.
+  `next/image`, but the project-wide optimizer is disabled, so consumers receive
+  the original asset unless they explicitly use a smaller generated branding file.
 - `public/icons/asol-app-icon-192.png` for the browser tab and
   `apple-touch-icon`. Those are raw `<link>` tags that nothing resizes, so the
   named file is downloaded verbatim on first paint — 30KB here against 593KB

@@ -331,7 +331,7 @@ The URL becomes `slide.image`, while the persistent object key becomes `slide.im
 
 Saving rejects managed slide URLs without `imageKey`. Removed keys are deleted only after a successful save and only when the object still exists in storage.
 
-In local development those public URLs use `/sync_data/sync_file/...`. `shouldUseUnoptimizedImage` treats that prefix, `blob:`, `data:`, and listed CDN hosts as unoptimized so `next/image` does not send them through `/_next/image`.
+In local development those public URLs use `/sync_data/sync_file/...`. The project-wide image policy disables the Next.js Image Optimizer in every runtime, so both local and cloud slide URLs are requested directly and never pass through `/_next/image`.
 
 Removing an image in the editor only changes the local form. On Save, the server first commits the new configuration to SQLite or Turso. Only after that succeeds does it delete removed managed image keys from local storage or R2. A failed database save never deletes a referenced image, and there is no delayed cleanup queue.
 

@@ -57,4 +57,15 @@ assert.doesNotMatch(
 );
 assert.match(doctor, /level: "EVIDENCE_GAP"/);
 
+const nextConfig = readFileSync(path.join(process.cwd(), "next.config.ts"), "utf8");
+assert.match(
+  nextConfig,
+  /images:\s*\{[\s\S]*?unoptimized:\s*true/,
+  "next/image must stay globally unoptimized so no runtime uses /_next/image",
+);
+assert.doesNotMatch(nextConfig, /unoptimized:\s*isStatic/);
+assert.doesNotMatch(nextConfig, /formats:\s*\[/);
+assert.doesNotMatch(nextConfig, /deviceSizes:\s*\[/);
+assert.doesNotMatch(nextConfig, /imageSizes:\s*\[/);
+
 console.log("Runtime host-class policy and adversarial doctor wiring tests passed.");

@@ -12,8 +12,6 @@ import {
   Trash2,
 } from "lucide-react";
 
-import { shouldUseUnoptimizedImage } from "@asol/storage-core";
-
 import type {
   ProductCardAction,
   ProductCardVariant,
@@ -111,7 +109,6 @@ export function ProductCard({ id,
               fill
               className="object-cover"
               sizes={isFeatured ? "160px" : "(max-width: 768px) 50vw, 25vw"}
-              unoptimized={shouldUseUnoptimizedImage(card.imageUrl)}
             />
           ) : (
             <Package className="absolute inset-0 m-auto h-9 w-9 text-on-surface-variant" />

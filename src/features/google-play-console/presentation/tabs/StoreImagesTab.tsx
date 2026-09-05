@@ -4,7 +4,6 @@ import * as React from "react";
 import { ListPlus, RotateCcw, Upload } from "lucide-react";
 
 import Image from "next/image";
-import { shouldUseUnoptimizedImage } from "@asol/storage-core";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { useAdminArabic } from "@/shared/i18n/use-admin-arabic";
@@ -136,7 +135,6 @@ function StoreImagePreview(props: { id: string; url: string; unavailableLabel: s
         sizes="224px"
         referrerPolicy="no-referrer"
         className="object-contain"
-        unoptimized={shouldUseUnoptimizedImage(props.url)}
         onError={() => setFailed(true)}
       />
     </div>

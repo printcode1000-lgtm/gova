@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import * as React from "react";
-import { shouldUseUnoptimizedImage, type StoredImage } from "@asol/storage-core";
+import { type StoredImage } from "@asol/storage-core";
 
 type Point = { x: number; y: number };
 const distance = (a: Point, b: Point) => Math.hypot(b.x - a.x, b.y - a.y);
@@ -187,7 +187,6 @@ export function ProductImageGallery({ id, images }: { images: StoredImage[] } & 
             priority
             draggable={false}
             sizes="100vw"
-            unoptimized={shouldUseUnoptimizedImage(active.url)}
             onLoad={() =>
               setLoaded((current) => new Set(current).add(active.url))
             }
@@ -217,7 +216,6 @@ export function ProductImageGallery({ id, images }: { images: StoredImage[] } & 
                 fill
                 draggable={false}
                 sizes="80px"
-                unoptimized={shouldUseUnoptimizedImage(image.url)}
                 onLoad={() =>
                   setLoaded((current) => new Set(current).add(image.url))
                 }

@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { shouldUseUnoptimizedImage } from "@asol/storage-core";
 
 interface HeroSliderImageProbeProps {
   src: string;
@@ -23,7 +22,6 @@ export function HeroSliderImageProbe({ id,
       aria-hidden
       onLoad={onLoad}
       onError={onError}
-      unoptimized={shouldUseUnoptimizedImage(src)}
     />
   );
 }

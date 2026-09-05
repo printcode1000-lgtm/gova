@@ -5,8 +5,8 @@
 
 # Write Surface Map
 
-Detected write-like surfaces: **383**
-Unproven gateway paths: **148**
+Detected write-like surfaces: **377**
+Unproven gateway paths: **149**
 
 | Source | Owner | Operations | Gateway | Proven | Route | Runtimes | Risk |
 |---|---|---|---|---|---|---|---|
@@ -141,7 +141,6 @@ Unproven gateway paths: **148**
 | `packages/page-snapshot-core/src/domain/page-snapshot.types.ts` | `@asol/page-snapshot-core` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/page-snapshot-core/src/runtime/page-snapshot-runtime.ts` | `@asol/page-snapshot-core` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/page-snapshot-core/src/tests/index.test.ts` | `@asol/page-snapshot-core` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |
-| `packages/product-card-core/src/presentation/ProductCard.tsx` | `@asol/product-card-core` | delete | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/products-composition/src/index.ts` | `@asol/products-composition` | create, upload | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/profiles-composition/src/index.ts` | `@asol/profiles-composition` | create, upload | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/release-core/src/console-server/build-job-runner.ts` | `@asol/release-core` | delete, update | `unproven` | NO | `` | development, web | high |
@@ -152,7 +151,6 @@ Unproven gateway paths: **148**
 | `packages/secrets-core/src/archive/archive-workspace.ts` | `@asol/secrets-core` | update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/seller-card-core/src/application/seller-card-presenter.ts` | `@asol/seller-card-core` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/seller-card-core/src/domain/seller-card.types.ts` | `@asol/seller-card-core` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
-| `packages/seller-card-core/src/presentation/SellerCard.tsx` | `@asol/seller-card-core` | write-like | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/seller-card-core/src/tests/seller-card-presenter.test.ts` | `@asol/seller-card-core` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/service-mirror-core/src/index.ts` | `@asol/service-mirror-core` | delete, save, upload | `@asol/data-core, @asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/service-mirror-core/src/tests/index.test.ts` | `@asol/service-mirror-core` | write-like | `@asol/data-core, @asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
@@ -206,9 +204,7 @@ Unproven gateway paths: **148**
 | `src/core/config/system-logs.server.ts` | `unknown` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/core/providers/query-provider.tsx` | `unknown` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/advertisements/presentation/HeroSliderEditor.tsx` | `advertisements` | delete, patch, save, upload | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
-| `src/features/advertisements/presentation/HeroSliderImageProbe.tsx` | `advertisements` | write-like | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/advertisements/presentation/HeroSliderImagesEditor.tsx` | `advertisements` | delete | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
-| `src/features/advertisements/presentation/HeroSliderSlide.tsx` | `advertisements` | write-like | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/advertisements/presentation/hooks/use-home-featured-marquee.ts` | `advertisements` | update | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/advertisements/presentation/hooks/use-home-hero-slider.ts` | `advertisements` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/advertisements/presentation/hooks/use-home-trending-ribbon.ts` | `advertisements` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
@@ -258,7 +254,6 @@ Unproven gateway paths: **148**
 | `src/features/google-play-console/presentation/hooks/use-store-assets.ts` | `google-play-console` | delete, save, upload | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/features/google-play-console/presentation/hooks/use-store-text-page-save.ts` | `google-play-console` | save | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/features/google-play-console/presentation/tabs/PlayTracksTab.tsx` | `google-play-console` | save, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
-| `src/features/google-play-console/presentation/tabs/StoreImagesTab.tsx` | `google-play-console` | save, upload | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/google-play-console/presentation/tabs/StoreTextTab.tsx` | `google-play-console` | patch, save | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/features/notifications/application/notification-bus.ts` | `notifications` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/features/notifications/application/notification-lifecycle-service.ts` | `notifications` | delete, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
@@ -334,7 +329,7 @@ Unproven gateway paths: **148**
 | `src/features/product/presentation/ProductImageEditors.tsx` | `product` | delete | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/product/presentation/ProductImageGallery.tsx` | `product` | delete | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/product/presentation/ProductPageContent.tsx` | `product` | create, save, update, upload | `unproven` | NO | `` | android, development, ios, static-out, web | high |
-| `src/features/product/presentation/ProductReviews.tsx` | `product` | create, delete, save, update | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
+| `src/features/product/presentation/ProductReviews.tsx` | `product` | create, delete, save, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/features/product/presentation/style-editors/search-columns/ProductSearchColumnsStyleEditor.tsx` | `product` | update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/features/product/server/services/product-review-service.server.ts` | `product` | create, delete, update | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/features/product/server/services/product-service.server.ts` | `product` | create, delete, update | `@asol/data-core, @asol/storage-core` | yes | `` | development, web | medium |
@@ -390,6 +385,5 @@ Unproven gateway paths: **148**
 | `src/features/system-logs/server/control-persistence.server.ts` | `system-logs` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/features/voice-input/application/voice-input-scanner.ts` | `voice-input` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/shared/installation/installation-bootstrap.ts` | `unknown` | update | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
-| `src/shared/layouts/AppSidebar.tsx` | `unknown` | save | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/shared/preferences/app-preferences-storage.ts` | `unknown` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/shared/theme/runtime/storage.ts` | `unknown` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |

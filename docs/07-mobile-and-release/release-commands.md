@@ -294,6 +294,28 @@ repository source. Remove the directory and re-run the check:
 rm -rf .tmp-gova-build
 ```
 
+### Persistent external Vercel experiment sandbox
+
+On the canonical local host, a sanitized persistent copy of the generated gova
+upload view is kept outside the repository at
+`/home/hesham/gova-sandboxes/vercel-gova/view/`. It is for isolated Vercel
+experiments only; it is never a release source and `architecture:check` cannot
+see it because it lives outside the repository root.
+
+Refresh it with:
+
+```bash
+/home/hesham/gova-sandboxes/vercel-gova/refresh.sh
+```
+
+The refresh script copies `.tmp-gova-build/`, removes that in-repository temporary
+view afterwards, and records the source commit in `source.json`. It deliberately
+excludes `.env*`, secret archives, private keys, Vercel state, nested agent
+worktrees, build output, and `node_modules`. Credentials must be injected only
+for the experiment that needs them and must not be persisted in the sandbox.
+Durable source changes always belong in `/home/hesham/gova`, never in the
+external experiment copy.
+
 ## Verification
 
 A deployment reporting `READY` means the deployment exists, not that a request

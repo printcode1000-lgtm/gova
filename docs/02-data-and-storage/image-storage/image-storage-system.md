@@ -134,4 +134,4 @@ public/sync_data/sync_file/
 
 See also [r2-storage.md](./r2-storage.md).
 
-`shouldUseUnoptimizedImage` in `@asol/storage-core` bypasses the Next.js optimizer for `blob:` and `data:` previews, local `/sync_data/sync_file/` URLs, and listed CDN hosts (`r2.dev`, `cloudflarestorage.com`, `googleusercontent.com`).
+Gova disables the Next.js Image Optimizer globally. `next/image` remains the rendering component for sizing, layout, loading, and error handling, but every image URL is requested directly and is never rewritten through `/_next/image`. This policy is identical in Development, Web, Static `out/`, Android, and iOS.

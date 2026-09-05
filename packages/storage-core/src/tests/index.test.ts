@@ -2,7 +2,6 @@ import { runAccountRegistryUnitTest } from './unit/account-registry.test';
 import { runAccountCredentialsTest } from './unit/account-credentials.test';
 import { runStorageProfileValidatorTest } from './unit/storage-profile-validator.test';
 import { runImageRulesTest } from './unit/image-rules.test';
-import { runExternalImageTest } from './unit/external-image.test';
 import { runImageKeyGeneratorTest } from './unit/image-key-generator.test';
 import { runImagePathTest } from './unit/image-path.test';
 import { runOutputFormatTest } from './unit/output-format.test';
@@ -24,7 +23,6 @@ async function main() {
   runAccountCredentialsTest();
   runStorageProfileValidatorTest();
   runImageRulesTest();
-  runExternalImageTest();
   runImageKeyGeneratorTest();
   runImagePathTest();
   runOutputFormatTest();

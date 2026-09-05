@@ -3,7 +3,6 @@
 import * as React from "react";
 import Image from "next/image";
 import { ChevronLeft, MessageSquare } from "lucide-react";
-import { shouldUseUnoptimizedImage } from "@asol/storage-core";
 import { useSessionRuntime } from "@/shared/session-runtime";
 import type {
   ProductReview,
@@ -329,7 +328,6 @@ export function ProductReviews({ id,
                         fill
                         sizes="44px"
                         className="object-cover"
-                        unoptimized={shouldUseUnoptimizedImage(review.reviewerAvatarUrl)}
                       />
                     </span>
                   ) : (

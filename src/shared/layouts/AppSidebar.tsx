@@ -42,7 +42,6 @@ import { isSuperAdmin } from "@/features/auth";
 import { formatSessionPhone } from "@/features/auth";
 import { useStoreDetails } from "@/features/profile/ui";
 import { useProfileStoreImages } from "@/features/profile/ui";
-import { shouldUseUnoptimizedImage } from '@asol/storage-core';
 import { Button } from "@/shared/ui/button";
 import { isOutsideDismissExempt } from "@/shared/ui/overlay-chrome";
 
@@ -310,7 +309,6 @@ export const AppSidebar = React.memo(function AppSidebar({ id,
                             fill
                             sizes="56px"
                             className="object-cover"
-                            unoptimized={shouldUseUnoptimizedImage(storeImages.avatarUrl)}
                           />
                         ) : (
                           <User id='shared-layouts-appsidebar-user-13-tj1git' className={sidebarSmallIconClass} />

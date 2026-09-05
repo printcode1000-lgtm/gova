@@ -37840,17 +37840,6 @@
       ]
     },
     {
-      "id": "source:packages/storage-core/src/domain/images/external-image.ts",
-      "kind": "source",
-      "name": "external-image.ts",
-      "path": "packages/storage-core/src/domain/images/external-image.ts",
-      "tags": [
-        "packages/storage-core/src/domain/images/external-image",
-        "packages/storage-core/src/domain/images/external-image.ts",
-        "ts"
-      ]
-    },
-    {
       "id": "source:packages/storage-core/src/domain/images/image-key-generator.ts",
       "kind": "source",
       "name": "image-key-generator.ts",
@@ -55000,18 +54989,6 @@
       "tags": [
         "packages/storage-core/src/tests/unit/account-registry",
         "packages/storage-core/src/tests/unit/account-registry.test.ts",
-        "test",
-        "ts"
-      ]
-    },
-    {
-      "id": "test:packages/storage-core/src/tests/unit/external-image.test.ts",
-      "kind": "test",
-      "name": "external-image.test.ts",
-      "path": "packages/storage-core/src/tests/unit/external-image.test.ts",
-      "tags": [
-        "packages/storage-core/src/tests/unit/external-image",
-        "packages/storage-core/src/tests/unit/external-image.test.ts",
         "test",
         "ts"
       ]
@@ -83591,12 +83568,6 @@
     },
     {
       "from": "domain:architecture",
-      "to": "source:packages/storage-core/src/domain/images/external-image.ts",
-      "kind": "documents",
-      "detail": "packages/"
-    },
-    {
-      "from": "domain:architecture",
       "to": "source:packages/storage-core/src/domain/images/image-key-generator.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -84864,12 +84835,6 @@
     {
       "from": "domain:architecture",
       "to": "test:packages/storage-core/src/tests/unit/account-registry.test.ts",
-      "kind": "documents",
-      "detail": "packages/"
-    },
-    {
-      "from": "domain:architecture",
-      "to": "test:packages/storage-core/src/tests/unit/external-image.test.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -86513,12 +86478,6 @@
     },
     {
       "from": "domain:data-and-storage",
-      "to": "source:packages/storage-core/src/domain/images/external-image.ts",
-      "kind": "documents",
-      "detail": "packages/storage-core/"
-    },
-    {
-      "from": "domain:data-and-storage",
       "to": "source:packages/storage-core/src/domain/images/image-key-generator.ts",
       "kind": "documents",
       "detail": "packages/storage-core/"
@@ -87042,12 +87001,6 @@
     {
       "from": "domain:data-and-storage",
       "to": "test:packages/storage-core/src/tests/unit/account-registry.test.ts",
-      "kind": "documents",
-      "detail": "packages/storage-core/"
-    },
-    {
-      "from": "domain:data-and-storage",
-      "to": "test:packages/storage-core/src/tests/unit/external-image.test.ts",
       "kind": "documents",
       "detail": "packages/storage-core/"
     },
@@ -108899,11 +108852,6 @@
       "kind": "imports"
     },
     {
-      "from": "feature:google-play-console",
-      "to": "package:@asol/storage-core",
-      "kind": "imports"
-    },
-    {
       "from": "feature:home",
       "to": "external-dependency:next",
       "kind": "imports"
@@ -111139,11 +111087,6 @@
       "kind": "imports"
     },
     {
-      "from": "package:@asol/product-card-core",
-      "to": "package:@asol/storage-core",
-      "kind": "imports"
-    },
-    {
       "from": "package:@asol/products-composition",
       "to": "feature:categories",
       "kind": "imports"
@@ -111236,11 +111179,6 @@
     {
       "from": "package:@asol/seller-card-core",
       "to": "package:@asol/data-core",
-      "kind": "imports"
-    },
-    {
-      "from": "package:@asol/seller-card-core",
-      "to": "package:@asol/storage-core",
       "kind": "imports"
     },
     {
@@ -132232,18 +132170,6 @@
       "detail": "route source dependency"
     },
     {
-      "from": "route:/categories/[categoryId]:page",
-      "to": "package:@asol/storage-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/categories/[categoryId]:page",
-      "to": "package:@asol/storage-core",
-      "kind": "related-to",
-      "detail": "route write gateway"
-    },
-    {
       "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -132314,18 +132240,6 @@
       "to": "package:@asol/seller-card-core",
       "kind": "related-to",
       "detail": "route source dependency"
-    },
-    {
-      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
-      "to": "package:@asol/storage-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
-      "to": "package:@asol/storage-core",
-      "kind": "related-to",
-      "detail": "route write gateway"
     },
     {
       "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
@@ -132400,18 +132314,6 @@
       "detail": "route source dependency"
     },
     {
-      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
-      "to": "package:@asol/storage-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
-      "to": "package:@asol/storage-core",
-      "kind": "related-to",
-      "detail": "route write gateway"
-    },
-    {
       "from": "route:/collections/[collectionId]:page",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -132482,18 +132384,6 @@
       "to": "package:@asol/seller-card-core",
       "kind": "related-to",
       "detail": "route source dependency"
-    },
-    {
-      "from": "route:/collections/[collectionId]:page",
-      "to": "package:@asol/storage-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/collections/[collectionId]:page",
-      "to": "package:@asol/storage-core",
-      "kind": "related-to",
-      "detail": "route write gateway"
     },
     {
       "from": "route:/contact-us:page",
@@ -135011,12 +134901,6 @@
     },
     {
       "from": "route:/product:page",
-      "to": "package:@asol/cors",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/product:page",
       "to": "package:@asol/data-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -135714,12 +135598,6 @@
     {
       "from": "route:/s/product:page",
       "to": "package:@asol/branding-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/s/product:page",
-      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -175421,12 +175299,6 @@
     },
     {
       "from": "source:packages/product-card-core/src/presentation/ProductCard.tsx",
-      "to": "package:@asol/storage-core",
-      "kind": "imports",
-      "detail": "@asol/storage-core"
-    },
-    {
-      "from": "source:packages/product-card-core/src/presentation/ProductCard.tsx",
       "to": "source:packages/product-card-core/src/domain/product-card.types.ts",
       "kind": "imports",
       "detail": "../domain/product-card.types"
@@ -177581,12 +177453,6 @@
     },
     {
       "from": "source:packages/seller-card-core/src/presentation/SellerCard.tsx",
-      "to": "package:@asol/storage-core",
-      "kind": "imports",
-      "detail": "@asol/storage-core"
-    },
-    {
-      "from": "source:packages/seller-card-core/src/presentation/SellerCard.tsx",
       "to": "source:packages/seller-card-core/src/domain/seller-card.types.ts",
       "kind": "imports",
       "detail": "../domain/seller-card.types"
@@ -178219,36 +178085,6 @@
       "kind": "belongs-to"
     },
     {
-      "from": "source:packages/storage-core/src/domain/images/external-image.ts",
-      "to": "runtime:android",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/storage-core/src/domain/images/external-image.ts",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/storage-core/src/domain/images/external-image.ts",
-      "to": "runtime:ios",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/storage-core/src/domain/images/external-image.ts",
-      "to": "runtime:static-out",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/storage-core/src/domain/images/external-image.ts",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/storage-core/src/domain/images/external-image.ts",
-      "to": "package:@asol/storage-core",
-      "kind": "belongs-to"
-    },
-    {
       "from": "source:packages/storage-core/src/domain/images/image-key-generator.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -178715,12 +178551,6 @@
       "to": "source:packages/storage-core/src/domain/accounts/account-registry.types.ts",
       "kind": "imports",
       "detail": "./domain/accounts/account-registry.types"
-    },
-    {
-      "from": "source:packages/storage-core/src/index.ts",
-      "to": "source:packages/storage-core/src/domain/images/external-image.ts",
-      "kind": "imports",
-      "detail": "./domain/images/external-image"
     },
     {
       "from": "source:packages/storage-core/src/index.ts",
@@ -194750,12 +194580,6 @@
       "detail": "next/image"
     },
     {
-      "from": "source:src/features/advertisements/presentation/HeroSliderImageProbe.tsx",
-      "to": "package:@asol/storage-core",
-      "kind": "imports",
-      "detail": "@asol/storage-core"
-    },
-    {
       "from": "source:src/features/advertisements/presentation/HeroSliderImagesEditor.tsx",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -194892,12 +194716,6 @@
       "to": "external-dependency:next",
       "kind": "imports",
       "detail": "next/image"
-    },
-    {
-      "from": "source:src/features/advertisements/presentation/HeroSliderSlide.tsx",
-      "to": "package:@asol/storage-core",
-      "kind": "imports",
-      "detail": "@asol/storage-core"
     },
     {
       "from": "source:src/features/advertisements/presentation/HeroSliderSlide.tsx",
@@ -207973,12 +207791,6 @@
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
-    },
-    {
-      "from": "source:src/features/google-play-console/presentation/tabs/StoreImagesTab.tsx",
-      "to": "package:@asol/storage-core",
-      "kind": "imports",
-      "detail": "@asol/storage-core"
     },
     {
       "from": "source:src/features/google-play-console/presentation/tabs/StoreImagesTab.tsx",
@@ -222772,12 +222584,6 @@
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
-    },
-    {
-      "from": "source:src/features/product/presentation/ProductReviews.tsx",
-      "to": "package:@asol/storage-core",
-      "kind": "imports",
-      "detail": "@asol/storage-core"
     },
     {
       "from": "source:src/features/product/presentation/ProductReviews.tsx",
@@ -239866,12 +239672,6 @@
     },
     {
       "from": "source:src/shared/layouts/AppSidebar.tsx",
-      "to": "package:@asol/storage-core",
-      "kind": "imports",
-      "detail": "@asol/storage-core"
-    },
-    {
-      "from": "source:src/shared/layouts/AppSidebar.tsx",
       "to": "source:src/features/auth/index.ts",
       "kind": "imports",
       "detail": "@/features/auth"
@@ -248461,12 +248261,6 @@
     },
     {
       "from": "test:packages/storage-core/src/tests/index.test.ts",
-      "to": "test:packages/storage-core/src/tests/unit/external-image.test.ts",
-      "kind": "imports",
-      "detail": "./unit/external-image.test"
-    },
-    {
-      "from": "test:packages/storage-core/src/tests/index.test.ts",
       "to": "test:packages/storage-core/src/tests/unit/image-key-generator.test.ts",
       "kind": "imports",
       "detail": "./unit/image-key-generator.test"
@@ -249030,47 +248824,6 @@
     },
     {
       "from": "test:packages/storage-core/src/tests/unit/account-registry.test.ts",
-      "to": "package:@asol/storage-core",
-      "kind": "tests"
-    },
-    {
-      "from": "test:packages/storage-core/src/tests/unit/external-image.test.ts",
-      "to": "runtime:android",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "test:packages/storage-core/src/tests/unit/external-image.test.ts",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "test:packages/storage-core/src/tests/unit/external-image.test.ts",
-      "to": "runtime:ios",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "test:packages/storage-core/src/tests/unit/external-image.test.ts",
-      "to": "runtime:static-out",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "test:packages/storage-core/src/tests/unit/external-image.test.ts",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "test:packages/storage-core/src/tests/unit/external-image.test.ts",
-      "to": "package:@asol/storage-core",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "test:packages/storage-core/src/tests/unit/external-image.test.ts",
-      "to": "source:packages/storage-core/src/domain/images/external-image.ts",
-      "kind": "imports",
-      "detail": "../../domain/images/external-image"
-    },
-    {
-      "from": "test:packages/storage-core/src/tests/unit/external-image.test.ts",
       "to": "package:@asol/storage-core",
       "kind": "tests"
     },

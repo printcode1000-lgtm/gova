@@ -12,7 +12,6 @@ export * from './domain/profiles/product-category-storage-routing';
 export * from './domain/images/image-rules';
 export * from './domain/images/image-key-generator';
 export * from './domain/images/image-path';
-export * from './domain/images/external-image';
 export * from './domain/images/output-format.registry';
 export * from './domain/images/stored-image.types';
 
