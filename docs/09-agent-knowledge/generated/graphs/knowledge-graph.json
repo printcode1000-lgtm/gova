@@ -115007,121 +115007,7 @@
     },
     {
       "from": "route:/api/health:handler",
-      "to": "feature:system-logs",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
       "to": "package:@asol/api-contract-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/auth-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/backup-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/data-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/data-core",
-      "kind": "related-to",
-      "detail": "route write gateway"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/data-health-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/dev-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/env-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/featured-marquee-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/hero-slider-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/notifications-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/observability-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/orders-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/product-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/storage-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/storage-core",
-      "kind": "related-to",
-      "detail": "route write gateway"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/system-logs-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/trending-ribbon-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/health:handler",
-      "to": "package:@asol/vercel-deploy-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -185872,9 +185758,9 @@
     },
     {
       "from": "source:src/app/api/health/route.ts",
-      "to": "source:src/core/api/api-response.ts",
+      "to": "package:@asol/api-contract-core",
       "kind": "imports",
-      "detail": "@/core/api/api-response"
+      "detail": "@asol/api-contract-core/server"
     },
     {
       "from": "source:src/app/api/notifications/broadcast/recipients/route.ts",

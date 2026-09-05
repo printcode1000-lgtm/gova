@@ -1,7 +1,7 @@
-import { apiSuccess } from '@/core/api/api-response';
+import { jsonContractResponse } from '@asol/api-contract-core/server';
 
 export function GET() {
-  return apiSuccess({ status: 'ok' as const });
+  return jsonContractResponse({ status: 'ok' as const });
 }
 
 export function OPTIONS() {
