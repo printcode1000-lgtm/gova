@@ -54,7 +54,7 @@ Interpretation of that checkpoint:
 - The device checkout, `origin/main`, and `origin/integration` had the same Git tree SHA. This proves the tracked file names, file modes, and file contents were identical recursively at that checkpoint.
 - `main` and `integration` intentionally had different commit SHAs and histories. Different commit SHAs do not imply different files when their tree SHA is identical.
 - The synchronization preserved the existing `main` history by creating a new `main` commit whose tree was exactly the verified `origin/integration` tree; no force-push was required.
-- A stale `/home/hesham/gova/.git/index.lock` was encountered during verification. It was removed only after confirming that neither `fuser` nor `lsof` reported an active holder. Active Git locks must never be removed automatically.
+- A stale `/home/hesham/gova/.git/index.lock` was encountered during verification. It was removed only after confirming that neither `fuser` nor `lsof` reported an active holder for that exact lock file. Unrelated Git processes on the host must not block stale-lock recovery, while an actively held lock must never be removed automatically.
 - All temporary synchronization workflows and trigger files were absent from the final synchronized tree.
 - The final GitHub workflow set was exactly `deploy-main.yml`, `docs.yml`, and `local-agent-bootstrap.yml`.
 - The temporary synchronization procedure was a one-shot recovery/verification operation. It does not replace the normal gateway-based integration flow described above.

@@ -10046,6 +10046,34 @@
       ]
     },
     {
+      "id": "document:docs/04-ui-components/profile-registration-info-card.md",
+      "kind": "document",
+      "name": "Profile Registration Info Card",
+      "path": "docs/04-ui-components/profile-registration-info-card.md",
+      "summary": "`ProfileRegistrationInfoCard` owns the contact and registration controls shown in the profile edit registration section.",
+      "tags": [
+        "`profileregistrationinfocard` owns the contact and registration controls shown in the profile edit registration section.",
+        "and",
+        "card",
+        "contact",
+        "controls",
+        "docs/04-ui-components/profile-registration-info-card",
+        "docs/04-ui-components/profile-registration-info-card.md",
+        "edit",
+        "in",
+        "info",
+        "md",
+        "owns",
+        "profile",
+        "profile registration info card",
+        "profileregistrationinfocard",
+        "registration",
+        "section",
+        "shown",
+        "the"
+      ]
+    },
+    {
       "id": "document:docs/04-ui-components/README.md",
       "kind": "document",
       "name": "UI Components Domain",
@@ -10866,6 +10894,8 @@
         "packages/page-save-core/src/tests/header-visibility.test.ts",
         "packages/page-save-core/src/tests/journal-recovery",
         "packages/page-save-core/src/tests/journal-recovery.test.ts",
+        "packages/page-save-core/src/tests/resilience",
+        "packages/page-save-core/src/tests/resilience.test.ts",
         "page",
         "page save system",
         "performs",
@@ -54634,6 +54664,18 @@
       "tags": [
         "packages/page-save-core/src/tests/journal-recovery",
         "packages/page-save-core/src/tests/journal-recovery.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/page-save-core/src/tests/resilience.test.ts",
+      "kind": "test",
+      "name": "resilience.test.ts",
+      "path": "packages/page-save-core/src/tests/resilience.test.ts",
+      "tags": [
+        "packages/page-save-core/src/tests/resilience",
+        "packages/page-save-core/src/tests/resilience.test.ts",
         "test",
         "ts"
       ]

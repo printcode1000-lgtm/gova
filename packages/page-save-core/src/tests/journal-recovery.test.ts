@@ -194,7 +194,10 @@ async function testInterruptedRequestNeedsConfirmationAndIsNeverReplayed() {
 async function testRerunClearsTheRowItReplaces() {
   reset();
   const storage = createStorage();
-  const operationId = buildPageSaveOperationId("product-edit", "product-details");
+  const operationId = buildPageSaveOperationId(
+    "product-edit",
+    "product-details",
+  );
   storage.journal.set(operationId, {
     schemaVersion: PAGE_SAVE_JOURNAL_SCHEMA_VERSION,
     operationId,
@@ -260,6 +263,36 @@ async function testNeverStartedWorkIsDiscardedNotResurrected() {
   assert.equal(storage.journal.has("data-health::purge"), false);
 }
 
+async function testCorruptJournalRowsArePrunedAndNeverDriveTheHeader() {
+  reset();
+  const storage = createStorage();
+  storage.journal.set("corrupt::row", {
+    schemaVersion: PAGE_SAVE_JOURNAL_SCHEMA_VERSION,
+    operationId: "corrupt::row",
+    idempotencyKey: "key-corrupt",
+    scopeId: "corrupt",
+    itemId: "row",
+    kind: "save",
+    label: "Corrupt",
+    returnPath: "https://example.invalid/escape",
+    status: "running",
+    attempts: 1,
+    startedAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  });
+  configurePageSaveCore({ storage });
+
+  await hydratePageSaveRecoveryFromStorage();
+  assert.deepEqual(getPageSaveSnapshot().interrupted, []);
+  assert.equal(
+    storage.journal.has("corrupt::row"),
+    false,
+    "an identifiable corrupt journal row must be pruned",
+  );
+  openPageSaveDialog();
+  assert.equal(getPageSaveSnapshot().dialogOpen, false);
+}
+
 async function main() {
   await testSuccessLeavesNothingToReplay();
   await testFailureIsRecordedAndRetryable();
@@ -267,6 +300,7 @@ async function main() {
   await testInterruptedRequestNeedsConfirmationAndIsNeverReplayed();
   await testRerunClearsTheRowItReplaces();
   await testNeverStartedWorkIsDiscardedNotResurrected();
+  await testCorruptJournalRowsArePrunedAndNeverDriveTheHeader();
   console.log("page-save journal recovery tests passed.");
 }
 

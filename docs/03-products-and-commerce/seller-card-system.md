@@ -117,7 +117,7 @@ The presenter safely derives:
   fallback identity text.
 - `description` from the canonical `storeDescription` or `storeStory` fields.
 - `avatarUrl` from available avatar URL fields when present.
-- `initials` from the display name when no image exists.
+- `initials` remains view-model metadata, but the shared card never renders text inside the avatar area. When `avatarUrl` is empty, the UI renders one icon from a varied commerce/store icon pool, with a distinct non-blue color per icon type. Blue is reserved for cards that have a real profile image.
 - `href` as the canonical public profile URL:
 
 ```text
@@ -175,8 +175,8 @@ The system is currently used by:
 The UI component is responsible for:
 
 - Rendering layout variants.
-- Rendering image or initials fallback.
-- Rendering exactly one truncated identity-label line inside the card content.
+- Rendering the profile image when present, otherwise a varied commerce/store icon fallback.
+- Rendering exactly one truncated identity-label line inside the card content. Cards with a real profile image render that label in blue; cards using a fallback icon render the label in the exact same color as that icon.
 - Rendering context actions.
 - Avoiding nested interactive elements.
 

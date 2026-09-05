@@ -37,6 +37,10 @@ export function usePageSaveRegistration({
   const handleRef = React.useRef<PageSaveHandle>({
     save: async () => true,
   });
+  const registrationTokenRef = React.useRef<number | null>(null);
+  const statusRevisionRef = React.useRef(0);
+  statusRevisionRef.current += 1;
+  const statusRevision = statusRevisionRef.current;
 
   handleRef.current = {
     save: async (selectedItemIds) => {
@@ -49,7 +53,7 @@ export function usePageSaveRegistration({
   React.useEffect(() => {
     if (!enabled) return undefined;
 
-    return registerPageSave({
+    const cleanup = registerPageSave({
       id,
       label,
       returnPath,
@@ -63,18 +67,39 @@ export function usePageSaveRegistration({
           Promise.resolve(true),
       },
     });
+    registrationTokenRef.current = cleanup.registrationToken;
+    return () => {
+      if (registrationTokenRef.current === cleanup.registrationToken) {
+        registrationTokenRef.current = null;
+      }
+      cleanup();
+    };
   }, [enabled, id]);
 
   React.useEffect(() => {
     if (!enabled) return;
-    updatePageSaveRegistration(id, {
-      label,
-      returnPath,
-      items,
-      isSaving,
-      canSave,
-    });
-  }, [enabled, id, label, returnPath, items, isSaving, canSave]);
+    updatePageSaveRegistration(
+      id,
+      {
+        label,
+        returnPath,
+        items,
+        isSaving,
+        canSave,
+      },
+      registrationTokenRef.current ?? undefined,
+      statusRevision,
+    );
+  }, [
+    enabled,
+    id,
+    label,
+    returnPath,
+    items,
+    isSaving,
+    canSave,
+    statusRevision,
+  ]);
 
   React.useEffect(() => {
     if (!enabled) return;

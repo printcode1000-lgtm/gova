@@ -47,22 +47,34 @@ export function assertNoReleaseScratchFiles(input: {
   return paths;
 }
 
-function hasRunningGitProcess(): boolean {
-  try {
-    if (process.platform === "win32") {
+function hasProcessHoldingLock(lock: string): boolean {
+  if (process.platform === "win32") {
+    try {
       const output = execFileSync("tasklist", ["/FI", "IMAGENAME eq git.exe", "/FO", "CSV", "/NH"], {
         encoding: "utf8",
         windowsHide: true,
       });
       return /"git\.exe"/i.test(output);
+    } catch {
+      return false;
     }
-    return execFileSync("pgrep", ["-x", "git"], {
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "ignore"],
-    }).trim().length > 0;
-  } catch {
-    return false;
   }
+
+  for (const [command, args] of [
+    ["fuser", [lock]],
+    ["lsof", ["-t", "--", lock]],
+  ] as const) {
+    try {
+      execFileSync(command, [...args], {
+        stdio: "ignore",
+      });
+      return true;
+    } catch {
+      // Both probes return a non-zero status when this exact file has no holder.
+      // A missing probe is also harmless because the other probe may exist.
+    }
+  }
+  return false;
 }
 
 /** Removes only an abandoned lock; fresh or active locks fail closed. */
@@ -75,7 +87,7 @@ export function clearStaleReleaseGitIndexLock(input: {
   const lock = path.join(input.cwd, ".git", "index.lock");
   if (!existsSync(lock)) return;
   const ageMs = Date.now() - statSync(lock).mtimeMs;
-  if (ageMs < (input.staleAgeMs ?? 2 * 60 * 1000) || hasRunningGitProcess()) {
+  if (ageMs < (input.staleAgeMs ?? 2 * 60 * 1000) || hasProcessHoldingLock(lock)) {
     throw new Error(`Git index.lock is active. Close the other Git operation and run ${input.command} again.`);
   }
   unlinkSync(lock);

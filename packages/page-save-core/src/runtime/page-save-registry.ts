@@ -28,6 +28,13 @@ import type {
 
 interface StoredRegistration extends PageSaveRegistrationInput {
   items: PageSaveItemState[];
+  registrationToken: number;
+  statusRevision: number;
+}
+
+interface PageSaveRegistrationCleanup {
+  (): void;
+  registrationToken: number;
 }
 
 const registrations = new Map<string, StoredRegistration>();
@@ -35,23 +42,41 @@ const persistedRecords = new Map<string, PageSavePendingRecord>();
 let activeRegistrationId: string | null = null;
 let dialogOpen = false;
 let hydrated = false;
+let hydrationPromise: Promise<void> | null = null;
 let activeSaveExecutionId: string | null = null;
 let lastResult: PageSaveResult | null = null;
 let interrupted: PageSaveRecoveredOperation[] = [];
 let recoveryHydrated = false;
-const heldCleanPasses = new Map<string, Map<string, number>>();
+let recoveryHydrationPromise: Promise<void> | null = null;
+let nextRegistrationToken = 1;
+interface HeldCleanState {
+  pass: number;
+  throughRevision: number;
+}
+
+const heldCleanPasses = new Map<string, Map<string, HeldCleanState>>();
 const listeners = new Set<() => void>();
 
-function markItemsHeldClean(registrationId: string, itemIds: string[]): void {
+function markItemsHeldClean(
+  registrationId: string,
+  itemIds: string[],
+  throughRevision: number,
+): void {
   heldCleanPasses.set(
     registrationId,
-    new Map(itemIds.map((itemId) => [itemId, 0])),
+    new Map(
+      itemIds.map((itemId) => [
+        itemId,
+        { pass: 0, throughRevision } satisfies HeldCleanState,
+      ]),
+    ),
   );
 }
 
 function applyHeldClean(
   registrationId: string,
   items: PageSaveItemState[],
+  statusRevision?: number,
 ): PageSaveItemState[] {
   const passes = heldCleanPasses.get(registrationId);
   if (!passes || passes.size === 0) return items;
@@ -68,15 +93,24 @@ function applyHeldClean(
   }
 
   return items.map((item) => {
-    const pass = passes.get(item.id);
-    if (pass === undefined) return item;
+    const held = passes.get(item.id);
+    if (!held) return item;
     if (!item.isDirty) {
       passes.delete(item.id);
       if (passes.size === 0) heldCleanPasses.delete(registrationId);
       return item;
     }
-    if (pass === 0) {
-      passes.set(item.id, 1);
+
+    // A render produced after the save started can contain a genuine new edit.
+    // It must never be swallowed by the stale-update suppression pass.
+    if (statusRevision !== undefined && statusRevision > held.throughRevision) {
+      passes.delete(item.id);
+      if (passes.size === 0) heldCleanPasses.delete(registrationId);
+      return item;
+    }
+
+    if (held.pass === 0) {
+      passes.set(item.id, { ...held, pass: 1 });
       return { ...item, isDirty: false, selected: item.selected };
     }
     passes.delete(item.id);
@@ -85,7 +119,9 @@ function applyHeldClean(
   });
 }
 
-function isRegistrationSaving(registration: StoredRegistration | null): boolean {
+function isRegistrationSaving(
+  registration: StoredRegistration | null,
+): boolean {
   if (!registration) return false;
   return (
     activeSaveExecutionId === registration.id || registration.isSaving === true
@@ -117,6 +153,7 @@ function itemsEqual(a: PageSaveItemState[], b: PageSaveItemState[]): boolean {
       item.label === other?.label &&
       item.description === other?.description &&
       item.operation === other?.operation &&
+      item.ephemeral === other?.ephemeral &&
       item.isDirty === other?.isDirty &&
       item.canSave === other?.canSave &&
       item.selected === other?.selected
@@ -167,20 +204,33 @@ function emit(): void {
 
 function refreshPageSaveSnapshot(): void {
   const active = resolveActiveRegistration();
+  const saving = resolveSavingRegistration();
   const persisted = resolvePrimaryPersisted();
-  const activeDirty = active ? hasDirtyItems(active.items) : false;
+  const activeDirty = active !== null;
   const isDirty = activeDirty || persisted !== null;
-  const isSaving = isRegistrationSaving(active);
+  const isSaving =
+    activeSaveExecutionId !== null || isRegistrationSaving(saving);
   const selectedDirty = active ? selectedDirtyItems(active.items) : [];
   const discardableDirty =
     active?.items.some(
       (item) => item.isDirty && item.ephemeral && !item.selected,
     ) ?? false;
   const blockedSelected = selectedDirty.some((item) => !item.canSave);
+  const visibleRegistration = saving ?? active;
+  const visiblePersisted = visibleRegistration ? null : persisted;
 
   let phase: PageSaveSnapshot["phase"] = "idle";
   if (isSaving) phase = "saving";
   else if (isDirty) phase = "dirty";
+
+  let dialog = dialogOpen ? buildDialogState() : null;
+  const dialogHasWork = dialog?.items.some((item) => item.isDirty) ?? false;
+  if (dialogOpen && !dialogHasWork && interrupted.length === 0) {
+    // Work can disappear while the dialog is open (undo, unmount, scope switch,
+    // successful external state sync). Never leave an empty modal behind.
+    dialogOpen = false;
+    dialog = null;
+  }
 
   const next: PageSaveSnapshot = {
     phase,
@@ -192,11 +242,15 @@ function refreshPageSaveSnapshot(): void {
       !blockedSelected &&
       !isSaving &&
       (active?.canSave ?? false),
-    label: active?.label ?? persisted?.pageLabel ?? null,
-    registrationId: active?.id ?? persisted?.id ?? null,
+    label: visibleRegistration?.label ?? visiblePersisted?.pageLabel ?? null,
+    registrationId:
+      visibleRegistration?.id ??
+      visiblePersisted?.id ??
+      activeSaveExecutionId ??
+      null,
     hasPersistedPending: persisted !== null,
     dialogOpen,
-    dialog: dialogOpen ? buildDialogState() : null,
+    dialog,
     lastResult,
     interrupted,
   };
@@ -210,18 +264,50 @@ function nowIso(): string {
   return new Date().toISOString();
 }
 
-function normalizeItems(items: PageSaveItemInput[], previous?: PageSaveItemState[]): PageSaveItemState[] {
+function normalizeItems(
+  items: PageSaveItemInput[],
+  previous?: PageSaveItemState[],
+): PageSaveItemState[] {
   const previousById = new Map(previous?.map((item) => [item.id, item]) ?? []);
-  return items.map((item) => ({
-    ...item,
-    operation: item.operation ?? "save",
-    // Form-derived work cannot be abandoned independently from the form state:
-    // its edited values are still mounted and would immediately make it dirty
-    // again. Only staged operations own an executor that can be discarded.
-    selected: item.ephemeral
-      ? (previousById.get(item.id)?.selected ?? true)
-      : true,
-  }));
+  const normalized: PageSaveItemState[] = [];
+  const indexById = new Map<string, number>();
+
+  for (const item of items) {
+    const next: PageSaveItemState = {
+      ...item,
+      operation: item.operation ?? "save",
+      // Form-derived work cannot be abandoned independently from the form state:
+      // its edited values are still mounted and would immediately make it dirty
+      // again. Only staged operations own an executor that can be discarded.
+      selected: item.ephemeral
+        ? (previousById.get(item.id)?.selected ?? true)
+        : true,
+    };
+
+    const existingIndex = indexById.get(next.id);
+    if (existingIndex === undefined) {
+      indexById.set(next.id, normalized.length);
+      normalized.push(next);
+      continue;
+    }
+
+    const existing = normalized[existingIndex]!;
+    const sameContract =
+      existing.operation === next.operation &&
+      Boolean(existing.ephemeral) === Boolean(next.ephemeral);
+    normalized[existingIndex] = {
+      ...next,
+      // Two rows sharing an id would journal/execute under the same operation
+      // key. Exact duplicates collapse safely; conflicting definitions are kept
+      // visible but blocked so ambiguous work can never execute twice.
+      isDirty: existing.isDirty || next.isDirty,
+      canSave: sameContract ? existing.canSave && next.canSave : false,
+      selected: sameContract ? existing.selected && next.selected : true,
+      ephemeral: sameContract ? next.ephemeral : undefined,
+    };
+  }
+
+  return normalized;
 }
 
 function hasDirtyItems(items: PageSaveItemState[]): boolean {
@@ -234,8 +320,8 @@ function selectedDirtyItems(items: PageSaveItemState[]): PageSaveItemState[] {
 
 /**
  * Pages may mount several scopes at once (an editor plus a reviews surface).
- * The header drives whichever scope actually has work, falling back to the most
- * recently registered one.
+ * A clean scope is never a work source: allowing it to shadow dirty persisted
+ * work is what produced header waves with an empty/non-opening dialog.
  */
 function resolveActiveRegistration(): StoredRegistration | null {
   const current = activeRegistrationId
@@ -243,10 +329,29 @@ function resolveActiveRegistration(): StoredRegistration | null {
     : null;
   if (current && hasDirtyItems(current.items)) return current;
 
-  const dirty = [...registrations.values()]
-    .reverse()
-    .find((registration) => hasDirtyItems(registration.items));
-  return dirty ?? current;
+  return (
+    [...registrations.values()]
+      .reverse()
+      .find((registration) => hasDirtyItems(registration.items)) ?? null
+  );
+}
+
+function resolveSavingRegistration(): StoredRegistration | null {
+  if (activeSaveExecutionId) {
+    const executing = registrations.get(activeSaveExecutionId);
+    if (executing) return executing;
+  }
+
+  const current = activeRegistrationId
+    ? (registrations.get(activeRegistrationId) ?? null)
+    : null;
+  if (current?.isSaving) return current;
+
+  return (
+    [...registrations.values()]
+      .reverse()
+      .find((registration) => registration.isSaving) ?? null
+  );
 }
 
 // A record with nothing dirty left is not pending work: it must never light up
@@ -281,7 +386,55 @@ function buildPendingRecord(
   };
 }
 
-async function syncPersistedRegistration(registration: StoredRegistration): Promise<void> {
+function normalizePersistedRecord(
+  value: PageSavePendingRecord,
+): PageSavePendingRecord | null {
+  if (
+    !value ||
+    value.schemaVersion !== PAGE_SAVE_PENDING_SCHEMA_VERSION ||
+    typeof value.id !== "string" ||
+    value.id.length === 0 ||
+    typeof value.pageLabel !== "string" ||
+    typeof value.returnPath !== "string" ||
+    !value.returnPath.startsWith("/") ||
+    !Array.isArray(value.items)
+  ) {
+    return null;
+  }
+
+  const items = value.items
+    .filter(
+      (item) =>
+        Boolean(item) &&
+        !item.ephemeral &&
+        typeof item.id === "string" &&
+        item.id.length > 0 &&
+        typeof item.label === "string" &&
+        typeof item.isDirty === "boolean" &&
+        typeof item.canSave === "boolean",
+    )
+    .map((item) => ({
+      ...item,
+      operation: (item.operation === "upload" || item.operation === "delete"
+        ? item.operation
+        : "save") as PageSaveItemState["operation"],
+      selected: true,
+    }));
+
+  if (!hasDirtyItems(items)) return null;
+  return { ...value, items };
+}
+
+function ignoreBackgroundPersistenceFailure(promise: Promise<void>): void {
+  // The live registry remains authoritative for this session. The persistence
+  // layer retries and serializes writes; a final storage failure must not turn
+  // into an unhandled rejection that destabilizes the app shell.
+  void promise.catch(() => undefined);
+}
+
+async function syncPersistedRegistration(
+  registration: StoredRegistration,
+): Promise<void> {
   const persistable = persistableItems(registration.items);
   if (!hasDirtyItems(persistable)) {
     persistedRecords.delete(registration.id);
@@ -333,56 +486,102 @@ export function subscribePageSave(listener: () => void): () => void {
   };
 }
 
-export async function hydratePageSavePendingFromStorage(): Promise<void> {
-  if (hydrated) return;
-  hydrated = true;
-  const records = await loadPageSavePendingRecords();
-  persistedRecords.clear();
-  for (const record of records) {
-    if (!hasDirtyItems(record.items)) {
-      // Stale leftovers from a finished save would otherwise resurface as an
-      // empty save dialog on the next page that mounts a scope.
-      await deletePageSavePendingRecord(record.id);
-      continue;
+export function hydratePageSavePendingFromStorage(): Promise<void> {
+  if (hydrated) return Promise.resolve();
+  if (hydrationPromise) return hydrationPromise;
+
+  hydrationPromise = (async () => {
+    const records = await loadPageSavePendingRecords();
+
+    for (const rawRecord of records) {
+      const recordId =
+        rawRecord && typeof rawRecord.id === "string" ? rawRecord.id : null;
+      const record = normalizePersistedRecord(rawRecord);
+      if (!record) {
+        if (recordId) await deletePageSavePendingRecord(recordId);
+        continue;
+      }
+
+      // A mounted scope is newer truth than a record loaded from IndexedDB.
+      // Hydration can finish after React has already mounted/updated the page;
+      // never let that older durable snapshot overwrite the live state.
+      const live = registrations.get(record.id);
+      if (live) {
+        const liveItems = persistableItems(live.items);
+        if (hasDirtyItems(liveItems)) {
+          const liveRecord = buildPendingRecord(live, liveItems);
+          persistedRecords.set(live.id, liveRecord);
+          await persistPageSavePendingRecord(liveRecord);
+        } else {
+          persistedRecords.delete(record.id);
+          await deletePageSavePendingRecord(record.id);
+        }
+        continue;
+      }
+
+      persistedRecords.set(record.id, record);
     }
-    persistedRecords.set(record.id, {
-      ...record,
-      items: record.items.map((item) => ({ ...item, selected: true })),
-    });
-  }
-  emit();
+
+    hydrated = true;
+    emit();
+  })().finally(() => {
+    hydrationPromise = null;
+  });
+
+  return hydrationPromise;
 }
 
-export function registerPageSave(registration: PageSaveRegistrationInput): () => void {
+export function registerPageSave(
+  registration: PageSaveRegistrationInput,
+): PageSaveRegistrationCleanup {
   const previous = registrations.get(registration.id);
+  const registrationToken = nextRegistrationToken++;
   const stored: StoredRegistration = {
     ...registration,
     items: normalizeItems(registration.items, previous?.items),
+    registrationToken,
+    statusRevision: 0,
   };
   registrations.set(registration.id, stored);
   activeRegistrationId = registration.id;
-  void syncPersistedRegistration(stored);
+  ignoreBackgroundPersistenceFailure(syncPersistedRegistration(stored));
   emit();
 
-  return () => {
+  const cleanup = (() => {
+    const current = registrations.get(registration.id);
+    if (!current || current.registrationToken !== registrationToken) return;
     registrations.delete(registration.id);
     if (activeRegistrationId === registration.id) {
       activeRegistrationId = [...registrations.keys()].at(-1) ?? null;
     }
     emit();
-  };
+  }) as PageSaveRegistrationCleanup;
+  cleanup.registrationToken = registrationToken;
+  return cleanup;
 }
 
 export function updatePageSaveRegistration(
   id: string,
   patch: PageSaveStatusPatch,
+  registrationToken?: number,
+  statusRevision?: number,
 ): void {
   const current = registrations.get(id);
   if (!current) return;
+  if (
+    registrationToken !== undefined &&
+    current.registrationToken !== registrationToken
+  ) {
+    return;
+  }
+  if (statusRevision !== undefined && statusRevision < current.statusRevision) {
+    return;
+  }
 
   const nextItems = applyHeldClean(
     id,
     patch.items ? normalizeItems(patch.items, current.items) : current.items,
+    statusRevision,
   );
   const nextLabel = patch.label ?? current.label;
   const nextReturnPath = patch.returnPath ?? current.returnPath;
@@ -399,6 +598,12 @@ export function updatePageSaveRegistration(
     nextCanSave === current.canSave &&
     itemsEqual(nextItems, current.items)
   ) {
+    if (
+      statusRevision !== undefined &&
+      statusRevision > current.statusRevision
+    ) {
+      registrations.set(id, { ...current, statusRevision });
+    }
     return;
   }
 
@@ -409,9 +614,10 @@ export function updatePageSaveRegistration(
     isSaving: nextIsSaving,
     canSave: nextCanSave,
     items: nextItems,
+    statusRevision: statusRevision ?? current.statusRevision,
   };
   registrations.set(id, next);
-  void syncPersistedRegistration(next);
+  ignoreBackgroundPersistenceFailure(syncPersistedRegistration(next));
   emit();
 }
 
@@ -432,7 +638,9 @@ export function setPageSaveItemSelected(
       item.id === itemId ? { ...item, selected } : item,
     );
     registrations.set(registrationId, { ...current, items });
-    void syncPersistedRegistration({ ...current, items });
+    ignoreBackgroundPersistenceFailure(
+      syncPersistedRegistration({ ...current, items }),
+    );
     emit();
     return;
   }
@@ -447,7 +655,9 @@ export function setPageSaveItemSelected(
     );
     const nextRecord = { ...persisted, items, updatedAt: nowIso() };
     persistedRecords.set(registrationId, nextRecord);
-    void persistPageSavePendingRecord(nextRecord);
+    ignoreBackgroundPersistenceFailure(
+      persistPageSavePendingRecord(nextRecord),
+    );
     emit();
   }
 }
@@ -495,7 +705,6 @@ export async function dropPageSaveItems(
   await Promise.all(persistence);
 }
 
-
 /**
  * Reads and clears the last execution result. The header consumes it to show
  * one check mark; leaving it set would flash a stale confirmation on the next
@@ -513,17 +722,24 @@ export function acknowledgePageSaveResult(): PageSaveResult | null {
  * Reads what a previous session left unfinished. Anything whose outcome the
  * client cannot know is surfaced for the user to confirm; nothing is replayed.
  */
-export async function hydratePageSaveRecoveryFromStorage(): Promise<void> {
-  if (recoveryHydrated) return;
-  recoveryHydrated = true;
-  const recovered = await recoverPageSaveJournal();
-  const unresolved = recovered.filter(
-    (operation) =>
-      operation.verdict === "needsConfirmation" || operation.verdict === "failed",
-  );
-  if (unresolved.length === 0) return;
-  interrupted = unresolved;
-  emit();
+export function hydratePageSaveRecoveryFromStorage(): Promise<void> {
+  if (recoveryHydrated) return Promise.resolve();
+  if (recoveryHydrationPromise) return recoveryHydrationPromise;
+
+  recoveryHydrationPromise = (async () => {
+    const recovered = await recoverPageSaveJournal();
+    interrupted = recovered.filter(
+      (operation) =>
+        operation.verdict === "needsConfirmation" ||
+        operation.verdict === "failed",
+    );
+    recoveryHydrated = true;
+    emit();
+  })().finally(() => {
+    recoveryHydrationPromise = null;
+  });
+
+  return recoveryHydrationPromise;
 }
 
 /**
@@ -550,23 +766,22 @@ export function acknowledgePageSaveInterruption(operationId: string): void {
   );
   if (next.length === interrupted.length) return;
   interrupted = next;
-  void acknowledgePageSaveJournalEntry(operationId);
+  ignoreBackgroundPersistenceFailure(
+    acknowledgePageSaveJournalEntry(operationId),
+  );
   emit();
 }
 
 export function openPageSaveDialog(): void {
   const snapshot = getPageSaveSnapshot();
-  if (!snapshot.isDirty && !snapshot.isSaving && snapshot.interrupted.length === 0) {
-    return;
-  }
-  // The header can be driven by a scope other than the one that owns the work.
-  // Opening a dialog with no dirty row and nothing to acknowledge would ask the
-  // user to choose from an empty list.
+  if (!snapshot.isDirty && snapshot.interrupted.length === 0) return;
+
+  // Opening is allowed only when the modal can name actual dirty work or an
+  // interrupted operation. A saving-only state never justifies an empty modal.
   const pending = buildDialogState();
   const hasListedWork = pending?.items.some((item) => item.isDirty) ?? false;
-  if (!hasListedWork && !snapshot.isSaving && snapshot.interrupted.length === 0) {
-    return;
-  }
+  if (!hasListedWork && snapshot.interrupted.length === 0) return;
+
   dialogOpen = true;
   lastResult = null;
   emit();
@@ -588,7 +803,9 @@ export function consumePageSaveExecuteAfterNavigation(
   return true;
 }
 
-export function markPageSaveExecuteAfterNavigation(registrationId: string): void {
+export function markPageSaveExecuteAfterNavigation(
+  registrationId: string,
+): void {
   if (typeof window === "undefined") return;
   window.sessionStorage.setItem(`page-save:execute:${registrationId}`, "1");
 }
@@ -598,19 +815,33 @@ async function openJournalForSelection(
   selectedIds: string[],
 ): Promise<PageSaveJournalEntry[]> {
   const selected = new Set(selectedIds);
-  return Promise.all(
-    registration.items
-      .filter((item) => selected.has(item.id))
-      .map((item) =>
-        openPageSaveJournalEntry({
+  const journalled: PageSaveJournalEntry[] = [];
+
+  try {
+    for (const item of registration.items) {
+      if (!selected.has(item.id)) continue;
+      journalled.push(
+        await openPageSaveJournalEntry({
           scopeId: registration.id,
           itemId: item.id,
           kind: item.operation,
           label: item.label,
           returnPath: registration.returnPath,
         }),
+      );
+    }
+    return journalled;
+  } catch (error) {
+    // No page operation has run yet. Any journal rows opened before a later
+    // journal write failed are therefore known failures, not ambiguous
+    // `running` work that should alarm the user after restart.
+    await Promise.allSettled(
+      journalled.map((entry) =>
+        settlePageSaveJournalEntry(entry, "failed", error),
       ),
-  );
+    );
+    throw error;
+  }
 }
 
 export async function executePageSave(): Promise<boolean> {
@@ -630,9 +861,6 @@ export async function executePageSave(): Promise<boolean> {
 
   if (active.isSaving || !dialog.canSave) return false;
 
-  // Unchecked staged operations are deliberately abandoned when Execute is
-  // pressed. They never run, and both their in-memory executors and any stale
-  // pending representation are removed before selected work starts.
   const discardedIds = dialog.items
     .filter((item) => item.isDirty && item.ephemeral && !item.selected)
     .map((item) => item.id);
@@ -659,82 +887,101 @@ export async function executePageSave(): Promise<boolean> {
 
   activeSaveExecutionId = active.id;
   const markSaving = (saving: boolean): void => {
-    const current = resolveActiveRegistration();
-    if (!current || current.id !== active.id) return;
-    registrations.set(current.id, { ...current, isSaving: saving });
+    const current = registrations.get(active.id);
+    if (current) {
+      registrations.set(current.id, { ...current, isSaving: saving });
+    }
     emit();
   };
 
-  // The dialog is dismissed the moment the work is accepted: the save runs in
-  // the background, and only a failure brings the dialog back to report it.
   dialogOpen = false;
   markSaving(true);
   lastResult = null;
 
   const failAndReopen = (): void => {
     lastResult = "failure";
-    dialogOpen = true;
     markSaving(false);
+    const pending = buildDialogState();
+    dialogOpen = pending !== null || interrupted.length > 0;
     emit();
   };
 
-  // The journal opens before the first request leaves the device, so an
-  // interruption anywhere below is recoverable instead of silent.
-  const journalled = await openJournalForSelection(active, selectedIds);
-  // A new attempt overwrites the journal entry it reuses, so any recovered row
-  // for the same operation describes a record that no longer exists. Left in
-  // place it pinned the header icon and reopened the dialog on an
-  // acknowledgement the user could no longer answer — the outcome of *this*
-  // attempt is the answer.
-  supersedeInterrupted(journalled);
-  const settle = (status: "succeeded" | "failed", error?: unknown) =>
-    Promise.all(
-      journalled.map((entry) => settlePageSaveJournalEntry(entry, status, error)),
+  let journalled: PageSaveJournalEntry[] = [];
+  const settleBestEffort = async (
+    status: "succeeded" | "failed",
+    error?: unknown,
+  ): Promise<void> => {
+    await Promise.allSettled(
+      journalled.map((entry) =>
+        settlePageSaveJournalEntry(entry, status, error),
+      ),
     );
+  };
 
   try {
+    // Journal setup is part of accepting the operation. Failure here happens
+    // before page work runs and must always restore a usable non-saving state.
+    journalled = await openJournalForSelection(active, selectedIds);
+    supersedeInterrupted(journalled);
+
     if (active.handle.prepareForSave) {
       const prepared = await active.handle.prepareForSave(selectedIds);
       if (!prepared) {
-        await settle("failed");
+        await settleBestEffort("failed");
         failAndReopen();
         return false;
       }
     }
 
     const saved = await active.handle.save(selectedIds);
-    await settle(saved ? "succeeded" : "failed");
-    if (saved) {
-      const current = resolveActiveRegistration();
-      if (current && current.id === active.id) {
-        const cleanedItems = current.items.map((item) =>
-          selectedIds.includes(item.id)
-            ? { ...item, isDirty: false, selected: true }
-            : item,
-        );
-        registrations.set(current.id, {
-          ...current,
-          items: cleanedItems,
-          isSaving: false,
-        });
-        markItemsHeldClean(active.id, selectedIds);
-      }
-      persistedRecords.delete(active.id);
-      await deletePageSavePendingRecord(active.id);
-      dialogOpen = false;
-      lastResult = "success";
-      emit();
-    } else {
+    if (!saved) {
+      await settleBestEffort("failed");
       failAndReopen();
+      return false;
     }
-    return saved;
+
+    // The page write is authoritative. Local cleanup failures must never turn
+    // a successful write into a retry prompt, which could duplicate the write.
+    await settleBestEffort("succeeded");
+
+    const current = registrations.get(active.id);
+    if (current) {
+      const cleanedItems = current.items.map((item) =>
+        selectedIds.includes(item.id)
+          ? { ...item, isDirty: false, selected: true }
+          : item,
+      );
+      registrations.set(current.id, {
+        ...current,
+        items: cleanedItems,
+        isSaving: false,
+      });
+      markItemsHeldClean(active.id, selectedIds, active.statusRevision);
+    }
+
+    persistedRecords.delete(active.id);
+    try {
+      await deletePageSavePendingRecord(active.id);
+    } catch {
+      // The page write already succeeded. A local cleanup failure is retried by
+      // the persistence layer and must never convert success into a duplicate
+      // execution prompt.
+    }
+    dialogOpen = false;
+    lastResult = "success";
+    emit();
+    return true;
   } catch (error) {
-    await settle("failed", error);
+    await settleBestEffort("failed", error);
     failAndReopen();
     throw error;
   } finally {
     if (activeSaveExecutionId === active.id) {
       activeSaveExecutionId = null;
+      const current = registrations.get(active.id);
+      if (current?.isSaving) {
+        registrations.set(active.id, { ...current, isSaving: false });
+      }
       emit();
     }
   }
@@ -746,10 +993,13 @@ export function resetPageSaveRegistryForTests(): void {
   activeRegistrationId = null;
   dialogOpen = false;
   hydrated = false;
+  hydrationPromise = null;
   activeSaveExecutionId = null;
   lastResult = null;
   interrupted = [];
   recoveryHydrated = false;
+  recoveryHydrationPromise = null;
+  nextRegistrationToken = 1;
   heldCleanPasses.clear();
   listeners.clear();
   cachedSnapshot = IDLE_SNAPSHOT;

@@ -82,6 +82,29 @@ assert.match(registrationCard, /useStoreDetails/);
 assert.match(registrationCard, /auth\.storeName\.label/);
 assert.match(registrationCard, /updateField\("storeName"/);
 
+const providerAccountUiStart = registrationCard.indexOf(
+  "features-profile-presentation-profileregistrationinfocard-div-35-uv2m4q",
+);
+assert.notEqual(providerAccountUiStart, -1, "provider-account UI container must exist");
+const providerAccountUi = registrationCard.slice(providerAccountUiStart);
+assert.match(
+  registrationCard,
+  /const \[isProviderAccountOpen, setIsProviderAccountOpen\] = React\.useState\(false\)/,
+);
+assert.match(
+  registrationCard,
+  /const \[isProviderAccountEnabled, setIsProviderAccountEnabled\] = React\.useState\(false\)/,
+);
+assert.match(providerAccountUi, /profile\.providerAccount\.title/);
+assert.match(providerAccountUi, /<BriefcaseBusiness/);
+assert.match(providerAccountUi, /<Switch/);
+assert.match(providerAccountUi, /onCheckedChange=\{setIsProviderAccountEnabled\}/);
+assert.doesNotMatch(
+  providerAccountUi,
+  /updateField\(|saveAsync|asolApi|fetch\(/,
+  "provider-account switch is UI-only and must not mutate profile or call an API",
+);
+
 const storeDetailsHook = source('src/features/profile/presentation/hooks/use-store-details.ts');
 assert.match(storeDetailsHook, /store-name-draft/);
 

@@ -9,11 +9,11 @@ import {
 const snapshot = {
   buyerId: "buyer_1",
   sellerOrders: [
-    { seller_id: "seller_a", service_provider_id: "provider_x" },
-    { seller_id: "seller_b", service_provider_id: "provider_y" },
+    { sellerId: "seller_a", serviceProviderId: "provider_x" },
+    { sellerId: "seller_b", serviceProviderId: "provider_y" },
   ],
-  shipments: [{ carrier_id: "carrier_1" }, { carrier_id: "provider_x" }],
-  deliveryPlanCandidates: [{ provider_id: "provider_z" }],
+  shipments: [{ carrierId: "carrier_1" }, { carrierId: "provider_x" }],
+  deliveryPlanCandidates: [{ providerId: "provider_z" }],
 };
 
 assert.deepEqual(collectOrderPartyUids(snapshot.sellerOrders), {

@@ -129,12 +129,20 @@ export async function runR2AccountSeparationTest() {
   // ── 4. Product images are stored as keys (+ optional storageProfileId) ───────
 
   const productRowModule = stripComments(
-    read('packages', 'product-core', 'src', 'server', 'product-row.ts'),
+    read(
+      'packages',
+      'data-core',
+      'src',
+      'domains',
+      'product',
+      'repositories',
+      'product-persistence.ts',
+    ),
   );
   const serializeImages = /export function serializeProductImages\([\s\S]*?\n}/.exec(
     productRowModule,
   );
-  assert.ok(serializeImages, 'serializeProductImages not found in @asol/product-core/server');
+  assert.ok(serializeImages, 'serializeProductImages not found in @asol/data-core product persistence');
   assert.match(
     serializeImages[0],
     /imageKey:\s*image\.imageKey/,
@@ -154,7 +162,7 @@ export async function runR2AccountSeparationTest() {
   const parseProductImages = /export function parseProductImages\([\s\S]*?\n}/.exec(
     productRowModule,
   );
-  assert.ok(parseProductImages, 'parseProductImages not found in @asol/product-core/server');
+  assert.ok(parseProductImages, 'parseProductImages not found in @asol/data-core product persistence');
   assert.doesNotMatch(
     parseProductImages[0],
     /url:\s*image\.url/,
@@ -173,7 +181,7 @@ export async function runR2AccountSeparationTest() {
   assert.match(
     repository,
     /productRowValues/,
-    'product-repository must persist rows through @asol/product-core/server row mapping.',
+    'product-repository must persist rows through @asol/data-core product persistence row mapping.',
   );
 
   // ── 5. Three media accounts are distinct (no shared identity fields) ─────────

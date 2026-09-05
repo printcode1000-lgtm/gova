@@ -10046,6 +10046,34 @@
       ]
     },
     {
+      "id": "document:docs/04-ui-components/profile-registration-info-card.md",
+      "kind": "document",
+      "name": "Profile Registration Info Card",
+      "path": "docs/04-ui-components/profile-registration-info-card.md",
+      "summary": "`ProfileRegistrationInfoCard` owns the contact and registration controls shown in the profile edit registration section.",
+      "tags": [
+        "`profileregistrationinfocard` owns the contact and registration controls shown in the profile edit registration section.",
+        "and",
+        "card",
+        "contact",
+        "controls",
+        "docs/04-ui-components/profile-registration-info-card",
+        "docs/04-ui-components/profile-registration-info-card.md",
+        "edit",
+        "in",
+        "info",
+        "md",
+        "owns",
+        "profile",
+        "profile registration info card",
+        "profileregistrationinfocard",
+        "registration",
+        "section",
+        "shown",
+        "the"
+      ]
+    },
+    {
       "id": "document:docs/04-ui-components/README.md",
       "kind": "document",
       "name": "UI Components Domain",
@@ -10866,6 +10894,8 @@
         "packages/page-save-core/src/tests/header-visibility.test.ts",
         "packages/page-save-core/src/tests/journal-recovery",
         "packages/page-save-core/src/tests/journal-recovery.test.ts",
+        "packages/page-save-core/src/tests/resilience",
+        "packages/page-save-core/src/tests/resilience.test.ts",
         "page",
         "page save system",
         "performs",
@@ -54639,6 +54669,18 @@
       ]
     },
     {
+      "id": "test:packages/page-save-core/src/tests/resilience.test.ts",
+      "kind": "test",
+      "name": "resilience.test.ts",
+      "path": "packages/page-save-core/src/tests/resilience.test.ts",
+      "tags": [
+        "packages/page-save-core/src/tests/resilience",
+        "packages/page-save-core/src/tests/resilience.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/page-snapshot-core/src/tests/index.test.ts",
       "kind": "test",
       "name": "index.test.ts",
@@ -59800,6 +59842,11 @@
     {
       "from": "command:test:page-save-core",
       "to": "test:packages/page-save-core/src/tests/journal-recovery.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:page-save-core",
+      "to": "test:packages/page-save-core/src/tests/resilience.test.ts",
       "kind": "invokes"
     },
     {
@@ -70620,6 +70667,11 @@
       "kind": "belongs-to"
     },
     {
+      "from": "document:docs/04-ui-components/profile-registration-info-card.md",
+      "to": "domain:ui-components",
+      "kind": "belongs-to"
+    },
+    {
       "from": "document:docs/04-ui-components/README.md",
       "to": "domain:ui-components",
       "kind": "belongs-to"
@@ -71701,6 +71753,12 @@
       "to": "test:packages/page-save-core/src/tests/journal-recovery.test.ts",
       "kind": "references",
       "detail": "packages/page-save-core/src/tests/journal-recovery.test.ts"
+    },
+    {
+      "from": "document:docs/05-platform-features/page-save-system.md",
+      "to": "test:packages/page-save-core/src/tests/resilience.test.ts",
+      "kind": "references",
+      "detail": "packages/page-save-core/src/tests/resilience.test.ts"
     },
     {
       "from": "document:docs/05-platform-features/page-save-system.md",
@@ -84638,6 +84696,12 @@
     {
       "from": "domain:architecture",
       "to": "test:packages/page-save-core/src/tests/journal-recovery.test.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "test:packages/page-save-core/src/tests/resilience.test.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -97994,6 +98058,12 @@
     {
       "from": "domain:platform-features",
       "to": "test:packages/page-save-core/src/tests/journal-recovery.test.ts",
+      "kind": "documents",
+      "detail": "packages/page-save-core/"
+    },
+    {
+      "from": "domain:platform-features",
+      "to": "test:packages/page-save-core/src/tests/resilience.test.ts",
       "kind": "documents",
       "detail": "packages/page-save-core/"
     },
@@ -218322,6 +218392,12 @@
     },
     {
       "from": "source:src/features/page-save/presentation/PageSaveRuntimeInit.tsx",
+      "to": "package:@asol/system-logs-core",
+      "kind": "imports",
+      "detail": "@asol/system-logs-core"
+    },
+    {
+      "from": "source:src/features/page-save/presentation/PageSaveRuntimeInit.tsx",
       "to": "source:src/features/page-save/application/page-save-core-bootstrap.ts",
       "kind": "imports",
       "detail": "@/features/page-save/application/page-save-core-bootstrap"
@@ -228927,6 +229003,12 @@
       "to": "source:src/shared/ui/label.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/label"
+    },
+    {
+      "from": "source:src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
+      "to": "source:src/shared/ui/switch.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/switch"
     },
     {
       "from": "source:src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
@@ -247381,6 +247463,47 @@
     },
     {
       "from": "test:packages/page-save-core/src/tests/journal-recovery.test.ts",
+      "to": "package:@asol/page-save-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:packages/page-save-core/src/tests/resilience.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/page-save-core/src/tests/resilience.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/page-save-core/src/tests/resilience.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/page-save-core/src/tests/resilience.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/page-save-core/src/tests/resilience.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/page-save-core/src/tests/resilience.test.ts",
+      "to": "package:@asol/page-save-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:packages/page-save-core/src/tests/resilience.test.ts",
+      "to": "source:packages/page-save-core/src/index.ts",
+      "kind": "imports",
+      "detail": "../index"
+    },
+    {
+      "from": "test:packages/page-save-core/src/tests/resilience.test.ts",
       "to": "package:@asol/page-save-core",
       "kind": "tests"
     },

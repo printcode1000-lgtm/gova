@@ -85,6 +85,17 @@ function testSuccessFlashOwnsItsTimer() {
   );
 }
 
+/** Hydration must be retryable after WebView/tab resume and never reject unobserved. */
+function testRuntimeHydrationRetriesOnResume() {
+  const runtimeInit = read(
+    "src/features/page-save/presentation/PageSaveRuntimeInit.tsx",
+  );
+  assert.match(runtimeInit, /Promise\.allSettled/);
+  assert.match(runtimeInit, /window\.addEventListener\("pageshow"/);
+  assert.match(runtimeInit, /document\.addEventListener\("visibilitychange"/);
+  assert.match(runtimeInit, /reportSystemIssue\(/);
+}
+
 /** Every staged operation kind must round-trip through the package door. */
 function testPackageOwnsOperationQueue() {
   const packageDoor = read("packages/page-save-core/src/index.ts");
@@ -110,9 +121,7 @@ function testPackageOwnsOperationQueue() {
 
 /** The shared dialog exposes one execute contract on every page-save surface. */
 function testDialogExecuteContract() {
-  const dialog = read(
-    "src/features/page-save/presentation/PageSaveDialog.tsx",
-  );
+  const dialog = read("src/features/page-save/presentation/PageSaveDialog.tsx");
   const arabic = read("src/shared/locales/ar.json");
   const english = read("src/shared/locales/en.json");
 
@@ -157,7 +166,11 @@ function testNoDeepImports() {
   const offenders = sourceFiles.filter((filePath) =>
     /@asol\/page-save-core\/src\//.test(read(filePath)),
   );
-  assert.deepEqual(offenders, [], "deep imports into page-save-core are forbidden");
+  assert.deepEqual(
+    offenders,
+    [],
+    "deep imports into page-save-core are forbidden",
+  );
 }
 
 /**
@@ -266,7 +279,11 @@ function testStagingSurfacesRegisterScopes() {
   ];
 
   for (const [filePath, pattern] of registrations) {
-    assert.match(read(filePath), pattern, `${filePath} must register a page-save scope`);
+    assert.match(
+      read(filePath),
+      pattern,
+      `${filePath} must register a page-save scope`,
+    );
   }
 }
 
@@ -274,6 +291,7 @@ function main() {
   testNoNativeConfirmations();
   testImageManagerHasNoOwnActionButtons();
   testSuccessFlashOwnsItsTimer();
+  testRuntimeHydrationRetriesOnResume();
   testPackageOwnsOperationQueue();
   testDialogExecuteContract();
   testNoDeepImports();

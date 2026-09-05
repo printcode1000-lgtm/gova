@@ -13,7 +13,7 @@
     {
       "id": "${id}",
       "source": "packages/seller-card-core/src/presentation/SellerCard.tsx",
-      "line": 80,
+      "line": 114,
       "element": "article",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -349,7 +349,7 @@
     {
       "id": "${id}",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.navigation-summary.tsx",
-      "line": 130,
+      "line": 131,
       "element": "section",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -357,7 +357,7 @@
     {
       "id": "${id}",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.order-items.tsx",
-      "line": 57,
+      "line": 58,
       "element": "div",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -365,7 +365,7 @@
     {
       "id": "${id}",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.order-items.tsx",
-      "line": 95,
+      "line": 96,
       "element": "div",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -397,7 +397,7 @@
     {
       "id": "${id}",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.seller-orders.tsx",
-      "line": 113,
+      "line": 114,
       "element": "article",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -405,7 +405,7 @@
     {
       "id": "${id}",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.shipments.tsx",
-      "line": 61,
+      "line": 62,
       "element": "section",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -413,7 +413,7 @@
     {
       "id": "${id}",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.shipments.tsx",
-      "line": 103,
+      "line": 104,
       "element": "section",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -421,7 +421,7 @@
     {
       "id": "${id}",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.shipping-quotes.tsx",
-      "line": 87,
+      "line": 88,
       "element": "section",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -429,7 +429,7 @@
     {
       "id": "${id}",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.shipping-quotes.tsx",
-      "line": 228,
+      "line": 229,
       "element": "div",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -12413,7 +12413,7 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-div-1-apidkk",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 80,
+      "line": 83,
       "element": "div",
       "semanticName": "profile-presentation-profileregistrationinfocard-div-1",
       "kind": "literal"
@@ -12421,7 +12421,7 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-div-14-rstytq",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 129,
+      "line": 132,
       "element": "div",
       "semanticName": "profile-presentation-profileregistrationinfocard-div-14",
       "kind": "literal"
@@ -12429,7 +12429,7 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-div-18-xiccfz",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 145,
+      "line": 148,
       "element": "div",
       "semanticName": "profile-presentation-profileregistrationinfocard-div-18",
       "kind": "literal"
@@ -12437,7 +12437,7 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-div-2-soklq9",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 87,
+      "line": 90,
       "element": "div",
       "semanticName": "profile-presentation-profileregistrationinfocard-div-2",
       "kind": "literal"
@@ -12445,7 +12445,7 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-div-22-6umeqa",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 163,
+      "line": 166,
       "element": "div",
       "semanticName": "profile-presentation-profileregistrationinfocard-div-22",
       "kind": "literal"
@@ -12453,7 +12453,7 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-div-23-nm0dtg",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 164,
+      "line": 167,
       "element": "div",
       "semanticName": "profile-presentation-profileregistrationinfocard-div-23",
       "kind": "literal"
@@ -12461,7 +12461,7 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-div-27-gkksrd",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 188,
+      "line": 191,
       "element": "div",
       "semanticName": "profile-presentation-profileregistrationinfocard-div-27",
       "kind": "literal"
@@ -12469,15 +12469,55 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-div-31-0dvpi8",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 210,
+      "line": 213,
       "element": "div",
       "semanticName": "profile-presentation-profileregistrationinfocard-div-31",
       "kind": "literal"
     },
     {
+      "id": "features-profile-presentation-profileregistrationinfocard-div-35-uv2m4q",
+      "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
+      "line": 240,
+      "element": "div",
+      "semanticName": "profile-presentation-profileregistrationinfocard-div-35",
+      "kind": "literal"
+    },
+    {
+      "id": "features-profile-presentation-profileregistrationinfocard-div-39-yw6c1p",
+      "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
+      "line": 273,
+      "element": "div",
+      "semanticName": "profile-presentation-profileregistrationinfocard-div-39",
+      "kind": "literal"
+    },
+    {
+      "id": "features-profile-presentation-profileregistrationinfocard-div-40-r8h5vc",
+      "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
+      "line": 277,
+      "element": "div",
+      "semanticName": "profile-presentation-profileregistrationinfocard-div-40",
+      "kind": "literal"
+    },
+    {
+      "id": "features-profile-presentation-profileregistrationinfocard-div-41-j2b7fd",
+      "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
+      "line": 278,
+      "element": "div",
+      "semanticName": "profile-presentation-profileregistrationinfocard-div-41",
+      "kind": "literal"
+    },
+    {
+      "id": "features-profile-presentation-profileregistrationinfocard-div-45-z7v3nm",
+      "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
+      "line": 298,
+      "element": "div",
+      "semanticName": "profile-presentation-profileregistrationinfocard-div-45",
+      "kind": "literal"
+    },
+    {
       "id": "features-profile-presentation-profileregistrationinfocard-div-6-8iorb8",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 96,
+      "line": 99,
       "element": "div",
       "semanticName": "profile-presentation-profileregistrationinfocard-div-6",
       "kind": "literal"
@@ -12485,7 +12525,7 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-div-7-9qnjmn",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 98,
+      "line": 101,
       "element": "div",
       "semanticName": "profile-presentation-profileregistrationinfocard-div-7",
       "kind": "literal"
@@ -12493,7 +12533,7 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-div-9-yua6ah",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 110,
+      "line": 113,
       "element": "div",
       "semanticName": "profile-presentation-profileregistrationinfocard-div-9",
       "kind": "literal"
@@ -12501,7 +12541,7 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-header-3-pu2bl2",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 88,
+      "line": 91,
       "element": "header",
       "semanticName": "profile-presentation-profileregistrationinfocard-header-3",
       "kind": "literal"
@@ -12509,15 +12549,23 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-heading-4-y7eacq",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 89,
+      "line": 92,
       "element": "h2",
       "semanticName": "profile-presentation-profileregistrationinfocard-heading-4",
       "kind": "literal"
     },
     {
+      "id": "features-profile-presentation-profileregistrationinfocard-span-48-q1n7vc",
+      "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
+      "line": 256,
+      "element": "span",
+      "semanticName": "profile-presentation-profileregistrationinfocard-span-48",
+      "kind": "literal"
+    },
+    {
       "id": "features-profile-presentation-profileregistrationinfocard-text-13-eksfhq",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 123,
+      "line": 126,
       "element": "p",
       "semanticName": "profile-presentation-profileregistrationinfocard-text-13",
       "kind": "literal"
@@ -12525,7 +12573,7 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-text-17-u8ajkc",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 140,
+      "line": 143,
       "element": "p",
       "semanticName": "profile-presentation-profileregistrationinfocard-text-17",
       "kind": "literal"
@@ -12533,7 +12581,7 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-text-26-oylbyq",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 183,
+      "line": 186,
       "element": "p",
       "semanticName": "profile-presentation-profileregistrationinfocard-text-26",
       "kind": "literal"
@@ -12541,7 +12589,7 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-text-30-zvghgc",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 205,
+      "line": 208,
       "element": "p",
       "semanticName": "profile-presentation-profileregistrationinfocard-text-30",
       "kind": "literal"
@@ -12549,15 +12597,39 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-text-34-soxlb7",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 229,
+      "line": 232,
       "element": "p",
       "semanticName": "profile-presentation-profileregistrationinfocard-text-34",
       "kind": "literal"
     },
     {
+      "id": "features-profile-presentation-profileregistrationinfocard-text-43-a6c1wu",
+      "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
+      "line": 286,
+      "element": "p",
+      "semanticName": "profile-presentation-profileregistrationinfocard-text-43",
+      "kind": "literal"
+    },
+    {
+      "id": "features-profile-presentation-profileregistrationinfocard-text-46-c4q8hy",
+      "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
+      "line": 299,
+      "element": "p",
+      "semanticName": "profile-presentation-profileregistrationinfocard-text-46",
+      "kind": "literal"
+    },
+    {
+      "id": "features-profile-presentation-profileregistrationinfocard-text-47-b9m2tk",
+      "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
+      "line": 302,
+      "element": "p",
+      "semanticName": "profile-presentation-profileregistrationinfocard-text-47",
+      "kind": "literal"
+    },
+    {
       "id": "features-profile-presentation-profileregistrationinfocard-text-5-ixmb6o",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 92,
+      "line": 95,
       "element": "p",
       "semanticName": "profile-presentation-profileregistrationinfocard-text-5",
       "kind": "literal"
@@ -13413,7 +13485,7 @@
     {
       "id": "features-seller-card-presentation-sellercard-button-2-nwaag6",
       "source": "packages/seller-card-core/src/presentation/SellerCard.tsx",
-      "line": 82,
+      "line": 116,
       "element": "button",
       "semanticName": "seller-card-presentation-sellercard-button-2",
       "kind": "literal"
@@ -13421,7 +13493,7 @@
     {
       "id": "features-seller-card-presentation-sellercard-div-10-cduns8",
       "source": "packages/seller-card-core/src/presentation/SellerCard.tsx",
-      "line": 108,
+      "line": 144,
       "element": "div",
       "semanticName": "seller-card-presentation-sellercard-div-10",
       "kind": "literal"
@@ -13429,7 +13501,7 @@
     {
       "id": "features-seller-card-presentation-sellercard-div-12-4ndc3q",
       "source": "packages/seller-card-core/src/presentation/SellerCard.tsx",
-      "line": 115,
+      "line": 151,
       "element": "div",
       "semanticName": "seller-card-presentation-sellercard-div-12",
       "kind": "literal"
@@ -13437,7 +13509,7 @@
     {
       "id": "features-seller-card-presentation-sellercard-div-3-mohi8d",
       "source": "packages/seller-card-core/src/presentation/SellerCard.tsx",
-      "line": 88,
+      "line": 122,
       "element": "div",
       "semanticName": "seller-card-presentation-sellercard-div-3",
       "kind": "literal"
@@ -13445,7 +13517,7 @@
     {
       "id": "features-seller-card-presentation-sellercard-div-4-a8zanz",
       "source": "packages/seller-card-core/src/presentation/SellerCard.tsx",
-      "line": 101,
+      "line": 135,
       "element": "div",
       "semanticName": "seller-card-presentation-sellercard-div-4",
       "kind": "literal"
@@ -13453,7 +13525,7 @@
     {
       "id": "features-seller-card-presentation-sellercard-div-5-h5pjcl",
       "source": "packages/seller-card-core/src/presentation/SellerCard.tsx",
-      "line": 106,
+      "line": 142,
       "element": "div",
       "semanticName": "seller-card-presentation-sellercard-div-5",
       "kind": "literal"
@@ -21149,7 +21221,7 @@
     {
       "id": "id ? `${id}-text-19-y2yrxu` : undefined",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.shipping-quotes.tsx",
-      "line": 231,
+      "line": 232,
       "element": "p",
       "semanticName": "text-19",
       "kind": "scoped-template"
@@ -21205,7 +21277,7 @@
     {
       "id": "id ? `${id}-text-20-dh5qtv` : undefined",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.shipping-quotes.tsx",
-      "line": 232,
+      "line": 233,
       "element": "p",
       "semanticName": "text-20",
       "kind": "scoped-template"
@@ -22341,7 +22413,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-buyer-delivery-div-1-tyms8j",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.buyer-delivery.tsx",
-      "line": 34,
+      "line": 35,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-buyer-delivery-div-1",
       "kind": "literal"
@@ -22349,7 +22421,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-buyer-delivery-div-2-w0f6va",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.buyer-delivery.tsx",
-      "line": 41,
+      "line": 42,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-buyer-delivery-div-2",
       "kind": "literal"
@@ -22357,7 +22429,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-buyer-delivery-div-4-yayvir",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.buyer-delivery.tsx",
-      "line": 43,
+      "line": 44,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-buyer-delivery-div-4",
       "kind": "literal"
@@ -22365,7 +22437,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-buyer-delivery-text-3-nq5qdz",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.buyer-delivery.tsx",
-      "line": 42,
+      "line": 43,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-buyer-delivery-text-3",
       "kind": "literal"
@@ -22373,7 +22445,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-custom-request-actions-div-1-adduyg",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.custom-request-actions.tsx",
-      "line": 38,
+      "line": 39,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-custom-request-actions-div-1",
       "kind": "literal"
@@ -22381,7 +22453,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-custom-request-row-div-1-nf9zyi",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.custom-request-row.tsx",
-      "line": 30,
+      "line": 31,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-custom-request-row-div-1",
       "kind": "literal"
@@ -22389,7 +22461,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-custom-request-row-div-2-evvn1m",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.custom-request-row.tsx",
-      "line": 31,
+      "line": 32,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-custom-request-row-div-2",
       "kind": "literal"
@@ -22397,7 +22469,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-custom-request-row-div-3-kqkydn",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.custom-request-row.tsx",
-      "line": 32,
+      "line": 33,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-custom-request-row-div-3",
       "kind": "literal"
@@ -22405,7 +22477,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-custom-request-row-div-5-80p2bt",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.custom-request-row.tsx",
-      "line": 35,
+      "line": 36,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-custom-request-row-div-5",
       "kind": "literal"
@@ -22413,7 +22485,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-custom-request-row-div-6-0zqrln",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.custom-request-row.tsx",
-      "line": 36,
+      "line": 37,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-custom-request-row-div-6",
       "kind": "literal"
@@ -22421,7 +22493,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-custom-request-row-div-7-hnoqya",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.custom-request-row.tsx",
-      "line": 37,
+      "line": 38,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-custom-request-row-div-7",
       "kind": "literal"
@@ -22429,7 +22501,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-custom-request-row-heading-8-0sgyzp",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.custom-request-row.tsx",
-      "line": 38,
+      "line": 39,
       "element": "h3",
       "semanticName": "presentation-order-details-orderdetailspagecontent-custom-request-row-heading-8",
       "kind": "literal"
@@ -22437,7 +22509,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-custom-request-row-text-10-q7yzcv",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.custom-request-row.tsx",
-      "line": 45,
+      "line": 46,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-custom-request-row-text-10",
       "kind": "literal"
@@ -22445,7 +22517,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-custom-request-row-text-11-glmjaq",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.custom-request-row.tsx",
-      "line": 50,
+      "line": 51,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-custom-request-row-text-11",
       "kind": "literal"
@@ -22453,7 +22525,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-custom-request-row-text-9-zlf8eb",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.custom-request-row.tsx",
-      "line": 41,
+      "line": 42,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-custom-request-row-text-9",
       "kind": "literal"
@@ -22461,7 +22533,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-delivery-plan-div-14-jrpzpl",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.delivery-plan.tsx",
-      "line": 175,
+      "line": 176,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-delivery-plan-div-14",
       "kind": "literal"
@@ -22469,7 +22541,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-delivery-plan-div-16-nigncb",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.delivery-plan.tsx",
-      "line": 183,
+      "line": 184,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-delivery-plan-div-16",
       "kind": "literal"
@@ -22477,7 +22549,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-delivery-plan-div-19-ijsxdp",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.delivery-plan.tsx",
-      "line": 195,
+      "line": 196,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-delivery-plan-div-19",
       "kind": "literal"
@@ -22485,7 +22557,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-delivery-plan-div-2-8ew4kr",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.delivery-plan.tsx",
-      "line": 151,
+      "line": 152,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-delivery-plan-div-2",
       "kind": "literal"
@@ -22493,7 +22565,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-delivery-plan-div-22-xsgy8h",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.delivery-plan.tsx",
-      "line": 205,
+      "line": 206,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-delivery-plan-div-22",
       "kind": "literal"
@@ -22501,7 +22573,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-delivery-plan-div-24-bgp5cf",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.delivery-plan.tsx",
-      "line": 207,
+      "line": 208,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-delivery-plan-div-24",
       "kind": "literal"
@@ -22509,7 +22581,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-delivery-plan-div-25-g8z0ps",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.delivery-plan.tsx",
-      "line": 229,
+      "line": 230,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-delivery-plan-div-25",
       "kind": "literal"
@@ -22517,7 +22589,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-delivery-plan-div-27-quywr6",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.delivery-plan.tsx",
-      "line": 231,
+      "line": 232,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-delivery-plan-div-27",
       "kind": "literal"
@@ -22525,7 +22597,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-delivery-plan-div-29-uvdyuu",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.delivery-plan.tsx",
-      "line": 356,
+      "line": 357,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-delivery-plan-div-29",
       "kind": "literal"
@@ -22533,7 +22605,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-delivery-plan-div-3-mxy2zm",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.delivery-plan.tsx",
-      "line": 152,
+      "line": 153,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-delivery-plan-div-3",
       "kind": "literal"
@@ -22541,7 +22613,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-delivery-plan-div-6-ffljuj",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.delivery-plan.tsx",
-      "line": 156,
+      "line": 157,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-delivery-plan-div-6",
       "kind": "literal"
@@ -22549,7 +22621,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-delivery-plan-div-9-y6wdkf",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.delivery-plan.tsx",
-      "line": 163,
+      "line": 164,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-delivery-plan-div-9",
       "kind": "literal"
@@ -22557,7 +22629,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-delivery-plan-heading-23-gya7vo",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.delivery-plan.tsx",
-      "line": 206,
+      "line": 207,
       "element": "h3",
       "semanticName": "presentation-order-details-orderdetailspagecontent-delivery-plan-heading-23",
       "kind": "literal"
@@ -22565,7 +22637,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-delivery-plan-heading-26-c3gb6n",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.delivery-plan.tsx",
-      "line": 230,
+      "line": 231,
       "element": "h3",
       "semanticName": "presentation-order-details-orderdetailspagecontent-delivery-plan-heading-26",
       "kind": "literal"
@@ -22573,7 +22645,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-delivery-plan-heading-7-jxgg5n",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.delivery-plan.tsx",
-      "line": 157,
+      "line": 158,
       "element": "h2",
       "semanticName": "presentation-order-details-orderdetailspagecontent-delivery-plan-heading-7",
       "kind": "literal"
@@ -22581,7 +22653,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-delivery-plan-section-1-puhjjt",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.delivery-plan.tsx",
-      "line": 150,
+      "line": 151,
       "element": "section",
       "semanticName": "presentation-order-details-orderdetailspagecontent-delivery-plan-section-1",
       "kind": "literal"
@@ -22589,7 +22661,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-delivery-plan-text-10-40omrp",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.delivery-plan.tsx",
-      "line": 164,
+      "line": 165,
       "element": "span",
       "semanticName": "presentation-order-details-orderdetailspagecontent-delivery-plan-text-10",
       "kind": "literal"
@@ -22597,7 +22669,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-delivery-plan-text-12-8aqtsk",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.delivery-plan.tsx",
-      "line": 168,
+      "line": 169,
       "element": "span",
       "semanticName": "presentation-order-details-orderdetailspagecontent-delivery-plan-text-12",
       "kind": "literal"
@@ -22605,7 +22677,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-delivery-plan-text-17-esoi4a",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.delivery-plan.tsx",
-      "line": 184,
+      "line": 185,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-delivery-plan-text-17",
       "kind": "literal"
@@ -22613,7 +22685,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-delivery-plan-text-18-ygnfnd",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.delivery-plan.tsx",
-      "line": 187,
+      "line": 188,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-delivery-plan-text-18",
       "kind": "literal"
@@ -22621,7 +22693,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-delivery-plan-text-20-yd7ezv",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.delivery-plan.tsx",
-      "line": 196,
+      "line": 197,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-delivery-plan-text-20",
       "kind": "literal"
@@ -22629,7 +22701,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-delivery-plan-text-21-tqwwd9",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.delivery-plan.tsx",
-      "line": 199,
+      "line": 200,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-delivery-plan-text-21",
       "kind": "literal"
@@ -22637,7 +22709,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-delivery-plan-text-28-codqz3",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.delivery-plan.tsx",
-      "line": 331,
+      "line": 332,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-delivery-plan-text-28",
       "kind": "literal"
@@ -22645,7 +22717,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-delivery-plan-text-32-wweqsa",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.delivery-plan.tsx",
-      "line": 394,
+      "line": 395,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-delivery-plan-text-32",
       "kind": "literal"
@@ -22653,7 +22725,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-delivery-plan-text-4-j0ydtj",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.delivery-plan.tsx",
-      "line": 153,
+      "line": 154,
       "element": "span",
       "semanticName": "presentation-order-details-orderdetailspagecontent-delivery-plan-text-4",
       "kind": "literal"
@@ -22661,7 +22733,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-delivery-plan-text-8-imyzr0",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.delivery-plan.tsx",
-      "line": 158,
+      "line": 159,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-delivery-plan-text-8",
       "kind": "literal"
@@ -22669,7 +22741,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-navigation-summary-div-10-ja0dbh",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.navigation-summary.tsx",
-      "line": 148,
+      "line": 149,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-navigation-summary-div-10",
       "kind": "literal"
@@ -22677,7 +22749,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-navigation-summary-div-3-bbu7vq",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.navigation-summary.tsx",
-      "line": 131,
+      "line": 132,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-navigation-summary-div-3",
       "kind": "literal"
@@ -22685,7 +22757,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-navigation-summary-div-7-f99vap",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.navigation-summary.tsx",
-      "line": 142,
+      "line": 143,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-navigation-summary-div-7",
       "kind": "literal"
@@ -22693,7 +22765,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-navigation-summary-text-11-ky7ogs",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.navigation-summary.tsx",
-      "line": 149,
+      "line": 150,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-navigation-summary-text-11",
       "kind": "literal"
@@ -22701,7 +22773,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-navigation-summary-text-12-0ik7um",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.navigation-summary.tsx",
-      "line": 150,
+      "line": 151,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-navigation-summary-text-12",
       "kind": "literal"
@@ -22709,7 +22781,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-navigation-summary-text-13-3qvnjm",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.navigation-summary.tsx",
-      "line": 154,
+      "line": 155,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-navigation-summary-text-13",
       "kind": "literal"
@@ -22717,7 +22789,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-navigation-summary-text-4-u6ivo2",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.navigation-summary.tsx",
-      "line": 132,
+      "line": 133,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-navigation-summary-text-4",
       "kind": "literal"
@@ -22725,7 +22797,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-navigation-summary-text-5-6pe0uw",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.navigation-summary.tsx",
-      "line": 133,
+      "line": 134,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-navigation-summary-text-5",
       "kind": "literal"
@@ -22733,7 +22805,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-navigation-summary-text-6-d9duma",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.navigation-summary.tsx",
-      "line": 137,
+      "line": 138,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-navigation-summary-text-6",
       "kind": "literal"
@@ -22741,7 +22813,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-navigation-summary-text-8-zbgg3g",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.navigation-summary.tsx",
-      "line": 143,
+      "line": 144,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-navigation-summary-text-8",
       "kind": "literal"
@@ -22749,7 +22821,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-navigation-summary-text-9-uknmyl",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.navigation-summary.tsx",
-      "line": 144,
+      "line": 145,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-navigation-summary-text-9",
       "kind": "literal"
@@ -22757,7 +22829,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-order-items-div-11-1acvc7",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.order-items.tsx",
-      "line": 155,
+      "line": 156,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-order-items-div-11",
       "kind": "literal"
@@ -22765,7 +22837,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-order-items-div-3-jgjkk2",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.order-items.tsx",
-      "line": 96,
+      "line": 97,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-order-items-div-3",
       "kind": "literal"
@@ -22773,7 +22845,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-order-items-div-4-ca23g7",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.order-items.tsx",
-      "line": 97,
+      "line": 98,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-order-items-div-4",
       "kind": "literal"
@@ -22781,7 +22853,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-order-items-div-5-yaovoi",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.order-items.tsx",
-      "line": 110,
+      "line": 111,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-order-items-div-5",
       "kind": "literal"
@@ -22789,7 +22861,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-order-items-div-6-chpvlm",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.order-items.tsx",
-      "line": 111,
+      "line": 112,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-order-items-div-6",
       "kind": "literal"
@@ -22797,7 +22869,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-order-items-div-7-djb797",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.order-items.tsx",
-      "line": 112,
+      "line": 113,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-order-items-div-7",
       "kind": "literal"
@@ -22805,7 +22877,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-order-items-heading-8-a6hfyw",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.order-items.tsx",
-      "line": 113,
+      "line": 114,
       "element": "h3",
       "semanticName": "presentation-order-details-orderdetailspagecontent-order-items-heading-8",
       "kind": "literal"
@@ -22813,7 +22885,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-order-items-text-10-zmkm04",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.order-items.tsx",
-      "line": 121,
+      "line": 122,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-order-items-text-10",
       "kind": "literal"
@@ -22821,7 +22893,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-order-items-text-9-yp0zy8",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.order-items.tsx",
-      "line": 116,
+      "line": 117,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-order-items-text-9",
       "kind": "literal"
@@ -22917,7 +22989,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-seller-orders-div-14-o17rdc",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.seller-orders.tsx",
-      "line": 177,
+      "line": 178,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-seller-orders-div-14",
       "kind": "literal"
@@ -22925,7 +22997,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-seller-orders-div-15-pxndt7",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.seller-orders.tsx",
-      "line": 202,
+      "line": 203,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-seller-orders-div-15",
       "kind": "literal"
@@ -22933,7 +23005,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-seller-orders-div-2-put7dx",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.seller-orders.tsx",
-      "line": 114,
+      "line": 115,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-seller-orders-div-2",
       "kind": "literal"
@@ -22941,7 +23013,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-seller-orders-div-3-miw0cr",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.seller-orders.tsx",
-      "line": 115,
+      "line": 116,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-seller-orders-div-3",
       "kind": "literal"
@@ -22949,7 +23021,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-seller-orders-div-8-8fsi9l",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.seller-orders.tsx",
-      "line": 142,
+      "line": 143,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-seller-orders-div-8",
       "kind": "literal"
@@ -22957,7 +23029,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-seller-orders-heading-4-60nssn",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.seller-orders.tsx",
-      "line": 116,
+      "line": 117,
       "element": "h2",
       "semanticName": "presentation-order-details-orderdetailspagecontent-seller-orders-heading-4",
       "kind": "literal"
@@ -22965,7 +23037,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-seller-orders-text-10-fpab2i",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.seller-orders.tsx",
-      "line": 144,
+      "line": 145,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-seller-orders-text-10",
       "kind": "literal"
@@ -22973,7 +23045,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-seller-orders-text-11-vjjydr",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.seller-orders.tsx",
-      "line": 147,
+      "line": 148,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-seller-orders-text-11",
       "kind": "literal"
@@ -22981,7 +23053,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-seller-orders-text-12-yu6bfy",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.seller-orders.tsx",
-      "line": 148,
+      "line": 149,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-seller-orders-text-12",
       "kind": "literal"
@@ -22989,7 +23061,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-seller-orders-text-13-lh7yew",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.seller-orders.tsx",
-      "line": 154,
+      "line": 155,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-seller-orders-text-13",
       "kind": "literal"
@@ -22997,7 +23069,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-seller-orders-text-5-a60zei",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.seller-orders.tsx",
-      "line": 117,
+      "line": 118,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-seller-orders-text-5",
       "kind": "literal"
@@ -23005,7 +23077,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-seller-orders-text-6-hqmens",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.seller-orders.tsx",
-      "line": 121,
+      "line": 122,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-seller-orders-text-6",
       "kind": "literal"
@@ -23013,7 +23085,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-seller-orders-text-7-f4ch9f",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.seller-orders.tsx",
-      "line": 125,
+      "line": 126,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-seller-orders-text-7",
       "kind": "literal"
@@ -23021,7 +23093,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-seller-orders-text-9-r4fs1p",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.seller-orders.tsx",
-      "line": 143,
+      "line": 144,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-seller-orders-text-9",
       "kind": "literal"
@@ -23029,7 +23101,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-shipments-div-3-a89d4p",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.shipments.tsx",
-      "line": 63,
+      "line": 64,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-shipments-div-3",
       "kind": "literal"
@@ -23037,7 +23109,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-shipments-div-9-85nrwv",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.shipments.tsx",
-      "line": 108,
+      "line": 109,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-shipments-div-9",
       "kind": "literal"
@@ -23045,7 +23117,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-shipments-heading-2-stivmh",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.shipments.tsx",
-      "line": 62,
+      "line": 63,
       "element": "h2",
       "semanticName": "presentation-order-details-orderdetailspagecontent-shipments-heading-2",
       "kind": "literal"
@@ -23053,7 +23125,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-shipments-heading-7-qorn48",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.shipments.tsx",
-      "line": 104,
+      "line": 105,
       "element": "h2",
       "semanticName": "presentation-order-details-orderdetailspagecontent-shipments-heading-7",
       "kind": "literal"
@@ -23061,7 +23133,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-shipments-text-8-qbgtu9",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.shipments.tsx",
-      "line": 106,
+      "line": 107,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-shipments-text-8",
       "kind": "literal"
@@ -23069,7 +23141,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-button-14-ixvnp2",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.shipping-quotes.tsx",
-      "line": 165,
+      "line": 166,
       "element": "button",
       "semanticName": "presentation-order-details-orderdetailspagecontent-shipping-quotes-button-14",
       "kind": "literal"
@@ -23077,7 +23149,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-div-11-mvcssx",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.shipping-quotes.tsx",
-      "line": 142,
+      "line": 143,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-shipping-quotes-div-11",
       "kind": "literal"
@@ -23085,7 +23157,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-div-15-wjdcus",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.shipping-quotes.tsx",
-      "line": 188,
+      "line": 189,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-shipping-quotes-div-15",
       "kind": "literal"
@@ -23093,7 +23165,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-div-2-b8ec3l",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.shipping-quotes.tsx",
-      "line": 88,
+      "line": 89,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-shipping-quotes-div-2",
       "kind": "literal"
@@ -23101,7 +23173,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-div-3-a0b4qs",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.shipping-quotes.tsx",
-      "line": 89,
+      "line": 90,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-shipping-quotes-div-3",
       "kind": "literal"
@@ -23109,7 +23181,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-div-5-wqn5bv",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.shipping-quotes.tsx",
-      "line": 93,
+      "line": 94,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-shipping-quotes-div-5",
       "kind": "literal"
@@ -23117,7 +23189,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-div-8-fqeioe",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.shipping-quotes.tsx",
-      "line": 111,
+      "line": 112,
       "element": "div",
       "semanticName": "presentation-order-details-orderdetailspagecontent-shipping-quotes-div-8",
       "kind": "literal"
@@ -23125,7 +23197,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-heading-6-p0zetq",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.shipping-quotes.tsx",
-      "line": 94,
+      "line": 95,
       "element": "h3",
       "semanticName": "presentation-order-details-orderdetailspagecontent-shipping-quotes-heading-6",
       "kind": "literal"
@@ -23133,7 +23205,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-label-12-mbxdkk",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.shipping-quotes.tsx",
-      "line": 143,
+      "line": 144,
       "element": "label",
       "semanticName": "presentation-order-details-orderdetailspagecontent-shipping-quotes-label-12",
       "kind": "literal"
@@ -23141,7 +23213,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-label-13-tsmm6g",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.shipping-quotes.tsx",
-      "line": 155,
+      "line": 156,
       "element": "label",
       "semanticName": "presentation-order-details-orderdetailspagecontent-shipping-quotes-label-13",
       "kind": "literal"
@@ -23149,7 +23221,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-text-10-3qnomc",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.shipping-quotes.tsx",
-      "line": 135,
+      "line": 136,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-shipping-quotes-text-10",
       "kind": "literal"
@@ -23157,7 +23229,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-text-4-kvjano",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.shipping-quotes.tsx",
-      "line": 90,
+      "line": 91,
       "element": "span",
       "semanticName": "presentation-order-details-orderdetailspagecontent-shipping-quotes-text-4",
       "kind": "literal"
@@ -23165,7 +23237,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-text-7-ndd2ep",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.shipping-quotes.tsx",
-      "line": 95,
+      "line": 96,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-shipping-quotes-text-7",
       "kind": "literal"
@@ -23173,7 +23245,7 @@
     {
       "id": "orders-presentation-order-details-orderdetailspagecontent-shipping-quotes-text-9-opi9tv",
       "source": "src/features/orders/presentation/order-details/OrderDetailsPageContent.shipping-quotes.tsx",
-      "line": 129,
+      "line": 130,
       "element": "p",
       "semanticName": "presentation-order-details-orderdetailspagecontent-shipping-quotes-text-9",
       "kind": "literal"

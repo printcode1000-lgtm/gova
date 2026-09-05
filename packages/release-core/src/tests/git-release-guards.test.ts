@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { spawn } from "node:child_process";
 import { mkdtempSync, existsSync, mkdirSync, rmSync, utimesSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -15,7 +16,16 @@ assert.throws(
 );
 assert.ok(existsSync(lock));
 utimesSync(lock, new Date(Date.now() - 120_000), new Date(Date.now() - 120_000));
-clearStaleReleaseGitIndexLock({ cwd: root, command: "test", staleAgeMs: 1 });
-assert.ok(!existsSync(lock), "An abandoned lock must be removed.");
+const unrelatedGit = spawn("git", ["hash-object", "--stdin"], {
+  stdio: ["pipe", "ignore", "ignore"],
+});
+Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 50);
+try {
+  clearStaleReleaseGitIndexLock({ cwd: root, command: "test", staleAgeMs: 1 });
+  assert.ok(!existsSync(lock), "An abandoned lock must be removed even while unrelated Git work exists.");
+} finally {
+  unrelatedGit.stdin.end();
+  unrelatedGit.kill();
+}
 rmSync(root, { recursive: true, force: true });
-console.log("release-core Git guards: fresh locks fail closed; abandoned locks are recovered.");
+console.log("release-core Git guards: fresh locks fail closed; abandoned locks ignore unrelated Git work.");

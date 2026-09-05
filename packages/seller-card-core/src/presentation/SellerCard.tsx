@@ -2,7 +2,19 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { Check, Eye, Phone, Store, Trash2, X } from "lucide-react";
+import {
+  Building2,
+  Check,
+  Eye,
+  PackageOpen,
+  Phone,
+  ShoppingBag,
+  ShoppingBasket,
+  Store,
+  Trash2,
+  Warehouse,
+  X,
+} from "lucide-react";
 
 import { shouldUseUnoptimizedImage } from "@asol/storage-core";
 
@@ -46,6 +58,23 @@ const avatarClass: Record<SellerCardVariant, string> = {
   compact: "h-12 w-12 rounded-full",
 };
 
+const commerceFallbackOptions = [
+  { Icon: Store, colorClass: "text-orange-600" },
+  { Icon: ShoppingBag, colorClass: "text-emerald-600" },
+  { Icon: ShoppingBasket, colorClass: "text-amber-600" },
+  { Icon: Building2, colorClass: "text-violet-600" },
+  { Icon: Warehouse, colorClass: "text-rose-600" },
+  { Icon: PackageOpen, colorClass: "text-fuchsia-600" },
+] as const;
+
+function fallbackIconIndex(seed: string): number {
+  let value = 0;
+  for (let index = 0; index < seed.length; index += 1) {
+    value = (value * 31 + seed.charCodeAt(index)) >>> 0;
+  }
+  return value % commerceFallbackOptions.length;
+}
+
 function actionIcon(kind: SellerCardAction["kind"]) {
   if (kind === "select") return <Check className="h-4 w-4" />;
   if (kind === "remove") return <X className="h-4 w-4" />;
@@ -71,6 +100,11 @@ export function SellerCard({ id,
   onOpen,
 }: SellerCardProps & { id?: string }) {
   const horizontal = variant === "linked-provider" || variant === "compact";
+  const fallbackIconSeed = React.useId();
+  const fallbackOption =
+    commerceFallbackOptions[fallbackIconIndex(fallbackIconSeed)] ?? commerceFallbackOptions[0];
+  const FallbackStoreIcon = fallbackOption.Icon;
+  const identityColorClass = card.avatarUrl ? "text-blue-600" : fallbackOption.colorClass;
   const showFavorite =
     (favoriteEnabled ??
       (variant === "search" || variant === "category-sellers" || variant === "doctor-sellers")) &&
@@ -98,14 +132,16 @@ export function SellerCard({ id,
               unoptimized={shouldUseUnoptimizedImage(card.avatarUrl)}
             />
           ) : (
-            <div id="features-seller-card-presentation-sellercard-div-4-a8zanz" className="flex h-full w-full items-center justify-center text-lg font-bold text-on-surface-variant">
-              {card.initials !== "?" ? card.initials : <Store className="h-6 w-6" />}
+            <div id="features-seller-card-presentation-sellercard-div-4-a8zanz" className="flex h-full w-full items-center justify-center text-on-surface-variant" aria-hidden="true">
+              <FallbackStoreIcon
+                className={`${horizontal ? "h-6 w-6" : "h-10 w-10"} ${fallbackOption.colorClass}`}
+              />
             </div>
           )}
         </div>
         <div id="features-seller-card-presentation-sellercard-div-5-h5pjcl" className={horizontal ? "min-w-0 flex-1" : "mt-3 min-w-0"}>
           {card.identityLabel ? (
-            <div id="features-seller-card-presentation-sellercard-div-10-cduns8" className="truncate text-center text-sm font-semibold text-on-surface">
+            <div id="features-seller-card-presentation-sellercard-div-10-cduns8" className={`truncate text-center text-sm font-semibold ${identityColorClass}`}>
               {card.identityLabel}
             </div>
           ) : null}

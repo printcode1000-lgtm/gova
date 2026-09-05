@@ -1,11 +1,12 @@
 "use client";
 
-import { ChevronDown, Lock, Loader2, Mail } from "lucide-react";
+import { BriefcaseBusiness, ChevronDown, Lock, Loader2, Mail } from "lucide-react";
 import * as React from "react";
 
 import { Button } from "@/shared/ui/button";
 import { Label } from "@/shared/ui/label";
 import { Input } from "@/shared/ui/input";
+import { Switch } from "@/shared/ui/switch";
 import { useTranslation } from "@/shared/i18n";
 import { cn } from "@/shared/utils";
 import { useProfileRegistration } from "@/features/auth/ui";
@@ -42,6 +43,8 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
   } = useProfileRegistration();
   const { details: storeDetails, updateField } = useStoreDetails();
   const [isPasswordOpen, setIsPasswordOpen] = React.useState(false);
+  const [isProviderAccountOpen, setIsProviderAccountOpen] = React.useState(false);
+  const [isProviderAccountEnabled, setIsProviderAccountEnabled] = React.useState(false);
   const label = t("onboarding.contactInfo.primaryContact");
 
   React.useImperativeHandle(
@@ -233,6 +236,76 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
               </div>
             </div>
           ) : null}
+
+          <div id='features-profile-presentation-profileregistrationinfocard-div-35-uv2m4q' className="overflow-hidden rounded-xl border border-outline-variant/40 bg-surface">
+            <Button
+              id='features-profile-presentation-profileregistrationinfocard-button-36-gt9k2a'
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start gap-2 rounded-none px-3 py-3 text-xs sm:text-sm"
+              aria-expanded={isProviderAccountOpen}
+              aria-controls="features-profile-presentation-profileregistrationinfocard-div-39-yw6c1p"
+              onClick={() => setIsProviderAccountOpen((open) => !open)}
+            >
+              <BriefcaseBusiness
+                id='features-profile-presentation-profileregistrationinfocard-briefcasebusiness-37-t4d8kb'
+                className="h-4 w-4 shrink-0 text-primary"
+                aria-hidden="true"
+              />
+              <span
+                id='features-profile-presentation-profileregistrationinfocard-span-48-q1n7vc'
+                className="min-w-0 flex-1 text-start font-medium"
+              >
+                {t("profile.providerAccount.title")}
+              </span>
+              <ChevronDown
+                id='features-profile-presentation-profileregistrationinfocard-chevrondown-38-mq7e3n'
+                className={cn(
+                  "h-4 w-4 shrink-0 transition-transform",
+                  isProviderAccountOpen && "rotate-180",
+                )}
+                aria-hidden="true"
+              />
+            </Button>
+
+            {isProviderAccountOpen ? (
+              <div
+                id='features-profile-presentation-profileregistrationinfocard-div-39-yw6c1p'
+                className="space-y-4 border-t border-outline-variant/40 bg-surface-container-lowest p-3 sm:p-4"
+              >
+                <div id='features-profile-presentation-profileregistrationinfocard-div-40-r8h5vc' className="flex items-start justify-between gap-4">
+                  <div id='features-profile-presentation-profileregistrationinfocard-div-41-j2b7fd' className="min-w-0 space-y-1">
+                    <Label
+                      id='features-profile-presentation-profileregistrationinfocard-label-42-x3n9es'
+                      htmlFor='features-profile-presentation-profileregistrationinfocard-switch-44-k5p2zr'
+                      className="text-xs font-semibold text-on-surface sm:text-sm"
+                    >
+                      {t("profile.providerAccount.toggleLabel")}
+                    </Label>
+                    <p id='features-profile-presentation-profileregistrationinfocard-text-43-a6c1wu' className="text-[11px] leading-5 text-on-surface-variant sm:text-xs">
+                      {t("profile.providerAccount.toggleDescription")}
+                    </p>
+                  </div>
+                  <Switch
+                    id='features-profile-presentation-profileregistrationinfocard-switch-44-k5p2zr'
+                    checked={isProviderAccountEnabled}
+                    onCheckedChange={setIsProviderAccountEnabled}
+                    aria-label={t("profile.providerAccount.toggleLabel")}
+                  />
+                </div>
+
+                <div id='features-profile-presentation-profileregistrationinfocard-div-45-z7v3nm' className="space-y-2 rounded-lg bg-surface-container-low px-3 py-3">
+                  <p id='features-profile-presentation-profileregistrationinfocard-text-46-c4q8hy' className="text-xs leading-5 text-on-surface sm:text-sm">
+                    {t("profile.providerAccount.description")}
+                  </p>
+                  <p id='features-profile-presentation-profileregistrationinfocard-text-47-b9m2tk' className="text-[11px] leading-5 text-on-surface-variant sm:text-xs">
+                    {t("profile.providerAccount.personalToProviderHint")}
+                  </p>
+                </div>
+              </div>
+            ) : null}
+          </div>
         </div>
       </div>
     </div>

@@ -2,12 +2,12 @@
 
 `@asol/page-save-core` is the **only** place ASOL performs a user-triggered save, upload, or delete.
 
-No page, dialog, card, or list row anywhere in `src/` or `packages/` may carry its own save button, upload button, delete button, or confirmation message. Pages *stage* the work; the header save icon and its dialog execute it.
+No page, dialog, card, or list row anywhere in `src/` or `packages/` may carry its own save button, upload button, delete button, or confirmation message. Pages _stage_ the work; the header save icon and its dialog execute it.
 
 ## Package
 
-| Door | Path |
-| ---- | ---- |
+| Door            | Path                                                            |
+| --------------- | --------------------------------------------------------------- |
 | Browser/runtime | `@asol/page-save-core` → `packages/page-save-core/src/index.ts` |
 
 The registry stores registrations keyed by scope id. Each editable surface registers through `usePageSaveRegistration` in `src/features/page-save/presentation/hooks/use-page-save-registration.ts`.
@@ -20,39 +20,39 @@ The generated push service worker mirrors the same database name, version, and s
 
 ### Registration
 
-| API | Purpose |
-| --- | ------- |
-| `registerPageSave()` | Mount a page save scope with save items |
-| `updatePageSaveRegistration()` | Sync label, return path, items, saving, canSave |
-| `openPageSaveDialog()` / `closePageSaveDialog()` | Header dialog lifecycle |
-| `setPageSaveItemSelected()` | Toggle staged-operation selection; form-derived items reject selection changes |
-| `executePageSave()` | Execute checked work and permanently discard unchecked staged operations |
-| `getPageSaveSnapshot()` | Read header + dialog state, including `lastResult` |
-| `acknowledgePageSaveResult()` | Read and clear `lastResult` (the header consumes it for one check mark) |
-| `subscribePageSave()` | React external store subscription |
-| `hydratePageSavePendingFromStorage()` | Restore pending icon state after app restart |
-| `dropPageSaveItems()` | Forget items whose executors cannot outlive the page. Async — it writes the pending record, so a caller that cannot await must still catch, or a storage rejection becomes an unhandled one |
-| `configurePageSaveCore()` | Wire IndexedDB storage port (bootstrap only) |
+| API                                              | Purpose                                                                                                                                                                                     |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `registerPageSave()`                             | Mount a page save scope with save items                                                                                                                                                     |
+| `updatePageSaveRegistration()`                   | Sync label, return path, items, saving, canSave                                                                                                                                             |
+| `openPageSaveDialog()` / `closePageSaveDialog()` | Header dialog lifecycle                                                                                                                                                                     |
+| `setPageSaveItemSelected()`                      | Toggle staged-operation selection; form-derived items reject selection changes                                                                                                              |
+| `executePageSave()`                              | Execute checked work and permanently discard unchecked staged operations                                                                                                                    |
+| `getPageSaveSnapshot()`                          | Read header + dialog state, including `lastResult`                                                                                                                                          |
+| `acknowledgePageSaveResult()`                    | Read and clear `lastResult` (the header consumes it for one check mark)                                                                                                                     |
+| `subscribePageSave()`                            | React external store subscription                                                                                                                                                           |
+| `hydratePageSavePendingFromStorage()`            | Restore pending icon state after app restart                                                                                                                                                |
+| `dropPageSaveItems()`                            | Forget items whose executors cannot outlive the page. Async — it writes the pending record, so a caller that cannot await must still catch, or a storage rejection becomes an unhandled one |
+| `configurePageSaveCore()`                        | Wire IndexedDB storage port (bootstrap only)                                                                                                                                                |
 
 ### Operation journal
 
 Every execution is journalled before the first request leaves the device, so an
 interruption leaves evidence instead of silence.
 
-| API | Purpose |
-| --- | ------- |
+| API                                    | Purpose                                                                 |
+| -------------------------------------- | ----------------------------------------------------------------------- |
 | `hydratePageSaveRecoveryFromStorage()` | Read what the previous session left unfinished (called once at startup) |
-| `recoverPageSaveJournal()` | Classify journal entries and prune the unambiguous ones |
-| `acknowledgePageSaveInterruption()` | Clear one recovered entry after the user has seen it |
-| `acknowledgePageSaveJournalEntry()` | Delete a journal entry directly |
-| `buildPageSaveOperationId()` | `scopeId::itemId`, the journal key |
+| `recoverPageSaveJournal()`             | Classify journal entries and prune the unambiguous ones                 |
+| `acknowledgePageSaveInterruption()`    | Clear one recovered entry after the user has seen it                    |
+| `acknowledgePageSaveJournalEntry()`    | Delete a journal entry directly                                         |
+| `buildPageSaveOperationId()`           | `scopeId::itemId`, the journal key                                      |
 
-| Status | Meaning | Recovery verdict | Safe to retry |
-| ------ | ------- | ---------------- | ------------- |
-| `pending` | Recorded, never started | `incomplete` | yes (pruned on read) |
-| `running` | Request left the device, answer never arrived | `needsConfirmation` | **no** |
-| `failed` | Rejected; nothing was applied | `failed` | yes |
-| `succeeded` | Applied; the entry is deleted | `completed` | n/a (pruned) |
+| Status      | Meaning                                       | Recovery verdict    | Safe to retry        |
+| ----------- | --------------------------------------------- | ------------------- | -------------------- |
+| `pending`   | Recorded, never started                       | `incomplete`        | yes (pruned on read) |
+| `running`   | Request left the device, answer never arrived | `needsConfirmation` | **no**               |
+| `failed`    | Rejected; nothing was applied                 | `failed`            | yes                  |
+| `succeeded` | Applied; the entry is deleted                 | `completed`         | n/a (pruned)         |
 
 A `running` entry is the only ambiguous state, and it is **never replayed
 automatically** — replay is what would duplicate a write or an upload. It stays
@@ -68,15 +68,15 @@ owns the draft store and upload queue that make a staged file resumable.
 
 Deletes, uploads, and one-shot saves that used to sit behind their own button are staged in the package's operation queue instead.
 
-| API | Purpose |
-| --- | ------- |
-| `stagePageSaveOperation()` | Queue one `save` / `upload` / `delete` with its executor |
-| `unstagePageSaveOperation()` | Remove a single staged operation |
-| `clearPageSaveOperations()` | Drop a scope's staged operations, returning their item ids |
-| `listPageSaveOperations()` | Read a scope's staged operations |
-| `hasPageSaveOperation()` | Test whether one item is staged |
+| API                             | Purpose                                                                  |
+| ------------------------------- | ------------------------------------------------------------------------ |
+| `stagePageSaveOperation()`      | Queue one `save` / `upload` / `delete` with its executor                 |
+| `unstagePageSaveOperation()`    | Remove a single staged operation                                         |
+| `clearPageSaveOperations()`     | Drop a scope's staged operations, returning their item ids               |
+| `listPageSaveOperations()`      | Read a scope's staged operations                                         |
+| `hasPageSaveOperation()`        | Test whether one item is staged                                          |
 | `buildPageSaveOperationItems()` | Convert staged operations into registration items (referentially stable) |
-| `runPageSaveOperations()` | Execute the selected staged operations, in stage order |
+| `runPageSaveOperations()`       | Execute the selected staged operations, in stage order                   |
 
 A staged operation that fails **stays staged**, so the dialog can list it again
 on the next attempt, and `executePageSave()` reports failure. An unchecked
@@ -101,23 +101,74 @@ The dialog derives the per-item wording from `operation` (`pageSave.operation.*`
 
 ## React helpers
 
-| Hook | File | Use |
-| ---- | ---- | --- |
-| `usePageSaveRegistration` | `src/features/page-save/presentation/hooks/use-page-save-registration.ts` | Register a scope whose dirtiness comes from form state |
-| `usePageSaveOperations` | `src/features/page-save/presentation/hooks/use-page-save-operations.ts` | Stage operations for a scope that also has form items; merge `items` into the registration and call `run()` from `save` |
-| `usePageSaveOperationScope` | `src/features/page-save/presentation/hooks/use-page-save-operation-scope.ts` | Register a scope whose only work is staged operations |
+| Hook                        | File                                                                         | Use                                                                                                                     |
+| --------------------------- | ---------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `usePageSaveRegistration`   | `src/features/page-save/presentation/hooks/use-page-save-registration.ts`    | Register a scope whose dirtiness comes from form state                                                                  |
+| `usePageSaveOperations`     | `src/features/page-save/presentation/hooks/use-page-save-operations.ts`      | Stage operations for a scope that also has form items; merge `items` into the registration and call `run()` from `save` |
+| `usePageSaveOperationScope` | `src/features/page-save/presentation/hooks/use-page-save-operation-scope.ts` | Register a scope whose only work is staged operations                                                                   |
 
 On unmount both operation hooks call `dropPageSaveItems()` with the ids they cleared. Only those items are forgotten; other dirty items in the same scope keep their persisted pending record.
 
 ## Active scope resolution
 
-Several scopes can be mounted at once (a product page shows both the editor and the reviews surface). The header drives whichever registration currently has dirty items, falling back to the most recently registered one.
+Several scopes can be mounted at once (a product page shows both the editor and the reviews surface). The header drives whichever registration currently has dirty items, preferring the current scope when it is dirty and otherwise the most recently registered dirty scope. A clean scope is never selected merely because it mounted last.
+
+## Resilience invariants
+
+The header, dialog, persistence layer, and recovery journal share one fail-closed
+state model. These invariants are enforced by `test:page-save-core` and must not
+be weakened by page integrations:
+
+- A clean mounted scope is never a work source. The active header/dialog source
+  must own dirty live items, an active save execution, or a dirty persisted
+  record. A newer clean scope cannot shadow older pending work.
+- `dialogOpen` may remain true only when the dialog can list at least one dirty
+  item or an interrupted journal operation. Undo, unmount, scope replacement,
+  or a state sync that removes the last dirty item closes the dialog
+  automatically. A saving-only state never opens an empty dialog.
+- Pending-record writes and deletes are serialized per scope. A slower old
+  `setPending` cannot finish after a newer delete and resurrect stale work on
+  the next launch. Storage operations retry short-lived IndexedDB/WebView
+  failures before reporting failure.
+- Journal mutations are serialized per operation id. A late acknowledgement of
+  an interrupted attempt cannot delete the journal row of a newer attempt.
+- Hydration is single-flight and retryable. If storage is temporarily
+  unavailable, a failed hydration does not mark itself complete forever;
+  `PageSaveRuntimeInit` retries on `pageshow` and when the document becomes
+  visible after browser/WebView resume.
+- Hydration never overwrites newer mounted React state with an older IndexedDB
+  snapshot. Invalid records, non-local return paths, clean records, persisted
+  ephemeral operations whose in-memory executors no longer exist, and malformed
+  journal rows are pruned instead of driving the header.
+- A registration lease token and monotonic React status revision protect both
+  cleanup and status updates. An older component instance or older render cannot
+  unregister or overwrite a newer instance/state that reused the same scope id.
+  The same revision boundary keeps held-clean stale-render suppression from
+  swallowing a genuine edit made immediately after a successful save.
+- Duplicate item ids are collapsed before they reach the dialog/journal. Exact
+  duplicates collapse safely; conflicting definitions are visible but blocked,
+  so two operations can never execute under one journal/idempotency key.
+- An accepted save remains globally `saving` even if its page unmounts while the
+  promise is in flight. Journal-setup failure always clears the saving state and
+  restores a usable failure state.
+- The result of the page write is authoritative. If the page write succeeds but
+  local pending/journal cleanup fails, the UI still completes as success rather
+  than asking the user to repeat a write that may already have landed. A failed
+  journal delete falls back to a durable `succeeded` marker so recovery prunes
+  it instead of presenting a false retry.
+
+Durable recovery still depends on the platform storage service eventually being
+available; no browser or WebView can persist data while its storage subsystem is
+permanently unavailable. In that condition the live in-memory registry remains
+self-consistent, hydration failures are reported through system logs, and resume
+retries continue instead of producing an unhandled rejection or an empty save
+surface.
 
 ## Header indicator
 
 `PageSaveHeaderButton` in `src/features/page-save/presentation/PageSaveHeaderButton.tsx` is mounted in `AppHeader`, beside the menu button rather than among the navigation actions on the other end: saving is about the page the user is on, not about leaving it. `PageSaveRuntimeInit` in `AppShell` registers storage ports and hydrates pending records on startup.
 
-- Appears when the active scope has dirty items, is saving, or a persisted pending record exists
+- Appears when there is dirty live work, an active save, a dirty persisted pending record, or an unresolved recovered interruption
 - Shows wave animation while dirty (not saving). The waves are rendered in the error/red theme token (`--color-error`) via `.asol-page-save-wave` in `src/app/globals.css`, so unsaved work reads as an alert in both light and dark themes
 - While save runs, shows the project `LoadingSpinner` in place of the save icon
 - After a successful save with no remaining dirty items, briefly shows a check icon, then hides. The check fires on the observed saving phase **or** on `lastResult === "success"`, so a save that resolves before React paints the spinner still confirms; the header acknowledges the result so it cannot flash again on another page. The countdown lives in its own effect, keyed on the flash state alone.
@@ -152,7 +203,8 @@ After a successful save the registry marks the saved items clean immediately so 
 The icon and the dialog track **dirty work only**. A persisted pending record
 whose items are all clean is deleted on hydration and never counts as pending,
 and `openPageSaveDialog()` refuses to open when no dirty row would be listed and
-nothing is interrupted or saving. An empty "choose what to save" dialog is a bug.
+nothing is interrupted. A saving-only state keeps its spinner in the header but
+never opens an empty "choose what to save" dialog.
 
 A recovered interruption is cleared by the attempt that replaces it. Executing a
 save rewrites the journal entry for every selected operation, so a recovered row
@@ -202,33 +254,33 @@ Every user-triggered save surface must:
 
 ### Current registrations
 
-| Scope ID | Surface | Staged operations |
-| -------- | ------- | ----------------- |
-| `profile-edit` | `/profile?mode=edit` unified editor | Product deletion from `ProductsCard` |
-| `product-*` | Product create/edit (`product-images`, `product-details`) | — |
-| `product-reviews:*` | Product/store reviews and seller replies | Review save/delete, reply save/delete |
-| `custom-request` | `/custom-request` special order | Image upload + request submit |
-| `account-deletion` | `/delete-account` | Account deletion (phrase gate stays on the page) |
-| `super-admin-users` | `/super-admin/users` | Super-admin deletion of a user account, one staged item per row |
-| `data-health` | `/super-admin/data-health` | Quarantine release, quarantined image delete |
-| `dev-cloud-backup` | `/super-admin/dev-cloud-backup` | Backup create, saved-backup update, restore, delete |
-| `super-admin-hero-slider` | Home hero slider admin | — |
-| `super-admin-featured-marquee` | Featured products marquee admin | — |
-| `super-admin-trending-ribbon` | Trending ribbon admin | — |
-| `super-admin-logs` | `/super-admin/logs` | Clear all logs, clear one section |
-| `system-logs-floating` | Floating error badge | Clear all logs |
-| `catalog-studio` | Catalog Studio JSON drafts + staged image upload | Move catalog image to the developer trash |
-| `data-health` | `/super-admin/data-health` | Cleanup plan, order purge, quarantine image delete, quarantine clear, run-history clear, cleanup-audit clear |
-| `dev-cloud-backup` | `/dev/cloud-backup` | Delete a saved local backup |
-| `pharmacy-catalog-manager` | `/profile/pharmacy-catalog` | Create/rename category and subcategory, visibility changes for categories, subcategories, and products |
-| `developer-product-style` | `/dev/category-selector` | — |
-| `release-console-store-text` | Google Play store text/listings | — |
-| `release-console-store-images` | Google Play staged image uploads | — |
-| `release-console-store-assets` | Google Play asset deletions | Store image delete, listing delete |
-| `release-console-play-tracks` | Google Play track update form | — |
-| `release-console-ota-rollout` | OTA rollout percentage | — |
-| `onboarding` | Seller onboarding wizard | — |
-| `onboarding-product-form` | Onboarding product draft while the form is open | — |
+| Scope ID                       | Surface                                                   | Staged operations                                                                                            |
+| ------------------------------ | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `profile-edit`                 | `/profile?mode=edit` unified editor                       | Product deletion from `ProductsCard`                                                                         |
+| `product-*`                    | Product create/edit (`product-images`, `product-details`) | —                                                                                                            |
+| `product-reviews:*`            | Product/store reviews and seller replies                  | Review save/delete, reply save/delete                                                                        |
+| `custom-request`               | `/custom-request` special order                           | Image upload + request submit                                                                                |
+| `account-deletion`             | `/delete-account`                                         | Account deletion (phrase gate stays on the page)                                                             |
+| `super-admin-users`            | `/super-admin/users`                                      | Super-admin deletion of a user account, one staged item per row                                              |
+| `data-health`                  | `/super-admin/data-health`                                | Quarantine release, quarantined image delete                                                                 |
+| `dev-cloud-backup`             | `/super-admin/dev-cloud-backup`                           | Backup create, saved-backup update, restore, delete                                                          |
+| `super-admin-hero-slider`      | Home hero slider admin                                    | —                                                                                                            |
+| `super-admin-featured-marquee` | Featured products marquee admin                           | —                                                                                                            |
+| `super-admin-trending-ribbon`  | Trending ribbon admin                                     | —                                                                                                            |
+| `super-admin-logs`             | `/super-admin/logs`                                       | Clear all logs, clear one section                                                                            |
+| `system-logs-floating`         | Floating error badge                                      | Clear all logs                                                                                               |
+| `catalog-studio`               | Catalog Studio JSON drafts + staged image upload          | Move catalog image to the developer trash                                                                    |
+| `data-health`                  | `/super-admin/data-health`                                | Cleanup plan, order purge, quarantine image delete, quarantine clear, run-history clear, cleanup-audit clear |
+| `dev-cloud-backup`             | `/dev/cloud-backup`                                       | Delete a saved local backup                                                                                  |
+| `pharmacy-catalog-manager`     | `/profile/pharmacy-catalog`                               | Create/rename category and subcategory, visibility changes for categories, subcategories, and products       |
+| `developer-product-style`      | `/dev/category-selector`                                  | —                                                                                                            |
+| `release-console-store-text`   | Google Play store text/listings                           | —                                                                                                            |
+| `release-console-store-images` | Google Play staged image uploads                          | —                                                                                                            |
+| `release-console-store-assets` | Google Play asset deletions                               | Store image delete, listing delete                                                                           |
+| `release-console-play-tracks`  | Google Play track update form                             | —                                                                                                            |
+| `release-console-ota-rollout`  | OTA rollout percentage                                    | —                                                                                                            |
+| `onboarding`                   | Seller onboarding wizard                                  | —                                                                                                            |
+| `onboarding-product-form`      | Onboarding product draft while the form is open           | —                                                                                                            |
 
 The registrations above were audited for Execute/discard semantics. Form-only
 and form-derived upload scopes use locked checkboxes. Mixed scopes keep their
@@ -264,7 +316,7 @@ skipped: they wire those methods into ports and do not run the write.
 - Duplicate save banners that trigger persistence outside `executePageSave()`
 - Deep imports from `@asol/page-save-core/src/**`
 
-Buttons that *stage* an operation are allowed, but must read as staging (`إضافة الحذف للحفظ`), not as the destructive action itself.
+Buttons that _stage_ an operation are allowed, but must read as staging (`إضافة الحذف للحفظ`), not as the destructive action itself.
 
 Controls that only edit form state — dropping a slide, a contact row, a trending text, a discount — must read as a removal (`إزالة` / `Remove`), never as `حذف` / `Delete`. Nothing outside the page-save dialog deletes, so nothing outside it may claim to. The ownership test enforces this on `aria-label` and on the `labels.delete` prop.
 
@@ -274,6 +326,6 @@ Controls that only edit form state — dropping a slide, a contact row, a trendi
 npm run test:page-save-core
 ```
 
-Runs the registry/queue unit tests, `packages/page-save-core/src/tests/journal-recovery.test.ts` (interrupted, failed, and never-started operations, and the no-replay rule), `packages/page-save-core/src/tests/header-visibility.test.ts` (which pins every header state — first edit, undo, partial save, failure, multi-scope pages, staged-operation saves, unmount, and restart-with-pending), plus `src/features/page-save/tests/page-save-write-surface.test.ts` (the frozen content-write allowlist and the no-fire-and-forget rule) and `src/features/page-save/tests/page-save-ownership.test.ts`, which scans every source file for native confirmations, deep imports, page-owned save messaging, and missing scope registrations on the staging surfaces.
+Runs the registry/queue unit tests, `packages/page-save-core/src/tests/journal-recovery.test.ts` (interrupted, failed, and never-started operations, and the no-replay rule), `packages/page-save-core/src/tests/header-visibility.test.ts` (which pins every header state — first edit, undo, partial save, failure, multi-scope pages, staged-operation saves, unmount, and restart-with-pending), and `packages/page-save-core/src/tests/resilience.test.ts` (clean-scope shadowing, hydration races/retry, ordered persistence, stale registration cleanup, journal setup/acknowledgement races, cleanup-after-success, corrupt/unrunnable records, in-flight unmount, empty-dialog prevention, and multi-scope source transitions). It also runs `src/features/page-save/tests/page-save-write-surface.test.ts` (the frozen content-write allowlist and the no-fire-and-forget rule) and `src/features/page-save/tests/page-save-ownership.test.ts`, which scans every source file for native confirmations, deep imports, page-owned save messaging, missing scope registrations, and resume-time hydration protection.
 
 Structural coverage also lives in `src/features/storage/tests/image-upload-queue.test.ts` for import-door enforcement on migrated surfaces.

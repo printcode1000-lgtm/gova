@@ -87,6 +87,42 @@ const sellerCardSource = readFileSync(
   new URL("../presentation/SellerCard.tsx", import.meta.url),
   "utf8",
 );
+const avatarFallbackStart = sellerCardSource.indexOf(
+  'id="features-seller-card-presentation-sellercard-div-4-a8zanz"',
+);
+assert.notEqual(avatarFallbackStart, -1, "seller avatar fallback element must exist");
+const avatarFallbackEnd = sellerCardSource.indexOf("</div>", avatarFallbackStart);
+assert.notEqual(avatarFallbackEnd, -1, "seller avatar fallback element must close");
+const avatarFallbackSource = sellerCardSource.slice(
+  avatarFallbackStart,
+  avatarFallbackEnd,
+);
+assert.match(
+  avatarFallbackSource,
+  /<FallbackStoreIcon/,
+  "seller avatar fallback must render a commerce/store icon",
+);
+assert.doesNotMatch(
+  avatarFallbackSource,
+  /card\.initials|UserRound/,
+  "seller avatar fallback must never render initials or a person icon",
+);
+assert.match(
+  sellerCardSource,
+  /const commerceFallbackOptions = \[/,
+  "seller cards without images must have a varied commerce icon pool",
+);
+assert.match(
+  sellerCardSource,
+  /text-orange-600[\s\S]*text-emerald-600[\s\S]*text-amber-600[\s\S]*text-violet-600[\s\S]*text-rose-600[\s\S]*text-fuchsia-600/,
+  "commerce fallback icons must use distinct non-blue colors",
+);
+assert.match(
+  sellerCardSource,
+  /const identityColorClass = card\.avatarUrl \? "text-blue-600" : fallbackOption\.colorClass;/,
+  "cards with profile images must use blue identity text while fallback cards inherit the icon color",
+);
+
 const identityElementStart = sellerCardSource.indexOf(
   'id="features-seller-card-presentation-sellercard-div-10-cduns8"',
 );

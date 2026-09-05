@@ -6,7 +6,12 @@ import {
   type PageSaveRecoveryVerdict,
 } from "../domain/page-save-journal.types";
 import type { PageSaveOperationKind } from "../domain/page-save-operation.types";
-import { requirePageSaveStorage } from "./page-save-persistence";
+import {
+  enqueuePageSaveJournalMutation,
+  flushPageSaveJournalMutations,
+  requirePageSaveStorage,
+  runPageSaveStorageOperation,
+} from "./page-save-persistence";
 
 /**
  * Durable record of what the page tried to persist and how far it got, so an
@@ -27,7 +32,10 @@ function randomId(): string {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
-export function buildPageSaveOperationId(scopeId: string, itemId: string): string {
+export function buildPageSaveOperationId(
+  scopeId: string,
+  itemId: string,
+): string {
   return `${scopeId}::${itemId}`;
 }
 
@@ -47,27 +55,29 @@ export interface OpenPageSaveJournalEntryInput {
 export async function openPageSaveJournalEntry(
   input: OpenPageSaveJournalEntryInput,
 ): Promise<PageSaveJournalEntry> {
-  const storage = requirePageSaveStorage();
   const operationId = buildPageSaveOperationId(input.scopeId, input.itemId);
-  const previous = await storage.getJournalEntry(operationId);
+  return enqueuePageSaveJournalMutation(operationId, async () => {
+    const storage = requirePageSaveStorage();
+    const previous = await storage.getJournalEntry(operationId);
 
-  const entry: PageSaveJournalEntry = {
-    schemaVersion: PAGE_SAVE_JOURNAL_SCHEMA_VERSION,
-    operationId,
-    idempotencyKey: previous?.idempotencyKey ?? randomId(),
-    scopeId: input.scopeId,
-    itemId: input.itemId,
-    kind: input.kind,
-    label: input.label,
-    returnPath: input.returnPath,
-    status: "running",
-    attempts: (previous?.attempts ?? 0) + 1,
-    startedAt: previous?.startedAt ?? nowIso(),
-    updatedAt: nowIso(),
-  };
+    const entry: PageSaveJournalEntry = {
+      schemaVersion: PAGE_SAVE_JOURNAL_SCHEMA_VERSION,
+      operationId,
+      idempotencyKey: previous?.idempotencyKey ?? randomId(),
+      scopeId: input.scopeId,
+      itemId: input.itemId,
+      kind: input.kind,
+      label: input.label,
+      returnPath: input.returnPath,
+      status: "running",
+      attempts: (previous?.attempts ?? 0) + 1,
+      startedAt: previous?.startedAt ?? nowIso(),
+      updatedAt: nowIso(),
+    };
 
-  await storage.setJournalEntry(entry);
-  return entry;
+    await storage.setJournalEntry(entry);
+    return entry;
+  });
 }
 
 /**
@@ -79,18 +89,36 @@ export async function settlePageSaveJournalEntry(
   status: Extract<PageSaveJournalStatus, "succeeded" | "failed">,
   error?: unknown,
 ): Promise<void> {
-  const storage = requirePageSaveStorage();
+  await enqueuePageSaveJournalMutation(entry.operationId, async () => {
+    const storage = requirePageSaveStorage();
 
-  if (status === "succeeded") {
-    await storage.deleteJournalEntry(entry.operationId);
-    return;
-  }
+    if (status === "succeeded") {
+      try {
+        await storage.deleteJournalEntry(entry.operationId);
+      } catch {
+        // A durable succeeded marker is safer than leaving a stale `running`
+        // record behind: recovery will prune it instead of asking the user to
+        // retry work that already landed.
+        await storage.setJournalEntry({
+          ...entry,
+          status: "succeeded",
+          updatedAt: nowIso(),
+        });
+      }
+      return;
+    }
 
-  await storage.setJournalEntry({
-    ...entry,
-    status,
-    updatedAt: nowIso(),
-    error: error instanceof Error ? error.message : error ? String(error) : undefined,
+    await storage.setJournalEntry({
+      ...entry,
+      status,
+      updatedAt: nowIso(),
+      error:
+        error instanceof Error
+          ? error.message
+          : error
+            ? String(error)
+            : undefined,
+    });
   });
 }
 
@@ -118,18 +146,72 @@ function classify(entry: PageSaveJournalEntry): PageSaveRecoveredOperation {
  * are pruned as they are reported, so the same interruption is only surfaced
  * once.
  */
-export async function recoverPageSaveJournal(): Promise<PageSaveRecoveredOperation[]> {
+export async function recoverPageSaveJournal(): Promise<
+  PageSaveRecoveredOperation[]
+> {
+  await flushPageSaveJournalMutations();
   const storage = requirePageSaveStorage();
-  const entries = await storage.listJournalEntries();
-  const recovered = entries.map(classify);
+  const entries = await runPageSaveStorageOperation(() =>
+    storage.listJournalEntries(),
+  );
+  const validEntries: PageSaveJournalEntry[] = [];
+  const invalidOperationIds: string[] = [];
+  for (const entry of entries) {
+    const valid =
+      Boolean(entry) &&
+      entry.schemaVersion === PAGE_SAVE_JOURNAL_SCHEMA_VERSION &&
+      typeof entry.operationId === "string" &&
+      entry.operationId.length > 0 &&
+      typeof entry.idempotencyKey === "string" &&
+      entry.idempotencyKey.length > 0 &&
+      typeof entry.scopeId === "string" &&
+      entry.scopeId.length > 0 &&
+      typeof entry.itemId === "string" &&
+      entry.itemId.length > 0 &&
+      ["save", "upload", "delete"].includes(entry.kind) &&
+      typeof entry.label === "string" &&
+      typeof entry.returnPath === "string" &&
+      entry.returnPath.startsWith("/") &&
+      ["pending", "running", "failed", "succeeded"].includes(entry.status) &&
+      Number.isInteger(entry.attempts) &&
+      entry.attempts >= 0 &&
+      typeof entry.startedAt === "string" &&
+      typeof entry.updatedAt === "string";
+
+    if (valid) validEntries.push(entry);
+    else if (
+      entry &&
+      typeof entry.operationId === "string" &&
+      entry.operationId
+    ) {
+      invalidOperationIds.push(entry.operationId);
+    }
+  }
+
+  // Corrupt rows can never be executed or acknowledged safely. Remove any row
+  // whose key is still identifiable so it cannot keep reappearing forever.
+  await Promise.allSettled(
+    invalidOperationIds.map((operationId) =>
+      enqueuePageSaveJournalMutation(operationId, () =>
+        storage.deleteJournalEntry(operationId),
+      ),
+    ),
+  );
+
+  const recovered = validEntries.map(classify);
 
   await Promise.all(
     recovered
       .filter(
         (operation) =>
-          operation.verdict === "completed" || operation.verdict === "incomplete",
+          operation.verdict === "completed" ||
+          operation.verdict === "incomplete",
       )
-      .map((operation) => storage.deleteJournalEntry(operation.entry.operationId)),
+      .map((operation) =>
+        enqueuePageSaveJournalMutation(operation.entry.operationId, () =>
+          storage.deleteJournalEntry(operation.entry.operationId),
+        ),
+      ),
   );
 
   return recovered;
@@ -138,5 +220,7 @@ export async function recoverPageSaveJournal(): Promise<PageSaveRecoveredOperati
 export async function acknowledgePageSaveJournalEntry(
   operationId: string,
 ): Promise<void> {
-  await requirePageSaveStorage().deleteJournalEntry(operationId);
+  await enqueuePageSaveJournalMutation(operationId, () =>
+    requirePageSaveStorage().deleteJournalEntry(operationId),
+  );
 }
