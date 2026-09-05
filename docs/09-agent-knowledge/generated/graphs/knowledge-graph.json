@@ -183315,15 +183315,15 @@
     },
     {
       "from": "source:services/profiles/src/app/api/profile/users-by-specialty/route.ts",
-      "to": "source:src/features/profile/domain/profile-directory-entry.entity.ts",
-      "kind": "imports",
-      "detail": "@/features/profile/domain/profile-directory-entry.entity"
-    },
-    {
-      "from": "source:services/profiles/src/app/api/profile/users-by-specialty/route.ts",
       "to": "source:src/features/profile/domain/profile-query-requests.ts",
       "kind": "imports",
       "detail": "@/features/profile/domain/profile-query-requests"
+    },
+    {
+      "from": "source:services/profiles/src/app/api/profile/users-by-specialty/route.ts",
+      "to": "source:src/features/profile/server.ts",
+      "kind": "imports",
+      "detail": "@/features/profile/server"
     },
     {
       "from": "source:services/profiles/src/app/api/storage/profiles/[profileId]/route.ts",

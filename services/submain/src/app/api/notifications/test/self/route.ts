@@ -18,11 +18,15 @@ export async function POST(request: Request): Promise<Response> {
     assertSubmainEnv();
 
     const claims = account.assertSignedIn(request);
-    const body = await readJsonBody<{ locale?: unknown; requestId?: unknown }>(request).catch(() => ({}));
+    const rawBody = await readJsonBody<unknown>(request).catch(() => ({}));
+    const body: Record<string, unknown> =
+      rawBody !== null && typeof rawBody === 'object' && !Array.isArray(rawBody)
+        ? Object.fromEntries(Object.entries(rawBody))
+        : {};
     const result = await devices.sendSelfTest({
       identity: { uid: claims.uid, phone: claims.phone },
-      locale: body?.locale === 'en' ? 'en' : 'ar',
-      ...(typeof body?.requestId === 'string' ? { requestId: body.requestId } : {}),
+      locale: body.locale === 'en' ? 'en' : 'ar',
+      ...(typeof body.requestId === 'string' ? { requestId: body.requestId } : {}),
     });
     return jsonResponse(request, result, 200);
   } catch (error) {

@@ -238,6 +238,12 @@
       ],
       "@asol/storage-core/profiles-config": [
         "./generated/packages/storage-core/src/config/storage-profiles.json"
+      ],
+      "@asol/system-logs-core": [
+        "./generated/packages/system-logs-core/src/index.ts"
+      ],
+      "@asol/system-logs-core/server": [
+        "./generated/packages/system-logs-core/src/server.ts"
       ]
     }
   },
