@@ -3134,6 +3134,20 @@
       ]
     },
     {
+      "id": "command:test:local-agent-mode-c",
+      "kind": "command",
+      "name": "npm run test:local-agent-mode-c",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "local-agent-mode-c",
+        "npm",
+        "npm run test:local-agent-mode-c",
+        "run",
+        "test",
+        "test:local-agent-mode-c"
+      ]
+    },
+    {
       "id": "command:test:map-core",
       "kind": "command",
       "name": "npm run test:map-core",
@@ -12347,28 +12361,35 @@
       "kind": "document",
       "name": "GOVA Local Agent Connection Guide",
       "path": "docs/06-super-admin-and-operations/local-agent-connection.md",
-      "summary": "This document defines the current approved remote-entry and local-execution model.",
+      "summary": "This document defines the current approved remote-entry and local-execution model, including execution Mode C through Remote Desktop Commander.",
       "tags": [
         "agent",
         "and",
         "approved",
+        "commander",
         "connection",
         "current",
         "defines",
+        "desktop",
         "docs/06-super-admin-and-operations/local-agent-connection",
         "docs/06-super-admin-and-operations/local-agent-connection.md",
         "document",
+        "execution",
         "gova",
         "gova local agent connection guide",
         "guide",
+        "including",
         "local",
         "local-execution",
         "md",
+        "mode",
         "model",
+        "remote",
         "remote-entry",
         "the",
         "this",
-        "this document defines the current approved remote-entry and local-execution model."
+        "this document defines the current approved remote-entry and local-execution model, including execution mode c through remote desktop commander.",
+        "through"
       ]
     },
     {
@@ -12425,39 +12446,40 @@
       "kind": "document",
       "name": "Persistent Local Agent Runtime",
       "path": "docs/06-super-admin-and-operations/local-agent-runtime.md",
-      "summary": "Before the first task action, every local agent asks the user to select an execution mode unless the task already selects one. Mode A is Gateway-managed isolation; Mode B edits the canonical checkout at `/home/hesham/gova` directly. GitHub `workflow_dispatch` through `local-agent",
+      "summary": "Before the first task action, every agent asks the user to select an execution mode unless the task already selects one. Mode A is Gateway-managed isolation; Mode B is direct editing; Mode C makes Remote Desktop Commander the exclusive execution transport for the whole task. GitH",
       "tags": [
-        "/home/hesham/gova",
         "action",
         "agent",
         "already",
         "an",
         "asks",
-        "at",
         "before",
-        "before the first task action, every local agent asks the user to select an execution mode unless the task already selects one. mode a is gateway-managed isolation; mode b edits the canonical checkout at `/home/hesham/gova` directly. github `workflow_dispatch` through `local-agent",
-        "canonical",
-        "checkout",
-        "directly",
+        "before the first task action, every agent asks the user to select an execution mode unless the task already selects one. mode a is gateway-managed isolation; mode b is direct editing; mode c makes remote desktop commander the exclusive execution transport for the whole task. gith",
+        "commander",
+        "desktop",
+        "direct",
         "docs/06-super-admin-and-operations/local-agent-recovery",
         "docs/06-super-admin-and-operations/local-agent-recovery.md",
         "docs/06-super-admin-and-operations/local-agent-runtime",
         "docs/06-super-admin-and-operations/local-agent-runtime.md",
-        "edits",
+        "editing",
         "every",
+        "exclusive",
         "execution",
         "first",
+        "for",
         "gateway-managed",
-        "github",
+        "gith",
         "is",
         "isolation",
         "local",
-        "local-agent",
+        "makes",
         "md",
         "mode",
         "one",
         "persistent",
         "persistent local agent runtime",
+        "remote",
         "runtime",
         "scripts/local-agent/related-core-tests",
         "scripts/local-agent/related-core-tests.ts",
@@ -12465,12 +12487,12 @@
         "selects",
         "task",
         "the",
-        "through",
         "to",
+        "transport",
         "ts",
         "unless",
         "user",
-        "workflow_dispatch"
+        "whole"
       ]
     },
     {
@@ -12586,6 +12608,53 @@
         "system/live",
         "user",
         "visibility"
+      ]
+    },
+    {
+      "id": "document:docs/06-super-admin-and-operations/remote-desktop-commander-mode.md",
+      "kind": "document",
+      "name": "Remote Desktop Commander Execution Mode C",
+      "path": "docs/06-super-admin-and-operations/remote-desktop-commander-mode.md",
+      "summary": "Mode C makes Remote Desktop Commander the exclusive execution transport for a Gova task. It exists for cloud agents that must operate directly on the authorized physical Gova device without routing execution through the Gateway, GitHub Actions, the cloud Mode-B projector, a publi",
+      "tags": [
+        "actions",
+        "agents",
+        "authorized",
+        "cloud",
+        "commander",
+        "desktop",
+        "device",
+        "directly",
+        "docs/06-super-admin-and-operations/remote-desktop-commander-mode",
+        "docs/06-super-admin-and-operations/remote-desktop-commander-mode.md",
+        "exclusive",
+        "execution",
+        "exists",
+        "for",
+        "gateway",
+        "github",
+        "gova",
+        "it",
+        "makes",
+        "md",
+        "mode",
+        "mode c makes remote desktop commander the exclusive execution transport for a gova task. it exists for cloud agents that must operate directly on the authorized physical gova device without routing execution through the gateway, github actions, the cloud mode-b projector, a publi",
+        "mode-b",
+        "must",
+        "on",
+        "operate",
+        "physical",
+        "projector",
+        "publi",
+        "remote",
+        "remote desktop commander execution mode c",
+        "routing",
+        "task",
+        "that",
+        "the",
+        "through",
+        "transport",
+        "without"
       ]
     },
     {
@@ -55230,6 +55299,18 @@
       ]
     },
     {
+      "id": "test:scripts/tests/local-agent-mode-c.test.ts",
+      "kind": "test",
+      "name": "local-agent-mode-c.test.ts",
+      "path": "scripts/tests/local-agent-mode-c.test.ts",
+      "tags": [
+        "scripts/tests/local-agent-mode-c",
+        "scripts/tests/local-agent-mode-c.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:scripts/tests/local-agent-related-core-tests.test.ts",
       "kind": "test",
       "name": "local-agent-related-core-tests.test.ts",
@@ -59063,6 +59144,11 @@
     },
     {
       "from": "command:test:deployment-tools",
+      "to": "command:test:local-agent-mode-c",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:deployment-tools",
       "to": "test:scripts/tests/deploy-all.test.ts",
       "kind": "invokes"
     },
@@ -59333,6 +59419,16 @@
     },
     {
       "from": "command:test:installation-bootstrap",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:test:local-agent-mode-c",
+      "to": "test:scripts/tests/local-agent-mode-c.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:local-agent-mode-c",
       "to": "runtime:tooling",
       "kind": "targets-runtime"
     },
@@ -73407,6 +73503,12 @@
       "kind": "belongs-to"
     },
     {
+      "from": "document:docs/06-super-admin-and-operations/local-agent-connection.md",
+      "to": "document:docs/06-super-admin-and-operations/remote-desktop-commander-mode.md",
+      "kind": "references",
+      "detail": "./remote-desktop-commander-mode.md"
+    },
+    {
       "from": "document:docs/06-super-admin-and-operations/local-agent-recovery.md",
       "to": "domain:super-admin-and-operations",
       "kind": "belongs-to"
@@ -73421,6 +73523,12 @@
       "to": "document:docs/06-super-admin-and-operations/local-agent-recovery.md",
       "kind": "references",
       "detail": "docs/06-super-admin-and-operations/local-agent-recovery.md"
+    },
+    {
+      "from": "document:docs/06-super-admin-and-operations/local-agent-runtime.md",
+      "to": "document:docs/06-super-admin-and-operations/remote-desktop-commander-mode.md",
+      "kind": "references",
+      "detail": "./remote-desktop-commander-mode.md"
     },
     {
       "from": "document:docs/06-super-admin-and-operations/local-agent-runtime.md",
@@ -73517,6 +73625,12 @@
     },
     {
       "from": "document:docs/06-super-admin-and-operations/README.md",
+      "to": "document:docs/06-super-admin-and-operations/remote-desktop-commander-mode.md",
+      "kind": "references",
+      "detail": "./remote-desktop-commander-mode.md"
+    },
+    {
+      "from": "document:docs/06-super-admin-and-operations/README.md",
       "to": "document:docs/06-super-admin-and-operations/super-admin-cloud-accounts.md",
       "kind": "references",
       "detail": "./super-admin-cloud-accounts.md"
@@ -73532,6 +73646,11 @@
       "to": "document:docs/06-super-admin-and-operations/super-admin-user-impersonation.md",
       "kind": "references",
       "detail": "./super-admin-user-impersonation.md"
+    },
+    {
+      "from": "document:docs/06-super-admin-and-operations/remote-desktop-commander-mode.md",
+      "to": "domain:super-admin-and-operations",
+      "kind": "belongs-to"
     },
     {
       "from": "document:docs/06-super-admin-and-operations/super-admin-cloud-accounts.md",
@@ -90927,6 +91046,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "test:scripts/tests/github-ci-policy.test.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "test:scripts/tests/local-agent-mode-c.test.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -249799,6 +249924,11 @@
       "from": "test:scripts/tests/github-ci-policy.test.ts",
       "to": "script:scripts/github-ci-policy.ts",
       "kind": "tests"
+    },
+    {
+      "from": "test:scripts/tests/local-agent-mode-c.test.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
     },
     {
       "from": "test:scripts/tests/local-agent-related-core-tests.test.ts",

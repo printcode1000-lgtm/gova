@@ -49,6 +49,9 @@ const REQUIRED_AGENT_MARKERS = [
   'document-mutability',
   'runtime:check',
   'docs:ci',
+  'Mode C',
+  'Remote Desktop Commander',
+  'tools/local-agent/mode_c_preflight.py',
 ] as const;
 
 function nodeMap(graph: KnowledgeGraph): Map<string, KnowledgeNode> {

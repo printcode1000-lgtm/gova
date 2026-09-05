@@ -203,7 +203,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:delivery-planner` | `Tooling` | 1 |  | 0 |
 | `npm run test:deploy-all-resume` | `Tooling` | 1 |  | 0 |
 | `npm run test:deploy-runbook-execution` | `Tooling` | 1 |  | 0 |
-| `npm run test:deployment-tools` | `Tooling` | 20 |  | 0 |
+| `npm run test:deployment-tools` | `Tooling` | 21 |  | 0 |
 | `npm run test:dev-cloud-backup` | `Tooling` | 1 |  | 1 |
 | `npm run test:dev-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:env-core` | `Tooling` | 1 |  | 0 |
@@ -219,6 +219,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:image-upload-queue` | `Tooling` | 1 |  | 0 |
 | `npm run test:import-without-composition` | `Tooling` | 1 |  | 0 |
 | `npm run test:installation-bootstrap` | `Tooling` | 1 |  | 0 |
+| `npm run test:local-agent-mode-c` | `Tooling` | 1 |  | 0 |
 | `npm run test:map-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:marketplace-orders` | `Tooling` | 10 |  | 1 |
 | `npm run test:mirror-status-parity` | `Tooling` | 1 |  | 0 |

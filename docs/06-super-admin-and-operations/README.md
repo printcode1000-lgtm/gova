@@ -17,6 +17,7 @@ These operations run in their own deployment, `asol-control`, not in the applica
 - Logs → [Super Admin Live Logs](./super-admin-live-logs.md)
 - Impersonation → [Super Admin User Impersonation](./super-admin-user-impersonation.md)
 - How a cloud agent reaches this machine → [Local Agent Connection Guide](./local-agent-connection.md), and what it reaches → [Persistent Local Agent Runtime](./local-agent-runtime.md)
+- Remote Desktop Commander-only execution → [Remote Desktop Commander Execution Mode C](./remote-desktop-commander-mode.md)
 - DOM inspection → standalone super-admin inspector that reads and copies the selected element's plain HTML `id`. A touched internal node without an `id` resolves to its closest identified DOM ancestor. While inspection is active, selection cannot execute the touched control or dismiss the sidebar, dialogs, or menus.
 
 ## Safety Boundary

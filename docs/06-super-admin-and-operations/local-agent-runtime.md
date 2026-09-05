@@ -2,11 +2,11 @@
 
 ## Purpose
 
-Before the first task action, every local agent asks the user to select an execution mode unless the task already selects one. Mode A is Gateway-managed isolation; Mode B edits the canonical checkout at `/home/hesham/gova` directly. GitHub `workflow_dispatch` through `local-agent-bootstrap.yml` is the primary remote bootstrap/entry path and does not select a mode.
+Before the first task action, every agent asks the user to select an execution mode unless the task already selects one. Mode A is Gateway-managed isolation; Mode B is direct editing; Mode C makes Remote Desktop Commander the exclusive execution transport for the whole task. GitHub `workflow_dispatch` through `local-agent-bootstrap.yml` is the primary bootstrap/entry path for Mode A and does not select a mode.
 
 ## Remote branch model
 
-GitHub contains exactly two recognized remote branches: `main` and `integration`. `main` is the production/release branch. Mode A explicitly authorizes a local `agent/*` branch and submitting verified work to `integration`; it never creates another remote branch or authorizes deployment. Mode B keeps the canonical checkout on its current branch and does not create an `agent/*` branch, move work to `integration`, commit, push, or deploy.
+GitHub contains exactly two recognized remote branches: `main` and `integration`. `main` is the production/release branch. Mode A explicitly authorizes a local `agent/*` branch and submitting verified work to `integration`; it never creates another remote branch or authorizes deployment. Local Mode B and Mode C keep the canonical checkout on its current branch by default. Selecting either B or C does not itself authorize an `agent/*` branch, integration, commit, push, or deployment.
 
 ## Local layout
 
@@ -32,6 +32,22 @@ Mode B does **not** register an agent with localhost control, create a task/work
 `gova-agent-gateway.service` may remain installed and running under systemd. Use Gateway registration, task state, locks, worktrees, handoffs, and `integration-submit` when the user selects Mode A.
 
 In Mode A, the Gateway listens on TCP port `8765`; `/health` is public and mutation/state APIs require the local key stored outside Git in `/home/hesham/.config/gova-agent/auth`. Create the Mode-A task, run `gova-agent mode-a-bootstrap <agent> <task>` once, then wait for the manual GitHub dispatch to run the self-hosted bootstrap and restart the persistent service. Gateway rejects a worktree, command, lock, or integration submission until that dispatch is recorded. The selected flow then creates its worktree under `/home/hesham/gova-agents/`, uses a local `agent/*` branch, and submits verified work through `integration-submit`.
+
+## Mode C: Remote Desktop Commander as the execution channel for everything
+
+Mode C is a direct-device cloud execution mode. The Remote Desktop Commander connection is not merely a bootstrap or terminal helper; it is the exclusive transport for the complete task. Repository/document reads, searches, file edits, terminal and interactive processes, tests, Git operations, service/process control, builds, native tooling, and separately authorized GitHub/Vercel/deployment operations all execute on the paired device through Remote Desktop Commander.
+
+The first device action must be:
+
+```bash
+python3 /home/hesham/gova/tools/local-agent/mode_c_preflight.py
+```
+
+and that command itself must be executed through Remote Desktop Commander. A failed preflight stops Mode C. A missing Remote Desktop Commander capability also stops Mode C; the agent must not fall back to the Gateway, GitHub Actions, cloud Mode-B projection, a GitHub connector, direct cloud shell/file tools, or another execution transport.
+
+Mode C works in `/home/hesham/gova`, preserves pre-existing changes, and leaves commit/push/integration/deployment authorization unchanged. The Gateway may record `execution_mode=C` with `execution_transport=remote-desktop-commander` for observability, but its managed execution paths reject C.
+
+See [Remote Desktop Commander Execution Mode C](./remote-desktop-commander-mode.md).
 
 ## Cloud Mode B: Git as transport, the runner as projector
 
@@ -166,7 +182,7 @@ Public viewing is provided by a Cloudflare Quick Tunnel while the HTTP server it
 ```bash
 gova-agent health
 gova-agent register agent-001
-gova-agent task-create agent-001 "Refactor notifications" --task-id notifications-refactor
+gova-agent task-create agent-001 "Refactor notifications" --task-id notifications-refactor --mode A
 gova-agent workspace-create agent-001 notifications-refactor
 gova-agent exec agent-001 'git status --short' --task-id notifications-refactor
 gova-agent messages --recipient agent-001

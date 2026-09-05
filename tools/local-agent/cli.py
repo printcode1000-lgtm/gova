@@ -23,7 +23,7 @@ def main():
     p=argparse.ArgumentParser(prog='gova-agent'); sp=p.add_subparsers(dest='cmd',required=True)
     sp.add_parser('health'); sp.add_parser('agents'); sp.add_parser('tasks'); sp.add_parser('locks'); sp.add_parser('diagnostics')
     a=sp.add_parser('register'); a.add_argument('agent_id'); a.add_argument('--session-id')
-    a=sp.add_parser('task-create'); a.add_argument('agent_id'); a.add_argument('goal'); a.add_argument('--task-id'); a.add_argument('--mode',required=True,choices=('A','B')); a.add_argument('--cloud-bridge',action='store_true',help='Use managed transport for a cloud Mode-B task, then project its integration commit into the canonical checkout')
+    a=sp.add_parser('task-create'); a.add_argument('agent_id'); a.add_argument('goal'); a.add_argument('--task-id'); a.add_argument('--mode',required=True,choices=('A','B','C')); a.add_argument('--cloud-bridge',action='store_true',help='Use managed transport for a cloud Mode-B task, then project its integration commit into the canonical checkout; unavailable for Mode C')
     a=sp.add_parser('mode-a-bootstrap'); a.add_argument('agent_id'); a.add_argument('task_id'); a.add_argument('--dry-run',action='store_true')
     a=sp.add_parser('task-status'); a.add_argument('task_id')
     a=sp.add_parser('task-handoff'); a.add_argument('task_id'); a.add_argument('from_agent'); a.add_argument('to_agent'); a.add_argument('--notes',default='')

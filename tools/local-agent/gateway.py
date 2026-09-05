@@ -15,7 +15,7 @@ DB_PATH = RUNTIME / 'runtime.sqlite3'
 COMMAND_DIR = RUNTIME / 'commands'
 LOCK_LEASE = int(os.environ.get('GOVA_AGENT_LOCK_LEASE_SECONDS', '180'))
 MAX_BODY = 2_000_000
-EXECUTION_MODES = {'A', 'B'}
+EXECUTION_MODES = {'A', 'B', 'C'}
 MODE_A_BOOTSTRAP_WORKFLOW = 'local-agent-bootstrap.yml'
 MODE_A_BOOTSTRAP_REF = 'main'
 
@@ -79,16 +79,31 @@ def task_execution(task_id):
     mode=row['execution_mode']
     if mode not in EXECUTION_MODES: raise RuntimeError('task has no valid execution mode')
     transport=row['execution_transport'] or 'local'
-    if transport not in {'local','cloud-bridge'}: raise RuntimeError('task has no valid execution transport')
+    if transport not in {'local','cloud-bridge','remote-desktop-commander'}: raise RuntimeError('task has no valid execution transport')
+    if mode == 'C' and transport != 'remote-desktop-commander': raise RuntimeError('Mode C requires the Remote Desktop Commander transport')
+    if mode != 'C' and transport == 'remote-desktop-commander': raise RuntimeError('Remote Desktop Commander transport is reserved for Mode C')
+    return mode,transport
+
+def resolve_execution_transport(mode, cloud_bridge=False):
+    mode=str(mode or '').upper()
+    if mode not in EXECUTION_MODES: raise RuntimeError('execution_mode must be A, B, or C')
+    if mode == 'C':
+        if cloud_bridge: raise RuntimeError('cloud_bridge is unavailable for execution mode C')
+        return mode,'remote-desktop-commander'
+    transport='cloud-bridge' if bool(cloud_bridge) else 'local'
+    if transport == 'cloud-bridge' and mode != 'B': raise RuntimeError('cloud_bridge is available only for execution mode B')
     return mode,transport
 
 def require_task_mode(task_id, expected='A'):
     mode,_transport=task_execution(task_id)
+    if mode == 'C': raise RuntimeError('Gateway execution mutations are unavailable for Mode C; use Remote Desktop Commander for all execution')
     if expected and mode != expected: raise RuntimeError(f'Gateway mutation is unavailable for execution mode {mode}; select Mode A')
     return mode
 
 def require_managed_transport(task_id):
     mode,transport=task_execution(task_id)
+    if mode == 'C':
+        raise RuntimeError('Gateway managed execution is unavailable for Mode C; use Remote Desktop Commander for all execution')
     if mode == 'A' or (mode == 'B' and transport == 'cloud-bridge'):
         return mode,transport
     raise RuntimeError('Gateway mutation is unavailable for local Mode B; select Mode A or cloud-bridge Mode B')
@@ -143,6 +158,8 @@ def create_worktree(agent_id, task_id):
     return str(path),branch
 
 def remove_worktree(agent_id, task_id, force=False):
+    mode,_transport=task_execution(task_id)
+    if mode == 'C': raise RuntimeError('Gateway workspace mutations are unavailable for Mode C; use Remote Desktop Commander for all execution')
     c=db(); row=c.execute('SELECT worktree,branch,status FROM tasks WHERE id=?',(task_id,)).fetchone(); c.close()
     if not row: raise RuntimeError('task not found')
     path=row['worktree']; branch=row['branch']
@@ -452,9 +469,7 @@ class H(BaseHTTPRequestHandler):
                 aid=safe(data['agent_id']); sess=data.get('session_id') or sid('session'); ts=now(); c=db(); c.execute('INSERT INTO agents(id,session_id,status,last_seen,created_at,updated_at) VALUES(?,?,\'idle\',?,?,?) ON CONFLICT(id) DO UPDATE SET session_id=excluded.session_id,status=\'idle\',last_seen=excluded.last_seen,updated_at=excluded.updated_at',(aid,sess,ts,ts,ts)); c.execute('INSERT OR REPLACE INTO sessions(id,agent_id,status,started_at,last_seen) VALUES(?,?,\'active\',?,?)',(sess,aid,ts,ts)); c.close(); event('agent-registered',aid,None,{'session_id':sess}); return self.sendj(200,{'ok':True,'agent_id':aid,'session_id':sess})
             if path=='/v1/task/create':
                 aid=safe(data['agent_id']); tid=safe(data.get('task_id') or sid('task')); goal=str(data['goal']); mode=str(data.get('execution_mode','')).upper();
-                if mode not in EXECUTION_MODES: raise RuntimeError('execution_mode must be A or B')
-                transport='cloud-bridge' if bool(data.get('cloud_bridge',False)) else 'local'
-                if transport == 'cloud-bridge' and mode != 'B': raise RuntimeError('cloud_bridge is available only for execution mode B')
+                mode,transport=resolve_execution_transport(mode,bool(data.get('cloud_bridge',False)))
                 ts=now(); c=db(); c.execute('INSERT INTO tasks(id,goal,execution_mode,execution_transport,originating_agent,current_agent,status,created_at,updated_at) VALUES(?,?,?,?,?,?,\'active\',?,?)',(tid,goal,mode,transport,aid,aid,ts,ts)); c.execute('UPDATE agents SET task_id=?,updated_at=? WHERE id=?',(tid,ts,aid)); c.close(); event('task-created',aid,tid,{'goal':goal,'execution_mode':mode,'execution_transport':transport}); return self.sendj(200,{'ok':True,'task_id':tid,'execution_mode':mode,'execution_transport':transport})
             if path=='/v1/task/checkpoint': checkpoint(data['task_id'],**data.get('fields',{})); event('checkpoint',data.get('agent_id'),data['task_id'],data.get('fields',{})); return self.sendj(200,{'ok':True})
             if path=='/v1/task/handoff':

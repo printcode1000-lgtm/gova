@@ -71,3 +71,12 @@
 - All project documentation inside `docs/` is in **English**.
 - User communication by agents in this repository is strictly in **Arabic**.
 - Generated documentation under `docs/09-agent-knowledge/generated/` is overwrite-only via `npm run docs:generate` (never edited by hand).
+---
+
+## 8. Agent Execution Modes
+
+- **Mode A**: Gateway-managed isolation with the approved bootstrap, managed worktree, locks, and explicit integration submission.
+- **Mode B**: direct editing. Local B uses the canonical checkout; cloud B uses the documented Git/runner projection path.
+- **Mode C**: Remote Desktop Commander is the exclusive execution transport for the complete task. All project/device reads, edits, commands, tests, Git actions, process/service control, builds, and separately authorized external-service operations execute on the paired device through Remote Desktop Commander. It never silently falls back to another transport.
+- Mode C begins by running `python3 /home/hesham/gova/tools/local-agent/mode_c_preflight.py` through Remote Desktop Commander.
+- Selecting a transport mode does not itself authorize commit, push, integration, deployment, destructive reset/clean, or other privileged operations.

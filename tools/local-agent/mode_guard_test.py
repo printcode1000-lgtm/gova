@@ -29,6 +29,16 @@ with tempfile.TemporaryDirectory() as temp:
     git('add', 'bridge.txt')
     git('commit', '-m', 'base')
 
+    assert gateway.resolve_execution_transport('A') == ('A', 'local')
+    assert gateway.resolve_execution_transport('B') == ('B', 'local')
+    assert gateway.resolve_execution_transport('B', True) == ('B', 'cloud-bridge')
+    assert gateway.resolve_execution_transport('C') == ('C', 'remote-desktop-commander')
+    try:
+        gateway.resolve_execution_transport('C', True)
+        raise AssertionError('Mode C accepted the cloud bridge transport')
+    except RuntimeError as error:
+        assert 'unavailable for execution mode C' in str(error)
+
     c = gateway.db()
     c.execute("INSERT INTO tasks(id,goal,execution_mode,execution_transport,originating_agent,current_agent,status,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?)",
               ('mode-a', 'test', 'A', 'local', 'agent', 'agent', 'active', gateway.now(), gateway.now()))
@@ -36,6 +46,8 @@ with tempfile.TemporaryDirectory() as temp:
               ('mode-b', 'test', 'B', 'local', 'agent', 'agent', 'active', gateway.now(), gateway.now()))
     c.execute("INSERT INTO tasks(id,goal,execution_mode,execution_transport,originating_agent,current_agent,status,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?)",
               ('mode-b-cloud', 'test', 'B', 'cloud-bridge', 'agent', 'agent', 'active', gateway.now(), gateway.now()))
+    c.execute("INSERT INTO tasks(id,goal,execution_mode,execution_transport,originating_agent,current_agent,status,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?)",
+              ('mode-c', 'test', 'C', 'remote-desktop-commander', 'agent', 'agent', 'active', gateway.now(), gateway.now()))
     c.close()
 
     try:
@@ -43,6 +55,21 @@ with tempfile.TemporaryDirectory() as temp:
         raise AssertionError('Mode B was accepted for a Gateway mutation')
     except RuntimeError as error:
         assert 'Mode A' in str(error)
+
+    mode_c = gateway.task_execution('mode-c')
+    assert mode_c == ('C', 'remote-desktop-commander')
+    for guard in (gateway.require_task_mode, gateway.require_managed_transport):
+        try:
+            guard('mode-c')
+            raise AssertionError('Mode C was accepted for Gateway execution')
+        except RuntimeError as error:
+            assert 'Remote Desktop Commander' in str(error)
+
+    try:
+        gateway.remove_worktree('agent', 'mode-c')
+        raise AssertionError('Mode C was accepted for a Gateway workspace mutation')
+    except RuntimeError as error:
+        assert 'Remote Desktop Commander' in str(error)
 
     dry = gateway.dispatch_mode_a_bootstrap('agent', 'mode-a', dry_run=True)
     assert dry == {'task_id': 'mode-a', 'workflow': 'local-agent-bootstrap.yml', 'ref': 'main', 'execution_mode': 'A', 'execution_transport': 'local', 'dry_run': True}
