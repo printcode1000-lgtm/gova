@@ -23,7 +23,8 @@
   - it does not centralize unrelated wiring,
   - every Runtime/Deployment receives its own exact composition,
   - every composition uses the smallest reachable dependency graph,
-  - unnecessary dynamic imports and registrations are eliminated.- Review the existing `*-composition` packages themselves rather than treating them as automatically correct, and decide whether each should be:
+  - unnecessary dynamic imports and registrations are eliminated.
+- Review the existing `*-composition` packages themselves rather than treating them as automatically correct, and decide whether each should be:
   - split,
   - partially merged,
   - or replaced with more specialized composition packages.
