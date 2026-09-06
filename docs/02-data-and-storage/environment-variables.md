@@ -413,3 +413,13 @@ not.
 Create replacements at
 `github.com/settings/personal-access-tokens/new` → *Only select repositories* →
 `gova`.
+
+## Local macOS iOS build-machine configuration
+
+The Linux-hosted macOS build machine has machine-local configuration in the Git-ignored `.env.local` file. This includes local identity fields, VM topology and version metadata, local guest connection metadata, boot/storage paths, and Linux↔macOS synchronization metadata.
+
+These values must not be moved into `.env.example`: some are private credentials or account identity, while the remaining values describe one physical host/VM installation rather than a portable application requirement. Repository documentation records the purpose of the fields, never private values.
+
+The full local environment file participates in the Linux↔macOS synchronization system with per-key conflict detection. If the same environment key is independently changed to different values on both systems, the conflict report and Linux desktop notification expose only the key name and do not choose a value automatically.
+
+See [Local macOS iOS Build Machine](../07-mobile-and-release/local-macos-ios-build-machine.md) for the complete local VM, toolchain, synchronization, conflict, backup, and notification contract.

@@ -14064,6 +14064,53 @@
       ]
     },
     {
+      "id": "document:docs/07-mobile-and-release/local-macos-ios-build-machine.md",
+      "kind": "document",
+      "name": "Local macOS iOS Build Machine",
+      "path": "docs/07-mobile-and-release/local-macos-ios-build-machine.md",
+      "summary": "Gova uses a local macOS virtual machine as the native iOS/Xcode build environment while Linux remains the canonical development host. This document records the operational contract established for that machine, the bidirectional project synchronization model, local-only configura",
+      "tags": [
+        "as",
+        "bidirectional",
+        "build",
+        "canonical",
+        "configura",
+        "contract",
+        "development",
+        "docs/07-mobile-and-release/local-macos-ios-build-machine",
+        "docs/07-mobile-and-release/local-macos-ios-build-machine.md",
+        "document",
+        "environment",
+        "established",
+        "for",
+        "gova",
+        "gova uses a local macos virtual machine as the native ios/xcode build environment while linux remains the canonical development host. this document records the operational contract established for that machine, the bidirectional project synchronization model, local-only configura",
+        "host",
+        "ios",
+        "ios/xcode",
+        "linux",
+        "local",
+        "local macos ios build machine",
+        "local-only",
+        "machine",
+        "macos",
+        "md",
+        "model",
+        "native",
+        "operational",
+        "project",
+        "records",
+        "remains",
+        "synchronization",
+        "that",
+        "the",
+        "this",
+        "uses",
+        "virtual",
+        "while"
+      ]
+    },
+    {
       "id": "document:docs/07-mobile-and-release/local-runner-full-host-control.md",
       "kind": "document",
       "name": "Local Runner Full Host Control",
@@ -69307,6 +69354,12 @@
     },
     {
       "from": "document:docs/02-data-and-storage/environment-variables.md",
+      "to": "document:docs/07-mobile-and-release/local-macos-ios-build-machine.md",
+      "kind": "references",
+      "detail": "../07-mobile-and-release/local-macos-ios-build-machine.md"
+    },
+    {
+      "from": "document:docs/02-data-and-storage/environment-variables.md",
       "to": "package:@asol/cors",
       "kind": "references",
       "detail": "@asol/cors"
@@ -75506,6 +75559,41 @@
       "kind": "belongs-to"
     },
     {
+      "from": "document:docs/07-mobile-and-release/local-macos-ios-build-machine.md",
+      "to": "domain:mobile-and-release",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/local-macos-ios-build-machine.md",
+      "to": "document:docs/02-data-and-storage/environment-variables.md",
+      "kind": "references",
+      "detail": "../02-data-and-storage/environment-variables.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/local-macos-ios-build-machine.md",
+      "to": "document:docs/06-super-admin-and-operations/remote-desktop-commander-mode.md",
+      "kind": "references",
+      "detail": "../06-super-admin-and-operations/remote-desktop-commander-mode.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/local-macos-ios-build-machine.md",
+      "to": "document:docs/07-mobile-and-release/capacitor/fastlane-module.md",
+      "kind": "references",
+      "detail": "./capacitor/fastlane-module.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/local-macos-ios-build-machine.md",
+      "to": "document:docs/07-mobile-and-release/README.md",
+      "kind": "references",
+      "detail": "./README.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/local-macos-ios-build-machine.md",
+      "to": "document:docs/09-agent-knowledge/runtime-contract.md",
+      "kind": "references",
+      "detail": "../09-agent-knowledge/runtime-contract.md"
+    },
+    {
       "from": "document:docs/07-mobile-and-release/local-runner-full-host-control.md",
       "to": "domain:mobile-and-release",
       "kind": "belongs-to"
@@ -75579,6 +75667,12 @@
       "to": "document:docs/07-mobile-and-release/local-agent-runner-pool.md",
       "kind": "references",
       "detail": "./local-agent-runner-pool.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/README.md",
+      "to": "document:docs/07-mobile-and-release/local-macos-ios-build-machine.md",
+      "kind": "references",
+      "detail": "./local-macos-ios-build-machine.md"
     },
     {
       "from": "document:docs/07-mobile-and-release/README.md",
