@@ -1,7 +1,7 @@
 "use client";
 
 import { Search } from "lucide-react";
-import Image from "next/image";
+import Image from "@/shared/ui/local-first-image";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import * as React from "react";
 

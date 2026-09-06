@@ -9,6 +9,7 @@ import { registerDataCoreBrowserPorts } from '@/features/data';
 import { registerPageSaveCorePorts } from '@/features/page-save';
 import { registerPageSnapshotCorePorts } from '@/features/page-snapshot/ports';
 import { registerSystemLogsCoreBrowserPorts } from '@/features/system-logs';
+import { registerStorageImageManagerCoreBrowserPorts } from '@/features/storage';
 import { registerBrowserApplicationPorts } from './browser-application-ports';
 
 /**
@@ -40,5 +41,6 @@ export function registerBrowserPorts(): void {
   registerPageSaveCorePorts();
   registerPageSnapshotCorePorts();
   registerSystemLogsCoreBrowserPorts();
+  registerStorageImageManagerCoreBrowserPorts();
   registerBrowserApplicationPorts();
 }

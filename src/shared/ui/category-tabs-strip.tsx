@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import Image from "next/image";
+import Image from "@/shared/ui/local-first-image";
 
 export interface CategoryTabsStripItem {
   id: string;

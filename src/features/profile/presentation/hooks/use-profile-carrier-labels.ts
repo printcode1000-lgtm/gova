@@ -1,6 +1,6 @@
 "use client";
 
-import { useQueries } from "@tanstack/react-query";
+import { ASOL_QUERY_POLICIES, useQueries } from "@asol/data-core/browser";
 import { profileService } from "../../application/services/profile-service";
 
 export function useProfileCarrierLabels(uids: string[]) {
@@ -9,7 +9,7 @@ export function useProfileCarrierLabels(uids: string[]) {
     queries: uniqueUids.map((uid) => ({
       queryKey: ["profile", "store-details", uid] as const,
       queryFn: () => profileService.getStoreDetails(uid),
-      staleTime: 5 * 60 * 1000,
+      ...ASOL_QUERY_POLICIES.localFirst,
     })),
   });
 

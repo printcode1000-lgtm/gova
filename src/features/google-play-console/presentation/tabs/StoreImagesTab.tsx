@@ -3,7 +3,7 @@
 import * as React from "react";
 import { ListPlus, RotateCcw, Upload } from "lucide-react";
 
-import Image from "next/image";
+import Image from "@/shared/ui/local-first-image";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { useAdminArabic } from "@/shared/i18n/use-admin-arabic";

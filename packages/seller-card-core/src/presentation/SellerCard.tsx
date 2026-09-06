@@ -3,6 +3,10 @@
 import * as React from "react";
 import Image from "next/image";
 import {
+  LOCAL_FIRST_IMAGE_PLACEHOLDER,
+  useLocalFirstStorageImageSource,
+} from "@asol/storage-image-manager-core/image-cache";
+import {
   Building2,
   Check,
   Eye,
@@ -98,6 +102,7 @@ export function SellerCard({ id,
   onOpen,
 }: SellerCardProps & { id?: string }) {
   const horizontal = variant === "linked-provider" || variant === "compact";
+  const cachedAvatar = useLocalFirstStorageImageSource(card.avatarUrl);
   const fallbackIconSeed = React.useId();
   const fallbackOption =
     commerceFallbackOptions[fallbackIconIndex(fallbackIconSeed)] ?? commerceFallbackOptions[0];
@@ -122,7 +127,8 @@ export function SellerCard({ id,
         >
           {card.avatarUrl ? (
             <Image
-              src={card.avatarUrl}
+              src={cachedAvatar.src ?? LOCAL_FIRST_IMAGE_PLACEHOLDER}
+              unoptimized
               alt={card.title}
               fill
               className="object-cover"

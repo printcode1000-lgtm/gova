@@ -6330,6 +6330,7 @@
         "@asol/storage-core/server",
         "@asol/storage-image-manager-core",
         "@asol/storage-image-manager-core/client-lifecycle",
+        "@asol/storage-image-manager-core/image-cache",
         "@asol/storage-image-manager-core/services",
         "@asol/sub2main-composition",
         "@asol/submain-composition",
@@ -6500,6 +6501,7 @@
         "@asol/storage-core/profiles-config",
         "@asol/storage-core/server",
         "@asol/storage-image-manager-core",
+        "@asol/storage-image-manager-core/image-cache",
         "@asol/sub2main-composition",
         "@asol/submain-composition",
         "@asol/system-logs-core",
@@ -7625,6 +7627,7 @@
       "summary": "Preserved operational and architectural detail, relocated here during the 2026-08 architecture reconstruction. Agents use this for implementation guidance.",
       "tags": [
         "2026-08",
+        "@asol/data-core/browser",
         "agents",
         "and",
         "architectural",
@@ -7665,6 +7668,8 @@
         "/01-architecture/readme",
         "2026-08",
         "> **note:** operational detail relocated here during the 2026-08 architecture reconstruction. architectural relationships: [docs/01-architecture/](../01-architecture/readme.md).",
+        "@asol/data-core/browser",
+        "@asol/storage-image-manager-core/image-cache",
         "and",
         "architectural",
         "architecture",
@@ -7740,6 +7745,7 @@
         "2026-08",
         "> **note:** operational detail relocated here during the 2026-08 architecture reconstruction. architectural relationships: [docs/01-architecture/](../01-architecture/readme.md).",
         "@asol/data-core",
+        "@asol/data-core/browser",
         "@asol/storage-core",
         "access",
         "architectural",
@@ -8012,6 +8018,7 @@
       "tags": [
         "@asol/dev-core",
         "@asol/storage-core",
+        "@asol/storage-image-manager-core/image-cache",
         "architecture",
         "docs/02-data-and-storage/image-storage/image-storage-system",
         "docs/02-data-and-storage/image-storage/image-storage-system.md",
@@ -8027,6 +8034,7 @@
         "never",
         "only",
         "or",
+        "packages/data-core/src/browser/image-cache/",
         "packages/storage-core/src/config/storage-profiles",
         "packages/storage-core/src/config/storage-profiles.json",
         "packages/storage-core/src/domain/images/image-key-generator",
@@ -8047,6 +8055,8 @@
         "packages/storage-image-manager-core/src/services/image-upload-draft-service.ts",
         "packages/storage-image-manager-core/src/services/image-upload-queue",
         "packages/storage-image-manager-core/src/services/image-upload-queue.ts",
+        "packages/storage-image-manager-core/src/services/local-first-image-cache",
+        "packages/storage-image-manager-core/src/services/local-first-image-cache.ts",
         "passes",
         "profile",
         "profile-driven",
@@ -8055,6 +8065,8 @@
         "size",
         "src/features/storage/application/services/image-storage-api-service",
         "src/features/storage/application/services/image-storage-api-service.ts",
+        "src/features/storage/application/services/storage-image-manager-browser-ports",
+        "src/features/storage/application/services/storage-image-manager-browser-ports.ts",
         "src/features/storage/presentation/storageimagemanager",
         "src/features/storage/presentation/storageimagemanager.tsx",
         "storage",
@@ -11348,12 +11360,13 @@
       "kind": "document",
       "name": "`@asol/data-core`",
       "path": "docs/05-platform-features/sealed-packages/data-core-module.md",
-      "summary": "Every database in this project, and every piece of code that talks to one, lives in a single sealed package at `packages/data-core/`. It is the largest package in the repository: 197 production files across 18 domains, plus the drivers, the schemas, the migrations, the shard rout",
+      "summary": "Every database in this project, and every piece of code that talks to one, lives in a single sealed package at `packages/data-core/`. It is the largest package in the repository: 253 production files across 18 domains, plus the drivers, the schemas, the migrations, the shard rout",
       "tags": [
         "18",
-        "197",
+        "253",
         "@asol/backup-core",
         "@asol/data-core",
+        "@asol/data-core/browser",
         "@asol/data-health-core",
         "@asol/dev-core",
         "@asol/notifications-core",
@@ -11374,7 +11387,7 @@
         "domains",
         "drivers",
         "every",
-        "every database in this project, and every piece of code that talks to one, lives in a single sealed package at `packages/data-core/`. it is the largest package in the repository: 197 production files across 18 domains, plus the drivers, the schemas, the migrations, the shard rout",
+        "every database in this project, and every piece of code that talks to one, lives in a single sealed package at `packages/data-core/`. it is the largest package in the repository: 253 production files across 18 domains, plus the drivers, the schemas, the migrations, the shard rout",
         "files",
         "in",
         "is",
@@ -21131,9 +21144,11 @@
       "id": "external-dependency:@tanstack/react-query",
       "kind": "external-dependency",
       "name": "@tanstack/react-query",
-      "summary": "External package imported by repository source",
+      "summary": "Declared dependency range observed: ^5.102.3",
       "tags": [
+        "102",
         "@tanstack/react-query",
+        "^5.102.3",
         "dependency",
         "external",
         "external dependency npm package",
@@ -21145,9 +21160,11 @@
       "id": "external-dependency:@tanstack/react-query-persist-client",
       "kind": "external-dependency",
       "name": "@tanstack/react-query-persist-client",
-      "summary": "External package imported by repository source",
+      "summary": "Declared dependency range observed: ^5.102.3",
       "tags": [
+        "102",
         "@tanstack/react-query-persist-client",
+        "^5.102.3",
         "dependency",
         "external",
         "external dependency npm package",
@@ -23419,12 +23436,14 @@
       "kind": "package",
       "name": "@asol/storage-image-manager-core",
       "path": "packages/storage-image-manager-core",
-      "summary": "Image manager UI and client lifecycle over storage ports; Layer: capability; Public exports: ., ./client-lifecycle, ./services",
+      "summary": "Image manager UI and client lifecycle over storage ports; Layer: capability; Public exports: ., ./client-lifecycle, ./image-cache, ./services",
       "tags": [
         ".",
         "./client-lifecycle",
+        "./image-cache",
         "./services",
         "/client-lifecycle",
+        "/image-cache",
         "/services",
         "@asol/storage-image-manager-core",
         "and",
@@ -30000,6 +30019,28 @@
       ]
     },
     {
+      "id": "source:packages/data-core/src/browser/image-cache/image-cache.ts",
+      "kind": "source",
+      "name": "image-cache.ts",
+      "path": "packages/data-core/src/browser/image-cache/image-cache.ts",
+      "tags": [
+        "packages/data-core/src/browser/image-cache/image-cache",
+        "packages/data-core/src/browser/image-cache/image-cache.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/browser/image-cache/index.ts",
+      "kind": "source",
+      "name": "index.ts",
+      "path": "packages/data-core/src/browser/image-cache/index.ts",
+      "tags": [
+        "packages/data-core/src/browser/image-cache/index",
+        "packages/data-core/src/browser/image-cache/index.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/data-core/src/browser/index.ts",
       "kind": "source",
       "name": "index.ts",
@@ -30008,6 +30049,72 @@
         "packages/data-core/src/browser/index",
         "packages/data-core/src/browser/index.ts",
         "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/browser/query/index.ts",
+      "kind": "source",
+      "name": "index.ts",
+      "path": "packages/data-core/src/browser/query/index.ts",
+      "tags": [
+        "packages/data-core/src/browser/query/index",
+        "packages/data-core/src/browser/query/index.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/browser/query/local-read.ts",
+      "kind": "source",
+      "name": "local-read.ts",
+      "path": "packages/data-core/src/browser/query/local-read.ts",
+      "tags": [
+        "packages/data-core/src/browser/query/local-read",
+        "packages/data-core/src/browser/query/local-read.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/browser/query/query-client.ts",
+      "kind": "source",
+      "name": "query-client.ts",
+      "path": "packages/data-core/src/browser/query/query-client.ts",
+      "tags": [
+        "packages/data-core/src/browser/query/query-client",
+        "packages/data-core/src/browser/query/query-client.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/browser/query/query-persistence-runtime.ts",
+      "kind": "source",
+      "name": "query-persistence-runtime.ts",
+      "path": "packages/data-core/src/browser/query/query-persistence-runtime.ts",
+      "tags": [
+        "packages/data-core/src/browser/query/query-persistence-runtime",
+        "packages/data-core/src/browser/query/query-persistence-runtime.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/browser/query/query-policies.ts",
+      "kind": "source",
+      "name": "query-policies.ts",
+      "path": "packages/data-core/src/browser/query/query-policies.ts",
+      "tags": [
+        "packages/data-core/src/browser/query/query-policies",
+        "packages/data-core/src/browser/query/query-policies.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/browser/query/query-provider.tsx",
+      "kind": "source",
+      "name": "query-provider.tsx",
+      "path": "packages/data-core/src/browser/query/query-provider.tsx",
+      "tags": [
+        "packages/data-core/src/browser/query/query-provider",
+        "packages/data-core/src/browser/query/query-provider.tsx",
+        "tsx"
       ]
     },
     {
@@ -38200,6 +38307,17 @@
       ]
     },
     {
+      "id": "source:packages/storage-image-manager-core/src/hooks/use-local-first-storage-image-source.ts",
+      "kind": "source",
+      "name": "use-local-first-storage-image-source.ts",
+      "path": "packages/storage-image-manager-core/src/hooks/use-local-first-storage-image-source.ts",
+      "tags": [
+        "packages/storage-image-manager-core/src/hooks/use-local-first-storage-image-source",
+        "packages/storage-image-manager-core/src/hooks/use-local-first-storage-image-source.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/storage-image-manager-core/src/hooks/use-storage-profile-upload.ts",
       "kind": "source",
       "name": "use-storage-profile-upload.ts",
@@ -38207,6 +38325,17 @@
       "tags": [
         "packages/storage-image-manager-core/src/hooks/use-storage-profile-upload",
         "packages/storage-image-manager-core/src/hooks/use-storage-profile-upload.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/storage-image-manager-core/src/image-cache.ts",
+      "kind": "source",
+      "name": "image-cache.ts",
+      "path": "packages/storage-image-manager-core/src/image-cache.ts",
+      "tags": [
+        "packages/storage-image-manager-core/src/image-cache",
+        "packages/storage-image-manager-core/src/image-cache.ts",
         "ts"
       ]
     },
@@ -38241,6 +38370,17 @@
       "tags": [
         "packages/storage-image-manager-core/src/services",
         "packages/storage-image-manager-core/src/services.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/storage-image-manager-core/src/services/image-cache-port.ts",
+      "kind": "source",
+      "name": "image-cache-port.ts",
+      "path": "packages/storage-image-manager-core/src/services/image-cache-port.ts",
+      "tags": [
+        "packages/storage-image-manager-core/src/services/image-cache-port",
+        "packages/storage-image-manager-core/src/services/image-cache-port.ts",
         "ts"
       ]
     },
@@ -38309,6 +38449,17 @@
       "tags": [
         "packages/storage-image-manager-core/src/services/image-upload-queue",
         "packages/storage-image-manager-core/src/services/image-upload-queue.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/storage-image-manager-core/src/services/local-first-image-cache.ts",
+      "kind": "source",
+      "name": "local-first-image-cache.ts",
+      "path": "packages/storage-image-manager-core/src/services/local-first-image-cache.ts",
+      "tags": [
+        "packages/storage-image-manager-core/src/services/local-first-image-cache",
+        "packages/storage-image-manager-core/src/services/local-first-image-cache.ts",
         "ts"
       ]
     },
@@ -42792,6 +42943,17 @@
       "tags": [
         "src/core/api/asol-http-transport",
         "src/core/api/asol-http-transport.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/core/api/browser-local-read-cache.ts",
+      "kind": "source",
+      "name": "browser-local-read-cache.ts",
+      "path": "src/core/api/browser-local-read-cache.ts",
+      "tags": [
+        "src/core/api/browser-local-read-cache",
+        "src/core/api/browser-local-read-cache.ts",
         "ts"
       ]
     },
@@ -51820,6 +51982,17 @@
       ]
     },
     {
+      "id": "source:src/features/storage/application/services/storage-image-manager-browser-ports.ts",
+      "kind": "source",
+      "name": "storage-image-manager-browser-ports.ts",
+      "path": "src/features/storage/application/services/storage-image-manager-browser-ports.ts",
+      "tags": [
+        "src/features/storage/application/services/storage-image-manager-browser-ports",
+        "src/features/storage/application/services/storage-image-manager-browser-ports.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/storage/index.ts",
       "kind": "source",
       "name": "index.ts",
@@ -53245,6 +53418,17 @@
       ]
     },
     {
+      "id": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "source",
+      "name": "local-first-image.tsx",
+      "path": "src/shared/ui/local-first-image.tsx",
+      "tags": [
+        "src/shared/ui/local-first-image",
+        "src/shared/ui/local-first-image.tsx",
+        "tsx"
+      ]
+    },
+    {
       "id": "source:src/shared/ui/overlay-chrome-branch.tsx",
       "kind": "source",
       "name": "overlay-chrome-branch.tsx",
@@ -53655,6 +53839,18 @@
       "tags": [
         "packages/cors/src/tests/index",
         "packages/cors/src/tests/index.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/data-core/src/browser/query/local-read.test.ts",
+      "kind": "test",
+      "name": "local-read.test.ts",
+      "path": "packages/data-core/src/browser/query/local-read.test.ts",
+      "tags": [
+        "packages/data-core/src/browser/query/local-read",
+        "packages/data-core/src/browser/query/local-read.test.ts",
         "test",
         "ts"
       ]
@@ -55561,6 +55757,18 @@
       "tags": [
         "src/core/api/tests/compatibility-boundary",
         "src/core/api/tests/compatibility-boundary.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/core/api/tests/local-read-gateway.test.ts",
+      "kind": "test",
+      "name": "local-read-gateway.test.ts",
+      "path": "src/core/api/tests/local-read-gateway.test.ts",
+      "tags": [
+        "src/core/api/tests/local-read-gateway",
+        "src/core/api/tests/local-read-gateway.test.ts",
         "test",
         "ts"
       ]
@@ -58828,6 +59036,11 @@
     },
     {
       "from": "command:test:api-core",
+      "to": "test:src/core/api/tests/local-read-gateway.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:api-core",
       "to": "test:src/core/api/tests/production-deploy-concurrency-logging.test.ts",
       "kind": "invokes"
     },
@@ -61380,18 +61593,6 @@
       "to": "external-dependency:@tailwindcss/postcss",
       "kind": "declares-dependency",
       "detail": "devDependencies:^4.3.1"
-    },
-    {
-      "from": "config:package.json",
-      "to": "external-dependency:@tanstack/react-query-persist-client",
-      "kind": "declares-dependency",
-      "detail": "dependencies:^5.101.1"
-    },
-    {
-      "from": "config:package.json",
-      "to": "external-dependency:@tanstack/react-query",
-      "kind": "declares-dependency",
-      "detail": "dependencies:^5.101.1"
     },
     {
       "from": "config:package.json",
@@ -66147,6 +66348,12 @@
       "from": "document:docs/01-architecture/08-reference/capability-map.md",
       "to": "package:@asol/storage-image-manager-core",
       "kind": "references",
+      "detail": "@asol/storage-image-manager-core/image-cache"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/capability-map.md",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "references",
       "detail": "@asol/storage-image-manager-core/services"
     },
     {
@@ -66687,6 +66894,12 @@
       "to": "package:@asol/storage-image-manager-core",
       "kind": "references",
       "detail": "@asol/storage-image-manager-core"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/dependency-map.md",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "references",
+      "detail": "@asol/storage-image-manager-core/image-cache"
     },
     {
       "from": "document:docs/01-architecture/08-reference/dependency-map.md",
@@ -68748,6 +68961,12 @@
     },
     {
       "from": "document:docs/02-data-and-storage/asol-db-system.md",
+      "to": "package:@asol/data-core",
+      "kind": "references",
+      "detail": "@asol/data-core/browser"
+    },
+    {
+      "from": "document:docs/02-data-and-storage/asol-db-system.md",
       "to": "source:packages/data-core/src/browser/asol-db/index.ts",
       "kind": "references",
       "detail": "packages/data-core/src/browser/asol-db/index.ts"
@@ -68783,6 +69002,18 @@
     },
     {
       "from": "document:docs/02-data-and-storage/cache-rules-and-data-flow.md",
+      "to": "package:@asol/data-core",
+      "kind": "references",
+      "detail": "@asol/data-core/browser"
+    },
+    {
+      "from": "document:docs/02-data-and-storage/cache-rules-and-data-flow.md",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "references",
+      "detail": "@asol/storage-image-manager-core/image-cache"
+    },
+    {
+      "from": "document:docs/02-data-and-storage/cache-rules-and-data-flow.md",
       "to": "source:packages/data-core/src/browser/asol-db/index.ts",
       "kind": "references",
       "detail": "packages/data-core/src/browser/asol-db/"
@@ -68814,6 +69045,12 @@
       "to": "package:@asol/data-core",
       "kind": "references",
       "detail": "@asol/data-core"
+    },
+    {
+      "from": "document:docs/02-data-and-storage/central-data-access.md",
+      "to": "package:@asol/data-core",
+      "kind": "references",
+      "detail": "@asol/data-core/browser"
     },
     {
       "from": "document:docs/02-data-and-storage/central-data-access.md",
@@ -69172,7 +69409,19 @@
       "from": "document:docs/02-data-and-storage/image-storage/image-storage-system.md",
       "to": "package:@asol/storage-image-manager-core",
       "kind": "references",
+      "detail": "@asol/storage-image-manager-core/image-cache"
+    },
+    {
+      "from": "document:docs/02-data-and-storage/image-storage/image-storage-system.md",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "references",
       "detail": "packages/storage-image-manager-core/src/processing/"
+    },
+    {
+      "from": "document:docs/02-data-and-storage/image-storage/image-storage-system.md",
+      "to": "source:packages/data-core/src/browser/image-cache/index.ts",
+      "kind": "references",
+      "detail": "packages/data-core/src/browser/image-cache/"
     },
     {
       "from": "document:docs/02-data-and-storage/image-storage/image-storage-system.md",
@@ -69218,9 +69467,21 @@
     },
     {
       "from": "document:docs/02-data-and-storage/image-storage/image-storage-system.md",
+      "to": "source:packages/storage-image-manager-core/src/services/local-first-image-cache.ts",
+      "kind": "references",
+      "detail": "packages/storage-image-manager-core/src/services/local-first-image-cache.ts"
+    },
+    {
+      "from": "document:docs/02-data-and-storage/image-storage/image-storage-system.md",
       "to": "source:src/features/storage/application/services/image-storage-api-service.ts",
       "kind": "references",
       "detail": "src/features/storage/application/services/image-storage-api-service.ts"
+    },
+    {
+      "from": "document:docs/02-data-and-storage/image-storage/image-storage-system.md",
+      "to": "source:src/features/storage/application/services/storage-image-manager-browser-ports.ts",
+      "kind": "references",
+      "detail": "src/features/storage/application/services/storage-image-manager-browser-ports.ts"
     },
     {
       "from": "document:docs/02-data-and-storage/image-storage/image-storage-system.md",
@@ -72207,6 +72468,12 @@
       "to": "package:@asol/data-core",
       "kind": "references",
       "detail": "@asol/data-core"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/data-core-module.md",
+      "to": "package:@asol/data-core",
+      "kind": "references",
+      "detail": "@asol/data-core/browser"
     },
     {
       "from": "document:docs/05-platform-features/sealed-packages/data-core-module.md",
@@ -79428,7 +79695,55 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/data-core/src/browser/image-cache/image-cache.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/data-core/src/browser/image-cache/index.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:packages/data-core/src/browser/index.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/data-core/src/browser/query/index.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/data-core/src/browser/query/local-read.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/data-core/src/browser/query/query-client.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/data-core/src/browser/query/query-persistence-runtime.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/data-core/src/browser/query/query-policies.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/data-core/src/browser/query/query-provider.tsx",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -83760,7 +84075,19 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/storage-image-manager-core/src/hooks/use-local-first-storage-image-source.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:packages/storage-image-manager-core/src/hooks/use-storage-profile-upload.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/storage-image-manager-core/src/image-cache.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -83779,6 +84106,12 @@
     {
       "from": "domain:architecture",
       "to": "source:packages/storage-image-manager-core/src/services.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/storage-image-manager-core/src/services/image-cache-port.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -83815,6 +84148,12 @@
     {
       "from": "domain:architecture",
       "to": "source:packages/storage-image-manager-core/src/services/image-upload-queue.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/storage-image-manager-core/src/services/local-first-image-cache.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -84169,6 +84508,12 @@
     {
       "from": "domain:architecture",
       "to": "test:packages/cors/src/tests/index.test.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "test:packages/data-core/src/browser/query/local-read.test.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -84966,7 +85311,55 @@
     },
     {
       "from": "domain:data-and-storage",
+      "to": "source:packages/data-core/src/browser/image-cache/image-cache.ts",
+      "kind": "documents",
+      "detail": "packages/data-core/"
+    },
+    {
+      "from": "domain:data-and-storage",
+      "to": "source:packages/data-core/src/browser/image-cache/index.ts",
+      "kind": "documents",
+      "detail": "packages/data-core/"
+    },
+    {
+      "from": "domain:data-and-storage",
       "to": "source:packages/data-core/src/browser/index.ts",
+      "kind": "documents",
+      "detail": "packages/data-core/"
+    },
+    {
+      "from": "domain:data-and-storage",
+      "to": "source:packages/data-core/src/browser/query/index.ts",
+      "kind": "documents",
+      "detail": "packages/data-core/"
+    },
+    {
+      "from": "domain:data-and-storage",
+      "to": "source:packages/data-core/src/browser/query/local-read.ts",
+      "kind": "documents",
+      "detail": "packages/data-core/"
+    },
+    {
+      "from": "domain:data-and-storage",
+      "to": "source:packages/data-core/src/browser/query/query-client.ts",
+      "kind": "documents",
+      "detail": "packages/data-core/"
+    },
+    {
+      "from": "domain:data-and-storage",
+      "to": "source:packages/data-core/src/browser/query/query-persistence-runtime.ts",
+      "kind": "documents",
+      "detail": "packages/data-core/"
+    },
+    {
+      "from": "domain:data-and-storage",
+      "to": "source:packages/data-core/src/browser/query/query-policies.ts",
+      "kind": "documents",
+      "detail": "packages/data-core/"
+    },
+    {
+      "from": "domain:data-and-storage",
+      "to": "source:packages/data-core/src/browser/query/query-provider.tsx",
       "kind": "documents",
       "detail": "packages/data-core/"
     },
@@ -86748,6 +87141,12 @@
     },
     {
       "from": "domain:data-and-storage",
+      "to": "source:src/features/storage/application/services/storage-image-manager-browser-ports.ts",
+      "kind": "documents",
+      "detail": "src/features/storage/"
+    },
+    {
+      "from": "domain:data-and-storage",
       "to": "source:src/features/storage/index.ts",
       "kind": "documents",
       "detail": "src/features/storage/"
@@ -86787,6 +87186,12 @@
       "to": "source:src/features/storage/ui.ts",
       "kind": "documents",
       "detail": "src/features/storage/"
+    },
+    {
+      "from": "domain:data-and-storage",
+      "to": "test:packages/data-core/src/browser/query/local-read.test.ts",
+      "kind": "documents",
+      "detail": "packages/data-core/"
     },
     {
       "from": "domain:data-and-storage",
@@ -97536,6 +97941,12 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "source:src/features/storage/application/services/storage-image-manager-browser-ports.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "source:src/features/storage/index.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -107424,6 +107835,12 @@
     },
     {
       "from": "domain:ui-components",
+      "to": "source:src/features/storage/application/services/storage-image-manager-browser-ports.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
       "to": "source:src/features/storage/index.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -108213,11 +108630,6 @@
     },
     {
       "from": "feature:advertisements",
-      "to": "external-dependency:next",
-      "kind": "imports"
-    },
-    {
-      "from": "feature:advertisements",
       "to": "external-dependency:react",
       "kind": "imports"
     },
@@ -108289,11 +108701,6 @@
     {
       "from": "feature:auth",
       "to": "external-dependency:@hookform/resolvers",
-      "kind": "imports"
-    },
-    {
-      "from": "feature:auth",
-      "to": "external-dependency:@tanstack/react-query",
       "kind": "imports"
     },
     {
@@ -108978,11 +109385,6 @@
     },
     {
       "from": "feature:onboarding",
-      "to": "external-dependency:next",
-      "kind": "imports"
-    },
-    {
-      "from": "feature:onboarding",
       "to": "external-dependency:react",
       "kind": "imports"
     },
@@ -109559,11 +109961,6 @@
     {
       "from": "feature:profile",
       "to": "external-dependency:@fortawesome/react-fontawesome",
-      "kind": "imports"
-    },
-    {
-      "from": "feature:profile",
-      "to": "external-dependency:@tanstack/react-query",
       "kind": "imports"
     },
     {
@@ -110379,7 +110776,24 @@
     },
     {
       "from": "package:@asol/data-core",
+      "to": "external-dependency:@tanstack/react-query-persist-client",
+      "kind": "declares-dependency",
+      "detail": "dependencies:^5.102.3"
+    },
+    {
+      "from": "package:@asol/data-core",
+      "to": "external-dependency:@tanstack/react-query",
+      "kind": "declares-dependency",
+      "detail": "dependencies:^5.102.3"
+    },
+    {
+      "from": "package:@asol/data-core",
       "to": "external-dependency:@libsql/client",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/data-core",
+      "to": "external-dependency:@tanstack/react-query",
       "kind": "imports"
     },
     {
@@ -110400,6 +110814,11 @@
     {
       "from": "package:@asol/data-core",
       "to": "external-dependency:drizzle-orm",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/data-core",
+      "to": "external-dependency:react",
       "kind": "imports"
     },
     {
@@ -110943,11 +111362,6 @@
     },
     {
       "from": "package:@asol/observability-core",
-      "to": "external-dependency:@tanstack/react-query",
-      "kind": "imports"
-    },
-    {
-      "from": "package:@asol/observability-core",
       "to": "external-dependency:\\.\\.\\",
       "kind": "imports"
     },
@@ -111087,6 +111501,11 @@
       "kind": "imports"
     },
     {
+      "from": "package:@asol/product-card-core",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "imports"
+    },
+    {
       "from": "package:@asol/products-composition",
       "to": "feature:categories",
       "kind": "imports"
@@ -111179,6 +111598,11 @@
     {
       "from": "package:@asol/seller-card-core",
       "to": "package:@asol/data-core",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/seller-card-core",
+      "to": "package:@asol/storage-image-manager-core",
       "kind": "imports"
     },
     {
@@ -121761,6 +122185,12 @@
     },
     {
       "from": "route:/api/specialty-chat/messages:handler",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/specialty-chat/messages:handler",
       "to": "package:@asol/system-logs-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -121959,6 +122389,12 @@
       "to": "package:@asol/storage-core",
       "kind": "related-to",
       "detail": "route write gateway"
+    },
+    {
+      "from": "route:/api/specialty-chat/preferences:handler",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
     },
     {
       "from": "route:/api/specialty-chat/preferences:handler",
@@ -122163,6 +122599,12 @@
     },
     {
       "from": "route:/api/specialty-chat/product-conversations:handler",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/specialty-chat/product-conversations:handler",
       "to": "package:@asol/system-logs-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -122361,6 +122803,12 @@
       "to": "package:@asol/storage-core",
       "kind": "related-to",
       "detail": "route write gateway"
+    },
+    {
+      "from": "route:/api/specialty-chat/profile-conversations:handler",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
     },
     {
       "from": "route:/api/specialty-chat/profile-conversations:handler",
@@ -122565,6 +123013,12 @@
     },
     {
       "from": "route:/api/specialty-chat/receipts:handler",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/specialty-chat/receipts:handler",
       "to": "package:@asol/system-logs-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -122763,6 +123217,12 @@
       "to": "package:@asol/storage-core",
       "kind": "related-to",
       "detail": "route write gateway"
+    },
+    {
+      "from": "route:/api/specialty-chat/requests:handler",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
     },
     {
       "from": "route:/api/specialty-chat/requests:handler",
@@ -132081,6 +132541,12 @@
     },
     {
       "from": "route:/cart:page",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/cart:page",
       "to": "package:@asol/system-logs-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -132170,6 +132636,12 @@
       "detail": "route source dependency"
     },
     {
+      "from": "route:/categories/[categoryId]:page",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
       "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -132238,6 +132710,12 @@
     {
       "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
       "to": "package:@asol/seller-card-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/categories/[categoryId]/doctor-appointment/[specialtyId]:page",
+      "to": "package:@asol/storage-image-manager-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -132314,6 +132792,12 @@
       "detail": "route source dependency"
     },
     {
+      "from": "route:/categories/[categoryId]/sellers/[subcategoryId]:page",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
       "from": "route:/collections/[collectionId]:page",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -132386,6 +132870,12 @@
       "detail": "route source dependency"
     },
     {
+      "from": "route:/collections/[collectionId]:page",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
       "from": "route:/contact-us:page",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -132424,6 +132914,12 @@
     {
       "from": "route:/contact-us:page",
       "to": "package:@asol/auth-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/contact-us:page",
+      "to": "package:@asol/storage-image-manager-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -132543,7 +133039,19 @@
     },
     {
       "from": "route:/custom-request:page",
+      "to": "package:@asol/api-contract-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/custom-request:page",
       "to": "package:@asol/auth-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/custom-request:page",
+      "to": "package:@asol/backup-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -132567,13 +133075,49 @@
     },
     {
       "from": "route:/custom-request:page",
+      "to": "package:@asol/data-health-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/custom-request:page",
       "to": "package:@asol/dev-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
     {
       "from": "route:/custom-request:page",
+      "to": "package:@asol/env-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/custom-request:page",
+      "to": "package:@asol/featured-marquee-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/custom-request:page",
       "to": "package:@asol/hero-slider-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/custom-request:page",
+      "to": "package:@asol/notifications-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/custom-request:page",
+      "to": "package:@asol/orders-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/custom-request:page",
+      "to": "package:@asol/product-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -132592,6 +133136,18 @@
     {
       "from": "route:/custom-request:page",
       "to": "package:@asol/system-logs-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/custom-request:page",
+      "to": "package:@asol/trending-ribbon-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/custom-request:page",
+      "to": "package:@asol/vercel-deploy-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -133677,6 +134233,12 @@
     },
     {
       "from": "route:/dev/notification-tests:page",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/notification-tests:page",
       "to": "package:@asol/system-logs-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -133947,6 +134509,12 @@
     },
     {
       "from": "route:/favorites:page",
+      "to": "package:@asol/native-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/favorites:page",
       "to": "package:@asol/notifications-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -133992,6 +134560,12 @@
       "to": "package:@asol/storage-core",
       "kind": "related-to",
       "detail": "route write gateway"
+    },
+    {
+      "from": "route:/favorites:page",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
     },
     {
       "from": "route:/favorites:page",
@@ -134475,6 +135049,12 @@
     },
     {
       "from": "route:/notifications/chat:page",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/notifications/chat:page",
       "to": "package:@asol/vercel-deploy-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -134576,6 +135156,12 @@
       "detail": "route source dependency"
     },
     {
+      "from": "route:/orders:page",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
       "from": "route:/orders/[orderId]:page",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -134672,6 +135258,12 @@
       "detail": "route source dependency"
     },
     {
+      "from": "route:/orders/[orderId]:page",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
       "from": "route:/orders/details:page",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -134764,6 +135356,12 @@
     {
       "from": "route:/orders/details:page",
       "to": "package:@asol/signed-token-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/details:page",
+      "to": "package:@asol/storage-image-manager-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -135015,6 +135613,12 @@
     },
     {
       "from": "route:/product:page",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/product:page",
       "to": "package:@asol/system-logs-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -135147,7 +135751,19 @@
     },
     {
       "from": "route:/profile:page",
+      "to": "package:@asol/api-contract-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/profile:page",
       "to": "package:@asol/auth-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/profile:page",
+      "to": "package:@asol/backup-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -135171,13 +135787,49 @@
     },
     {
       "from": "route:/profile:page",
+      "to": "package:@asol/data-health-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/profile:page",
       "to": "package:@asol/dev-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
     {
       "from": "route:/profile:page",
+      "to": "package:@asol/env-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/profile:page",
+      "to": "package:@asol/featured-marquee-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/profile:page",
       "to": "package:@asol/hero-slider-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/profile:page",
+      "to": "package:@asol/notifications-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/profile:page",
+      "to": "package:@asol/orders-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/profile:page",
+      "to": "package:@asol/product-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -135196,6 +135848,18 @@
     {
       "from": "route:/profile:page",
       "to": "package:@asol/system-logs-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/profile:page",
+      "to": "package:@asol/trending-ribbon-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/profile:page",
+      "to": "package:@asol/vercel-deploy-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -135286,6 +135950,12 @@
     {
       "from": "route:/profile/pharmacy-catalog:page",
       "to": "package:@asol/signed-token-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/profile/pharmacy-catalog:page",
+      "to": "package:@asol/storage-image-manager-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -135717,6 +136387,12 @@
     },
     {
       "from": "route:/s/product:page",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/s/product:page",
       "to": "package:@asol/system-logs-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -135855,7 +136531,19 @@
     },
     {
       "from": "route:/s/profile:page",
+      "to": "package:@asol/api-contract-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/s/profile:page",
       "to": "package:@asol/auth-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/s/profile:page",
+      "to": "package:@asol/backup-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -135885,13 +136573,49 @@
     },
     {
       "from": "route:/s/profile:page",
+      "to": "package:@asol/data-health-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/s/profile:page",
       "to": "package:@asol/dev-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
     {
       "from": "route:/s/profile:page",
+      "to": "package:@asol/env-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/s/profile:page",
+      "to": "package:@asol/featured-marquee-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/s/profile:page",
       "to": "package:@asol/hero-slider-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/s/profile:page",
+      "to": "package:@asol/notifications-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/s/profile:page",
+      "to": "package:@asol/orders-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/s/profile:page",
+      "to": "package:@asol/product-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -135910,6 +136634,18 @@
     {
       "from": "route:/s/profile:page",
       "to": "package:@asol/system-logs-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/s/profile:page",
+      "to": "package:@asol/trending-ribbon-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/s/profile:page",
+      "to": "package:@asol/vercel-deploy-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -136042,6 +136778,12 @@
     {
       "from": "route:/settings:page",
       "to": "feature:settings",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/settings:page",
+      "to": "feature:storage",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -136186,6 +136928,12 @@
     {
       "from": "route:/settings/notifications:page",
       "to": "feature:settings",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/settings/notifications:page",
+      "to": "feature:storage",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -136336,6 +137084,12 @@
     {
       "from": "route:/specialty-request:page",
       "to": "package:@asol/observability-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/specialty-request:page",
+      "to": "package:@asol/storage-image-manager-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -136629,6 +137383,12 @@
     },
     {
       "from": "route:/super-admin/featured-marquee:page",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/super-admin/featured-marquee:page",
       "to": "package:@asol/system-logs-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -136899,6 +137659,12 @@
     },
     {
       "from": "route:/super-admin/hero-slider:page",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/super-admin/hero-slider:page",
       "to": "package:@asol/system-logs-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -137109,6 +137875,12 @@
     },
     {
       "from": "route:/super-admin/logs:page",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/super-admin/logs:page",
       "to": "package:@asol/system-logs-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -137316,6 +138088,12 @@
       "to": "package:@asol/storage-core",
       "kind": "related-to",
       "detail": "route write gateway"
+    },
+    {
+      "from": "route:/super-admin/notifications-broadcast:page",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
     },
     {
       "from": "route:/super-admin/notifications-broadcast:page",
@@ -137643,6 +138421,12 @@
     },
     {
       "from": "route:/super-admin/trending-ribbon:page",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/super-admin/trending-ribbon:page",
       "to": "package:@asol/system-logs-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -137850,6 +138634,12 @@
       "to": "package:@asol/storage-core",
       "kind": "related-to",
       "detail": "route write gateway"
+    },
+    {
+      "from": "route:/super-admin/users:page",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
     },
     {
       "from": "route:/super-admin/users:page",
@@ -146619,6 +147409,78 @@
       "kind": "belongs-to"
     },
     {
+      "from": "source:packages/data-core/src/browser/image-cache/image-cache.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/image-cache/image-cache.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/image-cache/image-cache.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/image-cache/image-cache.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/image-cache/image-cache.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/image-cache/image-cache.ts",
+      "to": "package:@asol/data-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/image-cache/image-cache.ts",
+      "to": "source:packages/data-core/src/browser/asol-db/index.ts",
+      "kind": "imports",
+      "detail": "../asol-db"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/image-cache/index.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/image-cache/index.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/image-cache/index.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/image-cache/index.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/image-cache/index.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/image-cache/index.ts",
+      "to": "package:@asol/data-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/image-cache/index.ts",
+      "to": "source:packages/data-core/src/browser/image-cache/image-cache.ts",
+      "kind": "imports",
+      "detail": "./image-cache"
+    },
+    {
       "from": "source:packages/data-core/src/browser/index.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -146665,6 +147527,318 @@
       "to": "source:packages/data-core/src/browser/clear-browser-databases.ts",
       "kind": "imports",
       "detail": "./clear-browser-databases"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/index.ts",
+      "to": "source:packages/data-core/src/browser/image-cache/index.ts",
+      "kind": "imports",
+      "detail": "./image-cache"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/index.ts",
+      "to": "source:packages/data-core/src/browser/query/index.ts",
+      "kind": "imports",
+      "detail": "./query"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/index.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/index.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/index.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/index.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/index.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/index.ts",
+      "to": "package:@asol/data-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/index.ts",
+      "to": "external-dependency:@tanstack/react-query",
+      "kind": "imports",
+      "detail": "@tanstack/react-query"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/index.ts",
+      "to": "source:packages/data-core/src/browser/query/local-read.ts",
+      "kind": "imports",
+      "detail": "./local-read"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/index.ts",
+      "to": "source:packages/data-core/src/browser/query/query-client.ts",
+      "kind": "imports",
+      "detail": "./query-client"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/index.ts",
+      "to": "source:packages/data-core/src/browser/query/query-persistence-runtime.ts",
+      "kind": "imports",
+      "detail": "./query-persistence-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/index.ts",
+      "to": "source:packages/data-core/src/browser/query/query-policies.ts",
+      "kind": "imports",
+      "detail": "./query-policies"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/index.ts",
+      "to": "source:packages/data-core/src/browser/query/query-provider.tsx",
+      "kind": "imports",
+      "detail": "./query-provider"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/local-read.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/local-read.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/local-read.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/local-read.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/local-read.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/local-read.ts",
+      "to": "package:@asol/data-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/local-read.ts",
+      "to": "source:packages/data-core/src/browser/query/query-client.ts",
+      "kind": "imports",
+      "detail": "./query-client"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/local-read.ts",
+      "to": "source:packages/data-core/src/browser/query/query-persistence-runtime.ts",
+      "kind": "imports",
+      "detail": "./query-persistence-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-client.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-client.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-client.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-client.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-client.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-client.ts",
+      "to": "package:@asol/data-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-client.ts",
+      "to": "external-dependency:@tanstack/react-query",
+      "kind": "imports",
+      "detail": "@tanstack/react-query"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-client.ts",
+      "to": "source:packages/data-core/src/browser/asol-db-persister.ts",
+      "kind": "imports",
+      "detail": "../asol-db-persister"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-client.ts",
+      "to": "source:packages/data-core/src/browser/query/query-policies.ts",
+      "kind": "imports",
+      "detail": "./query-policies"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-persistence-runtime.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-persistence-runtime.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-persistence-runtime.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-persistence-runtime.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-persistence-runtime.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-persistence-runtime.ts",
+      "to": "package:@asol/data-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-persistence-runtime.ts",
+      "to": "external-dependency:@tanstack/react-query-persist-client",
+      "kind": "imports",
+      "detail": "@tanstack/react-query-persist-client"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-persistence-runtime.ts",
+      "to": "external-dependency:@tanstack/react-query",
+      "kind": "imports",
+      "detail": "@tanstack/react-query"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-persistence-runtime.ts",
+      "to": "source:packages/data-core/src/browser/asol-db-persister.ts",
+      "kind": "imports",
+      "detail": "../asol-db-persister"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-persistence-runtime.ts",
+      "to": "source:packages/data-core/src/browser/query/query-policies.ts",
+      "kind": "imports",
+      "detail": "./query-policies"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-policies.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-policies.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-policies.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-policies.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-policies.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-policies.ts",
+      "to": "package:@asol/data-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-policies.ts",
+      "to": "external-dependency:@tanstack/react-query",
+      "kind": "imports",
+      "detail": "@tanstack/react-query"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-provider.tsx",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-provider.tsx",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-provider.tsx",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-provider.tsx",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-provider.tsx",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-provider.tsx",
+      "to": "package:@asol/data-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-provider.tsx",
+      "to": "external-dependency:@tanstack/react-query",
+      "kind": "imports",
+      "detail": "@tanstack/react-query"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-provider.tsx",
+      "to": "external-dependency:react",
+      "kind": "imports",
+      "detail": "react"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-provider.tsx",
+      "to": "source:packages/data-core/src/browser/query/query-client.ts",
+      "kind": "imports",
+      "detail": "./query-client"
+    },
+    {
+      "from": "source:packages/data-core/src/browser/query/query-provider.tsx",
+      "to": "source:packages/data-core/src/browser/query/query-persistence-runtime.ts",
+      "kind": "imports",
+      "detail": "./query-persistence-runtime"
     },
     {
       "from": "source:packages/data-core/src/browser/workers/asol-push-sw.js",
@@ -170052,12 +171226,6 @@
     },
     {
       "from": "source:packages/observability-core/src/monitor/query-observer.ts",
-      "to": "external-dependency:@tanstack/react-query",
-      "kind": "imports",
-      "detail": "@tanstack/react-query"
-    },
-    {
-      "from": "source:packages/observability-core/src/monitor/query-observer.ts",
       "to": "source:packages/observability-core/src/monitor/monitor-store.ts",
       "kind": "imports",
       "detail": "./monitor-store"
@@ -175299,6 +176467,12 @@
     },
     {
       "from": "source:packages/product-card-core/src/presentation/ProductCard.tsx",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "imports",
+      "detail": "@asol/storage-image-manager-core/image-cache"
+    },
+    {
+      "from": "source:packages/product-card-core/src/presentation/ProductCard.tsx",
       "to": "source:packages/product-card-core/src/domain/product-card.types.ts",
       "kind": "imports",
       "detail": "../domain/product-card.types"
@@ -177453,6 +178627,12 @@
     },
     {
       "from": "source:packages/seller-card-core/src/presentation/SellerCard.tsx",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "imports",
+      "detail": "@asol/storage-image-manager-core/image-cache"
+    },
+    {
+      "from": "source:packages/seller-card-core/src/presentation/SellerCard.tsx",
       "to": "source:packages/seller-card-core/src/domain/seller-card.types.ts",
       "kind": "imports",
       "detail": "../domain/seller-card.types"
@@ -179406,6 +180586,12 @@
     },
     {
       "from": "source:packages/storage-image-manager-core/src/components/StorageImageManager.tsx",
+      "to": "source:packages/storage-image-manager-core/src/hooks/use-local-first-storage-image-source.ts",
+      "kind": "imports",
+      "detail": "../hooks/use-local-first-storage-image-source"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/components/StorageImageManager.tsx",
       "to": "source:packages/storage-image-manager-core/src/hooks/use-storage-profile-upload.ts",
       "kind": "imports",
       "detail": "../hooks/use-storage-profile-upload"
@@ -179421,6 +180607,48 @@
       "to": "source:packages/storage-image-manager-core/src/services/image-upload-queue.ts",
       "kind": "imports",
       "detail": "../services/image-upload-queue"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/hooks/use-local-first-storage-image-source.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/hooks/use-local-first-storage-image-source.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/hooks/use-local-first-storage-image-source.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/hooks/use-local-first-storage-image-source.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/hooks/use-local-first-storage-image-source.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/hooks/use-local-first-storage-image-source.ts",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/hooks/use-local-first-storage-image-source.ts",
+      "to": "external-dependency:react",
+      "kind": "imports",
+      "detail": "react"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/hooks/use-local-first-storage-image-source.ts",
+      "to": "source:packages/storage-image-manager-core/src/services/local-first-image-cache.ts",
+      "kind": "imports",
+      "detail": "../services/local-first-image-cache"
     },
     {
       "from": "source:packages/storage-image-manager-core/src/hooks/use-storage-profile-upload.ts",
@@ -179493,6 +180721,60 @@
       "to": "source:packages/storage-image-manager-core/src/services/image-upload-queue.ts",
       "kind": "imports",
       "detail": "../services/image-upload-queue"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/hooks/use-storage-profile-upload.ts",
+      "to": "source:packages/storage-image-manager-core/src/services/local-first-image-cache.ts",
+      "kind": "imports",
+      "detail": "../services/local-first-image-cache"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/image-cache.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/image-cache.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/image-cache.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/image-cache.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/image-cache.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/image-cache.ts",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/image-cache.ts",
+      "to": "source:packages/storage-image-manager-core/src/hooks/use-local-first-storage-image-source.ts",
+      "kind": "imports",
+      "detail": "./hooks/use-local-first-storage-image-source"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/image-cache.ts",
+      "to": "source:packages/storage-image-manager-core/src/services/image-cache-port.ts",
+      "kind": "imports",
+      "detail": "./services/image-cache-port"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/image-cache.ts",
+      "to": "source:packages/storage-image-manager-core/src/services/local-first-image-cache.ts",
+      "kind": "imports",
+      "detail": "./services/local-first-image-cache"
     },
     {
       "from": "source:packages/storage-image-manager-core/src/index.ts",
@@ -179643,6 +180925,36 @@
       "to": "source:packages/storage-image-manager-core/src/services/image-upload-queue.ts",
       "kind": "imports",
       "detail": "./services/image-upload-queue"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/services/image-cache-port.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/services/image-cache-port.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/services/image-cache-port.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/services/image-cache-port.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/services/image-cache-port.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/services/image-cache-port.ts",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "belongs-to"
     },
     {
       "from": "source:packages/storage-image-manager-core/src/services/image-storage-api-service.interface.ts",
@@ -179877,6 +181189,48 @@
       "from": "source:packages/storage-image-manager-core/src/services/image-upload-queue.ts",
       "to": "package:@asol/storage-image-manager-core",
       "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/services/local-first-image-cache.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/services/local-first-image-cache.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/services/local-first-image-cache.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/services/local-first-image-cache.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/services/local-first-image-cache.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/services/local-first-image-cache.ts",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/services/local-first-image-cache.ts",
+      "to": "package:@asol/data-core",
+      "kind": "imports",
+      "detail": "@asol/data-core/browser"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/services/local-first-image-cache.ts",
+      "to": "source:packages/storage-image-manager-core/src/services/image-cache-port.ts",
+      "kind": "imports",
+      "detail": "./image-cache-port"
     },
     {
       "from": "source:packages/sub2main-composition/src/index.ts",
@@ -191802,6 +193156,12 @@
     },
     {
       "from": "source:src/core/api/asol-api-client.ts",
+      "to": "source:src/core/api/browser-local-read-cache.ts",
+      "kind": "imports",
+      "detail": "./browser-local-read-cache"
+    },
+    {
+      "from": "source:src/core/api/asol-api-client.ts",
       "to": "source:src/core/api/business-api-error-codes.ts",
       "kind": "imports",
       "detail": "./business-api-error-codes"
@@ -191890,6 +193250,31 @@
     },
     {
       "from": "source:src/core/api/asol-http-transport.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/core/api/browser-local-read-cache.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/core/api/browser-local-read-cache.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/core/api/browser-local-read-cache.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/core/api/browser-local-read-cache.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/core/api/browser-local-read-cache.ts",
       "to": "runtime:web",
       "kind": "affects-runtime"
     },
@@ -192022,6 +193407,12 @@
       "to": "source:src/core/api/asol-api-routes.ts",
       "kind": "imports",
       "detail": "./asol-api-routes"
+    },
+    {
+      "from": "source:src/core/api/index.ts",
+      "to": "source:src/core/api/browser-local-read-cache.ts",
+      "kind": "imports",
+      "detail": "./browser-local-read-cache"
     },
     {
       "from": "source:src/core/api/index.ts",
@@ -192269,6 +193660,12 @@
       "to": "source:src/features/page-snapshot/ports.ts",
       "kind": "imports",
       "detail": "@/features/page-snapshot/ports"
+    },
+    {
+      "from": "source:src/core/composition/browser-ports.ts",
+      "to": "source:src/features/storage/index.ts",
+      "kind": "imports",
+      "detail": "@/features/storage"
     },
     {
       "from": "source:src/core/composition/browser-ports.ts",
@@ -193471,18 +194868,6 @@
     },
     {
       "from": "source:src/core/providers/query-provider.tsx",
-      "to": "external-dependency:@tanstack/react-query-persist-client",
-      "kind": "imports",
-      "detail": "@tanstack/react-query-persist-client"
-    },
-    {
-      "from": "source:src/core/providers/query-provider.tsx",
-      "to": "external-dependency:@tanstack/react-query",
-      "kind": "imports",
-      "detail": "@tanstack/react-query"
-    },
-    {
-      "from": "source:src/core/providers/query-provider.tsx",
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
@@ -193498,12 +194883,6 @@
       "to": "package:@asol/observability-core",
       "kind": "imports",
       "detail": "@asol/observability-core"
-    },
-    {
-      "from": "source:src/core/providers/query-provider.tsx",
-      "to": "source:src/core/config/public-env.ts",
-      "kind": "imports",
-      "detail": "@/core/config/public-env"
     },
     {
       "from": "source:src/core/providers/query-provider.tsx",
@@ -194575,9 +195954,9 @@
     },
     {
       "from": "source:src/features/advertisements/presentation/HeroSliderImageProbe.tsx",
-      "to": "external-dependency:next",
+      "to": "source:src/shared/ui/local-first-image.tsx",
       "kind": "imports",
-      "detail": "next/image"
+      "detail": "@/shared/ui/local-first-image"
     },
     {
       "from": "source:src/features/advertisements/presentation/HeroSliderImagesEditor.tsx",
@@ -194713,12 +196092,6 @@
     },
     {
       "from": "source:src/features/advertisements/presentation/HeroSliderSlide.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
-      "detail": "next/image"
-    },
-    {
-      "from": "source:src/features/advertisements/presentation/HeroSliderSlide.tsx",
       "to": "source:src/features/advertisements/presentation/hero-slider-styles.ts",
       "kind": "imports",
       "detail": "./hero-slider-styles"
@@ -194728,6 +196101,12 @@
       "to": "source:src/features/advertisements/presentation/hero-slider.types.ts",
       "kind": "imports",
       "detail": "./hero-slider.types"
+    },
+    {
+      "from": "source:src/features/advertisements/presentation/HeroSliderSlide.tsx",
+      "to": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/local-first-image"
     },
     {
       "from": "source:src/features/advertisements/presentation/hooks/use-home-featured-marquee.ts",
@@ -196471,12 +197850,6 @@
     },
     {
       "from": "source:src/features/auth/presentation/hooks/use-login.ts",
-      "to": "external-dependency:@tanstack/react-query",
-      "kind": "imports",
-      "detail": "@tanstack/react-query"
-    },
-    {
-      "from": "source:src/features/auth/presentation/hooks/use-login.ts",
       "to": "external-dependency:next",
       "kind": "imports",
       "detail": "next/navigation"
@@ -196498,6 +197871,12 @@
       "to": "package:@asol/auth-core",
       "kind": "imports",
       "detail": "@asol/auth-core"
+    },
+    {
+      "from": "source:src/features/auth/presentation/hooks/use-login.ts",
+      "to": "package:@asol/data-core",
+      "kind": "imports",
+      "detail": "@asol/data-core/browser"
     },
     {
       "from": "source:src/features/auth/presentation/hooks/use-login.ts",
@@ -196597,9 +197976,9 @@
     },
     {
       "from": "source:src/features/auth/presentation/hooks/use-logout.ts",
-      "to": "external-dependency:@tanstack/react-query",
+      "to": "package:@asol/data-core",
       "kind": "imports",
-      "detail": "@tanstack/react-query"
+      "detail": "@asol/data-core/browser"
     },
     {
       "from": "source:src/features/auth/presentation/hooks/use-logout.ts",
@@ -196669,12 +198048,6 @@
     },
     {
       "from": "source:src/features/auth/presentation/hooks/use-profile-registration.ts",
-      "to": "external-dependency:@tanstack/react-query",
-      "kind": "imports",
-      "detail": "@tanstack/react-query"
-    },
-    {
-      "from": "source:src/features/auth/presentation/hooks/use-profile-registration.ts",
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
@@ -196684,6 +198057,12 @@
       "to": "package:@asol/auth-core",
       "kind": "imports",
       "detail": "@asol/auth-core"
+    },
+    {
+      "from": "source:src/features/auth/presentation/hooks/use-profile-registration.ts",
+      "to": "package:@asol/data-core",
+      "kind": "imports",
+      "detail": "@asol/data-core/browser"
     },
     {
       "from": "source:src/features/auth/presentation/hooks/use-profile-registration.ts",
@@ -196783,12 +198162,6 @@
     },
     {
       "from": "source:src/features/auth/presentation/hooks/use-register.ts",
-      "to": "external-dependency:@tanstack/react-query",
-      "kind": "imports",
-      "detail": "@tanstack/react-query"
-    },
-    {
-      "from": "source:src/features/auth/presentation/hooks/use-register.ts",
       "to": "external-dependency:next",
       "kind": "imports",
       "detail": "next/navigation"
@@ -196810,6 +198183,12 @@
       "to": "package:@asol/auth-core",
       "kind": "imports",
       "detail": "@asol/auth-core"
+    },
+    {
+      "from": "source:src/features/auth/presentation/hooks/use-register.ts",
+      "to": "package:@asol/data-core",
+      "kind": "imports",
+      "detail": "@asol/data-core/browser"
     },
     {
       "from": "source:src/features/auth/presentation/hooks/use-register.ts",
@@ -197596,6 +198975,12 @@
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
+    },
+    {
+      "from": "source:src/features/auth/presentation/SessionProvider.tsx",
+      "to": "package:@asol/data-core",
+      "kind": "imports",
+      "detail": "@asol/data-core/browser"
     },
     {
       "from": "source:src/features/auth/presentation/SessionProvider.tsx",
@@ -198558,12 +199943,6 @@
       "from": "source:src/features/cart/presentation/CartPageContent.tsx",
       "to": "external-dependency:next",
       "kind": "imports",
-      "detail": "next/image"
-    },
-    {
-      "from": "source:src/features/cart/presentation/CartPageContent.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
       "detail": "next/link"
     },
     {
@@ -198643,6 +200022,12 @@
       "to": "source:src/shared/session-runtime/index.ts",
       "kind": "imports",
       "detail": "@/shared/session-runtime"
+    },
+    {
+      "from": "source:src/features/cart/presentation/CartPageContent.tsx",
+      "to": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/local-first-image"
     },
     {
       "from": "source:src/features/cart/presentation/hooks/use-cart.ts",
@@ -199992,12 +201377,6 @@
       "from": "source:src/features/categories/presentation/CategorySubcategoriesPage.tsx",
       "to": "external-dependency:next",
       "kind": "imports",
-      "detail": "next/image"
-    },
-    {
-      "from": "source:src/features/categories/presentation/CategorySubcategoriesPage.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
       "detail": "next/navigation"
     },
     {
@@ -200023,6 +201402,12 @@
       "to": "source:src/shared/i18n/index.ts",
       "kind": "imports",
       "detail": "@/shared/i18n"
+    },
+    {
+      "from": "source:src/features/categories/presentation/CategorySubcategoriesPage.tsx",
+      "to": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/local-first-image"
     },
     {
       "from": "source:src/features/categories/presentation/CollectionSubcategoriesPage.tsx",
@@ -200059,12 +201444,6 @@
       "to": "external-dependency:lucide-react",
       "kind": "imports",
       "detail": "lucide-react"
-    },
-    {
-      "from": "source:src/features/categories/presentation/CollectionSubcategoriesPage.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
-      "detail": "next/image"
     },
     {
       "from": "source:src/features/categories/presentation/CollectionSubcategoriesPage.tsx",
@@ -200097,6 +201476,12 @@
       "detail": "@/shared/i18n"
     },
     {
+      "from": "source:src/features/categories/presentation/CollectionSubcategoriesPage.tsx",
+      "to": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/local-first-image"
+    },
+    {
       "from": "source:src/features/categories/presentation/DoctorAppointmentSellersPageContent.tsx",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -200131,12 +201516,6 @@
       "to": "external-dependency:lucide-react",
       "kind": "imports",
       "detail": "lucide-react"
-    },
-    {
-      "from": "source:src/features/categories/presentation/DoctorAppointmentSellersPageContent.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
-      "detail": "next/image"
     },
     {
       "from": "source:src/features/categories/presentation/DoctorAppointmentSellersPageContent.tsx",
@@ -200181,6 +201560,12 @@
       "detail": "@/shared/i18n"
     },
     {
+      "from": "source:src/features/categories/presentation/DoctorAppointmentSellersPageContent.tsx",
+      "to": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/local-first-image"
+    },
+    {
       "from": "source:src/features/categories/presentation/SellersPageContent.tsx",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -200215,12 +201600,6 @@
       "to": "external-dependency:lucide-react",
       "kind": "imports",
       "detail": "lucide-react"
-    },
-    {
-      "from": "source:src/features/categories/presentation/SellersPageContent.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
-      "detail": "next/image"
     },
     {
       "from": "source:src/features/categories/presentation/SellersPageContent.tsx",
@@ -200263,6 +201642,12 @@
       "to": "source:src/shared/i18n/index.ts",
       "kind": "imports",
       "detail": "@/shared/i18n"
+    },
+    {
+      "from": "source:src/features/categories/presentation/SellersPageContent.tsx",
+      "to": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/local-first-image"
     },
     {
       "from": "source:src/features/categories/ui.ts",
@@ -200490,12 +201875,6 @@
       "from": "source:src/features/contact/presentation/ContactPageContent.tsx",
       "to": "external-dependency:next",
       "kind": "imports",
-      "detail": "next/image"
-    },
-    {
-      "from": "source:src/features/contact/presentation/ContactPageContent.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
       "detail": "next/link"
     },
     {
@@ -200527,6 +201906,12 @@
       "to": "source:src/shared/phone/phone-field-labels.ts",
       "kind": "imports",
       "detail": "@/shared/phone/phone-field-labels"
+    },
+    {
+      "from": "source:src/features/contact/presentation/ContactPageContent.tsx",
+      "to": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/local-first-image"
     },
     {
       "from": "source:src/features/contact/presentation/ContactPageContent.tsx",
@@ -201681,7 +203066,19 @@
       "from": "source:src/features/data/ports/data-core-browser-ports.ts",
       "to": "package:@asol/data-core",
       "kind": "imports",
+      "detail": "@asol/data-core/browser"
+    },
+    {
+      "from": "source:src/features/data/ports/data-core-browser-ports.ts",
+      "to": "package:@asol/data-core",
+      "kind": "imports",
       "detail": "@asol/data-core/runtime-config"
+    },
+    {
+      "from": "source:src/features/data/ports/data-core-browser-ports.ts",
+      "to": "source:src/core/api/index.ts",
+      "kind": "imports",
+      "detail": "@/core/api"
     },
     {
       "from": "source:src/features/data/ports/data-core-browser-ports.ts",
@@ -207782,12 +209179,6 @@
     },
     {
       "from": "source:src/features/google-play-console/presentation/tabs/StoreImagesTab.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
-      "detail": "next/image"
-    },
-    {
-      "from": "source:src/features/google-play-console/presentation/tabs/StoreImagesTab.tsx",
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
@@ -207827,6 +209218,12 @@
       "to": "source:src/shared/ui/input.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/input"
+    },
+    {
+      "from": "source:src/features/google-play-console/presentation/tabs/StoreImagesTab.tsx",
+      "to": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/local-first-image"
     },
     {
       "from": "source:src/features/google-play-console/presentation/tabs/StoreTextTab.tsx",
@@ -208285,12 +209682,6 @@
       "from": "source:src/features/home/presentation/CategoriesGrid.tsx",
       "to": "external-dependency:next",
       "kind": "imports",
-      "detail": "next/image"
-    },
-    {
-      "from": "source:src/features/home/presentation/CategoriesGrid.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
       "detail": "next/link"
     },
     {
@@ -208316,6 +209707,12 @@
       "to": "source:src/shared/i18n/index.ts",
       "kind": "imports",
       "detail": "@/shared/i18n"
+    },
+    {
+      "from": "source:src/features/home/presentation/CategoriesGrid.tsx",
+      "to": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/local-first-image"
     },
     {
       "from": "source:src/features/home/presentation/HomeScreen.tsx",
@@ -213587,12 +214984,6 @@
     },
     {
       "from": "source:src/features/onboarding/presentation/sections/collections-section.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
-      "detail": "next/image"
-    },
-    {
-      "from": "source:src/features/onboarding/presentation/sections/collections-section.tsx",
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
@@ -213668,6 +215059,12 @@
       "to": "source:src/shared/ui/label.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/label"
+    },
+    {
+      "from": "source:src/features/onboarding/presentation/sections/collections-section.tsx",
+      "to": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/local-first-image"
     },
     {
       "from": "source:src/features/onboarding/presentation/sections/collections-section.tsx",
@@ -215374,12 +216771,6 @@
       "from": "source:src/features/orders/presentation/order-details/OrderDetailsPageContent.delivery-plan.tsx",
       "to": "external-dependency:next",
       "kind": "imports",
-      "detail": "next/image"
-    },
-    {
-      "from": "source:src/features/orders/presentation/order-details/OrderDetailsPageContent.delivery-plan.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
       "detail": "next/link"
     },
     {
@@ -215486,6 +216877,12 @@
     },
     {
       "from": "source:src/features/orders/presentation/order-details/OrderDetailsPageContent.delivery-plan.tsx",
+      "to": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/local-first-image"
+    },
+    {
+      "from": "source:src/features/orders/presentation/order-details/OrderDetailsPageContent.delivery-plan.tsx",
       "to": "source:src/shared/ui/textarea.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/textarea"
@@ -215525,12 +216922,6 @@
       "to": "external-dependency:lucide-react",
       "kind": "imports",
       "detail": "lucide-react"
-    },
-    {
-      "from": "source:src/features/orders/presentation/order-details/OrderDetailsPageContent.navigation-summary.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
-      "detail": "next/image"
     },
     {
       "from": "source:src/features/orders/presentation/order-details/OrderDetailsPageContent.navigation-summary.tsx",
@@ -215612,6 +217003,12 @@
     },
     {
       "from": "source:src/features/orders/presentation/order-details/OrderDetailsPageContent.navigation-summary.tsx",
+      "to": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/local-first-image"
+    },
+    {
+      "from": "source:src/features/orders/presentation/order-details/OrderDetailsPageContent.navigation-summary.tsx",
       "to": "source:src/shared/ui/textarea.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/textarea"
@@ -215651,12 +217048,6 @@
       "to": "external-dependency:lucide-react",
       "kind": "imports",
       "detail": "lucide-react"
-    },
-    {
-      "from": "source:src/features/orders/presentation/order-details/OrderDetailsPageContent.order-items.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
-      "detail": "next/image"
     },
     {
       "from": "source:src/features/orders/presentation/order-details/OrderDetailsPageContent.order-items.tsx",
@@ -215750,6 +217141,12 @@
     },
     {
       "from": "source:src/features/orders/presentation/order-details/OrderDetailsPageContent.order-items.tsx",
+      "to": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/local-first-image"
+    },
+    {
+      "from": "source:src/features/orders/presentation/order-details/OrderDetailsPageContent.order-items.tsx",
       "to": "source:src/shared/ui/textarea.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/textarea"
@@ -215789,12 +217186,6 @@
       "to": "external-dependency:lucide-react",
       "kind": "imports",
       "detail": "lucide-react"
-    },
-    {
-      "from": "source:src/features/orders/presentation/order-details/OrderDetailsPageContent.returns.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
-      "detail": "next/image"
     },
     {
       "from": "source:src/features/orders/presentation/order-details/OrderDetailsPageContent.returns.tsx",
@@ -215873,6 +217264,12 @@
       "to": "source:src/shared/ui/input.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/input"
+    },
+    {
+      "from": "source:src/features/orders/presentation/order-details/OrderDetailsPageContent.returns.tsx",
+      "to": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/local-first-image"
     },
     {
       "from": "source:src/features/orders/presentation/order-details/OrderDetailsPageContent.returns.tsx",
@@ -215992,12 +217389,6 @@
       "from": "source:src/features/orders/presentation/order-details/OrderDetailsPageContent.seller-orders.tsx",
       "to": "external-dependency:next",
       "kind": "imports",
-      "detail": "next/image"
-    },
-    {
-      "from": "source:src/features/orders/presentation/order-details/OrderDetailsPageContent.seller-orders.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
       "detail": "next/link"
     },
     {
@@ -216104,6 +217495,12 @@
     },
     {
       "from": "source:src/features/orders/presentation/order-details/OrderDetailsPageContent.seller-orders.tsx",
+      "to": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/local-first-image"
+    },
+    {
+      "from": "source:src/features/orders/presentation/order-details/OrderDetailsPageContent.seller-orders.tsx",
       "to": "source:src/shared/ui/textarea.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/textarea"
@@ -216143,12 +217540,6 @@
       "to": "external-dependency:lucide-react",
       "kind": "imports",
       "detail": "lucide-react"
-    },
-    {
-      "from": "source:src/features/orders/presentation/order-details/OrderDetailsPageContent.shipments.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
-      "detail": "next/image"
     },
     {
       "from": "source:src/features/orders/presentation/order-details/OrderDetailsPageContent.shipments.tsx",
@@ -216242,6 +217633,12 @@
     },
     {
       "from": "source:src/features/orders/presentation/order-details/OrderDetailsPageContent.shipments.tsx",
+      "to": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/local-first-image"
+    },
+    {
+      "from": "source:src/features/orders/presentation/order-details/OrderDetailsPageContent.shipments.tsx",
       "to": "source:src/shared/ui/textarea.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/textarea"
@@ -216281,12 +217678,6 @@
       "to": "external-dependency:lucide-react",
       "kind": "imports",
       "detail": "lucide-react"
-    },
-    {
-      "from": "source:src/features/orders/presentation/order-details/OrderDetailsPageContent.shipping-quotes.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
-      "detail": "next/image"
     },
     {
       "from": "source:src/features/orders/presentation/order-details/OrderDetailsPageContent.shipping-quotes.tsx",
@@ -216377,6 +217768,12 @@
       "to": "source:src/shared/ui/input.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/input"
+    },
+    {
+      "from": "source:src/features/orders/presentation/order-details/OrderDetailsPageContent.shipping-quotes.tsx",
+      "to": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/local-first-image"
     },
     {
       "from": "source:src/features/orders/presentation/order-details/OrderDetailsPageContent.shipping-quotes.tsx",
@@ -216706,12 +218103,6 @@
       "from": "source:src/features/orders/presentation/OrderDetailsPageContent.tsx",
       "to": "external-dependency:next",
       "kind": "imports",
-      "detail": "next/image"
-    },
-    {
-      "from": "source:src/features/orders/presentation/OrderDetailsPageContent.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
       "detail": "next/link"
     },
     {
@@ -216827,6 +218218,12 @@
       "to": "source:src/shared/ui/input.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/input"
+    },
+    {
+      "from": "source:src/features/orders/presentation/OrderDetailsPageContent.tsx",
+      "to": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/local-first-image"
     },
     {
       "from": "source:src/features/orders/presentation/OrderDetailsPageContent.tsx",
@@ -219445,12 +220842,6 @@
       "from": "source:src/features/pharmacy-profile-catalog/presentation/catalog-manager/PharmacyCatalogManagerPage.dialogs.tsx",
       "to": "external-dependency:next",
       "kind": "imports",
-      "detail": "next/image"
-    },
-    {
-      "from": "source:src/features/pharmacy-profile-catalog/presentation/catalog-manager/PharmacyCatalogManagerPage.dialogs.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
       "detail": "next/link"
     },
     {
@@ -219488,6 +220879,12 @@
       "to": "source:src/shared/ui/LoadingSpinner.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/LoadingSpinner"
+    },
+    {
+      "from": "source:src/features/pharmacy-profile-catalog/presentation/catalog-manager/PharmacyCatalogManagerPage.dialogs.tsx",
+      "to": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/local-first-image"
     },
     {
       "from": "source:src/features/pharmacy-profile-catalog/presentation/catalog-manager/PharmacyCatalogManagerPage.model.ts",
@@ -219560,12 +220957,6 @@
       "to": "external-dependency:lucide-react",
       "kind": "imports",
       "detail": "lucide-react"
-    },
-    {
-      "from": "source:src/features/pharmacy-profile-catalog/presentation/PharmacyCatalogManagerPage.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
-      "detail": "next/image"
     },
     {
       "from": "source:src/features/pharmacy-profile-catalog/presentation/PharmacyCatalogManagerPage.tsx",
@@ -219644,6 +221035,12 @@
       "to": "source:src/shared/ui/LoadingSpinner.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/LoadingSpinner"
+    },
+    {
+      "from": "source:src/features/pharmacy-profile-catalog/presentation/PharmacyCatalogManagerPage.tsx",
+      "to": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/local-first-image"
     },
     {
       "from": "source:src/features/pharmacy-profile-catalog/presentation/PharmacyCategoryIcon.tsx",
@@ -222215,12 +223612,6 @@
     },
     {
       "from": "source:src/features/product/presentation/ProductImageGallery.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
-      "detail": "next/image"
-    },
-    {
-      "from": "source:src/features/product/presentation/ProductImageGallery.tsx",
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
@@ -222230,6 +223621,12 @@
       "to": "package:@asol/storage-core",
       "kind": "imports",
       "detail": "@asol/storage-core"
+    },
+    {
+      "from": "source:src/features/product/presentation/ProductImageGallery.tsx",
+      "to": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/local-first-image"
     },
     {
       "from": "source:src/features/product/presentation/ProductPageContent.tsx",
@@ -222575,12 +223972,6 @@
     },
     {
       "from": "source:src/features/product/presentation/ProductReviews.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
-      "detail": "next/image"
-    },
-    {
-      "from": "source:src/features/product/presentation/ProductReviews.tsx",
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
@@ -222634,6 +224025,12 @@
       "detail": "@/shared/session-runtime"
     },
     {
+      "from": "source:src/features/product/presentation/ProductReviews.tsx",
+      "to": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/local-first-image"
+    },
+    {
       "from": "source:src/features/product/presentation/ProductVehicleSpecs.tsx",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -222665,12 +224062,6 @@
     },
     {
       "from": "source:src/features/product/presentation/ProductVehicleSpecs.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
-      "detail": "next/image"
-    },
-    {
-      "from": "source:src/features/product/presentation/ProductVehicleSpecs.tsx",
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
@@ -222692,6 +224083,12 @@
       "to": "source:src/features/vehicle-catalog/index.ts",
       "kind": "imports",
       "detail": "@/features/vehicle-catalog"
+    },
+    {
+      "from": "source:src/features/product/presentation/ProductVehicleSpecs.tsx",
+      "to": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/local-first-image"
     },
     {
       "from": "source:src/features/product/presentation/style-editors/images/ProductImagesStyleEditor.tsx",
@@ -226676,9 +228073,9 @@
     },
     {
       "from": "source:src/features/profile/presentation/hooks/use-profile-carrier-labels.ts",
-      "to": "external-dependency:@tanstack/react-query",
+      "to": "package:@asol/data-core",
       "kind": "imports",
-      "detail": "@tanstack/react-query"
+      "detail": "@asol/data-core/browser"
     },
     {
       "from": "source:src/features/profile/presentation/hooks/use-profile-carrier-labels.ts",
@@ -226718,15 +228115,15 @@
     },
     {
       "from": "source:src/features/profile/presentation/hooks/use-profile-contacts.ts",
-      "to": "external-dependency:@tanstack/react-query",
-      "kind": "imports",
-      "detail": "@tanstack/react-query"
-    },
-    {
-      "from": "source:src/features/profile/presentation/hooks/use-profile-contacts.ts",
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
+    },
+    {
+      "from": "source:src/features/profile/presentation/hooks/use-profile-contacts.ts",
+      "to": "package:@asol/data-core",
+      "kind": "imports",
+      "detail": "@asol/data-core/browser"
     },
     {
       "from": "source:src/features/profile/presentation/hooks/use-profile-contacts.ts",
@@ -226802,15 +228199,15 @@
     },
     {
       "from": "source:src/features/profile/presentation/hooks/use-profile-fulfillment-settings.ts",
-      "to": "external-dependency:@tanstack/react-query",
-      "kind": "imports",
-      "detail": "@tanstack/react-query"
-    },
-    {
-      "from": "source:src/features/profile/presentation/hooks/use-profile-fulfillment-settings.ts",
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
+    },
+    {
+      "from": "source:src/features/profile/presentation/hooks/use-profile-fulfillment-settings.ts",
+      "to": "package:@asol/data-core",
+      "kind": "imports",
+      "detail": "@asol/data-core/browser"
     },
     {
       "from": "source:src/features/profile/presentation/hooks/use-profile-fulfillment-settings.ts",
@@ -226874,9 +228271,9 @@
     },
     {
       "from": "source:src/features/profile/presentation/hooks/use-profile-public-contacts.ts",
-      "to": "external-dependency:@tanstack/react-query",
+      "to": "package:@asol/data-core",
       "kind": "imports",
-      "detail": "@tanstack/react-query"
+      "detail": "@asol/data-core/browser"
     },
     {
       "from": "source:src/features/profile/presentation/hooks/use-profile-public-contacts.ts",
@@ -226922,9 +228319,9 @@
     },
     {
       "from": "source:src/features/profile/presentation/hooks/use-profile-public-fulfillment-settings.ts",
-      "to": "external-dependency:@tanstack/react-query",
+      "to": "package:@asol/data-core",
       "kind": "imports",
-      "detail": "@tanstack/react-query"
+      "detail": "@asol/data-core/browser"
     },
     {
       "from": "source:src/features/profile/presentation/hooks/use-profile-public-fulfillment-settings.ts",
@@ -226970,15 +228367,15 @@
     },
     {
       "from": "source:src/features/profile/presentation/hooks/use-profile-store-images.ts",
-      "to": "external-dependency:@tanstack/react-query",
-      "kind": "imports",
-      "detail": "@tanstack/react-query"
-    },
-    {
-      "from": "source:src/features/profile/presentation/hooks/use-profile-store-images.ts",
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
+    },
+    {
+      "from": "source:src/features/profile/presentation/hooks/use-profile-store-images.ts",
+      "to": "package:@asol/data-core",
+      "kind": "imports",
+      "detail": "@asol/data-core/browser"
     },
     {
       "from": "source:src/features/profile/presentation/hooks/use-profile-store-images.ts",
@@ -227036,15 +228433,15 @@
     },
     {
       "from": "source:src/features/profile/presentation/hooks/use-store-details.ts",
-      "to": "external-dependency:@tanstack/react-query",
-      "kind": "imports",
-      "detail": "@tanstack/react-query"
-    },
-    {
-      "from": "source:src/features/profile/presentation/hooks/use-store-details.ts",
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
+    },
+    {
+      "from": "source:src/features/profile/presentation/hooks/use-store-details.ts",
+      "to": "package:@asol/data-core",
+      "kind": "imports",
+      "detail": "@asol/data-core/browser"
     },
     {
       "from": "source:src/features/profile/presentation/hooks/use-store-details.ts",
@@ -227114,9 +228511,9 @@
     },
     {
       "from": "source:src/features/profile/presentation/hooks/use-users-by-specialty.ts",
-      "to": "external-dependency:@tanstack/react-query",
+      "to": "package:@asol/data-core",
       "kind": "imports",
-      "detail": "@tanstack/react-query"
+      "detail": "@asol/data-core/browser"
     },
     {
       "from": "source:src/features/profile/presentation/hooks/use-users-by-specialty.ts",
@@ -228406,12 +229803,6 @@
       "from": "source:src/features/profile/presentation/ProfilePreviewContent.tsx",
       "to": "external-dependency:next",
       "kind": "imports",
-      "detail": "next/image"
-    },
-    {
-      "from": "source:src/features/profile/presentation/ProfilePreviewContent.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
       "detail": "next/navigation"
     },
     {
@@ -228539,6 +229930,12 @@
       "to": "source:src/shared/ui/contact-action-bar.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/contact-action-bar"
+    },
+    {
+      "from": "source:src/features/profile/presentation/ProfilePreviewContent.tsx",
+      "to": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/local-first-image"
     },
     {
       "from": "source:src/features/profile/presentation/ProfilePreviewInformation.tsx",
@@ -228974,12 +230371,6 @@
     },
     {
       "from": "source:src/features/profile/presentation/SpecialtiesCard.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
-      "detail": "next/image"
-    },
-    {
-      "from": "source:src/features/profile/presentation/SpecialtiesCard.tsx",
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
@@ -229073,6 +230464,12 @@
       "to": "source:src/shared/ui/LoadingSpinner.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/LoadingSpinner"
+    },
+    {
+      "from": "source:src/features/profile/presentation/SpecialtiesCard.tsx",
+      "to": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/local-first-image"
     },
     {
       "from": "source:src/features/profile/presentation/SpecialtiesToast.tsx",
@@ -232970,12 +234367,6 @@
     },
     {
       "from": "source:src/features/sharing/application/ShareMenu.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
-      "detail": "next/image"
-    },
-    {
-      "from": "source:src/features/sharing/application/ShareMenu.tsx",
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
@@ -233003,6 +234394,12 @@
       "to": "source:src/shared/ui/dialog.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/dialog"
+    },
+    {
+      "from": "source:src/features/sharing/application/ShareMenu.tsx",
+      "to": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/local-first-image"
     },
     {
       "from": "source:src/features/sharing/application/ShareMenu.tsx",
@@ -233761,12 +235158,6 @@
       "from": "source:src/features/specialty-chat/presentation/SpecialtyRequestPageContent.tsx",
       "to": "external-dependency:next",
       "kind": "imports",
-      "detail": "next/image"
-    },
-    {
-      "from": "source:src/features/specialty-chat/presentation/SpecialtyRequestPageContent.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
       "detail": "next/link"
     },
     {
@@ -233810,6 +235201,12 @@
       "to": "source:src/shared/i18n/index.ts",
       "kind": "imports",
       "detail": "@/shared/i18n"
+    },
+    {
+      "from": "source:src/features/specialty-chat/presentation/SpecialtyRequestPageContent.tsx",
+      "to": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/local-first-image"
     },
     {
       "from": "source:src/features/specialty-chat/server.ts",
@@ -234116,9 +235513,9 @@
     },
     {
       "from": "source:src/features/splash/presentation/MarqueeCard.tsx",
-      "to": "external-dependency:next",
+      "to": "source:src/shared/ui/local-first-image.tsx",
       "kind": "imports",
-      "detail": "next/image"
+      "detail": "@/shared/ui/local-first-image"
     },
     {
       "from": "source:src/features/splash/presentation/ProgressIndicator.tsx",
@@ -234835,6 +236232,48 @@
       "detail": "./image-storage-service"
     },
     {
+      "from": "source:src/features/storage/application/services/storage-image-manager-browser-ports.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/storage/application/services/storage-image-manager-browser-ports.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/storage/application/services/storage-image-manager-browser-ports.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/storage/application/services/storage-image-manager-browser-ports.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/storage/application/services/storage-image-manager-browser-ports.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/storage/application/services/storage-image-manager-browser-ports.ts",
+      "to": "feature:storage",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:src/features/storage/application/services/storage-image-manager-browser-ports.ts",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "imports",
+      "detail": "@asol/storage-image-manager-core/image-cache"
+    },
+    {
+      "from": "source:src/features/storage/application/services/storage-image-manager-browser-ports.ts",
+      "to": "source:src/core/api/index.ts",
+      "kind": "imports",
+      "detail": "@/core/api"
+    },
+    {
       "from": "source:src/features/storage/index.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -234869,6 +236308,12 @@
       "to": "source:src/features/storage/application/services/image-upload-client-lifecycle.ts",
       "kind": "imports",
       "detail": "./application/services/image-upload-client-lifecycle"
+    },
+    {
+      "from": "source:src/features/storage/index.ts",
+      "to": "source:src/features/storage/application/services/storage-image-manager-browser-ports.ts",
+      "kind": "imports",
+      "detail": "./application/services/storage-image-manager-browser-ports"
     },
     {
       "from": "source:src/features/storage/ports/storage-core-ports.ts",
@@ -235312,12 +236757,6 @@
       "from": "source:src/features/super-admin/presentation/featured-marquee/SuperAdminFeaturedMarqueePage.product-display.tsx",
       "to": "external-dependency:next",
       "kind": "imports",
-      "detail": "next/image"
-    },
-    {
-      "from": "source:src/features/super-admin/presentation/featured-marquee/SuperAdminFeaturedMarqueePage.product-display.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
       "detail": "next/navigation"
     },
     {
@@ -235397,6 +236836,12 @@
       "to": "source:src/shared/ui/label.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/label"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/featured-marquee/SuperAdminFeaturedMarqueePage.product-display.tsx",
+      "to": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/local-first-image"
     },
     {
       "from": "source:src/features/super-admin/presentation/logs/SuperAdminLogsPage.cloud-errors.tsx",
@@ -235804,12 +237249,6 @@
       "from": "source:src/features/super-admin/presentation/SuperAdminFeaturedMarqueePage.tsx",
       "to": "external-dependency:next",
       "kind": "imports",
-      "detail": "next/image"
-    },
-    {
-      "from": "source:src/features/super-admin/presentation/SuperAdminFeaturedMarqueePage.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
       "detail": "next/navigation"
     },
     {
@@ -235907,6 +237346,12 @@
       "to": "source:src/shared/ui/label.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/label"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/SuperAdminFeaturedMarqueePage.tsx",
+      "to": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/local-first-image"
     },
     {
       "from": "source:src/features/super-admin/presentation/SuperAdminHeroSliderPage.tsx",
@@ -239253,12 +240698,6 @@
     },
     {
       "from": "source:src/shared/layouts/app-sidebar/AppSidebar.sidebar-model.tsx",
-      "to": "external-dependency:@tanstack/react-query",
-      "kind": "imports",
-      "detail": "@tanstack/react-query"
-    },
-    {
-      "from": "source:src/shared/layouts/app-sidebar/AppSidebar.sidebar-model.tsx",
       "to": "external-dependency:focus-trap-react",
       "kind": "imports",
       "detail": "focus-trap-react"
@@ -239630,12 +241069,6 @@
     },
     {
       "from": "source:src/shared/layouts/AppSidebar.tsx",
-      "to": "external-dependency:@tanstack/react-query",
-      "kind": "imports",
-      "detail": "@tanstack/react-query"
-    },
-    {
-      "from": "source:src/shared/layouts/AppSidebar.tsx",
       "to": "external-dependency:focus-trap-react",
       "kind": "imports",
       "detail": "focus-trap-react"
@@ -239645,12 +241078,6 @@
       "to": "external-dependency:lucide-react",
       "kind": "imports",
       "detail": "lucide-react"
-    },
-    {
-      "from": "source:src/shared/layouts/AppSidebar.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
-      "detail": "next/image"
     },
     {
       "from": "source:src/shared/layouts/AppSidebar.tsx",
@@ -239729,6 +241156,12 @@
       "to": "source:src/shared/ui/button.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/button"
+    },
+    {
+      "from": "source:src/shared/layouts/AppSidebar.tsx",
+      "to": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/local-first-image"
     },
     {
       "from": "source:src/shared/layouts/AppSidebar.tsx",
@@ -240912,15 +242345,15 @@
     },
     {
       "from": "source:src/shared/ui/category-tabs-strip.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
-      "detail": "next/image"
-    },
-    {
-      "from": "source:src/shared/ui/category-tabs-strip.tsx",
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
+    },
+    {
+      "from": "source:src/shared/ui/category-tabs-strip.tsx",
+      "to": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/local-first-image"
     },
     {
       "from": "source:src/shared/ui/checkbox.tsx",
@@ -241497,6 +242930,43 @@
       "to": "source:src/shared/utils.ts",
       "kind": "imports",
       "detail": "@/shared/utils"
+    },
+    {
+      "from": "source:src/shared/ui/local-first-image.tsx",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/local-first-image.tsx",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/local-first-image.tsx",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/local-first-image.tsx",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/local-first-image.tsx",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/local-first-image.tsx",
+      "to": "external-dependency:next",
+      "kind": "imports",
+      "detail": "next/image"
+    },
+    {
+      "from": "source:src/shared/ui/local-first-image.tsx",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "imports",
+      "detail": "@asol/storage-image-manager-core/image-cache"
     },
     {
       "from": "source:src/shared/ui/overlay-chrome-branch.tsx",
@@ -243106,6 +244576,47 @@
       "kind": "tests"
     },
     {
+      "from": "test:packages/data-core/src/browser/query/local-read.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/data-core/src/browser/query/local-read.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/data-core/src/browser/query/local-read.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/data-core/src/browser/query/local-read.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/data-core/src/browser/query/local-read.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/data-core/src/browser/query/local-read.test.ts",
+      "to": "package:@asol/data-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:packages/data-core/src/browser/query/local-read.test.ts",
+      "to": "source:packages/data-core/src/browser/query/index.ts",
+      "kind": "imports",
+      "detail": "./index"
+    },
+    {
+      "from": "test:packages/data-core/src/browser/query/local-read.test.ts",
+      "to": "package:@asol/data-core",
+      "kind": "tests"
+    },
+    {
       "from": "test:packages/data-core/src/core/database-runtime-policy.test.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -244320,6 +245831,12 @@
       "to": "source:packages/data-core/src/ports/telemetry.ts",
       "kind": "imports",
       "detail": "../ports/telemetry.ts"
+    },
+    {
+      "from": "test:packages/data-core/src/tests/index.test.ts",
+      "to": "test:packages/data-core/src/browser/query/local-read.test.ts",
+      "kind": "imports",
+      "detail": "../browser/query/local-read.test.ts"
     },
     {
       "from": "test:packages/data-core/src/tests/index.test.ts",
@@ -249147,6 +250664,12 @@
     },
     {
       "from": "test:packages/storage-image-manager-core/src/tests/index.test.ts",
+      "to": "source:packages/storage-image-manager-core/src/services/local-first-image-cache.ts",
+      "kind": "imports",
+      "detail": "../services/local-first-image-cache"
+    },
+    {
+      "from": "test:packages/storage-image-manager-core/src/tests/index.test.ts",
       "to": "package:@asol/storage-core",
       "kind": "tests"
     },
@@ -250315,6 +251838,53 @@
       "from": "test:src/core/api/tests/compatibility-boundary.test.ts",
       "to": "environment-key:NEXT_PUBLIC_ASOL_SUBMAIN_URL",
       "kind": "uses-environment"
+    },
+    {
+      "from": "test:src/core/api/tests/local-read-gateway.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/core/api/tests/local-read-gateway.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/core/api/tests/local-read-gateway.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/core/api/tests/local-read-gateway.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/core/api/tests/local-read-gateway.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/core/api/tests/local-read-gateway.test.ts",
+      "to": "source:src/core/api/asol-api-client.ts",
+      "kind": "imports",
+      "detail": "../asol-api-client"
+    },
+    {
+      "from": "test:src/core/api/tests/local-read-gateway.test.ts",
+      "to": "source:src/core/api/browser-local-read-cache.ts",
+      "kind": "imports",
+      "detail": "../browser-local-read-cache"
+    },
+    {
+      "from": "test:src/core/api/tests/local-read-gateway.test.ts",
+      "to": "source:src/core/api/asol-api-client.ts",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/core/api/tests/local-read-gateway.test.ts",
+      "to": "source:src/core/api/browser-local-read-cache.ts",
+      "kind": "tests"
     },
     {
       "from": "test:src/core/api/tests/production-deploy-concurrency-logging.test.ts",

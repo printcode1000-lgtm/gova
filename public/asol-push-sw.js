@@ -1,5 +1,5 @@
 const ASOL_DB_NAME = 'AsolDB';
-const ASOL_DB_VERSION = 11;
+const ASOL_DB_VERSION = 12;
 const ASOL_NOTIFICATION_STORES = [
   'guestSessions',
   'appSettings',
@@ -18,6 +18,7 @@ const ASOL_NOTIFICATION_STORES = [
   'favorites',
   'cart',
   'imageUploadDrafts',
+  'imageCache',
 ];
 const ASOL_NOTIFICATION_CHANGED_EVENT = 'asol:notifications:changed';
 

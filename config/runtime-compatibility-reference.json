@@ -29,8 +29,6 @@
       "@radix-ui/react-slot": "^1.3.0",
       "@radix-ui/react-switch": "^1.3.1",
       "@radix-ui/react-tabs": "^1.1.15",
-      "@tanstack/react-query": "^5.101.1",
-      "@tanstack/react-query-persist-client": "^5.101.1",
       "@types/web-push": "^3.6.4",
       "better-sqlite3": "^13.0.3",
       "class-variance-authority": "^0.7.1",
@@ -109,8 +107,6 @@
     "@radix-ui/react-slot": "1.3.3",
     "@radix-ui/react-switch": "1.3.7",
     "@radix-ui/react-tabs": "1.1.21",
-    "@tanstack/react-query": "5.102.3",
-    "@tanstack/react-query-persist-client": "5.102.3",
     "@types/web-push": "3.6.4",
     "better-sqlite3": "13.0.3",
     "class-variance-authority": "0.7.1",
@@ -160,7 +156,7 @@
     "tsx": "4.23.12",
     "typescript": "5.9.3"
   },
-  "packageLockDigest": "055a36ca3086d9d2803f31a835a943afe1c5d6fb8ed235c6018f676f6e02aa22",
+  "packageLockDigest": "bcae18d6529f01f5eb00b63b651db833ddd69796a8d8752a5a4df30a0eec0b5b",
   "workspacePackages": {
     "account-bridge": "@asol/account-bridge@0.1.0",
     "account-declarations": "@asol/account-declarations@0.1.0",

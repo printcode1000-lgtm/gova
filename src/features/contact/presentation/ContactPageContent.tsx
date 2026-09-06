@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/shared/ui/local-first-image";
 import Link from "next/link";
 import { useState, type FormEvent, type ReactNode } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

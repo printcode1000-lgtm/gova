@@ -22,8 +22,8 @@
 | runtime | 7 |
 | script | 147 |
 | service | 7 |
-| source | 2239 |
-| test | 250 |
+| source | 2254 |
+| test | 252 |
 
 ## Domains
 
@@ -86,7 +86,7 @@
 | @asol/service-runtime-core | `packages/service-runtime-core` | Shared service runtime helpers; Layer: capability; Public exports: . |
 | @asol/signed-token-core | `packages/signed-token-core` | Signed token create/verify; Layer: capability; Public exports: . |
 | @asol/storage-core | `packages/storage-core` | Object storage (R2/S3) access; Layer: capability; Public exports: ., ./profiles-config, ./server |
-| @asol/storage-image-manager-core | `packages/storage-image-manager-core` | Image manager UI and client lifecycle over storage ports; Layer: capability; Public exports: ., ./client-lifecycle, ./services |
+| @asol/storage-image-manager-core | `packages/storage-image-manager-core` | Image manager UI and client lifecycle over storage ports; Layer: capability; Public exports: ., ./client-lifecycle, ./image-cache, ./services |
 | @asol/sub2main-composition | `packages/sub2main-composition` | Composition root for the sub2main account; Layer: composition; Public exports: . |
 | @asol/submain-composition | `packages/submain-composition` | Composition root for the submain account; Layer: composition; Public exports: . |
 | @asol/system-logs-core | `packages/system-logs-core` | System log capture and persistence contract; Layer: capability; Public exports: ., ./server |

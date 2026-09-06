@@ -1,7 +1,7 @@
 # `@asol/data-core`
 
 Every database in this project, and every piece of code that talks to one, lives in a single
-sealed package at `packages/data-core/`. It is the largest package in the repository: 197
+sealed package at `packages/data-core/`. It is the largest package in the repository: 253
 production files across 18 domains, plus the drivers, the schemas, the migrations, the shard
 router, the provisioning engine, the maintenance executables, and the browser IndexedDB layer.
 
@@ -39,7 +39,7 @@ single wildcard silently defeated the `native-core` seal once and must never rea
 | `.` | Module identity and the server database backend policy. Browser-safe. | `shared` |
 | `./telemetry` | The telemetry port and its registration function. | `shared` |
 | `./core` | The data source registry and `IDatabaseClient`. | `database-client` |
-| `./browser` | AsolDB (IndexedDB) stores, the query persister, the reset helper. | `shared` |
+| `./browser` | AsolDB stores, Blob/image-cache persistence primitives, TanStack Query runtime/policies/provider, persister, and reset helpers. | `shared` |
 | `./provisioning` | Schema inspection, diff, sync, Turso provisioning, shard identity. | `provisioning` |
 | `./tooling` | Maintenance executables that spawn processes and touch the filesystem. | `provisioning` |
 | `./<domain>` × 18 | One door per domain, each pointing at that domain's `index.server.ts`. | `operations` (`marketplace-orders` → `server-services`) |
@@ -82,7 +82,7 @@ package now declares `src/ports/telemetry.ts` and announces work through it; the
 registers an implementation in `packages/observability-core/src/monitor/data-core-telemetry.ts` (shared) and
 `data-core-telemetry.server.ts` (the `server-only` half). Those two files are the seam and the
 only modules allowed to know both sides. Registration happens in `src/instrumentation.ts` on the
-server and at module scope in the query provider in the browser.
+server. In the browser the application query provider supplies only the observability callback to `@asol/data-core/browser`; query policy and persistence stay inside data-core.
 
 Every port method is a **wrapper**, never "build this event and hand it over": the package
 passes a descriptor plus the action, so the monitor's event shape, its session and flow
@@ -169,7 +169,7 @@ are not in any chain, because the sync above is the authority.
 `build`, `build:static`, and `test` chains. The test itself asserts that wiring, because rule 3
 has been missed three times in this repository by writing a test that gated nothing.
 
-It pins: the exact door set, the absence of a wildcard door, that every door target exists, that
+It pins: the exact door set, root-vs-data-core TanStack dependency ownership, the absence of a wildcard door, that every door target exists, that
 every domain has a door, that the root door is not a barrel, that no door reaches
 `src/core/database`, that the browser door's transitive closure touches no `node:*` builtin and
 no server driver, that every telemetry default is safe, and the app-edge budget in both

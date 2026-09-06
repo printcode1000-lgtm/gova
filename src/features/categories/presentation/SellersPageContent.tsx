@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import Image from "next/image";
+import Image from "@/shared/ui/local-first-image";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 

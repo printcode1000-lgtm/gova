@@ -36,6 +36,12 @@ Callers pass a semantic `storageScope` (catalog main-category id, or an onboardi
 
 `StorageImageManager` performs no provider write during selection or preview preparation. Before a selected preview becomes visible, its `Blob` and metadata are committed to the `imageUploadDrafts` AsolDB store. Upload starts only after the user presses Upload and confirms the localized application dialog. Removal calls the DELETE API and waits for provider success before clearing the UI value.
 
+Image retrieval is also local-first. Remote HTTP(S) image URLs resolve through `@asol/storage-image-manager-core/image-cache`: memory first, then AsolDB `imageCache`, then the application-supplied HTTP port. The port delegates to `AsolApiClient`, so there is no second transport stack. Fresh cached Blobs render without a network request; expired records send `If-None-Match` when an ETag exists; offline or transient download failures may render the stale local Blob. Concurrent requests for the same object are deduplicated. Local/public/data/blob sources bypass `imageCache` entirely.
+
+The retrieval path fails closed. A remote cache failure never returns the source HTTP(S) URL to `next/image` or a raw `<img>` element; with no cached/stale Blob, the UI receives a local transparent placeholder. The only raw `<img>` allowed by the build gate is `StorageImageManager`'s `src={previewUrl}` path, whose value is already a local Blob/data preview or a resolved cached object URL. `getAbsoluteBinaryResponse` is statically pinned to the storage-image browser adapter as its only application consumer.
+
+The durable image cache is bounded independently from upload drafts (default 96 MiB / 500 entries) and uses stable image identity where an image key is available. Replacing or deleting an uploaded object invalidates that identity so old bytes cannot survive an object replacement.
+
 Product creation and unified profile saving are commit boundaries. If a user has selected images but has not pressed the per-image upload control, the commit asks every visible image manager to upload its pending draft, waits for the FIFO queue, and saves data only after every upload succeeds. A failed image blocks the commit and remains locally available for retry. Clicking an empty image card does nothing; the source menu opens only from its explicit **Add image** text action.
 
 ## Upload queue
@@ -67,6 +73,9 @@ in-memory queue and clears every image draft on Web, Android, and iOS.
 | Orchestrator        | `packages/storage-core/src/server/storage/`                    |
 | **Client service**  | `packages/storage-image-manager-core/src/services/image-storage-service.ts` |
 | Draft persistence   | `packages/storage-image-manager-core/src/services/image-upload-draft-service.ts` |
+| Retrieval cache policy | `packages/storage-image-manager-core/src/services/local-first-image-cache.ts` |
+| Blob persistence | `packages/data-core/src/browser/image-cache/` |
+| Retrieval HTTP port | `src/features/storage/application/services/storage-image-manager-browser-ports.ts` |
 | API adapter         | `src/features/storage/application/services/image-storage-api-service.ts`    |
 | App wiring          | `src/features/storage/presentation/StorageImageManager.tsx` and service shims |
 | Hook                | `packages/storage-image-manager-core/src/hooks/use-storage-profile-upload.ts` |
@@ -134,4 +143,4 @@ public/sync_data/sync_file/
 
 See also [r2-storage.md](./r2-storage.md).
 
-Gova disables the Next.js Image Optimizer globally. `next/image` remains the rendering component for sizing, layout, loading, and error handling, but every image URL is requested directly and is never rewritten through `/_next/image`. This policy is identical in Development, Web, Static `out/`, Android, and iOS.
+Gova disables the Next.js Image Optimizer globally. `next/image` remains the rendering component for sizing, layout, loading, and error handling, but cloud images first resolve to a local Blob through the local-first cache and are rendered with optimization disabled. A cache miss downloads the original URL directly through `AsolApiClient`; no image URL is rewritten through `/_next/image`. This policy is identical in Development, Web, Static `out/`, Android, and iOS.

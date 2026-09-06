@@ -17,6 +17,10 @@
     "./services": {
       "types": "./src/services.ts",
       "default": "./src/services.ts"
+    },
+    "./image-cache": {
+      "types": "./src/image-cache.ts",
+      "default": "./src/image-cache.ts"
     }
   },
   "scripts": {

@@ -14,7 +14,9 @@
 | `queryCache` | TanStack Query persistence |
 | `guestSessions` | Guest session ID |
 | `sellerOnboarding` | Zustand onboarding state |
-| `appSettings` | Reserved |
+| `appSettings` | Shared application settings |
+| `imageUploadDrafts` | Durable staged image uploads |
+| `imageCache` | Bounded remote image Blob cache with ETag metadata |
 
 **Rule:** IndexedDB is normally a local cache. Notification-center entries, notification analytics/badges, and notification-only conversation bodies are explicit local-only sources of truth and are never copied to SQLite/Turso.
 
@@ -22,19 +24,54 @@ See [session-system.md](../05-platform-features/session-system.md) for session d
 
 ### TanStack Query
 
-- **Reads:** `useQuery` in hooks
-- **Writes:** `useMutation` + invalidation
-- **Offline:** in-memory cache + AsolDB persister (`asol-db-persister.ts`)
+`@asol/data-core/browser` is the sole browser query-runtime and IndexedDB gateway. Application hooks import `useQuery`, `useMutation`, `useQueries`, and `useQueryClient` from that shared browser-safe door; the root manifest no longer owns TanStack directly.
 
-Provider defaults (`query-provider.tsx`):
+- **Reads:** `useQuery` / `useQueries` through `@asol/data-core/browser`
+- **Writes:** `useMutation` plus explicit `setQueryData` / invalidation
+- **Offline:** in-memory cache + AsolDB `queryCache` persister
+- **Persistence compatibility:** schema buster `asol-query-cache-v2`, not `buildId`
+- **Persisted max age:** 7 days
+- **Identity boundary:** logout and invalid-session handling clear memory + persisted query state
+
+Default `localFirst` policy:
 
 | Setting | Value |
 |---------|-------|
-| `staleTime` | 5 min |
-| `gcTime` | 24 h |
+| `staleTime` | 30 min |
+| `gcTime` | 7 days |
 | `networkMode` | `offlineFirst` |
 | `retry` | 1 |
+| `refetchOnMount` | only when stale |
 | `refetchOnWindowFocus` | false |
+| `refetchOnReconnect` | true |
+
+Named policies also exist for user-owned (1 h), static (infinite), and volatile (30 s) data. A feature should choose a named policy when it genuinely needs different freshness rather than forcing `staleTime: 0` or `refetchOnMount: "always"`.
+
+#### Mandatory browser GET gateway
+
+Every browser JSON `GET` through `AsolApiClient`, including imperative reads that are not wrapped by a feature hook, is forced through the same local-read gate. The gate waits for the persisted TanStack cache to be restored from AsolDB before `fetchQuery` may run. Missing browser composition fails closed: it raises an error and performs no cloud request.
+
+```text
+AsolApiClient GET -> memory QueryClient -> restore/check AsolDB queryCache -> freshness policy -> network loader
+```
+
+Transport-level defaults are intentionally shorter than feature-level policies: ordinary content is local-first for 5 minutes, volatile routes for 30 seconds, static reads may be infinite, and operational/security reads are network-authoritative. Network-authoritative means the local cache is still checked first, but the request is deliberately revalidated immediately. Successful mutations invalidate the transport-read namespace before the next read. Session/header values are hashed in persisted transport cache keys and are never stored in clear text as query-key material.
+
+Binary operational artifacts (OTA/archive downloads) are not JSON application data and keep their explicit download lifecycle. Public app assets are already project-owned files and do not enter the remote-data cache.
+
+### Remote images
+
+Remote HTTP(S) images use one local-first path owned by `@asol/storage-image-manager-core/image-cache` with persistence primitives in `@asol/data-core/browser`:
+
+```text
+render request -> memory -> AsolDB imageCache -> conditional network download
+                                  |
+                                  +-> stale Blob on offline/network failure
+```
+
+Local/public asset paths, `data:` URLs, and `blob:` URLs are never copied into `imageCache`. Concurrent requests for the same cache key share one in-flight download. Expired entries use ETag revalidation when R2 supplies an ETag, avoiding a second Blob transfer on `304 Not Modified`.
+
+Remote image rendering is fail-closed. A cache miss may invoke only the registered image-download port after the memory/AsolDB checks. If that download fails and no stale Blob exists, the renderer receives a local transparent placeholder, never the original HTTP(S) URL. Build-gated tests pin the allowed `next/image` importers, the single raw `<img>` local-preview exception, and the sole consumer of `AsolApiClient.getAbsoluteBinaryResponse`.
 
 ---
 

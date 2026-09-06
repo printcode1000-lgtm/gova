@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import Image from "next/image";
+import Image from "@/shared/ui/local-first-image";
 import { X } from "lucide-react";
 import { useTranslation } from "@/shared/i18n";
 import { Checkbox } from "@/shared/ui/checkbox";

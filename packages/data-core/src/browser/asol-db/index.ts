@@ -4,7 +4,7 @@ import type { StateStorage } from 'zustand/middleware';
 import { traceBrowserDatabaseOperation } from '../../ports/telemetry';
 
 const DB_NAME = 'AsolDB';
-const DB_VERSION = 11;
+const DB_VERSION = 12;
 
 export const ASOL_DB_STORES = {
   GUEST_SESSIONS: 'guestSessions',
@@ -24,6 +24,7 @@ export const ASOL_DB_STORES = {
   FAVORITES: 'favorites',
   CART: 'cart',
   IMAGE_UPLOAD_DRAFTS: 'imageUploadDrafts',
+  IMAGE_CACHE: 'imageCache',
 } as const;
 
 export type AsolDbStoreName = (typeof ASOL_DB_STORES)[keyof typeof ASOL_DB_STORES];

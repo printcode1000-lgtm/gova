@@ -14,6 +14,7 @@ import { SessionRuntimeProvider, type SessionRuntimeUser } from '@/shared/sessio
 import { isLoggedIn, type UserSession } from '../domain/session.entity';
 import { sessionService } from '../application/services/session-service';
 import { clearImageUploadClientState } from '@/features/storage';
+import { clearAsolQueryCache, useQueryClient } from '@asol/data-core/browser';
 import { reportPreAuthFailure } from '@/features/system-logs';
 import { setNotificationGrantDeliveryIdentity } from '@/features/notifications';
 
@@ -29,6 +30,7 @@ interface SessionContextValue {
 const SessionContext = createContext<SessionContextValue | null>(null);
 
 export function SessionProvider({ children }: { children: ReactNode }) {
+  const queryClient = useQueryClient();
   const [session, setSessionState] = useState<UserSession | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -54,14 +56,17 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const clearInvalidSession = () => {
-      void clearImageUploadClientState().catch((error) => {
+      void Promise.all([
+        clearImageUploadClientState(),
+        clearAsolQueryCache(queryClient),
+      ]).catch((error) => {
         reportPreAuthFailure('clear-invalid-session-state', error);
       });
       setSessionState(null);
     };
     window.addEventListener('asol-session-invalid', clearInvalidSession);
     return () => window.removeEventListener('asol-session-invalid', clearInvalidSession);
-  }, []);
+  }, [queryClient]);
 
   const setSession = useCallback((next: UserSession | null) => {
     setSessionState(next);

@@ -4,10 +4,18 @@
 // an OperationRecord emitted to the monitor store.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import type { QueryClient } from '@tanstack/react-query';
 import { useMonitorStore, getSessionId, getCurrentFlowId, setActiveQueryContext, clearActiveQueryContext } from './monitor-store';
 import type { CacheSource, RefetchReason } from './types';
 import { isObservabilityEnabled } from '../ports';
+
+export interface ObservableQueryClient {
+  getQueryCache(): {
+    subscribe(listener: (event: any) => void): () => void;
+  };
+  getMutationCache(): {
+    subscribe(listener: (event: any) => void): () => void;
+  };
+}
 
 // Derive cache source from query metadata / fetch counts
 function deriveCacheSource(query: any, actionType: string): CacheSource {
@@ -57,7 +65,7 @@ interface QueryExecutionSnapshot {
 
 const queryExecutionSnapshots = new WeakMap<object, QueryExecutionSnapshot>();
 
-export function attachQueryObserver(queryClient: QueryClient): () => void {
+export function attachQueryObserver(queryClient: ObservableQueryClient): () => void {
   if (!isObservabilityEnabled()) return () => {};
 
   const emit = useMonitorStore.getState().emit;

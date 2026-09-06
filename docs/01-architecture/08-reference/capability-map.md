@@ -783,7 +783,7 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 | **Capability** | Image manager UI and client lifecycle over storage ports |
 | **Owner Package** | `@asol/storage-image-manager-core` |
 | **Architectural Layer** | capability |
-| **Public Gateway** | `@asol/storage-image-manager-core` · `@asol/storage-image-manager-core/client-lifecycle` · `@asol/storage-image-manager-core/services` |
+| **Public Gateway** | `@asol/storage-image-manager-core` · `@asol/storage-image-manager-core/client-lifecycle` · `@asol/storage-image-manager-core/image-cache` · `@asol/storage-image-manager-core/services` |
 | **Allowed Consumers** | Application via declared doors; composition packages wire ports |
 | **Composition Root** | `N/A` (capability must not import `@/`) |
 | **Infrastructure Owner** | none (pure logic or ports) |

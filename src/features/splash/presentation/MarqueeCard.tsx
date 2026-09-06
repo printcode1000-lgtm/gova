@@ -1,4 +1,6 @@
-import Image from 'next/image';
+"use client";
+
+import Image from '@/shared/ui/local-first-image';
 
 interface MarqueeCardProps {
   label: string;

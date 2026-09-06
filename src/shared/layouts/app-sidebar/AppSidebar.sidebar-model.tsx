@@ -32,7 +32,6 @@ import {
   faTriangleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
 import { FocusTrap } from "focus-trap-react";
-import { useQueryClient } from "@tanstack/react-query";
 import { cn } from "@/shared/utils";
 import { useTranslation } from "@/shared/i18n";
 import {

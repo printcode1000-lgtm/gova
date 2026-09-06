@@ -11,6 +11,7 @@ import {
 import { NativeCore } from "@asol/native-core";
 import { useStorageProfileUpload } from "../hooks/use-storage-profile-upload";
 import { imageUploadQueue } from "../services/image-upload-queue";
+import { useLocalFirstStorageImageSource } from "../hooks/use-local-first-storage-image-source";
 import {
   buildImageUploadDraftKey,
   createImageUploadDraft,
@@ -360,6 +361,10 @@ const StorageImageSlot = React.forwardRef<
   const imageUrl = image?.url;
   const isImageUploading = image?.isUploading;
   const imageError = image?.error;
+  const cachedStoredImage = useLocalFirstStorageImageSource(
+    uploadedImage?.url ?? imageUrl ?? null,
+    { cacheKey: uploadedImage?.imageKey ?? imageKey },
+  );
 
   React.useEffect(() => {
     traceStorageImageManager(config.id, "value-synchronized", {
@@ -491,7 +496,7 @@ const StorageImageSlot = React.forwardRef<
   // persistence is asynchronous.
   const previewUrl =
     selectedPreviewUrl ??
-    (storedPreviewFailed ? null : (uploadedImage?.url ?? image?.url ?? null));
+    (storedPreviewFailed ? null : cachedStoredImage.src);
   const displayError = sourceError ?? error;
   const durableUploadActive =
     draftStatus === "queued" || draftStatus === "uploading";
@@ -519,7 +524,11 @@ const StorageImageSlot = React.forwardRef<
     loadingImage: t("storage.imageManager.stage.loadingImage"),
     deleting: t("storage.imageManager.stage.deleting"),
   };
-  const showProgress = stage !== "idle" && stage !== "ready";
+  const showProgress =
+    cachedStoredImage.isResolving || (stage !== "idle" && stage !== "ready");
+  const progressLabel = cachedStoredImage.isResolving
+    ? t("storage.imageManager.stage.loadingImage")
+    : stageLabels[stage];
 
   React.useEffect(() => {
     if (stage === "loadingImage" && imageRef.current?.complete) {
@@ -911,6 +920,7 @@ const StorageImageSlot = React.forwardRef<
             alt=""
             className="absolute inset-0 h-full w-full rounded-lg object-cover"
             onLoad={() => {
+              if (cachedStoredImage.isResolving) return;
               traceStorageImageManager(config.id, "preview-rendered", {
                 index,
                 source: selectedPreviewUrl ? "selected-file" : "stored-image",
@@ -938,7 +948,7 @@ const StorageImageSlot = React.forwardRef<
             <div className="absolute inset-0 flex min-h-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-lg bg-background/80 px-1.5 py-1 text-center">
               <InlineLoadingSpinner size="md" />
               <p className={storageImageEmptyStateProgressClasses}>
-                {stageLabels[stage]}
+                {progressLabel}
               </p>
             </div>
           )}
@@ -964,7 +974,7 @@ const StorageImageSlot = React.forwardRef<
             </span>
             {showProgress ? (
               <span className={storageImageEmptyStateProgressClasses}>
-                {stageLabels[stage]}
+                {progressLabel}
               </span>
             ) : (
               <DropdownMenu.Trigger asChild>

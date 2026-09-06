@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from "@asol/data-core/browser";
 
 import { profileService } from "../../application/services/profile-service";
 import { profilePublicContactsQueryKey } from "./profile-contact-query-keys";
@@ -10,8 +10,6 @@ export function useProfilePublicContacts(uid: string) {
     queryKey: profilePublicContactsQueryKey(uid),
     queryFn: () => profileService.getContacts(uid),
     enabled: Boolean(uid),
-    staleTime: 0,
-    refetchOnMount: "always",
   });
 
   return {

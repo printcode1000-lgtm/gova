@@ -19,6 +19,7 @@ const SRC = path.join(PACKAGE_ROOT, 'src');
 const REPO_ROOT = path.resolve(PACKAGE_ROOT, '..', '..');
 
 const manifest = JSON.parse(readFileSync(path.join(PACKAGE_ROOT, 'package.json'), 'utf8'));
+const rootManifest = JSON.parse(readFileSync(path.join(REPO_ROOT, 'package.json'), 'utf8'));
 
 function walk(dir: string, out: string[] = []): string[] {
   for (const entry of readdirSync(dir)) {
@@ -31,6 +32,41 @@ function walk(dir: string, out: string[] = []): string[] {
 
 const sourceFiles = walk(SRC);
 const productionFiles = sourceFiles.filter((f) => !f.includes('/tests/') && !f.endsWith('.test.ts'));
+
+const vendorConsumers = [
+  ...walk(path.join(REPO_ROOT, 'src')),
+  ...readdirSync(path.join(REPO_ROOT, 'packages')).flatMap((name) => {
+    const packageSrc = path.join(REPO_ROOT, 'packages', name, 'src');
+    try {
+      return statSync(packageSrc).isDirectory() ? walk(packageSrc) : [];
+    } catch {
+      return [];
+    }
+  }),
+].filter((file) => !file.includes('/packages/data-core/src/'));
+for (const file of vendorConsumers) {
+  const source = readFileSync(file, 'utf8');
+  assert.ok(
+    !/from\s+['"]@tanstack\/react-query(?:-persist-client)?['"]/.test(source),
+    `${file} imports TanStack Query directly. The browser query runtime is owned by @asol/data-core/browser.`,
+  );
+}
+
+assert.equal(
+  rootManifest.dependencies?.['@tanstack/react-query'],
+  undefined,
+  'The application manifest must not own TanStack Query; @asol/data-core owns the browser query runtime.',
+);
+assert.equal(
+  rootManifest.dependencies?.['@tanstack/react-query-persist-client'],
+  undefined,
+  'The application manifest must not own the query persister vendor package.',
+);
+assert.ok(
+  manifest.dependencies?.['@tanstack/react-query'] &&
+    manifest.dependencies?.['@tanstack/react-query-persist-client'],
+  '@asol/data-core must declare both TanStack Query runtime dependencies.',
+);
 
 // ── Rule 2: the declared doors, pinned ──────────────────────────────────────
 const EXPECTED_DOORS = [
@@ -155,6 +191,24 @@ function closureFrom(entry: string): Set<string> {
   return seen;
 }
 
+const localReadSource = readFileSync(
+  path.join(SRC, 'browser', 'query', 'local-read.ts'),
+  'utf8',
+);
+assert.ok(
+  localReadSource.indexOf('ensureAsolQueryCacheRestored') < localReadSource.indexOf('queryClient.fetchQuery'),
+  'Imperative cloud reads must restore the persisted AsolDB Query cache before fetchQuery can run.',
+);
+const queryProviderSource = readFileSync(
+  path.join(SRC, 'browser', 'query', 'query-provider.tsx'),
+  'utf8',
+);
+assert.match(
+  queryProviderSource,
+  /ensureAsolQueryCacheRestored\(queryClient/,
+  'Hooks and imperative reads must share one AsolDB restoration barrier.',
+);
+
 const browserClosure = closureFrom(path.join(SRC, 'browser', 'index.ts'));
 for (const file of browserClosure) {
   for (const specifier of importsOf(file)) {
@@ -204,6 +258,8 @@ assert.equal(
 );
 
 await import('../domains/product/tests/product-select-columns.test.ts');
+const { runLocalReadTests } = await import('../browser/query/local-read.test.ts');
+await runLocalReadTests();
 
 await assert.rejects(
   telemetry.traceDatabaseQuery(

@@ -1,6 +1,6 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from '@asol/data-core/browser';
 import { profileApiService } from '../../application/services/profile-api-service';
 
 const usersBySpecialtyQueryKey = (

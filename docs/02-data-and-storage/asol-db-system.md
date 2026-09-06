@@ -17,7 +17,7 @@ Asol uses IndexedDB (AsolDB) as its primary client-side persistent storage mecha
 ## Configuration
 
 - **Database Name:** `AsolDB`
-- **Current Version:** `9`
+- **Current Version:** `12`
 - **Low-level Implementation:** `packages/data-core/src/browser/asol-db/index.ts`
 - **Object Stores Schema:** Every object store is configured with `{ keyPath: 'key' }` and stores key-value pairs (where value can be a structured cloneable object).
 
@@ -56,7 +56,8 @@ Manages guest browsing identifiers.
 Caches partial form state and draft applications during the seller registration process to prevent data loss.
 
 ### 5. `queryCache`
-Persists serialized React Query cache payloads for offline readiness.
+Persists the dehydrated TanStack Query client owned by `@asol/data-core/browser`. The cache uses a schema-version buster rather than a build id, so a deployment does not erase otherwise compatible data. The default persisted max age is seven days; normal revisits inside the local-first freshness window read from memory/AsolDB without a network request. A shared restoration barrier is awaited by both React Query hooks and imperative `AsolApiClient` browser GETs, so an early effect cannot race the IndexedDB restore and go to cloud first. Logout and invalid-session handling clear both the in-memory QueryClient and this durable snapshot.
+
 
 ### 6. Notification stores
 The notification module stores its local state in dedicated AsolDB stores. Templates are not stored in IndexedDB; they live as JSON files in the notification module.
@@ -75,6 +76,10 @@ Notification cards and specialty-chat message bodies have no SQLite/Turso table.
 ### 7. `imageUploadDrafts`
 
 Stores the original `Blob` and safe file metadata for every image currently staged, queued, uploading, failed, or awaiting completion recovery in `StorageImageManager`. Keys are isolated by user, page, manager id, slot, storage profile, and storage scope. Completed and removed drafts are deleted, and logout clears the entire store.
+
+### 8. `imageCache`
+
+Stores downloaded remote image `Blob`s for the local-first image path. Each record carries the source URL, stable cache key, content type, byte length, ETag when available, storage/access timestamps, and expiry time. The cache is bounded by LRU pruning (default 96 MiB / 500 entries), never stores local/public/data/blob URLs, and may serve a stale local Blob when the network is unavailable. Expired R2 objects are conditionally revalidated with `If-None-Match`; a `304` refreshes metadata without downloading the Blob again.
 
 ---
 

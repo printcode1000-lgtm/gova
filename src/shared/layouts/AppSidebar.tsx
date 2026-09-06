@@ -18,7 +18,7 @@ import {
   User,
 } from "lucide-react";
 import Link from "next/link";
-import NextImage from "next/image";
+import NextImage from "@/shared/ui/local-first-image";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import React from "react";
@@ -28,7 +28,6 @@ import {
   faTriangleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
 import { FocusTrap } from "focus-trap-react";
-import { useQueryClient } from "@tanstack/react-query";
 import { cn } from "@/shared/utils";
 import { useTranslation } from "@/shared/i18n";
 import {
@@ -78,7 +77,6 @@ export const AppSidebar = React.memo(function AppSidebar({ id,
     ? storeDetails.storeName.trim() || formatSessionPhone(session?.phone ?? "")
     : "";
   const router = useRouter();
-  const queryClient = useQueryClient();
   const pathname = usePathname();
   const showSuperAdmin = isSuperAdmin(session);
   const [superAdminOpen, setSuperAdminOpen] = useState(false);
@@ -172,12 +170,11 @@ export const AppSidebar = React.memo(function AppSidebar({ id,
 
     setLogoutDialogOpen(false);
     executeSidebarLogout({
-      clearQueryCache: () => queryClient.clear(),
       closeSidebar: onClose,
       logout: () => logout.mutateAsync(),
       replaceRoute: (href) => router.replace(href),
     });
-  }, [logout, onClose, queryClient, router]);
+  }, [logout, onClose, router]);
 
   const handleSettingsGroupToggle = useCallback(() => {
     setSettingsGroupOpen((open) => !open);

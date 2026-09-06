@@ -11,7 +11,7 @@ import {
   ShieldCheck,
   Trash2,
 } from "lucide-react";
-import Image from "next/image";
+import Image from "@/shared/ui/local-first-image";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FeaturedMarquee } from "@/features/advertisements/ui";

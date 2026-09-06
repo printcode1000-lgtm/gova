@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import Image from "next/image";
+import Image from "@/shared/ui/local-first-image";
 import Link from "next/link";
 import { ArrowRight, Eye, EyeOff, PackagePlus, Pencil, Plus } from "lucide-react";
 import { useSearchParams } from "next/navigation";

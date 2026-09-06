@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/shared/ui/local-first-image";
 import { useState, type ReactNode } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {

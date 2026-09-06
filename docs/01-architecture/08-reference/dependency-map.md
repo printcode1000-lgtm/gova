@@ -280,6 +280,9 @@ ALLOWED_TO_IMPORT → `@asol/native-core`
 `@asol/product-card-core`
 ALLOWED_TO_IMPORT → `@asol/product-core`
 
+`@asol/product-card-core`
+ALLOWED_TO_IMPORT → `@asol/storage-image-manager-core/image-cache`
+
 ### @asol/product-core
 
 `@asol/product-core` has no production `@asol/*` imports.
@@ -317,6 +320,9 @@ ALLOWED_TO_IMPORT → `@asol/vercel-deploy-core`
 
 `@asol/seller-card-core`
 ALLOWED_TO_IMPORT → `@asol/data-core/profile/entities`
+
+`@asol/seller-card-core`
+ALLOWED_TO_IMPORT → `@asol/storage-image-manager-core/image-cache`
 
 ### @asol/service-mirror-core
 
@@ -390,4 +396,4 @@ ALLOWED_TO_IMPORT → `@asol/account-declarations`
 | Metric | Value |
 |---|---|
 | Packages | 48 |
-| Import edges | 66 |
+| Import edges | 68 |

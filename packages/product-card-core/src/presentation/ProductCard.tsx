@@ -3,6 +3,10 @@
 import * as React from "react";
 import Image from "next/image";
 import {
+  LOCAL_FIRST_IMAGE_PLACEHOLDER,
+  useLocalFirstStorageImageSource,
+} from "@asol/storage-image-manager-core/image-cache";
+import {
   Eye,
   Heart,
   Package,
@@ -85,6 +89,7 @@ export function ProductCard({ id,
   onOpen,
 }: ProductCardProps & { id?: string }) {
   const isFeatured = variant === "featured-marquee";
+  const cachedImage = useLocalFirstStorageImageSource(card.imageUrl);
   const hasActions = actions.length > 0;
   const showFavorite =
     (favoriteEnabled ?? (variant === "search" || variant === "profile-preview")) &&
@@ -104,7 +109,8 @@ export function ProductCard({ id,
         >
           {card.imageUrl ? (
             <Image
-              src={card.imageUrl}
+              src={cachedImage.src ?? LOCAL_FIRST_IMAGE_PLACEHOLDER}
+              unoptimized
               alt={card.title}
               fill
               className="object-cover"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from "@asol/data-core/browser";
 import {
   EMPTY_PROFILE_FULFILLMENT_SETTINGS,
   normalizeProfileFulfillmentSettings,
@@ -15,8 +15,6 @@ export function useProfilePublicFulfillmentSettings(uid: string) {
     queryKey: profileFulfillmentSettingsQueryKey(uid),
     queryFn: () => profileService.getFulfillmentSettings(uid),
     enabled: Boolean(uid),
-    staleTime: 0,
-    refetchOnMount: "always",
   });
 
   return {

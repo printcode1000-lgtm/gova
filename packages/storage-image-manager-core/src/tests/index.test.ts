@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 import {
   DuplicateImageUploadError,
@@ -12,6 +12,11 @@ import {
   type ImageUploadDraft,
 } from "../services/image-upload-draft-service";
 import { StorageProfiles } from "@asol/storage-core";
+import {
+  buildStorageImageCacheKey,
+  isRemoteStorageImageUrl,
+  resolveLocalFirstStorageImage,
+} from "../services/local-first-image-cache";
 
 function deferred<T>() {
   let resolve!: (value: T) => void;
@@ -157,12 +162,113 @@ async function testQueuedCancellationAndDeduplication() {
   assert.deepEqual(queue.getSnapshot(), { active: 0, queued: 0 });
 }
 
+async function testRemoteImageFailureNeverReturnsCloudUrl() {
+  const remote = "https://cdn.example.com/not-cached.webp";
+  const result = await resolveLocalFirstStorageImage(remote);
+  assert.equal(result.source, "fallback");
+  assert.equal(
+    result.fallbackUrl,
+    undefined,
+    "a remote miss/failure must never hand the original cloud URL back to a renderer",
+  );
+}
+
+function productionSources(root: string): string[] {
+  const output: string[] = [];
+  const visit = (directory: string) => {
+    for (const entry of readdirSync(directory, { withFileTypes: true })) {
+      if (entry.name === "node_modules" || entry.name === "tests" || entry.name === ".next") continue;
+      const full = path.join(directory, entry.name);
+      if (entry.isDirectory()) visit(full);
+      else if (/\.(?:ts|tsx|css)$/.test(entry.name) && !entry.name.includes(".test.")) output.push(full);
+    }
+  };
+  visit(path.join(root, "src"));
+  visit(path.join(root, "packages"));
+  return output;
+}
+
+function testRemoteImageRenderingBypassIsClosed(root: string) {
+  const nextImageImporters = productionSources(root)
+    .filter((file) => /from\s+["']next\/image["']/.test(readFileSync(file, "utf8")))
+    .map((file) => path.relative(root, file).split(path.sep).join("/"))
+    .sort();
+  assert.deepEqual(nextImageImporters, [
+    "packages/product-card-core/src/presentation/ProductCard.tsx",
+    "packages/seller-card-core/src/presentation/SellerCard.tsx",
+    "src/shared/brand/AppIcon.tsx",
+    "src/shared/ui/local-first-image.tsx",
+  ]);
+
+  for (const relative of nextImageImporters) {
+    if (relative === "src/shared/brand/AppIcon.tsx") continue;
+    const source = readFileSync(path.join(root, relative), "utf8");
+    assert.match(
+      source,
+      /LOCAL_FIRST_IMAGE_PLACEHOLDER|useLocalFirstStorageImageSource/,
+      `${relative} renders images without the mandatory local-first resolver`,
+    );
+    assert.doesNotMatch(
+      source,
+      /cached(?:Image|Avatar)?\.src\s*\?\?\s*(?:card\.|sourceUrl)/,
+      `${relative} can fall back from the local cache to a raw cloud URL`,
+    );
+  }
+
+  const cacheSource = readFileSync(
+    path.join(root, "packages/storage-image-manager-core/src/services/local-first-image-cache.ts"),
+    "utf8",
+  );
+  assert.doesNotMatch(cacheSource, /source:\s*["']fallback["'][^}]*fallbackUrl:\s*sourceUrl/);
+
+  const hookSource = readFileSync(
+    path.join(root, "packages/storage-image-manager-core/src/hooks/use-local-first-storage-image-source.ts"),
+    "utf8",
+  );
+  assert.doesNotMatch(hookSource, /fallbackUrl\s*\?\?\s*sourceUrl/);
+
+  const directImg = productionSources(root)
+    .filter((file) => /<img(?:\s|>)/.test(readFileSync(file, "utf8")))
+    .map((file) => path.relative(root, file).split(path.sep).join("/"));
+  assert.deepEqual(
+    directImg,
+    ["packages/storage-image-manager-core/src/components/StorageImageManager.tsx"],
+    "raw <img> is forbidden except the sealed manager's already-local blob/data preview",
+  );
+  const managerPreviewSource = readFileSync(path.join(root, directImg[0]!), "utf8");
+  assert.match(managerPreviewSource, /<img[\s\S]{0,160}src=\{previewUrl\}/);
+  assert.doesNotMatch(managerPreviewSource, /<img[\s\S]{0,160}src=\{(?:imageUrl|uploadedImage\?\.url)/);
+}
+
+function testLocalFirstImageCacheIdentity() {
+  assert.equal(isRemoteStorageImageUrl("https://cdn.example.com/a.webp"), true);
+  assert.equal(isRemoteStorageImageUrl("http://localhost/a.webp"), true);
+  assert.equal(isRemoteStorageImageUrl("/sync_data/a.webp"), false);
+  assert.equal(isRemoteStorageImageUrl("blob:abc"), false);
+  assert.equal(isRemoteStorageImageUrl("data:image/png;base64,AA=="), false);
+
+  const url = "https://cdn.example.com/a.webp#fragment";
+  assert.equal(
+    buildStorageImageCacheKey(url),
+    buildStorageImageCacheKey("https://cdn.example.com/a.webp"),
+    "URL fragments are not object identity and must not duplicate cached bytes",
+  );
+  assert.notEqual(
+    buildStorageImageCacheKey(url, "image-key-a"),
+    buildStorageImageCacheKey(url, "image-key-b"),
+    "stable storage identities must isolate replacements that reuse a URL",
+  );
+}
+
 async function main() {
   await testSequentialUploads();
   await testFailureDoesNotStopQueue();
   await testQueuedCancellationAndDeduplication();
   testDraftIdentityAndFileRestoration();
+  testLocalFirstImageCacheIdentity();
+  await testRemoteImageFailureNeverReturnsCloudUrl();
   const root = process.cwd();
+  testRemoteImageRenderingBypassIsClosed(root);
   const managerSource = readFileSync(
     path.join(
       root,

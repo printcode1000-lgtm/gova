@@ -1,6 +1,6 @@
 'use client';
 
-import { useMutation } from '@tanstack/react-query';
+import { clearAsolQueryCache, useMutation, useQueryClient } from '@asol/data-core/browser';
 import { useSession } from '@/features/auth/presentation/SessionProvider';
 import { authApiService } from '../../application/services/auth-api-service';
 import { sessionService } from '../../application/services/session-service';
@@ -11,6 +11,7 @@ import { notifications } from '@/features/notifications';
 /** Clears session in IndexedDB and updates in-memory session state. */
 export function useLogout() {
   const { session, setSession } = useSession();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async () => {
@@ -31,6 +32,9 @@ export function useLogout() {
       }
     },
     meta: authMonitorMeta('useLogout', 'AppSidebar', 'Logout', 'DELETE'),
-    onSuccess: () => setSession(null),
+    onSuccess: async () => {
+      await clearAsolQueryCache(queryClient);
+      setSession(null);
+    },
   });
 }

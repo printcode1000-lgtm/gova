@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { StoredImage, StorageProfileId } from "@asol/storage-core";
 import { imageStorageService } from "../services/image-storage-service";
+import { invalidateLocalFirstStorageImage } from "../services/local-first-image-cache";
 import type { ImageUploadProgressStage } from "../services/image-storage-service.interface";
 import { reportSystemIssue } from "@asol/system-logs-core";
 import {
@@ -144,6 +145,7 @@ export function useStorageProfileUpload({
         });
         uploadHandleRef.current = handle;
         const result = await handle.promise;
+        await invalidateLocalFirstStorageImage(result.url, result.imageKey).catch(() => {});
         const uploadedImage = {
           imageKey: result.imageKey,
           url: result.url,
@@ -270,6 +272,7 @@ export function useStorageProfileUpload({
     onProgress?.("deleting");
     try {
       await imageStorageService.deleteImage(storageProfileId, value.imageKey);
+      await invalidateLocalFirstStorageImage(value.url, value.imageKey).catch(() => {});
       onChange(null);
     } catch (err) {
       console.error(

@@ -2,7 +2,7 @@
 
 import type { OrderDto } from "@asol/orders-core";
 import * as React from "react";
-import Image from "next/image";
+import Image from "@/shared/ui/local-first-image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {

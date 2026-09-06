@@ -6330,6 +6330,7 @@
         "@asol/storage-core/server",
         "@asol/storage-image-manager-core",
         "@asol/storage-image-manager-core/client-lifecycle",
+        "@asol/storage-image-manager-core/image-cache",
         "@asol/storage-image-manager-core/services",
         "@asol/sub2main-composition",
         "@asol/submain-composition",
@@ -6500,6 +6501,7 @@
         "@asol/storage-core/profiles-config",
         "@asol/storage-core/server",
         "@asol/storage-image-manager-core",
+        "@asol/storage-image-manager-core/image-cache",
         "@asol/sub2main-composition",
         "@asol/submain-composition",
         "@asol/system-logs-core",
@@ -7625,6 +7627,7 @@
       "summary": "Preserved operational and architectural detail, relocated here during the 2026-08 architecture reconstruction. Agents use this for implementation guidance.",
       "tags": [
         "2026-08",
+        "@asol/data-core/browser",
         "agents",
         "and",
         "architectural",
@@ -7665,6 +7668,8 @@
         "/01-architecture/readme",
         "2026-08",
         "> **note:** operational detail relocated here during the 2026-08 architecture reconstruction. architectural relationships: [docs/01-architecture/](../01-architecture/readme.md).",
+        "@asol/data-core/browser",
+        "@asol/storage-image-manager-core/image-cache",
         "and",
         "architectural",
         "architecture",
@@ -7740,6 +7745,7 @@
         "2026-08",
         "> **note:** operational detail relocated here during the 2026-08 architecture reconstruction. architectural relationships: [docs/01-architecture/](../01-architecture/readme.md).",
         "@asol/data-core",
+        "@asol/data-core/browser",
         "@asol/storage-core",
         "access",
         "architectural",
@@ -8012,6 +8018,7 @@
       "tags": [
         "@asol/dev-core",
         "@asol/storage-core",
+        "@asol/storage-image-manager-core/image-cache",
         "architecture",
         "docs/02-data-and-storage/image-storage/image-storage-system",
         "docs/02-data-and-storage/image-storage/image-storage-system.md",
@@ -8027,6 +8034,7 @@
         "never",
         "only",
         "or",
+        "packages/data-core/src/browser/image-cache/",
         "packages/storage-core/src/config/storage-profiles",
         "packages/storage-core/src/config/storage-profiles.json",
         "packages/storage-core/src/domain/images/image-key-generator",
@@ -8047,6 +8055,8 @@
         "packages/storage-image-manager-core/src/services/image-upload-draft-service.ts",
         "packages/storage-image-manager-core/src/services/image-upload-queue",
         "packages/storage-image-manager-core/src/services/image-upload-queue.ts",
+        "packages/storage-image-manager-core/src/services/local-first-image-cache",
+        "packages/storage-image-manager-core/src/services/local-first-image-cache.ts",
         "passes",
         "profile",
         "profile-driven",
@@ -8055,6 +8065,8 @@
         "size",
         "src/features/storage/application/services/image-storage-api-service",
         "src/features/storage/application/services/image-storage-api-service.ts",
+        "src/features/storage/application/services/storage-image-manager-browser-ports",
+        "src/features/storage/application/services/storage-image-manager-browser-ports.ts",
         "src/features/storage/presentation/storageimagemanager",
         "src/features/storage/presentation/storageimagemanager.tsx",
         "storage",
@@ -11348,12 +11360,13 @@
       "kind": "document",
       "name": "`@asol/data-core`",
       "path": "docs/05-platform-features/sealed-packages/data-core-module.md",
-      "summary": "Every database in this project, and every piece of code that talks to one, lives in a single sealed package at `packages/data-core/`. It is the largest package in the repository: 197 production files across 18 domains, plus the drivers, the schemas, the migrations, the shard rout",
+      "summary": "Every database in this project, and every piece of code that talks to one, lives in a single sealed package at `packages/data-core/`. It is the largest package in the repository: 253 production files across 18 domains, plus the drivers, the schemas, the migrations, the shard rout",
       "tags": [
         "18",
-        "197",
+        "253",
         "@asol/backup-core",
         "@asol/data-core",
+        "@asol/data-core/browser",
         "@asol/data-health-core",
         "@asol/dev-core",
         "@asol/notifications-core",
@@ -11374,7 +11387,7 @@
         "domains",
         "drivers",
         "every",
-        "every database in this project, and every piece of code that talks to one, lives in a single sealed package at `packages/data-core/`. it is the largest package in the repository: 197 production files across 18 domains, plus the drivers, the schemas, the migrations, the shard rout",
+        "every database in this project, and every piece of code that talks to one, lives in a single sealed package at `packages/data-core/`. it is the largest package in the repository: 253 production files across 18 domains, plus the drivers, the schemas, the migrations, the shard rout",
         "files",
         "in",
         "is",
@@ -21131,9 +21144,11 @@
       "id": "external-dependency:@tanstack/react-query",
       "kind": "external-dependency",
       "name": "@tanstack/react-query",
-      "summary": "External package imported by repository source",
+      "summary": "Declared dependency range observed: ^5.102.3",
       "tags": [
+        "102",
         "@tanstack/react-query",
+        "^5.102.3",
         "dependency",
         "external",
         "external dependency npm package",
@@ -21145,9 +21160,11 @@
       "id": "external-dependency:@tanstack/react-query-persist-client",
       "kind": "external-dependency",
       "name": "@tanstack/react-query-persist-client",
-      "summary": "External package imported by repository source",
+      "summary": "Declared dependency range observed: ^5.102.3",
       "tags": [
+        "102",
         "@tanstack/react-query-persist-client",
+        "^5.102.3",
         "dependency",
         "external",
         "external dependency npm package",
@@ -23419,12 +23436,14 @@
       "kind": "package",
       "name": "@asol/storage-image-manager-core",
       "path": "packages/storage-image-manager-core",
-      "summary": "Image manager UI and client lifecycle over storage ports; Layer: capability; Public exports: ., ./client-lifecycle, ./services",
+      "summary": "Image manager UI and client lifecycle over storage ports; Layer: capability; Public exports: ., ./client-lifecycle, ./image-cache, ./services",
       "tags": [
         ".",
         "./client-lifecycle",
+        "./image-cache",
         "./services",
         "/client-lifecycle",
+        "/image-cache",
         "/services",
         "@asol/storage-image-manager-core",
         "and",
@@ -30000,6 +30019,28 @@
       ]
     },
     {
+      "id": "source:packages/data-core/src/browser/image-cache/image-cache.ts",
+      "kind": "source",
+      "name": "image-cache.ts",
+      "path": "packages/data-core/src/browser/image-cache/image-cache.ts",
+      "tags": [
+        "packages/data-core/src/browser/image-cache/image-cache",
+        "packages/data-core/src/browser/image-cache/image-cache.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/browser/image-cache/index.ts",
+      "kind": "source",
+      "name": "index.ts",
+      "path": "packages/data-core/src/browser/image-cache/index.ts",
+      "tags": [
+        "packages/data-core/src/browser/image-cache/index",
+        "packages/data-core/src/browser/image-cache/index.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/data-core/src/browser/index.ts",
       "kind": "source",
       "name": "index.ts",
@@ -30008,6 +30049,72 @@
         "packages/data-core/src/browser/index",
         "packages/data-core/src/browser/index.ts",
         "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/browser/query/index.ts",
+      "kind": "source",
+      "name": "index.ts",
+      "path": "packages/data-core/src/browser/query/index.ts",
+      "tags": [
+        "packages/data-core/src/browser/query/index",
+        "packages/data-core/src/browser/query/index.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/browser/query/local-read.ts",
+      "kind": "source",
+      "name": "local-read.ts",
+      "path": "packages/data-core/src/browser/query/local-read.ts",
+      "tags": [
+        "packages/data-core/src/browser/query/local-read",
+        "packages/data-core/src/browser/query/local-read.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/browser/query/query-client.ts",
+      "kind": "source",
+      "name": "query-client.ts",
+      "path": "packages/data-core/src/browser/query/query-client.ts",
+      "tags": [
+        "packages/data-core/src/browser/query/query-client",
+        "packages/data-core/src/browser/query/query-client.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/browser/query/query-persistence-runtime.ts",
+      "kind": "source",
+      "name": "query-persistence-runtime.ts",
+      "path": "packages/data-core/src/browser/query/query-persistence-runtime.ts",
+      "tags": [
+        "packages/data-core/src/browser/query/query-persistence-runtime",
+        "packages/data-core/src/browser/query/query-persistence-runtime.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/browser/query/query-policies.ts",
+      "kind": "source",
+      "name": "query-policies.ts",
+      "path": "packages/data-core/src/browser/query/query-policies.ts",
+      "tags": [
+        "packages/data-core/src/browser/query/query-policies",
+        "packages/data-core/src/browser/query/query-policies.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/browser/query/query-provider.tsx",
+      "kind": "source",
+      "name": "query-provider.tsx",
+      "path": "packages/data-core/src/browser/query/query-provider.tsx",
+      "tags": [
+        "packages/data-core/src/browser/query/query-provider",
+        "packages/data-core/src/browser/query/query-provider.tsx",
+        "tsx"
       ]
     },
     {
@@ -38200,6 +38307,17 @@
       ]
     },
     {
+      "id": "source:packages/storage-image-manager-core/src/hooks/use-local-first-storage-image-source.ts",
+      "kind": "source",
+      "name": "use-local-first-storage-image-source.ts",
+      "path": "packages/storage-image-manager-core/src/hooks/use-local-first-storage-image-source.ts",
+      "tags": [
+        "packages/storage-image-manager-core/src/hooks/use-local-first-storage-image-source",
+        "packages/storage-image-manager-core/src/hooks/use-local-first-storage-image-source.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/storage-image-manager-core/src/hooks/use-storage-profile-upload.ts",
       "kind": "source",
       "name": "use-storage-profile-upload.ts",
@@ -38207,6 +38325,17 @@
       "tags": [
         "packages/storage-image-manager-core/src/hooks/use-storage-profile-upload",
         "packages/storage-image-manager-core/src/hooks/use-storage-profile-upload.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/storage-image-manager-core/src/image-cache.ts",
+      "kind": "source",
+      "name": "image-cache.ts",
+      "path": "packages/storage-image-manager-core/src/image-cache.ts",
+      "tags": [
+        "packages/storage-image-manager-core/src/image-cache",
+        "packages/storage-image-manager-core/src/image-cache.ts",
         "ts"
       ]
     },
@@ -38241,6 +38370,17 @@
       "tags": [
         "packages/storage-image-manager-core/src/services",
         "packages/storage-image-manager-core/src/services.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/storage-image-manager-core/src/services/image-cache-port.ts",
+      "kind": "source",
+      "name": "image-cache-port.ts",
+      "path": "packages/storage-image-manager-core/src/services/image-cache-port.ts",
+      "tags": [
+        "packages/storage-image-manager-core/src/services/image-cache-port",
+        "packages/storage-image-manager-core/src/services/image-cache-port.ts",
         "ts"
       ]
     },
@@ -38309,6 +38449,17 @@
       "tags": [
         "packages/storage-image-manager-core/src/services/image-upload-queue",
         "packages/storage-image-manager-core/src/services/image-upload-queue.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/storage-image-manager-core/src/services/local-first-image-cache.ts",
+      "kind": "source",
+      "name": "local-first-image-cache.ts",
+      "path": "packages/storage-image-manager-core/src/services/local-first-image-cache.ts",
+      "tags": [
+        "packages/storage-image-manager-core/src/services/local-first-image-cache",
+        "packages/storage-image-manager-core/src/services/local-first-image-cache.ts",
         "ts"
       ]
     },
@@ -42792,6 +42943,17 @@
       "tags": [
         "src/core/api/asol-http-transport",
         "src/core/api/asol-http-transport.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/core/api/browser-local-read-cache.ts",
+      "kind": "source",
+      "name": "browser-local-read-cache.ts",
+      "path": "src/core/api/browser-local-read-cache.ts",
+      "tags": [
+        "src/core/api/browser-local-read-cache",
+        "src/core/api/browser-local-read-cache.ts",
         "ts"
       ]
     },
@@ -51820,6 +51982,17 @@
       ]
     },
     {
+      "id": "source:src/features/storage/application/services/storage-image-manager-browser-ports.ts",
+      "kind": "source",
+      "name": "storage-image-manager-browser-ports.ts",
+      "path": "src/features/storage/application/services/storage-image-manager-browser-ports.ts",
+      "tags": [
+        "src/features/storage/application/services/storage-image-manager-browser-ports",
+        "src/features/storage/application/services/storage-image-manager-browser-ports.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/storage/index.ts",
       "kind": "source",
       "name": "index.ts",
@@ -53245,6 +53418,17 @@
       ]
     },
     {
+      "id": "source:src/shared/ui/local-first-image.tsx",
+      "kind": "source",
+      "name": "local-first-image.tsx",
+      "path": "src/shared/ui/local-first-image.tsx",
+      "tags": [
+        "src/shared/ui/local-first-image",
+        "src/shared/ui/local-first-image.tsx",
+        "tsx"
+      ]
+    },
+    {
       "id": "source:src/shared/ui/overlay-chrome-branch.tsx",
       "kind": "source",
       "name": "overlay-chrome-branch.tsx",
@@ -53655,6 +53839,18 @@
       "tags": [
         "packages/cors/src/tests/index",
         "packages/cors/src/tests/index.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/data-core/src/browser/query/local-read.test.ts",
+      "kind": "test",
+      "name": "local-read.test.ts",
+      "path": "packages/data-core/src/browser/query/local-read.test.ts",
+      "tags": [
+        "packages/data-core/src/browser/query/local-read",
+        "packages/data-core/src/browser/query/local-read.test.ts",
         "test",
         "ts"
       ]
@@ -55561,6 +55757,18 @@
       "tags": [
         "src/core/api/tests/compatibility-boundary",
         "src/core/api/tests/compatibility-boundary.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/core/api/tests/local-read-gateway.test.ts",
+      "kind": "test",
+      "name": "local-read-gateway.test.ts",
+      "path": "src/core/api/tests/local-read-gateway.test.ts",
+      "tags": [
+        "src/core/api/tests/local-read-gateway",
+        "src/core/api/tests/local-read-gateway.test.ts",
         "test",
         "ts"
       ]

@@ -341,6 +341,9 @@
       "@asol/storage-image-manager-core/client-lifecycle": [
         "./packages/storage-image-manager-core/src/client-lifecycle.ts"
       ],
+      "@asol/storage-image-manager-core/image-cache": [
+        "./packages/storage-image-manager-core/src/image-cache.ts"
+      ],
       "@asol/storage-image-manager-core/services": [
         "./packages/storage-image-manager-core/src/services.ts"
       ],

@@ -28,10 +28,13 @@ UI -> Client Service -> AsolApiClient -> Business API -> Server Service
    -> Data Source Registry -> SQLite (development) | Turso (production)
 ```
 
-Browser-local data follows this path:
+Browser-local persistence and query state follow these paths:
 
 ```text
 Client feature -> @asol/data-core/browser -> AsolDB (IndexedDB)
+Client hook -> @asol/data-core/browser -> QueryClient -> memory / AsolDB queryCache
+AsolApiClient browser GET -> data-core local-read gate -> memory / AsolDB queryCache -> cloud only when policy requires
+Remote image cache -> @asol/data-core/browser -> AsolDB imageCache -> cloud only after local miss/staleness
 ```
 
 Clients never receive database credentials and never submit SQL. Static and
@@ -45,6 +48,8 @@ Capacitor clients still use `AsolApiClient` to reach the hosted backend.
 | `core/database/` | SQLite, Turso, and sharded database adapters plus schemas and migrations |
 | `core/turso/` | Low-level users and advertisements libSQL clients |
 | `browser/asol-db/` | Typed AsolDB stores and IndexedDB transactions |
+| `browser/query/` | TanStack Query ownership, policies, provider, and durable lifecycle |
+| `browser/image-cache/` | Bounded Blob-cache records and LRU persistence primitives |
 | `browser/clear-browser-databases.ts` | Destructive browser database reset only |
 | `browser/workers/` | Source of generated workers that transact against AsolDB |
 | `domains/<domain>/queries/` | Read operations for one domain |
@@ -112,6 +117,8 @@ untouched file, reconnect after a replacement.
   at all**, so the seal enforces it rather than a path pattern.
 - Only `packages/data-core/src` may contain production SQL.
 - Only `packages/data-core/src/browser` may call IndexedDB APIs.
+- TanStack Query and its persistence package are dependency-owned by `@asol/data-core`; application code consumes the browser-safe `@asol/data-core/browser` door.
+- Browser JSON reads cannot bypass the local-read cache: `AsolApiClient` delegates every browser GET to the registered data-core gate, and missing registration fails closed before transport.
 - Database-backed tests that issue SQL live inside their owning domain in the
   package; tests outside it cannot issue SQL or import a driver.
 - Database maintenance executables live in `src/tooling`; `scripts/`

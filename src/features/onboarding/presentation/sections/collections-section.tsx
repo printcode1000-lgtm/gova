@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import Image from 'next/image';
+import Image from '@/shared/ui/local-first-image';
 import { FolderOpen, Plus, X, Package } from 'lucide-react';
 import { StorageProfiles, type StoredImage } from '@asol/storage-core';
 import { useOnboardingStore } from '@/features/onboarding/domain';

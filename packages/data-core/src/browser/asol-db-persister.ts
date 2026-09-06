@@ -1,7 +1,7 @@
 'use client';
 
 import type { PersistedClient, Persister } from '@tanstack/react-query-persist-client';
-import { asolDbGet, asolDbSet, ASOL_DB_STORES } from './asol-db';
+import { asolDbDelete, asolDbGet, asolDbSet, ASOL_DB_STORES } from './asol-db';
 
 const CACHE_KEY = 'rq_cache';
 
@@ -30,7 +30,7 @@ export function createAsolDbPersister(): Persister {
 
     /** Remove the persisted cache from IndexedDB (e.g. on logout or reset). */
     removeClient: async () => {
-      await asolDbSet(ASOL_DB_STORES.QUERY_CACHE, CACHE_KEY, null);
+      await asolDbDelete(ASOL_DB_STORES.QUERY_CACHE, CACHE_KEY);
     },
   };
 }

@@ -2,14 +2,35 @@ import { ApiError, NetworkOfflineError, NetworkUnavailableError } from './api-er
 import { sanitizeApiErrorCodeForClient } from './business-api-error-codes';
 import { buildAsolApiUrl, buildPublicAssetUrl } from './asol-api-config';
 import { asolHttpFetch } from './asol-http-transport';
+import {
+  buildAsolApiLocalReadCacheKey,
+  defaultAsolApiLocalReadPolicy,
+  invalidateAsolApiLocalReads,
+  readAsolApiLocalFirst,
+  type AsolApiLocalReadPolicy,
+} from './browser-local-read-cache';
 import { trackAsolApiRequest } from '@asol/observability-core';
 import { scheduleNotificationGrantDelivery } from '@asol/account-bridge/notifications';
+
+export type AsolAbsoluteBinaryResult =
+  | {
+      status: 'ok';
+      data: ArrayBuffer;
+      contentType: string | null;
+      etag: string | null;
+    }
+  | {
+      status: 'not-modified';
+      etag: string | null;
+    };
 
 export interface AsolApiRequestOptions {
   headers?: Record<string, string>;
   signal?: AbortSignal;
   cache?: RequestCache;
   suppressErrorLog?: boolean;
+  /** Browser application-data freshness. Every GET still checks local state first. */
+  localReadPolicy?: AsolApiLocalReadPolicy;
   /** Let a feature await and inspect notification delivery itself. */
   notificationGrantDelivery?: 'background' | 'manual';
 }
@@ -47,40 +68,51 @@ export class AsolApiClient {
     method: string,
     route: string,
     body?: unknown,
-    options: AsolApiRequestOptions = {}
+    options: AsolApiRequestOptions = {},
   ): Promise<T> {
-    this.assertOnline(method, route, options.suppressErrorLog);
+    const loadFromNetwork = async (): Promise<T> => {
+      this.assertOnline(method, route, options.suppressErrorLog);
+      const headers: Record<string, string> = {
+        Accept: 'application/json',
+        ...options.headers,
+      };
+      const init: RequestInit = {
+        method,
+        headers,
+        credentials: 'omit',
+        signal: options.signal,
+        cache: options.cache,
+      };
+      if (body !== undefined) {
+        headers['Content-Type'] = 'application/json';
+        init.body = JSON.stringify(body);
+      }
 
-    const headers: Record<string, string> = {
-      Accept: 'application/json',
-      ...options.headers,
+      try {
+        return await trackAsolApiRequest(method, route, true, async () => {
+          const response = await asolHttpFetch(buildAsolApiUrl(route, method), init);
+          const data = await this.parseResponse<T>(
+            response,
+            options.notificationGrantDelivery,
+          );
+          return { data, response };
+        });
+      } catch (error) {
+        this.logAndThrow(method, route, error, options.suppressErrorLog);
+      }
     };
 
-    const init: RequestInit = {
-      method,
-      headers,
-      credentials: 'omit',
-      signal: options.signal,
-      cache: options.cache,
-    };
-
-    if (body !== undefined) {
-      headers['Content-Type'] = 'application/json';
-      init.body = JSON.stringify(body);
-    }
-
-    try {
-      return await trackAsolApiRequest(method, route, true, async () => {
-        const response = await asolHttpFetch(buildAsolApiUrl(route, method), init);
-        const data = await this.parseResponse<T>(
-          response,
-          options.notificationGrantDelivery,
-        );
-        return { data, response };
+    if (method === 'GET' && body === undefined && typeof window !== 'undefined') {
+      return readAsolApiLocalFirst({
+        cacheKey: buildAsolApiLocalReadCacheKey(route, options.headers),
+        policy: options.localReadPolicy ?? defaultAsolApiLocalReadPolicy(route),
+        load: loadFromNetwork,
       });
-    } catch (error) {
-      this.logAndThrow(method, route, error, options.suppressErrorLog);
     }
+
+    const data = await loadFromNetwork();
+    if (method !== 'GET') await invalidateAsolApiLocalReads();
+    return data;
   }
 
   private async parseResponse<T>(
@@ -176,8 +208,8 @@ export class AsolApiClient {
   }
 
   /** POST multipart/form-data (e.g. file uploads). Does not set Content-Type — browser sets boundary. */
-  postForm<T>(route: string, formData: FormData, options?: AsolApiRequestOptions): Promise<T> {
-    return trackAsolApiRequest('POST', route, true, async () => {
+  async postForm<T>(route: string, formData: FormData, options?: AsolApiRequestOptions): Promise<T> {
+    const data = await trackAsolApiRequest('POST', route, true, async () => {
       const response = await asolHttpFetch(buildAsolApiUrl(route, 'POST'), {
         method: 'POST',
         body: formData,
@@ -186,11 +218,13 @@ export class AsolApiClient {
         signal: options?.signal,
         cache: options?.cache,
       });
-      const data = await this.parseResponse<T>(response);
-      return { data, response };
+      const parsed = await this.parseResponse<T>(response);
+      return { data: parsed, response };
     }).catch((error) =>
       this.logAndThrow('POST', route, error, options?.suppressErrorLog),
     );
+    await invalidateAsolApiLocalReads();
+    return data;
   }
 
   /** Load a static JSON file from the public folder (not a Business API call). */
@@ -229,6 +263,41 @@ export class AsolApiClient {
 
   /** Load JSON from an explicit HTTP(S) URL (for signed platform manifests). */
   async getAbsoluteJson<T>(url: string, options: AsolApiRequestOptions = {}): Promise<T> {
+    const parsedUrl = new URL(url);
+    if (!['https:', 'http:'].includes(parsedUrl.protocol)) {
+      throw new Error(`Unsupported URL protocol: ${parsedUrl.protocol}`);
+    }
+    const loadFromNetwork = async (): Promise<T> => {
+      this.assertOnline('GET', url, options.suppressErrorLog);
+      try {
+        return await trackAsolApiRequest('GET', url, false, async () => {
+          const response = await asolHttpFetch(parsedUrl, {
+            method: 'GET',
+            headers: { Accept: 'application/json', ...options.headers },
+            credentials: 'omit',
+            signal: options.signal,
+            cache: options.cache ?? 'no-store',
+          });
+          const data = await this.parseResponse<T>(response);
+          return { data, response };
+        });
+      } catch (error) {
+        this.logAndThrow('GET', url, error, options.suppressErrorLog);
+      }
+    };
+    if (typeof window === 'undefined') return loadFromNetwork();
+    return readAsolApiLocalFirst({
+      cacheKey: buildAsolApiLocalReadCacheKey(url, options.headers),
+      policy: options.localReadPolicy ?? defaultAsolApiLocalReadPolicy(url),
+      load: loadFromNetwork,
+    });
+  }
+
+  /** Load binary content from an explicit HTTP(S) URL through the single HTTP gateway. */
+  async getAbsoluteBinaryResponse(
+    url: string,
+    options: AsolApiRequestOptions = {},
+  ): Promise<AsolAbsoluteBinaryResult> {
     this.assertOnline('GET', url, options.suppressErrorLog);
     const parsedUrl = new URL(url);
     if (!['https:', 'http:'].includes(parsedUrl.protocol)) {
@@ -236,16 +305,33 @@ export class AsolApiClient {
     }
 
     try {
-      return await trackAsolApiRequest('GET', url, false, async () => {
+      return await trackAsolApiRequest<AsolAbsoluteBinaryResult>('GET', url, false, async () => {
         const response = await asolHttpFetch(parsedUrl, {
           method: 'GET',
-          headers: { Accept: 'application/json', ...options.headers },
+          headers: { Accept: 'image/*, application/octet-stream, */*', ...options.headers },
           credentials: 'omit',
           signal: options.signal,
           cache: options.cache ?? 'no-store',
         });
-        const data = await this.parseResponse<T>(response);
-        return { data, response };
+        if (response.status === 304) {
+          return {
+            data: {
+              status: 'not-modified' as const,
+              etag: response.headers.get('etag'),
+            },
+            response,
+          };
+        }
+        if (!response.ok) await this.parseResponse<never>(response);
+        return {
+          data: {
+            status: 'ok' as const,
+            data: await response.arrayBuffer(),
+            contentType: response.headers.get('content-type'),
+            etag: response.headers.get('etag'),
+          },
+          response,
+        };
       });
     } catch (error) {
       this.logAndThrow('GET', url, error, options.suppressErrorLog);
@@ -264,7 +350,7 @@ export class AsolApiClient {
       throw new Error(`Unsupported URL protocol: ${parsedUrl.protocol}`);
     }
     try {
-      return await trackAsolApiRequest('POST', url, false, async () => {
+      const data = await trackAsolApiRequest('POST', url, false, async () => {
         const response = await asolHttpFetch(parsedUrl, {
           method: 'POST',
           headers: {
@@ -277,9 +363,11 @@ export class AsolApiClient {
           signal: options.signal,
           cache: options.cache ?? 'no-store',
         });
-        const data = await this.parseResponse<T>(response, 'manual');
-        return { data, response };
+        const parsed = await this.parseResponse<T>(response, 'manual');
+        return { data: parsed, response };
       });
+      await invalidateAsolApiLocalReads();
+      return data;
     } catch (error) {
       this.logAndThrow('POST', url, error, options.suppressErrorLog);
     }

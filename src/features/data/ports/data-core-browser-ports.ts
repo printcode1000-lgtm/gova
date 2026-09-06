@@ -5,7 +5,12 @@ import {
   type DoctorAppointmentItem,
   type SpecialtyColumnItem,
 } from '@asol/data-core/runtime-config';
+import {
+  invalidateAsolLocalFirstData,
+  readAsolLocalFirstData,
+} from '@asol/data-core/browser';
 import { isDevelopment } from '@/core/config';
+import { configureAsolApiBrowserLocalReadCache } from '@/core/api';
 import { categoryService } from '@/features/categories';
 
 /**
@@ -21,5 +26,9 @@ export function registerDataCoreBrowserPorts(): void {
       getDoctorAppointmentItems: () =>
         categoryService.getDoctorAppointmentItems() as unknown as readonly DoctorAppointmentItem[],
     },
+  });
+  configureAsolApiBrowserLocalReadCache({
+    read: (request) => readAsolLocalFirstData(request),
+    invalidateAll: invalidateAsolLocalFirstData,
   });
 }

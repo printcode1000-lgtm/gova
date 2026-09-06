@@ -1,6 +1,6 @@
 'use client';
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@asol/data-core/browser';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from '@/shared/i18n';
 import { useSessionRuntime } from '@/shared/session-runtime';

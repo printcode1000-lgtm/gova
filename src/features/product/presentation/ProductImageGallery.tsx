@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/shared/ui/local-first-image";
 import * as React from "react";
 import { type StoredImage } from "@asol/storage-core";
 

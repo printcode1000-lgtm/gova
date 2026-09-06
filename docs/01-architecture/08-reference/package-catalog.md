@@ -616,7 +616,7 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Folder** | `packages/storage-image-manager-core/` |
 | **Purpose** | Image manager UI and client lifecycle over storage ports |
 | **Architectural Layer** | capability |
-| **Public Exports** | `.` · `./client-lifecycle` · `./services` |
+| **Public Exports** | `.` · `./client-lifecycle` · `./image-cache` · `./services` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:storage-image-manager-core` |

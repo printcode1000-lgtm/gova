@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation } from '@asol/data-core/browser';
 import { useTranslation } from '@/shared/i18n';
 import { createRegistrationSchema, type RegistrationFormData } from '@asol/auth-core';
 import { useGuestSession } from '@/features/auth/application/hooks/use-guest-session';
