@@ -44,7 +44,7 @@ function main(): void {
     stdio: "inherit",
     env,
   });
-  execSync("npx tsx packages/ota-core/scripts/build-out.ts", { stdio: "inherit", env });
+  execSync("npx tsx scripts/build-static.ts", { stdio: "inherit", env });
   execSync("npm run cap:sync", { stdio: "inherit", env });
 
   console.log(

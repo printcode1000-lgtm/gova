@@ -14101,10 +14101,13 @@
         "project",
         "records",
         "remains",
+        "scripts/build-static",
+        "scripts/build-static.ts",
         "synchronization",
         "that",
         "the",
         "this",
+        "ts",
         "uses",
         "virtual",
         "while"

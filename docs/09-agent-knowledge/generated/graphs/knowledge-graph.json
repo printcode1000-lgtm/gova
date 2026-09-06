@@ -14101,10 +14101,13 @@
         "project",
         "records",
         "remains",
+        "scripts/build-static",
+        "scripts/build-static.ts",
         "synchronization",
         "that",
         "the",
         "this",
+        "ts",
         "uses",
         "virtual",
         "while"
@@ -75592,6 +75595,12 @@
       "to": "document:docs/09-agent-knowledge/runtime-contract.md",
       "kind": "references",
       "detail": "../09-agent-knowledge/runtime-contract.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/local-macos-ios-build-machine.md",
+      "to": "script:scripts/build-static.ts",
+      "kind": "references",
+      "detail": "scripts/build-static.ts"
     },
     {
       "from": "document:docs/07-mobile-and-release/local-runner-full-host-control.md",

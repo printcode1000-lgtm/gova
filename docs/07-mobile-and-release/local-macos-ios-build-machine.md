@@ -63,6 +63,8 @@ The verified local toolchain state is:
 - The project Fastlane bundle is not yet available under Ruby 3.3.12, and the lockfile currently lacks a macOS platform entry.
 
 For Xcode commands that need the full Xcode installation before any system-wide selector change, set `DEVELOPER_DIR` to the installed Xcode application's Developer directory for that command only.
+
+Local Capacitor builds use `scripts/build-static.ts` as the static-build composition root before `cap:sync`; this is required so OTA static-route auditing receives the application category catalog through its declared port.
 ## Local Machine Configuration Semantics
 
 The ignored local environment file contains a dedicated macOS-VM section. Its fields have these responsibilities:
