@@ -14227,6 +14227,59 @@
       ]
     },
     {
+      "id": "document:docs/07-mobile-and-release/ios-remote-access.md",
+      "kind": "document",
+      "name": "iPhone Network Access and Wireless Installation",
+      "path": "docs/07-mobile-and-release/ios-remote-access.md",
+      "summary": "This document is the operating reference for the physical iPhone used with Gova. It records how the Linux Desktop reaches the phone, how trust is bootstrapped once over USB, and how signed iOS artifacts are installed afterward over the private Tailscale network without the EliteB",
+      "tags": [
+        "access",
+        "afterward",
+        "and",
+        "are",
+        "artifacts",
+        "bootstrapped",
+        "desktop",
+        "docs/07-mobile-and-release/ios-remote-access",
+        "docs/07-mobile-and-release/ios-remote-access.md",
+        "document",
+        "eliteb",
+        "for",
+        "gova",
+        "how",
+        "installation",
+        "installed",
+        "ios",
+        "iphone",
+        "iphone network access and wireless installation",
+        "is",
+        "it",
+        "linux",
+        "md",
+        "network",
+        "once",
+        "operating",
+        "over",
+        "phone",
+        "physical",
+        "private",
+        "reaches",
+        "records",
+        "reference",
+        "signed",
+        "tailscale",
+        "the",
+        "this",
+        "this document is the operating reference for the physical iphone used with gova. it records how the linux desktop reaches the phone, how trust is bootstrapped once over usb, and how signed ios artifacts are installed afterward over the private tailscale network without the eliteb",
+        "trust",
+        "usb",
+        "used",
+        "wireless",
+        "with",
+        "without"
+      ]
+    },
+    {
       "id": "document:docs/07-mobile-and-release/local-agent-runner-pool.md",
       "kind": "document",
       "name": "Local Agent Runner Pool",
@@ -76226,6 +76279,17 @@
       "kind": "belongs-to"
     },
     {
+      "from": "document:docs/07-mobile-and-release/ios-remote-access.md",
+      "to": "domain:mobile-and-release",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/ios-remote-access.md",
+      "to": "document:docs/07-mobile-and-release/local-macos-ios-build-machine.md",
+      "kind": "references",
+      "detail": "./local-macos-ios-build-machine.md"
+    },
+    {
       "from": "document:docs/07-mobile-and-release/local-agent-runner-pool.md",
       "to": "domain:mobile-and-release",
       "kind": "belongs-to"
@@ -76345,6 +76409,12 @@
       "to": "document:docs/07-mobile-and-release/github-ci-policy.md",
       "kind": "references",
       "detail": "./github-ci-policy.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/README.md",
+      "to": "document:docs/07-mobile-and-release/ios-remote-access.md",
+      "kind": "references",
+      "detail": "./ios-remote-access.md"
     },
     {
       "from": "document:docs/07-mobile-and-release/README.md",

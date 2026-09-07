@@ -14,6 +14,7 @@ Read [Project Runtime Contract](../09-agent-knowledge/runtime-contract.md) befor
 
 - Native/Capacitor → `capacitor/`, [Project Runtime Contract](../09-agent-knowledge/runtime-contract.md), plus the owning `@asol/native-core` architecture entry.
 - Local macOS VM / iOS build host / Linux↔macOS synchronization → [Local macOS iOS Build Machine](./local-macos-ios-build-machine.md).
+- Physical iPhone / network-only developer access / wireless signed-app installation → [iPhone Network Access and Wireless Installation](./ios-remote-access.md).
 - Static bundle / OTA → `@asol/ota-core`, `scripts/build-static.ts`, `next.config.ts`, and the runtime contract.
 - Deployment topology → [Deployment Targets](./deployment-targets.md).
 - Which command publishes what, and in which order → [Release Commands](./release-commands.md).
