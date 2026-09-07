@@ -30,7 +30,7 @@ Unproven gateway paths: **147**
 | `packages/auth-core/src/ports/auth-repository.port.ts` | `@asol/auth-core` | patch, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/auth-core/src/server/account-deletion-service.ts` | `@asol/auth-core` | delete | `unproven` | NO | `` | development, web | high |
 | `packages/auth-core/src/server/auth-operations-service.ts` | `@asol/auth-core` | update | `unproven` | NO | `` | development, web | high |
-| `packages/auth-core/src/tests/index.test.ts` | `@asol/auth-core` | update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
+| `packages/auth-core/src/tests/index.test.ts` | `@asol/auth-core` | patch, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/backup-core/src/server/dev-cloud-backup-service.ts` | `@asol/backup-core` | create, update | `unproven` | NO | `` | development, web | high |
 | `packages/backup-core/src/server/r2-backup.repository.ts` | `@asol/backup-core` | write-like | `@asol/storage-core` | yes | `` | development, web | medium |
 | `packages/control-composition/src/index.ts` | `@asol/control-composition` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |

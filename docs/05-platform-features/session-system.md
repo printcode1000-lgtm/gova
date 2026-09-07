@@ -21,6 +21,7 @@ interface UserSession {
   uid: string;
   phone: string;
   email?: string;  // only when present
+  providerAccountEnabled: boolean;
   specialties: ProfileSpecialtiesSelection;
   sessionToken?: string; // present after a new password login
 }
@@ -38,7 +39,7 @@ function isLoggedIn(session: SessionState): boolean {
 
 ```
 Login / Register
-  → authService.login()           // returns identity, specialties, signed sessionToken
+  → authService.login()           // returns identity, provider account mode, specialties, signed sessionToken
   → sessionService.saveSession()  // writes auth/current in IDB
   → setSession()                  // React context (SessionProvider)
 
@@ -78,7 +79,7 @@ App load
 
 | Store | Key | Value |
 |---|---|---|
-| `auth` | `current` | `{ uid, phone, email?, specialties, sessionToken? }` when logged in |
+| `auth` | `current` | `{ uid, phone, email?, providerAccountEnabled, specialties, sessionToken? }` when logged in |
 | `auth` | `superAdminOriginalSession` | Super-admin session preserved while impersonating |
 | `auth` | `pendingAuthLoginCompleted` | `{ uid, phone }` consumed once after a hard navigation login switch |
 | `guestSessions` | `current` | Guest browsing id (unrelated to login) |
@@ -87,7 +88,7 @@ On first load, `cleanLegacyStore()`:
 
 - Deletes the obsolete legacy `auth` key.
 - Removes `auth/current` rows that lack `uid`.
-- Preserves a valid signed `sessionToken` and normalizes identity, email, and specialties.
+- Preserves a valid signed `sessionToken` and normalizes identity, email, `providerAccountEnabled`, and specialties. Sessions written before the account-mode field existed normalize it to `false`.
 
 ---
 
@@ -100,7 +101,7 @@ On first load, `cleanLegacyStore()`:
 |---|---|
 | `cleanLegacyStore()` | One-time cleanup + normalize on app start |
 | `getSession()` | Read `auth/current` → `UserSession \| null` |
-| `saveSession({ uid, phone, email?, specialties?, sessionToken? })` | Write `auth/current` |
+| `saveSession({ uid, phone, email?, providerAccountEnabled?, specialties?, sessionToken? })` | Write `auth/current` |
 | `clearSession()` | Delete `auth/current` |
 
 ---
@@ -126,7 +127,7 @@ Mounted in root `layout.tsx` inside `AppQueryProvider`.
 `POST /api/auth/login` returns:
 
 ```json
-{ "uid": "...", "phone": "...", "email": "...", "specialties": { "main": [], "sub": {} }, "sessionToken": "..." }
+{ "uid": "...", "phone": "...", "email": "...", "providerAccountEnabled": false, "specialties": { "main": [], "sub": {} }, "sessionToken": "..." }
 ```
 
 The token is signed server-side after password verification. The server validates its signature and expiry without storing a cloud session row. Sessions created before this feature remain usable for ordinary browsing, but specialty-chat mutations require one fresh login.

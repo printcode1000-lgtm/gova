@@ -156,6 +156,8 @@ Store identity tab. An empty or omitted alias writes nothing. The client
 registration hook does not call `profileService.saveStoreDetails`; that write
 belongs to page-save on the profile editor, not to account creation.
 
+The Registration tab also owns the personal/service-provider account-mode control. Its authoritative per-user value is `users.provider_account_enabled` (default `false`). The users SQLite schema is the development source of truth and schema synchronization adds the same column to the users Turso database. Login and profile-update results carry the value into `UserSession`, whose current-device copy is stored in AsolDB. The profile editor uses the staged registration value immediately: personal mode shows only Registration, while service-provider mode exposes the provider editing tabs.
+
 ### Logout simplification
 
 `AppSidebar` logout now calls only `useLogout()` (clear IDB session + React context). It no longer duplicates device unregister, theme resets, or `clearAllClientStorage()`.

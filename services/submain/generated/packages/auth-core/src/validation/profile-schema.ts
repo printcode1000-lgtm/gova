@@ -32,6 +32,7 @@ export function createProfileSchema(t: ProfileTranslateFn) {
         .email(t('auth.validation.emailInvalid'))
         .optional()
         .or(z.literal('')),
+      providerAccountEnabled: z.boolean().default(false),
       currentPassword: z.string(),
       newPassword: z.string(),
       confirmPassword: z.string(),
@@ -70,10 +71,12 @@ export type ProfileFormData = z.infer<ReturnType<typeof createProfileSchema>>;
 export function toProfileFormData(input: {
   phone?: string;
   email?: string | null;
+  providerAccountEnabled?: boolean;
 }): ProfileFormData {
   return {
     phone: input.phone ?? '',
     email: input.email ?? '',
+    providerAccountEnabled: input.providerAccountEnabled ?? false,
     currentPassword: '',
     newPassword: '',
     confirmPassword: '',
@@ -87,6 +90,7 @@ export function isProfileFormDirty(
   return (
     current.phone !== baseline.phone ||
     current.email !== baseline.email ||
+    current.providerAccountEnabled !== baseline.providerAccountEnabled ||
     !!current.currentPassword ||
     !!current.newPassword ||
     !!current.confirmPassword

@@ -6,6 +6,7 @@ export interface CreateAuthUserInput {
   phone: string;
   email: string | null;
   password: string;
+  providerAccountEnabled?: boolean;
   lastLoginAt: string | null;
   createdAt: string;
   updatedAt: string;
@@ -40,6 +41,7 @@ export class CreateUserCommand {
           phone: user.phone,
           email: user.email,
           password: user.password,
+          providerAccountEnabled: user.providerAccountEnabled ?? false,
           last_login_at: user.lastLoginAt,
           created_at: user.createdAt,
           updated_at: user.updatedAt,

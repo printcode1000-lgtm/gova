@@ -13,6 +13,7 @@ export async function PUT(request: Request) {
         uid: body.uid,
         phone: body.phone,
         email: body.email,
+        providerAccountEnabled: body.providerAccountEnabled,
         currentPassword: body.currentPassword,
         newPassword: body.newPassword,
         sessionToken,

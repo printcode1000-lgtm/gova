@@ -18,6 +18,7 @@ export class UserRepository implements IUserRepository {
       phone: normalizeAuthPhone(user.phone),
       email: normalizeAuthEmail(user.email),
       password: user.password || '',
+      providerAccountEnabled: user.providerAccountEnabled ?? false,
       lastLoginAt: user.last_login_at || null,
       createdAt: user.created_at || new Date().toISOString(),
       updatedAt: user.updated_at || new Date().toISOString(),
@@ -47,6 +48,7 @@ export class UserRepository implements IUserRepository {
       phone: row.phone,
       email: row.email,
       password: row.password,
+      providerAccountEnabled: row.providerAccountEnabled,
       last_login_at: row.lastLoginAt,
       created_at: row.createdAt,
       updated_at: row.updatedAt,
@@ -74,6 +76,7 @@ export class UserRepository implements IUserRepository {
       phone: row.phone,
       email: row.email,
       password: row.password,
+      providerAccountEnabled: row.providerAccountEnabled,
       last_login_at: row.lastLoginAt,
       created_at: row.createdAt,
       updated_at: row.updatedAt,
@@ -100,6 +103,7 @@ export class UserRepository implements IUserRepository {
       phone: row.phone,
       email: row.email,
       password: row.password,
+      providerAccountEnabled: row.providerAccountEnabled,
       last_login_at: row.lastLoginAt,
       created_at: row.createdAt,
       updated_at: row.updatedAt,
@@ -113,6 +117,7 @@ export class UserRepository implements IUserRepository {
     if (fields.phone !== undefined) updateData.phone = normalizeAuthPhone(fields.phone);
     if (fields.email !== undefined) updateData.email = normalizeAuthEmail(fields.email);
     if (fields.password !== undefined) updateData.password = fields.password;
+    if (fields.providerAccountEnabled !== undefined) updateData.providerAccountEnabled = fields.providerAccountEnabled;
     if (fields.last_login_at !== undefined) updateData.lastLoginAt = fields.last_login_at;
     if (fields.deleted_at !== undefined) updateData.deletedAt = fields.deleted_at;
 

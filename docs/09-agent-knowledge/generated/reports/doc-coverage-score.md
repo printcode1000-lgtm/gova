@@ -9,7 +9,7 @@ Runtime coverage is inherited from each owner's owned source/test/script nodes, 
 
 Owners scored: **100**
 Average coverage: **83%**
-Weak owners (<70%): **11**
+Weak owners (<70%): **10**
 
 | Owner | Kind | Owner | Docs | Tests | Runtime | Consumers | Dependencies | Cmd/Cfg/Env | Runtime tests | Score |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -20,7 +20,6 @@ Weak owners (<70%): **11**
 | `src/features/home` | feature | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
 | `src/features/location` | feature | yes | yes | NO | yes | yes | NO | NO | yes | 63% |
 | `src/features/navigation` | feature | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
-| `src/features/network` | feature | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
 | `src/features/ota` | feature | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
 | `src/features/splash` | feature | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
 | `src/features/voice-input` | feature | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
@@ -48,6 +47,7 @@ Weak owners (<70%): **11**
 | `src/features/contact` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
 | `src/features/data` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
 | `src/features/favorites` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
+| `src/features/network` | feature | yes | yes | yes | yes | NO | yes | NO | yes | 75% |
 | `src/features/onboarding` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
 | `src/features/page-snapshot` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
 | `src/features/pharmacy-profile-catalog` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |

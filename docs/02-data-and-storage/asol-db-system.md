@@ -43,7 +43,7 @@ Stores user authentication session state.
 
 | Key | Value Type | Description |
 |-----|------------|-------------|
-| `current` | `UserSession \| null` | Authenticated session info: `{ uid, phone, email?, specialties, sessionToken? }`. The signed token is local-only and removed with the session. |
+| `current` | `UserSession \| null` | Authenticated session info: `{ uid, phone, email?, providerAccountEnabled, specialties, sessionToken? }`. `providerAccountEnabled` is a local session copy of the current user's persisted account mode; the authoritative value is `users.provider_account_enabled` in SQLite/Turso. The signed token is local-only and removed with the session. |
 
 ### 3. `guestSessions`
 Manages guest browsing identifiers.

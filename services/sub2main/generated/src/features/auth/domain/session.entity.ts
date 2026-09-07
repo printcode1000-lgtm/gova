@@ -9,6 +9,7 @@ export interface UserSession {
   uid: string;
   phone: string;
   email?: string;
+  providerAccountEnabled: boolean;
   specialties: ProfileSpecialtiesSelection;
   sessionToken?: string;
 }
@@ -17,6 +18,7 @@ export interface SaveSessionInput {
   uid: string;
   phone: string;
   email?: string;
+  providerAccountEnabled?: boolean;
   specialties?: ProfileSpecialtiesSelection;
   sessionToken?: string;
 }
@@ -41,6 +43,7 @@ export function parseStoredSession(raw: unknown): UserSession | null {
       ? record.email.trim()
       : undefined;
 
+  const providerAccountEnabled = record.providerAccountEnabled === true;
   const rawSpecialties = record.specialties;
   const sessionToken =
     typeof record.sessionToken === 'string' && record.sessionToken.trim()
@@ -52,8 +55,8 @@ export function parseStoredSession(raw: unknown): UserSession | null {
       : EMPTY_PROFILE_SPECIALTIES;
 
   return email
-    ? { uid, phone, email, specialties, ...(sessionToken ? { sessionToken } : {}) }
-    : { uid, phone, specialties, ...(sessionToken ? { sessionToken } : {}) };
+    ? { uid, phone, email, providerAccountEnabled, specialties, ...(sessionToken ? { sessionToken } : {}) }
+    : { uid, phone, providerAccountEnabled, specialties, ...(sessionToken ? { sessionToken } : {}) };
 }
 
 export function formatSessionPhone(phone: string): string {

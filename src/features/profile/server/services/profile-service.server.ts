@@ -408,6 +408,7 @@ export class ProfileService implements IProfileService {
           uid: input.uid,
           phone: user.phone,
           email: user.email?.trim() || null,
+          providerAccountEnabled: user.providerAccountEnabled ?? false,
         };
 
         if (
@@ -436,6 +437,7 @@ export class ProfileService implements IProfileService {
             uid: input.uid,
             phone: input.registration.phone,
             email: input.registration.email,
+            providerAccountEnabled: input.registration.providerAccountEnabled,
             currentPassword: input.registration.newPassword
               ? input.registration.currentPassword
               : undefined,

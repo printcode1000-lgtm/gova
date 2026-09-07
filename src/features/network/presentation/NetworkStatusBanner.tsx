@@ -1,42 +1,70 @@
 'use client';
 
-import { RefreshCw, ServerOff, Wifi, WifiOff } from 'lucide-react';
+import { CircleAlert, RefreshCw, ServerOff, Wifi, WifiOff } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 import { BOTTOM_NAV_CLEARANCE } from '@/shared/layouts/bottom-nav-layout';
 import { useNetworkStatus, type NetworkStatus } from '@/features/network/presentation/hooks/use-network-status';
 import { useTranslation } from '@/shared/i18n';
+import { getClientRuntimeContext } from '@/core/config/runtime-context.client';
+import { publicEnv } from '@/core/config/public-env';
 import { cn } from '@/shared/utils';
+import {
+  resolveNetworkDisplayEnvironment,
+  restoredMessageKey,
+  serverUnavailableMessageKey,
+  type NetworkRestoredFrom,
+} from './network-status-copy';
 
-const DISCONNECTED_STATUSES: NetworkStatus[] = ['offline', 'server-unreachable'];
+const DISCONNECTED_STATUSES: NetworkRestoredFrom[] = [
+  'offline',
+  'server-unreachable',
+  'check-failed',
+];
 
 export function NetworkStatusBanner() {
   const { status, isChecking, checkConnection } = useNetworkStatus();
   const { t } = useTranslation();
   const previousStatus = useRef<NetworkStatus>('checking');
-  const [showRestored, setShowRestored] = useState(false);
+  const [restoredFrom, setRestoredFrom] = useState<NetworkRestoredFrom | null>(null);
+  const environment = resolveNetworkDisplayEnvironment(
+    getClientRuntimeContext(),
+    publicEnv.developmentBuild,
+  );
 
   useEffect(() => {
-    const wasDisconnected = DISCONNECTED_STATUSES.includes(previousStatus.current);
+    const previous = previousStatus.current;
+    const wasDisconnected = DISCONNECTED_STATUSES.includes(
+      previous as NetworkRestoredFrom,
+    );
     previousStatus.current = status;
 
-    if (!wasDisconnected || status !== 'online') return;
+    if (!wasDisconnected || status !== 'online') {
+      if (status !== 'online') setRestoredFrom(null);
+      return;
+    }
 
-    setShowRestored(true);
-    const timeout = window.setTimeout(() => setShowRestored(false), 3_000);
+    setRestoredFrom(previous as NetworkRestoredFrom);
+    const timeout = window.setTimeout(() => setRestoredFrom(null), 3_000);
     return () => window.clearTimeout(timeout);
   }, [status]);
 
-  const isDisconnected = DISCONNECTED_STATUSES.includes(status);
+  const isDisconnected = DISCONNECTED_STATUSES.includes(
+    status as NetworkRestoredFrom,
+  );
+  const showRestored = status === 'online' && restoredFrom !== null;
   if (!isDisconnected && !showRestored) return null;
 
   const isOffline = status === 'offline';
-  const Icon = showRestored ? Wifi : isOffline ? WifiOff : ServerOff;
+  const isCheckFailed = status === 'check-failed';
+  const Icon = showRestored ? Wifi : isOffline ? WifiOff : isCheckFailed ? CircleAlert : ServerOff;
   const message = showRestored
-    ? t('network.restored')
+    ? t(restoredMessageKey(restoredFrom, environment))
     : isOffline
       ? t('network.offline')
-      : t('network.serverUnavailable');
+      : isCheckFailed
+        ? t('network.checkFailed')
+        : t(serverUnavailableMessageKey(environment));
 
   return (
     <div id='features-network-presentation-networkstatusbanner-div-1-fagcln'

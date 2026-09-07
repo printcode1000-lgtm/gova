@@ -52,7 +52,13 @@ export class UpdateUserProfileCommand {
         throw error;
       }
 
-      return { uid: input.uid, phone, email };
+      return {
+        uid: input.uid,
+        phone,
+        email,
+        providerAccountEnabled:
+          input.providerAccountEnabled ?? user.providerAccountEnabled ?? false,
+      };
     });
   }
 }

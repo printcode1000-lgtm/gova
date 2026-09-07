@@ -14,10 +14,11 @@ import type { ISessionService } from '../../ports/session-service.interface';
 function toStoredSession(input: SaveSessionInput): UserSession {
   const email = input.email?.trim();
   const specialties = input.specialties ?? { main: [], sub: {} };
+  const providerAccountEnabled = input.providerAccountEnabled === true;
   const sessionToken = input.sessionToken?.trim();
   return email
-    ? { uid: input.uid, phone: input.phone, email, specialties, ...(sessionToken ? { sessionToken } : {}) }
-    : { uid: input.uid, phone: input.phone, specialties, ...(sessionToken ? { sessionToken } : {}) };
+    ? { uid: input.uid, phone: input.phone, email, providerAccountEnabled, specialties, ...(sessionToken ? { sessionToken } : {}) }
+    : { uid: input.uid, phone: input.phone, providerAccountEnabled, specialties, ...(sessionToken ? { sessionToken } : {}) };
 }
 
 /**

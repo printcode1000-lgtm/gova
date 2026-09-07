@@ -91,19 +91,44 @@ assert.match(
   registrationCard,
   /const \[isProviderAccountOpen, setIsProviderAccountOpen\] = React\.useState\(false\)/,
 );
-assert.match(
+assert.doesNotMatch(
   registrationCard,
-  /const \[isProviderAccountEnabled, setIsProviderAccountEnabled\] = React\.useState\(false\)/,
+  /const \[isProviderAccountEnabled, setIsProviderAccountEnabled\]/,
+  "provider-account mode must come from the current-user registration draft, not component-local state",
 );
 assert.match(providerAccountUi, /profile\.providerAccount\.title/);
 assert.match(providerAccountUi, /<BriefcaseBusiness/);
 assert.match(providerAccountUi, /<Switch/);
-assert.match(providerAccountUi, /onCheckedChange=\{setIsProviderAccountEnabled\}/);
-assert.doesNotMatch(
+assert.match(providerAccountUi, /checked=\{providerAccountEnabled\}/);
+assert.match(
   providerAccountUi,
-  /updateField\(|saveAsync|asolApi|fetch\(/,
-  "provider-account switch is UI-only and must not mutate profile or call an API",
+  /updateRegistrationField\("providerAccountEnabled", enabled\)/,
 );
+assert.match(providerAccountUi, /onProviderAccountEnabledChange\(enabled\)/);
+assert.doesNotMatch(providerAccountUi, /asolApi|fetch\(/);
+
+const providerWorkspaceView = source(
+  'src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx',
+);
+assert.match(
+  providerWorkspaceView,
+  /providerAccountEnabled \? \(\s*<ProfileEditTabsBar id='profile-presentation-profile-page-profileeditworkspaceview-profileedittabsbar-2-1zx3up'/,
+);
+assert.match(
+  providerWorkspaceView,
+  /className=\{providerAccountEnabled \? [^}]+ : "hidden"\}/,
+  "provider-only edit panels must be hidden while the current user is a personal account",
+);
+assert.match(
+  providerWorkspaceView,
+  /aria-hidden=\{providerAccountEnabled && activeTab !== "registration"\}/,
+);
+assert.match(
+  providerWorkspaceView,
+  /onProviderAccountEnabledChange=\{setProviderAccountEnabled\}/,
+);
+assert.match(model, /session\?\.providerAccountEnabled === true/);
+assert.match(model, /selectSection\("registration"\)/);
 
 const storeDetailsHook = source('src/features/profile/presentation/hooks/use-store-details.ts');
 assert.match(storeDetailsHook, /store-name-draft/);

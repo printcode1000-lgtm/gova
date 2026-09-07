@@ -30,15 +30,19 @@ import {
 } from "./ProfileEditWorkspaceChrome";
 
 export function ProfileEditWorkspaceView({ model }: { model: ProfilePageContentModel }) {
-const { t, locale, session, superAdmin, registrationRef, specialtiesRef, productsRef, contactsRef, storeRef, workingHoursRef, fulfillmentRef, discountsRef, activeTab, carouselHeight, animateCarouselHeight, carouselRef, panelRefs, handleCarouselScroll, sectionStatuses, saveError, handleRegistrationStatus, handleSpecialtiesStatus, handleProductsStatus, handleContactStatus, handleStoreStatus, handleWorkingHoursStatus, handleFulfillmentStatus, handleDiscountsStatus } = model;
+const { t, locale, session, superAdmin, providerAccountEnabled, setProviderAccountEnabled, registrationRef, specialtiesRef, productsRef, contactsRef, storeRef, workingHoursRef, fulfillmentRef, discountsRef, activeTab, carouselHeight, animateCarouselHeight, carouselRef, panelRefs, handleCarouselScroll, sectionStatuses, saveError, handleRegistrationStatus, handleSpecialtiesStatus, handleProductsStatus, handleContactStatus, handleStoreStatus, handleWorkingHoursStatus, handleFulfillmentStatus, handleDiscountsStatus } = model;
 return (
         <div
           id='profile-presentation-profile-page-profileeditworkspaceview-div-1-kpbevk'
           className="mx-auto flex w-full max-w-4xl flex-col gap-3 pt-1 sm:gap-4 sm:pt-2"
         >
-          <ProfileEditTabsBar id='profile-presentation-profile-page-profileeditworkspaceview-profileedittabsbar-2-1zx3up' model={model} />
+          {providerAccountEnabled ? (
+            <ProfileEditTabsBar id='profile-presentation-profile-page-profileeditworkspaceview-profileedittabsbar-2-1zx3up' model={model} />
+          ) : null}
 
-          <ProfileEditSaveFeedback id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsavefeedback-3-nyaopz' model={model} />
+          {providerAccountEnabled ? (
+            <ProfileEditSaveFeedback id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsavefeedback-3-nyaopz' model={model} />
+          ) : null}
 
           <Card id='profile-presentation-profile-page-profileeditworkspaceview-card-4-chftbq' className="order-3 w-full max-w-full overflow-hidden rounded-3xl border border-outline-variant/50 bg-surface/95 shadow-xl shadow-primary/5">
             <CardContent id='profile-presentation-profile-page-profileeditworkspaceview-cardcontent-5-spvk2b' className="p-0">
@@ -48,8 +52,8 @@ return (
                   ref={carouselRef}
                   onScroll={handleCarouselScroll}
                   style={{
-                    ...(carouselHeight ? { height: carouselHeight } : null),
-                    transitionDuration: animateCarouselHeight ? "300ms" : "0ms",
+                    ...(providerAccountEnabled && carouselHeight ? { height: carouselHeight } : null),
+                    transitionDuration: providerAccountEnabled && animateCarouselHeight ? "300ms" : "0ms",
                   }}
                   className="flex snap-x snap-mandatory scroll-smooth items-start overflow-x-auto overflow-y-hidden overscroll-x-contain transition-[height] ease-out [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
                 >
@@ -59,8 +63,8 @@ return (
                     }}
                     id={PROFILE_SECTION_IDS.registration}
                     role="region"
-                    aria-hidden={activeTab !== "registration"}
-                    inert={activeTab !== "registration"}
+                    aria-hidden={providerAccountEnabled && activeTab !== "registration"}
+                    inert={providerAccountEnabled && activeTab !== "registration"}
                     className="w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
                     <ProfileEditSectionFrame id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-9-ynox7w'
@@ -73,6 +77,8 @@ return (
                       <ProfileRegistrationInfoCard
                         ref={registrationRef}
                         onStatusChange={handleRegistrationStatus}
+                        providerAccountEnabled={providerAccountEnabled}
+                        onProviderAccountEnabledChange={setProviderAccountEnabled}
                       />
                     </ProfileEditSectionFrame>
                   </div>
@@ -84,7 +90,7 @@ return (
                     role="region"
                     aria-hidden={activeTab !== "specialties"}
                     inert={activeTab !== "specialties"}
-                    className="w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
+                    className={providerAccountEnabled ? "w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6" : "hidden"}
                   >
                     <ProfileEditSectionFrame id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-11-zfl6bg'
                       icon={faStar}
@@ -109,7 +115,7 @@ return (
                     role="region"
                     aria-hidden={activeTab !== "store"}
                     inert={activeTab !== "store"}
-                    className="w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
+                    className={providerAccountEnabled ? "w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6" : "hidden"}
                   >
                     <ProfileEditSectionFrame id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-13-krapbq'
                       icon={faBuilding}
@@ -132,7 +138,7 @@ return (
                     role="region"
                     aria-hidden={activeTab !== "products"}
                     inert={activeTab !== "products"}
-                    className="w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
+                    className={providerAccountEnabled ? "w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6" : "hidden"}
                   >
                     <ProfileEditSectionFrame id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-15-piput6'
                       icon={faTags}
@@ -156,7 +162,7 @@ return (
                     role="region"
                     aria-hidden={activeTab !== "contact"}
                     inert={activeTab !== "contact"}
-                    className="w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
+                    className={providerAccountEnabled ? "w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6" : "hidden"}
                   >
                     <ProfileEditSectionFrame id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-17-ucrnnq'
                       icon={faComments}
@@ -180,7 +186,7 @@ return (
                     role="region"
                     aria-hidden={activeTab !== "workingHours"}
                     inert={activeTab !== "workingHours"}
-                    className="w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
+                    className={providerAccountEnabled ? "w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6" : "hidden"}
                   >
                     <ProfileEditSectionFrame id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-19-kxfrnb'
                       icon={faClock}
@@ -203,7 +209,7 @@ return (
                     role="region"
                     aria-hidden={activeTab !== "fulfillment"}
                     inert={activeTab !== "fulfillment"}
-                    className="w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
+                    className={providerAccountEnabled ? "w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6" : "hidden"}
                   >
                     <ProfileEditSectionFrame id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-21-fo6s6g'
                       icon={faTruckFast}
@@ -226,7 +232,7 @@ return (
                     role="region"
                     aria-hidden={activeTab !== "discounts"}
                     inert={activeTab !== "discounts"}
-                    className="w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
+                    className={providerAccountEnabled ? "w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6" : "hidden"}
                   >
                     <ProfileEditSectionFrame id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-23-gpqagb'
                       icon={faPercent}

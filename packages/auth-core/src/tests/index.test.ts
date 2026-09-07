@@ -220,6 +220,7 @@ function createMemoryUsers(): AuthUserRepositoryPort {
         phone: input.phone,
         email: input.email,
         password: input.password,
+        providerAccountEnabled: input.providerAccountEnabled,
       });
     },
     async getByPhone(phone) {
@@ -231,7 +232,11 @@ function createMemoryUsers(): AuthUserRepositoryPort {
     async getByEmail(email) {
       return [...byUid.values()].find((user) => user.email === email) ?? null;
     },
-    async update() {},
+    async update(uid, patch) {
+      const current = byUid.get(uid);
+      if (!current) return;
+      byUid.set(uid, { ...current, ...patch });
+    },
     async updateLastLogin() {},
   };
 }
@@ -272,6 +277,37 @@ export async function runRegistrationStoreNameTest() {
   assert.deepEqual(saved, []);
 
   console.log('✅ auth-core registration store name test passed');
+}
+
+
+export async function runProviderAccountPersistenceTest() {
+  const users = createMemoryUsers();
+  const service = new AuthOperationsService(
+    users,
+    { getProfileSpecialties: async () => ({ main: [], sub: {} }) },
+    { saveStoreName: async () => {} },
+  );
+
+  const created = await service.register({
+    phone: '01090000001',
+    password: '0258',
+    email: 'provider-mode@example.com',
+  });
+  const initialLogin = await service.login({ phone: '01090000001', password: '0258' });
+  assert.equal(initialLogin.providerAccountEnabled, false);
+
+  const updated = await service.updateProfile({
+    uid: created.uid,
+    phone: initialLogin.phone,
+    email: initialLogin.email,
+    providerAccountEnabled: true,
+    sessionToken: initialLogin.sessionToken,
+  });
+  assert.equal(updated.providerAccountEnabled, true);
+
+  const nextLogin = await service.login({ phone: '01090000001', password: '0258' });
+  assert.equal(nextLogin.providerAccountEnabled, true);
+  console.log('✅ auth-core provider-account persistence test passed');
 }
 
 export async function runSuperAdminAccountDeletionTest() {
@@ -353,6 +389,7 @@ async function main() {
   runPublicSurfaceTest();
   await runImageDeletionRetryTest();
   await runRegistrationStoreNameTest();
+  await runProviderAccountPersistenceTest();
   await runSuperAdminAccountDeletionTest();
   console.log('\n🎉 All @asol/auth-core tests passed successfully!');
 }

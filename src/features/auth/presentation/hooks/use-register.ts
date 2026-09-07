@@ -38,7 +38,7 @@ export function useRegister() {
       if (!uid?.trim()) throw new Error('invalidRegistrationResponse');
       const loginResult = await authService.login({ phone: data.phone, password: data.password });
       if (!loginResult.uid?.trim() || !loginResult.phone?.trim() || !loginResult.sessionToken?.trim()) throw new Error('invalidPostRegistrationLoginResponse');
-      return sessionService.saveSession({ uid: loginResult.uid || uid, phone: data.phone, email: loginResult.email || undefined, specialties: loginResult.specialties, sessionToken: loginResult.sessionToken });
+      return sessionService.saveSession({ uid: loginResult.uid || uid, phone: data.phone, email: loginResult.email || undefined, providerAccountEnabled: loginResult.providerAccountEnabled, specialties: loginResult.specialties, sessionToken: loginResult.sessionToken });
     },
     meta: authMonitorMeta('useRegister', 'RegistrationPageContent', 'Register', 'INSERT'),
     onSuccess: (session) => {

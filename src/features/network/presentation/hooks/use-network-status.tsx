@@ -14,7 +14,12 @@ import {
 import { networkApiService } from '../../application/services/network-api-service';
 import { reportPreAuthFailure } from '@/features/system-logs';
 
-export type NetworkStatus = 'checking' | 'online' | 'offline' | 'server-unreachable';
+export type NetworkStatus =
+  | 'checking'
+  | 'online'
+  | 'offline'
+  | 'server-unreachable'
+  | 'check-failed';
 
 interface NetworkStatusValue {
   status: NetworkStatus;
@@ -57,9 +62,9 @@ export function NetworkStatusProvider({ children }: { children: ReactNode }) {
     setIsChecking(true);
 
     try {
-      const healthy = await networkApiService.checkHealth(controller.signal);
+      const health = await networkApiService.checkHealth(controller.signal);
       if (sequence === checkSequence.current) {
-        if (!healthy) {
+        if (health === 'unreachable') {
           reportPreAuthFailure(
             'startup-network-health-check',
             new Error('serverUnreachable'),
@@ -67,13 +72,13 @@ export function NetworkStatusProvider({ children }: { children: ReactNode }) {
             'warn',
           );
         }
-        setStatus(healthy ? 'online' : 'server-unreachable');
+        setStatus(health === 'reachable' ? 'online' : 'server-unreachable');
       }
     } catch (error) {
       if (controller.signal.aborted) return;
       reportPreAuthFailure('startup-network-health-check', error, {}, 'warn');
       if (sequence === checkSequence.current) {
-        setStatus(browserIsOffline() ? 'offline' : 'server-unreachable');
+        setStatus(browserIsOffline() ? 'offline' : 'check-failed');
       }
     } finally {
       if (sequence === checkSequence.current) {

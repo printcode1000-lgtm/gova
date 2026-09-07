@@ -12017,8 +12017,11 @@
         "entitlements",
         "in",
         "install-banner",
+        "ios/app/app",
+        "ios/app/app.xcodeproj/project.pbxproj",
         "ios/app/app/app",
         "ios/app/app/app.entitlements",
+        "ios/shareextension/",
         "is",
         "json/route",
         "location",
@@ -12030,6 +12033,7 @@
         "packages/native-core/src/adapters/app.adapter.ts",
         "packages/native-core/src/api/native-core",
         "packages/native-core/src/api/native-core.api.ts",
+        "pbxproj",
         "product",
         "public-profile",
         "rich-preview",
@@ -12055,6 +12059,7 @@
         "tsx",
         "well-known/apple-app-site-association/route",
         "well-known/assetlinks",
+        "xcodeproj/project",
         "xml"
       ]
     },
@@ -12878,6 +12883,53 @@
         "tsx",
         "ui",
         "user",
+        "with"
+      ]
+    },
+    {
+      "id": "document:docs/07-mobile-and-release/android-remote-access.md",
+      "kind": "document",
+      "name": "Android Remote Access and Control",
+      "path": "docs/07-mobile-and-release/android-remote-access.md",
+      "summary": "This document is the complete operating reference for the physical OPPO Android device used with Gova. It explains how the device is reached, viewed, controlled, recovered, and kept reachable when its Wi-Fi IP changes.",
+      "tags": [
+        "access",
+        "and",
+        "android",
+        "android remote access and control",
+        "changes",
+        "complete",
+        "control",
+        "controlled",
+        "device",
+        "docs/07-mobile-and-release/android-remote-access",
+        "docs/07-mobile-and-release/android-remote-access.md",
+        "document",
+        "explains",
+        "for",
+        "gova",
+        "how",
+        "ip",
+        "is",
+        "it",
+        "its",
+        "kept",
+        "md",
+        "operating",
+        "oppo",
+        "physical",
+        "reachable",
+        "reached",
+        "recovered",
+        "reference",
+        "remote",
+        "the",
+        "this",
+        "this document is the complete operating reference for the physical oppo android device used with gova. it explains how the device is reached, viewed, controlled, recovered, and kept reachable when its wi-fi ip changes.",
+        "used",
+        "viewed",
+        "when",
+        "wi-fi",
         "with"
       ]
     },
@@ -46812,6 +46864,17 @@
       ]
     },
     {
+      "id": "source:src/features/network/presentation/network-status-copy.ts",
+      "kind": "source",
+      "name": "network-status-copy.ts",
+      "path": "src/features/network/presentation/network-status-copy.ts",
+      "tags": [
+        "src/features/network/presentation/network-status-copy",
+        "src/features/network/presentation/network-status-copy.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/network/presentation/NetworkStatusBanner.tsx",
       "kind": "source",
       "name": "NetworkStatusBanner.tsx",
@@ -55987,6 +56050,18 @@
       "tags": [
         "src/features/follow/tests/follower-notification",
         "src/features/follow/tests/follower-notification.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/features/network/tests/network-status-copy.test.ts",
+      "kind": "test",
+      "name": "network-status-copy.test.ts",
+      "path": "src/features/network/tests/network-status-copy.test.ts",
+      "tags": [
+        "src/features/network/tests/network-status-copy",
+        "src/features/network/tests/network-status-copy.test.ts",
         "test",
         "ts"
       ]
@@ -73389,9 +73464,21 @@
     },
     {
       "from": "document:docs/05-platform-features/sharing-system.md",
+      "to": "source:ios/App/App.xcodeproj/project.pbxproj",
+      "kind": "references",
+      "detail": "ios/App/App.xcodeproj/project.pbxproj"
+    },
+    {
+      "from": "document:docs/05-platform-features/sharing-system.md",
       "to": "source:ios/App/App/App.entitlements",
       "kind": "references",
       "detail": "ios/App/App/App.entitlements"
+    },
+    {
+      "from": "document:docs/05-platform-features/sharing-system.md",
+      "to": "source:ios/ShareExtension/Info.plist",
+      "kind": "references",
+      "detail": "ios/ShareExtension/"
     },
     {
       "from": "document:docs/05-platform-features/sharing-system.md",
@@ -74257,6 +74344,35 @@
       "to": "source:src/features/super-admin/presentation/SuperAdminUsersPage.tsx",
       "kind": "references",
       "detail": "src/features/super-admin/presentation/SuperAdminUsersPage.tsx"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/android-remote-access.md",
+      "to": "domain:mobile-and-release",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/android-remote-access.md",
+      "to": "document:docs/07-mobile-and-release/local-macos-ios-build-machine.md",
+      "kind": "references",
+      "detail": "./local-macos-ios-build-machine.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/android-remote-access.md",
+      "to": "document:docs/07-mobile-and-release/README.md",
+      "kind": "references",
+      "detail": "./README.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/android-remote-access.md",
+      "to": "document:docs/07-mobile-and-release/release-and-secrets.md",
+      "kind": "references",
+      "detail": "./release-and-secrets.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/android-remote-access.md",
+      "to": "document:docs/09-agent-knowledge/runtime-contract.md",
+      "kind": "references",
+      "detail": "../09-agent-knowledge/runtime-contract.md"
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/android-push-notifications.md",
@@ -75634,6 +75750,12 @@
       "from": "document:docs/07-mobile-and-release/README.md",
       "to": "domain:mobile-and-release",
       "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/README.md",
+      "to": "document:docs/07-mobile-and-release/android-remote-access.md",
+      "kind": "references",
+      "detail": "./android-remote-access.md"
     },
     {
       "from": "document:docs/07-mobile-and-release/README.md",
@@ -95266,6 +95388,12 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "source:src/features/network/presentation/network-status-copy.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "source:src/features/network/presentation/NetworkStatusBanner.tsx",
       "kind": "documents",
       "detail": "src/features/"
@@ -98597,6 +98725,12 @@
     {
       "from": "domain:platform-features",
       "to": "test:src/features/follow/tests/follower-notification.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
+      "to": "test:src/features/network/tests/network-status-copy.test.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -105160,6 +105294,12 @@
     },
     {
       "from": "domain:ui-components",
+      "to": "source:src/features/network/presentation/network-status-copy.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
       "to": "source:src/features/network/presentation/NetworkStatusBanner.tsx",
       "kind": "documents",
       "detail": "src/features/"
@@ -108389,6 +108529,12 @@
     {
       "from": "domain:ui-components",
       "to": "test:src/features/follow/tests/follower-notification.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "test:src/features/network/tests/network-status-copy.test.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -210262,6 +210408,48 @@
       "detail": "@/features/system-logs"
     },
     {
+      "from": "source:src/features/network/presentation/network-status-copy.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/network/presentation/network-status-copy.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/network/presentation/network-status-copy.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/network/presentation/network-status-copy.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/network/presentation/network-status-copy.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/network/presentation/network-status-copy.ts",
+      "to": "feature:network",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:src/features/network/presentation/network-status-copy.ts",
+      "to": "source:src/core/config/index.ts",
+      "kind": "imports",
+      "detail": "@/core/config"
+    },
+    {
+      "from": "source:src/features/network/presentation/network-status-copy.ts",
+      "to": "source:src/shared/i18n/index.ts",
+      "kind": "imports",
+      "detail": "@/shared/i18n"
+    },
+    {
       "from": "source:src/features/network/presentation/NetworkStatusBanner.tsx",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -210305,9 +210493,27 @@
     },
     {
       "from": "source:src/features/network/presentation/NetworkStatusBanner.tsx",
+      "to": "source:src/core/config/public-env.ts",
+      "kind": "imports",
+      "detail": "@/core/config/public-env"
+    },
+    {
+      "from": "source:src/features/network/presentation/NetworkStatusBanner.tsx",
+      "to": "source:src/core/config/runtime-context.client.ts",
+      "kind": "imports",
+      "detail": "@/core/config/runtime-context.client"
+    },
+    {
+      "from": "source:src/features/network/presentation/NetworkStatusBanner.tsx",
       "to": "source:src/features/network/presentation/hooks/use-network-status.tsx",
       "kind": "imports",
       "detail": "@/features/network/presentation/hooks/use-network-status"
+    },
+    {
+      "from": "source:src/features/network/presentation/NetworkStatusBanner.tsx",
+      "to": "source:src/features/network/presentation/network-status-copy.ts",
+      "kind": "imports",
+      "detail": "./network-status-copy"
     },
     {
       "from": "source:src/features/network/presentation/NetworkStatusBanner.tsx",
@@ -252701,6 +252907,58 @@
     {
       "from": "test:src/features/follow/tests/follower-notification.test.ts",
       "to": "package:@asol/auth-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/network/tests/network-status-copy.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/network/tests/network-status-copy.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/network/tests/network-status-copy.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/network/tests/network-status-copy.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/network/tests/network-status-copy.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/network/tests/network-status-copy.test.ts",
+      "to": "feature:network",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:src/features/network/tests/network-status-copy.test.ts",
+      "to": "source:src/core/config/index.ts",
+      "kind": "imports",
+      "detail": "@/core/config"
+    },
+    {
+      "from": "test:src/features/network/tests/network-status-copy.test.ts",
+      "to": "source:src/features/network/presentation/network-status-copy.ts",
+      "kind": "imports",
+      "detail": "../presentation/network-status-copy"
+    },
+    {
+      "from": "test:src/features/network/tests/network-status-copy.test.ts",
+      "to": "feature:network",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/network/tests/network-status-copy.test.ts",
+      "to": "source:src/core/config/index.ts",
       "kind": "tests"
     },
     {

@@ -42,14 +42,15 @@ No component calls `fetch()` directly.
 
 ## Status Model
 
-The provider exposes four states:
+The provider exposes five states:
 
 | Status | Meaning |
 |---|---|
 | `checking` | Initial connectivity check is running. |
 | `online` | The device is online and the ASOL backend is reachable. |
 | `offline` | `navigator.onLine` reports that the device has no network connection. |
-| `server-unreachable` | The device reports a network connection, but the backend cannot be reached. This includes DNS, TLS, CORS, timeout, and server availability failures. |
+| `server-unreachable` | The device reports a network connection, but the configured health target cannot be reached. This includes loss of upstream internet, DNS, TLS, CORS, timeout, and server availability failures. It does **not** claim which of those causes occurred. |
+| `check-failed` | The connectivity check failed for a non-transport application reason (for example an internal configuration/initialization failure). This state must never be presented as an internet or backend outage. |
 
 The public hook returns:
 
@@ -107,21 +108,35 @@ The static build removes `src/app/api` from the exported client. Therefore, stat
 
 ### Offline
 
-Displayed when the device reports no network connection:
+Displayed only when `navigator.onLine === false`. The copy says that the device has no active network connection; it does not claim that a particular backend is down.
 
-> No internet connection. Check your network and try again.
+### Health target unreachable
 
-### Server unavailable
+Displayed when the device reports a network connection but the health target cannot be reached. The copy is runtime-specific:
 
-Displayed when the device is connected but the backend health check fails:
+| Runtime | User-facing meaning |
+|---|---|
+| Development | The device is network-connected, but the local Gova development server cannot be reached. |
+| Production Web | The device is network-connected, but the Gova server cannot be reached. |
+| Static Web | The static client is loaded, but its configured remote Gova server cannot be reached. |
+| Android | The Android app is network-connected, but it cannot reach the Gova server. |
+| iOS | The iOS app is network-connected, but it cannot reach the Gova server. |
 
-> You are connected, but the ASOL server is currently unavailable.
+The banner deliberately says **cannot be reached**, not **the internet is down** and not **the server is down**, because a browser transport failure cannot distinguish upstream internet loss, DNS, TLS, CORS, timeout, and backend availability.
+
+### Check failed
+
+Unexpected application/configuration failures during the health check use `check-failed`. The banner explicitly says that the check could not complete and that this does not prove an internet outage.
 
 ### Connection restored
 
-When the state changes from a disconnected state to `online`, a success message appears for three seconds:
+Recovery copy preserves the prior cause:
 
-> Internet connection restored.
+- `offline → online`: the device is back on the network **and** the health target was successfully reached.
+- `server-unreachable → online`: the server/health target is reachable again; the banner does not claim that the internet itself was restored.
+- `check-failed → online`: the network/server check completed successfully.
+
+Each recovery banner remains visible for three seconds.
 
 The banner:
 
@@ -222,10 +237,14 @@ The following keys exist in both locale dictionaries:
 | Key | Purpose |
 |---|---|
 | `network.offline` | Device has no connection. |
-| `network.serverUnavailable` | Network exists but backend is unreachable. |
-| `network.retry` | Manual retry button. |
-| `network.checking` | Retry is in progress. |
-| `network.restored` | Connection has returned. |
+| `network.serverUnavailable.*` | Runtime-specific banner text saying the health target cannot be reached while a network interface is active. |
+| `network.serverUnavailable` | Generic accurate server-reachability text for non-banner API error surfaces that do not own runtime presentation context. |
+| `network.checkFailed` | The health check itself failed for a non-transport application reason. |
+| `network.retry` | Manual re-check button. |
+| `network.checking` | A network/server check is in progress. |
+| `network.networkAndServerRestored` | Recovery from an offline device state, after a successful health check. |
+| `network.serverRestored*` | Recovery from an unreachable health target without claiming an internet outage. |
+| `network.checkRestored` | Recovery from an internal check failure. |
 
 Files:
 

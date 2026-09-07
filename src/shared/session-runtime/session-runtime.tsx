@@ -11,6 +11,7 @@ export interface SessionRuntimeUser {
   uid: string;
   phone: string;
   email?: string;
+  providerAccountEnabled?: boolean;
   specialties?: unknown;
   sessionToken?: string;
 }

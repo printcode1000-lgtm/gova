@@ -50,3 +50,7 @@ Static `out/` contains no App Router API handlers. Android/iOS production client
 ## Change Impact
 
 Release/shared-client changes can affect the server Web build, static Capacitor bundle, Android/iOS native projects, service deployments, environment requirements, version policy, OTA behavior, push/native permissions, and store artifacts. Run a Context Pack for the exact script/config/package before editing; the pack always exposes all five application surfaces and direct graph evidence for the target.
+
+## Physical Android Device Operations
+
+See [Android Remote Access Setup](./android-remote-access.md) for the documented developer-device configuration and its operational constraints.

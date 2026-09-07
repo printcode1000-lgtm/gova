@@ -28,7 +28,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `home` | feature | 2 | 0 | 1 | 0 | 0 | 4 |
 | `location` | feature | 1 | 0 | 3 | 0 | 2 | 0 |
 | `navigation` | feature | 1 | 0 | 0 | 0 | 0 | 4 |
-| `network` | feature | 1 | 0 | 0 | 0 | 0 | 3 |
+| `network` | feature | 1 | 1 | 0 | 0 | 0 | 3 |
 | `notifications` | feature | 3 | 31 | 43 | 0 | 10 | 13 |
 | `onboarding` | feature | 1 | 0 | 0 | 0 | 1 | 9 |
 | `orders` | feature | 1 | 1 | 9 | 0 | 1 | 13 |

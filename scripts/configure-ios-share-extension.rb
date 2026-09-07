@@ -40,6 +40,7 @@ extension_target.build_configurations.each do |configuration|
   settings["IPHONEOS_DEPLOYMENT_TARGET"] = "15.0"
   settings["MARKETING_VERSION"] = "0.2.3"
   settings["PRODUCT_BUNDLE_IDENTIFIER"] = "hgh.asol.app.ShareExtension"
+  settings["PRODUCT_NAME"] = "$(TARGET_NAME)"
   settings["SKIP_INSTALL"] = "YES"
   settings["SWIFT_VERSION"] = "5.0"
   settings["TARGETED_DEVICE_FAMILY"] = "1,2"

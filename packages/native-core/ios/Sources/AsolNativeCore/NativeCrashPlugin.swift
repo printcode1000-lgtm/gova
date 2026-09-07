@@ -81,6 +81,10 @@ public class NativeCrashPlugin: CAPPlugin, CAPBridgedPlugin {
     }
 }
 
+private func asolHandleUncaughtException(_ exception: NSException) {
+    NativeCrashReporter.handleUncaughtException(exception)
+}
+
 enum NativeCrashReporter {
     private static var installed = false
     private static var previousHandler: (@convention(c) (NSException) -> Void)?
@@ -89,17 +93,17 @@ enum NativeCrashReporter {
         guard !installed else { return }
         installed = true
         previousHandler = NSGetUncaughtExceptionHandler()
-        NSSetUncaughtExceptionHandler { exception in
-            record(
-                operation: "uncaught-exception",
-                name: exception.name.rawValue,
-                message: exception.reason ?? "Native crash",
-                stack: exception.callStackSymbols.joined(separator: "\n")
-            )
-            if let previousHandler {
-                previousHandler(exception)
-            }
-        }
+        NSSetUncaughtExceptionHandler(asolHandleUncaughtException)
+    }
+
+    fileprivate static func handleUncaughtException(_ exception: NSException) {
+        record(
+            operation: "uncaught-exception",
+            name: exception.name.rawValue,
+            message: exception.reason ?? "Native crash",
+            stack: exception.callStackSymbols.joined(separator: "\n")
+        )
+        previousHandler?(exception)
     }
 
     static func record(operation: String, name: String, message: String, stack: String) {

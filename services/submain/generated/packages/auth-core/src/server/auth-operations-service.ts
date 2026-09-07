@@ -36,6 +36,7 @@ export class AuthOperationsService {
       phone,
       email,
       password: hashedPassword,
+      providerAccountEnabled: false,
       lastLoginAt: null,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -69,6 +70,7 @@ export class AuthOperationsService {
       uid: user.uid,
       phone: user.phone,
       email: user.email ?? '',
+      providerAccountEnabled: user.providerAccountEnabled,
       specialties: specialtySelection,
       sessionToken: createSignedSessionToken(user.uid, user.phone),
     };
@@ -103,8 +105,10 @@ export class AuthOperationsService {
       if (existing && existing.uid !== input.uid) throw new Error('emailAlreadyRegistered');
     }
 
+    const providerAccountEnabled = input.providerAccountEnabled ?? user.providerAccountEnabled;
+
     try {
-      await this.users.update(input.uid, { phone, email });
+      await this.users.update(input.uid, { phone, email, providerAccountEnabled });
     } catch (error) {
       if (email) {
         const existing = await this.users.getByEmail(email);
@@ -115,7 +119,7 @@ export class AuthOperationsService {
       throw error;
     }
 
-    return { uid: input.uid, phone, email };
+    return { uid: input.uid, phone, email, providerAccountEnabled };
   }
 
   async getUserPhone(uid: string): Promise<string | null> {

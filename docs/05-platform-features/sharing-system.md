@@ -124,6 +124,7 @@ accidentally importing server services through the normal module barrel.
 |---|---|
 | `android/app/src/main/AndroidManifest.xml` | Verified HTTPS intent filters for the two public paths. |
 | `ios/App/App/App.entitlements` | iOS `applinks:` associated-domain entitlement. |
+| `ios/ShareExtension/` + `ios/App/App.xcodeproj/project.pbxproj` | Native share-extension source and Xcode target; the target product name remains `ShareExtension` so Xcode produces `ShareExtension.appex`. |
 | `packages/native-core/src/adapters/app.adapter.ts` | Thin Capacitor `App.getLaunchUrl()` adapter. |
 | `packages/native-core/src/api/native-core.api.ts` | Platform-neutral `NativeCore.onAppUrlOpen()` API. |
 | `src/app/layout.tsx` | Global controller mount and public metadata base. |

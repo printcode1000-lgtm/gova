@@ -50,6 +50,14 @@ const { session, isLoggedIn, isLoading, setSession } = useSessionRuntime();
 
 const superAdmin = isSuperAdminSession(session);
 
+const [providerAccountEnabled, setProviderAccountEnabled] = React.useState(
+  session?.providerAccountEnabled === true,
+);
+
+React.useEffect(() => {
+  setProviderAccountEnabled(session?.providerAccountEnabled === true);
+}, [session?.providerAccountEnabled, session?.uid]);
+
 const searchParams = useSearchParams();
 
 const mode = searchParams.get("mode");
@@ -126,6 +134,11 @@ const {
     isLoggedIn,
     userId: session?.uid,
   });
+
+React.useEffect(() => {
+  if (!showEditCard || providerAccountEnabled || activeTab === "registration") return;
+  selectSection("registration");
+}, [activeTab, providerAccountEnabled, selectSection, showEditCard]);
 
 const {
     sectionStatuses,
@@ -358,7 +371,7 @@ const earlyView = isLoading ? (
       </div>
     ) : null;
 
-return { initialPublicProfile, t, locale, router, session, isLoggedIn, isLoading, setSession, superAdmin, searchParams, mode, uid, isViewingOtherProfile, showEditCard, showPreviewCard, matchingInitialProfile, storeImages, isLoadingStoreImages, storeDetails, isLoadingStoreDetails, previewUid, isPreviewOwner, previewContacts, isLoadingPreviewContacts, previewFulfillment, isLoadingPreviewFulfillment, registrationRef, specialtiesRef, productsRef, contactsRef, storeRef, workingHoursRef, fulfillmentRef, discountsRef, activeTab, carouselHeight, animateCarouselHeight, carouselRef, tabsScrollRef, panelRefs, navButtonRefs, activeSectionIndex, handleCarouselScroll, selectSection, resyncScrollToActiveTab, goToAdjacentSection, sectionStatuses, saveError, isUnifiedSaving,  handleRegistrationStatus, handleSpecialtiesStatus, handleProductsStatus, handleContactStatus, handleStoreStatus, handleWorkingHoursStatus, handleFulfillmentStatus, handleDiscountsStatus, handleSaveChangedSections,  editSnapshotReady, restoreEditSnapshot, restoredEditSnapshotRef, featuredProducts, setFeaturedProducts, isLoadingFeaturedProducts, setIsLoadingFeaturedProducts, heroSliderConfig, profileFeaturedConfig, profileTrendingConfig, dirtySections, dirtyLabels, isSaveBlocked, saveProfileChanges, earlyView };
+return { initialPublicProfile, t, locale, router, session, isLoggedIn, isLoading, setSession, superAdmin, providerAccountEnabled, setProviderAccountEnabled, searchParams, mode, uid, isViewingOtherProfile, showEditCard, showPreviewCard, matchingInitialProfile, storeImages, isLoadingStoreImages, storeDetails, isLoadingStoreDetails, previewUid, isPreviewOwner, previewContacts, isLoadingPreviewContacts, previewFulfillment, isLoadingPreviewFulfillment, registrationRef, specialtiesRef, productsRef, contactsRef, storeRef, workingHoursRef, fulfillmentRef, discountsRef, activeTab, carouselHeight, animateCarouselHeight, carouselRef, tabsScrollRef, panelRefs, navButtonRefs, activeSectionIndex, handleCarouselScroll, selectSection, resyncScrollToActiveTab, goToAdjacentSection, sectionStatuses, saveError, isUnifiedSaving,  handleRegistrationStatus, handleSpecialtiesStatus, handleProductsStatus, handleContactStatus, handleStoreStatus, handleWorkingHoursStatus, handleFulfillmentStatus, handleDiscountsStatus, handleSaveChangedSections,  editSnapshotReady, restoreEditSnapshot, restoredEditSnapshotRef, featuredProducts, setFeaturedProducts, isLoadingFeaturedProducts, setIsLoadingFeaturedProducts, heroSliderConfig, profileFeaturedConfig, profileTrendingConfig, dirtySections, dirtyLabels, isSaveBlocked, saveProfileChanges, earlyView };
 }
 
 

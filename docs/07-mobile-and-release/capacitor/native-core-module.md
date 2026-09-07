@@ -89,7 +89,7 @@ Gradle package builds (`android:build:debug`, `release:android`, `android:r8:ver
 ### Where the native code is wired in
 
 - **Android** — `packages/native-core/android` is a Gradle library module, registered as `include ':native-core'` in `android/settings.gradle` and consumed by `implementation project(':native-core')` in `android/app/build.gradle`. `MainActivity` is a thin delegate over `AsolNativeCore`.
-- **iOS** — `packages/native-core/ios` is a Swift package (`AsolNativeCore`), reached through the Capacitor SPM aggregator: `ios/App/CapApp-SPM/Package.swift` declares it as a local `.package(path:)` dependency and links its product into the target. The Xcode project references only the aggregator. There must be exactly one copy of each Swift plugin — duplicates in `ios/App/App/` mean the package is not the compiled source.
+- **iOS** — `packages/native-core/ios` is a Swift package (`AsolNativeCore`), reached through the Capacitor SPM aggregator. Capacitor regenerates `ios/App/CapApp-SPM/Package.swift` during `cap sync`, so `npm run ios:spm:normalize` immediately restores the local `AsolNativeCore` package and product dependencies after every sync. The Xcode project references only the aggregator. There must be exactly one copy of each Swift plugin — duplicates in `ios/App/App/` mean the package is not the compiled source.
 
 ---
 
@@ -126,6 +126,6 @@ window.dispatchEvent(new CustomEvent('asol:native-crash', { detail: { name, mess
 Android: `NativeCrashPlugin.java`, `NativeCrashReporter.java`, registered in
 `AsolNativeCore.onPreCreate`.
 
-iOS: `NativeCrashPlugin.swift`, handler installed in `AsolNativeCore.application`.
+iOS: `NativeCrashPlugin.swift`, handler installed in `AsolNativeCore.application`. The uncaught-exception callback is a file-level non-capturing function so it remains compatible with Foundation's C function-pointer contract under current Xcode/Swift compilers.
 
 This suite runs inside `build`, `build:static`, `npm test`, and the `native-core` GitHub workflow, so a breaking edit fails the release path rather than surfacing on a device.

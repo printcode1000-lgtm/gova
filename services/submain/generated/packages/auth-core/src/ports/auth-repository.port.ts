@@ -5,6 +5,7 @@ export interface AuthUserRecord {
   phone: string;
   email: string | null;
   password: string;
+  providerAccountEnabled: boolean;
 }
 
 export interface AuthUserRepositoryPort {
@@ -13,6 +14,7 @@ export interface AuthUserRepositoryPort {
     phone: string;
     email: string | null;
     password: string;
+    providerAccountEnabled: boolean;
     lastLoginAt: string | null;
     createdAt: string;
     updatedAt: string;
@@ -21,7 +23,7 @@ export interface AuthUserRepositoryPort {
   getByPhone(phone: string): Promise<AuthUserRecord | null>;
   getByUid(uid: string): Promise<AuthUserRecord | null>;
   getByEmail(email: string): Promise<AuthUserRecord | null>;
-  update(uid: string, patch: { phone?: string; email?: string; password?: string }): Promise<void>;
+  update(uid: string, patch: { phone?: string; email?: string; password?: string; providerAccountEnabled?: boolean }): Promise<void>;
   updateLastLogin(uid: string): Promise<void>;
 }
 

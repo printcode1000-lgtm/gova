@@ -12,6 +12,7 @@ export interface LoginResult {
   uid: string;
   phone: string;
   email: string;
+  providerAccountEnabled: boolean;
   specialties: ProfileSpecialtiesSelection;
   sessionToken: string;
 }

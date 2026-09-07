@@ -20,12 +20,14 @@ import { foldPasswordDigits } from "@asol/auth-core";
 
 interface ProfileRegistrationInfoCardProps {
   onStatusChange?: (status: ProfileSectionStatus) => void;
+  providerAccountEnabled: boolean;
+  onProviderAccountEnabledChange: (enabled: boolean) => void;
 }
 
 export const ProfileRegistrationInfoCard = React.forwardRef<
   ProfileRegistrationController,
   ProfileRegistrationInfoCardProps
->(function ProfileRegistrationInfoCard({ onStatusChange }, ref) {
+>(function ProfileRegistrationInfoCard({ onStatusChange, providerAccountEnabled, onProviderAccountEnabledChange }, ref) {
   const { t } = useTranslation();
   const {
     form,
@@ -44,7 +46,6 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
   const { details: storeDetails, updateField } = useStoreDetails();
   const [isPasswordOpen, setIsPasswordOpen] = React.useState(false);
   const [isProviderAccountOpen, setIsProviderAccountOpen] = React.useState(false);
-  const [isProviderAccountEnabled, setIsProviderAccountEnabled] = React.useState(false);
   const label = t("onboarding.contactInfo.primaryContact");
 
   React.useImperativeHandle(
@@ -289,8 +290,11 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
                   </div>
                   <Switch
                     id='features-profile-presentation-profileregistrationinfocard-switch-44-k5p2zr'
-                    checked={isProviderAccountEnabled}
-                    onCheckedChange={setIsProviderAccountEnabled}
+                    checked={providerAccountEnabled}
+                    onCheckedChange={(enabled) => {
+                      updateRegistrationField("providerAccountEnabled", enabled);
+                      onProviderAccountEnabledChange(enabled);
+                    }}
                     aria-label={t("profile.providerAccount.toggleLabel")}
                   />
                 </div>

@@ -24,8 +24,8 @@ export function useProfileRegistration() {
   const { session, setSession } = useSession();
   const uid = session?.uid ?? '';
   const initialForm = useMemo(
-    () => toProfileFormData({ phone: session?.phone, email: session?.email }),
-    [session?.phone, session?.email],
+    () => toProfileFormData({ phone: session?.phone, email: session?.email, providerAccountEnabled: session?.providerAccountEnabled }),
+    [session?.phone, session?.email, session?.providerAccountEnabled],
   );
 
   const [form, setForm] = useState<ProfileFormData>(initialForm);
@@ -54,6 +54,7 @@ export function useProfileRegistration() {
       uid: profile.uid,
       phone: profile.phone,
       email: profile.email ?? undefined,
+      providerAccountEnabled: profile.providerAccountEnabled,
       specialties: session?.specialties,
       sessionToken: session?.sessionToken,
     });
@@ -73,6 +74,7 @@ export function useProfileRegistration() {
         uid,
         phone: data.phone,
         email: data.email ?? '',
+        providerAccountEnabled: data.providerAccountEnabled,
         currentPassword: data.newPassword ? data.currentPassword : undefined,
         newPassword: data.newPassword || undefined,
         sessionToken: session.sessionToken,

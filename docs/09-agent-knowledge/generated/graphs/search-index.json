@@ -12017,8 +12017,11 @@
         "entitlements",
         "in",
         "install-banner",
+        "ios/app/app",
+        "ios/app/app.xcodeproj/project.pbxproj",
         "ios/app/app/app",
         "ios/app/app/app.entitlements",
+        "ios/shareextension/",
         "is",
         "json/route",
         "location",
@@ -12030,6 +12033,7 @@
         "packages/native-core/src/adapters/app.adapter.ts",
         "packages/native-core/src/api/native-core",
         "packages/native-core/src/api/native-core.api.ts",
+        "pbxproj",
         "product",
         "public-profile",
         "rich-preview",
@@ -12055,6 +12059,7 @@
         "tsx",
         "well-known/apple-app-site-association/route",
         "well-known/assetlinks",
+        "xcodeproj/project",
         "xml"
       ]
     },
@@ -12878,6 +12883,53 @@
         "tsx",
         "ui",
         "user",
+        "with"
+      ]
+    },
+    {
+      "id": "document:docs/07-mobile-and-release/android-remote-access.md",
+      "kind": "document",
+      "name": "Android Remote Access and Control",
+      "path": "docs/07-mobile-and-release/android-remote-access.md",
+      "summary": "This document is the complete operating reference for the physical OPPO Android device used with Gova. It explains how the device is reached, viewed, controlled, recovered, and kept reachable when its Wi-Fi IP changes.",
+      "tags": [
+        "access",
+        "and",
+        "android",
+        "android remote access and control",
+        "changes",
+        "complete",
+        "control",
+        "controlled",
+        "device",
+        "docs/07-mobile-and-release/android-remote-access",
+        "docs/07-mobile-and-release/android-remote-access.md",
+        "document",
+        "explains",
+        "for",
+        "gova",
+        "how",
+        "ip",
+        "is",
+        "it",
+        "its",
+        "kept",
+        "md",
+        "operating",
+        "oppo",
+        "physical",
+        "reachable",
+        "reached",
+        "recovered",
+        "reference",
+        "remote",
+        "the",
+        "this",
+        "this document is the complete operating reference for the physical oppo android device used with gova. it explains how the device is reached, viewed, controlled, recovered, and kept reachable when its wi-fi ip changes.",
+        "used",
+        "viewed",
+        "when",
+        "wi-fi",
         "with"
       ]
     },
@@ -46812,6 +46864,17 @@
       ]
     },
     {
+      "id": "source:src/features/network/presentation/network-status-copy.ts",
+      "kind": "source",
+      "name": "network-status-copy.ts",
+      "path": "src/features/network/presentation/network-status-copy.ts",
+      "tags": [
+        "src/features/network/presentation/network-status-copy",
+        "src/features/network/presentation/network-status-copy.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/network/presentation/NetworkStatusBanner.tsx",
       "kind": "source",
       "name": "NetworkStatusBanner.tsx",
@@ -55987,6 +56050,18 @@
       "tags": [
         "src/features/follow/tests/follower-notification",
         "src/features/follow/tests/follower-notification.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/features/network/tests/network-status-copy.test.ts",
+      "kind": "test",
+      "name": "network-status-copy.test.ts",
+      "path": "src/features/network/tests/network-status-copy.test.ts",
+      "tags": [
+        "src/features/network/tests/network-status-copy",
+        "src/features/network/tests/network-status-copy.test.ts",
         "test",
         "ts"
       ]

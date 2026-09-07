@@ -2,12 +2,14 @@ export interface UserProfile {
   uid: string;
   phone: string;
   email: string;
+  providerAccountEnabled: boolean;
 }
 
 export interface UpdateProfileInput {
   uid: string;
   phone: string;
   email: string;
+  providerAccountEnabled?: boolean;
   currentPassword?: string;
   newPassword?: string;
   sessionToken: string;
@@ -17,6 +19,7 @@ export interface LoginResult {
   uid: string;
   phone: string;
   email: string;
+  providerAccountEnabled: boolean;
   specialties: ProfileSpecialtiesSelection;
   sessionToken: string;
 }

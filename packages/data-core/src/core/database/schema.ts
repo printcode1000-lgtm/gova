@@ -7,6 +7,7 @@ export const users = sqliteTable('users', {
   // All writes normalize email to lowercase; UNIQUE allows multiple NULL values.
   email: text('email').unique(),
   password: text('password').notNull(),
+  providerAccountEnabled: integer('provider_account_enabled', { mode: 'boolean' }).notNull().default(false),
   lastLoginAt: text('last_login_at'),
   createdAt: text('created_at').$defaultFn(() => new Date().toISOString()),
   updatedAt: text('updated_at').$defaultFn(() => new Date().toISOString()),

@@ -4,6 +4,7 @@ export interface User {
   phone: string;
   email?: string | null;
   password?: string;
+  providerAccountEnabled?: boolean;
   last_login_at?: string | null;
   created_at?: string | null;
   updated_at?: string | null;

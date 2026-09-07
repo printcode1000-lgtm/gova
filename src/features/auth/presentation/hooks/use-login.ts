@@ -30,7 +30,7 @@ export function useLogin() {
     mutationFn: async (data: LoginFormData) => {
       const result = await authService.login(data);
       if (!result.uid?.trim() || !result.phone?.trim() || !result.sessionToken?.trim()) throw new Error('invalidLoginResponse');
-      return sessionService.saveSession({ uid: result.uid, phone: result.phone, email: result.email || undefined, specialties: result.specialties, sessionToken: result.sessionToken });
+      return sessionService.saveSession({ uid: result.uid, phone: result.phone, email: result.email || undefined, providerAccountEnabled: result.providerAccountEnabled, specialties: result.specialties, sessionToken: result.sessionToken });
     },
     meta: authMonitorMeta('useLogin', 'LoginPageContent', 'Login', 'UPDATE'),
     onSuccess: (session) => {

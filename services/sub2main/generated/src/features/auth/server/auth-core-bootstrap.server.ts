@@ -25,12 +25,14 @@ function toAuthUserRecord(user: {
   phone: string;
   email?: string | null;
   password?: string;
+  providerAccountEnabled?: boolean;
 }): AuthUserRecord {
   return {
     uid: user.uid,
     phone: user.phone,
     email: user.email ?? null,
     password: user.password ?? '',
+    providerAccountEnabled: user.providerAccountEnabled ?? false,
   };
 }
 

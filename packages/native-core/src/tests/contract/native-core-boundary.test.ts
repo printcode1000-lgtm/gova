@@ -9,6 +9,7 @@
  */
 
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import * as publicApi from "../../index";
 
 // 1. Exports NativeCore facade
@@ -152,7 +153,18 @@ for (const id of publicApi.FROZEN_CHANNEL_IDS) {
 // 12. Sound invariant
 assert.ok(/custom_notification/.test(publicApi.DEFAULT_CHANNEL_SOUND), "Sound must contain custom_notification");
 
-// 13. Zero raw adapter exports
+// 13. Capacitor SPM repair invariant
+const spmRepair = readFileSync("packages/native-core/scripts/normalize-capacitor-spm-paths.ts", "utf8");
+const capAppSpm = readFileSync("ios/App/CapApp-SPM/Package.swift", "utf8");
+for (const required of [
+  '.package(name: "AsolNativeCore", path: "../../../packages/native-core/ios")',
+  '.product(name: "AsolNativeCore", package: "AsolNativeCore")',
+]) {
+  assert.ok(spmRepair.includes(required), `SPM repair must preserve ${required}`);
+  assert.ok(capAppSpm.includes(required), `CapApp-SPM must contain ${required}`);
+}
+
+// 14. Zero raw adapter exports
 const forbiddenAdapters = [
   "cameraAdapter", "filesAdapter", "shareAdapter", "statusBarAdapter",
   "clipboardAdapter", "speechAdapter", "notificationsAdapter",
