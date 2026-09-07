@@ -2,7 +2,7 @@ import {
   EMPTY_PROFILE_SPECIALTIES,
   type ProfileSpecialtiesSelection,
 } from '@asol/data-core/profile/entities';
-import { formatPhoneInternational } from '@asol/auth-core';
+import { formatPhoneInternational, readUnsignedSessionTokenUid } from '@asol/auth-core';
 
 /** Logged-in user session — persisted in AsolDB (auth store, key: current). */
 export interface UserSession {
@@ -30,6 +30,14 @@ export function isLoggedIn(session: SessionState): boolean {
   return session !== null && !!session.uid;
 }
 
+export function isSessionTokenUidConsistent(
+  uid: string,
+  sessionToken?: string,
+): boolean {
+  if (!sessionToken) return true;
+  return readUnsignedSessionTokenUid(sessionToken) === uid.trim();
+}
+
 export function parseStoredSession(raw: unknown): UserSession | null {
   if (!raw || typeof raw !== 'object') return null;
 
@@ -49,6 +57,7 @@ export function parseStoredSession(raw: unknown): UserSession | null {
     typeof record.sessionToken === 'string' && record.sessionToken.trim()
       ? record.sessionToken.trim()
       : undefined;
+  if (!isSessionTokenUidConsistent(uid, sessionToken)) return null;
   const specialties =
     rawSpecialties && typeof rawSpecialties === 'object'
       ? (rawSpecialties as ProfileSpecialtiesSelection)

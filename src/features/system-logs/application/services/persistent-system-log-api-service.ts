@@ -36,7 +36,6 @@ export class PersistentSystemLogApiService {
       input,
       { suppressErrorLog: true },
     );
-    notifySystemLogsChanged();
     return result;
   }
 
@@ -46,7 +45,6 @@ export class PersistentSystemLogApiService {
       inputs,
       { suppressErrorLog: true },
     );
-    notifySystemLogsChanged();
     return result;
   }
 

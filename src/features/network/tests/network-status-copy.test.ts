@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 
 import type { AppRuntimeContext } from '@/core/config';
+import { isExpectedNetworkCheckAbort } from '../application/network-check-error';
 import {
   resolveNetworkDisplayEnvironment,
   restoredMessageKey,
@@ -55,3 +56,9 @@ assert.equal(restoredMessageKey('offline', 'web'), 'network.networkAndServerRest
 assert.equal(restoredMessageKey('server-unreachable', 'development'), 'network.serverRestored.development');
 assert.equal(restoredMessageKey('server-unreachable', 'android'), 'network.serverRestored');
 assert.equal(restoredMessageKey('check-failed', 'ios'), 'network.checkRestored');
+
+const aborted = new Error('signal is aborted without reason');
+aborted.name = 'AbortError';
+assert.equal(isExpectedNetworkCheckAbort(aborted), true);
+assert.equal(isExpectedNetworkCheckAbort(new Error('server unavailable')), false);
+assert.equal(isExpectedNetworkCheckAbort('AbortError'), false);

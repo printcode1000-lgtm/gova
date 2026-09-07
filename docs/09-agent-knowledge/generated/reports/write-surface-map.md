@@ -178,7 +178,7 @@ Unproven gateway paths: **147**
 | `packages/storage-image-manager-core/src/services/image-upload-draft-service.ts` | `@asol/storage-image-manager-core` | delete, patch, upload | `@asol/data-core, @asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/storage-image-manager-core/src/services/image-upload-queue.ts` | `@asol/storage-image-manager-core` | delete, upload | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/storage-image-manager-core/src/services/local-first-image-cache.ts` | `@asol/storage-image-manager-core` | delete | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
-| `packages/storage-image-manager-core/src/tests/index.test.ts` | `@asol/storage-image-manager-core` | upload | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
+| `packages/storage-image-manager-core/src/tests/index.test.ts` | `@asol/storage-image-manager-core` | create, upload | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/sub2main-composition/src/index.ts` | `@asol/sub2main-composition` | create, delete, update | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/submain-composition/src/index.ts` | `@asol/submain-composition` | delete | `@asol/data-core, @asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/system-logs-core/src/browser/memory-store.ts` | `@asol/system-logs-core` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |

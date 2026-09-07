@@ -16,6 +16,7 @@ import {
   buildStorageImageCacheKey,
   isRemoteStorageImageUrl,
   resolveLocalFirstStorageImage,
+  shouldRetryFailedLocalFirstImage,
 } from "../services/local-first-image-cache";
 
 function deferred<T>() {
@@ -240,6 +241,47 @@ function testRemoteImageRenderingBypassIsClosed(root: string) {
   assert.doesNotMatch(managerPreviewSource, /<img[\s\S]{0,160}src=\{(?:imageUrl|uploadedImage\?\.url)/);
 }
 
+function testLocalFirstImageRenderRecoveryPolicy() {
+  assert.equal(
+    shouldRetryFailedLocalFirstImage({
+      remote: true,
+      isResolving: false,
+      cacheSource: "asoldb",
+      retryAttempt: 0,
+    }),
+    true,
+  );
+  assert.equal(
+    shouldRetryFailedLocalFirstImage({
+      remote: true,
+      isResolving: false,
+      cacheSource: "network",
+      retryAttempt: 1,
+    }),
+    false,
+    "render recovery is bounded to one retry",
+  );
+  assert.equal(
+    shouldRetryFailedLocalFirstImage({
+      remote: true,
+      isResolving: false,
+      cacheSource: "fallback",
+      retryAttempt: 0,
+    }),
+    false,
+    "the local placeholder is terminal and must not create a retry loop",
+  );
+  assert.equal(
+    shouldRetryFailedLocalFirstImage({
+      remote: false,
+      isResolving: false,
+      cacheSource: "local",
+      retryAttempt: 0,
+    }),
+    false,
+  );
+}
+
 function testLocalFirstImageCacheIdentity() {
   assert.equal(isRemoteStorageImageUrl("https://cdn.example.com/a.webp"), true);
   assert.equal(isRemoteStorageImageUrl("http://localhost/a.webp"), true);
@@ -266,6 +308,7 @@ async function main() {
   await testQueuedCancellationAndDeduplication();
   testDraftIdentityAndFileRestoration();
   testLocalFirstImageCacheIdentity();
+  testLocalFirstImageRenderRecoveryPolicy();
   await testRemoteImageFailureNeverReturnsCloudUrl();
   const root = process.cwd();
   testRemoteImageRenderingBypassIsClosed(root);

@@ -23,6 +23,20 @@ export interface LocalFirstStorageImageResult {
   cacheKey?: string;
 }
 
+export function shouldRetryFailedLocalFirstImage(input: {
+  remote: boolean;
+  isResolving: boolean;
+  cacheSource: StorageImageCacheSource;
+  retryAttempt: number;
+}): boolean {
+  return (
+    input.remote &&
+    !input.isResolving &&
+    input.cacheSource !== "fallback" &&
+    input.retryAttempt === 0
+  );
+}
+
 const memory = new Map<string, AsolImageCacheRecord>();
 const inFlight = new Map<string, Promise<LocalFirstStorageImageResult>>();
 

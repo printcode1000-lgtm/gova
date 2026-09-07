@@ -12,7 +12,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `account-bridge` | feature | 1 | 0 | 2 | 0 | 0 | 2 |
 | `advertisements` | feature | 2 | 2 | 17 | 0 | 4 | 13 |
 | `app-reset` | feature | 1 | 0 | 5 | 0 | 2 | 2 |
-| `auth` | feature | 2 | 4 | 117 | 0 | 22 | 15 |
+| `auth` | feature | 2 | 5 | 117 | 0 | 22 | 15 |
 | `cart` | feature | 1 | 4 | 8 | 0 | 5 | 11 |
 | `catalog-studio` | feature | 2 | 1 | 3 | 0 | 0 | 7 |
 | `categories` | feature | 4 | 0 | 43 | 0 | 13 | 7 |
@@ -58,7 +58,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/account-declarations` | package | 14 | 9 | 21 | 0 | 37 | 0 |
 | `@asol/api-contract-core` | package | 4 | 1 | 140 | 0 | 24 | 0 |
 | `@asol/architecture-core` | package | 17 | 7 | 0 | 0 | 9 | 8 |
-| `@asol/auth-core` | package | 11 | 5 | 142 | 0 | 102 | 3 |
+| `@asol/auth-core` | package | 11 | 5 | 142 | 0 | 100 | 3 |
 | `@asol/backup-core` | package | 7 | 2 | 140 | 0 | 11 | 3 |
 | `@asol/branding-core` | package | 12 | 1 | 49 | 0 | 8 | 1 |
 | `@asol/catalog-core` | package | 8 | 1 | 13 | 0 | 17 | 1 |

@@ -16,7 +16,7 @@ export interface LocalFirstStorageImageSource {
 
 export function useLocalFirstStorageImageSource(
   sourceUrl: string | null | undefined,
-  options: { cacheKey?: string; maxAgeMs?: number } = {},
+  options: { cacheKey?: string; maxAgeMs?: number; refreshToken?: number } = {},
 ): LocalFirstStorageImageSource {
   const remote = isRemoteStorageImageUrl(sourceUrl);
   const [state, setState] = React.useState<LocalFirstStorageImageSource>(() => ({
@@ -38,7 +38,10 @@ export function useLocalFirstStorageImageSource(
       isResolving: true,
       cacheSource: "local",
     });
-    void resolveLocalFirstStorageImage(sourceUrl, options).then((result) => {
+    void resolveLocalFirstStorageImage(sourceUrl, {
+      ...(options.cacheKey ? { cacheKey: options.cacheKey } : {}),
+      ...(options.maxAgeMs !== undefined ? { maxAgeMs: options.maxAgeMs } : {}),
+    }).then((result) => {
       if (!active) return;
       if (result.blob) {
         objectUrl = URL.createObjectURL(result.blob);
@@ -63,7 +66,7 @@ export function useLocalFirstStorageImageSource(
       active = false;
       if (objectUrl) URL.revokeObjectURL(objectUrl);
     };
-  }, [sourceUrl, options.cacheKey, options.maxAgeMs]);
+  }, [sourceUrl, options.cacheKey, options.maxAgeMs, options.refreshToken]);
 
   return state;
 }

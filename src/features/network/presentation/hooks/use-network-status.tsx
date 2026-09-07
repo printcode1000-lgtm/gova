@@ -11,8 +11,14 @@ import {
   type ReactNode,
 } from 'react';
 
+import { isExpectedNetworkCheckAbort } from '../../application/network-check-error';
 import { networkApiService } from '../../application/services/network-api-service';
+import { registerBrowserPorts } from '@/core/composition/browser-ports';
 import { reportPreAuthFailure } from '@/features/system-logs';
+
+// The health check goes through AsolApiClient's fail-closed local-read gateway.
+// Register browser ports in this client boundary before the first startup effect can run.
+registerBrowserPorts();
 
 export type NetworkStatus =
   | 'checking'

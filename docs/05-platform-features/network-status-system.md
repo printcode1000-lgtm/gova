@@ -78,6 +78,8 @@ It checks connectivity:
 
 Only one health check is active at a time. Starting a new check aborts the previous request. A sequence counter prevents an older response from overwriting a newer state.
 
+The provider module registers the browser composition ports before its first effect. This is required because `AsolApiClient` fails closed when its browser local-read gateway has not been composed yet; the startup health check must never race another client boundary's registration.
+
 The provider also stops its timer, removes browser listeners, and aborts pending work when it unmounts.
 
 ## Health Endpoint
@@ -203,7 +205,7 @@ Valid HTTP error responses continue to use `ApiError` with their original status
 
 ### Aborted requests
 
-`AbortError` is passed through unchanged. Aborting an old health check is expected behavior and must not change the global status.
+`AbortError` is passed through unchanged. Aborting an old health check is expected behavior and must not change the global status or be persisted as a `startup-network-health-check` failure. This remains true when a shared query promise delivers the cancellation to a newer check whose own `AbortSignal` was not aborted.
 
 ### Logging
 

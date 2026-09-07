@@ -16,10 +16,14 @@ type Context = { admin: SignedSessionClaims };
 /** The JSON variant has already parsed the body, so it is present, not optional. */
 type JsonContext<TBody> = Context & { body: TBody };
 
-function authorized(request: Request): SignedSessionClaims {
-  const claims = verifySignedSessionToken(extractSessionToken(request));
+export function assertControlSuperAdminToken(token: string): SignedSessionClaims {
+  const claims = verifySignedSessionToken(token);
   if (!isSuperAdminIdentity(claims.uid, claims.phone)) throw new Error('forbidden');
   return claims;
+}
+
+export function assertControlSuperAdminRequest(request: Request): SignedSessionClaims {
+  return assertControlSuperAdminToken(extractSessionToken(request));
 }
 
 /**
@@ -39,7 +43,7 @@ function failure(error: unknown, request?: Request): Response {
 
 export async function runControlSuperAdminRoute<T>(request: Request, handler: (context: Context) => Awaitable<T | Response>): Promise<Response> {
   try {
-    const result = await handler({ admin: authorized(request) });
+    const result = await handler({ admin: assertControlSuperAdminRequest(request) });
     return result instanceof Response
       ? withControlCors(request, result)
       : controlJson(result, 200, request);
@@ -48,7 +52,7 @@ export async function runControlSuperAdminRoute<T>(request: Request, handler: (c
 
 export async function runControlSuperAdminJsonRoute<TBody, TResult>(request: Request, handler: (context: JsonContext<TBody>) => Awaitable<TResult | Response>): Promise<Response> {
   try {
-    const admin = authorized(request);
+    const admin = assertControlSuperAdminRequest(request);
     const body = await readJsonContractBody<TBody>(request);
     const result = await handler({ admin, body });
     return result instanceof Response

@@ -4,8 +4,7 @@ import { jsonContractResponse } from '@asol/api-contract-core/server';
 
 import { createSseStream, isIngestRateLimited, normalizeIngestPayload, persistentSystemLogService, readBoundedJsonBody, validateIngestBatchSize } from '@asol/system-logs-core/server';
 import { registerControlSystemLogPersistence } from '@/features/system-logs/server/control-persistence.server';
-import { extractSessionToken, verifySignedSessionToken } from '@asol/auth-core/session';
-import { isSuperAdminIdentity } from '@asol/auth-core/super-admin';
+import { assertControlSuperAdminToken } from './super-admin-route';
 import { businessApiErrorStatus } from '@/core/api/business-api-error-status';
 
 registerControlSystemLogPersistence();
@@ -15,8 +14,7 @@ export { createSseStream, isIngestRateLimited, normalizeIngestPayload, persisten
 export function assertControlSystemLogAccess(request: Request): void {
   const url = new URL(request.url);
   const token = request.headers.get('x-asol-session-token')?.trim() ?? url.searchParams.get('sessionToken')?.trim() ?? '';
-  const claims = verifySignedSessionToken(token);
-  if (!isSuperAdminIdentity(claims.uid, claims.phone)) throw new Error('forbidden');
+  assertControlSuperAdminToken(token);
 }
 
 /**

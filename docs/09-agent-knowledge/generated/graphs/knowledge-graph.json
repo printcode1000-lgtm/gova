@@ -12762,6 +12762,8 @@
         "log",
         "logs",
         "md",
+        "services/control/src/control/super-admin-route",
+        "services/control/src/control/super-admin-route.ts",
         "src/app/global-error",
         "src/app/global-error.tsx",
         "src/core/api/expected-business-error-codes",
@@ -29594,6 +29596,17 @@
       "tags": [
         "packages/auth-core/src/domain/phone",
         "packages/auth-core/src/domain/phone.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/auth-core/src/domain/session-token-claims.ts",
+      "kind": "source",
+      "name": "session-token-claims.ts",
+      "path": "packages/auth-core/src/domain/session-token-claims.ts",
+      "tags": [
+        "packages/auth-core/src/domain/session-token-claims",
+        "packages/auth-core/src/domain/session-token-claims.ts",
         "ts"
       ]
     },
@@ -46827,6 +46840,17 @@
       "tags": [
         "src/features/navigation/ui",
         "src/features/navigation/ui.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/network/application/network-check-error.ts",
+      "kind": "source",
+      "name": "network-check-error.ts",
+      "path": "src/features/network/application/network-check-error.ts",
+      "tags": [
+        "src/features/network/application/network-check-error",
+        "src/features/network/application/network-check-error.ts",
         "ts"
       ]
     },
@@ -74211,6 +74235,12 @@
     },
     {
       "from": "document:docs/06-super-admin-and-operations/super-admin-live-logs.md",
+      "to": "source:services/control/src/control/super-admin-route.ts",
+      "kind": "references",
+      "detail": "services/control/src/control/super-admin-route.ts"
+    },
+    {
+      "from": "document:docs/06-super-admin-and-operations/super-admin-live-logs.md",
       "to": "source:src/app/global-error.tsx",
       "kind": "references",
       "detail": "src/app/global-error.tsx"
@@ -79633,6 +79663,12 @@
     {
       "from": "domain:architecture",
       "to": "source:packages/auth-core/src/domain/phone.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/auth-core/src/domain/session-token-claims.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -92166,6 +92202,12 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "source:packages/auth-core/src/domain/session-token-claims.ts",
+      "kind": "documents",
+      "detail": "packages/auth-core/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "source:packages/auth-core/src/domain/super-admin.ts",
       "kind": "documents",
       "detail": "packages/auth-core/"
@@ -95365,6 +95407,12 @@
     {
       "from": "domain:platform-features",
       "to": "source:src/features/navigation/ui.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
+      "to": "source:src/features/network/application/network-check-error.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -105271,6 +105319,12 @@
     {
       "from": "domain:ui-components",
       "to": "source:src/features/navigation/ui.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "source:src/features/network/application/network-check-error.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -145788,6 +145842,36 @@
       "detail": "./digits"
     },
     {
+      "from": "source:packages/auth-core/src/domain/session-token-claims.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/auth-core/src/domain/session-token-claims.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/auth-core/src/domain/session-token-claims.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/auth-core/src/domain/session-token-claims.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/auth-core/src/domain/session-token-claims.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/auth-core/src/domain/session-token-claims.ts",
+      "to": "package:@asol/auth-core",
+      "kind": "belongs-to"
+    },
+    {
       "from": "source:packages/auth-core/src/domain/super-admin.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -145898,6 +145982,12 @@
       "to": "source:packages/auth-core/src/domain/phone.ts",
       "kind": "imports",
       "detail": "./domain/phone"
+    },
+    {
+      "from": "source:packages/auth-core/src/index.ts",
+      "to": "source:packages/auth-core/src/domain/session-token-claims.ts",
+      "kind": "imports",
+      "detail": "./domain/session-token-claims"
     },
     {
       "from": "source:packages/auth-core/src/index.ts",
@@ -184097,21 +184187,15 @@
     },
     {
       "from": "source:services/control/src/control/system-logs.ts",
-      "to": "package:@asol/auth-core",
-      "kind": "imports",
-      "detail": "@asol/auth-core/session"
-    },
-    {
-      "from": "source:services/control/src/control/system-logs.ts",
-      "to": "package:@asol/auth-core",
-      "kind": "imports",
-      "detail": "@asol/auth-core/super-admin"
-    },
-    {
-      "from": "source:services/control/src/control/system-logs.ts",
       "to": "package:@asol/system-logs-core",
       "kind": "imports",
       "detail": "@asol/system-logs-core/server"
+    },
+    {
+      "from": "source:services/control/src/control/system-logs.ts",
+      "to": "source:services/control/src/control/super-admin-route.ts",
+      "kind": "imports",
+      "detail": "./super-admin-route"
     },
     {
       "from": "source:services/control/src/control/system-logs.ts",
@@ -210294,6 +210378,36 @@
       "detail": "./presentation/MobileBackButtonController"
     },
     {
+      "from": "source:src/features/network/application/network-check-error.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/network/application/network-check-error.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/network/application/network-check-error.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/network/application/network-check-error.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/network/application/network-check-error.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/network/application/network-check-error.ts",
+      "to": "feature:network",
+      "kind": "belongs-to"
+    },
+    {
       "from": "source:src/features/network/application/services/network-api-service.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -210394,6 +210508,18 @@
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
+    },
+    {
+      "from": "source:src/features/network/presentation/hooks/use-network-status.tsx",
+      "to": "source:src/core/composition/browser-ports.ts",
+      "kind": "imports",
+      "detail": "@/core/composition/browser-ports"
+    },
+    {
+      "from": "source:src/features/network/presentation/hooks/use-network-status.tsx",
+      "to": "source:src/features/network/application/network-check-error.ts",
+      "kind": "imports",
+      "detail": "../../application/network-check-error"
     },
     {
       "from": "source:src/features/network/presentation/hooks/use-network-status.tsx",
@@ -243273,6 +243399,12 @@
     },
     {
       "from": "source:src/shared/ui/local-first-image.tsx",
+      "to": "external-dependency:react",
+      "kind": "imports",
+      "detail": "react"
+    },
+    {
+      "from": "source:src/shared/ui/local-first-image.tsx",
       "to": "package:@asol/storage-image-manager-core",
       "kind": "imports",
       "detail": "@asol/storage-image-manager-core/image-cache"
@@ -252947,6 +253079,12 @@
     },
     {
       "from": "test:src/features/network/tests/network-status-copy.test.ts",
+      "to": "source:src/features/network/application/network-check-error.ts",
+      "kind": "imports",
+      "detail": "../application/network-check-error"
+    },
+    {
+      "from": "test:src/features/network/tests/network-status-copy.test.ts",
       "to": "source:src/features/network/presentation/network-status-copy.ts",
       "kind": "imports",
       "detail": "../presentation/network-status-copy"
@@ -255364,6 +255502,17 @@
       "from": "test:src/features/super-admin/tests/super-admin-impersonation-notification-flow.test.ts",
       "to": "feature:super-admin",
       "kind": "belongs-to"
+    },
+    {
+      "from": "test:src/features/super-admin/tests/super-admin-impersonation-notification-flow.test.ts",
+      "to": "source:src/features/auth/index.ts",
+      "kind": "imports",
+      "detail": "@/features/auth"
+    },
+    {
+      "from": "test:src/features/super-admin/tests/super-admin-impersonation-notification-flow.test.ts",
+      "to": "feature:auth",
+      "kind": "tests"
     },
     {
       "from": "test:src/features/super-admin/tests/super-admin-impersonation-notification-flow.test.ts",

@@ -1,10 +1,27 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
+import { SUPER_ADMIN_PHONE, SUPER_ADMIN_UID, isSuperAdmin } from '@/features/auth';
 
 function source(relativePath: string): string {
   return readFileSync(path.join(process.cwd(), relativePath), 'utf8');
 }
+
+
+const tokenFor = (uid: string) =>
+  Buffer.from(JSON.stringify({ uid, phone: SUPER_ADMIN_PHONE, expiresAt: Date.now() + 60_000 })).toString('base64url') + '.signature';
+const adminSession = {
+  uid: SUPER_ADMIN_UID,
+  phone: SUPER_ADMIN_PHONE,
+  providerAccountEnabled: false,
+  specialties: { main: [], sub: {} },
+};
+assert.equal(isSuperAdmin({ ...adminSession, sessionToken: tokenFor(SUPER_ADMIN_UID) }), true);
+assert.equal(
+  isSuperAdmin({ ...adminSession, sessionToken: tokenFor('usr_impersonated') }),
+  false,
+  'stale local super-admin identity must not override a token that belongs to another uid',
+);
 
 const usersPage = source('src/features/super-admin/presentation/SuperAdminUsersPage.tsx');
 const banner = source('src/features/super-admin/presentation/SuperAdminImpersonationBanner.tsx');
