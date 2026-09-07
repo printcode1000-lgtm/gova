@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { readFileSync } from 'node:fs';
@@ -38,6 +38,20 @@ assert.ok(
   !/from\s+'node:/.test(readEnvSource),
   'The main door must stay free of node builtins: it is read from client config too.',
 );
+
+const rootScripts = (
+  JSON.parse(readFileSync(path.join(ROOT, 'package.json'), 'utf8')) as {
+    scripts?: Record<string, string>;
+  }
+).scripts ?? {};
+assert.equal(rootScripts['env:verify:single-source'], 'npx tsx scripts/verify-single-env-source.ts');
+for (const lifecycle of ['predev', 'predev:checked', 'prebuild', 'prebuild:static', 'prebuild:vercel', 'prestart']) {
+  assert.equal(
+    rootScripts[lifecycle],
+    'npm run env:verify:single-source',
+    `${lifecycle} must refuse legacy local env files before runtime tooling starts.`,
+  );
+}
 
 // ── Blank is absent ─────────────────────────────────────────────────────────
 //
@@ -78,29 +92,21 @@ assert.equal(readBooleanEnv('MISSING', env), false);
 assert.deepEqual(readListEnv('LIST', env), ['a', 'b', 'c'], 'Lists trim and drop blanks.');
 assert.deepEqual(readListEnv('MISSING', env), []);
 
-// ── .env files ──────────────────────────────────────────────────────────────
+// ── canonical local environment file ────────────────────────────────────────
 const dir = mkdtempSync(path.join(os.tmpdir(), 'env-core-'));
 const local = path.join(dir, '.env.local');
-const base = path.join(dir, '.env');
-writeFileSync(local, 'SHARED=from-local\nONLY_LOCAL=1\n');
-writeFileSync(base, 'SHARED=from-base\nONLY_BASE=2\nlowercase=ignored\n');
+writeFileSync(local, 'SHARED=from-local\nONLY_LOCAL=1\nTOKEN=abc \n');
 
-const files = readEnvFiles([local, base]);
-assert.equal(files.SHARED, 'from-local', '.env.local wins — that is the developer override.');
+const files = readEnvFiles([local]);
+assert.equal(files.SHARED, 'from-local');
 assert.equal(files.ONLY_LOCAL, '1');
-assert.equal(files.ONLY_BASE, '2');
-assert.equal(files.lowercase, undefined, 'Only upper-case keys are environment variables.');
+assert.equal(files.TOKEN, 'abc ', 'Raw file values remain untrimmed.');
 assert.deepEqual(readEnvFiles([path.join(dir, 'nope')]), {}, 'A missing file is empty, not a throw.');
-
-// Raw values: a token whose trailing characters matter must not be altered on the way to a
-// database. This is why the file reader does not reuse the trimming rule above.
-writeFileSync(base, 'TOKEN=abc \n');
-assert.equal(readEnvFiles([base]).TOKEN, 'abc ');
 
 assert.deepEqual(
   [...RELEASE_TOOL_ENV_FILES],
-  ['.env.local', '.env', 'fastlane/.env'],
-  'Release-tool files are ordered: local, then base, then Fastlane.',
+  ['.env.local'],
+  'Release tooling has exactly one local file source.',
 );
 
 const parsedEmpty = parseReleaseEnvFileText(
@@ -109,72 +115,19 @@ const parsedEmpty = parseReleaseEnvFileText(
 assert.equal(parsedEmpty.PRESENT, 'from-file');
 assert.equal(parsedEmpty.EMPTY, '');
 assert.equal(parsedEmpty.EXPORTED, '1');
-assert.equal(
-  parsedEmpty.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64,
-  'secret-value',
-  'Parser keeps values; tests may read fixtures but production loading must never log them.',
-);
+assert.equal(parsedEmpty.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64, 'secret-value');
 
 const releaseDir = mkdtempSync(path.join(os.tmpdir(), 'env-core-release-'));
-const fastlaneDir = path.join(releaseDir, 'fastlane');
-mkdirSync(fastlaneDir, { recursive: true });
 writeFileSync(
   path.join(releaseDir, '.env.local'),
-  'SHARED=from-local\nEMPTY_LOCAL=\nONLY_LOCAL=1\nPROCESS_WINS=from-local\n',
+  'SHARED=from-local\nONLY_LOCAL=1\nPROCESS_WINS=from-local\nGOOGLE_PLAY_JSON_KEY_FILE=from-local\n',
 );
-writeFileSync(
-  path.join(releaseDir, '.env'),
-  'SHARED=from-base\nEMPTY_LOCAL=from-base\nONLY_BASE=play-from-env\nFASTLANE_ONLY=\nGOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64=base-secret\n',
-);
-writeFileSync(
-  path.join(fastlaneDir, '.env'),
-  'FASTLANE_ONLY=from-fastlane\nGOOGLE_PLAY_JSON_KEY_FILE=from-fastlane\nONLY_BASE=should-not-win\n',
-);
-
 const fakeEnv: NodeJS.ProcessEnv = { PROCESS_WINS: 'from-process' };
-loadReleaseToolEnvironment({
-  cwd: releaseDir,
-  env: fakeEnv,
-});
+loadReleaseToolEnvironment({ cwd: releaseDir, env: fakeEnv });
 assert.equal(fakeEnv.PROCESS_WINS, 'from-process', 'Existing process values win.');
-assert.equal(fakeEnv.SHARED, 'from-local', '.env.local fills missing keys.');
-assert.equal(
-  fakeEnv.EMPTY_LOCAL,
-  'from-base',
-  'Empty .env.local declarations do not mask a later non-empty .env value.',
-);
-assert.equal(
-  fakeEnv.ONLY_BASE,
-  'play-from-env',
-  'An existing .env.local without Google keys does not suppress valid keys in .env.',
-);
+assert.equal(fakeEnv.SHARED, 'from-local');
 assert.equal(fakeEnv.ONLY_LOCAL, '1');
-assert.equal(
-  fakeEnv.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64,
-  'base-secret',
-  '.env supplies a still-missing Google Play key.',
-);
-assert.equal(fakeEnv.FASTLANE_ONLY, 'from-fastlane', 'fastlane/.env supplies a still-missing release key.');
-assert.equal(fakeEnv.ONLY_BASE, 'play-from-env', 'Later files cannot overwrite a non-empty earlier value.');
-assert.equal(fakeEnv.GOOGLE_PLAY_JSON_KEY_FILE, 'from-fastlane');
-
-const logged: string[] = [];
-const originalLog = console.log;
-const originalError = console.error;
-console.log = (...args: unknown[]) => {
-  logged.push(args.map(String).join(' '));
-};
-console.error = (...args: unknown[]) => {
-  logged.push(args.map(String).join(' '));
-};
-try {
-  loadReleaseToolEnvironment({ cwd: releaseDir, env: {} });
-} finally {
-  console.log = originalLog;
-  console.error = originalError;
-}
-assert.equal(logged.join('\n').includes('base-secret'), false, 'No secret value is logged.');
-assert.equal(logged.join('\n').includes('from-fastlane'), false, 'No Fastlane secret value is logged.');
+assert.equal(fakeEnv.GOOGLE_PLAY_JSON_KEY_FILE, 'from-local');
 
 const sources = resolveReleaseToolEnvironmentSources({
   cwd: releaseDir,
@@ -183,12 +136,31 @@ const sources = resolveReleaseToolEnvironmentSources({
 const byKey = Object.fromEntries(sources.map((entry) => [entry.key, entry.source]));
 assert.equal(byKey.PROCESS_WINS, 'process');
 assert.equal(byKey.SHARED, '.env.local');
-assert.equal(byKey.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64, '.env');
-assert.equal(byKey.GOOGLE_PLAY_JSON_KEY_FILE, 'fastlane/.env');
-assert.equal(
-  sources.some((entry) => JSON.stringify(entry).includes('base-secret')),
-  false,
-  'Source reports never include secret values.',
-);
+assert.equal(byKey.GOOGLE_PLAY_JSON_KEY_FILE, '.env.local');
+assert.equal(sources.some((entry) => JSON.stringify(entry).includes('from-local')), false);
 
-console.log('@asol/env-core contract: 3 doors, blank-is-absent pinned, release-tool precedence pinned.');
+writeFileSync(path.join(releaseDir, '.env'), 'LEGACY=forbidden\n');
+assert.throws(
+  () => loadReleaseToolEnvironment({ cwd: releaseDir, env: {} }),
+  /legacyEnvironmentFileDetected:\.env/,
+  'A legacy root .env must fail closed instead of becoming a hidden fallback.',
+);
+rmSync(path.join(releaseDir, '.env'));
+writeFileSync(path.join(releaseDir, '.env.production'), 'LEGACY=forbidden\n');
+assert.throws(
+  () => loadReleaseToolEnvironment({ cwd: releaseDir, env: {} }),
+  /legacyEnvironmentFileDetected:\.env\.production/,
+  'Next.js environment variants must not become a second local source.',
+);
+rmSync(path.join(releaseDir, '.env.production'));
+const releaseFastlaneDir = path.join(releaseDir, 'fastlane');
+mkdirSync(releaseFastlaneDir, { recursive: true });
+writeFileSync(path.join(releaseFastlaneDir, '.env'), 'LEGACY=forbidden\n');
+assert.throws(
+  () => loadReleaseToolEnvironment({ cwd: releaseDir, env: {} }),
+  /legacyEnvironmentFileDetected:fastlane\/\.env/,
+  'Fastlane must inherit the canonical process environment instead of loading its own env file.',
+);
+rmSync(path.join(releaseFastlaneDir, '.env'));
+
+console.log('@asol/env-core contract: 3 doors, one local file source, blank-is-absent pinned.');

@@ -42,8 +42,38 @@ export async function runLocalReadTests(): Promise<void> {
     assert.equal(
       authoritativeLoads,
       2,
-      'network-authoritative reads still check the cache but intentionally revalidate every call',
+      'network-authoritative reads must execute a fresh loader for every call',
     );
+
+    let concurrentLoads = 0;
+    let rejectFirst: ((reason?: unknown) => void) | undefined;
+    const firstConcurrent = readAsolLocalFirstData({
+      cacheKey: 'test:authoritative-concurrent',
+      policy: 'networkAuthoritative',
+      load: async () => {
+        concurrentLoads += 1;
+        return new Promise<{ value: number }>((_resolve, reject) => {
+          rejectFirst = reject;
+        });
+      },
+    });
+    await Promise.resolve();
+    const secondConcurrent = readAsolLocalFirstData({
+      cacheKey: 'test:authoritative-concurrent',
+      policy: 'networkAuthoritative',
+      load: async () => ({ value: ++concurrentLoads }),
+    });
+    assert.equal(
+      concurrentLoads,
+      2,
+      'network-authoritative calls must not share an aborting in-flight probe',
+    );
+    rejectFirst?.(new DOMException('probe aborted', 'AbortError'));
+    await assert.rejects(
+      firstConcurrent,
+      (error: unknown) => error instanceof DOMException && error.name === 'AbortError',
+    );
+    assert.deepEqual(await secondConcurrent, { value: 2 });
 
     await invalidateAsolLocalFirstData();
     const third = await readAsolLocalFirstData({

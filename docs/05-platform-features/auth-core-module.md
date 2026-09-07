@@ -81,8 +81,9 @@ This migration was done without backward compatibility: legacy SHA-256 password 
 
 ### Session tokens
 
-- 30-day HMAC-signed payload: `{ uid, phone, exp }`.
+- 30-day HMAC-signed payload: `{ uid, phone, expiresAt }`.
 - Issued on successful password login; stored in Asol IndexedDB with the local session.
+- The browser-safe `readUnsignedSessionTokenUid()` helper may inspect only the public payload so local session persistence can reject a UID/token mismatch. It does **not** authenticate the token; signature and expiry verification remain server-only.
 - **No server-side session table** — verification is signature + expiry only.
 - Required on sensitive routes via header `x-asol-session-token`:
   - `PUT /api/auth/profile`

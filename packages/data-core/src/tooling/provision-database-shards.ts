@@ -200,7 +200,7 @@ export async function provisionDatabaseShards(): Promise<void> {
       [`${prefix}_DATABASE_URL`]: databaseUrl,
       [`${prefix}_DATABASE_AUTH_TOKEN`]: authToken,
     };
-    updateEnvFile(".env", entries);
+    updateEnvFile(".env.local", entries);
     updateEnvFile(".env.local", entries);
     await syncShardToTurso(databaseName, databaseUrl, authToken);
     console.log(`${databaseName}: provisioned and synced`);

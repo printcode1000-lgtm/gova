@@ -187,6 +187,22 @@ with the file and line. Two exemptions:
 A route, a proxy, a service helper, or a config table that needs CORS states a policy and asks this
 package for the headers.
 
+## Live production gate
+
+Static ownership is necessary but not sufficient because Cloudflare R2 and deployed Vercel origins are remote state. The release contract therefore also runs:
+
+```bash
+npm run cors:verify:live      # all eight production API origins + storage R2 buckets
+npm run r2:verify:cors       # storage buckets only
+npm run ota:verify:cors      # dedicated OTA bucket
+```
+
+The API probe derives its requested-header list from `BROWSER_REQUEST_HEADERS`, so adding a client header without updating the shared policy makes the live gate fail immediately. It requires `204`, the exact reflected caller origin, `GET` in allowed methods, every browser request header, and `Vary: Origin`.
+
+The R2 verifier compares Cloudflare's live bucket rule with `buildDefaultR2CorsRules` and probes a real public object when one exists. An unreadable bucket or invalid Cloudflare API token fails closed; an empty bucket cannot silently bypass verification. `deploy:push` and `deploy:push:fast` run the combined gate before any git write, `deploy:all` includes it in preflight, and OTA publish/check requires its independent OTA verifier.
+
+This protects the external configuration layer that `architecture:check` cannot see. See [public R2 object fetch blocked by CORS](../../08-troubleshooting/problems/public-r2-object-fetch-blocked-by-cors.md).
+
 ## Test gate
 
 ```bash

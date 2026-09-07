@@ -23,7 +23,7 @@ import { loadReleaseEnvironment } from './load-release-env';
  * neither is reimplemented here, only wired.
  *
  * Release-tool env is loaded first so a missing process value is filled from
- * `.env.local` → `.env` → `fastlane/.env` — the same contract as `ota:check`
+ * `.env.local` — the same single-source contract as `ota:check`
  * and `release:android`. Static/native bundles bake
  * `ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` from that resolved environment.
  */

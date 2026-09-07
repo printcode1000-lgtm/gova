@@ -458,6 +458,9 @@ async function assertFastPublishReadiness(
   assertReleaseMainBranch(ROOT, "deploy:push");
   await ensureReleaseSecretsRestored("deploy:push");
   assertMainDeploymentCredentials();
+  // Remote CORS is production state, not a compile-time fact. Run this even in
+  // --fast mode so a drifted API origin or R2 bucket can never be published over.
+  await runDeploymentNpmScript("cors:verify:live", { logPrefix: "deploy:push" });
   if (flags.fast) {
     console.log(
       "[deploy:push] --fast: skipping Vercel account access, publish refusals, and mirror builds.",

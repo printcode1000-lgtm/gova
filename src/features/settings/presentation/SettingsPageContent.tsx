@@ -1,7 +1,6 @@
 "use client";
 
 import { formatDateTime } from "@asol/format-core";
-import Link from "next/link";
 
 import { RefreshCw, RotateCcw } from "lucide-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -80,7 +79,7 @@ export function SettingsPageContent() {
       : `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 
   return (
-    <div id='features-settings-presentation-settingspagecontent-div-1-rxag7e' className="mx-auto w-full max-w-4xl px-4 py-6 pb-32 sm:px-6 sm:py-12 md:px-12">
+    <>
       <header id='features-settings-presentation-settingspagecontent-header-2-kuqilv' className="mb-12 space-y-2 text-center">
         <h1 id='features-settings-presentation-settingspagecontent-heading-3-qgqr9b' className="text-3xl font-bold text-primary">
           {t("settings.title")}
@@ -189,13 +188,6 @@ export function SettingsPageContent() {
         </div>
       </section>
 
-      <Link
-        href="/settings/notifications"
-        className="asol-control flex w-full items-center justify-center rounded-xl border border-outline-variant px-6 py-3 font-semibold text-on-surface"
-      >
-        {t("settings.notifications.title")}
-      </Link>
-
       {/* Footer actions — restore/clear is a destructive dev-facing reset, visible to super admins only */}
       {isSuperAdmin(session) ? (
         <footer id='features-settings-presentation-settingspagecontent-footer-22-xyqhwg' className="flex flex-col items-center justify-center gap-4 pt-12 md:flex-row-reverse">
@@ -248,6 +240,6 @@ export function SettingsPageContent() {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }

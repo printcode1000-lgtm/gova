@@ -38,6 +38,7 @@ export const DEPLOY_ALL_PREFLIGHT_SECTIONS: readonly DeployAllRunbookSection[] =
     branches: [
       branch("production-doctor", "production environment readiness", "doctor:environment:production", "npm"),
       branch("vercel-account-access", "all eight Vercel account tokens", "vercel:accounts:check", "npm"),
+      branch("live-cors", "live API and R2 CORS contract", "cors:verify:live", "npm"),
     ],
   },
   {

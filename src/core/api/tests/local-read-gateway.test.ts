@@ -50,6 +50,16 @@ function assertNoBrowserTransportBypass(): void {
   );
   assert.match(browserRoot, /registerDataCoreBrowserPorts\(\)/);
   assert.match(dataBrowserPort, /configureAsolApiBrowserLocalReadCache\(/);
+
+  const networkStatusProvider = readFileSync(
+    path.join(root, 'src/features/network/presentation/hooks/use-network-status.tsx'),
+    'utf8',
+  );
+  assert.match(
+    networkStatusProvider,
+    /registerBrowserPorts\(\)/,
+    'startup network health checks must compose the browser local-read gateway before their first effect',
+  );
 }
 
 async function main() {

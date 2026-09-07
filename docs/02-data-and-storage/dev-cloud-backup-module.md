@@ -4,7 +4,7 @@
 backing up and restoring the cloud development state:
 
 - Every Turso database reachable from the environment. Sources are discovered,
-  not listed, so a database added to `.env` cannot be left out.
+  not listed, so a database added to `.env.local` cannot be left out.
 - Every Cloudflare R2 object in both the general and product buckets. There is
   no scope option and no prefix filtering: a backup is always complete.
 
@@ -84,7 +84,7 @@ The zip is intentionally editable:
   manifest entry.
 
 Do not put Turso or R2 credentials inside the zip. The restore operation uses
-the current local `.env` credentials.
+the current local `.env.local` credentials.
 
 ## Compare And Update
 

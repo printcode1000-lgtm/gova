@@ -74,7 +74,7 @@ This is not an optimisation — it is what stops server-side rendering from
 turning into a main-app-to-service call.
 
 **One dataset in local development.** A `next dev` browser stays on the local
-Business API even when service origins exist in `.env`. The local API reads and
+Business API even when service origins exist in `.env.local`. The local API reads and
 writes the SQLite development databases; redirecting only its reads to a
 deployed service mixes local and cloud data and produces false `notFound`
 responses. Production web, static, and Capacitor builds are unaffected because

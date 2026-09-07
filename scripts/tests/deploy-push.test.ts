@@ -209,6 +209,15 @@ for (const gate of [
   assert.ok(readiness.includes(gate), `The non-fast publish path must still run ${gate}.`);
 }
 
+assert.ok(
+  readiness.includes('runDeploymentNpmScript("cors:verify:live"'),
+  "Live CORS verification must run before both fast and non-fast publishing.",
+);
+assert.ok(
+  readiness.indexOf('runDeploymentNpmScript("cors:verify:live"') < readiness.indexOf("if (flags.fast)"),
+  "--fast must not bypass the live CORS gate.",
+);
+
 /**
  * `--fast` skips `secrets:backup`, so the success line must not claim it ran.
  * A final line that names a skipped step teaches the wrong recovery.

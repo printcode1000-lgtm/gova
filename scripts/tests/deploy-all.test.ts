@@ -70,6 +70,7 @@ assert.throws(() => parseFlags(["--force"]), /Unknown option/);
 for (const required of [
   "doctor:environment:production",
   "vercel:accounts:check",
+  "cors:verify:live",
   "docs:generate",
   "lint",
   "typecheck",

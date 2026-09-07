@@ -7,13 +7,27 @@ import type { CorsOriginPolicy, CorsPolicy, CorsRequestLike } from './types';
  * `npm run architecture:check` enforces that, so a route or a proxy cannot quietly grow a sixth
  * copy of this record. See docs/05-platform-features/sealed-packages/cors-module.md.
  */
-const ALLOW_ORIGIN = 'Access-Control-Allow-Origin';
-const ALLOW_METHODS = 'Access-Control-Allow-Methods';
-const ALLOW_HEADERS = 'Access-Control-Allow-Headers';
-const ALLOW_CREDENTIALS = 'Access-Control-Allow-Credentials';
-const EXPOSE_HEADERS = 'Access-Control-Expose-Headers';
-const MAX_AGE = 'Access-Control-Max-Age';
-const VARY = 'Vary';
+export const CORS_HEADER_NAMES = {
+  allowOrigin: 'Access-Control-Allow-Origin',
+  allowMethods: 'Access-Control-Allow-Methods',
+  allowHeaders: 'Access-Control-Allow-Headers',
+  allowCredentials: 'Access-Control-Allow-Credentials',
+  exposeHeaders: 'Access-Control-Expose-Headers',
+  maxAge: 'Access-Control-Max-Age',
+  requestMethod: 'Access-Control-Request-Method',
+  requestHeaders: 'Access-Control-Request-Headers',
+  vary: 'Vary',
+} as const;
+
+const {
+  allowOrigin: ALLOW_ORIGIN,
+  allowMethods: ALLOW_METHODS,
+  allowHeaders: ALLOW_HEADERS,
+  allowCredentials: ALLOW_CREDENTIALS,
+  exposeHeaders: EXPOSE_HEADERS,
+  maxAge: MAX_AGE,
+  vary: VARY,
+} = CORS_HEADER_NAMES;
 
 /** Reads the caller's origin. `null` for a same-origin, server-side, or absent request. */
 export function requestOrigin(request: CorsRequestLike | null | undefined): string | null {

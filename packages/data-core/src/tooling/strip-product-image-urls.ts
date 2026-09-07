@@ -19,7 +19,6 @@ import dotenv from "dotenv";
 import { createClient, type Client } from "@libsql/client";
 
 if (existsSync(".env.local")) dotenv.config({ path: ".env.local", quiet: true });
-dotenv.config({ path: ".env", quiet: true });
 
 const LOCAL_PATH = resolveProductSqlitePath();
 

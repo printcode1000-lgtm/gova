@@ -20,7 +20,6 @@ const seed = JSON.parse(readFileSync(seedPath, "utf8")) as {
 };
 
 process.env.ASOL_PROVISIONING = "true";
-if (existsSync(".env")) dotenv.config({ path: ".env" });
 if (existsSync(".env.local")) dotenv.config({ path: ".env.local" });
 
 const DROP_TABLES = [

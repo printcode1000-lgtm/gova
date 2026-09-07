@@ -7,7 +7,6 @@ process.env.ASOL_PROVISIONING = "true";
 if (existsSync(".env.local")) {
   dotenv.config({ path: ".env.local" });
 }
-dotenv.config({ path: ".env" });
 
 function schemaSyncRequiresCredentials(): boolean {
   return (

@@ -1,9 +1,13 @@
 import { existsSync, readFileSync } from 'node:fs';
 
 import type { EnvSource } from './read-env';
+import {
+  assertSingleLocalEnvSource,
+  CANONICAL_LOCAL_ENV_FILE,
+} from './local-env-contract';
 
 /**
- * Reads `.env.local` then `.env` into a plain object, first spelling wins.
+ * Reads the canonical `.env.local` into a plain object.
  *
  * For the provisioning tooling, which runs outside Next.js and therefore has no loaded
  * environment of its own. Two copies of this parser lived in `data-core/tooling`, and a third
@@ -13,9 +17,10 @@ import type { EnvSource } from './read-env';
  * existing scripts were written against, and a Turso token with meaningful trailing characters
  * must not be silently altered on the way to a database.
  */
-export const DEFAULT_ENV_FILES = ['.env.local', '.env'] as const;
+export const DEFAULT_ENV_FILES = [CANONICAL_LOCAL_ENV_FILE] as const;
 
 export function readEnvFiles(files: readonly string[] = DEFAULT_ENV_FILES): EnvSource {
+  if (files === DEFAULT_ENV_FILES) assertSingleLocalEnvSource();
   const values: Record<string, string> = {};
   for (const file of files) {
     if (!existsSync(file)) continue;

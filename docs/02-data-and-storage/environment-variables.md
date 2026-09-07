@@ -2,6 +2,11 @@
 
 # Environment Variables
 
+`.env.local` is the **only** local application and release environment file.
+`.env` and `fastlane/.env` are forbidden legacy sources; `fastlane/.env.example`
+is also retired. `.env.example` is the one committed template and never contains
+private values. Process-injected environment values keep precedence over the local file.
+
 ```env
 # ── ASOL API (client-safe) ──
 NEXT_PUBLIC_ASOL_API_BASE_URL=     # Remote backend (static/Capacitor). Empty = same origin locally; production smoke needs the live origin (e.g. https://gova-swart.vercel.app).

@@ -32,9 +32,13 @@ const POLICY = {
 export async function readAsolLocalFirstData<T>(
   request: AsolLocalReadRequest<T>,
 ): Promise<T> {
+  const policy = POLICY[request.policy];
+  if (request.policy === 'networkAuthoritative') {
+    return request.load();
+  }
+
   const queryClient = getAsolQueryClient();
   await ensureAsolQueryCacheRestored(queryClient);
-  const policy = POLICY[request.policy];
   const data = await queryClient.fetchQuery({
     queryKey: [REMOTE_READ_ROOT, request.cacheKey],
     queryFn: request.load,

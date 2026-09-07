@@ -24,7 +24,6 @@ import { findProject, listProjectEnv, writeProjectEnv } from "@asol/vercel-deplo
  */
 
 if (existsSync(".env.local")) dotenv.config({ path: ".env.local", quiet: true });
-dotenv.config({ path: ".env", quiet: true });
 
 const PROJECT_NAME = process.env.VERCEL_PROJECT_NAME || "gova";
 

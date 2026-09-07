@@ -704,6 +704,36 @@
       ]
     },
     {
+      "id": "command:cors:verify:api-live",
+      "kind": "command",
+      "name": "npm run cors:verify:api-live",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "api-live",
+        "cors",
+        "cors:verify:api-live",
+        "npm",
+        "npm run cors:verify:api-live",
+        "run",
+        "verify"
+      ]
+    },
+    {
+      "id": "command:cors:verify:live",
+      "kind": "command",
+      "name": "npm run cors:verify:live",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "cors",
+        "cors:verify:live",
+        "live",
+        "npm",
+        "npm run cors:verify:live",
+        "run",
+        "verify"
+      ]
+    },
+    {
       "id": "command:data-access:sync-public",
       "kind": "command",
       "name": "npm run data-access:sync-public",
@@ -1376,6 +1406,21 @@
       ]
     },
     {
+      "id": "command:env:verify:single-source",
+      "kind": "command",
+      "name": "npm run env:verify:single-source",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "env",
+        "env:verify:single-source",
+        "npm",
+        "npm run env:verify:single-source",
+        "run",
+        "single-source",
+        "verify"
+      ]
+    },
+    {
       "id": "command:fastlane",
       "kind": "command",
       "name": "npm run fastlane",
@@ -1981,6 +2026,87 @@
       ]
     },
     {
+      "id": "command:ota:verify:cors",
+      "kind": "command",
+      "name": "npm run ota:verify:cors",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "cors",
+        "npm",
+        "npm run ota:verify:cors",
+        "ota",
+        "ota:verify:cors",
+        "run",
+        "verify"
+      ]
+    },
+    {
+      "id": "command:prebuild",
+      "kind": "command",
+      "name": "npm run prebuild",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run prebuild",
+        "prebuild",
+        "run"
+      ]
+    },
+    {
+      "id": "command:prebuild:static",
+      "kind": "command",
+      "name": "npm run prebuild:static",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run prebuild:static",
+        "prebuild",
+        "prebuild:static",
+        "run",
+        "static"
+      ]
+    },
+    {
+      "id": "command:prebuild:vercel",
+      "kind": "command",
+      "name": "npm run prebuild:vercel",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run prebuild:vercel",
+        "prebuild",
+        "prebuild:vercel",
+        "run",
+        "vercel"
+      ]
+    },
+    {
+      "id": "command:predev",
+      "kind": "command",
+      "name": "npm run predev",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run predev",
+        "predev",
+        "run"
+      ]
+    },
+    {
+      "id": "command:predev:checked",
+      "kind": "command",
+      "name": "npm run predev:checked",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "checked",
+        "npm",
+        "npm run predev:checked",
+        "predev",
+        "predev:checked",
+        "run"
+      ]
+    },
+    {
       "id": "command:prepare",
       "kind": "command",
       "name": "npm run prepare",
@@ -1989,6 +2115,18 @@
         "npm",
         "npm run prepare",
         "prepare",
+        "run"
+      ]
+    },
+    {
+      "id": "command:prestart",
+      "kind": "command",
+      "name": "npm run prestart",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run prestart",
+        "prestart",
         "run"
       ]
     },
@@ -2091,6 +2229,21 @@
         "r2:sync:cors",
         "run",
         "sync"
+      ]
+    },
+    {
+      "id": "command:r2:verify:cors",
+      "kind": "command",
+      "name": "npm run r2:verify:cors",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "cors",
+        "npm",
+        "npm run r2:verify:cors",
+        "r2",
+        "r2:verify:cors",
+        "run",
+        "verify"
       ]
     },
     {
@@ -7947,8 +8100,13 @@
         "docs/02-data-and-storage/environment-variables",
         "docs/02-data-and-storage/environment-variables.md",
         "during",
+        "env",
         "environment",
         "environment variables",
+        "example",
+        "fastlane/",
+        "fastlane/.env",
+        "fastlane/.env.example",
         "here",
         "md",
         "note",
@@ -8124,6 +8282,8 @@
         "packages/ota-core/src/publishing/adapters/r2-storage.adapter.ts",
         "packages/storage-core/scripts/sync-cors",
         "packages/storage-core/scripts/sync-cors.ts",
+        "packages/storage-core/scripts/verify-cors",
+        "packages/storage-core/scripts/verify-cors.ts",
         "packages/storage-core/src/adapters/s3-client",
         "packages/storage-core/src/adapters/s3-client.adapter.ts",
         "packages/storage-core/src/domain/accounts/account-registry",
@@ -13597,9 +13757,6 @@
         "download",
         "during",
         "each",
-        "env",
-        "fastlane/",
-        "fastlane/.env",
         "fastlane/fastfile",
         "file",
         "forward-only",
@@ -15333,6 +15490,57 @@
       ]
     },
     {
+      "id": "document:docs/08-troubleshooting/problems/public-r2-object-fetch-blocked-by-cors.md",
+      "kind": "document",
+      "name": "Public R2 object opens directly but browser fetch is blocked by CORS",
+      "path": "docs/08-troubleshooting/problems/public-r2-object-fetch-blocked-by-cors.md",
+      "summary": "A Cloudflare R2 image URL returns `200` when opened directly or requested with `curl`, but Gova shows a transparent image placeholder. The server and Internet can both be healthy.",
+      "tags": [
+        "200",
+        "@asol/cors",
+        "@asol/storage-core",
+        "a cloudflare r2 image url returns `200` when opened directly or requested with `curl`, but gova shows a transparent image placeholder. the server and internet can both be healthy.",
+        "and",
+        "be",
+        "blocked",
+        "both",
+        "browser",
+        "but",
+        "by",
+        "can",
+        "cloudflare",
+        "cors",
+        "curl",
+        "directly",
+        "docs/08-troubleshooting/problems/public-r2-object-fetch-blocked-by-cors",
+        "docs/08-troubleshooting/problems/public-r2-object-fetch-blocked-by-cors.md",
+        "fetch",
+        "gova",
+        "healthy",
+        "image",
+        "internet",
+        "is",
+        "md",
+        "object",
+        "opened",
+        "opens",
+        "or",
+        "placeholder",
+        "public",
+        "public r2 object opens directly but browser fetch is blocked by cors",
+        "r2",
+        "requested",
+        "returns",
+        "server",
+        "shows",
+        "the",
+        "transparent",
+        "url",
+        "when",
+        "with"
+      ]
+    },
+    {
       "id": "document:docs/08-troubleshooting/problems/README.md",
       "kind": "document",
       "name": "Problems and Solutions",
@@ -15376,11 +15584,8 @@
         "docs/08-troubleshooting/problems/service-smoke-release-environment",
         "docs/08-troubleshooting/problems/service-smoke-release-environment.md",
         "during",
-        "env",
         "export",
         "fails",
-        "fastlane/",
-        "fastlane/.env",
         "is",
         "md",
         "missing",
@@ -28271,6 +28476,17 @@
       ]
     },
     {
+      "id": "script:scripts/verify-live-api-cors.ts",
+      "kind": "script",
+      "name": "verify-live-api-cors.ts",
+      "path": "scripts/verify-live-api-cors.ts",
+      "tags": [
+        "scripts/verify-live-api-cors",
+        "scripts/verify-live-api-cors.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/verify-project-secrets.ts",
       "kind": "script",
       "name": "verify-project-secrets.ts",
@@ -28289,6 +28505,17 @@
       "tags": [
         "scripts/verify-service-mirrors",
         "scripts/verify-service-mirrors.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/verify-single-env-source.ts",
+      "kind": "script",
+      "name": "verify-single-env-source.ts",
+      "path": "scripts/verify-single-env-source.ts",
+      "tags": [
+        "scripts/verify-single-env-source",
+        "scripts/verify-single-env-source.ts",
         "ts"
       ]
     },
@@ -30097,6 +30324,17 @@
       "tags": [
         "packages/cors/src/types",
         "packages/cors/src/types.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/cors/src/verification.ts",
+      "kind": "source",
+      "name": "verification.ts",
+      "path": "packages/cors/src/verification.ts",
+      "tags": [
+        "packages/cors/src/verification",
+        "packages/cors/src/verification.ts",
         "ts"
       ]
     },
@@ -33214,6 +33452,17 @@
       "tags": [
         "packages/env-core/src/domain/load-release-environment",
         "packages/env-core/src/domain/load-release-environment.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/env-core/src/domain/local-env-contract.ts",
+      "kind": "source",
+      "name": "local-env-contract.ts",
+      "path": "packages/env-core/src/domain/local-env-contract.ts",
+      "tags": [
+        "packages/env-core/src/domain/local-env-contract",
+        "packages/env-core/src/domain/local-env-contract.ts",
         "ts"
       ]
     },
@@ -36408,6 +36657,17 @@
       ]
     },
     {
+      "id": "source:packages/ota-core/scripts/lib/ota-cors-policy.ts",
+      "kind": "source",
+      "name": "ota-cors-policy.ts",
+      "path": "packages/ota-core/scripts/lib/ota-cors-policy.ts",
+      "tags": [
+        "packages/ota-core/scripts/lib/ota-cors-policy",
+        "packages/ota-core/scripts/lib/ota-cors-policy.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/ota-core/scripts/ota-keygen.ts",
       "kind": "source",
       "name": "ota-keygen.ts",
@@ -36492,6 +36752,17 @@
       "tags": [
         "packages/ota-core/scripts/validate-app-versions",
         "packages/ota-core/scripts/validate-app-versions.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ota-core/scripts/verify-cors.ts",
+      "kind": "source",
+      "name": "verify-cors.ts",
+      "path": "packages/ota-core/scripts/verify-cors.ts",
+      "tags": [
+        "packages/ota-core/scripts/verify-cors",
+        "packages/ota-core/scripts/verify-cors.ts",
         "ts"
       ]
     },
@@ -38016,6 +38287,17 @@
       ]
     },
     {
+      "id": "source:packages/storage-core/scripts/verify-cors.ts",
+      "kind": "source",
+      "name": "verify-cors.ts",
+      "path": "packages/storage-core/scripts/verify-cors.ts",
+      "tags": [
+        "packages/storage-core/scripts/verify-cors",
+        "packages/storage-core/scripts/verify-cors.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/storage-core/src/adapters/s3-client.adapter.ts",
       "kind": "source",
       "name": "s3-client.adapter.ts",
@@ -38329,6 +38611,17 @@
       "tags": [
         "packages/storage-core/src/server/transport/r2-cors-policy",
         "packages/storage-core/src/server/transport/r2-cors-policy.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/storage-core/src/server/transport/r2-cors-verification.ts",
+      "kind": "source",
+      "name": "r2-cors-verification.ts",
+      "path": "packages/storage-core/src/server/transport/r2-cors-verification.ts",
+      "tags": [
+        "packages/storage-core/src/server/transport/r2-cors-verification",
+        "packages/storage-core/src/server/transport/r2-cors-verification.ts",
         "ts"
       ]
     },
@@ -55382,6 +55675,18 @@
       "tags": [
         "packages/storage-core/src/tests/unit/product-category-storage-routing",
         "packages/storage-core/src/tests/unit/product-category-storage-routing.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/storage-core/src/tests/unit/r2-cors-verification.test.ts",
+      "kind": "test",
+      "name": "r2-cors-verification.test.ts",
+      "path": "packages/storage-core/src/tests/unit/r2-cors-verification.test.ts",
+      "tags": [
+        "packages/storage-core/src/tests/unit/r2-cors-verification",
+        "packages/storage-core/src/tests/unit/r2-cors-verification.test.ts",
         "test",
         "ts"
       ]

@@ -1,43 +1,10 @@
-import { ANY_ORIGIN, corsOriginsFromEnv } from '@asol/cors';
 import { loadReleaseToolEnvironment } from '@asol/env-core/process';
 import { getOtaR2CloudflareCredentials, getOtaR2S3Credentials } from '../src/publishing/config/ota-r2-target';
+import { buildDefaultOtaCorsRules, type OtaR2CorsRule } from './lib/ota-cors-policy';
 
 loadReleaseToolEnvironment();
 
 const CF_API_BASE = 'https://api.cloudflare.com/client/v4';
-
-interface R2CorsRule {
-  id?: string;
-  allowed: {
-    origins: string[];
-    methods: string[];
-    headers?: string[];
-  };
-  exposeHeaders?: string[];
-  maxAgeSeconds?: number;
-}
-
-/**
- * The OTA bucket's rules, from the same allowed-origin configuration every other surface reads.
- *
- * An unconfigured bucket allows any origin: the update manifest is public bytes, and a bucket with
- * no CORS rules cannot be fetched by a WebView at all.
- */
-function buildDefaultOtaCorsRules(): R2CorsRule[] {
-  const origins = corsOriginsFromEnv(process.env, [ANY_ORIGIN]);
-  return [
-    {
-      id: 'asol-ota-browser-upload',
-      allowed: {
-        origins,
-        methods: ['GET', 'PUT', 'POST', 'DELETE', 'HEAD'],
-        headers: ['*'],
-      },
-      exposeHeaders: ['ETag', 'Content-Length', 'Content-Type'],
-      maxAgeSeconds: 3600,
-    },
-  ];
-}
 
 async function verifyOtaToken(cloudflare: { accountId: string; apiToken: string }): Promise<boolean> {
   const response = await fetch(`${CF_API_BASE}/accounts/${cloudflare.accountId}/tokens/verify`, {
@@ -50,7 +17,7 @@ async function verifyOtaToken(cloudflare: { accountId: string; apiToken: string 
 async function getOtaBucketCors(
   cloudflare: { accountId: string; apiToken: string },
   bucket: string,
-): Promise<R2CorsRule[]> {
+): Promise<OtaR2CorsRule[]> {
   const response = await fetch(
     `${CF_API_BASE}/accounts/${cloudflare.accountId}/r2/buckets/${encodeURIComponent(bucket)}/cors`,
     {
@@ -61,15 +28,15 @@ async function getOtaBucketCors(
     },
   );
   if (response.status === 404) return [];
-  const body = (await response.json()) as { success: boolean; result?: { rules?: R2CorsRule[] } };
+  const body = (await response.json()) as { success: boolean; result?: { rules?: OtaR2CorsRule[] } };
   return body.result?.rules ?? [];
 }
 
 async function putOtaBucketCors(
   cloudflare: { accountId: string; apiToken: string },
   bucket: string,
-  rules: R2CorsRule[],
-): Promise<R2CorsRule[]> {
+  rules: OtaR2CorsRule[],
+): Promise<OtaR2CorsRule[]> {
   const response = await fetch(
     `${CF_API_BASE}/accounts/${cloudflare.accountId}/r2/buckets/${encodeURIComponent(bucket)}/cors`,
     {
@@ -81,7 +48,7 @@ async function putOtaBucketCors(
       body: JSON.stringify({ rules }),
     },
   );
-  const body = (await response.json()) as { success: boolean; result?: { rules?: R2CorsRule[] } };
+  const body = (await response.json()) as { success: boolean; result?: { rules?: OtaR2CorsRule[] } };
   if (!response.ok || !body.success) {
     throw new Error(`Failed to update OTA bucket CORS: ${response.statusText}`);
   }

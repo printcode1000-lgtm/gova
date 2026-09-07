@@ -137,7 +137,7 @@ After compilation, `collectManifestFiles()` inventories final `out/` files:
 `ota:publish` publishes exactly that inventory. A file removed by a policy change is deleted from R2 during the next publication and is absent from the next staged application release.
 
 After route generation, the build runs `auditCapacitorDefaultBundle`. It rejects
-an output that does not start in Arabic/RTL/light mode or that contains `.env`,
+an output that does not start in Arabic/RTL/light mode or that contains `.env.local` or the forbidden legacy `.env`,
 Firebase configuration, SQLite, or `sync_data` artifacts. This audit is shared
 by manual static builds, local Capacitor builds, `ota:publish`, and
 `cap:build`.

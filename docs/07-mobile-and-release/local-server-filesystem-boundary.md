@@ -54,6 +54,6 @@ Authenticated full-host-control jobs are not restricted to this workspace path. 
 
 ## Secrets And Scheduled Host Tasks
 
-Secrets such as local `.env` files, R2 credentials, systemd configuration, cron configuration, and scheduled host tasks must be treated according to their actual storage location. If they exist only on the local server, GitHub inspection alone cannot prove their current state or execution status.
+Secrets such as the local `.env.local` file, R2 credentials, systemd configuration, cron configuration, and scheduled host tasks must be treated according to their actual storage location. If they exist only on the local server, GitHub inspection alone cannot prove their current state or execution status.
 
 When verifying host-level behavior such as an hourly R2 update, agents must inspect the relevant local server configuration or an explicitly tracked implementation file rather than infer the behavior from repository paths alone.

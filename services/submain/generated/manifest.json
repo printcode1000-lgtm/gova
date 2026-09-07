@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-05T15:18:23.612Z",
+  "generatedAt": "2026-09-07T09:19:26.709Z",
   "entryPoints": [
     "features/product-search/server/services/product-search-service.server.ts",
     "features/product-search/server/services/product-search-products.server.ts",
@@ -10,7 +10,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 491,
+  "fileCount": 492,
   "files": [
     "packages/account-declarations/src/accounts/gova-runtime-env-keys.ts",
     "packages/account-declarations/src/accounts/submain-runtime-env-keys.ts",
@@ -54,6 +54,7 @@
     "packages/cors/src/policy.ts",
     "packages/cors/src/preflight.ts",
     "packages/cors/src/types.ts",
+    "packages/cors/src/verification.ts",
     "packages/data-core/src/control-system-logs.ts",
     "packages/data-core/src/core/data-source-registry.ts",
     "packages/data-core/src/core/database-runtime-policy.ts",

@@ -14,7 +14,7 @@ missing required key throws, and which of two legacy spellings wins.
 | Door | Import | Safe for | Contents |
 | :--- | :--- | :--- | :--- |
 | `.` | `@asol/env-core` | Anything | `readOptionalEnv`, `readEnv`, `requireEnv`, `firstEnv`, `hasEnv`, `readBooleanEnv`, `readListEnv` |
-| `./files` | `@asol/env-core/files` | Node only | `readEnvFiles` — `.env.local` then `.env`, for tooling that runs outside Next.js |
+| `./files` | `@asol/env-core/files` | Node only | `readEnvFiles` — `.env.local` only, for tooling that runs outside Next.js |
 | `./process` | `@asol/env-core/process` | Node only | `loadReleaseToolEnvironment` / `resolveReleaseToolEnvironmentSources` — fills `process.env` for release tools |
 
 `./process` is Node-only. `loadReleaseToolEnvironment` applies this precedence
@@ -22,10 +22,10 @@ and **never logs values**:
 
 1. Existing process environment
 2. `.env.local` fills missing keys
-3. `.env` fills keys still missing
-4. `fastlane/.env` fills keys still missing
 
-Empty declarations are unconfigured and do not mask a later non-empty value.
+`.env` and `fastlane/.env` are forbidden legacy local sources. Their presence
+fails closed through the environment-source contract instead of becoming a hidden
+fallback. Empty declarations in `.env.local` are unconfigured.
 
 Callers: `ota:*` commands via `loadOtaEnvironment()`, `scripts/build-static.ts`,
 `scripts/release-android.ts`, `scripts/cap-build.ts`, `scripts/deploy-all.ts`,
@@ -47,5 +47,5 @@ Two deliberate narrownesses:
   meaningful trailing characters must not be silently altered on the way to a database, which is
   why the file reader deliberately does not reuse the trimming rule above.
 
-`env` is a parameter with a `process.env` default throughout, so a caller can pass a parsed `.env`
-file or a test fixture without touching the real environment.
+`env` is a parameter with a `process.env` default throughout, so a caller can pass a parsed environment
+object or a test fixture without touching the real environment.

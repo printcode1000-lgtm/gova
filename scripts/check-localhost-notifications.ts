@@ -31,7 +31,6 @@ const ROOT = process.cwd();
 const DEV_ORIGIN = process.env.ASOL_LOCAL_ORIGIN?.trim() || 'http://localhost:3001';
 
 if (existsSync('.env.local')) dotenv.config({ path: '.env.local', quiet: true });
-dotenv.config({ path: '.env', quiet: true });
 
 type Level = 'OK' | 'FAIL' | 'INFO';
 

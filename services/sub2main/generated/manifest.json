@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-05T15:18:24.996Z",
+  "generatedAt": "2026-09-07T09:19:27.435Z",
   "entryPoints": [
     "features/product/server/services/product-service.server.ts",
     "features/profile/server/services/profile-service.bootstrap.server.ts",
@@ -19,7 +19,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 448,
+  "fileCount": 449,
   "files": [
     "packages/account-declarations/src/accounts/products.ts",
     "packages/account-declarations/src/accounts/profiles.ts",
@@ -64,6 +64,7 @@
     "packages/cors/src/policy.ts",
     "packages/cors/src/preflight.ts",
     "packages/cors/src/types.ts",
+    "packages/cors/src/verification.ts",
     "packages/data-core/src/control-system-logs.ts",
     "packages/data-core/src/core/data-source-registry.ts",
     "packages/data-core/src/core/database-runtime-policy.ts",

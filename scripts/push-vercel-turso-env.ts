@@ -9,7 +9,6 @@ import {
 } from '@asol/vercel-deploy-core';
 
 if (existsSync('.env.local')) dotenv.config({ path: '.env.local' });
-dotenv.config({ path: '.env' });
 
 function requireToken(): string {
   const token = process.env.VERCEL_TOKEN?.trim() || process.env.VERCEL_ACCESS_TOKEN?.trim();

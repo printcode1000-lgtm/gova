@@ -7,9 +7,9 @@ means: **every public path runs the same ordered transaction**, defined once in
 
 | Command | Correctness preflight | Publish gates | Use it when |
 | --- | --- | --- | --- |
-| `deploy:all` | lint, typecheck, `architecture:check`, tests, DB sync, builds, mirror sync/verify/build, service smoke | all | nothing has been proven yet |
-| `deploy:push` | none | all — account access, scratch/manifest/empty refusals, `secrets:backup`, mirror builds | the correctness gates already passed and you want the publish gates anyway |
-| `deploy:push:fast` | none | branch, secret restore, credentials only | you just ran the gates yourself and want the shortest publish |
+| `deploy:all` | lint, typecheck, `architecture:check`, tests, live CORS, DB sync, builds, mirror sync/verify/build, service smoke | all | nothing has been proven yet |
+| `deploy:push` | none | all — live CORS, account access, scratch/manifest/empty refusals, `secrets:backup`, mirror builds | the correctness gates already passed and you want the publish gates anyway |
+| `deploy:push:fast` | none | branch, secret restore, credentials, **live CORS** | you just ran the gates yourself and want the shortest publish |
 
 None of them is a substitute for the other two on correctness: only `deploy:all`
 runs lint, typecheck and the test suite.
@@ -144,6 +144,7 @@ the first git write:
 
 | Gate | What it refuses |
 | --- | --- |
+| `cors:verify:live` | any deployed API origin or registered browser-facing R2 bucket whose live CORS no longer matches the current client contract |
 | `assertVercelAccountsForTargets` | a missing or wrong token, before the push rather than after |
 | `assertNoScratchFiles` | `*.log`, `*.tmp`, `*.bak`, `scratchpad/` — waived by `--allow-scratch-files` |
 | `assertReleaseManifestNotDowngraded` | a lower `releaseId` / `version` / `minimumNativeVersion` — waived by `--allow-manifest-downgrade` |
@@ -172,8 +173,9 @@ npm run deploy:push:fast
 
 The fast path, unchanged. It runs `--fast --vercel-target=all`.
 It skips account-access checks, publish refusals, `secrets:backup`, and local
-mirror builds. The branch check, secret restore, release credentials, exact-SHA
-deployment reports, and `VERCEL_TOKEN` remain mandatory.
+mirror builds. The branch check, secret restore, release credentials, **live CORS verification**, exact-SHA
+deployment reports, and `VERCEL_TOKEN` remain mandatory. Live CORS is remote production state, so a
+fast release may not skip it even when every local correctness gate just passed.
 
 Because the backup is skipped, the final line says so — `secrets backup skipped
 (--fast)` rather than `secrets backup completed`. A success line naming a step

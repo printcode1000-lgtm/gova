@@ -22,7 +22,6 @@ import {
  */
 
 if (existsSync(".env.local")) dotenv.config({ path: ".env.local", quiet: true });
-dotenv.config({ path: ".env", quiet: true });
 
 const APPLY = process.argv.includes("--apply");
 

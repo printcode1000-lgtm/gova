@@ -23,7 +23,6 @@ import {
  */
 
 if (existsSync(".env.local")) dotenv.config({ path: ".env.local", quiet: true });
-dotenv.config({ path: ".env", quiet: true });
 
 const ORDER_SHARDS = DATABASE_SHARD_NAMES.filter((name) =>
   name.startsWith("orders"),

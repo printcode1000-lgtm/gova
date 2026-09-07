@@ -4,6 +4,7 @@ import { homedir, platform, release } from "node:os";
 import path from "node:path";
 import dotenv from "dotenv";
 import { ACCOUNT_DECLARATIONS } from "@asol/account-declarations";
+import { findLegacyLocalEnvFiles } from "@asol/env-core/process";
 import { isValidJavaHome, resolveJavaHome } from "./android/java-home";
 import { validateRuntimeCompatibilityReference } from "./runtime-compatibility-reference";
 import {
@@ -13,7 +14,6 @@ import {
 import { hostedRuntimeEnvKeys } from "./vercel-deployment-guards";
 
 dotenv.config({ path: ".env.local", quiet: true });
-dotenv.config({ path: ".env", quiet: true });
 
 type Scenario = "all" | "development" | "web" | "production" | "android" | "ios";
 type Level = "OK" | "INSTALL" | "UPDATE" | "CONFIGURE" | "INFO" | "NOT_APPLICABLE" | "EVIDENCE_GAP";
@@ -340,8 +340,10 @@ function checkOutdatedPackages(): void {
 }
 
 function checkWeb(): void {
-  const envFile = existsSync(path.join(ROOT, ".env")) || existsSync(path.join(ROOT, ".env.local"));
-  add({ scenario: "development", item: "Environment file", level: envFile ? "OK" : "CONFIGURE", installed: envFile ? ".env and/or .env.local" : undefined, required: "Copy .env.example and fill only the selected scenario", action: envFile ? "No action." : "Copy .env.example to an ignored local environment file; never commit secrets." });
+  const envFile = existsSync(path.join(ROOT, ".env.local"));
+  const legacyEnvFiles = findLegacyLocalEnvFiles(ROOT);
+  add({ scenario: "development", item: "Environment file", level: envFile ? "OK" : "CONFIGURE", installed: envFile ? ".env.local" : undefined, required: "Copy .env.example to .env.local and fill only the selected scenario", action: envFile ? "No action." : "Copy .env.example to .env.local; never commit secrets." });
+  add({ scenario: "common", item: "Single local environment source", level: legacyEnvFiles.length === 0 ? "OK" : "CONFIGURE", installed: legacyEnvFiles.length === 0 ? ".env.local only" : `legacy files present: ${legacyEnvFiles.join(", ")}`, required: ".env.local is the only local application/release env file", action: legacyEnvFiles.length === 0 ? "No action." : "Merge values into .env.local and delete the legacy env files." });
   add({ scenario: "web", item: "Web toolchain", level: "OK", installed: "Next.js/React/TypeScript from package-lock.json", required: "npm ci", action: "Run npm run dev for development or npm run build for production." });
 
   const expected = {

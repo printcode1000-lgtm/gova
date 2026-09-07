@@ -61,7 +61,7 @@ The audit verifies:
 - initial theme is light;
 - the blocking app initializer selects light, comfortable, normal-contrast
   defaults;
-- no `.env`, Firebase configuration file, SQLite database, or `sync_data`
+- no `.env.local` or legacy `.env`, Firebase configuration file, SQLite database, or `sync_data`
   directory entered the static output.
 - Android cannot back up or restore client data after reinstall.
 

@@ -98,7 +98,7 @@ Successful response:
 }
 ```
 
-The endpoint does not access a database and does not require authentication. Its purpose is to prove that the Business API host is reachable.
+The endpoint does not access a database and does not require authentication. Its purpose is to prove that the Business API host is reachable. The request is classified as `networkAuthoritative`: it still enters the mandatory AsolApiClient browser-read gate, but the gate executes the network loader directly instead of sharing an in-flight TanStack Query request. This keeps a deliberately aborted health probe from aborting a replacement probe during React development effect replay.
 
 During a gradual deployment, an older backend may return an HTTP `404` because it does not have `/api/health` yet. The network service treats any valid HTTP response as proof that the server is reachable. Transport failures have no HTTP status and remain connectivity failures.
 
@@ -205,7 +205,7 @@ Valid HTTP error responses continue to use `ApiError` with their original status
 
 ### Aborted requests
 
-`AbortError` is passed through unchanged. Aborting an old health check is expected behavior and must not change the global status or be persisted as a `startup-network-health-check` failure. This remains true when a shared query promise delivers the cancellation to a newer check whose own `AbortSignal` was not aborted.
+`AbortError` is passed through unchanged. Aborting an old health check is expected behavior and must not change the global status or be persisted as a `startup-network-health-check` failure. Network-authoritative probes are not deduplicated, so cancelling one probe cannot cancel the replacement probe.
 
 ### Logging
 

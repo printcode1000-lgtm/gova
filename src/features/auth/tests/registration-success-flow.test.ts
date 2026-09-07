@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
+import { parseStoredSession } from '@/features/auth/domain/session.entity';
 
 function source(relativePath: string): string {
   return readFileSync(path.join(process.cwd(), relativePath), 'utf8');
@@ -12,6 +13,7 @@ const registration = source('src/features/auth/presentation/hooks/use-register.t
 const registrationPage = source('src/features/auth/presentation/RegistrationPageContent.tsx');
 const toast = source('src/features/auth/presentation/LoginSuccessToast.tsx');
 const rootLayout = source('src/app/layout.tsx');
+const sessionProvider = source('src/features/auth/presentation/SessionProvider.tsx');
 const notificationBridge = source('src/core/composition/NotificationsFeatureBridge.tsx');
 const notificationOptIn = source(
   'src/features/notifications/presentation/NotificationOptInController.tsx',
@@ -68,6 +70,28 @@ assert.doesNotMatch(
   notificationOptIn,
   /AUTH_LOGIN_COMPLETED_EVENT/,
   'NotificationOptInController must receive loginCompleted via the composition bridge, not listen to auth events directly',
+);
+assert.match(sessionProvider, /isSessionTokenUidConsistent/);
+assert.match(sessionProvider, /sessionService\.clearSession\(\)/);
+
+const encodedSessionClaims = (uid: string) =>
+  Buffer.from(
+    JSON.stringify({ uid, phone: '+201000000000', expiresAt: Date.now() + 60_000 }),
+  ).toString('base64url') + '.signature';
+const storedSession = {
+  uid: 'usr_expected',
+  phone: '+201000000000',
+  providerAccountEnabled: false,
+  specialties: { main: [], sub: {} },
+};
+assert.ok(
+  parseStoredSession({ ...storedSession, sessionToken: encodedSessionClaims('usr_expected') }),
+  'a stored session may keep a token that names the same UID',
+);
+assert.equal(
+  parseStoredSession({ ...storedSession, sessionToken: encodedSessionClaims('usr_other') }),
+  null,
+  'a stored session must be rejected when its token names another UID',
 );
 
 console.log('Registration success flow tests passed.');

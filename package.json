@@ -12,6 +12,13 @@
   },
   "scripts": {
     "prepare": "git config core.hooksPath .githooks || exit 0",
+    "env:verify:single-source": "npx tsx scripts/verify-single-env-source.ts",
+    "predev": "npm run env:verify:single-source",
+    "predev:checked": "npm run env:verify:single-source",
+    "prebuild": "npm run env:verify:single-source",
+    "prebuild:static": "npm run env:verify:single-source",
+    "prebuild:vercel": "npm run env:verify:single-source",
+    "prestart": "npm run env:verify:single-source",
     "dev": "next dev --turbo --port 3001",
     "dev:distributed": "npx tsx scripts/dev-distributed.ts",
     "dev:distributed:smoke": "npx tsx scripts/dev-distributed.ts --smoke",
@@ -190,9 +197,9 @@
     "r2:migrate:images": "npx tsx packages/data-core/src/tooling/migrate-r2-image-public-url.ts",
     "r2:migrate:folders": "npx tsx packages/data-core/src/tooling/migrate-r2-cloud-folders.ts",
     "ota:keygen": "npx tsx packages/ota-core/scripts/ota-keygen.ts",
-    "ota:publish": "npx tsx scripts/ensure-release-command-secrets.ts google-play ota && npx tsx packages/ota-core/scripts/ota-publish.ts",
+    "ota:publish": "npx tsx scripts/ensure-release-command-secrets.ts google-play ota && npm run ota:verify:cors && npx tsx packages/ota-core/scripts/ota-publish.ts",
     "ota:revoke": "npx tsx scripts/ensure-release-command-secrets.ts ota-storage ota-signing && npx tsx packages/ota-core/scripts/ota-revoke.ts",
-    "ota:check": "npx tsx scripts/ensure-release-command-secrets.ts google-play ota && npx tsx packages/ota-core/scripts/ota-publish.ts --dry-run",
+    "ota:check": "npx tsx scripts/ensure-release-command-secrets.ts google-play ota && npm run ota:verify:cors && npx tsx packages/ota-core/scripts/ota-publish.ts --dry-run",
     "test:release-commands": "cross-env NODE_ENV=development NODE_OPTIONS=--conditions=react-server npx tsx src/features/release-commands/tests/release-commands.test.ts && npx tsx src/features/release-commands/tests/production-deploy-callback.test.ts",
     "test:console-command-parity": "npx tsx src/features/release-commands/tests/console-command-parity.test.ts",
     "test:deploy-runbook-execution": "npx tsx scripts/architecture/deploy-runbook-execution.test.ts",
@@ -288,7 +295,11 @@
     "test:service-cors": "npx tsx scripts/tests/service-cors-boundary.test.ts",
     "test:api-contract-core": "npx tsx packages/api-contract-core/src/tests/index.test.ts",
     "api:transport:inventory": "npx tsx scripts/api-transport-inventory.ts",
-    "api:transport:check": "npx tsx scripts/api-transport-contract-check.ts"
+    "api:transport:check": "npx tsx scripts/api-transport-contract-check.ts",
+    "cors:verify:api-live": "npx tsx scripts/verify-live-api-cors.ts",
+    "r2:verify:cors": "npx tsx packages/storage-core/scripts/verify-cors.ts",
+    "cors:verify:live": "npm run cors:verify:api-live && npm run r2:verify:cors",
+    "ota:verify:cors": "npx tsx scripts/ensure-release-command-secrets.ts ota-cloudflare && npx tsx packages/ota-core/scripts/verify-cors.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1075.0",

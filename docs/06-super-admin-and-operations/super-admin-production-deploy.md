@@ -195,7 +195,7 @@ The page lists any that are missing instead of failing silently.
 | `ASOL_DEPLOY_SANDBOX_VCPUS` | optional; sandbox size, default 2 |
 
 `npx tsx scripts/push-production-deploy-env.ts` writes every one of these —
-except `VERCEL_OIDC_TOKEN` — onto the `gova` project from the local `.env.local`/`.env`, generating
+except `VERCEL_OIDC_TOKEN` — onto the `gova` project from the local `.env.local`, generating
 `ASOL_DEPLOY_CALLBACK_SECRET` only when the project does not already have one and
 deriving the repository URL from `origin`. It never invents any other value: a
 key with no local value is reported and skipped.

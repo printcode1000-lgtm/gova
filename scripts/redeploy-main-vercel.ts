@@ -7,7 +7,6 @@ import { redeployLatestProduction } from "@asol/vercel-deploy-core";
 if (existsSync(".env.local")) {
   dotenv.config({ path: ".env.local" });
 }
-dotenv.config({ path: ".env" });
 
 async function main(): Promise<void> {
   const token = process.env.VERCEL_TOKEN || process.env.VERCEL_ACCESS_TOKEN;
@@ -15,7 +14,7 @@ async function main(): Promise<void> {
   const projectName = process.env.VERCEL_PROJECT_NAME?.trim() || "gova";
 
   if (!token) {
-    throw new Error("VERCEL_TOKEN or VERCEL_ACCESS_TOKEN is required in .env");
+    throw new Error("VERCEL_TOKEN or VERCEL_ACCESS_TOKEN is required in .env.local");
   }
 
   let projectId = process.env.VERCEL_PROJECT_ID?.trim() ?? "";

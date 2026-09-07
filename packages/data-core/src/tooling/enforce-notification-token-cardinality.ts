@@ -19,7 +19,6 @@ const migrationPath = path.join(
 );
 
 dotenv.config({ path: path.join(root, ".env.local"), quiet: true });
-dotenv.config({ path: path.join(root, ".env"), quiet: true });
 
 const statements = readFileSync(migrationPath, "utf8")
   .split("--> statement-breakpoint")

@@ -181,7 +181,7 @@ the main app and changes nothing here.
 
 The grant secret must be byte-identical on both sides — the main app signs with
 it and the service verifies. `npm run db:push:vercel-env` and
-`npm run notifications:deploy` both read it from the same `.env`, so they cannot
+`npm run notifications:deploy` both read it from the same `.env.local`, so they cannot
 drift. If they ever do, every grant is rejected as forged.
 
 The service is never told where the main app is: it has no reason to call it,

@@ -5,6 +5,7 @@ import {
   asolDbSetCurrentSession,
 } from '@asol/data-core/browser';
 import {
+  isSessionTokenUidConsistent,
   parseStoredSession,
   type SaveSessionInput,
   type UserSession,
@@ -16,6 +17,9 @@ function toStoredSession(input: SaveSessionInput): UserSession {
   const specialties = input.specialties ?? { main: [], sub: {} };
   const providerAccountEnabled = input.providerAccountEnabled === true;
   const sessionToken = input.sessionToken?.trim();
+  if (!isSessionTokenUidConsistent(input.uid, sessionToken)) {
+    throw new Error('sessionTokenIdentityMismatch');
+  }
   return email
     ? { uid: input.uid, phone: input.phone, email, providerAccountEnabled, specialties, ...(sessionToken ? { sessionToken } : {}) }
     : { uid: input.uid, phone: input.phone, providerAccountEnabled, specialties, ...(sessionToken ? { sessionToken } : {}) };

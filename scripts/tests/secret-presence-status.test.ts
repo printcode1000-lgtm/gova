@@ -21,10 +21,10 @@ const fixture = mkdtempSync(path.join(tmpdir(), "asol-secret-presence-"));
 mkdirSync(path.join(fixture, "config"), { recursive: true });
 writeFileSync(
   path.join(fixture, "config", "secret-backup-paths.json"),
-  JSON.stringify({ exactPaths: [".env", "fastlane/play-store-key.json"] }),
+  JSON.stringify({ exactPaths: [".env.local", "fastlane/play-store-key.json"] }),
   "utf8",
 );
-writeFileSync(path.join(fixture, ".env"), "VERCEL_TOKEN=super-secret-token-value\n", "utf8");
+writeFileSync(path.join(fixture, ".env.local"), "VERCEL_TOKEN=super-secret-token-value\n", "utf8");
 
 const env: NodeJS.ProcessEnv = {
   VERCEL_TOKEN: "super-secret-token-value",
@@ -41,7 +41,7 @@ assert.equal(byEnv.VERCEL_TOKEN, "present");
 assert.equal(byEnv.ASOL_OTA_R2_BUCKET_NAME, "empty");
 assert.equal(byEnv.ASOL_OTA_R2_ACCESS_KEY_ID, "missing");
 assert.equal(
-  files.some((row) => row.path === ".env" && row.status === "file-present"),
+  files.some((row) => row.path === ".env.local" && row.status === "file-present"),
   true,
 );
 assert.equal(

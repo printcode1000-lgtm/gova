@@ -13,7 +13,6 @@ process.env.ASOL_PROVISIONING = "true";
 if (existsSync(".env.local")) {
   dotenv.config({ path: ".env.local" });
 }
-dotenv.config({ path: ".env" });
 
 async function main() {
   if (!process.env.TURSO_API_TOKEN || !process.env.TURSO_ORGANIZATION) {

@@ -7,7 +7,6 @@ import { createClient, type Client, type InStatement } from "@libsql/client";
 import storageProfiles from "@asol/storage-core/profiles-config";
 
 dotenv.config({ path: ".env.local" });
-dotenv.config({ path: ".env" });
 
 const PUBLIC_URL = (process.env.R2_PUBLIC_URL || "").replace(/\/$/, "");
 const TIMEOUT_MS = 20_000;

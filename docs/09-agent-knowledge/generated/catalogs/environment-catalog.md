@@ -146,7 +146,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `LOCALAPPDATA` | server/tooling | 2 | `scripts/android/adb.ts`, `scripts/build-android-signed.ts` |
 | `NEXT_PHASE` | server/tooling | 1 | `src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` |
 | `NEXT_PUBLIC_` | client-visible | 1 | `src/core/config/business-api-origins.ts` |
-| `NEXT_PUBLIC_ASOL_API_BASE_URL` | client-visible | 3 | `npm run build:static:local`, `packages/ota-core/scripts/serve-static.ts`, `src/core/config/public-env.ts` |
+| `NEXT_PUBLIC_ASOL_API_BASE_URL` | client-visible | 4 | `npm run build:static:local`, `scripts/verify-live-api-cors.ts`, `packages/ota-core/scripts/serve-static.ts`, `src/core/config/public-env.ts` |
 | `NEXT_PUBLIC_ASOL_APP_STORE_URL` | client-visible | 1 | `src/core/config/public-env.ts` |
 | `NEXT_PUBLIC_ASOL_BASE_PATH` | client-visible | 1 | `src/core/config/public-env.ts` |
 | `NEXT_PUBLIC_ASOL_CONTROL_URL` | client-visible | 5 | `scripts/deploy-push.ts`, `scripts/release-readiness-publish.ts`, `src/core/config/business-api-origins.ts`, `src/core/config/public-env.ts`, `src/core/api/tests/compatibility-boundary.test.ts` |
@@ -159,7 +159,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `NEXT_PUBLIC_ASOL_OTA_PUBLIC_KEY` | client-visible | 2 | `packages/ota-core/src/publishing/config/ota-r2-target.ts`, `src/core/config/public-env.ts` |
 | `NEXT_PUBLIC_ASOL_PRODUCTS_URL` | client-visible | 3 | `src/core/config/business-api-origins.ts`, `src/core/config/public-env.ts`, `src/core/api/tests/compatibility-boundary.test.ts` |
 | `NEXT_PUBLIC_ASOL_PROFILES_URL` | client-visible | 3 | `src/core/config/business-api-origins.ts`, `src/core/config/public-env.ts`, `src/core/api/tests/compatibility-boundary.test.ts` |
-| `NEXT_PUBLIC_ASOL_PUBLIC_WEB_ORIGIN` | client-visible | 1 | `src/core/config/public-env.ts` |
+| `NEXT_PUBLIC_ASOL_PUBLIC_WEB_ORIGIN` | client-visible | 3 | `scripts/verify-live-api-cors.ts`, `packages/storage-core/scripts/verify-cors.ts`, `src/core/config/public-env.ts` |
 | `NEXT_PUBLIC_ASOL_SUB2MAIN_URL` | client-visible | 3 | `src/core/config/business-api-origins.ts`, `src/core/config/public-env.ts`, `src/core/api/tests/compatibility-boundary.test.ts` |
 | `NEXT_PUBLIC_ASOL_SUBMAIN_URL` | client-visible | 3 | `src/core/config/business-api-origins.ts`, `src/core/config/public-env.ts`, `src/core/api/tests/compatibility-boundary.test.ts` |
 | `NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION` | client-visible | 1 | `src/core/config/public-env.ts` |

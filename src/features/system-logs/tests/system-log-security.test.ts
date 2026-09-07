@@ -58,6 +58,20 @@ const collector = read("src/features/system-logs/application/SystemLogCollector.
 assert.equal(listRoute.includes("assertSuperAdminRequest(request)"), true);
 assert.equal(listRoute.includes('searchParams.get("uid")'), false);
 assert.equal(apiService.includes('"x-asol-session-token": sessionToken'), true);
+const ingestClientMethods = apiService.slice(
+  apiService.indexOf('async ingest('),
+  apiService.indexOf('async listPage('),
+);
+assert.equal(
+  ingestClientMethods.includes('notifySystemLogsChanged()'),
+  false,
+  'successful telemetry ingest must not trigger a list reload feedback loop',
+);
+assert.equal(
+  apiService.slice(apiService.indexOf('async clear(')).includes('notifySystemLogsChanged()'),
+  true,
+  'explicit clearing still notifies local readers',
+);
 assert.equal(
   ingestRoute.includes('addBatch(inputs, "untrusted-client")'),
   true,

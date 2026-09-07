@@ -1,23 +1,23 @@
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 
+import {
+  assertSingleLocalEnvSource,
+  CANONICAL_LOCAL_ENV_FILE,
+} from "./local-env-contract";
+
 /**
  * Authoritative release-tool environment loading.
  *
- * Precedence (later files never overwrite a non-empty earlier value):
+ * Precedence:
  * 1. Existing process environment
  * 2. `.env.local` fills missing keys
- * 3. `.env` fills keys still missing
- * 4. `fastlane/.env` fills keys still missing
  *
- * Empty declarations are unconfigured and do not mask a later non-empty value.
+ * `.env` and `fastlane/.env` are forbidden legacy sources.
+ * Empty declarations are unconfigured.
  * This function never logs values.
  */
-export const RELEASE_TOOL_ENV_FILES = [
-  ".env.local",
-  ".env",
-  "fastlane/.env",
-] as const;
+export const RELEASE_TOOL_ENV_FILES = [CANONICAL_LOCAL_ENV_FILE] as const;
 
 export type ReleaseToolEnvFile = (typeof RELEASE_TOOL_ENV_FILES)[number];
 export type ReleaseToolEnvSource = "process" | ReleaseToolEnvFile;
@@ -73,6 +73,7 @@ export function loadReleaseToolEnvironment(
 ): void {
   const cwd = options.cwd ?? process.cwd();
   const env = options.env ?? process.env;
+  assertSingleLocalEnvSource(cwd);
   for (const relative of RELEASE_TOOL_ENV_FILES) {
     const filePath = path.join(cwd, relative);
     if (!existsSync(filePath)) continue;
@@ -93,6 +94,7 @@ export function resolveReleaseToolEnvironmentSources(
 ): ReleaseToolEnvKeySource[] {
   const cwd = options.cwd ?? process.cwd();
   const env = options.env ?? process.env;
+  assertSingleLocalEnvSource(cwd);
   const sources = new Map<string, ReleaseToolEnvSource>();
   for (const [key, value] of Object.entries(env)) {
     if (isUsable(value)) sources.set(key, "process");
@@ -110,3 +112,10 @@ export function resolveReleaseToolEnvironmentSources(
     .map(([key, source]) => ({ key, source }))
     .sort((left, right) => left.key.localeCompare(right.key));
 }
+
+export {
+  assertSingleLocalEnvSource,
+  CANONICAL_LOCAL_ENV_FILE,
+  CANONICAL_ENV_TEMPLATE_FILE,
+  findLegacyLocalEnvFiles,
+} from "./local-env-contract";

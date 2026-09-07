@@ -8,7 +8,6 @@ import nodemailer from "nodemailer";
 import { KNOWN_UNSHIPPED } from "./route-ownership-coverage";
 
 if (existsSync(".env.local")) dotenv.config({ path: ".env.local", quiet: true });
-dotenv.config({ path: ".env", quiet: true });
 
 /**
  * The ASOL distributed-architecture migration report, by mail.

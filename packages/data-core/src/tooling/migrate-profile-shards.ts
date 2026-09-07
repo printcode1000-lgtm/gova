@@ -23,7 +23,6 @@ import {
  */
 
 if (existsSync(".env.local")) dotenv.config({ path: ".env.local", quiet: true });
-dotenv.config({ path: ".env", quiet: true });
 
 /**
  * The seven profile shards. `system-ops` is excluded on purpose: it holds system

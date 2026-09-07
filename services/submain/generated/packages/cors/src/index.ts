@@ -40,7 +40,10 @@ export {
   withAllowedMethods,
 } from './policy';
 
-export { requestOrigin, resolveCorsHeaders } from './headers';
+export { CORS_HEADER_NAMES, requestOrigin, resolveCorsHeaders } from './headers';
+
+export type { CorsPreflightExpectation, CorsPreflightProbeInput } from './verification';
+export { createCorsPreflightProbeHeaders, inspectCorsPreflightResponse } from './verification';
 
 export { PREFLIGHT_STATUS, handleCorsPreflight, isCorsPreflight } from './preflight';
 

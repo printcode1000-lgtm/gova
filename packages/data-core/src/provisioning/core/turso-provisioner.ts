@@ -43,7 +43,6 @@ function updateUsersEnvFiles(url: string, token: string): void {
     TURSO_DATABASE_URL: url,
     TURSO_AUTH_TOKEN: token,
   };
-  updateEnvFileKeys('.env', entries);
   updateEnvFileKeys('.env.local', entries);
 }
 
@@ -52,7 +51,6 @@ function updateProductEnvFiles(url: string, token: string): void {
     TURSO_PRODUCT_DATABASE_URL: url,
     TURSO_PRODUCT_AUTH_TOKEN: token,
   };
-  updateEnvFileKeys('.env', entries);
   updateEnvFileKeys('.env.local', entries);
 }
 
@@ -61,7 +59,6 @@ function updateAdvertisementsEnvFiles(url: string, token: string): void {
     TURSO_ADVERTISEMENTS_DATABASE_URL: url,
     TURSO_ADVERTISEMENTS_AUTH_TOKEN: token,
   };
-  updateEnvFileKeys('.env', entries);
   updateEnvFileKeys('.env.local', entries);
 }
 

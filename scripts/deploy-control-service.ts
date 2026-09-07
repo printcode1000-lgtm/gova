@@ -5,7 +5,6 @@ import { CONTROL_DECLARATION, deployAccountService } from '@asol/vercel-deploy-c
 import { assertReleaseDeploymentContext } from './assert-release-deployment-context';
 
 if (existsSync('.env.local')) dotenv.config({ path: '.env.local', quiet: true });
-dotenv.config({ path: '.env', quiet: true });
 
 /**
  * Deploys the control runtime.

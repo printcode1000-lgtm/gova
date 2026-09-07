@@ -704,6 +704,36 @@
       ]
     },
     {
+      "id": "command:cors:verify:api-live",
+      "kind": "command",
+      "name": "npm run cors:verify:api-live",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "api-live",
+        "cors",
+        "cors:verify:api-live",
+        "npm",
+        "npm run cors:verify:api-live",
+        "run",
+        "verify"
+      ]
+    },
+    {
+      "id": "command:cors:verify:live",
+      "kind": "command",
+      "name": "npm run cors:verify:live",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "cors",
+        "cors:verify:live",
+        "live",
+        "npm",
+        "npm run cors:verify:live",
+        "run",
+        "verify"
+      ]
+    },
+    {
       "id": "command:data-access:sync-public",
       "kind": "command",
       "name": "npm run data-access:sync-public",
@@ -1376,6 +1406,21 @@
       ]
     },
     {
+      "id": "command:env:verify:single-source",
+      "kind": "command",
+      "name": "npm run env:verify:single-source",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "env",
+        "env:verify:single-source",
+        "npm",
+        "npm run env:verify:single-source",
+        "run",
+        "single-source",
+        "verify"
+      ]
+    },
+    {
       "id": "command:fastlane",
       "kind": "command",
       "name": "npm run fastlane",
@@ -1981,6 +2026,87 @@
       ]
     },
     {
+      "id": "command:ota:verify:cors",
+      "kind": "command",
+      "name": "npm run ota:verify:cors",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "cors",
+        "npm",
+        "npm run ota:verify:cors",
+        "ota",
+        "ota:verify:cors",
+        "run",
+        "verify"
+      ]
+    },
+    {
+      "id": "command:prebuild",
+      "kind": "command",
+      "name": "npm run prebuild",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run prebuild",
+        "prebuild",
+        "run"
+      ]
+    },
+    {
+      "id": "command:prebuild:static",
+      "kind": "command",
+      "name": "npm run prebuild:static",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run prebuild:static",
+        "prebuild",
+        "prebuild:static",
+        "run",
+        "static"
+      ]
+    },
+    {
+      "id": "command:prebuild:vercel",
+      "kind": "command",
+      "name": "npm run prebuild:vercel",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run prebuild:vercel",
+        "prebuild",
+        "prebuild:vercel",
+        "run",
+        "vercel"
+      ]
+    },
+    {
+      "id": "command:predev",
+      "kind": "command",
+      "name": "npm run predev",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run predev",
+        "predev",
+        "run"
+      ]
+    },
+    {
+      "id": "command:predev:checked",
+      "kind": "command",
+      "name": "npm run predev:checked",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "checked",
+        "npm",
+        "npm run predev:checked",
+        "predev",
+        "predev:checked",
+        "run"
+      ]
+    },
+    {
       "id": "command:prepare",
       "kind": "command",
       "name": "npm run prepare",
@@ -1989,6 +2115,18 @@
         "npm",
         "npm run prepare",
         "prepare",
+        "run"
+      ]
+    },
+    {
+      "id": "command:prestart",
+      "kind": "command",
+      "name": "npm run prestart",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run prestart",
+        "prestart",
         "run"
       ]
     },
@@ -2091,6 +2229,21 @@
         "r2:sync:cors",
         "run",
         "sync"
+      ]
+    },
+    {
+      "id": "command:r2:verify:cors",
+      "kind": "command",
+      "name": "npm run r2:verify:cors",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "cors",
+        "npm",
+        "npm run r2:verify:cors",
+        "r2",
+        "r2:verify:cors",
+        "run",
+        "verify"
       ]
     },
     {
@@ -7947,8 +8100,13 @@
         "docs/02-data-and-storage/environment-variables",
         "docs/02-data-and-storage/environment-variables.md",
         "during",
+        "env",
         "environment",
         "environment variables",
+        "example",
+        "fastlane/",
+        "fastlane/.env",
+        "fastlane/.env.example",
         "here",
         "md",
         "note",
@@ -8124,6 +8282,8 @@
         "packages/ota-core/src/publishing/adapters/r2-storage.adapter.ts",
         "packages/storage-core/scripts/sync-cors",
         "packages/storage-core/scripts/sync-cors.ts",
+        "packages/storage-core/scripts/verify-cors",
+        "packages/storage-core/scripts/verify-cors.ts",
         "packages/storage-core/src/adapters/s3-client",
         "packages/storage-core/src/adapters/s3-client.adapter.ts",
         "packages/storage-core/src/domain/accounts/account-registry",
@@ -13597,9 +13757,6 @@
         "download",
         "during",
         "each",
-        "env",
-        "fastlane/",
-        "fastlane/.env",
         "fastlane/fastfile",
         "file",
         "forward-only",
@@ -15333,6 +15490,57 @@
       ]
     },
     {
+      "id": "document:docs/08-troubleshooting/problems/public-r2-object-fetch-blocked-by-cors.md",
+      "kind": "document",
+      "name": "Public R2 object opens directly but browser fetch is blocked by CORS",
+      "path": "docs/08-troubleshooting/problems/public-r2-object-fetch-blocked-by-cors.md",
+      "summary": "A Cloudflare R2 image URL returns `200` when opened directly or requested with `curl`, but Gova shows a transparent image placeholder. The server and Internet can both be healthy.",
+      "tags": [
+        "200",
+        "@asol/cors",
+        "@asol/storage-core",
+        "a cloudflare r2 image url returns `200` when opened directly or requested with `curl`, but gova shows a transparent image placeholder. the server and internet can both be healthy.",
+        "and",
+        "be",
+        "blocked",
+        "both",
+        "browser",
+        "but",
+        "by",
+        "can",
+        "cloudflare",
+        "cors",
+        "curl",
+        "directly",
+        "docs/08-troubleshooting/problems/public-r2-object-fetch-blocked-by-cors",
+        "docs/08-troubleshooting/problems/public-r2-object-fetch-blocked-by-cors.md",
+        "fetch",
+        "gova",
+        "healthy",
+        "image",
+        "internet",
+        "is",
+        "md",
+        "object",
+        "opened",
+        "opens",
+        "or",
+        "placeholder",
+        "public",
+        "public r2 object opens directly but browser fetch is blocked by cors",
+        "r2",
+        "requested",
+        "returns",
+        "server",
+        "shows",
+        "the",
+        "transparent",
+        "url",
+        "when",
+        "with"
+      ]
+    },
+    {
       "id": "document:docs/08-troubleshooting/problems/README.md",
       "kind": "document",
       "name": "Problems and Solutions",
@@ -15376,11 +15584,8 @@
         "docs/08-troubleshooting/problems/service-smoke-release-environment",
         "docs/08-troubleshooting/problems/service-smoke-release-environment.md",
         "during",
-        "env",
         "export",
         "fails",
-        "fastlane/",
-        "fastlane/.env",
         "is",
         "md",
         "missing",
@@ -28271,6 +28476,17 @@
       ]
     },
     {
+      "id": "script:scripts/verify-live-api-cors.ts",
+      "kind": "script",
+      "name": "verify-live-api-cors.ts",
+      "path": "scripts/verify-live-api-cors.ts",
+      "tags": [
+        "scripts/verify-live-api-cors",
+        "scripts/verify-live-api-cors.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/verify-project-secrets.ts",
       "kind": "script",
       "name": "verify-project-secrets.ts",
@@ -28289,6 +28505,17 @@
       "tags": [
         "scripts/verify-service-mirrors",
         "scripts/verify-service-mirrors.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/verify-single-env-source.ts",
+      "kind": "script",
+      "name": "verify-single-env-source.ts",
+      "path": "scripts/verify-single-env-source.ts",
+      "tags": [
+        "scripts/verify-single-env-source",
+        "scripts/verify-single-env-source.ts",
         "ts"
       ]
     },
@@ -30097,6 +30324,17 @@
       "tags": [
         "packages/cors/src/types",
         "packages/cors/src/types.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/cors/src/verification.ts",
+      "kind": "source",
+      "name": "verification.ts",
+      "path": "packages/cors/src/verification.ts",
+      "tags": [
+        "packages/cors/src/verification",
+        "packages/cors/src/verification.ts",
         "ts"
       ]
     },
@@ -33214,6 +33452,17 @@
       "tags": [
         "packages/env-core/src/domain/load-release-environment",
         "packages/env-core/src/domain/load-release-environment.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/env-core/src/domain/local-env-contract.ts",
+      "kind": "source",
+      "name": "local-env-contract.ts",
+      "path": "packages/env-core/src/domain/local-env-contract.ts",
+      "tags": [
+        "packages/env-core/src/domain/local-env-contract",
+        "packages/env-core/src/domain/local-env-contract.ts",
         "ts"
       ]
     },
@@ -36408,6 +36657,17 @@
       ]
     },
     {
+      "id": "source:packages/ota-core/scripts/lib/ota-cors-policy.ts",
+      "kind": "source",
+      "name": "ota-cors-policy.ts",
+      "path": "packages/ota-core/scripts/lib/ota-cors-policy.ts",
+      "tags": [
+        "packages/ota-core/scripts/lib/ota-cors-policy",
+        "packages/ota-core/scripts/lib/ota-cors-policy.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/ota-core/scripts/ota-keygen.ts",
       "kind": "source",
       "name": "ota-keygen.ts",
@@ -36492,6 +36752,17 @@
       "tags": [
         "packages/ota-core/scripts/validate-app-versions",
         "packages/ota-core/scripts/validate-app-versions.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/ota-core/scripts/verify-cors.ts",
+      "kind": "source",
+      "name": "verify-cors.ts",
+      "path": "packages/ota-core/scripts/verify-cors.ts",
+      "tags": [
+        "packages/ota-core/scripts/verify-cors",
+        "packages/ota-core/scripts/verify-cors.ts",
         "ts"
       ]
     },
@@ -38016,6 +38287,17 @@
       ]
     },
     {
+      "id": "source:packages/storage-core/scripts/verify-cors.ts",
+      "kind": "source",
+      "name": "verify-cors.ts",
+      "path": "packages/storage-core/scripts/verify-cors.ts",
+      "tags": [
+        "packages/storage-core/scripts/verify-cors",
+        "packages/storage-core/scripts/verify-cors.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/storage-core/src/adapters/s3-client.adapter.ts",
       "kind": "source",
       "name": "s3-client.adapter.ts",
@@ -38329,6 +38611,17 @@
       "tags": [
         "packages/storage-core/src/server/transport/r2-cors-policy",
         "packages/storage-core/src/server/transport/r2-cors-policy.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/storage-core/src/server/transport/r2-cors-verification.ts",
+      "kind": "source",
+      "name": "r2-cors-verification.ts",
+      "path": "packages/storage-core/src/server/transport/r2-cors-verification.ts",
+      "tags": [
+        "packages/storage-core/src/server/transport/r2-cors-verification",
+        "packages/storage-core/src/server/transport/r2-cors-verification.ts",
         "ts"
       ]
     },
@@ -55387,6 +55680,18 @@
       ]
     },
     {
+      "id": "test:packages/storage-core/src/tests/unit/r2-cors-verification.test.ts",
+      "kind": "test",
+      "name": "r2-cors-verification.test.ts",
+      "path": "packages/storage-core/src/tests/unit/r2-cors-verification.test.ts",
+      "tags": [
+        "packages/storage-core/src/tests/unit/r2-cors-verification",
+        "packages/storage-core/src/tests/unit/r2-cors-verification.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/storage-core/src/tests/unit/storage-profile-validator.test.ts",
       "kind": "test",
       "name": "storage-profile-validator.test.ts",
@@ -57534,6 +57839,31 @@
       "kind": "targets-runtime"
     },
     {
+      "from": "command:cors:verify:api-live",
+      "to": "script:scripts/verify-live-api-cors.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:cors:verify:api-live",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:cors:verify:live",
+      "to": "command:cors:verify:api-live",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:cors:verify:live",
+      "to": "command:r2:verify:cors",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:cors:verify:live",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
       "from": "command:data-access:sync-public",
       "to": "script:scripts/sync-data-access-public-artifacts.ts",
       "kind": "invokes"
@@ -58054,6 +58384,16 @@
       "kind": "targets-runtime"
     },
     {
+      "from": "command:env:verify:single-source",
+      "to": "script:scripts/verify-single-env-source.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:env:verify:single-source",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
       "from": "command:fastlane:android:aab:signed:no-r8",
       "to": "script:scripts/fastlane-runner.ts",
       "kind": "invokes"
@@ -58530,6 +58870,11 @@
     },
     {
       "from": "command:ota:check",
+      "to": "command:ota:verify:cors",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:ota:check",
       "to": "script:scripts/ensure-release-command-secrets.ts",
       "kind": "invokes"
     },
@@ -58562,6 +58907,11 @@
       "from": "command:ota:keygen",
       "to": "runtime:tooling",
       "kind": "targets-runtime"
+    },
+    {
+      "from": "command:ota:publish",
+      "to": "command:ota:verify:cors",
+      "kind": "invokes"
     },
     {
       "from": "command:ota:publish",
@@ -58674,7 +59024,97 @@
       "kind": "targets-runtime"
     },
     {
+      "from": "command:ota:verify:cors",
+      "to": "script:scripts/ensure-release-command-secrets.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:ota:verify:cors",
+      "to": "source:packages/ota-core/scripts/verify-cors.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:ota:verify:cors",
+      "to": "runtime:static-out",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:ota:verify:cors",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:prebuild:static",
+      "to": "command:env:verify:single-source",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:prebuild:static",
+      "to": "runtime:static-out",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:prebuild:static",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:prebuild:vercel",
+      "to": "command:env:verify:single-source",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:prebuild:vercel",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:prebuild:vercel",
+      "to": "runtime:web",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:prebuild",
+      "to": "command:env:verify:single-source",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:prebuild",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:predev:checked",
+      "to": "command:env:verify:single-source",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:predev:checked",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:predev",
+      "to": "command:env:verify:single-source",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:predev",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
       "from": "command:prepare",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:prestart",
+      "to": "command:env:verify:single-source",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:prestart",
       "to": "runtime:tooling",
       "kind": "targets-runtime"
     },
@@ -58760,6 +59200,16 @@
     },
     {
       "from": "command:r2:sync:cors",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:r2:verify:cors",
+      "to": "source:packages/storage-core/scripts/verify-cors.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:r2:verify:cors",
       "to": "runtime:tooling",
       "kind": "targets-runtime"
     },
@@ -61225,12 +61675,67 @@
     },
     {
       "from": "config:.env.example",
+      "to": "environment-key:GOOGLE_PLAY_SERVICE_ACCOUNT_AUTH_PROVIDER_X509_CERT_URL",
+      "kind": "contains"
+    },
+    {
+      "from": "config:.env.example",
+      "to": "environment-key:GOOGLE_PLAY_SERVICE_ACCOUNT_AUTH_URI",
+      "kind": "contains"
+    },
+    {
+      "from": "config:.env.example",
+      "to": "environment-key:GOOGLE_PLAY_SERVICE_ACCOUNT_CLIENT_EMAIL",
+      "kind": "contains"
+    },
+    {
+      "from": "config:.env.example",
+      "to": "environment-key:GOOGLE_PLAY_SERVICE_ACCOUNT_CLIENT_ID",
+      "kind": "contains"
+    },
+    {
+      "from": "config:.env.example",
+      "to": "environment-key:GOOGLE_PLAY_SERVICE_ACCOUNT_CLIENT_X509_CERT_URL",
+      "kind": "contains"
+    },
+    {
+      "from": "config:.env.example",
       "to": "environment-key:GOOGLE_PLAY_SERVICE_ACCOUNT_EMAIL",
       "kind": "contains"
     },
     {
       "from": "config:.env.example",
+      "to": "environment-key:GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64",
+      "kind": "contains"
+    },
+    {
+      "from": "config:.env.example",
+      "to": "environment-key:GOOGLE_PLAY_SERVICE_ACCOUNT_PRIVATE_KEY_BASE64",
+      "kind": "contains"
+    },
+    {
+      "from": "config:.env.example",
+      "to": "environment-key:GOOGLE_PLAY_SERVICE_ACCOUNT_PRIVATE_KEY_ID",
+      "kind": "contains"
+    },
+    {
+      "from": "config:.env.example",
+      "to": "environment-key:GOOGLE_PLAY_SERVICE_ACCOUNT_PROJECT_ID",
+      "kind": "contains"
+    },
+    {
+      "from": "config:.env.example",
+      "to": "environment-key:GOOGLE_PLAY_SERVICE_ACCOUNT_TOKEN_URI",
+      "kind": "contains"
+    },
+    {
+      "from": "config:.env.example",
       "to": "environment-key:GOOGLE_PLAY_SERVICE_ACCOUNT_UNIQUE_ID",
+      "kind": "contains"
+    },
+    {
+      "from": "config:.env.example",
+      "to": "environment-key:GOOGLE_PLAY_SERVICE_ACCOUNT_UNIVERSE_DOMAIN",
       "kind": "contains"
     },
     {
@@ -69669,6 +70174,12 @@
     },
     {
       "from": "document:docs/02-data-and-storage/image-storage/r2-storage.md",
+      "to": "document:docs/08-troubleshooting/problems/public-r2-object-fetch-blocked-by-cors.md",
+      "kind": "references",
+      "detail": "../../08-troubleshooting/problems/public-r2-object-fetch-blocked-by-cors.md"
+    },
+    {
+      "from": "document:docs/02-data-and-storage/image-storage/r2-storage.md",
       "to": "package:@asol/cors",
       "kind": "references",
       "detail": "@asol/cors"
@@ -69714,6 +70225,12 @@
       "to": "source:packages/storage-core/scripts/sync-cors.ts",
       "kind": "references",
       "detail": "packages/storage-core/scripts/sync-cors.ts"
+    },
+    {
+      "from": "document:docs/02-data-and-storage/image-storage/r2-storage.md",
+      "to": "source:packages/storage-core/scripts/verify-cors.ts",
+      "kind": "references",
+      "detail": "packages/storage-core/scripts/verify-cors.ts"
     },
     {
       "from": "document:docs/02-data-and-storage/image-storage/r2-storage.md",
@@ -72522,6 +73039,12 @@
       "to": "document:docs/08-troubleshooting/problems/preflight-answered-without-cors-headers.md",
       "kind": "references",
       "detail": "../../08-troubleshooting/problems/preflight-answered-without-cors-headers.md"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/cors-module.md",
+      "to": "document:docs/08-troubleshooting/problems/public-r2-object-fetch-blocked-by-cors.md",
+      "kind": "references",
+      "detail": "../../08-troubleshooting/problems/public-r2-object-fetch-blocked-by-cors.md"
     },
     {
       "from": "document:docs/05-platform-features/sealed-packages/cors-module.md",
@@ -76663,6 +77186,41 @@
       "detail": "src/features/profile/presentation/ProfilePageContent.tsx"
     },
     {
+      "from": "document:docs/08-troubleshooting/problems/public-r2-object-fetch-blocked-by-cors.md",
+      "to": "domain:troubleshooting",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/public-r2-object-fetch-blocked-by-cors.md",
+      "to": "document:docs/02-data-and-storage/image-storage/r2-storage.md",
+      "kind": "references",
+      "detail": "../../02-data-and-storage/image-storage/r2-storage.md"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/public-r2-object-fetch-blocked-by-cors.md",
+      "to": "document:docs/05-platform-features/sealed-packages/cors-module.md",
+      "kind": "references",
+      "detail": "../../05-platform-features/sealed-packages/cors-module.md"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/public-r2-object-fetch-blocked-by-cors.md",
+      "to": "document:docs/08-troubleshooting/problems/preflight-answered-without-cors-headers.md",
+      "kind": "references",
+      "detail": "./preflight-answered-without-cors-headers.md"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/public-r2-object-fetch-blocked-by-cors.md",
+      "to": "package:@asol/cors",
+      "kind": "references",
+      "detail": "@asol/cors"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/public-r2-object-fetch-blocked-by-cors.md",
+      "to": "package:@asol/storage-core",
+      "kind": "references",
+      "detail": "@asol/storage-core"
+    },
+    {
       "from": "document:docs/08-troubleshooting/problems/README.md",
       "to": "domain:troubleshooting",
       "kind": "belongs-to"
@@ -76780,6 +77338,12 @@
       "to": "document:docs/08-troubleshooting/problems/profile-prerender-useSearchParams-suspense.md",
       "kind": "references",
       "detail": "./profile-prerender-useSearchParams-suspense.md"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/README.md",
+      "to": "document:docs/08-troubleshooting/problems/public-r2-object-fetch-blocked-by-cors.md",
+      "kind": "references",
+      "detail": "./public-r2-object-fetch-blocked-by-cors.md"
     },
     {
       "from": "document:docs/08-troubleshooting/problems/README.md",
@@ -79938,6 +80502,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/cors/src/verification.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:packages/data-core/src/browser/asol-db-persister.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -81553,6 +82123,12 @@
     {
       "from": "domain:architecture",
       "to": "source:packages/env-core/src/domain/load-release-environment.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/env-core/src/domain/local-env-contract.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -83250,6 +83826,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/ota-core/scripts/lib/ota-cors-policy.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:packages/ota-core/scripts/ota-keygen.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -83293,6 +83875,12 @@
     {
       "from": "domain:architecture",
       "to": "source:packages/ota-core/scripts/validate-app-versions.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/ota-core/scripts/verify-cors.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -84120,6 +84708,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/storage-core/scripts/verify-cors.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:packages/storage-core/src/adapters/s3-client.adapter.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -84283,6 +84877,12 @@
     {
       "from": "domain:architecture",
       "to": "source:packages/storage-core/src/server/transport/r2-cors-policy.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/storage-core/src/server/transport/r2-cors-verification.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -85471,6 +86071,12 @@
     {
       "from": "domain:architecture",
       "to": "test:packages/storage-core/src/tests/unit/product-category-storage-routing.test.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "test:packages/storage-core/src/tests/unit/r2-cors-verification.test.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -87108,6 +87714,12 @@
     },
     {
       "from": "domain:data-and-storage",
+      "to": "source:packages/storage-core/scripts/verify-cors.ts",
+      "kind": "documents",
+      "detail": "packages/storage-core/"
+    },
+    {
+      "from": "domain:data-and-storage",
       "to": "source:packages/storage-core/src/adapters/s3-client.adapter.ts",
       "kind": "documents",
       "detail": "packages/storage-core/"
@@ -87271,6 +87883,12 @@
     {
       "from": "domain:data-and-storage",
       "to": "source:packages/storage-core/src/server/transport/r2-cors-policy.ts",
+      "kind": "documents",
+      "detail": "packages/storage-core/"
+    },
+    {
+      "from": "domain:data-and-storage",
+      "to": "source:packages/storage-core/src/server/transport/r2-cors-verification.ts",
       "kind": "documents",
       "detail": "packages/storage-core/"
     },
@@ -87697,6 +88315,12 @@
     {
       "from": "domain:data-and-storage",
       "to": "test:packages/storage-core/src/tests/unit/product-category-storage-routing.test.ts",
+      "kind": "documents",
+      "detail": "packages/storage-core/"
+    },
+    {
+      "from": "domain:data-and-storage",
+      "to": "test:packages/storage-core/src/tests/unit/r2-cors-verification.test.ts",
       "kind": "documents",
       "detail": "packages/storage-core/"
     },
@@ -88656,6 +89280,12 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "script:scripts/verify-live-api-cors.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "script:scripts/verify-project-secrets.ts",
       "kind": "documents",
       "detail": "scripts/"
@@ -88663,6 +89293,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "script:scripts/verify-service-mirrors.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/verify-single-env-source.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -89916,6 +90552,12 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "source:packages/ota-core/scripts/lib/ota-cors-policy.ts",
+      "kind": "documents",
+      "detail": "packages/ota-core/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "source:packages/ota-core/scripts/ota-keygen.ts",
       "kind": "documents",
       "detail": "packages/ota-core/"
@@ -89959,6 +90601,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "source:packages/ota-core/scripts/validate-app-versions.ts",
+      "kind": "documents",
+      "detail": "packages/ota-core/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:packages/ota-core/scripts/verify-cors.ts",
       "kind": "documents",
       "detail": "packages/ota-core/"
     },
@@ -139607,6 +140255,12 @@
     },
     {
       "from": "script:scripts/check-environment-requirements.ts",
+      "to": "package:@asol/env-core",
+      "kind": "imports",
+      "detail": "@asol/env-core/process"
+    },
+    {
+      "from": "script:scripts/check-environment-requirements.ts",
       "to": "script:scripts/android/java-home.ts",
       "kind": "imports",
       "detail": "./android/java-home"
@@ -140053,6 +140707,12 @@
       "to": "package:@asol/account-declarations",
       "kind": "imports",
       "detail": "@asol/account-declarations"
+    },
+    {
+      "from": "script:scripts/dev-distributed.ts",
+      "to": "package:@asol/env-core",
+      "kind": "imports",
+      "detail": "@asol/env-core/process"
     },
     {
       "from": "script:scripts/docs/account-routing-catalog.ts",
@@ -141982,6 +142642,39 @@
       "detail": "@asol/gova-deployment-core"
     },
     {
+      "from": "script:scripts/verify-live-api-cors.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/verify-live-api-cors.ts",
+      "to": "external-dependency:dotenv",
+      "kind": "imports",
+      "detail": "dotenv"
+    },
+    {
+      "from": "script:scripts/verify-live-api-cors.ts",
+      "to": "package:@asol/account-declarations",
+      "kind": "imports",
+      "detail": "@asol/account-declarations"
+    },
+    {
+      "from": "script:scripts/verify-live-api-cors.ts",
+      "to": "package:@asol/cors",
+      "kind": "imports",
+      "detail": "@asol/cors"
+    },
+    {
+      "from": "script:scripts/verify-live-api-cors.ts",
+      "to": "environment-key:NEXT_PUBLIC_ASOL_API_BASE_URL",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "script:scripts/verify-live-api-cors.ts",
+      "to": "environment-key:NEXT_PUBLIC_ASOL_PUBLIC_WEB_ORIGIN",
+      "kind": "uses-environment"
+    },
+    {
       "from": "script:scripts/verify-project-secrets.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
@@ -142014,6 +142707,17 @@
       "to": "package:@asol/vercel-deploy-core",
       "kind": "imports",
       "detail": "@asol/vercel-deploy-core"
+    },
+    {
+      "from": "script:scripts/verify-single-env-source.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/verify-single-env-source.ts",
+      "to": "package:@asol/env-core",
+      "kind": "imports",
+      "detail": "@asol/env-core/process"
     },
     {
       "from": "service:control",
@@ -147484,6 +148188,12 @@
       "detail": "./types"
     },
     {
+      "from": "source:packages/cors/src/index.ts",
+      "to": "source:packages/cors/src/verification.ts",
+      "kind": "imports",
+      "detail": "./verification"
+    },
+    {
       "from": "source:packages/cors/src/origins.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -147632,6 +148342,48 @@
       "from": "source:packages/cors/src/types.ts",
       "to": "package:@asol/cors",
       "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/cors/src/verification.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/verification.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/verification.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/verification.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/verification.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/cors/src/verification.ts",
+      "to": "package:@asol/cors",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/cors/src/verification.ts",
+      "to": "source:packages/cors/src/headers.ts",
+      "kind": "imports",
+      "detail": "./headers"
+    },
+    {
+      "from": "source:packages/cors/src/verification.ts",
+      "to": "source:packages/cors/src/origins.ts",
+      "kind": "imports",
+      "detail": "./origins"
     },
     {
       "from": "source:packages/data-core/src/browser/asol-db-persister.ts",
@@ -159886,6 +160638,12 @@
     },
     {
       "from": "source:packages/env-core/src/domain/env-files.ts",
+      "to": "source:packages/env-core/src/domain/local-env-contract.ts",
+      "kind": "imports",
+      "detail": "./local-env-contract"
+    },
+    {
+      "from": "source:packages/env-core/src/domain/env-files.ts",
       "to": "source:packages/env-core/src/domain/read-env.ts",
       "kind": "imports",
       "detail": "./read-env"
@@ -159925,6 +160683,42 @@
       "to": "external-dependency:)\n      ? line.slice(",
       "kind": "imports",
       "detail": ")\n      ? line.slice("
+    },
+    {
+      "from": "source:packages/env-core/src/domain/load-release-environment.ts",
+      "to": "source:packages/env-core/src/domain/local-env-contract.ts",
+      "kind": "imports",
+      "detail": "./local-env-contract"
+    },
+    {
+      "from": "source:packages/env-core/src/domain/local-env-contract.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/env-core/src/domain/local-env-contract.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/env-core/src/domain/local-env-contract.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/env-core/src/domain/local-env-contract.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/env-core/src/domain/local-env-contract.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/env-core/src/domain/local-env-contract.ts",
+      "to": "package:@asol/env-core",
+      "kind": "belongs-to"
     },
     {
       "from": "source:packages/env-core/src/domain/read-env.ts",
@@ -172813,6 +173607,47 @@
       "detail": "../src/publishing"
     },
     {
+      "from": "source:packages/ota-core/scripts/lib/ota-cors-policy.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ota-core/scripts/lib/ota-cors-policy.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ota-core/scripts/lib/ota-cors-policy.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ota-core/scripts/lib/ota-cors-policy.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ota-core/scripts/lib/ota-cors-policy.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ota-core/scripts/lib/ota-cors-policy.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ota-core/scripts/lib/ota-cors-policy.ts",
+      "to": "package:@asol/ota-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/ota-core/scripts/lib/ota-cors-policy.ts",
+      "to": "package:@asol/cors",
+      "kind": "imports",
+      "detail": "@asol/cors"
+    },
+    {
       "from": "source:packages/ota-core/scripts/ota-keygen.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -173133,15 +173968,15 @@
     },
     {
       "from": "source:packages/ota-core/scripts/sync-cors.ts",
-      "to": "package:@asol/cors",
-      "kind": "imports",
-      "detail": "@asol/cors"
-    },
-    {
-      "from": "source:packages/ota-core/scripts/sync-cors.ts",
       "to": "package:@asol/env-core",
       "kind": "imports",
       "detail": "@asol/env-core/process"
+    },
+    {
+      "from": "source:packages/ota-core/scripts/sync-cors.ts",
+      "to": "source:packages/ota-core/scripts/lib/ota-cors-policy.ts",
+      "kind": "imports",
+      "detail": "./lib/ota-cors-policy"
     },
     {
       "from": "source:packages/ota-core/scripts/sync-cors.ts",
@@ -173195,6 +174030,59 @@
       "to": "source:packages/ota-core/src/ports/index.ts",
       "kind": "imports",
       "detail": "../src/ports"
+    },
+    {
+      "from": "source:packages/ota-core/scripts/verify-cors.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ota-core/scripts/verify-cors.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ota-core/scripts/verify-cors.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ota-core/scripts/verify-cors.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ota-core/scripts/verify-cors.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ota-core/scripts/verify-cors.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/ota-core/scripts/verify-cors.ts",
+      "to": "package:@asol/ota-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/ota-core/scripts/verify-cors.ts",
+      "to": "package:@asol/env-core",
+      "kind": "imports",
+      "detail": "@asol/env-core/process"
+    },
+    {
+      "from": "source:packages/ota-core/scripts/verify-cors.ts",
+      "to": "source:packages/ota-core/scripts/lib/ota-cors-policy.ts",
+      "kind": "imports",
+      "detail": "./lib/ota-cors-policy"
+    },
+    {
+      "from": "source:packages/ota-core/scripts/verify-cors.ts",
+      "to": "source:packages/ota-core/src/publishing/config/ota-r2-target.ts",
+      "kind": "imports",
+      "detail": "../src/publishing/config/ota-r2-target"
     },
     {
       "from": "source:packages/ota-core/src/admin.ts",
@@ -179454,6 +180342,88 @@
       "detail": "../src/domain/accounts/account-registry"
     },
     {
+      "from": "source:packages/storage-core/scripts/verify-cors.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-core/scripts/verify-cors.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-core/scripts/verify-cors.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-core/scripts/verify-cors.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-core/scripts/verify-cors.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-core/scripts/verify-cors.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-core/scripts/verify-cors.ts",
+      "to": "package:@asol/storage-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/storage-core/scripts/verify-cors.ts",
+      "to": "external-dependency:dotenv",
+      "kind": "imports",
+      "detail": "dotenv"
+    },
+    {
+      "from": "source:packages/storage-core/scripts/verify-cors.ts",
+      "to": "package:@asol/cors",
+      "kind": "imports",
+      "detail": "@asol/cors"
+    },
+    {
+      "from": "source:packages/storage-core/scripts/verify-cors.ts",
+      "to": "source:packages/storage-core/src/domain/accounts/account-registry.ts",
+      "kind": "imports",
+      "detail": "../src/domain/accounts/account-registry"
+    },
+    {
+      "from": "source:packages/storage-core/scripts/verify-cors.ts",
+      "to": "source:packages/storage-core/src/server/transport/r2-cors-policy.ts",
+      "kind": "imports",
+      "detail": "../src/server/transport/r2-cors-policy"
+    },
+    {
+      "from": "source:packages/storage-core/scripts/verify-cors.ts",
+      "to": "source:packages/storage-core/src/server/transport/r2-cors-verification.ts",
+      "kind": "imports",
+      "detail": "../src/server/transport/r2-cors-verification"
+    },
+    {
+      "from": "source:packages/storage-core/scripts/verify-cors.ts",
+      "to": "source:packages/storage-core/src/server/transport/r2-object-store.ts",
+      "kind": "imports",
+      "detail": "../src/server/transport/r2-object-store"
+    },
+    {
+      "from": "source:packages/storage-core/scripts/verify-cors.ts",
+      "to": "source:packages/storage-core/src/server/transport/r2-platform-api.ts",
+      "kind": "imports",
+      "detail": "../src/server/transport/r2-platform-api"
+    },
+    {
+      "from": "source:packages/storage-core/scripts/verify-cors.ts",
+      "to": "environment-key:NEXT_PUBLIC_ASOL_PUBLIC_WEB_ORIGIN",
+      "kind": "uses-environment"
+    },
+    {
       "from": "source:packages/storage-core/src/adapters/s3-client.adapter.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -180595,6 +181565,27 @@
       "to": "package:@asol/cors",
       "kind": "imports",
       "detail": "@asol/cors"
+    },
+    {
+      "from": "source:packages/storage-core/src/server/transport/r2-cors-verification.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-core/src/server/transport/r2-cors-verification.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-core/src/server/transport/r2-cors-verification.ts",
+      "to": "package:@asol/storage-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/storage-core/src/server/transport/r2-cors-verification.ts",
+      "to": "source:packages/storage-core/src/server/transport/r2-cors-policy.ts",
+      "kind": "imports",
+      "detail": "./r2-cors-policy"
     },
     {
       "from": "source:packages/storage-core/src/server/transport/r2-object-store.ts",
@@ -233854,12 +234845,6 @@
     },
     {
       "from": "source:src/features/settings/presentation/SettingsPageContent.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
-      "detail": "next/link"
-    },
-    {
-      "from": "source:src/features/settings/presentation/SettingsPageContent.tsx",
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
@@ -250249,6 +251234,12 @@
     },
     {
       "from": "test:packages/storage-core/src/tests/index.test.ts",
+      "to": "test:packages/storage-core/src/tests/unit/r2-cors-verification.test.ts",
+      "kind": "imports",
+      "detail": "./unit/r2-cors-verification.test"
+    },
+    {
+      "from": "test:packages/storage-core/src/tests/index.test.ts",
       "to": "test:packages/storage-core/src/tests/unit/storage-profile-validator.test.ts",
       "kind": "imports",
       "detail": "./unit/storage-profile-validator.test"
@@ -251011,6 +252002,53 @@
     },
     {
       "from": "test:packages/storage-core/src/tests/unit/product-category-storage-routing.test.ts",
+      "to": "package:@asol/storage-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:packages/storage-core/src/tests/unit/r2-cors-verification.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/storage-core/src/tests/unit/r2-cors-verification.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/storage-core/src/tests/unit/r2-cors-verification.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/storage-core/src/tests/unit/r2-cors-verification.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/storage-core/src/tests/unit/r2-cors-verification.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/storage-core/src/tests/unit/r2-cors-verification.test.ts",
+      "to": "package:@asol/storage-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:packages/storage-core/src/tests/unit/r2-cors-verification.test.ts",
+      "to": "source:packages/storage-core/src/server/transport/r2-cors-policy.ts",
+      "kind": "imports",
+      "detail": "../../server/transport/r2-cors-policy"
+    },
+    {
+      "from": "test:packages/storage-core/src/tests/unit/r2-cors-verification.test.ts",
+      "to": "source:packages/storage-core/src/server/transport/r2-cors-verification.ts",
+      "kind": "imports",
+      "detail": "../../server/transport/r2-cors-verification"
+    },
+    {
+      "from": "test:packages/storage-core/src/tests/unit/r2-cors-verification.test.ts",
       "to": "package:@asol/storage-core",
       "kind": "tests"
     },
@@ -252592,6 +253630,12 @@
       "from": "test:src/features/auth/tests/registration-success-flow.test.ts",
       "to": "feature:auth",
       "kind": "belongs-to"
+    },
+    {
+      "from": "test:src/features/auth/tests/registration-success-flow.test.ts",
+      "to": "source:src/features/auth/domain/session.entity.ts",
+      "kind": "imports",
+      "detail": "@/features/auth/domain/session.entity"
     },
     {
       "from": "test:src/features/auth/tests/registration-success-flow.test.ts",

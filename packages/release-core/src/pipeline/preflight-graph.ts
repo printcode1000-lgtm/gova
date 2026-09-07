@@ -74,6 +74,7 @@ export const PREFLIGHT_NODE_POLICY: Readonly<Record<string, PreflightNodePolicy>
   // Reads remote account state only.
   "production-doctor": parallelCheck(),
   "vercel-account-access": parallelCheck(),
+  "live-cors": parallelCheck(),
 
   // Writes generated documentation, so it cannot share the tree.
   knowledge: exclusiveStep(),

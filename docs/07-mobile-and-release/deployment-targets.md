@@ -584,7 +584,7 @@ a Git-triggered deployment. The final console table shows target, account,
 project, unique comment, state, URL, and Vercel error.
 
 Each service continues to read its dedicated Vercel token and required
-environment values from `.env.local` or `.env`. `VERCEL_TOKEN` and the root
+environment values from the single local source `.env.local`. `VERCEL_TOKEN` and the root
 `.vercel/project.json` are required for the explicit gova deployment. The root
 link is never rewritten by a service command.
 

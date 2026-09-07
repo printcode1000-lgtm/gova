@@ -6,7 +6,7 @@
 
 ## Cause
 
-The service build and smoke scripts inherited only the ambient shell environment. Release credentials are normally sourced by release tooling from `.env.local`, `.env`, and `fastlane/.env`, so a valid release could reach service smoke without those values. A preceding static build could also leave `ASOL_MODE` / `NEXT_PUBLIC_ASOL_MODE` in the inherited environment and make a server service build as a static target.
+The service build and smoke scripts inherited only the ambient shell environment. Release credentials are sourced by release tooling from the single local file `.env.local`, so service smoke must receive the same canonical values rather than depend on ambient-shell accidents. A preceding static build could also leave `ASOL_MODE` / `NEXT_PUBLIC_ASOL_MODE` in the inherited environment and make a server service build as a static target.
 
 ## Fix
 

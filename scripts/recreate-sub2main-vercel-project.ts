@@ -12,7 +12,6 @@ import {
 } from '@asol/vercel-deploy-core';
 
 if (existsSync('.env.local')) dotenv.config({ path: '.env.local', quiet: true });
-dotenv.config({ path: '.env', quiet: true });
 
 async function resolveSub2mainTeamId(
   env: NodeJS.ProcessEnv,
@@ -32,7 +31,7 @@ async function resolveSub2mainTeamId(
 async function main(): Promise<void> {
   const token = process.env.VERCEL_SUB2MAIN_TOKEN?.trim();
   if (!token) {
-    throw new Error('VERCEL_SUB2MAIN_TOKEN is required in .env.local or .env');
+    throw new Error('VERCEL_SUB2MAIN_TOKEN is required in .env.local');
   }
 
   const teamId = await resolveSub2mainTeamId(process.env, token);

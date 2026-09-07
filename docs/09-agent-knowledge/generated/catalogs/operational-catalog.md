@@ -64,6 +64,8 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run control:sync` | `npx tsx scripts/sync-control-service-sources.ts` |
 | `npm run control:verify` | `npm run control:sync && npm run typecheck && npm run test:control` |
 | `npm run coordinator:email` | `npx tsx scripts/send-coordinator-completion-email.ts` |
+| `npm run cors:verify:api-live` | `npx tsx scripts/verify-live-api-cors.ts` |
+| `npm run cors:verify:live` | `npm run cors:verify:api-live && npm run r2:verify:cors` |
 | `npm run data-access:sync-public` | `npx tsx scripts/sync-data-access-public-artifacts.ts` |
 | `npm run db:create:product` | `npx tsx packages/data-core/src/tooling/create-product-sqlite-db.ts` |
 | `npm run db:create:profile` | `npx tsx packages/data-core/src/tooling/create-profile-sqlite-db.ts` |
@@ -110,6 +112,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run dom:id:check` | `npx tsx scripts/dom-id-check.ts` |
 | `npm run dom:id:write` | `npx tsx scripts/dom-id-check.ts --write` |
 | `npm run env:ownership` | `npx tsx scripts/runtime-env-ownership-report.ts` |
+| `npm run env:verify:single-source` | `npx tsx scripts/verify-single-env-source.ts` |
 | `npm run fastlane` | `npx tsx scripts/fastlane-runner.ts` |
 | `npm run fastlane:android:aab:signed` | `npx tsx scripts/fastlane-runner.ts android aab_signed` |
 | `npm run fastlane:android:aab:signed:no-r8` | `npx tsx scripts/fastlane-runner.ts android aab_signed_no_r8` |
@@ -143,15 +146,22 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run notifications:deploy` | `npx tsx scripts/deploy-service.ts notifications` |
 | `npm run notifications:tokens:dedupe` | `npx tsx packages/data-core/src/tooling/enforce-notification-token-cardinality.ts` |
 | `npm run orders:deploy` | `npx tsx scripts/deploy-service.ts orders` |
-| `npm run ota:check` | `npx tsx scripts/ensure-release-command-secrets.ts google-play ota && npx tsx packages/ota-core/scripts/ota-publish.ts --dry-run` |
+| `npm run ota:check` | `npx tsx scripts/ensure-release-command-secrets.ts google-play ota && npm run ota:verify:cors && npx tsx packages/ota-core/scripts/ota-publish.ts --dry-run` |
 | `npm run ota:keygen` | `npx tsx packages/ota-core/scripts/ota-keygen.ts` |
-| `npm run ota:publish` | `npx tsx scripts/ensure-release-command-secrets.ts google-play ota && npx tsx packages/ota-core/scripts/ota-publish.ts` |
+| `npm run ota:publish` | `npx tsx scripts/ensure-release-command-secrets.ts google-play ota && npm run ota:verify:cors && npx tsx packages/ota-core/scripts/ota-publish.ts` |
 | `npm run ota:revoke` | `npx tsx scripts/ensure-release-command-secrets.ts ota-storage ota-signing && npx tsx packages/ota-core/scripts/ota-revoke.ts` |
 | `npm run ota:self-test` | `npx tsx scripts/run-ota-self-test.ts --r2` |
 | `npm run ota:self-test:local` | `npx tsx scripts/run-ota-self-test.ts` |
 | `npm run ota:status` | `npx tsx scripts/ensure-release-command-secrets.ts ota-storage && npx tsx packages/ota-core/scripts/ota-status.ts` |
 | `npm run ota:sync:cors` | `npx tsx scripts/ensure-release-command-secrets.ts ota-cloudflare && npx tsx packages/ota-core/scripts/sync-cors.ts` |
+| `npm run ota:verify:cors` | `npx tsx scripts/ensure-release-command-secrets.ts ota-cloudflare && npx tsx packages/ota-core/scripts/verify-cors.ts` |
+| `npm run prebuild` | `npm run env:verify:single-source` |
+| `npm run prebuild:static` | `npm run env:verify:single-source` |
+| `npm run prebuild:vercel` | `npm run env:verify:single-source` |
+| `npm run predev` | `npm run env:verify:single-source` |
+| `npm run predev:checked` | `npm run env:verify:single-source` |
 | `npm run prepare` | `git config core.hooksPath .githooks \|\| exit 0` |
+| `npm run prestart` | `npm run env:verify:single-source` |
 | `npm run preview:static` | `npx tsx packages/ota-core/scripts/serve-static.ts` |
 | `npm run products:deploy` | `npx tsx scripts/deploy-service.ts products` |
 | `npm run profiles:deploy` | `npx tsx scripts/deploy-service.ts profiles` |
@@ -159,6 +169,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run r2:migrate:folders` | `npx tsx packages/data-core/src/tooling/migrate-r2-cloud-folders.ts` |
 | `npm run r2:migrate:images` | `npx tsx packages/data-core/src/tooling/migrate-r2-image-public-url.ts` |
 | `npm run r2:sync:cors` | `npx tsx packages/storage-core/scripts/sync-cors.ts` |
+| `npm run r2:verify:cors` | `npx tsx packages/storage-core/scripts/verify-cors.ts` |
 | `npm run release:android` | `npx tsx scripts/release-android.ts` |
 | `npm run release:check` | `npx tsx scripts/check-deployed-release.ts` |
 | `npm run runtime:check` | `npx tsx scripts/runtime/check.ts` |
@@ -376,8 +387,19 @@ This catalog exposes command and environment **names only**. Environment assignm
 - `GITHUB_ADMIN_TOKEN`
 - `GITHUB_REPOSITORY`
 - `GOOGLE_PLAY_JSON_KEY_FILE`
+- `GOOGLE_PLAY_SERVICE_ACCOUNT_AUTH_PROVIDER_X509_CERT_URL`
+- `GOOGLE_PLAY_SERVICE_ACCOUNT_AUTH_URI`
+- `GOOGLE_PLAY_SERVICE_ACCOUNT_CLIENT_EMAIL`
+- `GOOGLE_PLAY_SERVICE_ACCOUNT_CLIENT_ID`
+- `GOOGLE_PLAY_SERVICE_ACCOUNT_CLIENT_X509_CERT_URL`
 - `GOOGLE_PLAY_SERVICE_ACCOUNT_EMAIL`
+- `GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64`
+- `GOOGLE_PLAY_SERVICE_ACCOUNT_PRIVATE_KEY_BASE64`
+- `GOOGLE_PLAY_SERVICE_ACCOUNT_PRIVATE_KEY_ID`
+- `GOOGLE_PLAY_SERVICE_ACCOUNT_PROJECT_ID`
+- `GOOGLE_PLAY_SERVICE_ACCOUNT_TOKEN_URI`
 - `GOOGLE_PLAY_SERVICE_ACCOUNT_UNIQUE_ID`
+- `GOOGLE_PLAY_SERVICE_ACCOUNT_UNIVERSE_DOMAIN`
 - `GOOGLE_PLAY_TRACK`
 - `NEXT_PUBLIC_ASOL_API_BASE_URL`
 - `NEXT_PUBLIC_ASOL_APP_STORE_URL`

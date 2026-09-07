@@ -12,6 +12,9 @@ import {
   type LocalDevelopmentAccount,
 } from '@asol/account-declarations';
 import { resolveRouteOwner } from '@asol/account-bridge/routes';
+import { assertSingleLocalEnvSource } from '@asol/env-core/process';
+
+assertSingleLocalEnvSource(process.cwd());
 
 /**
  * Runs the whole distributed topology locally, on the declared ports.

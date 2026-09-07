@@ -180,8 +180,23 @@ assert.equal(
 
 const backupPaths = JSON.parse(
   readFileSync(path.join(ROOT, 'config/secret-backup-paths.json'), 'utf8'),
-) as { extensions?: string[]; namePatterns?: string[] };
+) as { exactPaths?: string[]; extensions?: string[]; namePatterns?: string[] };
 assert.equal(backupPaths.extensions?.includes('.p8'), true, 'App Store .p8 files are backup-eligible.');
+assert.deepEqual(
+  backupPaths.exactPaths?.filter((entry) => entry.startsWith('.env')),
+  ['.env.local'],
+  'The secret archive has exactly one application env file source.',
+);
+assert.equal(
+  backupPaths.namePatterns?.includes('^\\.env\\.local$'),
+  true,
+  'Secret discovery permits only .env.local, not arbitrary .env variants.',
+);
+assert.equal(
+  backupPaths.namePatterns?.some((pattern) => pattern === '^\\.env($|\\.)'),
+  false,
+  'The old broad .env discovery pattern must not return.',
+);
 assert.equal(
   backupPaths.namePatterns?.includes('^AuthKey_.*\\.p8$'),
   true,

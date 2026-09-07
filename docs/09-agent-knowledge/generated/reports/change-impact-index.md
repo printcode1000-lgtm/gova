@@ -55,7 +55,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `vehicle-catalog` | feature | 2 | 0 | 2 | 0 | 1 | 1 |
 | `voice-input` | feature | 1 | 0 | 0 | 0 | 0 | 2 |
 | `@asol/account-bridge` | package | 18 | 8 | 26 | 0 | 26 | 4 |
-| `@asol/account-declarations` | package | 14 | 9 | 21 | 0 | 37 | 0 |
+| `@asol/account-declarations` | package | 14 | 9 | 21 | 0 | 38 | 0 |
 | `@asol/api-contract-core` | package | 4 | 1 | 140 | 0 | 24 | 0 |
 | `@asol/architecture-core` | package | 17 | 7 | 0 | 0 | 9 | 8 |
 | `@asol/auth-core` | package | 11 | 5 | 142 | 0 | 100 | 3 |
@@ -63,11 +63,11 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/branding-core` | package | 12 | 1 | 49 | 0 | 8 | 1 |
 | `@asol/catalog-core` | package | 8 | 1 | 13 | 0 | 17 | 1 |
 | `@asol/control-composition` | package | 6 | 1 | 0 | 0 | 2 | 1 |
-| `@asol/cors` | package | 12 | 3 | 72 | 0 | 29 | 0 |
+| `@asol/cors` | package | 13 | 3 | 72 | 0 | 31 | 0 |
 | `@asol/data-core` | package | 59 | 27 | 147 | 0 | 190 | 24 |
 | `@asol/data-health-core` | package | 7 | 2 | 140 | 0 | 46 | 0 |
 | `@asol/dev-core` | package | 8 | 1 | 140 | 0 | 10 | 0 |
-| `@asol/env-core` | package | 7 | 1 | 146 | 0 | 18 | 1 |
+| `@asol/env-core` | package | 7 | 1 | 146 | 0 | 22 | 1 |
 | `@asol/favorites-core` | package | 7 | 3 | 3 | 0 | 12 | 7 |
 | `@asol/featured-marquee-core` | package | 6 | 1 | 139 | 0 | 14 | 1 |
 | `@asol/format-core` | package | 7 | 2 | 41 | 0 | 37 | 0 |
@@ -95,7 +95,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/service-mirror-core` | package | 11 | 1 | 0 | 0 | 3 | 1 |
 | `@asol/service-runtime-core` | package | 9 | 2 | 0 | 0 | 27 | 2 |
 | `@asol/signed-token-core` | package | 7 | 1 | 105 | 0 | 8 | 0 |
-| `@asol/storage-core` | package | 34 | 21 | 140 | 0 | 87 | 6 |
+| `@asol/storage-core` | package | 35 | 22 | 140 | 0 | 87 | 6 |
 | `@asol/storage-image-manager-core` | package | 10 | 2 | 28 | 0 | 18 | 8 |
 | `@asol/sub2main-composition` | package | 7 | 1 | 0 | 0 | 9 | 7 |
 | `@asol/submain-composition` | package | 9 | 3 | 0 | 0 | 38 | 18 |

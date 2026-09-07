@@ -102,7 +102,7 @@ decides *how*, and the test fails if a CLI starts doing its own cryptography.
 It never prints secret values. Environment-configured secret files are reported
 as labels such as `env:GOOGLE_PLAY_JSON_KEY_FILE`; the configured path is used
 only for the existence check and is never printed. Use the command to see what
-restore still owes a machine without dumping `.env` into a log.
+restore still owes a machine without dumping `.env.local` into a log.
 
 ### Agent use of `secrets:backup` and `secrets:restore`
 

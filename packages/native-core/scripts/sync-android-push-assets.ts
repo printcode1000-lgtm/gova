@@ -8,7 +8,7 @@ import {
 import path from "node:path";
 import { config as loadEnv } from "dotenv";
 
-loadEnv({ path: [".env.local", ".env"], quiet: true });
+loadEnv({ path: ".env.local", quiet: true });
 
 const EXPECTED = {
   projectName: "asole",

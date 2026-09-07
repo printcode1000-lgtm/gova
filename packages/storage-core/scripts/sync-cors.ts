@@ -11,7 +11,6 @@ import { getStorageAccountIds, getStorageAccount } from '../src/domain/accounts/
 if (existsSync('.env.local')) {
   dotenv.config({ path: '.env.local' });
 }
-dotenv.config({ path: '.env' });
 
 async function syncAccountCors(accountId: string) {
   const account = getStorageAccount(accountId);

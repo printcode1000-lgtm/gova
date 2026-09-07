@@ -15,6 +15,7 @@ import { runPackageIndependenceTest } from './contract/package-independence.test
 import { runNoPairedFunctionsTest } from './contract/no-paired-functions.test';
 import { runPublicSurfaceTest } from './contract/public-surface.test';
 import { runR2AccountSeparationTest } from './r2-account-separation.test';
+import { runR2CorsVerificationTest } from './unit/r2-cors-verification.test';
 
 async function main() {
   console.log('🚀 Running @asol/storage-core test suite...\n');
@@ -26,6 +27,7 @@ async function main() {
   runImageKeyGeneratorTest();
   runImagePathTest();
   runOutputFormatTest();
+  runR2CorsVerificationTest();
   runProductCategoryStorageRoutingTest();
   runAddAccountTest();
   runSplitAccountTest();

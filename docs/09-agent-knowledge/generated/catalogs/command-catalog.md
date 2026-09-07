@@ -50,6 +50,8 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run control:sync` | `Tooling` | 1 |  | 0 |
 | `npm run control:verify` | `Tooling` | 3 |  | 0 |
 | `npm run coordinator:email` | `Tooling` | 1 |  | 0 |
+| `npm run cors:verify:api-live` | `Tooling` | 1 |  | 0 |
+| `npm run cors:verify:live` | `Tooling` | 2 |  | 0 |
 | `npm run data-access:sync-public` | `Tooling` | 1 |  | 0 |
 | `npm run db:create:product` | `Tooling` | 1 |  | 0 |
 | `npm run db:create:profile` | `Tooling` | 1 |  | 0 |
@@ -96,6 +98,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run dom:id:check` | `Tooling` | 1 |  | 0 |
 | `npm run dom:id:write` | `Tooling` | 1 |  | 0 |
 | `npm run env:ownership` | `Tooling` | 1 |  | 0 |
+| `npm run env:verify:single-source` | `Tooling` | 1 |  | 0 |
 | `npm run fastlane` | `Tooling` | 1 |  | 0 |
 | `npm run fastlane:android:aab:signed` | `Android`, `Tooling` | 1 | `Android release package (APK/AAB)` | 0 |
 | `npm run fastlane:android:aab:signed:no-r8` | `Android`, `Tooling` | 1 | `Android release package (APK/AAB)` | 0 |
@@ -129,15 +132,22 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run notifications:deploy` | `Independent services`, `Tooling` | 1 |  | 0 |
 | `npm run notifications:tokens:dedupe` | `Tooling` | 1 |  | 0 |
 | `npm run orders:deploy` | `Independent services`, `Tooling` | 1 |  | 0 |
-| `npm run ota:check` | `Static out`, `Tooling` | 2 |  | 0 |
+| `npm run ota:check` | `Static out`, `Tooling` | 3 |  | 0 |
 | `npm run ota:keygen` | `Static out`, `Tooling` | 1 |  | 0 |
-| `npm run ota:publish` | `Static out`, `Tooling` | 2 |  | 0 |
+| `npm run ota:publish` | `Static out`, `Tooling` | 3 |  | 0 |
 | `npm run ota:revoke` | `Static out`, `Tooling` | 2 |  | 0 |
 | `npm run ota:self-test` | `Static out`, `Tooling` | 1 |  | 0 |
 | `npm run ota:self-test:local` | `Static out`, `Tooling` | 1 |  | 0 |
 | `npm run ota:status` | `Static out`, `Tooling` | 2 |  | 0 |
 | `npm run ota:sync:cors` | `Static out`, `Tooling` | 2 |  | 0 |
+| `npm run ota:verify:cors` | `Static out`, `Tooling` | 2 |  | 0 |
+| `npm run prebuild` | `Tooling` | 1 |  | 0 |
+| `npm run prebuild:static` | `Static out`, `Tooling` | 1 |  | 0 |
+| `npm run prebuild:vercel` | `Tooling`, `Web` | 1 |  | 0 |
+| `npm run predev` | `Tooling` | 1 |  | 0 |
+| `npm run predev:checked` | `Tooling` | 1 |  | 0 |
 | `npm run prepare` | `Tooling` | 0 |  | 0 |
+| `npm run prestart` | `Tooling` | 1 |  | 0 |
 | `npm run preview:static` | `Static out`, `Tooling` | 1 |  | 0 |
 | `npm run products:deploy` | `Independent services`, `Tooling` | 1 |  | 0 |
 | `npm run profiles:deploy` | `Independent services`, `Tooling` | 1 |  | 0 |
@@ -145,6 +155,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run r2:migrate:folders` | `Tooling` | 1 |  | 0 |
 | `npm run r2:migrate:images` | `Tooling` | 1 |  | 0 |
 | `npm run r2:sync:cors` | `Tooling` | 1 |  | 0 |
+| `npm run r2:verify:cors` | `Tooling` | 1 |  | 0 |
 | `npm run release:android` | `Android`, `Tooling` | 1 | `Android release package (APK/AAB)` | 0 |
 | `npm run release:check` | `Tooling` | 1 |  | 0 |
 | `npm run runtime:check` | `Tooling` | 1 |  | 0 |

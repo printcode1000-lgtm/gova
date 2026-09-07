@@ -45,7 +45,6 @@ export function prepareTempBuildDir(): void {
   }
 
   const rootFilesToCopy = [
-    ".env",
     ".env.local",
     "next.config.ts",
     "next-env.d.ts",

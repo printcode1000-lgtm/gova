@@ -29,3 +29,4 @@ A log of project problems and their solutions for recurrence and environment set
 | 24 | A push to `main` produces no Vercel deployment (intermittent, cause on Vercel's side; the failure is safe) | [main-push-without-vercel-deployment.md](./main-push-without-vercel-deployment.md) |
 | 25 | `Unable to reach the server` while the server is up: a preflight answered `204` with no CORS headers | [preflight-answered-without-cors-headers.md](./preflight-answered-without-cors-headers.md) |
 | 26 | Service smoke fails after successful builds: release env missing or static mode leaked | [service-smoke-release-environment.md](./service-smoke-release-environment.md) |
+| 27 | Public R2 object returns 200 but browser image fetch is blocked by bucket CORS | [public-r2-object-fetch-blocked-by-cors.md](./public-r2-object-fetch-blocked-by-cors.md) |

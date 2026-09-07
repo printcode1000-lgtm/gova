@@ -8,7 +8,6 @@ import { PRIMARY_SQLITE_DB_PATH } from "../core/database/environment";
 import { loadTursoCredentialsFromEnv } from "../provisioning/core/turso-provisioner";
 
 process.env.ASOL_PROVISIONING = "true";
-if (existsSync(".env")) dotenv.config({ path: ".env" });
 if (existsSync(".env.local")) dotenv.config({ path: ".env.local" });
 
 /**

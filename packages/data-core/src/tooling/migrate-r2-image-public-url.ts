@@ -6,7 +6,6 @@ import dotenv from "dotenv";
 import { createClient, type Client, type InStatement } from "@libsql/client";
 
 dotenv.config({ path: ".env.local" });
-dotenv.config({ path: ".env" });
 
 const OLD_PUBLIC_URL = (
   process.env.OLD_R2_PUBLIC_URL ||

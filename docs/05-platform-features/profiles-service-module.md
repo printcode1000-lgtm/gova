@@ -106,7 +106,7 @@ mismatch. It skips `system-ops` deliberately.
 
 It has already run — 30 rows across eight tables, every count matching — and the
 old shards were deleted from `hesham101`, so the `LEGACY_PROFILE_*` variables
-are gone from `.env`. The script is kept for the record of how the move was
+are gone from `.env.local`. The script is kept for the record of how the move was
 done; running it again would need those variables re-added.
 
 ## Verifying a deployment

@@ -22,6 +22,7 @@ Local secrets live in `.env.local` (gitignored). Template in `.env.example`.
 | `packages/storage-core/src/server/transport/r2-cors-policy.ts` | Cloudflare bucket rule shape; origins read through `@asol/cors` |
 | `packages/storage-core/src/domain/accounts/account-registry.ts` | Registry holding `general`, `products`, and `products-apparel-pets` accounts (single source of truth) |
 | `packages/storage-core/scripts/sync-cors.ts` | Apply full browser CORS to every `@asol/storage-core` registered bucket (`r2:sync:cors`) |
+| `packages/storage-core/scripts/verify-cors.ts` | Fail-closed live verification of every registered bucket plus a public-object preflight when a sample object exists (`r2:verify:cors`) |
 | `packages/ota-core/scripts/sync-cors.ts` | Apply full browser CORS to dedicated OTA bucket (`ota:sync:cors`) |
 | `packages/data-core/src/tooling/migrate-r2-image-public-url.ts` | Copy old public R2 image URLs into active bucket and rewrite database references |
 | `packages/data-core/src/tooling/migrate-r2-cloud-folders.ts` | Move active R2 objects from legacy profile folders into current cloud folders |
@@ -29,8 +30,10 @@ Local secrets live in `.env.local` (gitignored). Template in `.env.example`.
 ## Sync CORS
 
 ```bash
-npm run r2:sync:cors       # General, Products, and Apparel/Pets buckets (via @asol/storage-core)
-npm run ota:sync:cors      # Dedicated OTA bucket (via @asol/ota-core)
+npm run r2:sync:cors       # Repair General, Products, and Apparel/Pets bucket rules
+npm run r2:verify:cors     # Verify the live Cloudflare rules and public preflight
+npm run ota:sync:cors      # Repair the dedicated OTA bucket
+npm run ota:verify:cors    # Verify OTA CORS before OTA publish
 ```
 
 Applies `GET`, `PUT`, `POST`, `DELETE`, `HEAD` for all origins in `ASOL_CORS_ORIGINS`, read and
@@ -39,6 +42,19 @@ parsed through [`@asol/cors`](../../05-platform-features/sealed-packages/cors-mo
 configuration is shared with the application's own CORS surfaces. When the variable is unset the
 rules allow any origin: a bucket with no CORS rules cannot be reached by a browser at all, and the
 bytes are public either way.
+
+### Release invariant
+
+A public object returning `200` is not proof that browser JavaScript can read it. `r2:verify:cors`
+reads the live bucket policy through the Cloudflare control plane and, for non-empty buckets, sends
+a real `OPTIONS` request from the production web origin with `If-None-Match`. A missing/inactive API
+token or unreadable bucket is a hard failure. This matters for an empty bucket too: “nothing to
+probe” must not become permission to publish a bucket whose first future object may be unreadable.
+
+`cors:verify:live` combines that storage proof with browser-style preflights against all eight
+production API origins. It runs before writes in `deploy:push`, `deploy:push:fast`, and `deploy:all`.
+The OTA bucket is independently guarded by `ota:verify:cors` before `ota:publish` and `ota:check`.
+See [the R2 CORS incident record](../../08-troubleshooting/problems/public-r2-object-fetch-blocked-by-cors.md).
 
 ## Public URLs
 

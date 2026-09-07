@@ -7,7 +7,6 @@ import nodemailer from "nodemailer";
 import { androidRunbookStatsByTab } from "@asol/release-core/console/android-release-runbook";
 
 if (existsSync(".env.local")) dotenv.config({ path: ".env.local", quiet: true });
-dotenv.config({ path: ".env", quiet: true });
 
 const RECIPIENT = process.argv[2] ?? "print.code.1000@gmail.com";
 

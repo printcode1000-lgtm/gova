@@ -49,13 +49,15 @@ Named policies also exist for user-owned (1 h), static (infinite), and volatile 
 
 #### Mandatory browser GET gateway
 
-Every browser JSON `GET` through `AsolApiClient`, including imperative reads that are not wrapped by a feature hook, is forced through the same local-read gate. The gate waits for the persisted TanStack cache to be restored from AsolDB before `fetchQuery` may run. Missing browser composition fails closed: it raises an error and performs no cloud request.
+Every browser JSON `GET` through `AsolApiClient`, including imperative reads that are not wrapped by a feature hook, is forced through the same local-read gate. Cacheable policies wait for the persisted TanStack cache to be restored from AsolDB before `fetchQuery` may run. Missing browser composition fails closed: it raises an error and performs no cloud request.
 
 ```text
-AsolApiClient GET -> memory QueryClient -> restore/check AsolDB queryCache -> freshness policy -> network loader
+AsolApiClient GET -> local-read gate
+  -> cacheable policy -> memory QueryClient -> restore/check AsolDB queryCache -> freshness policy -> network loader
+  -> network-authoritative policy -> direct network loader
 ```
 
-Transport-level defaults are intentionally shorter than feature-level policies: ordinary content is local-first for 5 minutes, volatile routes for 30 seconds, static reads may be infinite, and operational/security reads are network-authoritative. Network-authoritative means the local cache is still checked first, but the request is deliberately revalidated immediately. Successful mutations invalidate the transport-read namespace before the next read. Session/header values are hashed in persisted transport cache keys and are never stored in clear text as query-key material.
+Transport-level defaults are intentionally shorter than feature-level policies: ordinary content is local-first for 5 minutes, volatile routes for 30 seconds, static reads may be infinite, and operational/security reads are network-authoritative. Network-authoritative requests are classified by the same gate but deliberately bypass QueryClient/AsolDB caching and in-flight deduplication so every call observes a fresh, cancellation-independent transport attempt. Successful mutations invalidate the transport-read namespace before the next cacheable read. Session/header values are hashed in persisted transport cache keys and are never stored in clear text as query-key material.
 
 Binary operational artifacts (OTA/archive downloads) are not JSON application data and keep their explicit download lifecycle. Public app assets are already project-owned files and do not enter the remote-data cache.
 

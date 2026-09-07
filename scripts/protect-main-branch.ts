@@ -20,7 +20,6 @@ import {
  */
 
 if (existsSync(".env.local")) dotenv.config({ path: ".env.local", quiet: true });
-dotenv.config({ path: ".env", quiet: true });
 
 const DRY_RUN = process.argv.includes("--dry-run");
 const REMOVE = process.argv.includes("--remove");
@@ -47,7 +46,7 @@ function requireToken(): string {
   const token = process.env.GITHUB_ADMIN_TOKEN;
   if (!token) {
     console.error(
-      "\nGITHUB_ADMIN_TOKEN is missing from .env.local / .env.\n" +
+      "\nGITHUB_ADMIN_TOKEN is missing from .env.local.\n" +
         "Create a fine-grained token scoped to this repository with\n" +
         '"Administration: Read and write" — see .env.example.\n' +
         "Run with --dry-run or --status after setting the token.",

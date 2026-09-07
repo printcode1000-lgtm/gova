@@ -15,9 +15,11 @@ import {
   anyOrigin,
   corsOriginsFromEnv,
   createCorsPolicy,
+  createCorsPreflightProbeHeaders,
   handleCorsPreflight,
   isCorsPreflight,
   isOriginAllowed,
+  inspectCorsPreflightResponse,
   parseAllowedOrigins,
   reflectRequestOrigin,
   requestOrigin,
@@ -55,6 +57,7 @@ function requestWith(origin: string | null, method = 'GET'): Request {
     'src/env.ts',
     'src/policy.ts',
     'src/headers.ts',
+    'src/verification.ts',
     'src/preflight.ts',
     'src/apply.ts',
     'src/index.ts',
@@ -243,6 +246,42 @@ for (const origins of [anyOrigin(), reflectRequestOrigin(), allowOrigins([ANY_OR
   assert.equal(wildcard['Access-Control-Allow-Origin'], ANY_ORIGIN);
   assert.equal(wildcard.Vary, undefined);
   assert.equal(resolveCorsHeaders(createCorsPolicy({ origins: anyOrigin() })).Vary, undefined);
+}
+
+
+// ── Live verification helpers ───────────────────────────────────────────────
+{
+  const probe = createCorsPreflightProbeHeaders({
+    origin: 'https://app.example',
+    method: 'GET',
+    requestedHeaders: ['If-None-Match'],
+  });
+  assert.equal(probe['Origin'], 'https://app.example');
+  assert.equal(probe['Access-Control-Request-Method'], 'GET');
+  assert.equal(probe['Access-Control-Request-Headers'], 'If-None-Match');
+
+  const valid = new Headers({
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, HEAD',
+    'Access-Control-Allow-Headers': '*',
+  });
+  assert.deepEqual(inspectCorsPreflightResponse(valid, {
+    origin: 'https://app.example',
+    method: 'GET',
+    requestedHeaders: ['If-None-Match'],
+    allowWildcardOrigin: true,
+  }), []);
+
+  const invalid = new Headers({ 'Access-Control-Allow-Methods': 'HEAD' });
+  assert.deepEqual(inspectCorsPreflightResponse(invalid, {
+    origin: 'https://app.example',
+    method: 'GET',
+    requestedHeaders: ['If-None-Match'],
+  }), [
+    'Access-Control-Allow-Origin',
+    'Access-Control-Allow-Methods:GET',
+    'Access-Control-Allow-Headers:If-None-Match',
+  ]);
 }
 
 // ── Preflight ───────────────────────────────────────────────────────────────

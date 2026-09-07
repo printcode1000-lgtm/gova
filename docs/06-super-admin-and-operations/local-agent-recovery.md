@@ -47,7 +47,7 @@ The recovery bundle is operationally complete but does not copy credentials. The
 
 - `/home/hesham/.config/gova-agent/auth`
 - GitHub/API tokens
-- `.env` and environment-secret files
+- `.env.local` and other environment-secret files
 - Codex credentials or the Codex binary
 - GitHub Runner credentials
 - SSH/GPG credentials
