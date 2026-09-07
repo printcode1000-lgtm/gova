@@ -11,7 +11,7 @@ import {
 } from 'react';
 
 import { SessionRuntimeProvider, type SessionRuntimeUser } from '@/shared/session-runtime';
-import { isLoggedIn, type UserSession } from '../domain/session.entity';
+import { isLoggedIn, isSessionTokenUidConsistent, type UserSession } from '../domain/session.entity';
 import { sessionService } from '../application/services/session-service';
 import { clearImageUploadClientState } from '@/features/storage';
 import { reportPreAuthFailure } from '@/features/system-logs';
@@ -51,6 +51,13 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     })();
     return () => { active = false; };
   }, [refreshSession]);
+
+  useEffect(() => {
+    if (!session?.sessionToken || isSessionTokenUidConsistent(session.uid, session.sessionToken)) return;
+    void sessionService.clearSession().finally(() => {
+      window.dispatchEvent(new Event('asol-session-invalid'));
+    });
+  }, [session?.uid, session?.sessionToken]);
 
   useEffect(() => {
     const clearInvalidSession = () => {

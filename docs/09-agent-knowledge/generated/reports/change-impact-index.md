@@ -12,7 +12,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `account-bridge` | feature | 1 | 0 | 2 | 0 | 0 | 2 |
 | `advertisements` | feature | 2 | 2 | 17 | 0 | 4 | 14 |
 | `app-reset` | feature | 1 | 0 | 5 | 0 | 2 | 2 |
-| `auth` | feature | 2 | 4 | 117 | 0 | 22 | 16 |
+| `auth` | feature | 2 | 5 | 117 | 0 | 22 | 16 |
 | `cart` | feature | 1 | 4 | 8 | 0 | 5 | 11 |
 | `catalog-studio` | feature | 2 | 1 | 3 | 0 | 0 | 7 |
 | `categories` | feature | 4 | 0 | 43 | 0 | 13 | 6 |
@@ -28,7 +28,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `home` | feature | 2 | 0 | 1 | 0 | 0 | 4 |
 | `location` | feature | 1 | 0 | 3 | 0 | 2 | 0 |
 | `navigation` | feature | 1 | 0 | 0 | 0 | 0 | 4 |
-| `network` | feature | 1 | 0 | 0 | 0 | 0 | 3 |
+| `network` | feature | 1 | 1 | 0 | 0 | 0 | 3 |
 | `notifications` | feature | 3 | 31 | 43 | 0 | 10 | 12 |
 | `onboarding` | feature | 1 | 0 | 0 | 0 | 1 | 10 |
 | `orders` | feature | 1 | 1 | 9 | 0 | 1 | 13 |
@@ -59,7 +59,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/account-bridge` | package | 18 | 8 | 26 | 0 | 25 | 4 |
 | `@asol/account-declarations` | package | 14 | 9 | 12 | 0 | 37 | 0 |
 | `@asol/architecture-core` | package | 17 | 7 | 0 | 0 | 8 | 8 |
-| `@asol/auth-core` | package | 11 | 6 | 141 | 0 | 103 | 3 |
+| `@asol/auth-core` | package | 11 | 6 | 141 | 0 | 101 | 3 |
 | `@asol/backup-core` | package | 7 | 2 | 136 | 0 | 11 | 3 |
 | `@asol/branding-core` | package | 12 | 1 | 48 | 0 | 8 | 1 |
 | `@asol/catalog-core` | package | 8 | 1 | 13 | 0 | 17 | 1 |

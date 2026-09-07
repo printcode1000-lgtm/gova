@@ -1,10 +1,15 @@
-import { samePhone, SUPER_ADMIN_PHONE, SUPER_ADMIN_UID } from "@asol/auth-core";
+import { readUnsignedSessionTokenUid, samePhone, SUPER_ADMIN_PHONE, SUPER_ADMIN_UID } from "@asol/auth-core";
 import type { UserSession } from "@/features/auth/domain/session.entity";
 
 export { SUPER_ADMIN_PHONE, SUPER_ADMIN_UID };
 
 export function isSuperAdmin(session: UserSession | null): boolean {
-  return !!session && isSuperAdminIdentity(session.uid, session.phone);
+  if (!session) return false;
+  if (session.sessionToken) {
+    const tokenUid = readUnsignedSessionTokenUid(session.sessionToken);
+    if (tokenUid !== session.uid) return false;
+  }
+  return isSuperAdminIdentity(session.uid, session.phone);
 }
 
 export function isSuperAdminIdentity(uid: string, phone: string): boolean {

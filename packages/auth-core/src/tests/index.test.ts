@@ -170,6 +170,8 @@ export function runSessionTokenTest() {
   registerSessionSigningSecret(() => 'auth-core-test-secret-0123456789abcdef');
   const token = createSignedSessionToken('usr_test', '01000000000');
   assert.equal(verifySignedSessionToken(token).uid, 'usr_test');
+  assert.equal(runtimeApi.readUnsignedSessionTokenUid(token), 'usr_test');
+  assert.equal(runtimeApi.readUnsignedSessionTokenUid('not-a-token'), null);
   assert.throws(() => verifySignedSessionToken(`${token}x`), /sessionTokenInvalid/);
   console.log('✅ auth-core session token test passed');
 }

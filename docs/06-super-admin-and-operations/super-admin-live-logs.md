@@ -144,7 +144,14 @@ Retention runs on write (`SYSTEM_LOGS_RETENTION_DAYS`, default 90).
 | `DELETE /api/system-logs` | Clear by level or all |
 
 Only the configured Super Admin identity can list, stream, or clear persisted
-logs.
+logs. Control routes must authenticate these operations through the shared
+`assertControlSuperAdminToken` guard in `services/control/src/control/super-admin-route.ts`.
+That module registers the canonical Super Admin UID/phone before identity comparison.
+System Logs accepts the token from `x-asol-session-token` for normal requests and
+from the `sessionToken` query parameter for SSE, then passes either form to the
+same initialized guard. A System Logs-only verifier must not call
+`isSuperAdminIdentity` before that Control bootstrap, because its default identity
+resolver is not the production Control identity configuration.
 
 ## Super Admin page
 
@@ -163,6 +170,12 @@ live and persisted counts by fingerprint. It is overlay chrome: tapping it
 while `PageSaveDialog` or another shared dialog is open does not dismiss that
 dialog, and tapping the inspector or development badge does not fold the
 expanded error toolbar.
+
+Telemetry ingest never emits the local `asol:system-logs-changed` refresh event.
+Only explicit mutations such as clearing logs notify local readers. This prevents
+a failed authenticated list request from becoming a feedback loop where the
+warning about that failure is ingested and immediately triggers the same failed
+list request again; normal freshness comes from the 20-second poll and SSE.
 
 Neither the page nor the floating button clears logs on tap. Both stage a
 `delete` operation in `@asol/page-save-core` (`super-admin-logs` and

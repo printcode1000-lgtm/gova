@@ -188,7 +188,7 @@ Valid HTTP error responses continue to use `ApiError` with their original status
 
 ### Aborted requests
 
-`AbortError` is passed through unchanged. Aborting an old health check is expected behavior and must not change the global status.
+`AbortError` is passed through unchanged. Aborting an old health check is expected behavior and must not change the global status or be persisted as a failed startup health check, including when a shared request rejects into a newer caller.
 
 ### Logging
 

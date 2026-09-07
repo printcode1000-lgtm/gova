@@ -12530,6 +12530,8 @@
         "log",
         "logs",
         "md",
+        "services/control/src/control/super-admin-route",
+        "services/control/src/control/super-admin-route.ts",
         "src/app/global-error",
         "src/app/global-error.tsx",
         "src/core/api/expected-business-error-codes",
@@ -29129,6 +29131,17 @@
       "tags": [
         "packages/auth-core/src/domain/phone",
         "packages/auth-core/src/domain/phone.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/auth-core/src/domain/session-token-claims.ts",
+      "kind": "source",
+      "name": "session-token-claims.ts",
+      "path": "packages/auth-core/src/domain/session-token-claims.ts",
+      "tags": [
+        "packages/auth-core/src/domain/session-token-claims",
+        "packages/auth-core/src/domain/session-token-claims.ts",
         "ts"
       ]
     },
@@ -46008,6 +46021,17 @@
       ]
     },
     {
+      "id": "source:src/features/network/application/network-check-error.ts",
+      "kind": "source",
+      "name": "network-check-error.ts",
+      "path": "src/features/network/application/network-check-error.ts",
+      "tags": [
+        "src/features/network/application/network-check-error",
+        "src/features/network/application/network-check-error.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/network/application/services/network-api-service.ts",
       "kind": "source",
       "name": "network-api-service.ts",
@@ -55219,6 +55243,18 @@
       "tags": [
         "src/features/follow/tests/follower-notification",
         "src/features/follow/tests/follower-notification.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/features/network/application/network-check-error.test.ts",
+      "kind": "test",
+      "name": "network-check-error.test.ts",
+      "path": "src/features/network/application/network-check-error.test.ts",
+      "tags": [
+        "src/features/network/application/network-check-error",
+        "src/features/network/application/network-check-error.test.ts",
         "test",
         "ts"
       ]

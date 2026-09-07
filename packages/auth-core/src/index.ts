@@ -31,6 +31,7 @@ export {
 } from './domain/phone';
 
 export { toAsciiDigits, asciiDigitsOnly } from './domain/digits';
+export { readUnsignedSessionTokenUid } from './domain/session-token-claims';
 
 export {
   readPasswordInput,

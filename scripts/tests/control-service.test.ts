@@ -93,6 +93,18 @@ const SEAM_ERROR_MAPPERS = [
   ['control/ota-admin.ts', 'otaError'],
   ['control/system-logs.ts', 'systemLogError'],
 ] as const;
+const systemLogsSource = readFileSync(path.join(SERVICE, 'src', 'control', 'system-logs.ts'), 'utf8');
+assert.match(
+  systemLogsSource,
+  /assertControlSuperAdminToken\(token\)/,
+  'system logs must use the initialized shared Control super-admin guard',
+);
+assert.doesNotMatch(
+  systemLogsSource,
+  /verifySignedSessionToken|isSuperAdminIdentity/,
+  'system logs must not duplicate auth verification without the Control identity bootstrap',
+);
+
 for (const [file, fn] of SEAM_ERROR_MAPPERS) {
   const source = readFileSync(path.join(SERVICE, 'src', file), 'utf8');
   assert.match(
