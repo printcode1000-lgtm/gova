@@ -85,11 +85,15 @@ export const PREFLIGHT_NODE_POLICY: Readonly<Record<string, PreflightNodePolicy>
   // The `test` gate re-syncs service mirrors and touches the database.
   tests: exclusiveStep(),
 
-  "local-db": exclusiveStep(),
-  "release-schema": exclusiveStep(["local-db"]),
+  // Read-only: compares the desired-schema manifests with Turso and applies
+  // nothing. It runs first so a schema that cannot be reached is reported before
+  // the release starts writing DDL.
+  "cloud-schema": exclusiveStep(),
+  "release-schema": exclusiveStep(["cloud-schema"]),
 
-  // `build` runs schema sync against the local database.
-  "server-build": exclusiveStep(["local-db", "release-schema"]),
+  // `build` verifies the cloud schema read-only; the release apply above is what
+  // brings Turso in line, and it must have finished first.
+  "server-build": exclusiveStep(["cloud-schema", "release-schema"]),
   // Reads the route traces the server build just produced.
   "function-size": parallelCheck(["server-build"]),
   // Starts the built server on a real port.

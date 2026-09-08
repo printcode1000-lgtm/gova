@@ -249,7 +249,7 @@ export function SuperAdminCloudAccountsContent() {
         نشرة للقراءة فقط تحمل <strong id="features-super-admin-presentation-superadmincloudaccountscontent-strong-80-tcgoop">فقط</strong> الشظايا التي تخدمها.
       </Note>
 
-      <SubTitle id='features-super-admin-presentation-superadmincloudaccountscontent-subtitle-81-7yvjq9'>hesham101 — {tursoDatabaseCount("hesham101")} قواعد بيانات</SubTitle>
+      <SubTitle id='features-super-admin-presentation-superadmincloudaccountscontent-subtitle-81-7yvjq9'>hesham106 — {tursoDatabaseCount("hesham106")} قواعد بيانات</SubTitle>
       <TableWrap id='features-super-admin-presentation-superadmincloudaccountscontent-tablewrap-82-axnqrh'>
         <thead id='features-super-admin-presentation-superadmincloudaccountscontent-thead-83-czijzj' className="bg-muted/50 text-xs text-on-surface-variant">
           <tr id='features-super-admin-presentation-superadmincloudaccountscontent-tr-84-ayvq1s'>
@@ -261,7 +261,7 @@ export function SuperAdminCloudAccountsContent() {
         <tbody id='features-super-admin-presentation-superadmincloudaccountscontent-tbody-88-pwkxst'>
           <tr id='features-super-admin-presentation-superadmincloudaccountscontent-tr-89-cy3e7d' className="border-t align-top">
             <td id='features-super-admin-presentation-superadmincloudaccountscontent-td-90-axk0rn' className="p-2 sm:p-3" dir="ltr">allusers</td>
-            <td id='features-super-admin-presentation-superadmincloudaccountscontent-td-91-ke22ds' className="p-2 sm:p-3">6</td>
+            <td id='features-super-admin-presentation-superadmincloudaccountscontent-td-91-ke22ds' className="p-2 sm:p-3">5</td>
             <td id='features-super-admin-presentation-superadmincloudaccountscontent-td-92-xrzkon' className="p-2 sm:p-3">
               <span id='features-super-admin-presentation-superadmincloudaccountscontent-text-93-bidpur' dir="ltr">users</span>، استرجاع كلمة المرور، أعلام
               الميزات (feature flags)، إصدارات OTA وسجل التدقيق
@@ -269,17 +269,17 @@ export function SuperAdminCloudAccountsContent() {
           </tr>
           <tr id='features-super-admin-presentation-superadmincloudaccountscontent-tr-94-nnq5nc' className="border-t align-top">
             <td id='features-super-admin-presentation-superadmincloudaccountscontent-td-95-gmn3vl' className="p-2 sm:p-3" dir="ltr">advertisements</td>
-            <td id='features-super-admin-presentation-superadmincloudaccountscontent-td-96-mclhag' className="p-2 sm:p-3">4</td>
+            <td id='features-super-admin-presentation-superadmincloudaccountscontent-td-96-mclhag' className="p-2 sm:p-3">3</td>
             <td id='features-super-admin-presentation-superadmincloudaccountscontent-td-97-rcddy5' className="p-2 sm:p-3">
               شريط البطل (hero slider)، الشريط المميز، شريط الأكثر رواجًا
             </td>
           </tr>
           <tr id='features-super-admin-presentation-superadmincloudaccountscontent-tr-98-qwdamg' className="border-t align-top">
             <td id='features-super-admin-presentation-superadmincloudaccountscontent-td-99-iloqek' className="p-2 sm:p-3" dir="ltr">system-ops</td>
-            <td id='features-super-admin-presentation-superadmincloudaccountscontent-td-100-fxjuxp' className="p-2 sm:p-3">9</td>
+            <td id='features-super-admin-presentation-superadmincloudaccountscontent-td-100-fxjuxp' className="p-2 sm:p-3">2</td>
             <td id='features-super-admin-presentation-superadmincloudaccountscontent-td-101-aie9ks' className="p-2 sm:p-3">
               <span id='features-super-admin-presentation-superadmincloudaccountscontent-text-102-l70y4p' dir="ltr">system_logs</span>،{" "}
-              <span id='features-super-admin-presentation-superadmincloudaccountscontent-text-103-1d4jxr' dir="ltr">data_health_*</span>
+              <span id='features-super-admin-presentation-superadmincloudaccountscontent-text-103-1d4jxr' dir="ltr">control_release_state</span>
             </td>
           </tr>
         </tbody>

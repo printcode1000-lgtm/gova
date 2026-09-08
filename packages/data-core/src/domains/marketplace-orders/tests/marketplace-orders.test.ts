@@ -1,4 +1,4 @@
-import assert from "node:assert/strict"; import { createMemoryMarketplaceDb } from "../db/test-client"; import { MarketplaceOrderService } from "../commands/marketplace-order-service"; import { validateImageAttachment } from "@asol/orders-core";
+import assert from "node:assert/strict"; import { createMemoryMarketplaceDb } from "./memory-marketplace-db"; import { MarketplaceOrderService } from "../commands/marketplace-order-service"; import { validateImageAttachment } from "@asol/orders-core";
 async function main(){
   const db=createMemoryMarketplaceDb();
   const s=new MarketplaceOrderService(db),buyer={id:"buyer",role:"buyer" as const},seller={id:"seller",role:"seller" as const},seller2={id:"seller2",role:"seller" as const},admin={id:"admin",role:"admin" as const},carrier={id:"carrier",role:"carrier" as const};

@@ -238,15 +238,15 @@ async function testRerunClearsTheRowItReplaces() {
 async function testNeverStartedWorkIsDiscardedNotResurrected() {
   reset();
   const storage = createStorage();
-  storage.journal.set("data-health::purge", {
+  storage.journal.set("super-admin-users::purge", {
     schemaVersion: PAGE_SAVE_JOURNAL_SCHEMA_VERSION,
-    operationId: "data-health::purge",
+    operationId: "super-admin-users::purge",
     idempotencyKey: "key-2",
-    scopeId: "data-health",
+    scopeId: "super-admin-users",
     itemId: "purge",
     kind: "delete",
     label: "Purge orders",
-    returnPath: "/super-admin/data-health",
+    returnPath: "/super-admin/users",
     status: "pending",
     attempts: 0,
     startedAt: new Date().toISOString(),
@@ -260,7 +260,7 @@ async function testNeverStartedWorkIsDiscardedNotResurrected() {
     [],
     "work that never left the device raises no question",
   );
-  assert.equal(storage.journal.has("data-health::purge"), false);
+  assert.equal(storage.journal.has("super-admin-users::purge"), false);
 }
 
 async function testCorruptJournalRowsArePrunedAndNeverDriveTheHeader() {

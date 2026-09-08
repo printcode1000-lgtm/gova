@@ -26,10 +26,10 @@ function runNpm(args) {
 
 runNpm(installArguments);
 
-// better-sqlite3 13 ships platform binaries, but npm on Windows currently invokes
-// node-gyp implicitly despite gypfile:false. The compatible install skips lifecycle
-// scripts there and proves the shipped native/tool binaries explicitly instead.
-runNpm(["exec", "--", "tsx", "-e", "import { verifySqliteRuntime } from '@asol/data-core/tooling'; verifySqliteRuntime()"]);
+// The install skips lifecycle scripts, so the tool binaries that ship prebuilt
+// are proven explicitly instead. There is no database driver in this list any
+// more: server data is reached over HTTP, so the release closure contains no
+// compiled native module to verify.
 run(process.execPath, ["-e", "require('esbuild').version"]);
 run(process.execPath, ["-e", "require('unrs-resolver')"]);
 runNpm(["ls", "--all"]);

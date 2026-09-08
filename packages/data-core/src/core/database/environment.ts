@@ -1,36 +1,18 @@
-import {
-  resolveAdvertisementsSqlitePath,
-  resolveMarketplaceOrdersSourceSqlitePath,
-  resolveNotificationsSqlitePath,
-  resolvePrimarySqlitePath,
-  resolveProductSqlitePath,
-  resolveProfileSourceSqlitePath,
-  resolveSchemaSyncReportPath,
-  resolveSqliteDirectory,
-} from "@asol/dev-core/server";
-import {
-  getServerRuntimeContext,
-} from '../../ports/runtime-config';
-import {
-  resolveServerDatabaseBackend,
-  type ServerDatabaseBackend,
-} from "../database-runtime-policy";
+import { getServerRuntimeContext } from '../../ports/runtime-config';
+import { assertServerDatabaseRuntime } from "../database-runtime-policy";
 
-export type { ServerDatabaseBackend };
-
-export function getServerDatabaseBackend(): ServerDatabaseBackend {
-  return resolveServerDatabaseBackend(
+/**
+ * Whether *this* runtime may open a server database at all.
+ *
+ * There is nothing here that resolves a path or picks a backend: server
+ * application data is Turso/libSQL in every runtime, so the only remaining
+ * question is legality, and the answer is a throw or nothing.
+ */
+export function assertServerDataAccessRuntime(): void {
+  assertServerDatabaseRuntime(
     getServerRuntimeContext(),
     typeof window !== "undefined",
   );
-}
-
-export function assertServerDataAccessRuntime(): void {
-  getServerDatabaseBackend();
-}
-
-export function isDevRuntime(): boolean {
-  return getServerDatabaseBackend() === "sqlite";
 }
 
 export function isStaticExportBuild(): boolean {
@@ -40,24 +22,3 @@ export function isStaticExportBuild(): boolean {
 export function isProvisioningContext(): boolean {
   return getServerRuntimeContext().isProvisioning;
 }
-
-export const SCHEMA_SYNC_REPORT_PATH = resolveSchemaSyncReportPath();
-
-export const SQLITE_DIRECTORY = resolveSqliteDirectory();
-
-export const PRIMARY_SQLITE_DB_PATH = resolvePrimarySqlitePath();
-
-export const PROFILE_SOURCE_SQLITE_DB_PATH = resolveProfileSourceSqlitePath();
-
-export const PRODUCT_SQLITE_DB_PATH = resolveProductSqlitePath();
-
-export const ADVERTISEMENTS_SQLITE_DB_PATH = resolveAdvertisementsSqlitePath();
-
-/**
- * Device tokens and delivery preferences. Separate from allusers.db because the
- * production copy lives in its own Turso account.
- */
-export const NOTIFICATIONS_SQLITE_DB_PATH = resolveNotificationsSqlitePath();
-
-export const MARKETPLACE_ORDERS_SOURCE_SQLITE_DB_PATH =
-  resolveMarketplaceOrdersSourceSqlitePath();

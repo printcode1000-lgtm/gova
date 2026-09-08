@@ -12,7 +12,7 @@ Gateway capabilities with explicit scan and/or ESLint enforcement. Ownership det
 
 ### `@asol/data-core` — Database
 
-**Owns:** Drizzle ORM, `better-sqlite3`, `@libsql/client`, sharding, domain repositories, browser IndexedDB adapter.
+**Owns:** Drizzle ORM, `@libsql/client`, sharding, domain repositories, browser IndexedDB adapter.
 
 **33 export doors** including `./browser`, `./provisioning`, `./tooling`, and per-domain slices.
 

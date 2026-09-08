@@ -11,8 +11,8 @@ const available = new Set(Object.keys(scripts).filter((name) => name.startsWith(
 assert.ok(available.has("test:architecture-core"), "the architecture floor suite must exist");
 
 assert.deepEqual(
-  relatedCoreTests(["packages/backup-core/src/server.ts", "src/features/orders/page.tsx"], available),
-  ["test:backup-core", "test:orders-core"],
+  relatedCoreTests(["packages/orders-core/src/index.ts", "src/features/orders/page.tsx"], available),
+  ["test:orders-core"],
 );
 assert.deepEqual(relatedCoreTests(["src/app/api/health/route.ts"], available), ["test:api-core"]);
 assert.deepEqual(relatedCoreTests(["android/app/build.gradle", "ios/App/App/Info.plist"], available), ["test:native-core"]);

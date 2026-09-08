@@ -24,22 +24,18 @@ function rowsOf(result: unknown): Record<string, unknown>[] {
   return Array.isArray(rows) ? (rows as Record<string, unknown>[]) : [];
 }
 
+/**
+ * Durable release state, read and written as data.
+ *
+ * `control_release_state` is declared in the `system-ops` desired-schema
+ * manifest. This class used to create it on every read and write, which made a
+ * repository a second schema authority: two definitions of one table, and the
+ * one that ran first decided what production got.
+ */
 export class SqlReleaseStateStore implements ReleaseStateStore {
   constructor(private readonly dataSource: SqlReleaseStateDataSource) {}
 
-  private async ensureSchema(): Promise<void> {
-    await this.dataSource.execute(
-      `CREATE TABLE IF NOT EXISTS control_release_state (
-        revision TEXT PRIMARY KEY NOT NULL,
-        version INTEGER NOT NULL,
-        state_json TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-      )`,
-    );
-  }
-
   async read(revision: string): Promise<DurableReleaseState | null> {
-    await this.ensureSchema();
     const rows = rowsOf(await this.dataSource.execute(
       'SELECT state_json FROM control_release_state WHERE revision = ? LIMIT 1',
       [revision],
@@ -52,7 +48,6 @@ export class SqlReleaseStateStore implements ReleaseStateStore {
     state: DurableReleaseState,
     expectedVersion: number | null,
   ): Promise<DurableReleaseState> {
-    await this.ensureSchema();
     const current = await this.read(state.revision);
     if ((current?.version ?? null) !== expectedVersion) {
       throw new Error('releaseStateVersionConflict');

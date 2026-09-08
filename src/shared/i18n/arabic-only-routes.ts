@@ -12,8 +12,6 @@ export const ARABIC_ONLY_SOURCE_ROOTS = [
   "src/app/dev",
   "src/features/super-admin/presentation",
   "src/features/google-play-console",
-  "src/features/data-health",
-  "src/features/dev-cloud-backup",
   "src/features/catalog-studio",
   "src/features/dev-tools/presentation",
 ] as const;

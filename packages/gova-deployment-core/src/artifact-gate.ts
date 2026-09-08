@@ -29,8 +29,6 @@ const FORBIDDEN_TRACE_PACKAGES = [
   '@asol/storage-core',
   '@asol/orders-core',
   '@asol/notifications-core',
-  '@asol/backup-core',
-  '@asol/data-health-core',
   '@asol/release-core',
   '@asol/vercel-deploy-core',
   '@libsql/client',

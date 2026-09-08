@@ -56,7 +56,7 @@ gova-agent lock-recover
 # Schema & database
 npm run db:drizzle -- generate
 npm run db:drizzle -- generate --config drizzle.profile.config.ts
-npm run db:ensure
+npm run db:schema:verify
 npm run db:schema:sync
 npm run db:schema:sync:release   # required credentials; used by deploy:all preflight
 npm run db:provision:turso
@@ -232,7 +232,7 @@ The preflight phase runs before the first Git write. Its sections are:
 2. source quality and architecture:
    `lint`, `typecheck`, `architecture:check`, `test`;
 3. database and runtime contracts:
-   `db:ensure`, `db:schema:sync:release`;
+   `db:schema:verify`, `db:schema:sync:release`;
 4. main app builds:
    `build`, then `build:static`;
 5. isolated service deployments:

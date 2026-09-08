@@ -1,13 +1,9 @@
 import assert from 'node:assert/strict';
-import { resolve } from 'node:path';
 import {
   ACCOUNT_DELETION_IMAGE_SOURCES,
   ACCOUNT_DELETION_REGISTRY_VERSION,
 } from '../account-deletion-registry.persistence';
-import {
-  DEFAULT_MIGRATION_SCAN_SOURCES,
-  evaluateRegistryCoverage,
-} from '../account-deletion-registry.coverage';
+import { evaluateRegistryCoverage } from '../account-deletion-registry.coverage';
 
 function runRegistryVersionTest() {
   assert.equal(typeof ACCOUNT_DELETION_REGISTRY_VERSION, 'number');
@@ -15,9 +11,13 @@ function runRegistryVersionTest() {
   console.log('✅ account deletion registry version test passed');
 }
 
+/**
+ * Coverage is measured against the desired-schema manifests — the schema the
+ * databases are meant to have now — not against concatenated migration history,
+ * which still contains tables that were later dropped or renamed.
+ */
 function runRegistryCoverageContractTest() {
-  const repoRoot = resolve(import.meta.dirname, '../../../../../..');
-  const { missing } = evaluateRegistryCoverage(repoRoot, DEFAULT_MIGRATION_SCAN_SOURCES);
+  const { missing } = evaluateRegistryCoverage();
 
   if (missing.length > 0) {
     const details = missing

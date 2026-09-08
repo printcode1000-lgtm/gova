@@ -22,7 +22,7 @@ export const FORBIDDEN_VERCEL_PROOF_COMMANDS = [
   "lint",
   "runtime:compatibility:check",
   "test:runtime-compatibility",
-  "db:ensure",
+  "db:schema:verify",
   "db:schema:sync",
   "services:sync",
   "catalog:validate",

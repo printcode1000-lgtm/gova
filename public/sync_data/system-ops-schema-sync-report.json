@@ -1,10 +1,11 @@
 {
-  "executedAt": "2026-09-07T09:23:18.130Z",
-  "durationMs": 10392,
-  "sqliteSchemaVersion": "d3201e44a5a06c97",
-  "tursoSchemaVersionBefore": "440944d52b90ce58",
-  "tursoSchemaVersionAfter": "440944d52b90ce58",
+  "executedAt": "2026-09-08T03:14:56.905Z",
+  "durationMs": 6418,
+  "desiredSchemaVersion": "5a240f878f3fab88",
+  "tursoSchemaVersionBefore": "5a240f878f3fab88",
+  "tursoSchemaVersionAfter": "5a240f878f3fab88",
   "operations": [],
+  "migrationsRequired": [],
   "tablesModified": 0,
   "columnsAdded": 0,
   "indexesAdded": 0,
@@ -13,8 +14,6 @@
   "sqlExecuted": [],
   "residualOperations": [],
   "errors": [],
-  "warnings": [
-    "Table \"ui_registry_pending_requests\" exists on Turso but not in SQLite. Not dropped automatically."
-  ],
+  "warnings": [],
   "skipped": false
 }

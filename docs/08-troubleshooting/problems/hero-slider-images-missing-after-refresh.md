@@ -2,7 +2,7 @@
 
 ## Symptom
 
-`/super-admin/hero-slider` shows `StorageImageManager` in `border-destructive` with "إضافة صورة" after reload. Browser logs report `ResourceLoadError` for `/sync_data/sync_file/images/advertisements/home-hero-slider/{uuid}.webp` (local dev) or equivalent R2 URLs in production.
+`/super-admin/hero-slider` shows `StorageImageManager` in `border-destructive` with "إضافة صورة" after reload. Browser logs report `ResourceLoadError` for the slide's R2 object URL. (Historically Development served these from `/sync_data/sync_file/...`; it now uses the same R2 URLs as every other runtime.)
 
 The database still lists `imageKey` values for the slides.
 

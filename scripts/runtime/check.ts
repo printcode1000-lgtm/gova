@@ -10,7 +10,6 @@ function isDevOnlyPath(path: string): boolean {
     path.startsWith('src/app/dev/') ||
     path.startsWith('src/features/dev-') ||
     path.startsWith('src/features/dev-tools/') ||
-    path.startsWith('src/features/dev-cloud-backup/') ||
     path.startsWith('packages/dev-core/')
   );
 }

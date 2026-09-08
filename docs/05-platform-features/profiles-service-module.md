@@ -125,5 +125,5 @@ silently absent.
 |---|---|
 | Reads only | Profile writes go through image storage and touch product-derived counts. |
 | No reviews, discounts, store-images, editor | Each reads or writes beyond the profile shards. |
-| `system-ops` stays behind | It holds system logs and data-health records, not profile data. |
+| `system-ops` stays behind | It holds system logs and the control release marker, not profile data. |
 | The bridge redirects `GET` only, in the browser only | A redirected write, or a server-side redirect, would make the accounts depend on each other. |

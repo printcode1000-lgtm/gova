@@ -52,7 +52,7 @@ export function SchemaSyncPanel() {
       ) : (
         <>
           <div id='app-dev-monitor-schemasyncpanel-div-10-e7imnk' style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12, marginBottom: 16 }}>
-            <Stat id='app-dev-monitor-schemasyncpanel-stat-11-ppgcw2' label="إصدار SQLite" value={report.sqliteSchemaVersion} />
+            <Stat id='app-dev-monitor-schemasyncpanel-stat-11-ppgcw2' label="إصدار SQLite" value={report.desiredSchemaVersion} />
             <Stat id='app-dev-monitor-schemasyncpanel-stat-12-ytkurb' label="Turso قبل" value={report.tursoSchemaVersionBefore} />
             <Stat id='app-dev-monitor-schemasyncpanel-stat-13-ia0qsf' label="Turso بعد" value={report.tursoSchemaVersionAfter} />
             <Stat id='app-dev-monitor-schemasyncpanel-stat-14-dki74y' label="المدة" value={`${report.durationMs}ms`} />

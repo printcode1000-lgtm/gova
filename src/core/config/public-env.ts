@@ -6,6 +6,15 @@ import {
   CURRENT_NATIVE_APP_VERSION,
   CURRENT_WEB_CONTENT_VERSION,
 } from "./app-version";
+import { businessApiOrigins } from "./business-api-origins";
+
+/**
+ * Owner origins resolved once, from the single resolver the compatibility
+ * boundary also reads. Development, Static, Android and iOS therefore address
+ * the same accounts: an explicit `NEXT_PUBLIC_ASOL_*_URL` first, otherwise the
+ * canonical deployment declared in `@asol/native-core`.
+ */
+const serviceOrigins = businessApiOrigins();
 
 const LEGACY_API_URL_KEY = "NEXT_PUBLIC_ASOL_API_URL";
 
@@ -18,7 +27,7 @@ export const publicEnv = {
     process.env[LEGACY_API_URL_KEY]?.replace(/\/$/, "") ||
     process.env.ASOL_API_BASE_URL?.replace(/\/$/, "") ||
     "",
-  controlUrl: process.env.NEXT_PUBLIC_ASOL_CONTROL_URL?.replace(/\/$/, '') || '',
+  controlUrl: serviceOrigins.control,
   publicWebOrigin:
     process.env.NEXT_PUBLIC_ASOL_PUBLIC_WEB_ORIGIN?.replace(/\/$/, "") ||
     "https://gova-swart.vercel.app",
@@ -30,39 +39,27 @@ export const publicEnv = {
    * Origin of the notifications deployment. Client-safe: the browser is the
    * only thing that calls it, and a signed grant — not this URL — is what
    * authorises a send.
-   *
-   * No fallback constant here on purpose. A static or native bundle has no
-   * same-origin option, so `build-static.ts` resolves the value from
-   * `NOTIFICATIONS_BASE_URL`, asserts it is absolute, and sets it
-   * before the build. Importing that default here instead would pull
-   * `platform/` into `next.config.ts` and break the static build's temp layout.
    */
-  notificationsUrl:
-    process.env.NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL?.replace(/\/$/, "") || "",
+  notificationsUrl: serviceOrigins.notifications,
   /**
    * Origin of the products deployment. Client-safe: only the browser calls it,
    * and it serves read-only product data.
-   *
-   * Like the notifications origin, no fallback constant lives here — a static
-   * or native build resolves and asserts it in `build-static.ts`.
    */
-  productsUrl:
-    process.env.NEXT_PUBLIC_ASOL_PRODUCTS_URL?.replace(/\/$/, "") || "",
+  productsUrl: serviceOrigins.products,
   /**
    * Origin of the orders deployment. Client-safe: only the browser calls it,
    * and it serves the order list only — the detail view stays on the main app,
    * which is the side that can read profile contacts and store details.
    */
-  ordersUrl: process.env.NEXT_PUBLIC_ASOL_ORDERS_URL?.replace(/\/$/, "") || "",
+  ordersUrl: serviceOrigins.orders,
   /**
    * Origin of the profiles deployment. Client-safe: it serves profile reads
    * only — reviews stay on the main app because they also read the product
    * database.
    */
-  profilesUrl:
-    process.env.NEXT_PUBLIC_ASOL_PROFILES_URL?.replace(/\/$/, "") || "",
-  submainUrl: process.env.NEXT_PUBLIC_ASOL_SUBMAIN_URL?.replace(/\/$/, "") || "",
-  sub2mainUrl: process.env.NEXT_PUBLIC_ASOL_SUB2MAIN_URL?.replace(/\/$/, "") || "",
+  profilesUrl: serviceOrigins.profiles,
+  submainUrl: serviceOrigins.submain,
+  sub2mainUrl: serviceOrigins.sub2main,
   otaManifestUrl: process.env.NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL || "",
   otaPublicKey: process.env.NEXT_PUBLIC_ASOL_OTA_PUBLIC_KEY || "",
   webBundleVersion:
@@ -83,17 +80,15 @@ export const publicEnv = {
 /**
  * Origin the browser bridge posts signed grants to.
  *
- * Static and native bundles must set `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL`
- * explicitly. In `next dev`, an unset value falls back to the page origin so
- * fan-out reads the same SQLite `notifications.db` that device registration
- * wrote — the remote service only sees Turso and would report `no_tokens`.
+ * One address in every runtime — Development included. The former
+ * development-only fall-back to `window.location.origin` existed so fan-out
+ * would read the same local `notifications.db` that device registration wrote;
+ * with no local database left to read, sending a grant to the page origin would
+ * only reach a gova runtime that owns no notifications route. A missing origin
+ * is a configuration error, and `null` is what reports it.
  */
 export function getNotificationsPublicUrl(): string | null {
-  if (publicEnv.notificationsUrl) return publicEnv.notificationsUrl;
-  if (publicEnv.developmentBuild && typeof window !== "undefined") {
-    return window.location.origin;
-  }
-  return null;
+  return publicEnv.notificationsUrl || null;
 }
 
 export function getMobilePushCredentialBlob(): string | null {

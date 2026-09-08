@@ -2,12 +2,8 @@ import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 
 import { createClient } from "@libsql/client";
-import Database from "better-sqlite3";
 import dotenv from "dotenv";
-import { drizzle } from "drizzle-orm/better-sqlite3";
-import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 
-import { ADVERTISEMENTS_SQLITE_DB_PATH } from "../core/database/environment";
 import { loadTursoAdvertisementsCredentialsFromEnv } from "../provisioning/core/turso-provisioner";
 
 /** Seed lives in the app tree; tooling loads it by path (no `@/` import). */
@@ -62,43 +58,6 @@ CREATE TABLE trending_ribbon (
   updated_by TEXT
 )`;
 
-function resetLocal(): void {
-  const db = new Database(ADVERTISEMENTS_SQLITE_DB_PATH);
-  try {
-    db.pragma("foreign_keys = OFF");
-    db.transaction(() => {
-      for (const table of DROP_TABLES) db.exec(`DROP TABLE IF EXISTS ${table}`);
-      db.exec("DROP TABLE IF EXISTS __drizzle_migrations");
-    })();
-    migrate(drizzle(db), {
-      migrationsFolder: path.join(
-        process.cwd(),
-        "packages/data-core/src/core/database/advertisements/migrations",
-      ),
-    });
-    db.prepare(
-      "INSERT INTO hero_slider (id, config_json, version, check_interval_minutes, updated_at) VALUES (?, ?, 1, 15, ?)",
-    ).run(
-      "home-hero-slider",
-      JSON.stringify(seed.config),
-      new Date().toISOString(),
-    );
-    db.prepare(
-      "INSERT INTO featured_marquee (id, product_ids_json, version, check_interval_minutes, updated_at) VALUES (?, '[]', 1, 15, ?)",
-    ).run("home-featured-marquee", new Date().toISOString());
-    db.prepare(
-      "INSERT INTO trending_ribbon (id, config_json, version, check_interval_minutes, updated_at) VALUES (?, ?, 1, 15, ?)",
-    ).run(
-      "home-trending-ribbon",
-      JSON.stringify({ label: "home.trending.label", items: [] }),
-      new Date().toISOString(),
-    );
-  } finally {
-    db.close();
-  }
-  console.log(`Advertisements SQLite reset: ${ADVERTISEMENTS_SQLITE_DB_PATH}`);
-}
-
 async function resetCloud(): Promise<void> {
   const credentials = loadTursoAdvertisementsCredentialsFromEnv();
   if (!credentials) {
@@ -142,9 +101,19 @@ async function resetCloud(): Promise<void> {
   console.log("Advertisements Turso reset complete");
 }
 
+/**
+ * A reset drops the advertisements tables and re-seeds them. There is one copy
+ * of that data, so `--cloud` is not a second target: it is the acknowledgement
+ * that this destroys what the live advertisements database currently holds.
+ */
 async function main() {
-  resetLocal();
-  if (process.argv.includes("--cloud")) await resetCloud();
+  if (!process.argv.includes("--cloud")) {
+    console.log(
+      "Refusing to reset without --cloud. This drops and re-seeds the live advertisements database.",
+    );
+    return;
+  }
+  await resetCloud();
 }
 
 main().catch((error) => {

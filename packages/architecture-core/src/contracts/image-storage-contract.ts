@@ -17,9 +17,7 @@ export const R2_S3_CLIENT_ALLOWED_IMPORTERS = new Set([
   'packages/storage-core/src/adapters/s3-client.adapter.ts',
   'packages/storage-core/src/server/transport/r2-object-store.ts',
   'packages/ota-core/src/publishing/adapters/r2-storage.adapter.ts',
-  'packages/backup-core/src/server/r2-backup.repository.ts',
   'packages/data-core/src/tooling/migrate-r2-image-public-url.ts',
-  'packages/data-core/src/tooling/migrate-r2-cloud-folders.ts',
 ]);
 
 /** R2 client module — adapter in storage-core. */
@@ -35,13 +33,10 @@ export const IMAGE_STORAGE_API_ADAPTER_ALLOWED_IMPORTERS = new Set([
 export const IMAGE_STORAGE_FORBIDDEN_PATTERN_EXEMPT = new Set([
   R2_S3_CLIENT_MODULE,
   'packages/storage-core/src/server/providers/r2-account.provider.ts',
-  'packages/storage-core/src/server/providers/local-storage.provider.ts',
   'packages/storage-core/src/server/transport/r2-object-store.ts',
   'packages/storage-core/src/domain/images/image-key-generator.ts',
   'packages/ota-core/src/publishing/adapters/r2-storage.adapter.ts',
-  'packages/backup-core/src/server/r2-backup.repository.ts',
   'packages/data-core/src/tooling/migrate-r2-image-public-url.ts',
-  'packages/data-core/src/tooling/migrate-r2-cloud-folders.ts',
   'packages/architecture-core/src/contracts/image-storage-contract.ts',
 ]);
 
@@ -59,6 +54,17 @@ export const IMAGE_STORAGE_FORBIDDEN_PATTERNS: Array<{ pattern: RegExp; message:
   { pattern: /uploadR2Object\s*\(/, message: 'Direct R2 upload outside Provider Layer' },
   { pattern: /deleteR2Object\s*\(/, message: 'Direct R2 delete outside Provider Layer' },
   { pattern: /new\s+R2AccountProvider\s*\(/, message: 'Direct Provider instantiation forbidden' },
-  { pattern: /new\s+LocalStorageProvider\s*\(/, message: 'Direct Provider instantiation forbidden' },
   { pattern: /randomUUID\s*\(\).*\.webp/, message: 'ImageKey must use ImageKeyGenerator only' },
+  // Server image objects live in Cloudflare R2 in every runtime. A filesystem
+  // write under the uploaded-image tree is a second object store, and the last
+  // one existed only so Development could avoid configuring R2 — which is also
+  // why a missing credential stayed invisible until a deployment.
+  {
+    pattern: /public\/sync_data\/sync_file/,
+    message: 'Filesystem image storage is forbidden: server image objects belong to Cloudflare R2',
+  },
+  {
+    pattern: /\bLocalStorageProvider\b/,
+    message: 'The filesystem image provider is removed; resolve the profile\'s R2 provider instead',
+  },
 ];

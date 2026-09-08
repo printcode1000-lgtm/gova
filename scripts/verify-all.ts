@@ -74,8 +74,6 @@ const STEPS: readonly Step[] = [
   // The four former ota-compatibility/delivery/background/hardening scripts were
   // consolidated into the package suite; this runs all of them.
   { script: "test:ota-core" },
-  { script: "test:data-health" },
-  { script: "test:dev-cloud-backup" },
 
   // The package seals. `test:data-core` also carries the offline schema-parity half — the
   // declared shards, the migration DDL, and the table→shard lookup describing one schema. The

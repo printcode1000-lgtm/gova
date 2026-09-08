@@ -2,53 +2,62 @@
 
 # Current Databases
 
-ASOL uses multiple logical databases. Each domain has a local SQLite database for development and a matching Turso/libSQL database for production.
+ASOL uses 21 logical databases. Every one of them is a Turso/libSQL database,
+in every runtime — Development included. There is no local database: `npm run
+dev` runs the UI locally and reaches the same cloud data a deployed function
+does, so a data-path bug reproduces on the developer's machine instead of
+waiting for a release to reveal it.
 
-The local SQLite schema is the source of truth. Schema synchronization applies incremental DDL from local SQLite to Turso through:
+That also means a normal create, update or delete performed in Development
+affects whichever cloud environment the configured credentials point at. There
+is no local sandbox to absorb it.
+
+The **desired-schema manifests** under
+`packages/data-core/src/provisioning/desired-schema/` are the schema source of
+truth: one TypeScript manifest per logical database, describing tables, columns,
+defaults, primary keys, foreign keys, uniqueness, CHECK constraints, indexes and
+triggers. They are ordinary source, so schema can be validated in a build with
+no database and no credentials.
 
 ```bash
-npm run db:schema:sync
+npm run db:schema:verify        # read-only: compares the manifests with Turso
+npm run db:schema:sync:release  # authorized: applies the missing additive DDL
 ```
+
+Verification never writes. `npm run build` runs the verify form only; applying
+DDL belongs to the release preflight, which is a step someone runs on purpose.
 
 ## Map
 
-| Domain | SQLite (dev) | Turso (prod) | Database Client | Env |
-| --- | --- | --- | --- | --- |
-| Users and auth | `allusers.db` | Users Turso DB | `usersDataSource` | `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN` |
-| Products | `product.db` | Product Turso DB (separate account `hesham103`) | `productsDataSource` | `TURSO_PRODUCT_DATABASE_URL`, `TURSO_PRODUCT_AUTH_TOKEN` |
-| Advertisements | `advertisements.db` | Advertisements Turso DB | `advertisementsDataSource` | `TURSO_ADVERTISEMENTS_DATABASE_URL`, `TURSO_ADVERTISEMENTS_AUTH_TOKEN` |
-| Notifications | `notifications.db` | Notifications Turso DB (separate account) | `notificationsDataSource` | `TURSO_NOTIFICATIONS_DATABASE_URL`, `TURSO_NOTIFICATIONS_AUTH_TOKEN` |
-| Profile shards | `profile-*.db` | Matching Turso shards (separate account `hesham105`) | `profilesDataSource` | `<SHARD>_DATABASE_URL`, `<SHARD>_DATABASE_AUTH_TOKEN` |
-| System operations | `system-ops.db` | System-ops Turso shard (`hesham101`) | `profilesDataSource` | `SYSTEM_OPS_DATABASE_URL`, `SYSTEM_OPS_DATABASE_AUTH_TOKEN` |
-| Marketplace order shards | `orders-*.db` | Matching Turso shards (separate account `hesham104`) | Marketplace orders DB client | `<SHARD>_DATABASE_URL`, `<SHARD>_DATABASE_AUTH_TOKEN` |
+| Domain | Turso database | Database Client | Env |
+| --- | --- | --- | --- |
+| Users and auth | Users Turso DB | `usersDataSource` | `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN` |
+| Products | Product Turso DB (separate account `hesham103`) | `productsDataSource` | `TURSO_PRODUCT_DATABASE_URL`, `TURSO_PRODUCT_AUTH_TOKEN` |
+| Advertisements | Advertisements Turso DB | `advertisementsDataSource` | `TURSO_ADVERTISEMENTS_DATABASE_URL`, `TURSO_ADVERTISEMENTS_AUTH_TOKEN` |
+| Notifications | Notifications Turso DB (separate account) | `notificationsDataSource` | `TURSO_NOTIFICATIONS_DATABASE_URL`, `TURSO_NOTIFICATIONS_AUTH_TOKEN` |
+| Profile shards | Seven Turso shards (separate account `hesham105`) | `profilesDataSource` | `<SHARD>_DATABASE_URL`, `<SHARD>_DATABASE_AUTH_TOKEN` |
+| System operations | System-ops Turso shard (`hesham106`) | `profilesDataSource` | `SYSTEM_OPS_DATABASE_URL`, `SYSTEM_OPS_DATABASE_AUTH_TOKEN` |
+| Marketplace order shards | Nine Turso shards (separate account `hesham104`) | Marketplace orders DB client | `<SHARD>_DATABASE_URL`, `<SHARD>_DATABASE_AUTH_TOKEN` |
 
-`public/sync_data/sync_sqlite/system-ops.db` is gitignored. It is generated locally by `db:ensure`, holds runtime system logs, data-health records, and release-barrier state, and must not be committed. Other shard SQLite files remain tracked as schema sources.
+Turso credentials are server-only. Browser code never connects to a database; it
+reaches data through the Business APIs.
 
-Logical relationships use shared IDs such as `uid`, `productId`, and `orderId`. There are no cross-file foreign keys between separate databases.
+Logical relationships use shared IDs such as `uid`, `productId`, and `orderId`.
+There are no foreign keys between separate databases — Turso cannot enforce one,
+so a cross-database relationship is an application invariant and a parity test
+fails any manifest that declares one as a constraint.
 
 ## One table, one database
 
-No application table exists in more than one database. Verified across all 21
-cloud databases on the five accounts and all 21 local runtime databases: 70
-distinct tables, zero overlap.
+No application table exists in more than one database. `desiredTableOwnership()`
+derives the owner of each of the 62 declared tables from the manifests and
+throws if two claim the same one, and the parity test cross-checks that against
+the shard routing map.
 
 `__drizzle_migrations` is not one of them. It is drizzle's own record of which
 migrations a database has applied, so each database that runs migrations keeps
-its own copy — four of them do. It holds no application data and is excluded
-from the rule.
-
-Two local files are the exception and are **not** databases the application
-reads:
-
-| File | Role |
-|---|---|
-| `profile.db` | schema source that `db:ensure` splits into the `profile-*` and `system-ops` shards |
-| `marketplace-orders.db` | schema source that `db:ensure` splits into the `orders-*` shards |
-
-They are build inputs. Their tables appear again in the shards by design, they
-are never synced to Turso, and no runtime code opens them. Cloud copies of both
-existed until they were deleted — nothing read them, and they duplicated every
-shard table while holding rows the shards never received.
+its own copy — four of them do. It holds no application data, is excluded from
+the manifests, and is ignored as a tooling-owned extra during schema sync.
 
 Adding a table means choosing exactly one database for it. If two domains need
 the same data, one owns it and the other resolves it by `uid` in a second query
@@ -112,17 +121,16 @@ back the seller directory, specialty chat, store pages and order enrichment, so
 isolating them means profile traffic can never consume the quota that serves
 logins or the catalogue.
 
-`system-ops` is **not** one of them. It is split out of the same `profile.db`
-source, but it holds `system_logs`, the `data_health_*` tables, and
-`control_release_state` — operational records, not profile data — so it stayed
-on `hesham101`.
+`system-ops` is **not** one of them. It holds `system_logs` and
+`control_release_state` — operational records about the platform, not profile
+data — so it lives on `hesham106`.
 
 `control_release_state` is the durable release barrier: one row per 40-character
 Git SHA, holding the per-runtime deployment and smoke results the gova build
-polls before it may publish. It is created by its own store on first use
-(`CREATE TABLE IF NOT EXISTS`), not by `db:ensure`, because the only runtime that
-touches it is `control` and the only writer is the authenticated release
-callback. See
+polls before it may publish. It is declared in the `system-ops` desired-schema
+manifest. It used to be created by its own store on first use, which made a
+repository a second schema authority — two definitions of one table, and
+whichever ran first decided what production got. See
 [control-runtime.md](../06-super-admin-and-operations/control-runtime.md) for
 how `ready` is derived and
 [release-commands.md](../07-mobile-and-release/release-commands.md) for who
@@ -339,17 +347,28 @@ that would keep receiving push.
 
 ## Schema Workflows
 
-### Ensure local databases exist
+### Verify the cloud schema (read-only)
 
 ```bash
-npm run db:ensure
+npm run db:schema:verify
 ```
 
-### Sync all configured Turso databases
+Compares each desired-schema manifest with its Turso database and reports what
+is missing. Sends no DDL. Without credentials it skips a database on a developer
+machine and fails the run in CI or a release; it never falls back to something
+local, because there is nothing local to fall back to.
+
+### Apply the schema (authorized)
 
 ```bash
-npm run db:schema:sync
+npm run db:schema:sync:release
 ```
+
+Applies the missing additive DDL, then re-reads Turso and re-diffs. A difference
+that survives the write fails the run rather than reporting success over a
+drifted cloud schema. A difference additive DDL *cannot* repair — a changed
+primary key, foreign key, CHECK constraint, uniqueness or default — is reported
+as requiring an explicit migration and never attempted.
 
 ### Build
 
@@ -357,15 +376,18 @@ npm run db:schema:sync
 npm run build
 ```
 
-The build runs schema sync before Next.js compilation.
+The build verifies the schema read-only. It does not mutate a cloud database.
 
 ## Adding a New Database
 
-1. Add a local SQLite database path.
-2. Add schema and migrations under `packages/data-core/src/core/database/...` or the owning module.
-3. Add a database client.
-4. Add Turso environment variables.
-5. Add schema sync wiring.
+1. Add its label to the shard map, if it is a shard.
+2. Add a desired-schema manifest under
+   `packages/data-core/src/provisioning/desired-schema/` and register it. The
+   registry throws at load if a declared shard has no manifest.
+3. Add schema and migrations under `packages/data-core/src/core/database/...` or
+   the owning module. Migrations remain history; the manifest is the SSOT.
+4. Add a database client.
+5. Add Turso environment variables.
 6. Keep access inside repositories and server services.
 7. Document the new database in this file.
 

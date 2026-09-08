@@ -17,11 +17,11 @@ const nextConfig: NextConfig = {
   },
 
   // Node.js-only packages: let Node require() them at runtime instead of
-  // bundling them, exactly as the main app does. `better-sqlite3` is not stubbed
+  // bundling them, exactly as the main app does.
   // here the way it is in the notifications service: the System Logs adapter
   // reaches the same profile-shard client the application uses, and stubbing a
   // branch this deployment can take would fail at runtime rather than at build.
-  serverExternalPackages: ['@libsql/client', 'better-sqlite3', 'drizzle-orm'],
+  serverExternalPackages: ['@libsql/client', 'drizzle-orm'],
   outputFileTracingIncludes: {
     '/*': ['./node_modules/drizzle-orm/libsql/**/*'],
   },

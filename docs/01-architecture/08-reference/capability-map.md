@@ -11,7 +11,7 @@ Machine-readable capability ownership reference. Each capability has exactly one
 
 ## Scope
 
-All 48 sealed `@asol/*` packages. Application-layer orchestration lives under `src/features/*` — see [application-feature-catalog.md](./application-feature-catalog.md).
+All 46 sealed `@asol/*` packages. Application-layer orchestration lives under `src/features/*` — see [application-feature-catalog.md](./application-feature-catalog.md).
 
 ## Source of Truth
 
@@ -110,24 +110,6 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 
 ---
 
-## Backup orchestration over storage ports
-
-| Field | Value |
-|---|---|
-| **Capability** | Backup orchestration over storage ports |
-| **Owner Package** | `@asol/backup-core` |
-| **Architectural Layer** | capability |
-| **Public Gateway** | `@asol/backup-core` · `@asol/backup-core/server` |
-| **Allowed Consumers** | Application via declared doors; composition packages wire ports |
-| **Composition Root** | `N/A` (capability must not import `@/`) |
-| **Infrastructure Owner** | none (pure logic or ports) |
-| **Status** | CLOSED (sealed package with registry entry) |
-| **Canonical Documents** | [package-catalog.md](./package-catalog.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
-
-**Source Map:** `packages/backup-core/` · registry: `packages/architecture-core/src/registry/capability-registry.ts`
-
----
-
 ## App icon identity and generated branding assets
 
 | Field | Value |
@@ -207,10 +189,10 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 | **Capability** | Database access, sharding, and domain repositories |
 | **Owner Package** | `@asol/data-core` |
 | **Architectural Layer** | capability |
-| **Public Gateway** | `@asol/data-core` · `@asol/data-core/account-deletion` · `@asol/data-core/advertisements` · `@asol/data-core/auth` · `@asol/data-core/auth/entities` · `@asol/data-core/browser` · `@asol/data-core/composition` · `@asol/data-core/control-ota` · `@asol/data-core/control-release-state` · `@asol/data-core/control-system-logs` · `@asol/data-core/data-health` · `@asol/data-core/dev-cloud-backup` · `@asol/data-core/feature-flags` · `@asol/data-core/follow` · `@asol/data-core/follow/entities` · `@asol/data-core/marketplace-orders` · `@asol/data-core/notifications` · `@asol/data-core/ota` · `@asol/data-core/ota-runtime` · `@asol/data-core/password-recovery` · `@asol/data-core/pharmacy-profile-catalog` · `@asol/data-core/pharmacy-profile-catalog/entities` · `@asol/data-core/product` · `@asol/data-core/product-search` · `@asol/data-core/product-search-fields` · `@asol/data-core/product-search/entities` · `@asol/data-core/product/entities` · `@asol/data-core/profile` · `@asol/data-core/profile/entities` · `@asol/data-core/provisioning` · `@asol/data-core/runtime-config` · `@asol/data-core/seller-discounts` · `@asol/data-core/seller-discounts/entities` · `@asol/data-core/super-admin` · `@asol/data-core/system-logs` · `@asol/data-core/telemetry` · `@asol/data-core/tooling` |
+| **Public Gateway** | `@asol/data-core` · `@asol/data-core/account-deletion` · `@asol/data-core/advertisements` · `@asol/data-core/auth` · `@asol/data-core/auth/entities` · `@asol/data-core/browser` · `@asol/data-core/composition` · `@asol/data-core/control-ota` · `@asol/data-core/control-release-state` · `@asol/data-core/control-system-logs` · `@asol/data-core/feature-flags` · `@asol/data-core/follow` · `@asol/data-core/follow/entities` · `@asol/data-core/marketplace-orders` · `@asol/data-core/notifications` · `@asol/data-core/ota` · `@asol/data-core/ota-runtime` · `@asol/data-core/password-recovery` · `@asol/data-core/pharmacy-profile-catalog` · `@asol/data-core/pharmacy-profile-catalog/entities` · `@asol/data-core/product` · `@asol/data-core/product-search` · `@asol/data-core/product-search-fields` · `@asol/data-core/product-search/entities` · `@asol/data-core/product/entities` · `@asol/data-core/profile` · `@asol/data-core/profile/entities` · `@asol/data-core/provisioning` · `@asol/data-core/runtime-config` · `@asol/data-core/seller-discounts` · `@asol/data-core/seller-discounts/entities` · `@asol/data-core/super-admin` · `@asol/data-core/system-logs` · `@asol/data-core/telemetry` · `@asol/data-core/tooling` |
 | **Allowed Consumers** | Application via declared doors; composition packages wire ports |
 | **Composition Root** | `N/A` (capability must not import `@/`) |
-| **Infrastructure Owner** | `better-sqlite3`, `@libsql/client`, `drizzle-orm`, `drizzle-orm/better-sqlite3`, `drizzle-orm/libsql` |
+| **Infrastructure Owner** | `@libsql/client`, `drizzle-orm`, `drizzle-orm/libsql` |
 | **Status** | CLOSED (sealed package with registry entry) |
 | **Canonical Documents** | [package-catalog.md](./package-catalog.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
@@ -218,29 +200,11 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 
 ---
 
-## Schema health and data integrity checks
+## Development-runtime guards for developer-only tooling
 
 | Field | Value |
 |---|---|
-| **Capability** | Schema health and data integrity checks |
-| **Owner Package** | `@asol/data-health-core` |
-| **Architectural Layer** | capability |
-| **Public Gateway** | `@asol/data-health-core` · `@asol/data-health-core/server` |
-| **Allowed Consumers** | Application via declared doors; composition packages wire ports |
-| **Composition Root** | `N/A` (capability must not import `@/`) |
-| **Infrastructure Owner** | none (pure logic or ports) |
-| **Status** | CLOSED (sealed package with registry entry) |
-| **Canonical Documents** | [package-catalog.md](./package-catalog.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
-
-**Source Map:** `packages/data-health-core/` · registry: `packages/architecture-core/src/registry/capability-registry.ts`
-
----
-
-## Developer-only tooling surfaces
-
-| Field | Value |
-|---|---|
-| **Capability** | Developer-only tooling surfaces |
+| **Capability** | Development-runtime guards for developer-only tooling |
 | **Owner Package** | `@asol/dev-core` |
 | **Architectural Layer** | capability |
 | **Public Gateway** | `@asol/dev-core` · `@asol/dev-core/server` |
@@ -405,7 +369,7 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 | **Capability** | Capacitor / native device capabilities |
 | **Owner Package** | `@asol/native-core` |
 | **Architectural Layer** | capability |
-| **Public Gateway** | `@asol/native-core` · `@asol/native-core/capability-keys` · `@asol/native-core/platform-globals` · `@asol/native-core/scripts/android-build-preflight` · `@asol/native-core/scripts/validate-android-r8-policy` |
+| **Public Gateway** | `@asol/native-core` · `@asol/native-core/capability-keys` · `@asol/native-core/platform-defaults` · `@asol/native-core/platform-globals` · `@asol/native-core/scripts/android-build-preflight` · `@asol/native-core/scripts/validate-android-r8-policy` |
 | **Allowed Consumers** | Application via declared doors; composition packages wire ports |
 | **Composition Root** | `N/A` (capability must not import `@/`) |
 | **Infrastructure Owner** | `@capacitor/cli`, `@capacitor/core`, `@capacitor/action-sheet`, `@capacitor/app`, `@capacitor/browser`, `@capacitor/camera`, `@capacitor/clipboard`, `@capacitor/device`, `@capacitor/dialog`, `@capacitor/filesystem`, `@capacitor/geolocation`, `@capacitor/haptics`, `@capacitor/keyboard`, `@capacitor/local-notifications`, `@capacitor/network`, `@capacitor/preferences`, `@capacitor/push-notifications`, `@capacitor/screen-orientation`, `@capacitor/share`, `@capacitor/splash-screen`, `@capacitor/status-bar`, `@capacitor/text-zoom`, `@capacitor/toast`, `@capacitor-mlkit/barcode-scanning`, `@capawesome/capacitor-file-picker`, `@capgo/capacitor-speech-recognition` |
@@ -888,9 +852,9 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 
 | Metric | Value |
 |---|---|
-| Sealed packages | 48 |
+| Sealed packages | 46 |
 | Layer `bridge` | 1 |
-| Layer `capability` | 38 |
+| Layer `capability` | 36 |
 | Layer `composition` | 7 |
 | Layer `declarations` | 1 |
 | Layer `enforcement` | 1 |

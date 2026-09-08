@@ -4,14 +4,20 @@ Profile-driven multi-provider architecture. The UI passes only **storage profile
 
 ## Contract
 
-| Profile                          | Max KB | Format | Local folder                             | R2 cloud folder                                  |
-| -------------------------------- | ------ | ------ | ---------------------------------------- | ------------------------------------------------ |
-| `StorageProfiles.Avatar`         | 20     | webp   | `images/avatars`                         | `images/profile/avatars`                         |
-| `StorageProfiles.Cover`          | 30     | webp   | `images/covers`                          | `images/profile/covers`                          |
-| `StorageProfiles.ProductDefault` | 30     | webp   | `images/products/<mainCategoryId>`       | `images/products/<mainCategoryId>` in the legacy product R2 bucket (`gova-storage`) |
-| `StorageProfiles.ProductApparelPets` | 30 | webp | `images/products-apparel-pets/<scope>` | `images/products-apparel-pets/<scope>` in the apparel-pets R2 bucket (`productcat1`) |
-| `StorageProfiles.HomeHeroSlider` | 1024   | webp   | `images/advertisements/home-hero-slider` | `images/content/advertisements/home-hero-slider` |
-| `StorageProfiles.SpicialOrder`   | 500    | webp   | `images/spicialOrder`                    | `images/content/spicialOrder`                    |
+| Profile                          | Max KB | Format | R2 object prefix                                 |
+| -------------------------------- | ------ | ------ | ------------------------------------------------ |
+| `StorageProfiles.Avatar`         | 20     | webp   | `images/profile/avatars`                         |
+| `StorageProfiles.Cover`          | 30     | webp   | `images/profile/covers`                          |
+| `StorageProfiles.ProductDefault` | 30     | webp   | `images/products/<mainCategoryId>` in the legacy product R2 bucket (`gova-storage`) |
+| `StorageProfiles.ProductApparelPets` | 30 | webp | `images/products-apparel-pets/<scope>` in the apparel-pets R2 bucket (`productcat1`) |
+| `StorageProfiles.HomeHeroSlider` | 1024   | webp   | `images/content/advertisements/home-hero-slider` |
+| `StorageProfiles.SpicialOrder`   | 500    | webp   | `images/content/spicialOrder`                    |
+
+One prefix per profile. A profile used to carry two — `folder` for the filesystem
+provider and `cloudFolder` for R2 — and every caller had to decide which applied,
+which is the kind of decision that gets made differently in an uploader and in a
+reader. The surviving value is the R2 prefix each profile already used, so no
+stored object key changed when the second field was dropped.
 
 Config: `packages/storage-core/src/config/storage-profiles.json` (server-only).
 
@@ -24,9 +30,13 @@ UI → ImageStorageService → API
 Server: Storage Profile → Provider → Persistence
 ```
 
-**Development** (`NODE_ENV=development`): `LocalStorageProvider` → paths from `@asol/dev-core` under `public/sync_data/sync_file/images/...`
-
-**Production / Capacitor / static**: profile provider (Cloudflare R2). The general R2 bucket uses `images/profile/...` for avatar/cover and `images/content/...` for advertisements and order images. Product images use dedicated product R2 accounts: legacy `product-default` under `images/products/...` on `gova-storage`, and new apparel/pets uploads under `images/products-apparel-pets/...` on `productcat1`.
+**Every runtime, Development included**: the provider the profile declares —
+always Cloudflare R2. Development used to be answered with a filesystem provider
+regardless of what the profile said, so an upload in `next dev` landed under
+`public/` and a missing or wrong R2 credential stayed invisible until a
+deployment. There is no fallback of any kind now: not to disk, and not to another
+R2 account, because falling back across accounts writes an object where nothing
+looks for it and reports success. The general R2 bucket uses `images/profile/...` for avatar/cover and `images/content/...` for advertisements and order images. Product images use dedicated product R2 accounts: legacy `product-default` under `images/products/...` on `gova-storage`, and new apparel/pets uploads under `images/products-apparel-pets/...` on `productcat1`.
 
 Callers pass a semantic `storageScope` (catalog main-category id, or an onboarding fashion slug). `resolveProductStorageProfileId(scope)` from `@asol/storage-core` selects `product-apparel-pets` for catalog ids `1` and `12` and all onboarding fashion slugs; every other scope stays on `product-default`. Persisted `images_json` entries may include `storageProfileId`; when omitted, readers treat the object as `product-default` so pre-split apparel/pets rows keep working without migration.
 
@@ -128,18 +138,20 @@ Any feature (Onboarding, Dashboard, Admin) uses `resolveProductStorageProfileId`
 
 Generated only via `ImageKeyGenerator` → `{uuid}.webp`. Folder from storage profile.
 
-## Local layout
+## Object layout
 
 ```
-public/sync_data/sync_file/
-  images/
-    avatars/
-    covers/
-    advertisements/home-hero-slider/
-    products/<mainCategoryId>/
-    products-apparel-pets/<scope>/
-    spicialOrder/
+images/
+  profile/avatars/
+  profile/covers/
+  content/advertisements/home-hero-slider/
+  content/spicialOrder/
+  products/<mainCategoryId>/                 (legacy product account)
+  products-apparel-pets/<scope>/             (apparel/pets account)
 ```
+
+These are R2 object prefixes, in every runtime. There is no filesystem layout to
+document: nothing writes uploaded images to disk.
 
 See also [r2-storage.md](./r2-storage.md).
 

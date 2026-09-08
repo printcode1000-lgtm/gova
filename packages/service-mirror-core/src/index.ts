@@ -340,10 +340,11 @@ const NODE_BUILTINS = new Set(builtinModules);
  * Package names the service's `next.config.ts` resolves itself, via `turbopack.resolveAlias`
  * or `serverExternalPackages`.
  *
- * `better-sqlite3` is the standing case: the shared data-access code keeps a local-SQLite
- * branch for main-app development, and each service aliases it to `stubs/better-sqlite3.js`
- * because that branch is unreachable in a Turso-only deployment. It is resolved, just not
- * through `package.json` — so requiring it as a declared dependency would be wrong.
+ * A package listed there is resolved, just not through `package.json`, so requiring it as a
+ * declared dependency would be wrong. The standing case used to be `better-sqlite3`: the shared
+ * data-access code carried a local-SQLite branch for main-app development, and every service
+ * aliased the driver to a throwing stub because that branch was unreachable in a Turso-only
+ * deployment. The branch is gone, so the stubs are too — a driver nothing imports needs no alias.
  */
 function aliasedPackages(serviceDir: string): Set<string> {
   const configPath = path.join(serviceDir, 'next.config.ts');

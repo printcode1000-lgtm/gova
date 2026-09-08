@@ -3,7 +3,7 @@ import { getServerRuntimeContext } from "./runtime-context.server";
 export const isDevelopment = getServerRuntimeContext().isDevelopment;
 export const isProduction = !isDevelopment;
 
-export type { AppDataSource, AppDeployment, AppPlatform, AppRuntimeContext } from './runtime-context';
+export type { AppDeployment, AppPlatform, AppRuntimeContext } from './runtime-context';
 
 /**
  * `publicEnv` is deliberately NOT re-exported here.

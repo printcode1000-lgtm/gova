@@ -32,7 +32,7 @@ const ALL_BRANCH_HELP_OVERRIDES: Record<string, string> = {
   types: "يشغل TypeScript بدون إخراج ملفات؛ يكشف كسر العقود والاستيرادات.",
   architecture: "يتأكد من حدود الحزم وقواعد العزل ومنع الاستيرادات المخالفة.",
   tests: "يشغل مجموعة الاختبارات الكاملة. هذا أطول فرع في preflight لكنه أكثرها حماية.",
-  "local-db": "يتأكد من توفر قواعد SQLite المحلية المطلوبة للتوليد والفحوص.",
+  "cloud-schema": "يقارن مخططات قواعد Turso مع بيانات المستودع للقراءة فقط دون تطبيق أي تغيير.",
   "release-schema": "يزامن مخططات Turso الخاصة بالإصدار قبل البناء والنشر.",
   "server-build": "يشغل بناء Next server الكامل لالتقاط أخطاء server components وroute handlers.",
   "function-size": "يقيس حجم دوال Vercel من أثر البناء؛ يوقف preflight قبل الدفع إذا تجاوزت ميزانية 250MB.",

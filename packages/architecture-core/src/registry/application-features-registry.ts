@@ -84,8 +84,6 @@ export const APPLICATION_FEATURES: readonly ApplicationFeature[] = [
   feature('categories', 'Category browsing and seller discovery presentation', ['.', './ui'], WEB_MOBILE_SERVER, ['@asol/catalog-core', '@asol/seller-card-core'], ['favorites', 'profile'], FULL),
   feature('contact', 'Contact actions and seller contact orchestration', ['.', './ui', './server'], WEB_MOBILE_SERVER, [], [], FULL),
   feature('data', 'Data-core application port wiring', ['.', './server'], WEB, ['@asol/data-core'], ['categories', 'product-search']),
-  feature('data-health', 'Development data-health inspection and cleanup UI', ['.', './server'], WEB_MOBILE_SERVER, ['@asol/data-health-core', '@asol/data-core'], ['auth', 'page-save', 'system-logs'], FULL),
-  feature('dev-cloud-backup', 'Development Turso cloud backup console', ['.', './server'], WEB_MOBILE_SERVER, ['@asol/backup-core', '@asol/data-core'], ['auth', 'page-save'], FULL),
   feature('dev-tools', 'Developer-only tooling pages', ['.', './ui'], WEB_MOBILE, ['@asol/dev-core'], ['categories', 'page-save', 'pharmacy-profile-catalog', 'product'], CLIENT_UI),
   feature('favorites', 'Application wiring and host slots for @asol/favorites-core', ['./ui'], WEB_MOBILE, ['@asol/favorites-core', '@asol/product-card-core', '@asol/seller-card-core'], ['auth', 'follow', 'system-logs'], CLIENT_UI),
   feature('feature-flags', 'Feature flag evaluation wiring', ['.', './server'], WEB_SERVER, [], ['auth'], [false, true, false]),

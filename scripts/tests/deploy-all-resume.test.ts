@@ -202,13 +202,16 @@ try {
   // ── 6. Duplicated gate steps are reused only inside one run ─────────────
   assert.equal(isReusableGateStep({ kind: "npm-script", value: "test:auth-core" }), true);
   assert.equal(isReusableGateStep({ kind: "npm-script", value: "architecture:check" }), true);
-  for (const mutating of ["branding:generate", "app:init", "services:sync", "db:ensure", "db:schema:sync", "maplibre:sync"]) {
+  for (const mutating of ["branding:generate", "app:init", "services:sync", "db:schema:sync", "maplibre:sync"]) {
     assert.equal(
       isReusableGateStep({ kind: "npm-script", value: mutating }),
       false,
       `${mutating} changes the tree and must always run.`,
     );
   }
+  // `db:schema:verify` sends no DDL, so it is a check like any other and may be
+  // reused within one run; `db:schema:sync` writes and must not be.
+  assert.equal(isReusableGateStep({ kind: "npm-script", value: "db:schema:verify" }), true);
   assert.equal(isReusableGateStep({ kind: "command", value: "next build" }), false, "A build always runs.");
 
   delete process.env.ASOL_DEPLOY_RUN_ID;

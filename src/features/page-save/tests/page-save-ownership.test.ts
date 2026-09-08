@@ -237,14 +237,6 @@ function testStagingSurfacesRegisterScopes() {
       /usePageSaveOperationScope\(/,
     ],
     [
-      "src/features/data-health/presentation/use-data-health-page.ts",
-      /usePageSaveOperationScope\(/,
-    ],
-    [
-      "src/features/dev-cloud-backup/presentation/use-dev-cloud-backup-page.ts",
-      /usePageSaveOperationScope\(/,
-    ],
-    [
       "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
       /usePageSaveOperationScope\(/,
     ],

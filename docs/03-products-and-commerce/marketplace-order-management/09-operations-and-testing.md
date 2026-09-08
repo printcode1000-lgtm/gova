@@ -2,7 +2,7 @@
 
 ## Local setup
 
-No production credentials are needed for development. `npm run db:ensure` creates or refreshes the local order shard files before build/test runs. Tests that need an isolated database use the in-memory marketplace test client.
+The order tests need no credentials: they build an in-memory database from the production migrations through the marketplace test client, which is the only place in the repository that still opens a local database and is confined to `tests/`. Running the *application* against orders needs the nine Turso order-shard credentials, in Development as anywhere else.
 
 ## Production setup
 

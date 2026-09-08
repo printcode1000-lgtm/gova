@@ -1,11 +1,19 @@
+/**
+ * How a runtime describes itself: which deployment it is, which platform it
+ * runs on, and what it may reach.
+ *
+ * Deliberately not a database-backend selector. Development is a deployment and
+ * build classification — it says the developer is running `next dev`, never that
+ * application data lives somewhere else. Server data is Turso in every runtime,
+ * and image objects are Cloudflare R2 in every runtime, so there is nothing here
+ * left to choose between.
+ */
 export type AppDeployment = "local-development" | "web-production" | "static-export";
 export type AppPlatform = "web" | "android" | "ios";
-export type AppDataSource = "local" | "cloud";
 
 export interface AppRuntimeContext {
   deployment: AppDeployment;
   platform: AppPlatform;
-  dataSource: AppDataSource;
   isDevelopment: boolean;
   isNative: boolean;
   isStatic: boolean;
@@ -20,7 +28,6 @@ export interface ServerRuntimeInput {
   publicMode?: string;
   vercel?: string;
   vercelEnv?: string;
-  dataSource?: string;
   provisioning?: string;
   githubActions?: string;
 }
@@ -38,19 +45,15 @@ export function resolveServerRuntime(input: ServerRuntimeInput): AppRuntimeConte
   const mode = (input.mode ?? input.publicMode ?? "").trim().toLowerCase();
   const isStatic = mode === "static" || input.githubActions === "true";
   const isVercel = input.vercel === "1" || Boolean(input.vercelEnv);
-  const requestedSource = input.dataSource?.trim().toLowerCase();
   const isDevelopment =
     !isStatic &&
     !isVercel &&
     input.provisioning !== "true" &&
-    (requestedSource === "local" ||
-      (requestedSource !== "cloud" &&
-        (mode === "development" || input.nodeEnv === "development")));
+    (mode === "development" || input.nodeEnv === "development");
 
   return {
     deployment: isStatic ? "static-export" : isDevelopment ? "local-development" : "web-production",
     platform: "web",
-    dataSource: isDevelopment ? "local" : "cloud",
     isDevelopment,
     isNative: false,
     isStatic,
@@ -74,7 +77,6 @@ export function resolveClientRuntime(input: ClientRuntimeInput): AppRuntimeConte
         ? "local-development"
         : "web-production",
     platform,
-    dataSource: isDevelopment ? "local" : "cloud",
     isDevelopment,
     isNative,
     isStatic,

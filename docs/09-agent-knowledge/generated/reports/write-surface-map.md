@@ -5,8 +5,8 @@
 
 # Write Surface Map
 
-Detected write-like surfaces: **389**
-Unproven gateway paths: **147**
+Detected write-like surfaces: **360**
+Unproven gateway paths: **141**
 
 | Source | Owner | Operations | Gateway | Proven | Route | Runtimes | Risk |
 |---|---|---|---|---|---|---|---|
@@ -31,8 +31,6 @@ Unproven gateway paths: **147**
 | `packages/auth-core/src/server/account-deletion-service.ts` | `@asol/auth-core` | delete | `unproven` | NO | `` | development, web | high |
 | `packages/auth-core/src/server/auth-operations-service.ts` | `@asol/auth-core` | update | `unproven` | NO | `` | development, web | high |
 | `packages/auth-core/src/tests/index.test.ts` | `@asol/auth-core` | patch, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
-| `packages/backup-core/src/server/dev-cloud-backup-service.ts` | `@asol/backup-core` | create, update | `unproven` | NO | `` | development, web | high |
-| `packages/backup-core/src/server/r2-backup.repository.ts` | `@asol/backup-core` | write-like | `@asol/storage-core` | yes | `` | development, web | medium |
 | `packages/control-composition/src/index.ts` | `@asol/control-composition` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/data-core/src/browser/asol-db/index.ts` | `@asol/data-core` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/data-core/src/control-ota.ts` | `@asol/data-core` | delete, insert, update | `unproven` | NO | `` | development, web | high |
@@ -52,21 +50,6 @@ Unproven gateway paths: **147**
 | `packages/data-core/src/domains/auth/repositories/user-repository.interface.ts` | `@asol/data-core` | create, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/data-core/src/domains/auth/repositories/user-repository.ts` | `@asol/data-core` | create, insert, update | `unproven` | NO | `` | development, web | high |
 | `packages/data-core/src/domains/auth/tests/email-uniqueness.test.ts` | `@asol/data-core` | create, insert, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
-| `packages/data-core/src/domains/data-health/repositories/data-health-repository-parts/data-health.repository.part-01.ts` | `@asol/data-core` | delete, insert, update | `@asol/storage-core` | yes | `` | development, web | medium |
-| `packages/data-core/src/domains/data-health/repositories/data-health-repository-parts/data-health.repository.part-02.ts` | `@asol/data-core` | update | `@asol/storage-core` | yes | `` | development, web | medium |
-| `packages/data-core/src/domains/data-health/repositories/data-health-repository-parts/data-health.repository.part-03.ts` | `@asol/data-core` | write-like | `@asol/storage-core` | yes | `` | development, web | medium |
-| `packages/data-core/src/domains/data-health/repositories/data-health-repository-parts/data-health.repository.part-04.ts` | `@asol/data-core` | delete, update | `@asol/storage-core` | yes | `` | development, web | medium |
-| `packages/data-core/src/domains/data-health/repositories/data-health-repository-parts/data-health.repository.part-05.ts` | `@asol/data-core` | insert | `@asol/storage-core` | yes | `` | development, web | medium |
-| `packages/data-core/src/domains/data-health/repositories/data-health-repository-parts/data-health.repository.part-06.ts` | `@asol/data-core` | write-like | `@asol/storage-core` | yes | `` | development, web | medium |
-| `packages/data-core/src/domains/data-health/repositories/data-health-repository-parts/data-health.repository.part-07.ts` | `@asol/data-core` | write-like | `@asol/storage-core` | yes | `` | development, web | medium |
-| `packages/data-core/src/domains/data-health/repositories/data-health-repository-parts/data-health.repository.part-08.ts` | `@asol/data-core` | delete | `@asol/storage-core` | yes | `` | development, web | medium |
-| `packages/data-core/src/domains/data-health/repositories/data-health-repository-parts/data-health.repository.part-09.ts` | `@asol/data-core` | write-like | `@asol/storage-core` | yes | `` | development, web | medium |
-| `packages/data-core/src/domains/data-health/repositories/data-health-repository-parts/data-health.repository.part-10.ts` | `@asol/data-core` | write-like | `@asol/storage-core` | yes | `` | development, web | medium |
-| `packages/data-core/src/domains/data-health/repositories/data-health-repository-parts/data-health.repository.part-11.ts` | `@asol/data-core` | delete, insert, update | `@asol/storage-core` | yes | `` | development, web | medium |
-| `packages/data-core/src/domains/data-health/repositories/data-health-repository-parts/data-health.repository.part-12.ts` | `@asol/data-core` | delete, insert, update | `@asol/storage-core` | yes | `` | development, web | medium |
-| `packages/data-core/src/domains/data-health/repositories/schema-comparison.repository.server.ts` | `@asol/data-core` | update | `unproven` | NO | `` | development, web | high |
-| `packages/data-core/src/domains/data-health/repositories/storage-inventory-repository-parts/storage-inventory.repository.part-01.ts` | `@asol/data-core` | write-like | `@asol/storage-core` | yes | `` | development, web | medium |
-| `packages/data-core/src/domains/data-health/repositories/storage-inventory-repository-parts/storage-inventory.repository.part-02.ts` | `@asol/data-core` | write-like | `@asol/storage-core` | yes | `` | development, web | medium |
 | `packages/data-core/src/domains/feature-flags/repositories/feature-flag-repository.ts` | `@asol/data-core` | insert, update | `unproven` | NO | `` | development, web | high |
 | `packages/data-core/src/domains/follow/repositories/follow-repository.ts` | `@asol/data-core` | delete, insert | `unproven` | NO | `` | development, web | high |
 | `packages/data-core/src/domains/marketplace-orders/repositories/index.ts` | `@asol/data-core` | create, delete, insert, patch, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
@@ -86,12 +69,9 @@ Unproven gateway paths: **147**
 | `packages/data-core/src/index.ts` | `@asol/data-core` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/data-core/src/ports/product-search-fields.ts` | `@asol/data-core` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/data-core/src/ports/runtime-config.ts` | `@asol/data-core` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
-| `packages/data-core/src/provisioning/core/schema-version.ts` | `@asol/data-core` | update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
+| `packages/data-core/src/provisioning/core/schema-version.ts` | `@asol/data-core` | create, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/data-core/src/tests/index.test.ts` | `@asol/data-core` | delete, update | `@asol/data-core, @asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
-| `packages/data-core/src/tests/schema-parity.test.ts` | `@asol/data-core` | create | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
-| `packages/data-core/src/tooling/migrate-r2-cloud-folders.ts` | `@asol/data-core` | update, upload | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/data-core/src/tooling/migrate-r2-image-public-url.ts` | `@asol/data-core` | update | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
-| `packages/data-health-core/src/server/policy.ts` | `@asol/data-health-core` | update | `unproven` | NO | `` | development, web | high |
 | `packages/favorites-core/src/application/favorite-storage.ts` | `@asol/favorites-core` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/favorites-core/src/presentation/FavoritesProvider.tsx` | `@asol/favorites-core` | publish, save | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/featured-marquee-core/src/server/featured-marquee-service.ts` | `@asol/featured-marquee-core` | save | `unproven` | NO | `` | development, web | high |
@@ -161,13 +141,11 @@ Unproven gateway paths: **147**
 | `packages/storage-core/src/index.ts` | `@asol/storage-core` | write-like | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/storage-core/src/server.ts` | `@asol/storage-core` | write-like | `@asol/storage-core` | yes | `` | development, web | medium |
 | `packages/storage-core/src/server/orchestration/image-storage-orchestrator.ts` | `@asol/storage-core` | delete, upload | `unproven` | NO | `` | development, web | high |
-| `packages/storage-core/src/server/providers/local-storage.provider.ts` | `@asol/storage-core` | delete, upload | `unproven` | NO | `` | development, web | high |
 | `packages/storage-core/src/server/providers/provider-resolver.ts` | `@asol/storage-core` | delete, upload | `unproven` | NO | `` | development, web | high |
 | `packages/storage-core/src/server/providers/r2-account.provider.ts` | `@asol/storage-core` | delete, upload | `unproven` | NO | `` | development, web | high |
 | `packages/storage-core/src/server/providers/storage-provider.interface.ts` | `@asol/storage-core` | delete, upload | `unproven` | NO | `` | development, web | high |
 | `packages/storage-core/src/tests/contract/package-independence.test.ts` | `@asol/storage-core` | write-like | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/storage-core/src/tests/index.test.ts` | `@asol/storage-core` | write-like | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
-| `packages/storage-core/src/tests/integration/parameterized-store.test.ts` | `@asol/storage-core` | delete, upload | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/storage-core/src/tests/r2-account-separation.test.ts` | `@asol/storage-core` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/storage-image-manager-core/src/components/storage-image-manager.types.ts` | `@asol/storage-image-manager-core` | write-like | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/storage-image-manager-core/src/components/StorageImageManager.tsx` | `@asol/storage-image-manager-core` | delete, save, upload | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
@@ -198,7 +176,6 @@ Unproven gateway paths: **147**
 | `src/app/api/profile/fulfillment-settings/route.ts` | `unknown` | write-like | `@asol/data-core` | yes | `/api/profile/fulfillment-settings` | development, web | medium |
 | `src/app/api/profile/reviews/route.ts` | `unknown` | create, delete, update | `unproven` | NO | `/api/profile/reviews` | development, web | high |
 | `src/app/api/storage/images/upload/route.ts` | `unknown` | upload | `@asol/storage-core` | yes | `/api/storage/images/upload` | development, web | medium |
-| `src/app/api/super-admin/dev-cloud-backup/backups/create/route.ts` | `unknown` | create | `unproven` | NO | `/api/super-admin/dev-cloud-backup/backups/create` | development, web | high |
 | `src/app/dev/monitor/SchemaSyncPanel.tsx` | `unknown` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/core/composition/server-ports.ts` | `unknown` | write-like | `@asol/storage-core` | yes | `` | development, web | medium |
 | `src/core/composition/tests/ports-registry.test.ts` | `unknown` | write-like | `@asol/data-core, @asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
@@ -238,16 +215,10 @@ Unproven gateway paths: **147**
 | `src/features/catalog-studio/server/services/catalog-studio-service/catalog-studio.service.server.catalog-files.ts` | `catalog-studio` | update | `unproven` | NO | `` | development, web | high |
 | `src/features/catalog-studio/tests/catalog-studio.test.ts` | `catalog-studio` | update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/features/categories/presentation/CategorySubcategoriesPage.tsx` | `categories` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |
-| `src/features/data-health/presentation/use-data-health-page.ts` | `data-health` | delete, save | `@asol/page-save-core` | yes | `` | android, development, ios, static-out, web | medium |
-| `src/features/data-health/server/services/data-health-service.server.ts` | `data-health` | delete | `@asol/data-core, @asol/storage-core` | yes | `` | development, web | medium |
-| `src/features/data-health/server/services/order-purge-service.server.ts` | `data-health` | write-like | `@asol/data-core, @asol/storage-core` | yes | `` | development, web | medium |
 | `src/features/data/ports/data-core-browser-ports.ts` | `data` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/data/ports/data-core-ports.ts` | `data` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/data/ports/data-core-runtime-config-ports.ts` | `data` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/data/ports/data-core-specialty-catalog-port.ts` | `data` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
-| `src/features/dev-cloud-backup/presentation/use-dev-cloud-backup-page.ts` | `dev-cloud-backup` | create, delete, save, update | `@asol/page-save-core` | yes | `` | android, development, ios, static-out, web | medium |
-| `src/features/dev-cloud-backup/server/services/dev-cloud-backup-service.server.ts` | `dev-cloud-backup` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
-| `src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` | `dev-cloud-backup` | delete | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/dev-tools/presentation/DeveloperBadge.tsx` | `dev-tools` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/feature-flags/server/services/feature-flag-service.server.ts` | `feature-flags` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/features/follow/domain/follow.types.ts` | `follow` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |

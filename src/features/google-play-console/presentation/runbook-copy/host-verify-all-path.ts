@@ -66,10 +66,6 @@ export const HOST_VERIFY_ALL_PATH_HELP: Record<string, string> = {
     "مرجع: npm run test:ota-background — OTA في الخلفية داخل verify:all.",
   "host-verify-all-test-ota-hardening":
     "مرجع: npm run test:ota-hardening — تصلّب OTA داخل verify:all.",
-  "host-verify-all-test-data-health":
-    "مرجع: npm run test:data-health — صحة البيانات داخل verify:all.",
-  "host-verify-all-test-dev-cloud-backup":
-    "مرجع: npm run test:dev-cloud-backup — نسخ dev-cloud داخل verify:all.",
   "host-verify-all-test-data-core":
     "مرجع: npm run test:data-core — بوابة data-core داخل verify:all.",
   "host-verify-all-test-orders-core":

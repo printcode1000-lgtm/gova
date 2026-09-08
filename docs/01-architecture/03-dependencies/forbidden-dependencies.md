@@ -25,7 +25,8 @@ Import and dependency anti-patterns across `src/`, `packages/`, `scripts/`, and 
 
 | Forbidden import | Owner only |
 |---|---|
-| `better-sqlite3`, `@libsql/client`, `drizzle-orm`, `@libsql/*`, `drizzle-orm/*` | `@asol/data-core` |
+| `@libsql/client`, `drizzle-orm`, `@libsql/*`, `drizzle-orm/*` | `@asol/data-core` |
+| `better-sqlite3` | nothing outside an isolated test — it is a devDependency with no production, build, provisioning or tooling importer |
 | `@capacitor/*`, `@capawesome/*`, `@capgo/*`, `@capacitor-mlkit/*` | `@asol/native-core` |
 | Direct `fetch` in client services | Use `asol-http-transport.ts` |
 | `localStorage`, `indexedDB` globals | Use `@asol/data-core/browser` adapters |
@@ -36,7 +37,7 @@ ESLint messages cite the owning package. Scan: `checkVendorOwnershipContract`.
 
 | Layer | Forbidden imports |
 |---|---|
-| UI / Hooks | Repository, Drizzle, `@libsql/*`, `better-sqlite3`, server services |
+| UI / Hooks | Repository, Drizzle, `@libsql/*`, server services |
 | Client components | `server-only` modules |
 | Client services | Raw `fetch`, SQL, repository |
 | Business API routes | Direct repository, operations layer skip |

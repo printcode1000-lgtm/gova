@@ -22,7 +22,7 @@ Static and test-based bypass prevention. Runtime security (auth, CSRF) is separa
 
 ### Database bypass
 
-- ESLint blocks `better-sqlite3`, `@libsql/client`, `drizzle-orm` in `src/` and `scripts/`
+- ESLint blocks `better-sqlite3`, `@libsql/client`, `drizzle-orm` in `src/` and `scripts/`; the architecture check additionally forbids `better-sqlite3` anywhere outside an isolated test
 - `checkExternalDataAccessOwnership` rejects DB code in scripts
 - `checkGeneratedDataAccessArtifacts` guards generated paths
 - Browser/runtime policy rejects DB construction in client bundles

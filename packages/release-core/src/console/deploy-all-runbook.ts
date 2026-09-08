@@ -56,7 +56,7 @@ export const DEPLOY_ALL_PREFLIGHT_SECTIONS: readonly DeployAllRunbookSection[] =
     id: "data",
     label: "database and runtime contracts",
     branches: [
-      branch("local-db", "local database availability", "db:ensure", "npm"),
+      branch("cloud-schema", "cloud schema readiness", "db:schema:verify", "npm"),
       branch("release-schema", "release database schema sync", "db:schema:sync:release", "npm"),
     ],
   },

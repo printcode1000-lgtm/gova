@@ -2,7 +2,7 @@
 
 ## Symptom
 
-In development (`dataSource: "local"` → the SQLite backend), `GET /api/products?id=<existing id>`
+Historical. At the time, Development selected a filesystem SQLite backend (`dataSource: "local"`); it now reads the same Turso product database as every other runtime, so this failure mode no longer exists. `GET /api/products?id=<existing id>`
 answers **200** with a fully blank `ProductRecord`:
 
 ```json

@@ -11,7 +11,7 @@ Canonical inventory of every sealed `@asol/*` package in `packages/`.
 
 ## Scope
 
-Covers all 48 sealed packages under `packages/`. Does not cover `services/*/generated/` mirrors.
+Covers all 46 sealed packages under `packages/`. Does not cover `services/*/generated/` mirrors.
 
 ## Source of Truth
 
@@ -90,20 +90,6 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Test Gate** | `npm run test:auth-core` |
 | **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
-### @asol/backup-core
-
-| Field | Value |
-|---|---|
-| **Package** | `@asol/backup-core` |
-| **Folder** | `packages/backup-core/` |
-| **Purpose** | Backup orchestration over storage ports |
-| **Architectural Layer** | capability |
-| **Public Exports** | `.` · `./server` |
-| **Infrastructure Privileges** | none |
-| **May Import App (`@/`)** | no |
-| **Test Gate** | `npm run test:backup-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
-
 ### @asol/branding-core
 
 | Field | Value |
@@ -168,24 +154,10 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Folder** | `packages/data-core/` |
 | **Purpose** | Database access, sharding, and domain repositories |
 | **Architectural Layer** | capability |
-| **Public Exports** | `.` · `./account-deletion` · `./advertisements` · `./auth` · `./auth/entities` · `./browser` · `./composition` · `./control-ota` · `./control-release-state` · `./control-system-logs` · `./data-health` · `./dev-cloud-backup` · `./feature-flags` · `./follow` · `./follow/entities` · `./marketplace-orders` · `./notifications` · `./ota` · `./ota-runtime` · `./password-recovery` · `./pharmacy-profile-catalog` · `./pharmacy-profile-catalog/entities` · `./product` · `./product-search` · `./product-search-fields` · `./product-search/entities` · `./product/entities` · `./profile` · `./profile/entities` · `./provisioning` · `./runtime-config` · `./seller-discounts` · `./seller-discounts/entities` · `./super-admin` · `./system-logs` · `./telemetry` · `./tooling` |
-| **Infrastructure Privileges** | `better-sqlite3`, `@libsql/client`, `drizzle-orm`, `drizzle-orm/better-sqlite3`, `drizzle-orm/libsql` |
+| **Public Exports** | `.` · `./account-deletion` · `./advertisements` · `./auth` · `./auth/entities` · `./browser` · `./composition` · `./control-ota` · `./control-release-state` · `./control-system-logs` · `./feature-flags` · `./follow` · `./follow/entities` · `./marketplace-orders` · `./notifications` · `./ota` · `./ota-runtime` · `./password-recovery` · `./pharmacy-profile-catalog` · `./pharmacy-profile-catalog/entities` · `./product` · `./product-search` · `./product-search-fields` · `./product-search/entities` · `./product/entities` · `./profile` · `./profile/entities` · `./provisioning` · `./runtime-config` · `./seller-discounts` · `./seller-discounts/entities` · `./super-admin` · `./system-logs` · `./telemetry` · `./tooling` |
+| **Infrastructure Privileges** | `@libsql/client`, `drizzle-orm`, `drizzle-orm/libsql` |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:data-core` |
-| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
-
-### @asol/data-health-core
-
-| Field | Value |
-|---|---|
-| **Package** | `@asol/data-health-core` |
-| **Folder** | `packages/data-health-core/` |
-| **Purpose** | Schema health and data integrity checks |
-| **Architectural Layer** | capability |
-| **Public Exports** | `.` · `./server` |
-| **Infrastructure Privileges** | none |
-| **May Import App (`@/`)** | no |
-| **Test Gate** | `npm run test:data-health-core` |
 | **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
 ### @asol/dev-core
@@ -194,7 +166,7 @@ This Markdown file is **generated** and verified by `architecture:check`.
 |---|---|
 | **Package** | `@asol/dev-core` |
 | **Folder** | `packages/dev-core/` |
-| **Purpose** | Developer-only tooling surfaces |
+| **Purpose** | Development-runtime guards for developer-only tooling |
 | **Architectural Layer** | capability |
 | **Public Exports** | `.` · `./server` |
 | **Infrastructure Privileges** | none |
@@ -322,7 +294,7 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Folder** | `packages/native-core/` |
 | **Purpose** | Capacitor / native device capabilities |
 | **Architectural Layer** | capability |
-| **Public Exports** | `.` · `./capability-keys` · `./platform-globals` · `./scripts/android-build-preflight` · `./scripts/validate-android-r8-policy` |
+| **Public Exports** | `.` · `./capability-keys` · `./platform-defaults` · `./platform-globals` · `./scripts/android-build-preflight` · `./scripts/validate-android-r8-policy` |
 | **Infrastructure Privileges** | `@capacitor/cli`, `@capacitor/core`, `@capacitor/action-sheet`, `@capacitor/app`, `@capacitor/browser`, `@capacitor/camera`, `@capacitor/clipboard`, `@capacitor/device`, `@capacitor/dialog`, `@capacitor/filesystem`, `@capacitor/geolocation`, `@capacitor/haptics`, `@capacitor/keyboard`, `@capacitor/local-notifications`, `@capacitor/network`, `@capacitor/preferences`, `@capacitor/push-notifications`, `@capacitor/screen-orientation`, `@capacitor/share`, `@capacitor/splash-screen`, `@capacitor/status-bar`, `@capacitor/text-zoom`, `@capacitor/toast`, `@capacitor-mlkit/barcode-scanning`, `@capawesome/capacitor-file-picker`, `@capgo/capacitor-speech-recognition` |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:native-core` |
@@ -696,4 +668,4 @@ This Markdown file is **generated** and verified by `architecture:check`.
 
 | Metric | Value |
 |---|---|
-| Packages | 48 |
+| Packages | 46 |

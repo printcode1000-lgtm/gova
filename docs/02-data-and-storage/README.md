@@ -20,7 +20,7 @@ Never bypass these owners from UI, routes, scripts, or services. Confirm the cur
 
 ## Change Impact
 
-A persistence change can affect schemas, migrations/provisioning, browser/server runtime separation, service deployments, tests, backup/data-health flows, and release environment requirements. Run a context pack for the exact table/domain/path before editing:
+A persistence change can affect desired-schema manifests, migrations/provisioning, browser/server runtime separation, service deployments, tests, and release environment requirements. Run a context pack for the exact table/domain/path before editing:
 
 ```bash
 npx tsx scripts/docs/context.ts packages/data-core/src/domains/<domain>

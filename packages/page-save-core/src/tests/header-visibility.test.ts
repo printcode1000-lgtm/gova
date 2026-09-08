@@ -223,7 +223,7 @@ async function testExecuteCanDiscardAllStagedWork() {
   reset();
   let executed = false;
   stagePageSaveOperation({
-    scopeId: "data-health",
+    scopeId: "super-admin-users",
     itemId: "purge",
     kind: "delete",
     label: "Purge",
@@ -233,13 +233,13 @@ async function testExecuteCanDiscardAllStagedWork() {
     },
   });
   formScope(
-    "data-health",
-    buildPageSaveOperationItems("data-health"),
+    "super-admin-users",
+    buildPageSaveOperationItems("super-admin-users"),
     async (selectedItemIds) =>
-      runPageSaveOperations("data-health", selectedItemIds),
+      runPageSaveOperations("super-admin-users", selectedItemIds),
   );
   openPageSaveDialog();
-  setPageSaveItemSelected("data-health", "purge", false);
+  setPageSaveItemSelected("super-admin-users", "purge", false);
 
   assert.equal(getPageSaveSnapshot().canSave, true, "Execute can discard all staged work");
   assert.equal(await executePageSave(), true);
@@ -291,21 +291,21 @@ async function testUnmountingAStagingSurfaceHidesTheIcon() {
   reset();
   configurePageSaveCore({ storage: createMemoryStorage() });
   stagePageSaveOperation({
-    scopeId: "data-health",
+    scopeId: "super-admin-users",
     itemId: "purge",
     kind: "delete",
     label: "Purge",
     execute: async () => true,
   });
   const unregister = formScope(
-    "data-health",
-    buildPageSaveOperationItems("data-health"),
-    async (ids) => runPageSaveOperations("data-health", ids),
+    "super-admin-users",
+    buildPageSaveOperationItems("super-admin-users"),
+    async (ids) => runPageSaveOperations("super-admin-users", ids),
   );
   assert.equal(headerState(), "dirty");
 
   // What the React cleanup does, in the same order.
-  dropPageSaveItems("data-health", clearPageSaveOperations("data-health"));
+  dropPageSaveItems("super-admin-users", clearPageSaveOperations("super-admin-users"));
   unregister();
 
   assert.equal(headerState(), "hidden", "leaving the page drops unrunnable work");

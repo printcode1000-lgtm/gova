@@ -30,7 +30,6 @@
       "@radix-ui/react-switch": "^1.3.1",
       "@radix-ui/react-tabs": "^1.1.15",
       "@types/web-push": "^3.6.4",
-      "better-sqlite3": "^13.0.3",
       "class-variance-authority": "^0.7.1",
       "clsx": "^2.1.1",
       "dotenv": "^17.4.2",
@@ -61,6 +60,7 @@
       "@next/eslint-plugin-next": "16.3.2",
       "@tailwindcss/postcss": "^4.3.1",
       "@types/better-sqlite3": "9.6.0",
+      "better-sqlite3": "^13.0.3",
       "@types/geojson": "^7946.0.16",
       "@types/node": "24.13.3",
       "@types/nodemailer": "^8.0.1",
@@ -108,7 +108,6 @@
     "@radix-ui/react-switch": "1.3.7",
     "@radix-ui/react-tabs": "1.1.21",
     "@types/web-push": "3.6.4",
-    "better-sqlite3": "13.0.3",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "dotenv": "17.4.2",
@@ -147,6 +146,7 @@
     "@types/react-dom": "19.2.5",
     "@types/supercluster": "7.1.3",
     "@typescript-eslint/parser": "8.46.4",
+    "better-sqlite3": "13.0.3",
     "cross-env": "10.1.0",
     "eslint": "9.39.5",
     "eslint-config-next": "16.3.2",
@@ -156,20 +156,18 @@
     "tsx": "4.23.12",
     "typescript": "5.9.3"
   },
-  "packageLockDigest": "bcae18d6529f01f5eb00b63b651db833ddd69796a8d8752a5a4df30a0eec0b5b",
+  "packageLockDigest": "2f1bd093b469d5f4cf69a54d4470ec07d1da60eb7f50324e72479c81e89f4639",
   "workspacePackages": {
     "account-bridge": "@asol/account-bridge@0.1.0",
     "account-declarations": "@asol/account-declarations@0.1.0",
     "api-contract-core": "@asol/api-contract-core@0.1.0",
     "architecture-core": "@asol/architecture-core@0.1.0",
     "auth-core": "@asol/auth-core@0.1.0",
-    "backup-core": "@asol/backup-core@0.1.0",
     "branding-core": "@asol/branding-core@0.1.0",
     "catalog-core": "@asol/catalog-core@0.1.0",
     "control-composition": "@asol/control-composition@0.1.0",
     "cors": "@asol/cors@0.1.0",
     "data-core": "@asol/data-core@0.1.0",
-    "data-health-core": "@asol/data-health-core@0.1.0",
     "dev-core": "@asol/dev-core@0.1.0",
     "env-core": "@asol/env-core@0.1.0",
     "favorites-core": "@asol/favorites-core@0.1.0",
@@ -219,7 +217,6 @@
         "@aws-sdk/s3-request-presigner": "3.1117.0",
         "@libsql/client": "0.17.4",
         "@vercel/sandbox": "2.4.0",
-        "better-sqlite3": "13.0.3",
         "drizzle-orm": "0.45.2",
         "fflate": "0.8.3",
         "google-auth-library": "11.0.2",
@@ -239,7 +236,7 @@
         "@types/react-dom": "19.2.5",
         "typescript": "5.9.3"
       },
-      "lockDigest": "693b52b913622e7ef38c5846b7ecfb23b5d125d24c0ba027d10a6afbf9ea77f0"
+      "lockDigest": "992a76e956cd1093a59482ccfa8a76288cd663455f2d9ecdb1632e9c8b40003a"
     },
     "notifications": {
       "packageManager": "npm@11.19.0",
@@ -260,14 +257,13 @@
         "zustand": "5.0.15"
       },
       "devDependencies": {
-        "@types/better-sqlite3": "9.6.0",
         "@types/node": "24.13.3",
         "@types/react": "19.2.18",
         "@types/react-dom": "19.2.5",
         "@types/web-push": "3.6.4",
         "typescript": "5.9.3"
       },
-      "lockDigest": "c6bd39cdfc27003be10e30e9289cb4348d39410907172cb187ce085f8a3f06a6"
+      "lockDigest": "8baf7884db29545ccaa35bc9000606850c39c6f04bcdddc532c757bf73feeca2"
     },
     "orders": {
       "packageManager": "npm@11.19.0",
@@ -287,13 +283,12 @@
         "zustand": "5.0.15"
       },
       "devDependencies": {
-        "@types/better-sqlite3": "9.6.0",
         "@types/node": "24.13.3",
         "@types/react": "19.2.18",
         "@types/react-dom": "19.2.5",
         "typescript": "5.9.3"
       },
-      "lockDigest": "c17a0a1949539b8a1ca401cd902566cf508a7e0fc0524d6b60eb064f63478b29"
+      "lockDigest": "cb3f3bb47a8e7213fccf1240c3984e482b762a3fec23e1aec902170fe2dffcab"
     },
     "products": {
       "packageManager": "npm@11.19.0",
@@ -315,13 +310,12 @@
         "zustand": "5.0.15"
       },
       "devDependencies": {
-        "@types/better-sqlite3": "9.6.0",
         "@types/node": "24.13.3",
         "@types/react": "19.2.18",
         "@types/react-dom": "19.2.5",
         "typescript": "5.9.3"
       },
-      "lockDigest": "5fc50d6ad48a4bc4c12f862c6d3712e770d5fb9095545d142f26bf98eb1b56b7"
+      "lockDigest": "2dbec0f8ff156f92cc8967912afc0e053f9907456d4f8be8a6c761208c84e9ac"
     },
     "profiles": {
       "packageManager": "npm@11.19.0",
@@ -343,13 +337,12 @@
         "zustand": "5.0.15"
       },
       "devDependencies": {
-        "@types/better-sqlite3": "9.6.0",
         "@types/node": "24.13.3",
         "@types/react": "19.2.18",
         "@types/react-dom": "19.2.5",
         "typescript": "5.9.3"
       },
-      "lockDigest": "8a29e798e924569016d131c5bb006a965310853efc5f97da58200bdde0748048"
+      "lockDigest": "74fe8df05fbf6e42e2b8365db922960229a902cfdeca93532ebd8b721963a40f"
     },
     "sub2main": {
       "packageManager": "npm@11.19.0",
@@ -373,14 +366,13 @@
         "zustand": "5.0.15"
       },
       "devDependencies": {
-        "@types/better-sqlite3": "9.6.0",
         "@types/node": "24.13.3",
         "@types/react": "19.2.18",
         "@types/react-dom": "19.2.5",
         "@types/web-push": "3.6.4",
         "typescript": "5.9.3"
       },
-      "lockDigest": "4358db6a7663fd0da2c22866a29b1bc76f2eb57bac9ee2301361496d95d861df"
+      "lockDigest": "e445055164e634b770c779741c2667359d9354e3846ebbb20a1b158ce3f655c5"
     },
     "submain": {
       "packageManager": "npm@11.19.0",
@@ -405,7 +397,6 @@
         "zustand": "5.0.15"
       },
       "devDependencies": {
-        "@types/better-sqlite3": "9.6.0",
         "@types/node": "24.13.3",
         "@types/nodemailer": "8.0.1",
         "@types/react": "19.2.18",
@@ -413,7 +404,7 @@
         "@types/web-push": "3.6.4",
         "typescript": "5.9.3"
       },
-      "lockDigest": "bb3e47146d97aaedd48d2984459a9e98f7069455fa868843b021f8609aacfa03"
+      "lockDigest": "a6f5811908652f2240760668c61aa9df9d5edba8cbe3897ae800a8882006c994"
     }
   },
   "tools": {

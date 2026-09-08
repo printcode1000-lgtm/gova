@@ -1,5 +1,8 @@
 # ADR-0003: SRP File Splits (2026-08)
 
+> **Partly superseded (cloud-only development data cutover).** `test:backup-core` and `test:data-health-core` were removed with their packages. The rule they illustrate — a suite must be listed by the pipeline that gates it, not only nested inside another — is unchanged.
+
+
 ## Status
 
 Accepted (2026-08)

@@ -1,18 +1,43 @@
-export { getSchemaSyncReportPublicUrl } from './schema-sync-report-path';
-export { runSchemaSync, getSchemaSyncReportPath } from './schema-sync';
-export { provisionTursoDatabase, loadTursoCredentialsFromEnv, ensureSqliteDirectory } from './turso-provisioner';
-export { readSqliteSchema } from './sqlite-schema-reader';
+export {
+  runSchemaSync,
+  ignoredExtraTablesFor,
+  runAllSchemaSyncs,
+  getSchemaSyncReportPath,
+  type AllSchemaSyncReports,
+} from './schema-sync';
+export { schemaSyncReportPathFor, SCHEMA_SYNC_REPORT_PATH } from './schema-sync-report-path';
+export { provisionTursoDatabase, loadTursoCredentialsFromEnv } from './turso-provisioner';
 export { readTursoSchema } from './turso-schema-reader';
 export { diffSchemas } from './schema-diff';
 export { computeSchemaVersion } from './schema-version';
+export { credentialKeysFor, loadCredentialsFor } from './schema-credentials';
 export type {
   SchemaSyncReport,
   SchemaDiffOperation,
+  SchemaMigrationRequirement,
   DatabaseSchema,
   TursoProvisionResult,
 } from './types';
 
-/** Provisioning also drives the two release scripts that create and fill the shards. */
+/**
+ * The desired-schema manifests are the provisioning SSOT.
+ *
+ * They are TypeScript the build already contains, so every consumer here — the
+ * release apply step, the read-only verifier, the parity tests — calculates the
+ * intended cloud schema without opening a database of any kind.
+ */
+export {
+  DESIRED_SCHEMAS,
+  LOGICAL_DATABASE_LABELS,
+  NON_SHARD_DATABASE_LABELS,
+  desiredTableOwnership,
+  isLogicalDatabaseLabel,
+  readDesiredSchema,
+  type LogicalDatabaseLabel,
+  type NonShardDatabaseLabel,
+} from '../desired-schema/registry';
+
+/** Provisioning also drives the release scripts that create the databases. */
 export {
   provisionTursoProductDatabase,
   provisionTursoAdvertisementsDatabase,
@@ -20,7 +45,6 @@ export {
   loadTursoAdvertisementsCredentialsFromEnv,
   loadTursoNotificationsCredentialsFromEnv,
 } from './turso-provisioner';
-export { runAllSchemaSyncs, type AllSchemaSyncReports } from './schema-sync';
 
 /**
  * Shard identity is provisioning metadata, not a database driver: it names the shards and
@@ -33,6 +57,5 @@ export {
   PROFILE_SHARD_DATABASE_NAMES,
   MARKETPLACE_ORDER_SHARD_DATABASE_NAMES,
   envPrefixForShard,
-  sqliteFileNameForShard,
   type DatabaseShardName,
 } from '../../core/database/database-shards';

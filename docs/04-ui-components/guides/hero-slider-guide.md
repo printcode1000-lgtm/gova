@@ -75,7 +75,7 @@ This is the full configuration editor. It renders a live carousel preview follow
 
 Autoplay, per-slide duration, looping, and transitions run in the admin live preview the same way as `view` mode. Slide tap actions stay disabled so editing does not navigate away. Add at least two slides to see transition effects; a single slide only shows titles and the static image.
 
-The live preview merges local `data:` previews from `StorageImageManager` into the carousel via `mergeHeroSliderAdminPreview` without mutating the persisted editor config. Staged slide images appear in the carousel immediately; server upload and Home publication happen only when the super-admin clicks Save. Local `/sync_data/sync_file/...` URLs bypass the Next.js image optimizer so newly written files render immediately after Save.
+The live preview merges local `data:` previews from `StorageImageManager` into the carousel via `mergeHeroSliderAdminPreview` without mutating the persisted editor config. Staged slide images appear in the carousel immediately; server upload and Home publication happen only when the super-admin clicks Save.
 
 Slide layout classes must stay space-separated (`absolute inset-0 …`). Concatenating tokens without spaces collapses the fill parent to zero size and leaves only the loading skeleton visible.
 
@@ -192,7 +192,7 @@ The Home slider is an advertisement managed by the super-admin workflow.
 The local database is:
 
 ```text
-public/sync_data/sync_sqlite/advertisements.db
+packages/data-core/src/provisioning/desired-schema/advertisements.ts
 ```
 
 Its schema is defined in:
@@ -326,12 +326,11 @@ The URL becomes `slide.image`, while the persistent object key becomes `slide.im
 
 | Runtime | Provider | Public URL shape |
 | --- | --- | --- |
-| Local dev (`next dev` / `next start`) | `LocalStorageProvider` | `/sync_data/sync_file/images/advertisements/home-hero-slider/{key}` |
 | Production / static web / Android (OTA) | Cloudflare R2 | `https://…r2.dev/images/content/advertisements/home-hero-slider/{key}` |
 
 Saving rejects managed slide URLs without `imageKey`. Removed keys are deleted only after a successful save and only when the object still exists in storage.
 
-In local development those public URLs use `/sync_data/sync_file/...`. The project-wide image policy disables the Next.js Image Optimizer in every runtime, so both local and cloud slide URLs are requested directly and never pass through `/_next/image`.
+Development uses the same R2 public URLs as every other runtime. The project-wide image policy disables the Next.js Image Optimizer everywhere, so slide URLs are requested directly and never pass through `/_next/image`.
 
 Removing an image in the editor only changes the local form. On Save, the server first commits the new configuration to SQLite or Turso. Only after that succeeds does it delete removed managed image keys from local storage or R2. A failed database save never deletes a referenced image, and there is no delayed cleanup queue.
 

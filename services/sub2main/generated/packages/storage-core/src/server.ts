@@ -9,7 +9,6 @@ export * from './server/transport/r2-platform-api';
 
 export * from './server/providers/storage-provider.interface';
 export * from './server/providers/r2-account.provider';
-export * from './server/providers/local-storage.provider';
 export * from './server/providers/provider-resolver';
 
 export * from './server/processing/image-processor';

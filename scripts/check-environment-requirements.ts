@@ -287,11 +287,15 @@ function checkCommon(): void {
   add({
     scenario: "common",
     item: "Dependency install scripts",
-    level: ["better-sqlite3", "esbuild", "unrs-resolver"].every((name) =>
+    // `better-sqlite3` is a devDependency now: a handful of isolated tests open
+    // an in-memory database, and nothing in a production, build or provisioning
+    // closure loads it. Its approval stays pinned so those tests can install it
+    // where they run, but the production dependency doctor no longer requires it.
+    level: ["esbuild", "unrs-resolver"].every((name) =>
       approvedBuilds.some((entry) => entry.startsWith(`${name}@`)),
     ) ? "OK" : "CONFIGURE",
     installed: approvedBuilds.join(", ") || "none",
-    required: "Pinned approvals for better-sqlite3, esbuild, and unrs-resolver",
+    required: "Pinned approvals for esbuild and unrs-resolver",
     action: "Review with npm install-scripts ls; approve only the pinned packages documented in package.json.",
   });
 }

@@ -73,11 +73,6 @@ ALLOWED_TO_IMPORT → `@asol/ota-core/publishing`
 `@asol/auth-core`
 ALLOWED_TO_IMPORT → `@asol/signed-token-core`
 
-### @asol/backup-core
-
-`@asol/backup-core`
-ALLOWED_TO_IMPORT → `@asol/storage-core/server`
-
 ### @asol/branding-core
 
 `@asol/branding-core` has no production `@asol/*` imports.
@@ -109,21 +104,6 @@ ALLOWED_TO_IMPORT → `@asol/auth-core/phone`
 ALLOWED_TO_IMPORT → `@asol/auth-core/server`
 
 `@asol/data-core`
-ALLOWED_TO_IMPORT → `@asol/backup-core`
-
-`@asol/data-core`
-ALLOWED_TO_IMPORT → `@asol/data-health-core`
-
-`@asol/data-core`
-ALLOWED_TO_IMPORT → `@asol/data-health-core/server`
-
-`@asol/data-core`
-ALLOWED_TO_IMPORT → `@asol/dev-core`
-
-`@asol/data-core`
-ALLOWED_TO_IMPORT → `@asol/dev-core/server`
-
-`@asol/data-core`
 ALLOWED_TO_IMPORT → `@asol/env-core/files`
 
 `@asol/data-core`
@@ -142,15 +122,6 @@ ALLOWED_TO_IMPORT → `@asol/orders-core`
 ALLOWED_TO_IMPORT → `@asol/product-core`
 
 `@asol/data-core`
-ALLOWED_TO_IMPORT → `@asol/storage-core`
-
-`@asol/data-core`
-ALLOWED_TO_IMPORT → `@asol/storage-core/profiles-config`
-
-`@asol/data-core`
-ALLOWED_TO_IMPORT → `@asol/storage-core/server`
-
-`@asol/data-core`
 ALLOWED_TO_IMPORT → `@asol/system-logs-core`
 
 `@asol/data-core`
@@ -158,10 +129,6 @@ ALLOWED_TO_IMPORT → `@asol/trending-ribbon-core`
 
 `@asol/data-core`
 ALLOWED_TO_IMPORT → `@asol/vercel-deploy-core`
-
-### @asol/data-health-core
-
-`@asol/data-health-core` has no production `@asol/*` imports.
 
 ### @asol/dev-core
 
@@ -345,9 +312,6 @@ ALLOWED_TO_IMPORT → `@asol/cors`
 `@asol/storage-core`
 ALLOWED_TO_IMPORT → `@asol/cors`
 
-`@asol/storage-core`
-ALLOWED_TO_IMPORT → `@asol/dev-core/server`
-
 ### @asol/storage-image-manager-core
 
 `@asol/storage-image-manager-core`
@@ -395,5 +359,5 @@ ALLOWED_TO_IMPORT → `@asol/account-declarations`
 
 | Metric | Value |
 |---|---|
-| Packages | 48 |
-| Import edges | 68 |
+| Packages | 46 |
+| Import edges | 58 |

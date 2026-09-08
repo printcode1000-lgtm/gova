@@ -149,7 +149,7 @@ Bypassing these is a build failure:
 
 | Capability | Owner | Enforcement |
 |---|---|---|
-| Database (Drizzle, SQLite, Turso) | `@asol/data-core` | ESLint + vendor ownership + native contract |
+| Database (Drizzle, Turso/libSQL) | `@asol/data-core` | ESLint + vendor ownership + native contract |
 | Object storage (R2/S3) | `@asol/storage-core` | ESLint + storage contract |
 | Capacitor / native | `@asol/native-core` | ESLint Capacitor ban + vendor registry |
 | Page-authored writes | `@asol/page-save-core` | Single-door check + write-surface tests |
@@ -209,7 +209,7 @@ Application code follows a enforced stack (no shortcut paths):
 
 ```text
 UI → Hooks → Client Services → AsolApiClient → Business API
-  → Server Services → Query/Command → Repository → Database Client → SQLite/Turso
+  → Server Services → Query/Command → Repository → Database Client → Turso
 ```
 
 UI MUST NOT import repository, Drizzle, or server services. Full layer rules: [10-application-layers/](../10-application-layers/README.md).
@@ -222,7 +222,7 @@ UI MUST NOT import repository, Drizzle, or server services. Full layer rules: [1
 
 | Vendor | Owner(s) |
 |---|---|
-| `better-sqlite3`, `@libsql/client`, `drizzle-orm/*` | `@asol/data-core` |
+| `@libsql/client`, `drizzle-orm/*` | `@asol/data-core` |
 | `@aws-sdk/client-s3` | `@asol/storage-core`, `@asol/ota-core` (distinct jobs) |
 | `@capacitor/*`, `@capawesome/*`, `@capgo/*` | `@asol/native-core` |
 | `web-push`, `google-auth-library` | `@asol/notifications-core` (FCM); also `ota-core`, `google-play` paths |

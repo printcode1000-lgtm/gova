@@ -78,7 +78,7 @@ import {
 } from "@asol/release-core/console-artifacts";
 
 async function withSyntheticDevelopmentRuntime<T>(run: () => Promise<T>): Promise<T> {
-  return withTemporaryEnvironment({ NODE_ENV: "development", ASOL_MODE: "development", NEXT_PUBLIC_ASOL_MODE: undefined, VERCEL: undefined, VERCEL_ENV: undefined, ASOL_DATA_SOURCE: "local", ASOL_PROVISIONING: undefined, GITHUB_ACTIONS: undefined }, run);
+  return withTemporaryEnvironment({ NODE_ENV: "development", ASOL_MODE: "development", NEXT_PUBLIC_ASOL_MODE: undefined, VERCEL: undefined, VERCEL_ENV: undefined, ASOL_PROVISIONING: undefined, GITHUB_ACTIONS: undefined }, run);
 }
 
 async function main() {
@@ -92,8 +92,6 @@ for (const route of [
   "app/super-admin/google-play-store-assets",
   "app/super-admin/google-play-console",
   "app/super-admin/ota-releases",
-  "app/super-admin/data-health",
-  "app/super-admin/dev-cloud-backup",
 ]) {
   assert.ok(staticBuilderConfigSource.includes(`"${route}"`),
     `${route} must be removed before static/mobile builds`);
@@ -111,19 +109,7 @@ const releasePageSource = await readFile(
 );
 assert.match(releasePageSource, /getServerRuntimeContext\(\)\.isDevelopment.*notFound/,
   "the release console page must return 404 outside server development");
-for (const pagePath of [
-  "src/app/super-admin/data-health/page.tsx",
-  "src/app/super-admin/dev-cloud-backup/page.tsx",
-]) {
-  const pageSource = await readFile(pagePath, "utf8");
-  assert.match(pageSource, /getServerRuntimeContext\(\)\.isDevelopment.*notFound/,
-    `${pagePath} must return 404 outside server development`);
-}
 const sidebarSource = await readFile("src/shared/layouts/AppSidebar.tsx", "utf8");
-assert.doesNotMatch(sidebarSource, /href="\/dev\/data-health"/,
-  "data health belongs under /dev and must not appear in the sidebar");
-assert.doesNotMatch(sidebarSource, /href="\/dev\/dev-cloud-backup"/,
-  "dev cloud backup belongs under /dev and must not appear in the sidebar");
 assert.doesNotMatch(sidebarSource, /window\.location\.hostname/,
   "localhost cannot identify development because Capacitor also uses it");
 const releaseConfirmDialogSource = await readFile(
@@ -991,8 +977,12 @@ async function verifyProductionDeployConsole() {
     "the remote runner must run deploy:all itself rather than reimplement it",
   );
   assert.ok(
-    remoteRunner.includes('"--ignore-scripts"') && remoteRunner.includes("verify-sqlite-runtime.ts"),
-    "the sandbox install must keep and verify better-sqlite3's bundled Linux binary instead of requiring make",
+    remoteRunner.includes('"--ignore-scripts"'),
+    "the sandbox install must skip lifecycle scripts: Vercel Sandboxes ship no make",
+  );
+  assert.ok(
+    !remoteRunner.includes("verify-sqlite-runtime"),
+    "the sandbox must not load a local database driver: the release runtime reaches Turso over HTTP",
   );
   assert.ok(
     productionDeployPage.includes("DeployAllOptions") &&

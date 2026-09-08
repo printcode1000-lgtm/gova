@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 
-import { createMemoryMarketplaceDb } from "../db/test-client";
+import { createMemoryMarketplaceDb } from "./memory-marketplace-db";
 import { MarketplaceOrderService } from "../commands/marketplace-order-service";
 
 async function main() {

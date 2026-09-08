@@ -111,11 +111,11 @@ Two separate faults in one line.
 
 **The message named the wrong account.** Five of the six stubs were
 copy-pasted and reported a different service than the one they ran in, which
-made a profiles failure read as a notifications problem. Each now names
-itself.
+made a profiles failure read as a notifications problem. Each was made to name
+itself; the stubs were later deleted along with the branch they stood in for.
 
-**The real fault:** all six isolated accounts alias `better-sqlite3` to a stub
-that throws — they never run against local SQLite, and bundling the native
+**The real fault:** all six isolated accounts aliased `better-sqlite3` to a stub
+that threw — they never ran against local SQLite, and bundling the native
 driver would force a native build for unreachable code. But they still let
 `resolveServerDatabaseBackend` decide from the environment, and a data source
 of `local` selects sqlite. The deployment then loaded a driver it does not
@@ -124,16 +124,22 @@ ship.
 On Vercel, one misconfigured variable reproduces this exactly: every data
 route down, health still green. Same shape as the original outage.
 
-**Fix:** an account that cannot run SQLite must not ask. Each composition root
-states its own invariant:
+**Fix at the time:** an account that cannot run SQLite must not ask. Each
+composition root stated its own invariant:
 
 ```ts
 registerDataCoreRuntimeConfigPorts({ forceRemoteDataSource: true });
 ```
 
-The general rule: when a deployment physically cannot serve one branch of a
-runtime choice, it pins that choice in code. Leaving it to configuration turns
-a guaranteed invariant into a variable that can be set wrong.
+**Fix since:** the branch is gone. Server application data is Turso/libSQL in
+every runtime, so there is no environment value that selects a driver and no stub
+to alias — the registrar takes no options and `npm run architecture:check` fails
+on any `better-sqlite3` reference outside an isolated test.
+
+The general rule survives the specific fix, and gets sharper: when a deployment
+physically cannot serve one branch of a runtime choice, remove the choice. Pinning
+it in code is the fallback when the branch must exist; six accounts pinned it
+correctly and the seventh was the one that would forget.
 
 ## A fourth cause: control repeated it, and its gate could not see it
 
@@ -161,9 +167,8 @@ the first caller in the repository to ask control a question that touches data.
   unauthenticated and must not leak configuration — but it made a broken store
   indistinguishable from a revision that had not deployed yet.
 
-**Fix:** `@asol/control-composition` registers the runtime-config port with
-`forceRemoteDataSource: true`, and `services/control/src/instrumentation.ts`
-calls it once per server instance. The six workloads import their composition
+**Fix:** `@asol/control-composition` registers the runtime-config port, and
+`services/control/src/instrumentation.ts` calls it once per server instance. The six workloads import their composition
 from each route; control has one composition and many routes, so it registers
 from instrumentation instead.
 

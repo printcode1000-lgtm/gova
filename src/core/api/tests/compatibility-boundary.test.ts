@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { NextRequest } from "next/server";
+import { NOTIFICATIONS_BASE_URL } from "@asol/native-core/platform-defaults";
 
 // Set before the boundary is exercised, not before it is imported: the origins
 // module reads the environment on each call, so a build-time snapshot cannot
@@ -60,10 +61,18 @@ for (const route of ["/api/health", "/api/dev/anything"]) {
   assert.equal(response.headers.get("x-middleware-next"), "1");
 }
 
-/** A missing owner origin fails loudly. gova has no implementation to fall back to. */
+/**
+ * An unset owner variable resolves to the canonical deployed declaration, not
+ * to gova. gova implements no business route, so the page origin was never a
+ * usable answer; the address the static and native bundles are built with is.
+ */
 {
   const response = run("POST", "https://gova.example/api/notifications/send");
-  assert.equal(response.status, 502);
+  assert.equal(response.status, 307);
+  assert.equal(
+    response.headers.get("location"),
+    `${NOTIFICATIONS_BASE_URL}/api/notifications/send`,
+  );
 }
 
 /** An owned-looking business path with no owner is a configuration error, not a pass-through. */

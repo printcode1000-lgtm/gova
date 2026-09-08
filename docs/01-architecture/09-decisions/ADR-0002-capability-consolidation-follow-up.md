@@ -1,5 +1,8 @@
 # ADR-0002: Capability Consolidation Follow-Up
 
+> **Partly superseded (cloud-only development data cutover).** The Data Health and Dev Cloud Backup capabilities recorded here were removed in full, along with `@asol/data-health-core` and `@asol/backup-core`. The consolidation principle stands; those two packages no longer exist. See [current-databases.md](../../02-data-and-storage/current-databases.md).
+
+
 ## Status
 
 Accepted (2026-08)

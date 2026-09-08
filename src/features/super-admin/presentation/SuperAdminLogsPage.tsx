@@ -51,6 +51,12 @@ const clipboard = {
   },
 };
 
+const SYSTEM_LOG_LOOKBACK_DAYS = 7;
+const PERSISTENT_LOG_LIMIT = 100;
+const CLOUD_LOG_LIMIT = 100;
+const REFRESH_INTERVAL_MS = 5 * 60 * 1_000;
+const STREAM_REFRESH_MIN_INTERVAL_MS = 60 * 1_000;
+
 export function SuperAdminLogsPage() {
   const router = useRouter();
   const { session, isLoading } = useSession();
@@ -145,11 +151,17 @@ export function SuperAdminLogsPage() {
     const sessionToken = session?.sessionToken;
     if (!authorized || !sessionToken) return;
     let cancelled = false;
+    let streamRefreshTimer: number | null = null;
+    let lastStreamRefreshAt = 0;
     const load = () => {
+      const since = new Date(
+        Date.now() - SYSTEM_LOG_LOOKBACK_DAYS * 24 * 60 * 60 * 1_000,
+      ).toISOString();
       setCloudLoadState("loading");
       void Promise.allSettled([
         persistentSystemLogApiService.list(sessionToken, {
-          limit: 500,
+          limit: PERSISTENT_LOG_LIMIT,
+          since,
           query: query || undefined,
           platform:
             platform === "all"
@@ -157,7 +169,8 @@ export function SuperAdminLogsPage() {
               : (platform as "web" | "android" | "ios" | "server"),
         }),
         persistentSystemLogApiService.list(sessionToken, {
-          limit: 1000,
+          limit: CLOUD_LOG_LIMIT,
+          since,
           origin: "cloud",
           level: "error",
         }),
@@ -188,19 +201,34 @@ export function SuperAdminLogsPage() {
         }
       });
     };
+    const loadFromStream = () => {
+      const elapsed = Date.now() - lastStreamRefreshAt;
+      if (elapsed >= STREAM_REFRESH_MIN_INTERVAL_MS) {
+        lastStreamRefreshAt = Date.now();
+        load();
+        return;
+      }
+      if (streamRefreshTimer !== null) return;
+      streamRefreshTimer = window.setTimeout(() => {
+        streamRefreshTimer = null;
+        lastStreamRefreshAt = Date.now();
+        load();
+      }, STREAM_REFRESH_MIN_INTERVAL_MS - elapsed);
+    };
     load();
-    const timer = window.setInterval(load, 20_000);
+    const timer = window.setInterval(load, REFRESH_INTERVAL_MS);
     let stream: EventSource | null = null;
     if (sessionToken) {
       stream = persistentSystemLogApiService.openStream(
         sessionToken,
         new Date(Date.now() - 60 * 60 * 1_000).toISOString(),
       );
-      stream.addEventListener("log", () => load());
+      stream.addEventListener("log", loadFromStream);
     }
     return () => {
       cancelled = true;
       window.clearInterval(timer);
+      if (streamRefreshTimer !== null) window.clearTimeout(streamRefreshTimer);
       stream?.close();
     };
   }, [authorized, platform, query, refreshKey, session]);
@@ -310,7 +338,7 @@ export function SuperAdminLogsPage() {
       {summary && (
         <section id='features-super-admin-presentation-superadminlogspage-section-16-rkhbnm' className="mb-6 grid gap-3 sm:grid-cols-3">
           <article id='features-super-admin-presentation-superadminlogspage-article-17-ngmuob' className="rounded-xl border bg-card p-4">
-            <p id='features-super-admin-presentation-superadminlogspage-text-18-de1nmb' className="text-xs text-muted-foreground">إجمالي الأخطاء المحفوظة</p>
+            <p id='features-super-admin-presentation-superadminlogspage-text-18-de1nmb' className="text-xs text-muted-foreground">أخطاء آخر 7 أيام</p>
             <p id='features-super-admin-presentation-superadminlogspage-text-19-1xcw7a' className="text-2xl font-bold">{summary.totalErrors}</p>
           </article>
           <article id='features-super-admin-presentation-superadminlogspage-article-20-pdtn0e' className="rounded-xl border bg-card p-4">

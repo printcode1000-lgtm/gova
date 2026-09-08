@@ -16,7 +16,7 @@ Extended profile data lives in a separate database from auth users.
 
 | Environment | Users/Auth | Profile |
 |-------------|------------|---------|
-| Development | `public/sync_data/sync_sqlite/allusers.db` | profile shard files in `public/sync_data/sync_sqlite` |
+| Development | Turso users database | Turso profile shards |
 | Production | Turso `TURSO_DATABASE_URL` | profile shard Turso databases |
 
 Logical link: `user_profiles.uid` points to `users.uid`. There is no cross-database foreign key.
@@ -232,11 +232,11 @@ The structural migration is:
 packages/data-core/src/core/database/profile/migrations/0010_profile_structured_search.sql
 ```
 
-Existing local shards and Turso schemas are refreshed with:
+Update the matching desired-schema manifest, then verify and apply:
 
 ```bash
-npm run db:ensure
-npm run db:schema:sync
+npm run db:schema:verify        # read-only
+npm run db:schema:sync:release  # authorized apply
 ```
 
 ## Environment

@@ -123,29 +123,35 @@ New service account touches declarations, composition, service folder, sync grap
 5. An account composition root MUST pin a runtime choice its deployment cannot
    serve both sides of.
 
-### Invariant 5 — a deployment pins what it cannot serve
+### Invariant 5 — no source may reach a second database backend
 
 Rule:
-: Each account composition root MUST call
-  `registerDataCoreRuntimeConfigPorts({ forceRemoteDataSource: true })`.
+: No production, build, provisioning or tooling source may import
+  `better-sqlite3`. An isolated test may, using `:memory:` or a temporary
+  directory.
 
 Reason:
-: Every account aliases `better-sqlite3` to a stub that throws — it runs against
-  Turso only. The backend is otherwise resolved from the runtime context, where
-  a data source of `local` selects SQLite in any deployment that asks.
+: Every account composition root used to have to pin itself with
+  `registerDataCoreRuntimeConfigPorts({ forceRemoteDataSource: true })`, because
+  the backend was resolved from the runtime context and a data source of `local`
+  selected a filesystem SQLite database in any deployment that asked — while the
+  accounts aliased the driver to a throwing stub because they could not run it.
 
 Failure prevented:
 : The profiles account did exactly this during a real `deploy:all`: it loaded a
   driver it does not ship and answered 500 on every route reaching data, while
   `/api/health` stayed 200 and Vercel reported READY. One misconfigured
-  environment variable reproduces it in production.
+  environment variable reproduced it in production. Six roots passed the pin
+  because six were fixed by hand; the seventh was the one that would forget.
 
 Current implementation:
-: `src/features/data/ports/data-core-runtime-config-ports.ts` accepts the pin;
-  the six `packages/*-composition/src/index.ts` pass it.
-  `checkIsolatedDeploymentBackendContract` fails `npm run architecture:check`
-  if a composition registers the port without it.
+: The pin is gone because the choice is gone — server application data is
+  Turso/libSQL in every runtime, `registerDataCoreRuntimeConfigPorts()` takes no
+  options, and the service stubs were deleted with the branch they hid.
+  `checkIsolatedDeploymentBackendContract` now fails `npm run architecture:check`
+  on any `better-sqlite3` reference outside a test, and still fails when a
+  deployed account does not register its ports or nothing imports its
+  composition root.
 
-The main application is deliberately excluded: it ships the real driver and
-needs the local branch for development. Only a deployment that cannot serve both
-branches pins one.
+The main application is not excluded. It runs against the same Turso databases as
+every deployment, so there is no branch for it to keep.

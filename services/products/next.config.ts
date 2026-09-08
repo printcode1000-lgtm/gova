@@ -13,13 +13,6 @@ const nextConfig: NextConfig = {
     // up to the repository lockfile and infers the main app's directory instead.
     root: __dirname,
 
-    resolveAlias: {
-      // The shared data-access code keeps a local-SQLite branch for main-app
-      // development. This deployment is Turso-only, so that branch is
-      // unreachable — aliasing it avoids shipping a native module for code that
-      // cannot run. See stubs/better-sqlite3.js.
-      'better-sqlite3': './stubs/better-sqlite3.js',
-    },
   },
 
   // Node.js-only package: let Node require() it at runtime instead of bundling

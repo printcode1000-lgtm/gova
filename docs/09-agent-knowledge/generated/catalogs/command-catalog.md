@@ -53,28 +53,23 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run cors:verify:api-live` | `Tooling` | 1 |  | 0 |
 | `npm run cors:verify:live` | `Tooling` | 2 |  | 0 |
 | `npm run data-access:sync-public` | `Tooling` | 1 |  | 0 |
-| `npm run db:create:product` | `Tooling` | 1 |  | 0 |
-| `npm run db:create:profile` | `Tooling` | 1 |  | 0 |
-| `npm run db:create:sqlite` | `Tooling` | 1 |  | 0 |
 | `npm run db:drizzle` | `Tooling` | 1 |  | 0 |
 | `npm run db:drop:factory-reset` | `Tooling` | 1 |  | 0 |
 | `npm run db:drop:factory-reset:cloud` | `Tooling` | 1 |  | 0 |
-| `npm run db:ensure` | `Tooling` | 1 |  | 0 |
 | `npm run db:migrate:orders` | `Tooling` | 1 |  | 0 |
 | `npm run db:migrate:phones-e164` | `Tooling` | 1 |  | 0 |
 | `npm run db:migrate:product` | `Tooling` | 1 |  | 0 |
 | `npm run db:migrate:product-image-urls` | `Tooling` | 1 |  | 0 |
 | `npm run db:migrate:profiles` | `Tooling` | 1 |  | 0 |
-| `npm run db:migrate:users` | `Tooling` | 1 |  | 0 |
+| `npm run db:migrate:system-log-origin` | `Tooling` | 1 |  | 0 |
 | `npm run db:provision:turso` | `Tooling` | 1 |  | 1 |
 | `npm run db:push:vercel-env` | `Tooling`, `Web` | 1 |  | 0 |
 | `npm run db:reset:advertisements` | `Tooling` | 1 |  | 0 |
 | `npm run db:reset:advertisements:cloud` | `Tooling` | 1 |  | 0 |
 | `npm run db:schema:sync` | `Tooling` | 1 |  | 1 |
 | `npm run db:schema:sync:release` | `Tooling` | 1 |  | 2 |
+| `npm run db:schema:verify` | `Tooling` | 1 |  | 1 |
 | `npm run db:setup:turso` | `Tooling` | 1 |  | 0 |
-| `npm run db:sync:users` | `Tooling` | 1 |  | 0 |
-| `npm run db:verify:sqlite` | `Tooling` | 1 |  | 0 |
 | `npm run db:verify:turso` | `Tooling` | 1 |  | 0 |
 | `npm run dependencies:install` | `Tooling` | 1 |  | 0 |
 | `npm run dependencies:outdated` | `Tooling` | 1 |  | 0 |
@@ -128,7 +123,6 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run lint` | `Tooling` | 0 |  | 0 |
 | `npm run main:deploy` | `Tooling` | 1 |  | 0 |
 | `npm run maplibre:sync` | `Tooling` | 1 |  | 0 |
-| `npm run notifications:check:local` | `Tooling` | 1 |  | 0 |
 | `npm run notifications:deploy` | `Independent services`, `Tooling` | 1 |  | 0 |
 | `npm run notifications:tokens:dedupe` | `Tooling` | 1 |  | 0 |
 | `npm run orders:deploy` | `Independent services`, `Tooling` | 1 |  | 0 |
@@ -152,7 +146,6 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run products:deploy` | `Independent services`, `Tooling` | 1 |  | 0 |
 | `npm run profiles:deploy` | `Independent services`, `Tooling` | 1 |  | 0 |
 | `npm run provision:mobile-push` | `Tooling` | 1 |  | 0 |
-| `npm run r2:migrate:folders` | `Tooling` | 1 |  | 0 |
 | `npm run r2:migrate:images` | `Tooling` | 1 |  | 0 |
 | `npm run r2:sync:cors` | `Tooling` | 1 |  | 0 |
 | `npm run r2:verify:cors` | `Tooling` | 1 |  | 0 |
@@ -195,7 +188,6 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:architecture-core` | `Tooling` | 2 |  | 0 |
 | `npm run test:auth-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:auth-email-uniqueness` | `Tooling` | 1 |  | 1 |
-| `npm run test:backup-core` | `Tooling` | 1 |  | 1 |
 | `npm run test:branding-core` | `Tooling` | 2 |  | 0 |
 | `npm run test:cart-pricing` | `Tooling` | 1 |  | 0 |
 | `npm run test:catalog-core` | `Tooling` | 1 |  | 0 |
@@ -208,14 +200,11 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:console-command-parity` | `Tooling` | 1 |  | 0 |
 | `npm run test:control` | `Tooling` | 1 |  | 0 |
 | `npm run test:cors-core` | `Tooling` | 1 |  | 0 |
-| `npm run test:data-core` | `Tooling` | 5 |  | 0 |
-| `npm run test:data-health` | `Tooling` | 4 |  | 1 |
-| `npm run test:data-health-core` | `Tooling` | 1 |  | 0 |
+| `npm run test:data-core` | `Tooling` | 2 |  | 0 |
 | `npm run test:delivery-planner` | `Tooling` | 1 |  | 0 |
 | `npm run test:deploy-all-resume` | `Tooling` | 1 |  | 0 |
 | `npm run test:deploy-runbook-execution` | `Tooling` | 1 |  | 0 |
 | `npm run test:deployment-tools` | `Tooling` | 21 |  | 0 |
-| `npm run test:dev-cloud-backup` | `Tooling` | 1 |  | 1 |
 | `npm run test:dev-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:env-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:favorites-core` | `Tooling` | 1 |  | 0 |
@@ -276,7 +265,6 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:sharing` | `Tooling` | 2 |  | 0 |
 | `npm run test:shipping-pricing` | `Tooling` | 1 |  | 0 |
 | `npm run test:signed-token-core` | `Tooling` | 1 |  | 0 |
-| `npm run test:sqlite-reconnect` | `Tooling` | 1 |  | 1 |
 | `npm run test:storage-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:storage-image-manager-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:store-name-draft` | `Tooling` | 2 |  | 0 |

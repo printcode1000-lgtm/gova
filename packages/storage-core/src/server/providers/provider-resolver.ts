@@ -8,7 +8,6 @@ import {
   cloudflareR2Provider,
   cloudflareR2ProductsProvider,
 } from './r2-account.provider';
-import { localStorageProvider } from './local-storage.provider';
 
 export class GoogleDriveProvider implements IStorageProvider {
   readonly providerId = 'GoogleDrive';
@@ -38,15 +37,21 @@ export const googleDriveProvider = new GoogleDriveProvider();
 
 const dynamicR2Providers = new Map<string, R2AccountProvider>();
 
-export function isLocalDevelopmentRuntime(): boolean {
-  return process.env.NODE_ENV === 'development' && !process.env.ASOL_PROVISIONING;
-}
-
+/**
+ * The provider a storage profile names, in every runtime.
+ *
+ * Development used to be answered here with a filesystem provider regardless of
+ * what the profile said, so an upload in `next dev` landed under `public/` and a
+ * missing R2 credential was invisible until a deployment. Uploads now reach the
+ * account the profile declares wherever the code runs, which also means a
+ * misconfigured account fails on the developer's machine — the only place it is
+ * cheap to find.
+ *
+ * There is no fallback of any kind: not to disk, and not to a different R2
+ * account. Falling back across accounts would write an object where nothing
+ * looks for it and report success.
+ */
 export function resolveStorageProvider(profileProvider: StorageProviderId): IStorageProvider {
-  if (isLocalDevelopmentRuntime()) {
-    return localStorageProvider;
-  }
-
   if (profileProvider === 'CloudflareR2') return cloudflareR2Provider;
   if (profileProvider === 'CloudflareR2Products') return cloudflareR2ProductsProvider;
 
@@ -60,19 +65,18 @@ export function resolveStorageProvider(profileProvider: StorageProviderId): ISto
   }
 
   throw new Error(
-    `Cloud runtime requires a Cloudflare R2 storage provider, received: ${profileProvider}`,
+    `Server image storage requires a Cloudflare R2 storage provider, received: ${profileProvider}`,
   );
 }
 
 export function resolveActiveProviderId(profileProvider: StorageProviderId): StorageProviderId {
-  if (isLocalDevelopmentRuntime()) return 'LocalStorage';
   if (
     profileProvider !== 'CloudflareR2' &&
     profileProvider !== 'CloudflareR2Products' &&
     !profileProvider.startsWith('CloudflareR2_')
   ) {
     throw new Error(
-      `Cloud runtime requires a Cloudflare R2 storage provider, received: ${profileProvider}`,
+      `Server image storage requires a Cloudflare R2 storage provider, received: ${profileProvider}`,
     );
   }
   return profileProvider;

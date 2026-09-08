@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 
 import { MarketplaceOrderService } from "../commands/marketplace-order-service";
 import { OrderQueryRepository } from "../repositories/order-query-repository";
-import { createMemoryMarketplaceDb } from "../db/test-client";
+import { createMemoryMarketplaceDb } from "./memory-marketplace-db";
 
 async function run() {
   const db = createMemoryMarketplaceDb();

@@ -1,22 +1,11 @@
 import "server-only";
 
 import type { IDatabaseClient } from "./database/database-client.interface";
-import { getServerDatabaseBackend } from "./database/environment";
-// Adapters are imported statically. A relative `nodeRequire()` cannot work here: this
-// package ships TypeScript sources, and `createRequire` is a real Node resolution at
-// runtime, which has no extension to resolve `./database/<client>` against — every data
-// source failed with "Cannot find module". Importing the classes costs nothing at load
-// time: each adapter still pulls its driver (`better-sqlite3`, `@libsql/client`, drizzle)
-// lazily through `nodeRequire` inside the branch that needs it, so a Turso deployment
-// never loads the SQLite driver and a SQLite run never opens a libSQL connection.
-import { SQLiteDatabaseClient } from "./database/sqlite-db-client";
+import { assertServerDataAccessRuntime } from "./database/environment";
 import { TursoDatabaseClient } from "./database/turso-db-client";
-import { ProductSQLiteDatabaseClient } from "./database/product-sqlite-db-client";
 import { ProductTursoDatabaseClient } from "./database/product-turso-db-client";
-import { AdvertisementsSQLiteDatabaseClient } from "./database/advertisements-sqlite-db-client";
 import { AdvertisementsTursoDatabaseClient } from "./database/advertisements-turso-db-client";
 import { ProfileShardedDatabaseClient } from "./database/profile-sharded-db-client";
-import { NotificationsSQLiteDatabaseClient } from "./database/notifications-sqlite-db-client";
 import { NotificationsTursoDatabaseClient } from "./database/notifications-turso-db-client";
 
 export type ServerDataSourceName =
@@ -29,8 +18,14 @@ export type ServerDataSourceName =
 /**
  * The single runtime registry for server database sources.
  *
- * It owns environment routing and lazy connection creation. Repositories ask
- * for a logical source; they never choose SQLite, Turso, or a shard directly.
+ * It owns lazy connection creation and nothing else. Repositories ask for a
+ * logical source; they never choose a database or a shard directly.
+ *
+ * There is no backend left to select. Every source is Turso/libSQL in every
+ * runtime that may reach a database at all — Development included — so a
+ * developer's request and a user's request cannot answer from different stores.
+ * Missing credentials fail loudly at the owning client rather than resolving to
+ * an emptier source.
  */
 class DataSourceRegistry {
   private readonly sources = new Map<ServerDataSourceName, IDatabaseClient>();
@@ -45,26 +40,18 @@ class DataSourceRegistry {
   }
 
   private create(name: ServerDataSourceName): IDatabaseClient {
-    const backend = getServerDatabaseBackend();
+    assertServerDataAccessRuntime();
     switch (name) {
       case "users":
-        return backend === "sqlite"
-          ? new SQLiteDatabaseClient()
-          : new TursoDatabaseClient();
+        return new TursoDatabaseClient();
       case "products":
-        return backend === "sqlite"
-          ? new ProductSQLiteDatabaseClient()
-          : new ProductTursoDatabaseClient();
+        return new ProductTursoDatabaseClient();
       case "advertisements":
-        return backend === "sqlite"
-          ? new AdvertisementsSQLiteDatabaseClient()
-          : new AdvertisementsTursoDatabaseClient();
+        return new AdvertisementsTursoDatabaseClient();
       case "profiles":
         return new ProfileShardedDatabaseClient();
       case "notifications":
-        return backend === "sqlite"
-          ? new NotificationsSQLiteDatabaseClient()
-          : new NotificationsTursoDatabaseClient();
+        return new NotificationsTursoDatabaseClient();
     }
   }
 }

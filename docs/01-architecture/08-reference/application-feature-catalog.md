@@ -11,7 +11,7 @@ Canonical inventory of every application feature under `src/features/`.
 
 ## Scope
 
-All 45 registered features. Sealed packages are listed in [package-catalog.md](./package-catalog.md).
+All 43 registered features. Sealed packages are listed in [package-catalog.md](./package-catalog.md).
 
 ## Source of Truth
 
@@ -148,32 +148,6 @@ src/
 | **Capability Owners** | `@asol/data-core` |
 | **Permitted Feature Dependencies** | `categories`, `product-search` |
 | **Surfaces** | browser=false · server=false · ui=false |
-
-### data-health
-
-| Field | Value |
-|---|---|
-| **Feature** | `data-health` |
-| **Source** | `src/features/data-health/` |
-| **Owns** | Development data-health inspection and cleanup UI |
-| **Public Doors** | `@/features/data-health` · `@/features/data-health/server` |
-| **Runtime Targets** | `web`, `android`, `ios`, `server` |
-| **Capability Owners** | `@asol/data-health-core`, `@asol/data-core` |
-| **Permitted Feature Dependencies** | `auth`, `page-save`, `system-logs` |
-| **Surfaces** | browser=true · server=true · ui=true |
-
-### dev-cloud-backup
-
-| Field | Value |
-|---|---|
-| **Feature** | `dev-cloud-backup` |
-| **Source** | `src/features/dev-cloud-backup/` |
-| **Owns** | Development Turso cloud backup console |
-| **Public Doors** | `@/features/dev-cloud-backup` · `@/features/dev-cloud-backup/server` |
-| **Runtime Targets** | `web`, `android`, `ios`, `server` |
-| **Capability Owners** | `@asol/backup-core`, `@asol/data-core` |
-| **Permitted Feature Dependencies** | `auth`, `page-save` |
-| **Surfaces** | browser=true · server=true · ui=true |
 
 ### dev-tools
 
@@ -621,7 +595,7 @@ src/
 
 | Metric | Value |
 |---|---|
-| Application features | 45 |
+| Application features | 43 |
 | Features with UI door | 31 |
-| Features with server door | 26 |
-| Sealed capability packages | 48 |
+| Features with server door | 24 |
+| Sealed capability packages | 46 |

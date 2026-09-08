@@ -7,7 +7,6 @@ export function getServerRuntimeContext() {
     publicMode: process.env.NEXT_PUBLIC_ASOL_MODE,
     vercel: process.env.VERCEL,
     vercelEnv: process.env.VERCEL_ENV,
-    dataSource: process.env.ASOL_DATA_SOURCE,
     provisioning: process.env.ASOL_PROVISIONING,
     githubActions: process.env.GITHUB_ACTIONS,
   });

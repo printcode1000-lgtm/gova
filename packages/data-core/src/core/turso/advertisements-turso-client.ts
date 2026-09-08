@@ -1,7 +1,6 @@
 import { nodeRequire } from '../node-require';
 import 'server-only';
 
-import { isDevRuntime, isProvisioningContext } from '../../ports/runtime-config';
 import { getTursoAdvertisementsRuntimeCredentials } from '../../ports/runtime-config';
 
 let tursoAdvertisementsClientInstance: unknown | null = null;
@@ -10,13 +9,6 @@ function assertTursoAdvertisementsAccessAllowed(): void {
   if (typeof window !== 'undefined') {
     throw new Error(
       'getTursoAdvertisementsClient() is server-only. Clients must use Business APIs (/api/*).'
-    );
-  }
-
-  if (isDevRuntime() && !isProvisioningContext()) {
-    throw new Error(
-      'Turso advertisements DB cannot be accessed during development runtime. ' +
-        'Development must use local SQLite only (public/sync_data/sync_sqlite/advertisements.db).'
     );
   }
 }

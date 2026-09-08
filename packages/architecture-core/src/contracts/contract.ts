@@ -59,8 +59,6 @@ export const ALLOWED_PROCESS_ENV_FILES = new Set([
   // The release console resolves its own Play credentials; the other two developer modules read
   // nothing themselves any more — they ask `src/core/config/development-guard.server.ts`.
   'src/features/google-play-console/domain/development-guard.server.ts',
-  'src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts',
-  'src/features/data-health/tests/development-guard.test.ts',
   // Sets the seven public owner origins to exercise the gova compatibility
   // boundary; a boundary test that cannot vary its origins tests nothing.
   'src/core/api/tests/compatibility-boundary.test.ts',
@@ -185,13 +183,8 @@ export function classifyLayer(relativePath: string): ArchitectureLayer {
   if (p.startsWith('packages/data-core/src/domains/') && p.endsWith('/index.server.ts')) return 'operations';
   if (p.startsWith('packages/data-core/src/domains/') && p.includes('/commands/')) return 'operations';
   if (p.startsWith('packages/data-core/src/domains/') && p.includes('/queries/')) return 'operations';
-  if (p === 'src/features/data-health/domain/execution-context.server.ts') return 'configuration';
-  if (p === 'src/features/data-health/domain/development-guard.server.ts') return 'configuration';
-  if (p === 'src/features/dev-cloud-backup/domain/development-guard.server.ts') return 'configuration';
   if (p === 'src/features/google-play-console/domain/development-guard.server.ts') return 'configuration';
   if (p.startsWith('src/features/release-commands/tests/')) return 'dev-tools';
-  if (p.startsWith('src/features/data-health/tests/')) return 'dev-tools';
-  if (p.startsWith('src/features/dev-cloud-backup/tests/')) return 'dev-tools';
   if (p.startsWith('packages/orders-core/src/')) return 'shared';
   // A feature's application layer is orchestration that runs on the server: it composes services,
   // repositories and notifications for one use case. Named `*.server.ts` so the half that could

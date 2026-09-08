@@ -35,47 +35,20 @@ import {
  *
  * The main application registers this too, through `registerDataCorePorts`.
  * One definition, so the accounts and the app cannot drift.
+ *
+ * It takes no options. An isolated account used to have to pin itself to a
+ * remote data source, because a runtime that called itself development would
+ * otherwise select a local SQLite backend the account does not ship — a pin that
+ * only existed because there were two backends to choose between. There is one
+ * now, so every deployment registers the same thing and there is nothing left
+ * for an account to override.
  */
-export interface DataCoreRuntimeConfigPortOptions {
-  /**
-   * Pin the deployment to Turso regardless of what the environment says.
-   *
-   * The isolated accounts alias `better-sqlite3` to a stub that throws, because
-   * they never run against local SQLite and bundling the native driver would
-   * force a native build for unreachable code. That made the backend choice an
-   * environment question with only one valid answer: a stray `local` data
-   * source made the profiles service load a driver it does not ship, and every
-   * route that reached data answered 500 with a message about a different
-   * account entirely.
-   *
-   * An account that cannot run SQLite should not be asking. It states its own
-   * invariant here instead of trusting a variable it does not control.
-   */
-  readonly forceRemoteDataSource?: boolean;
-}
-
-export function registerDataCoreRuntimeConfigPorts(
-  options: DataCoreRuntimeConfigPortOptions = {},
-): void {
+export function registerDataCoreRuntimeConfigPorts(): void {
   configureDataCoreRuntimeConfig({
-    isDevelopment: options.forceRemoteDataSource ? false : isDevelopment,
-    // Pinning the data source was not enough. The per-database Turso guards ask
-    // `isDevRuntime()`, not the data source, and refuse a remote read whenever
-    // the runtime still calls itself development — so an isolated account with
-    // `dataSource: 'remote'` answered
-    // "Turso advertisements DB cannot be accessed during development runtime"
-    // on every advertisements read while /api/health stayed 200.
-    //
-    // A deployment that cannot run SQLite is not a development runtime, whatever
-    // the environment says. The account states both halves of the invariant, or
-    // it states neither: leaving one to configuration is what made the first
-    // half insufficient.
-    isDevRuntime: options.forceRemoteDataSource ? () => false : isDevRuntime,
+    isDevelopment,
+    isDevRuntime,
     isProvisioningContext,
-    getServerRuntimeContext: () =>
-      options.forceRemoteDataSource
-        ? { ...getServerRuntimeContext(), dataSource: 'remote' }
-        : getServerRuntimeContext(),
+    getServerRuntimeContext,
     getTursoRuntimeCredentials,
     getTursoProductRuntimeCredentials,
     getTursoNotificationsRuntimeCredentials,

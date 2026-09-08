@@ -1,11 +1,10 @@
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync } from 'fs';
 import {
   createTursoDatabase,
   createTursoDatabaseToken,
   ensureTursoGroup,
   listTursoDatabases,
 } from './turso-platform-api';
-import { SQLITE_DIRECTORY } from '../../core/database/environment';
 import {
   writeTursoAdvertisementsRuntimeCredentials,
   writeTursoProductRuntimeCredentials,
@@ -203,10 +202,4 @@ export function loadTursoNotificationsCredentialsFromEnv(): { url: string; authT
 
   if (!url || !authToken) return null;
   return { url, authToken };
-}
-
-export function ensureSqliteDirectory(): void {
-  if (!existsSync(SQLITE_DIRECTORY)) {
-    mkdirSync(SQLITE_DIRECTORY, { recursive: true });
-  }
 }

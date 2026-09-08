@@ -1,24 +1,17 @@
 import "server-only";
 
-import path from "node:path";
 import { createRequire } from "node:module";
 import type { Client } from "@libsql/client";
 import { readOptionalEnv } from '../../ports/runtime-config';
-import {
-  assertServerDataAccessRuntime,
-  isDevRuntime,
-  SQLITE_DIRECTORY,
-} from "./environment";
+import { assertServerDataAccessRuntime } from "./environment";
 import {
   envPrefixForShard,
-  sqliteFileNameForShard,
   type DatabaseShardName,
 } from "./database-shards";
 import {
   isRetrySafeTursoRead,
   withTursoReadRetry,
 } from "./turso-read-retry";
-import { CachedSqliteConnection } from "./cached-sqlite-connection";
 
 const nodeRequire = createRequire(import.meta.url);
 
@@ -76,8 +69,14 @@ function extractReferencedTables(
   return [...normalized];
 }
 
+/**
+ * Routes one SQL statement to the one Turso shard that owns its tables.
+ *
+ * Routing is the whole responsibility: which shard, never which backend. Every
+ * shard is a Turso database in every runtime, so the same statement reaches the
+ * same database whether it was issued by `next dev` or by a deployed function.
+ */
 export class ShardedRawDatabaseClient {
-  private sqliteConnections = new Map<DatabaseShardName, CachedSqliteConnection<any>>();
   private tursoConnections = new Map<DatabaseShardName, Client>();
 
   constructor(
@@ -107,8 +106,6 @@ export class ShardedRawDatabaseClient {
 
     const tables = extractReferencedTables(sql, Object.keys(this.tableMap));
     if (tables.length === 0 && this.forcedShard) {
-      if (isDevRuntime())
-        return this.executeSqlite(this.forcedShard, sql, params);
       return this.executeTurso(this.forcedShard, sql, params);
     }
     if (tables.length === 0) {
@@ -123,7 +120,6 @@ export class ShardedRawDatabaseClient {
     }
 
     const shard = [...shards][0];
-    if (isDevRuntime()) return this.executeSqlite(shard, sql, params);
     return this.executeTurso(shard, sql, params);
   }
 
@@ -131,24 +127,6 @@ export class ShardedRawDatabaseClient {
     work: (db: ShardedRawDatabaseClient) => Promise<T>,
   ): Promise<T> {
     return work(this);
-  }
-
-  private sqlite(shard: DatabaseShardName): any {
-    const existing = this.sqliteConnections.get(shard);
-    if (existing) return existing.get();
-    const connection = new CachedSqliteConnection(
-      path.join(SQLITE_DIRECTORY, sqliteFileNameForShard(shard)),
-      (databasePath) => {
-        const sqliteModule = nodeRequire("better-sqlite3");
-        const Database = sqliteModule.default ?? sqliteModule;
-        const db = new Database(databasePath);
-        db.pragma("foreign_keys = ON");
-        return db;
-      },
-      (db) => db,
-    );
-    this.sqliteConnections.set(shard, connection);
-    return connection.get();
   }
 
   private turso(shard: DatabaseShardName): Client {
@@ -166,20 +144,6 @@ export class ShardedRawDatabaseClient {
     const client = createClient({ url, authToken });
     this.tursoConnections.set(shard, client);
     return client;
-  }
-
-  private async executeSqlite(
-    shard: DatabaseShardName,
-    sql: string,
-    params: unknown[],
-  ): Promise<Record<string, unknown>[]> {
-    const statement = this.sqlite(shard).prepare(sql);
-    const args = normalizeParams(params);
-    if (isReadQuery(sql) || /\bRETURNING\b/i.test(sql)) {
-      return statement.all(...args);
-    }
-    const result = statement.run(...args);
-    return [{ changes: result.changes }];
   }
 
   private async executeTurso(

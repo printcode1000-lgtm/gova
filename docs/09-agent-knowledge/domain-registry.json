@@ -40,7 +40,7 @@
     {
       "id": "super-admin-and-operations",
       "docsPrefix": "docs/06-super-admin-and-operations/",
-      "sourcePrefixes": ["src/features/super-admin/", "src/features/system-logs/", "src/features/data-health/", "packages/system-logs-core/", "packages/observability-core/"],
+      "sourcePrefixes": ["src/features/super-admin/", "src/features/system-logs/", "packages/system-logs-core/", "packages/observability-core/"],
       "readFirst": ["docs/06-super-admin-and-operations/README.md", "docs/09-agent-knowledge/runtime-contract.md"]
     },
     {

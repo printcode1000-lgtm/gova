@@ -5,27 +5,12 @@ import path from "node:path";
 import * as browserApi from "../index";
 import * as serverApi from "../server";
 import {
-  LOCAL_RUNTIME_SQLITE_FILES,
-  PRIMARY_SQLITE_FILE,
-} from "../domain/database-files";
-import {
-  LOCAL_SQLITE_SEGMENT,
-  LOCAL_SYNC_FILE_PUBLIC_PREFIX,
-} from "../domain/paths";
-import { buildLocalSyncFilePublicUrl } from "../domain/public-url";
-import { sqliteFileNameForShard } from "../domain/shards";
-import {
   assertLocalDevelopmentAllowed,
   assertStrictLocalDevelopmentAllowed,
   buildLocalDevelopmentEnvironment,
   isLocalDevelopmentRuntime,
   isStrictLocalDevelopmentRuntime,
 } from "../guards/development-guard";
-import {
-  resolvePrimarySqlitePath,
-  resolveSqliteDirectory,
-  resolveSyncFileRoot,
-} from "../server";
 
 function getTsSourceFiles(dir: string): string[] {
   const results: string[] = [];
@@ -40,25 +25,6 @@ function getTsSourceFiles(dir: string): string[] {
     }
   }
   return results;
-}
-
-export function runPathsTest() {
-  const cwd = path.join(process.cwd(), "packages", "dev-core");
-  assert.equal(resolveSqliteDirectory(cwd), path.join(cwd, LOCAL_SQLITE_SEGMENT));
-  assert.equal(
-    resolvePrimarySqlitePath(cwd),
-    path.join(cwd, LOCAL_SQLITE_SEGMENT, PRIMARY_SQLITE_FILE),
-  );
-  assert.equal(
-    resolveSyncFileRoot(cwd),
-    path.join(cwd, "public", "sync_data", "sync_file"),
-  );
-  assert.equal(
-    buildLocalSyncFilePublicUrl("images/avatars/test.webp"),
-    `${LOCAL_SYNC_FILE_PUBLIC_PREFIX}/images/avatars/test.webp`,
-  );
-  assert.equal(sqliteFileNameForShard("profile-core"), "profile-core.db");
-  console.log("✅ dev-core paths test passed");
 }
 
 export function runGuardsTest() {
@@ -94,11 +60,44 @@ export function runGuardsTest() {
 
 export function runPublicSurfaceTest() {
   assert.equal(typeof browserApi.isLocalDevelopmentRuntime, "function");
-  assert.equal(typeof browserApi.buildLocalSyncFilePublicUrl, "function");
-  assert.equal(browserApi.LOCAL_RUNTIME_SQLITE_FILES.primary, "allusers.db");
-  assert.equal(typeof serverApi.resolveSqliteDirectory, "function");
+  assert.equal(typeof browserApi.isStrictLocalDevelopmentRuntime, "function");
+  assert.equal(typeof browserApi.assertLocalDevelopmentAllowed, "function");
   assert.equal(typeof serverApi.readLocalDevelopmentRuntimeFromProcess, "function");
   console.log("✅ dev-core public surface test passed");
+}
+
+/**
+ * The package owns a Development guard and nothing else.
+ *
+ * It used to own local persistence as well: SQLite filenames, the
+ * `public/sync_data` segments, the shard-file naming rule, and the URL a locally
+ * stored image was served from. Server data is Turso and image objects are R2 in
+ * every runtime now, so any of those names reappearing here would mean a second
+ * storage backend is being reintroduced under a "development tooling" heading —
+ * which is exactly how the first one stayed invisible.
+ */
+export function runNoLocalPersistenceOwnershipTest() {
+  const files = getTsSourceFiles(path.join(process.cwd(), "packages", "dev-core", "src"));
+  const forbidden = [
+    "sync_sqlite",
+    "sync_file",
+    "allusers.db",
+    "sqliteFileNameForShard",
+    "resolveSqliteDirectory",
+    "resolveLocalImagesRoot",
+    "buildLocalSyncFilePublicUrl",
+    "SCHEMA_SYNC_REPORT",
+  ];
+  for (const file of files) {
+    const content = readFileSync(file, "utf8");
+    for (const token of forbidden) {
+      assert.ok(
+        !content.includes(token),
+        `dev-core must not own local persistence: ${path.relative(process.cwd(), file)} mentions ${token}`,
+      );
+    }
+  }
+  console.log("✅ dev-core no-local-persistence test passed");
 }
 
 export function runRuntimePurityTest() {
@@ -135,9 +134,9 @@ export function runPackageIndependenceTest() {
 
 async function main() {
   console.log("🚀 Running @asol/dev-core test suite...\n");
-  runPathsTest();
   runGuardsTest();
   runPublicSurfaceTest();
+  runNoLocalPersistenceOwnershipTest();
   runRuntimePurityTest();
   runPackageIndependenceTest();
   console.log("\n✅ @asol/dev-core: all tests passed");

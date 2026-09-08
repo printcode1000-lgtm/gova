@@ -25,7 +25,6 @@ Local secrets live in `.env.local` (gitignored). Template in `.env.example`.
 | `packages/storage-core/scripts/verify-cors.ts` | Fail-closed live verification of every registered bucket plus a public-object preflight when a sample object exists (`r2:verify:cors`) |
 | `packages/ota-core/scripts/sync-cors.ts` | Apply full browser CORS to dedicated OTA bucket (`ota:sync:cors`) |
 | `packages/data-core/src/tooling/migrate-r2-image-public-url.ts` | Copy old public R2 image URLs into active bucket and rewrite database references |
-| `packages/data-core/src/tooling/migrate-r2-cloud-folders.ts` | Move active R2 objects from legacy profile folders into current cloud folders |
 
 ## Sync CORS
 
@@ -76,7 +75,7 @@ See [the R2 CORS incident record](../../08-troubleshooting/problems/public-r2-ob
 - `images/products-apparel-pets/...`: new apparel/pets product images in the apparel-pets R2 bucket (`productcat1`).
 - `app-updates/...`: OTA release bundles, manifests, file trees, and revocations in the dedicated OTA R2 bucket (`ota`).
 
-Local development keeps the original single root under `public/sync_data/sync_file/images/...`.
+Development uses the same prefixes as every other runtime. There is no local image root: server image objects live in R2 wherever the code runs.
 
 ## Runtime integrity
 
@@ -90,10 +89,9 @@ Both complete variable groups `R2_*`, `PRODUCT_R2_*`, and `APPAREL_PETS_R2_*` mu
 
 ```bash
 npm run r2:migrate:images
-npm run r2:migrate:folders
 ```
 
-The public URL migration uses `OLD_R2_PUBLIC_URL` or `R2_MIGRATION_SOURCE_PUBLIC_URL` from `.env.local`, copies referenced objects into the active bucket, and rewrites known image references in local SQLite and Turso. The folder migration moves active R2 objects from legacy profile folders into `images/profile` or `images/content`.
+The public URL migration uses `OLD_R2_PUBLIC_URL` or `R2_MIGRATION_SOURCE_PUBLIC_URL` from `.env.local`, copies referenced objects into the active bucket, and rewrites known image references in Turso — the only copy of those rows.
 
 ## Packages & Isolation
 

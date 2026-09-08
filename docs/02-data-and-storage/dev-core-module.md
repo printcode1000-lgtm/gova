@@ -12,9 +12,15 @@ See sections below. Architectural relationships defer to [docs/01-architecture/R
 
 ## 1. Summary & Core Mission
 
-`@asol/dev-core` is the sealed workspace package that owns the **local development data contract** for ASOL: canonical paths under `public/sync_data/`, SQLite filename constants, shard file naming, development-only runtime predicates, and shared guards.
+`@asol/dev-core` is the sealed workspace package that owns one thing: **deciding
+whether the current runtime is a developer's machine**, so developer-only tooling
+can refuse to run on Vercel, during a static export, or in a production build.
 
-Located at `packages/dev-core/`, it does **not** own SQLite clients, Drizzle schemas, dev UI pages, or cloud backup tooling. Those stay in `data-access`, `features/`, and `modules/` and consume this package for paths and guards.
+Located at `packages/dev-core/`, it owns no data. It used to also own the local
+development *data* contract — path segments under `public/sync_data/`, SQLite
+filename constants, shard file naming, and the public URL a locally stored image
+was served from. None of that exists any more: server application data is Turso
+and image objects are Cloudflare R2 in every runtime, Development included.
 
 General deployment/runtime detection remains in `src/core/config/runtime-context*.ts`. `dev-core` adds narrower predicates on top of that context.
 
@@ -26,75 +32,57 @@ General deployment/runtime detection remains in `src/core/config/runtime-context
 
 | Door | Import | Safe for | Contents |
 | :--- | :--- | :--- | :--- |
-| Browser / shared | `@asol/dev-core` | Client bundles, shared constants | Relative path segments, SQLite filenames, `sqliteFileNameForShard`, development predicates, `buildLocalSyncFilePublicUrl` |
-| Server | `@asol/dev-core/server` | API routes, scripts, server modules | Absolute path resolvers (`resolveSqliteDirectory`, `resolvePrimarySqlitePath`, …), guard helpers, `readLocalDevelopmentRuntimeFromProcess` |
+| Browser / shared | `@asol/dev-core` | Client bundles, shared constants | Development-runtime predicates and assertions |
+| Server | `@asol/dev-core/server` | API routes, scripts, server modules | The same predicates plus `readLocalDevelopmentRuntimeFromProcess` |
 
 **Do not** deep-import from `packages/dev-core/src/**`. Use only the two doors above, per [module-isolation-rules.md](../01-architecture/02-packages/module-isolation-rules.md).
 
 ---
 
-## 3. What Moved Into the Package
+## 3. What This Package Owns
 
-| Concern | In `@asol/dev-core` | Stays in the app |
+| Concern | In `@asol/dev-core` | Where it lives instead |
 | :--- | :--- | :--- |
-| `public/sync_data/sync_sqlite` path segments | yes | — |
-| `public/sync_data/sync_file` path segments | yes | — |
-| SQLite filename constants (`allusers.db`, …) | yes | — |
-| `sqliteFileNameForShard()` | yes | — |
 | `isLocalDevelopmentRuntime` / `isStrictLocalDevelopmentRuntime` | yes | — |
+| `assertLocalDevelopmentAllowed` / `assertStrictLocalDevelopmentAllowed` | yes | — |
 | `readLocalDevelopmentRuntimeFromProcess` | yes (`/server`) | `getServerRuntimeContext()` in `core/config` |
-| SQLite DB clients (Drizzle + better-sqlite3) | — | `data-access/core/database` |
-| `LocalStorageProvider` implementation | — | `@asol/storage-core` (imports path resolvers from here) |
-| `db:ensure` / shard-split tooling | — | `data-access/tooling` (imports paths from here) |
-| Dev UI (`/dev/*`, catalog-studio, cloud backup) | — | `src/app/dev`, `src/features/*`, `src/features/*` |
+| Server database access | — | `@asol/data-core` (Turso only, every runtime) |
+| Desired schema and provisioning paths | — | `@asol/data-core/provisioning` |
+| Image object storage | — | `@asol/storage-core` (Cloudflare R2, every runtime) |
+| Dev UI (`/dev/*`, catalog studio) | — | `src/app/dev`, `src/features/*` |
 
-`packages/data-core/src/core/database/environment.ts` is now a thin adapter: it re-exports resolved absolute paths from `@asol/dev-core/server` and keeps data-access-specific runtime helpers (`isDevRuntime`, provisioning checks).
-
-Development guards in `data-health`, `dev-cloud-backup`, and `google-play-console` call `@asol/dev-core/server` instead of duplicating predicates.
-
----
-
-## 4. Local Path Layout (single source of truth)
-
-```text
-public/sync_data/
-├── sync_sqlite/                 ← resolveSqliteDirectory()
-│   ├── allusers.db            ← resolvePrimarySqlitePath()
-│   ├── product.db
-│   ├── advertisements.db
-│   ├── notifications.db
-│   ├── profile.db             ← schema source (split input)
-│   ├── marketplace-orders.db  ← schema source (split input)
-│   └── <shard-name>.db        ← resolveShardSqlitePath(name)
-├── sync_file/                   ← resolveSyncFileRoot()
-│   └── images/                  ← resolveLocalImagesRoot()
-└── schema-sync-report.json      ← resolveSchemaSyncReportPath()
-```
-
-Public image URLs in local development use `buildLocalSyncFilePublicUrl()` → `/sync_data/sync_file/...`.
+A test in this package (`runNoLocalPersistenceOwnershipTest`) fails if any of the
+removed names reappear here. A Development-guard package that knew where a
+database file lived would be an invitation to put one back, and that is exactly
+how the first local backend stayed invisible.
 
 ---
 
-## 5. Guard Levels
+## 4. Guard Levels
 
 | Helper | Use when |
 | :--- | :--- |
-| `isLocalDevelopmentRuntime` | Feature is allowed whenever `runtime.isDevelopment` is true (data health, release console pages) |
-| `isStrictLocalDevelopmentRuntime` | Tool must not run on Vercel, during static export, or in Next production-build phase (dev cloud backup) |
+| `isLocalDevelopmentRuntime` | Feature is allowed whenever `runtime.isDevelopment` is true |
+| `isStrictLocalDevelopmentRuntime` | Tool must not run on Vercel, during static export, or in Next production-build phase |
 
 App modules pass runtime through `readLocalDevelopmentRuntimeFromProcess(getServerRuntimeContext())` so `dev-core` never imports `@/core/config`.
 
----
-
-## 6. Measured Rule 7
-
-`@asol/dev-core` imports **nothing** from other `@asol/*` packages or the application.
-
-`@asol/storage-core` has **one designated edge** into `@asol/dev-core/server` for local path resolution inside `LocalStorageProvider`.
+A Development guard controls whether a *tool* may run. It says nothing about
+where data lives — Development reaches the same Turso databases and the same R2
+buckets as any deployed runtime.
 
 ---
 
-## 7. Verification
+## 5. Measured Rule 7
+
+`@asol/dev-core` imports **nothing** from other `@asol/*` packages or the
+application, and nothing imports it for a path. `@asol/storage-core`'s former
+edge into `@asol/dev-core/server` existed only for the filesystem image
+provider's local paths and is gone with it.
+
+---
+
+## 6. Verification
 
 ```bash
 npm run test:dev-core

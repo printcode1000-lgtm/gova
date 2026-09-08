@@ -135,7 +135,7 @@ The value must be semantic, such as `20`; it must not contain a folder name or p
 
 ### Special-order image example
 
-Custom marketplace requests use the dedicated `spicialOrder` profile. The spelling is an intentional stable contract identifier. It limits each processed WebP image to 500 KB, stores local development files under `public/sync_data/sync_file/images/spicialOrder`, and stores cloud files under `images/content/spicialOrder` in Cloudflare R2.
+Custom marketplace requests use the dedicated `spicialOrder` profile. The spelling is an intentional stable contract identifier. It limits each processed WebP image to 500 KB and stores every object under `images/content/spicialOrder` in Cloudflare R2, in every runtime.
 
 ```tsx
 <StorageImageManager
@@ -216,7 +216,7 @@ There is no Replace button after upload. The user removes the stored image and t
 
 ## Removal
 
-The delete action is destructive storage deletion by default. The image remains visible until the provider confirms deletion. Development removes the file from `public/sync_data/sync_file/images/...`; production removes the R2 object. A failure keeps the image and opens a localized error dialog.
+The delete action is destructive storage deletion by default. The image remains visible until the provider confirms deletion, which removes the R2 object — in Development as in any other runtime. A failure keeps the image and opens a localized error dialog.
 
 Storage deletion and feature-database persistence are two sequential operations, not one distributed transaction. After provider deletion succeeds, `onChange` removes the key and the owning feature must persist that new value in SQLite/Turso. If that feature save fails, storage is already deleted and the database may temporarily retain a stale key; callers that persist asynchronously must expose/retry that failure. Product creation persists the final uploaded `imageKey` and URL in the product feature, which stores product image lists in `products.images_json` when the user presses Create Product.
 

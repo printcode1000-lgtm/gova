@@ -1,17 +1,31 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import Database from "better-sqlite3";
-import { createClient } from "@libsql/client";
 import {
-  DATABASE_SHARDS as ALL_DATABASE_SHARDS,
   DATABASE_SHARDS,
   envPrefixForShard,
-  sqliteFileNameForShard,
   type DatabaseShardName,
 } from "../core/database/database-shards";
-import { SQLITE_DIRECTORY } from "../core/database/environment";
+import { runSchemaSync } from "../provisioning/core/schema-sync";
 import { readEnvFiles } from "@asol/env-core/files";
+
+/**
+ * Creates the shard databases, issues their credentials, and applies the desired
+ * schema. Nothing else.
+ *
+ * This command used to open a local shard file, drop every table in the matching
+ * Turso database, recreate them from that file, clear what remained, and copy
+ * local rows back in. It was named "provision" and it was a restore from a
+ * developer's laptop: running it against a database that already held real rows
+ * destroyed them, and the only thing standing between the two outcomes was
+ * whether the operator happened to know that.
+ *
+ * The replacement can only add. Creating a database is idempotent, credentials
+ * are re-issued, and schema arrives as additive DDL from the repository's own
+ * desired manifests — which is also why no `.db` file is opened here any more.
+ * Row data is never read, written, deleted, or copied by provisioning; a
+ * database that already exists keeps everything it has.
+ */
 
 type TursoDatabase = { Name: string; Hostname: string; hostname?: string };
 
@@ -27,17 +41,6 @@ function updateEnvFile(filePath: string, entries: Record<string, string>): void 
     }
   }
   fs.writeFileSync(filePath, content, "utf8");
-}
-
-function quoteIdent(value: string): string {
-  return `"${value.replace(/"/g, '""')}"`;
-}
-
-function sqlLiteral(value: unknown): string {
-  if (value === null || value === undefined) return "NULL";
-  if (typeof value === "number" || typeof value === "bigint") return String(value);
-  if (Buffer.isBuffer(value)) return `X'${value.toString("hex")}'`;
-  return `'${String(value).replace(/'/g, "''")}'`;
 }
 
 async function platformFetch<T>(
@@ -73,11 +76,11 @@ async function ensureDatabase(
   organization: string,
   token: string,
   databaseName: DatabaseShardName,
-): Promise<TursoDatabase> {
+): Promise<{ database: TursoDatabase; created: boolean }> {
   const existing = (await listDatabases(organization, token)).find(
     (database) => database.Name === databaseName,
   );
-  if (existing) return existing;
+  if (existing) return { database: existing, created: false };
 
   const data = await platformFetch<{ database: TursoDatabase }>(
     organization,
@@ -88,7 +91,7 @@ async function ensureDatabase(
       body: JSON.stringify({ name: databaseName, group: "default" }),
     },
   );
-  return data.database;
+  return { database: data.database, created: true };
 }
 
 async function createToken(
@@ -105,82 +108,6 @@ async function createToken(
   return data.jwt;
 }
 
-function schemaSql(db: Database.Database, table: string): string[] {
-  const rows = db
-    .prepare(
-      "SELECT sql FROM sqlite_master WHERE sql IS NOT NULL AND ((type='table' AND name=?) OR (tbl_name=? AND type IN ('index','trigger','view'))) ORDER BY CASE type WHEN 'table' THEN 0 WHEN 'index' THEN 1 WHEN 'trigger' THEN 2 ELSE 3 END",
-    )
-    .all(table, table) as { sql: string }[];
-  return rows.map((row) => row.sql);
-}
-
-function referencesOutsideShard(sql: string, shardTables: readonly string[]): boolean {
-  const own = new Set(shardTables);
-  const allTables = Object.values(ALL_DATABASE_SHARDS).flat();
-  return allTables.some((table) => !own.has(table) && new RegExp(`\\b${table}\\b`, "i").test(sql));
-}
-
-function stripCrossDatabaseReferences(sql: string): string {
-  if (!/^CREATE\s+TABLE\b/i.test(sql)) return sql;
-  return sql
-    .replace(
-      /,\s*FOREIGN\s+KEY\s*\([^)]+\)\s+REFERENCES\s+"?[\w-]+"?\s*\([^)]+\)(?:\s+ON\s+DELETE\s+(?:CASCADE|SET\s+NULL|RESTRICT|NO\s+ACTION))?(?:\s+ON\s+UPDATE\s+(?:CASCADE|SET\s+NULL|RESTRICT|NO\s+ACTION))?/gi,
-      "",
-    )
-    .replace(
-      /\s+REFERENCES\s+"?[\w-]+"?\s*\([^)]+\)(?:\s+ON\s+DELETE\s+(?:CASCADE|SET\s+NULL|RESTRICT|NO\s+ACTION))?(?:\s+ON\s+UPDATE\s+(?:CASCADE|SET\s+NULL|RESTRICT|NO\s+ACTION))?/gi,
-      "",
-    );
-}
-
-async function syncShardToTurso(
-  databaseName: DatabaseShardName,
-  databaseUrl: string,
-  authToken: string,
-): Promise<void> {
-  const sqlitePath = path.join(SQLITE_DIRECTORY, sqliteFileNameForShard(databaseName));
-  const sqlite = new Database(sqlitePath, { readonly: true });
-  const client = createClient({ url: databaseUrl, authToken });
-  try {
-    await client.execute("PRAGMA foreign_keys = OFF");
-    for (const table of [...DATABASE_SHARDS[databaseName]].reverse()) {
-      await client.execute(`DROP TABLE IF EXISTS ${quoteIdent(table)}`);
-    }
-    for (const table of DATABASE_SHARDS[databaseName]) {
-      for (const sql of schemaSql(sqlite, table)) {
-        if (referencesOutsideShard(sql, DATABASE_SHARDS[databaseName])) {
-          console.warn(`${databaseName}.${table}: skipped cross-shard schema object`);
-          continue;
-        }
-        try {
-          await client.execute(stripCrossDatabaseReferences(sql));
-        } catch (error) {
-          const message = error instanceof Error ? error.message : String(error);
-          if (!message.toLowerCase().includes("already exists")) {
-            console.warn(`${databaseName}.${table}: skipped schema object: ${message}`);
-          }
-        }
-      }
-      await client.execute(`DELETE FROM ${quoteIdent(table)}`);
-      const rows = sqlite.prepare(`SELECT * FROM ${quoteIdent(table)}`).all() as Record<
-        string,
-        unknown
-      >[];
-      for (const row of rows) {
-        const columns = Object.keys(row);
-        await client.execute(
-          `INSERT OR REPLACE INTO ${quoteIdent(table)} (${columns
-            .map(quoteIdent)
-            .join(",")}) VALUES (${columns.map((column) => sqlLiteral(row[column])).join(",")})`,
-        );
-      }
-    }
-    await client.execute("PRAGMA foreign_keys = ON");
-  } finally {
-    sqlite.close();
-  }
-}
-
 export async function provisionDatabaseShards(): Promise<void> {
   const values = readEnvFiles();
   const organization = values.TURSO_ORGANIZATION;
@@ -190,20 +117,30 @@ export async function provisionDatabaseShards(): Promise<void> {
   }
 
   for (const databaseName of Object.keys(DATABASE_SHARDS) as DatabaseShardName[]) {
-    const database = await ensureDatabase(organization, apiToken, databaseName);
+    const { database, created } = await ensureDatabase(organization, apiToken, databaseName);
     const hostname = database.Hostname || database.hostname;
     if (!hostname) throw new Error(`Turso database hostname missing for ${databaseName}`);
     const databaseUrl = `libsql://${hostname}`;
     const authToken = await createToken(organization, apiToken, databaseName);
     const prefix = envPrefixForShard(databaseName);
-    const entries = {
+    updateEnvFile(".env.local", {
       [`${prefix}_DATABASE_URL`]: databaseUrl,
       [`${prefix}_DATABASE_AUTH_TOKEN`]: authToken,
-    };
-    updateEnvFile(".env.local", entries);
-    updateEnvFile(".env.local", entries);
-    await syncShardToTurso(databaseName, databaseUrl, authToken);
-    console.log(`${databaseName}: provisioned and synced`);
+    });
+
+    // Additive only, and against the credentials just resolved rather than the
+    // environment, so provisioning a freshly created database cannot apply DDL
+    // to whichever one the process happened to be pointed at.
+    const report = await runSchemaSync({
+      databaseLabel: databaseName,
+      tursoUrl: databaseUrl,
+      tursoAuthToken: authToken,
+    });
+
+    console.log(
+      `${databaseName}: ${created ? "created" : "existing"}, ` +
+        `${report.operations.length} schema operation(s) applied`,
+    );
   }
 }
 

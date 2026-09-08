@@ -12,7 +12,7 @@ Application code in `src/` — not sealed packages (see [02-packages/](../02-pac
 
 ```text
 UI → Hooks → Client Services → AsolApiClient → Business API
-  → Server Services → Query/Command → Repository → Database Client → SQLite / Turso
+  → Server Services → Query/Command → Repository → Database Client → Turso
 ```
 
 No shortcut paths. Architecture scan and ESLint enforce the matrix in `packages/architecture-core/src/contracts/contract.ts`.

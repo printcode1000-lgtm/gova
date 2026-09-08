@@ -12,7 +12,6 @@ export type StorageProviderId =
   | 'CloudflareR2'
   | 'CloudflareR2Products'
   | `CloudflareR2_${string}`
-  | 'LocalStorage'
   | 'GoogleDrive';
 
 export type StorageFolderStrategy = 'main-category';
@@ -25,7 +24,6 @@ export interface StorageProfile {
   enabled: boolean;
   provider: StorageProviderId;
   folder: string;
-  cloudFolder?: string;
   folderStrategy?: StorageFolderStrategy;
 }
 

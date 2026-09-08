@@ -6,7 +6,7 @@
 
 ```text
 Layer: Page Save Write Gateway
-File: src/features/data-health/presentation/use-data-health-page.ts
+File: `src/features/data-health/presentation/use-data-health-page.ts` (the Data Health capability has since been removed; the page-save behaviour this records is unchanged and applies to every scope)
 Violation: Rendering code writes outside the page-save gateway (lines 218, 283).
 ```
 

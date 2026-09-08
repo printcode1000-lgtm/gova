@@ -1,13 +1,16 @@
-import { existsSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import path from "node:path";
-import { resolveNotificationsSqlitePath } from "@asol/dev-core/server";
 import dotenv from "dotenv";
 
 import { createClient } from "@libsql/client";
-import Database from "better-sqlite3";
 
+/**
+ * Collapses duplicate device tokens to one per user and platform.
+ *
+ * Turso only: there is one copy of the notifications data, so cleaning a second
+ * one proved nothing about what a device actually reads.
+ */
 const root = process.cwd();
-const localPath = resolveNotificationsSqlitePath();
 const migrationPath = path.join(
   root,
   'packages', 'data-core', 'src',
@@ -41,17 +44,6 @@ const AUDIT_SQL = `
     )) AS duplicate_groups
 `;
 
-function auditLocal(db: Database.Database): Audit {
-  const row = db.prepare(AUDIT_SQL).get() as {
-    total: number;
-    duplicate_groups: number;
-  };
-  return {
-    total: Number(row.total),
-    duplicateGroups: Number(row.duplicate_groups),
-  };
-}
-
 async function auditCloud(
   client: ReturnType<typeof createClient>,
 ): Promise<Audit> {
@@ -61,26 +53,6 @@ async function auditCloud(
     total: Number(row.total),
     duplicateGroups: Number(row.duplicate_groups),
   };
-}
-
-function cleanLocal(): { before: Audit; after: Audit } | null {
-  if (!existsSync(localPath)) return null;
-  const db = new Database(localPath);
-  try {
-    const table = db
-      .prepare(
-        "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'user_notification_tokens'",
-      )
-      .get();
-    if (!table) return null;
-    const before = auditLocal(db);
-    db.transaction(() => {
-      for (const statement of statements) db.exec(statement);
-    })();
-    return { before, after: auditLocal(db) };
-  } finally {
-    db.close();
-  }
 }
 
 async function cleanCloud(): Promise<{ before: Audit; after: Audit } | null> {
@@ -105,13 +77,10 @@ async function cleanCloud(): Promise<{ before: Audit; after: Audit } | null> {
 }
 
 async function main(): Promise<void> {
-  const local = cleanLocal();
   const cloud = await cleanCloud();
-  console.log(JSON.stringify({ local, cloud }, null, 2));
-  for (const result of [local, cloud]) {
-    if (result && result.after.duplicateGroups !== 0) {
-      throw new Error("notificationTokenCardinalityCleanupFailed");
-    }
+  console.log(JSON.stringify({ cloud }, null, 2));
+  if (cloud && cloud.after.duplicateGroups !== 0) {
+    throw new Error("notificationTokenCardinalityCleanupFailed");
   }
 }
 

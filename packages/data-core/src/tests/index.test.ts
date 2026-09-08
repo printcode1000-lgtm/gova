@@ -79,8 +79,6 @@ const EXPECTED_DOORS = [
   './account-deletion',
   './advertisements',
   './auth',
-  './data-health',
-  './dev-cloud-backup',
   './feature-flags',
   './follow',
   './marketplace-orders',
@@ -156,7 +154,7 @@ for (const target of doorTargets) {
   assert.ok(
     !target.includes('/src/core/database/'),
     `A door points into src/core/database (${target}). drizzle-orm, @libsql/client and ` +
-      'better-sqlite3 are reachable only from inside this package, and that is the whole seal.',
+      '@libsql/client are reachable only from inside this package, and that is the whole seal.',
   );
 }
 
@@ -219,7 +217,7 @@ for (const file of browserClosure) {
         'up in the shipped web bundle.',
     );
     assert.ok(
-      !['drizzle-orm', 'better-sqlite3', '@libsql/client'].includes(specifier) &&
+      !['drizzle-orm', '@libsql/client'].includes(specifier) &&
         !specifier.startsWith('drizzle-orm/') &&
         !specifier.startsWith('@libsql/'),
       `The browser door reaches a server database driver through ${file} (${specifier}).`,
@@ -289,13 +287,8 @@ const ALLOWED_APP_EDGES = new Set<string>([
  * `@asol/orders-core`, which is a layer-1 → layer-1 edge rather than knowledge of the app.
  */
 const DECLARED_PACKAGE_DOORS = new Set([
-  // The database adapter implements backup-core's port without giving backup-core a data driver.
-  '@asol/backup-core',
   // Persistence DTO boundaries assert camelCase without changing keys.
   '@asol/api-contract-core',
-  // Shared cleanup vocabulary and policy. The runtime fact is supplied by a local adapter.
-  '@asol/data-health-core',
-  '@asol/data-health-core/server',
   // Advertisement feature contracts now live in sealed UI-core packages.
   '@asol/hero-slider-core',
   '@asol/trending-ribbon-core',
@@ -310,8 +303,6 @@ const DECLARED_PACKAGE_DOORS = new Set([
   // canonical spelling the account identity uses.
   '@asol/auth-core/phone',
   '@asol/auth-core/server',
-  '@asol/dev-core',
-  '@asol/dev-core/server',
   '@asol/notifications-core',
   '@asol/ota-core',
   '@asol/product-core',

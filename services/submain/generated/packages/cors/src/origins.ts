@@ -6,10 +6,16 @@ export const ANY_ORIGIN = '*';
 /**
  * The origins a browser speaks from when no allow-list is configured.
  *
- * Three of the six are not web pages at all: a Capacitor WebView reports `capacitor://localhost`
+ * Three of them are not web pages at all: a Capacitor WebView reports `capacitor://localhost`
  * on iOS and `https://localhost` on Android, and an Ionic shell reports `ionic://localhost`. A
  * development default that lists only `http://localhost:3001` therefore locks out every native
  * build on the developer's own machine.
+ *
+ * `http://192.168.1.2:3001` is the LAN address `next.config.ts` already declares in
+ * `allowedDevOrigins` so a phone on the same network can open the dev server. Since Development
+ * addresses the deployed Business APIs and R2 like a released bundle, every one of these calls is
+ * cross-origin — LAN preview stops working entirely if that origin is not allowed, so it is part
+ * of the supported Development-origin contract rather than an afterthought.
  *
  * This is a *development* default and nothing else. Production surfaces state their origins
  * explicitly through `ASOL_CORS_ORIGINS`; see `corsOriginsFromEnv`.
@@ -17,6 +23,7 @@ export const ANY_ORIGIN = '*';
 export const DEVELOPMENT_ORIGINS: readonly string[] = [
   'http://localhost:3001',
   'http://127.0.0.1:3001',
+  'http://192.168.1.2:3001',
   'capacitor://localhost',
   'https://localhost',
   'http://localhost',

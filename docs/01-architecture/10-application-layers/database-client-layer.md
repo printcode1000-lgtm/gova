@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Lowest application data layer — connection management, shard routing, driver invocation for SQLite and Turso.
+Lowest application data layer — connection management, shard routing, and driver invocation for Turso/libSQL, in every runtime.
 
 ## Scope
 
@@ -17,7 +17,7 @@ Inside `@asol/data-core` only (`packages/data-core/src/core/database/**`, provis
 
 ## May import
 
-- `better-sqlite3`, `@libsql/client`, `drizzle-orm` (registered vendor owner)
+- `@libsql/client`, `drizzle-orm` (registered vendor owner)
 - Provisioning config from `@asol/data-core/provisioning`
 - Runtime policy modules
 

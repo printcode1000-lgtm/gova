@@ -33,14 +33,6 @@ export const PROFILE_SHARDS = {
   "system-ops": [
     "system_logs",
     "control_release_state",
-    "data_health_runs",
-    "data_health_findings",
-    "data_health_cleanup_plans",
-    "data_health_cleanup_audit",
-    "data_health_quarantine",
-    "data_health_locks",
-    "data_health_order_purge_plans",
-    "data_health_storage_deletion_tasks",
   ],
 } as const;
 
@@ -127,8 +119,6 @@ export const MARKETPLACE_ORDER_SHARD_DATABASE_NAMES = Object.keys(
   MARKETPLACE_ORDER_SHARDS,
 ) as MarketplaceOrderShardName[];
 export const DATABASE_SHARD_NAMES = Object.keys(DATABASE_SHARDS) as DatabaseShardName[];
-
-export { sqliteFileNameForShard } from "@asol/dev-core";
 
 export function envPrefixForShard(databaseName: DatabaseShardName): string {
   return databaseName.toUpperCase().replace(/-/g, "_");

@@ -8,6 +8,23 @@ if (existsSync(".env.local")) {
   dotenv.config({ path: ".env.local" });
 }
 
+/**
+ * Compares the repository's desired schema with every Turso database, and — only
+ * when asked — applies the additive DDL that closes the gap.
+ *
+ * `--verify` is the read-only mode a generic build and a developer machine run:
+ * it sends no DDL and reports what is missing. Applying belongs to the release
+ * preflight, which is a step someone runs deliberately. Splitting the two is
+ * what stops `npm run build` from being able to change a production database.
+ *
+ * There is no local database to fall back on. Missing credentials skip a
+ * database on a developer machine and fail the run in CI or a release; they
+ * never turn into a comparison against something local.
+ */
+function verifyOnlyRequested(argv: readonly string[] = process.argv): boolean {
+  return argv.includes("--verify");
+}
+
 function schemaSyncRequiresCredentials(): boolean {
   return (
     process.env.CI === "true" ||
@@ -18,37 +35,33 @@ function schemaSyncRequiresCredentials(): boolean {
 
 async function main() {
   const requireCredentials = schemaSyncRequiresCredentials();
-  const removeExtraObjects = process.env.ASOL_SCHEMA_SYNC_EXACT === "true";
+  const verifyOnly = verifyOnlyRequested();
+  const removeExtraObjects = !verifyOnly && process.env.ASOL_SCHEMA_SYNC_EXACT === "true";
   const reports = await runAllSchemaSyncs({
     skipIfMissingCredentials: !requireCredentials,
     removeExtraObjects,
+    verifyOnly,
   });
-  const flatReports = {
-    users: reports.users,
-    advertisements: reports.advertisements,
-    product: reports.product,
-    notifications: reports.notifications,
-    ...reports.shards,
-  };
 
   const skipped: Array<{ label: string; reason: string }> = [];
 
-  for (const [label, report] of Object.entries(flatReports)) {
+  for (const [label, report] of Object.entries(reports)) {
     if (report.skipped) {
       skipped.push({ label, reason: report.skipReason ?? "unknown" });
-      console.log(`${label} schema sync skipped: ${report.skipReason}`);
+      console.log(`${label} schema ${verifyOnly ? "verification" : "sync"} skipped: ${report.skipReason}`);
       continue;
     }
 
-    console.log(`${label} schema synchronization completed`);
-    console.log(`   SQLite version : ${report.sqliteSchemaVersion}`);
-    console.log(`   Turso before   : ${report.tursoSchemaVersionBefore}`);
-    console.log(`   Turso after    : ${report.tursoSchemaVersionAfter}`);
-    console.log(`   Operations     : ${report.operations.length}`);
-    console.log(`   Exact cleanup  : ${removeExtraObjects ? "enabled" : "disabled"}`);
-    console.log(`   Columns added  : ${report.columnsAdded}`);
-    console.log(`   Indexes added  : ${report.indexesAdded}`);
-    console.log(`   Duration       : ${report.durationMs}ms`);
+    console.log(`${label} schema ${verifyOnly ? "verification" : "synchronization"} completed`);
+    console.log(`   Desired version : ${report.desiredSchemaVersion}`);
+    console.log(`   Turso before    : ${report.tursoSchemaVersionBefore}`);
+    console.log(`   Turso after     : ${report.tursoSchemaVersionAfter}`);
+    console.log(`   Operations      : ${report.operations.length}`);
+    console.log(`   Mode            : ${verifyOnly ? "read-only verification" : "apply"}`);
+    console.log(`   Exact cleanup   : ${removeExtraObjects ? "enabled" : "disabled"}`);
+    console.log(`   Columns added   : ${report.columnsAdded}`);
+    console.log(`   Indexes added   : ${report.indexesAdded}`);
+    console.log(`   Duration        : ${report.durationMs}ms`);
 
     if (report.warnings.length > 0) {
       console.log(`${label} warnings:`);
@@ -60,7 +73,7 @@ async function main() {
 
   if (requireCredentials && skipped.length > 0) {
     throw new Error(
-      `Schema sync refused to finish with ${skipped.length} skipped database(s): ` +
+      `Schema ${verifyOnly ? "verification" : "sync"} refused to finish with ${skipped.length} skipped database(s): ` +
         skipped.map((entry) => `${entry.label} (${entry.reason})`).join("; "),
     );
   }
@@ -68,6 +81,7 @@ async function main() {
 
 export const __testables = {
   schemaSyncRequiresCredentials,
+  verifyOnlyRequested,
 };
 
 const invokedDirectly = process.argv[1]?.includes("schema-sync");

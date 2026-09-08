@@ -1,15 +1,60 @@
+/**
+ * The neutral schema model provisioning compares in both directions.
+ *
+ * One `DatabaseSchema` describes exactly one logical Turso database. The same
+ * shape is produced by a repository-owned desired manifest and by reading a live
+ * Turso database back, which is what lets the diff be a comparison rather than a
+ * translation.
+ *
+ * It models what a difference can be *repaired* by, not only what a difference
+ * looks like. A primary key carries its ordinal so a composite key compares
+ * exactly; foreign keys, CHECK constraints, `AUTOINCREMENT` and inline UNIQUE
+ * are named separately from the CREATE text because raw SQL equality is fragile
+ * — an added column arrives quoted differently from the original statement, and
+ * a diff that reads only the text reports drift that is not there while missing
+ * a constraint that genuinely differs.
+ */
+
 export interface ColumnInfo {
   name: string;
   type: string;
   notNull: boolean;
   defaultValue: string | null;
-  primaryKey: boolean;
+  /**
+   * 1-based position within the primary key; `0` when the column is not part of
+   * it. A boolean cannot distinguish `PRIMARY KEY (a, b)` from `(b, a)`, and the
+   * two are different tables.
+   */
+  primaryKeyPosition: number;
+}
+
+export interface ForeignKeySchema {
+  columns: string[];
+  referencesTable: string;
+  referencesColumns: string[];
+  onUpdate: string;
+  onDelete: string;
+}
+
+export interface TableConstraints {
+  /** Normalized CHECK expressions declared on the table. */
+  checks: string[];
+  /** `INTEGER PRIMARY KEY AUTOINCREMENT` — a rowid allocation guarantee, not decoration. */
+  autoIncrement: boolean;
+  /**
+   * Column tuples made unique by a table constraint rather than a named index.
+   * SQLite backs these with an auto-index whose `sqlite_master.sql` is null, so
+   * they are invisible to any check that reads only index DDL.
+   */
+  uniqueConstraints: string[][];
 }
 
 export interface TableSchema {
   name: string;
   createSql: string;
   columns: ColumnInfo[];
+  foreignKeys: ForeignKeySchema[];
+  constraints: TableConstraints;
 }
 
 export interface IndexSchema {
@@ -17,6 +62,9 @@ export interface IndexSchema {
   tableName: string;
   sql: string;
   unique: boolean;
+  columns: string[];
+  /** `WHERE` predicate of a partial index; `null` for a full index. */
+  where: string | null;
 }
 
 export interface ViewSchema {
@@ -55,13 +103,37 @@ export interface SchemaDiffOperation {
   tableName?: string;
 }
 
+/**
+ * A difference on an existing table that additive DDL cannot repair.
+ *
+ * SQLite cannot alter a primary key, a foreign key, a CHECK constraint or a
+ * column default in place; repairing one means rebuilding the table and moving
+ * its rows. That is a migration someone writes and reviews, so provisioning
+ * reports it instead of attempting it — and never counts the table as in parity.
+ */
+export interface SchemaMigrationRequirement {
+  tableName: string;
+  kind:
+    | 'PRIMARY_KEY'
+    | 'FOREIGN_KEY'
+    | 'CHECK_CONSTRAINT'
+    | 'UNIQUE_CONSTRAINT'
+    | 'COLUMN_DEFAULT'
+    | 'COLUMN_TYPE'
+    | 'COLUMN_NOT_NULL'
+    | 'AUTOINCREMENT';
+  description: string;
+}
+
 export interface SchemaSyncReport {
   executedAt: string;
   durationMs: number;
-  sqliteSchemaVersion: string;
+  /** Fingerprint of the repository-owned desired manifest for this database. */
+  desiredSchemaVersion: string;
   tursoSchemaVersionBefore: string;
   tursoSchemaVersionAfter: string;
   operations: SchemaDiffOperation[];
+  migrationsRequired: SchemaMigrationRequirement[];
   tablesModified: number;
   columnsAdded: number;
   indexesAdded: number;

@@ -10,20 +10,20 @@
 | Kind | Count |
 |---|---:|
 | artifact | 4 |
-| command | 289 |
+| command | 277 |
 | config | 12 |
-| document | 278 |
+| document | 276 |
 | domain | 10 |
-| environment-key | 242 |
+| environment-key | 238 |
 | external-dependency | 107 |
-| feature | 45 |
-| package | 48 |
-| route | 176 |
+| feature | 43 |
+| package | 46 |
+| route | 151 |
 | runtime | 7 |
-| script | 149 |
+| script | 147 |
 | service | 7 |
-| source | 2263 |
-| test | 254 |
+| source | 2130 |
+| test | 248 |
 
 ## Domains
 
@@ -49,14 +49,12 @@
 | @asol/api-contract-core | `packages/api-contract-core` | Application-owned JSON transport naming and validation contracts; Layer: capability; Public exports: ., ./server |
 | @asol/architecture-core | `packages/architecture-core` | Repository architecture contracts and static enforcement; Layer: enforcement; Public exports: . |
 | @asol/auth-core | `packages/auth-core` | Authentication and session identity; Layer: capability; Public exports: ., ./phone, ./server, ./session, ./super-admin |
-| @asol/backup-core | `packages/backup-core` | Backup orchestration over storage ports; Layer: capability; Public exports: ., ./server |
 | @asol/branding-core | `packages/branding-core` | App icon identity and generated branding assets; Layer: capability; Public exports: ., ./tooling |
 | @asol/catalog-core | `packages/catalog-core` | Category catalog domain; Layer: capability; Public exports: ., ./server |
 | @asol/control-composition | `packages/control-composition` | Composition root for the control account; Layer: composition; Public exports: . |
 | @asol/cors | `packages/cors` | Cross-origin (CORS) policy, headers, and preflight; Layer: capability; Public exports: . |
-| @asol/data-core | `packages/data-core` | Database access, sharding, and domain repositories; Layer: capability; Public exports: ., ./account-deletion, ./advertisements, ./auth, ./auth/entities, ./browser, ./composition, ./control-ota, ./control-release-state, ./control-system-logs, ./data-health, ./dev-cloud-backup, ./feature-flags, ./follow, ./follow/entities, ./marketplace-orders, ./notifications, ./ota, ./ota-runtime, ./password-recovery, ./pharmacy-profile-catalog, ./pharmacy-profile-catalog/entities, ./product, ./product-search, ./product-search-fields, ./product-search/entities, ./product/entities, ./profile, ./profile/entities, ./provisioning, ./runtime-config, ./seller-discounts, ./seller-discounts/entities, ./super-admin, ./system-logs, ./telemetry, ./tooling |
-| @asol/data-health-core | `packages/data-health-core` | Schema health and data integrity checks; Layer: capability; Public exports: ., ./server |
-| @asol/dev-core | `packages/dev-core` | Developer-only tooling surfaces; Layer: capability; Public exports: ., ./server |
+| @asol/data-core | `packages/data-core` | Database access, sharding, and domain repositories; Layer: capability; Public exports: ., ./account-deletion, ./advertisements, ./auth, ./auth/entities, ./browser, ./composition, ./control-ota, ./control-release-state, ./control-system-logs, ./feature-flags, ./follow, ./follow/entities, ./marketplace-orders, ./notifications, ./ota, ./ota-runtime, ./password-recovery, ./pharmacy-profile-catalog, ./pharmacy-profile-catalog/entities, ./product, ./product-search, ./product-search-fields, ./product-search/entities, ./product/entities, ./profile, ./profile/entities, ./provisioning, ./runtime-config, ./seller-discounts, ./seller-discounts/entities, ./super-admin, ./system-logs, ./telemetry, ./tooling |
+| @asol/dev-core | `packages/dev-core` | Development-runtime guards for developer-only tooling; Layer: capability; Public exports: ., ./server |
 | @asol/env-core | `packages/env-core` | Environment variable reading rules; Layer: capability; Public exports: ., ./files, ./process |
 | @asol/favorites-core | `packages/favorites-core` | Device-local favorites state, card adapters, and the favorite control; Layer: capability; Public exports: ., ./ui |
 | @asol/featured-marquee-core | `packages/featured-marquee-core` | Featured marquee UI capability; Layer: capability; Public exports: ., ./server |
@@ -65,7 +63,7 @@
 | @asol/gova-deployment-core | `packages/gova-deployment-core` | The gova deployment build view and its artifact gate; Layer: capability; Public exports: . |
 | @asol/hero-slider-core | `packages/hero-slider-core` | Hero slider UI capability; Layer: capability; Public exports: ., ./server |
 | @asol/map-core | `packages/map-core` | MapLibre map capability; Layer: capability; Public exports: . |
-| @asol/native-core | `packages/native-core` | Capacitor / native device capabilities; Layer: capability; Public exports: ., ./capability-keys, ./platform-globals, ./scripts/android-build-preflight, ./scripts/validate-android-r8-policy |
+| @asol/native-core | `packages/native-core` | Capacitor / native device capabilities; Layer: capability; Public exports: ., ./capability-keys, ./platform-defaults, ./platform-globals, ./scripts/android-build-preflight, ./scripts/validate-android-r8-policy |
 | @asol/notifications-composition | `packages/notifications-composition` | Composition root for the notifications account; Layer: composition; Public exports: . |
 | @asol/notifications-core | `packages/notifications-core` | Push notification delivery (Web Push, FCM HTTP v1, APNs); Layer: capability; Public exports: ., ./builder, ./grant-collector, ./grant-envelope, ./grants, ./providers, ./server |
 | @asol/observability-core | `packages/observability-core` | Observability and telemetry ports; Layer: capability; Public exports: ., ./dev-trace, ./server |
@@ -106,8 +104,6 @@
 | categories | `src/features/categories` |  |
 | contact | `src/features/contact` |  |
 | data | `src/features/data` |  |
-| data-health | `src/features/data-health` |  |
-| dev-cloud-backup | `src/features/dev-cloud-backup` |  |
 | dev-tools | `src/features/dev-tools` |  |
 | favorites | `src/features/favorites` |  |
 | feature-flags | `src/features/feature-flags` |  |

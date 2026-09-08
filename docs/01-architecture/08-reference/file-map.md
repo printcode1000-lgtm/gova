@@ -57,8 +57,6 @@ packages/data-core/                  # @asol/data-core — every database, seale
     `-- tests/                       # contract + schema parity, gate: test:data-core
 
 public/sync_data/
-|-- sync_sqlite/                     # local databases and shards (@asol/dev-core paths)
-|-- sync_file/images/                # local image files (@asol/dev-core paths)
 |-- schema-sync-report.json
 `-- *-schema-sync-report.json
 
@@ -69,7 +67,6 @@ services/
 |   |-- src/app/api/notifications/send/  # the only fan-out route in the system
 |   |-- src/app/api/health/
 |   |-- generated/                   # mirrored from src/, git-ignored
-|   |-- stubs/better-sqlite3.js
 |   |-- package.json                 # its own dependencies
 |   `-- .vercelignore                # forces generated/ into the upload
 |-- products/                        # independent module, own Vercel account

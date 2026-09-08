@@ -1,10 +1,8 @@
 import { existsSync } from "node:fs";
 
 import { createClient } from "@libsql/client";
-import Database from "better-sqlite3";
 import dotenv from "dotenv";
 
-import { PRIMARY_SQLITE_DB_PATH } from "../core/database/environment";
 import { loadTursoCredentialsFromEnv } from "../provisioning/core/turso-provisioner";
 
 process.env.ASOL_PROVISIONING = "true";
@@ -19,20 +17,6 @@ const DROP_TABLES = [
   "data_health_factory_reset_locks",
   "data_health_factory_reset_plans",
 ];
-
-function dropLocal(): void {
-  if (!existsSync(PRIMARY_SQLITE_DB_PATH)) {
-    console.log(`SQLite skipped: ${PRIMARY_SQLITE_DB_PATH} does not exist`);
-    return;
-  }
-  const db = new Database(PRIMARY_SQLITE_DB_PATH);
-  try {
-    for (const table of DROP_TABLES) db.exec(`DROP TABLE IF EXISTS ${table}`);
-  } finally {
-    db.close();
-  }
-  console.log(`SQLite factory reset tables dropped: ${PRIMARY_SQLITE_DB_PATH}`);
-}
 
 async function dropCloud(): Promise<void> {
   const credentials = loadTursoCredentialsFromEnv();
@@ -51,9 +35,19 @@ async function dropCloud(): Promise<void> {
   console.log("Turso factory reset tables dropped");
 }
 
+/**
+ * Dropping a cloud table is destructive and stays behind an explicit flag.
+ * There is only one copy of these rows now, so `--cloud` is not a second target
+ * — it is the confirmation that the caller means it.
+ */
 async function main() {
-  dropLocal();
-  if (process.argv.includes("--cloud")) await dropCloud();
+  if (!process.argv.includes("--cloud")) {
+    console.log(
+      "Refusing to drop anything without --cloud. This removes tables from the live users database.",
+    );
+    return;
+  }
+  await dropCloud();
 }
 
 main().catch((error) => {

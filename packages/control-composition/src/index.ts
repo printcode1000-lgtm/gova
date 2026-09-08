@@ -5,8 +5,8 @@ import { registerDataCoreRuntimeConfigPorts } from '@/features/data/ports/data-c
  *
  * Control is an operational runtime, not a workload, but it needs the one port
  * every isolated deployment needs and none inherits: `@asol/data-core`'s
- * runtime-config port. `forceRemoteDataSource` because control is Turso-only
- * and ships no SQLite driver.
+ * runtime-config port. There is one server database backend, so the port takes
+ * no options and control registers exactly what every other deployment does.
  *
  * Why this function being empty broke every data-touching control route while
  * health stayed 200 and the deployment reported READY:
@@ -17,5 +17,5 @@ import { registerDataCoreRuntimeConfigPorts } from '@/features/data/ports/data-c
  * storage transport in the mirrored `features/storage/ports`.
  */
 export async function registerControlServerPorts(): Promise<void> {
-  registerDataCoreRuntimeConfigPorts({ forceRemoteDataSource: true });
+  registerDataCoreRuntimeConfigPorts();
 }

@@ -19,7 +19,6 @@ const STATIC_ALLOWED_PROVIDERS = new Set([
   'CloudflareR2',
   'CloudflareR2Products',
   'GoogleDrive',
-  'LocalStorage',
 ]);
 
 const DYNAMIC_R2_PROVIDER = /^CloudflareR2_([a-z0-9-]+)$/;
@@ -91,15 +90,6 @@ function validateProfile(profile: StorageProfile, seenIds: Set<string>): void {
     throw new Error(
       `Profile "${profile.id}": folder must start with "${STORAGE_IMAGES_ROOT}/": ${profile.folder}`,
     );
-  }
-
-  if (profile.cloudFolder !== undefined) {
-    const cloudFolder = profile.cloudFolder.replace(/^\/+|\/+$/g, '');
-    if (!cloudFolder.startsWith(`${STORAGE_IMAGES_ROOT}/`)) {
-      throw new Error(
-        `Profile "${profile.id}": cloudFolder must start with "${STORAGE_IMAGES_ROOT}/": ${profile.cloudFolder}`,
-      );
-    }
   }
 }
 

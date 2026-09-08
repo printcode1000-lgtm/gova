@@ -5,7 +5,7 @@
 
 # Dead Docs Report
 
-Findings: **64**
+Findings: **71**
 
 | Kind | Source | Reference | Detail |
 |---|---|---|---|
@@ -23,6 +23,7 @@ Findings: **64**
 | `missing-file` | `docs/01-architecture/08-reference/application-feature-catalog.md` | `src/modules/` | documentation mentions a missing repository path |
 | `missing-file` | `docs/01-architecture/08-reference/application-feature-catalog.md` | `src/theme/` | documentation mentions a missing repository path |
 | `missing-file` | `docs/01-architecture/09-decisions/ADR-0001-consolidation-2026-08.md` | `scripts/lib/` | documentation mentions a missing repository path |
+| `missing-file` | `docs/01-architecture/09-decisions/ADR-0002-capability-consolidation-follow-up.md` | `packages/data-health-core/` | documentation mentions a missing repository path |
 | `missing-file` | `docs/01-architecture/09-decisions/ADR-0002-capability-consolidation-follow-up.md` | `src/modules/` | documentation mentions a missing repository path |
 | `missing-file` | `docs/01-architecture/09-decisions/ADR-0007-application-feature-consolidation.md` | `src/components/` | documentation mentions a missing repository path |
 | `missing-file` | `docs/01-architecture/09-decisions/ADR-0007-application-feature-consolidation.md` | `src/hooks/` | documentation mentions a missing repository path |
@@ -63,13 +64,19 @@ Findings: **64**
 | `missing-file` | `docs/05-platform-features/sealed-packages/data-core-module.md` | `src/ports/product-search-fields.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/sealed-packages/data-core-module.md` | `src/ports/runtime-config.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/sealed-packages/data-core-module.md` | `src/ports/telemetry.ts` | documentation mentions a missing repository path |
+| `missing-file` | `docs/05-platform-features/sealed-packages/data-core-module.md` | `src/provisioning/desired-schema/` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/sealed-packages/observability-core-module.md` | `src/core/monitor/` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/sealed-packages/orders-core-module.md` | `src/ports/index.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/sealed-packages/ota-core-module.md` | `src/index.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/sealed-packages/service-runtime-core-module.md` | `src/app/lib/http.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/service-bridge-module.md` | `src/features/service-bridge/` | documentation mentions a missing repository path |
-| `missing-file` | `docs/06-super-admin-and-operations/data-health-module.md` | `packages/data-health-core/src/domain/source-registry.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/07-mobile-and-release/release-and-secrets.md` | `scripts/lib/` | documentation mentions a missing repository path |
+| `missing-file` | `docs/08-troubleshooting/problems/page-save-read-marker-crlf-windows.md` | `src/features/data-health/presentation/use-data-health-page.ts` | documentation mentions a missing repository path |
+| `missing-file` | `docs/08-troubleshooting/problems/sqlite-pragma-run-empty-product.md` | `packages/data-core/src/core/database/sqlite-statement-execution.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/09-agent-knowledge/local-agent-runtime.md` | `scripts/local-agent-watch.ts` | documentation mentions a missing repository path |
 | `missing-package` | `docs/01-architecture/04-composition/dependency-wiring.md` | `@asol/my-feature-core` | documentation mentions unknown package @asol/my-feature-core |
+| `missing-package` | `docs/01-architecture/09-decisions/ADR-0002-capability-consolidation-follow-up.md` | `@asol/backup-core` | documentation mentions unknown package @asol/backup-core |
+| `missing-package` | `docs/01-architecture/09-decisions/ADR-0002-capability-consolidation-follow-up.md` | `@asol/data-health-core` | documentation mentions unknown package @asol/data-health-core |
+| `missing-package` | `docs/05-platform-features/sealed-packages/data-core-module.md` | `@asol/backup-core` | documentation mentions unknown package @asol/backup-core |
+| `missing-package` | `docs/05-platform-features/sealed-packages/data-core-module.md` | `@asol/data-health-core` | documentation mentions unknown package @asol/data-health-core |
 | `missing-package` | `docs/09-agent-knowledge/local-agent-runtime.md` | `@asol/local-agent-core` | documentation mentions unknown package @asol/local-agent-core |

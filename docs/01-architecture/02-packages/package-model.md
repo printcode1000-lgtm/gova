@@ -44,7 +44,7 @@ Some capabilities are **mandatory gateways** — bypassing them is a build failu
 
 | Gateway | Owner | Why mandatory |
 |---|---|---|
-| Database | `@asol/data-core` | Sole owner of Drizzle, SQLite, Turso |
+| Database | `@asol/data-core` | Sole owner of Drizzle and Turso/libSQL |
 | Object storage | `@asol/storage-core` | Sole owner of R2/S3 SDK |
 | Native / Capacitor | `@asol/native-core` | Sole owner of every Capacitor plugin |
 | Page-authored writes | `@asol/page-save-core` | Single-door gateway for UI persistence |

@@ -46,7 +46,7 @@ single wildcard silently defeated the `native-core` seal once and must never rea
 
 ### `src/core/database/` has no door
 
-This is the part worth keeping. `drizzle-orm`, `better-sqlite3`, and `@libsql/client` are
+This is the part worth keeping. `drizzle-orm` and `@libsql/client` are
 imported only inside that folder, and **no entry in the `exports` map leads to it**. Turso
 adapters load through `drizzle-libsql.server.ts` (a static `drizzle-orm/libsql` import) so
 Next.js file tracing ships the adapter on Vercel; lazy `nodeRequire('drizzle-orm/libsql')`
@@ -107,9 +107,11 @@ or shrink**, and the test fails when a new `@/` edge appears.
 
 ## Package-to-package edges
 
-`@asol/data-core` imports `@asol/dev-core` (local database paths), `@asol/storage-core` (public
-URL building), `@asol/system-logs-core/server`, `@asol/product-core`, `@asol/data-health-core`
-(cleanup vocabulary/policy), and `@asol/backup-core` (archive contract). Three packages now
+`@asol/data-core` imports `@asol/storage-core` (public URL building),
+`@asol/system-logs-core/server`, and `@asol/product-core`. Its edges to
+`@asol/dev-core` (local database paths), `@asol/data-health-core` and
+`@asol/backup-core` are gone with the local backend and the two removed
+capabilities. Three packages now
 import a `data-core` door instead of an application path, and each pins it in its own contract
 test as a **package door** rather than an app edge:
 
@@ -126,21 +128,27 @@ gone, which is what took the budget from 41 to 34.
 `ota-core`'s app-edge budget dropped from 5 to 3 as a result: two of its five declared edges
 were data-access paths and are now package doors.
 
-## Local schema and cloud schema cannot diverge
+## Desired schema and cloud schema cannot diverge
 
-The design source of truth is local: the SQLite files and the migrations that build them.
-Turso's schema is *derived* from them by `db:schema:sync:release`, which `deploy:all` runs in
-preflight before any build, push, or git write. Four things make a gap between the two
-impossible rather than unlikely, and each closes a different way it could open.
+The design source of truth is the desired-schema manifests under
+`src/provisioning/desired-schema/` — one per logical database, ordinary TypeScript this build
+already contains. Turso's schema is *derived* from them by `db:schema:sync:release`, which
+`deploy:all` runs in preflight before any build, push, or git write. Four things make a gap
+between the two impossible rather than unlikely, and each closes a different way it could open.
+
+The manifests replaced a local SQLite file per database. That arrangement made the schema source
+something a developer's machine held rather than something the repository stated: a fresh clone
+had none of it, so the offline half of this contract silently checked nothing on exactly the
+machine that ships the code.
 
 **1. The release refuses to skip.** `ASOL_SCHEMA_SYNC_REQUIRED=true` (set by
 `db:schema:sync:release`, and implied by `CI` and `VERCEL`) turns a missing credential from a
 silent skip into a failure that names every database it could not reach. A partially configured
 environment cannot produce a green release.
 
-**2. Shard coverage is derived, never listed.** `runAllSchemaSyncs` iterates
-`DATABASE_SHARD_NAMES`, so a shard is synced the moment it is declared. The four standalone
-databases are hand-listed, and the parity test fails if one of them is routed but not synced.
+**2. Shard coverage is derived, never listed.** `runAllSchemaSyncs` iterates the manifest
+registry, and the registry throws at module load if a declared shard has no manifest — so a
+shard cannot be added without something to provision for it.
 
 **3. The sync verifies its own result.** After applying the DDL it re-reads the Turso schema and
 re-runs the diff. Any remaining operation fails the release with the list. This closes the real
@@ -149,19 +157,22 @@ report intent — and the `already exists` branch deliberately swallows a failur
 sent" and "the cloud matches" are different claims, and only the second one is now asserted.
 
 **4. The offline half runs on every build.** `packages/data-core/src/tests/schema-parity.test.ts`
-checks what needs no network: every table a shard claims is created by a migration, no table is
-claimed by two shards, the table→shard lookup agrees with the shard map it derives from, and no
-two shards resolve to the same `*_DATABASE_URL` prefix. Every drift the live sync could discover
-starts in these files, because the cloud schema is produced from them.
+checks what needs no network: every logical database has exactly one manifest, every routed table
+is declared by its owner and by nobody else, no foreign key crosses a database boundary Turso
+cannot enforce, the order guard triggers survived the shard split, and constraint detail —
+composite-key ordinals, CHECK constraints, inline uniqueness, partial-index predicates,
+`AUTOINCREMENT` — is captured rather than silently dropped. Every drift the live sync could
+discover starts in these manifests, because the cloud schema is produced from them.
 
 Deliberately **not** duplicated: the live comparison happens once, in `deploy:all`. Running it a
 second time inside a test chain would either apply DDL twice or make a green build depend on a
 live database and a credential — the "local green is not CI green" failure this repository has
 already paid for three times.
 
-`npm run db:verify:sqlite` and `npm run db:verify:turso` expose the two read-only shard
-verifiers for manual inspection. They were unreachable executables before this migration; they
-are not in any chain, because the sync above is the authority.
+`npm run db:schema:verify` and `npm run db:verify:turso` are the read-only comparisons. The
+first is what `npm run build` runs — a generic build proves the code matches the schema it
+expects and must never be the thing that changes a cloud database; the second is for manual
+shard inspection.
 
 ## The gate
 

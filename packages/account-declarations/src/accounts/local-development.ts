@@ -1,11 +1,17 @@
 /**
- * Where each runtime listens during local development.
+ * Where each runtime listens under the explicit service-development harness.
  *
- * Local development mirrors the production topology exactly: eight processes on
- * eight origins, and the client bridge resolves an owner's origin here the same
- * way it resolves a public one in production. The alternative — one process with
- * a fallback for everything unowned — is what let routing bugs survive until
- * deployment, because the case that broke was the one development never ran.
+ * This is `dev:distributed` and nothing else: the eight-process topology a
+ * developer starts when the change under test is in a *service's own* code and
+ * has to be exercised before it is deployed.
+ *
+ * It is not how ordinary `npm run dev` reaches application data. That addresses
+ * the deployed accounts by canonical declaration, exactly as Static, Android and
+ * iOS do, so the transport a developer exercises is the transport a user gets.
+ * These localhost origins are therefore an opt-in override a developer types,
+ * never a fallback anything reaches for on its own — and every runtime started
+ * here is Turso/R2-only like any other, so "local ports" describes the process
+ * addresses and never a local data backend.
  *
  * Pure data. Nothing in this file may import anything.
  */
@@ -31,10 +37,13 @@ export function localDevelopmentOrigin(account: LocalDevelopmentAccount): string
 }
 
 /**
- * The public-origin environment gova's client bridge reads.
+ * The public-origin environment gova's client bridge reads under the harness.
  *
  * gova is the only runtime that needs these: it is where the browser loads the
  * application from, and every business call it makes is addressed to an owner.
+ *
+ * Only `dev:distributed` sets them. Ordinary Development leaves them unset and
+ * resolves the canonical deployed origins instead.
  */
 export function localDevelopmentPublicEnv(): Record<string, string> {
   return {

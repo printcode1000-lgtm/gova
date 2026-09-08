@@ -67,28 +67,23 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run cors:verify:api-live` | `npx tsx scripts/verify-live-api-cors.ts` |
 | `npm run cors:verify:live` | `npm run cors:verify:api-live && npm run r2:verify:cors` |
 | `npm run data-access:sync-public` | `npx tsx scripts/sync-data-access-public-artifacts.ts` |
-| `npm run db:create:product` | `npx tsx packages/data-core/src/tooling/create-product-sqlite-db.ts` |
-| `npm run db:create:profile` | `npx tsx packages/data-core/src/tooling/create-profile-sqlite-db.ts` |
-| `npm run db:create:sqlite` | `npx tsx packages/data-core/src/tooling/create-sqlite-db.ts` |
 | `npm run db:drizzle` | `npx tsx scripts/run-drizzle-kit.ts` |
 | `npm run db:drop:factory-reset` | `npx tsx packages/data-core/src/tooling/drop-factory-reset-tables.ts` |
 | `npm run db:drop:factory-reset:cloud` | `npx tsx packages/data-core/src/tooling/drop-factory-reset-tables.ts --cloud` |
-| `npm run db:ensure` | `npx tsx packages/data-core/src/tooling/ensure-sqlite-databases.ts` |
 | `npm run db:migrate:orders` | `npx tsx packages/data-core/src/tooling/migrate-order-shards.ts` |
 | `npm run db:migrate:phones-e164` | `npx tsx packages/data-core/src/tooling/migrate-phones-to-e164.ts` |
 | `npm run db:migrate:product` | `npx tsx packages/data-core/src/tooling/migrate-product-database.ts` |
 | `npm run db:migrate:product-image-urls` | `npx tsx packages/data-core/src/tooling/strip-product-image-urls.ts` |
 | `npm run db:migrate:profiles` | `npx tsx packages/data-core/src/tooling/migrate-profile-shards.ts` |
-| `npm run db:migrate:users` | `npx tsx packages/data-core/src/tooling/apply-users-migrations.ts` |
+| `npm run db:migrate:system-log-origin` | `npx tsx packages/data-core/src/tooling/migrate-system-log-origin.ts` |
 | `npm run db:provision:turso` | `cross-env ASOL_PROVISIONING=<redacted> npx tsx scripts/provision-turso.ts` |
 | `npm run db:push:vercel-env` | `npx tsx scripts/push-vercel-turso-env.ts` |
 | `npm run db:reset:advertisements` | `npx tsx packages/data-core/src/tooling/reset-advertisements-db.ts` |
 | `npm run db:reset:advertisements:cloud` | `npx tsx packages/data-core/src/tooling/reset-advertisements-db.ts --cloud` |
 | `npm run db:schema:sync` | `cross-env ASOL_PROVISIONING=<redacted> npx tsx scripts/schema-sync.ts` |
 | `npm run db:schema:sync:release` | `cross-env ASOL_PROVISIONING=<redacted> ASOL_SCHEMA_SYNC_REQUIRED=<redacted> npx tsx scripts/schema-sync.ts` |
+| `npm run db:schema:verify` | `cross-env ASOL_PROVISIONING=<redacted> npx tsx scripts/schema-sync.ts --verify` |
 | `npm run db:setup:turso` | `npm run db:schema:sync` |
-| `npm run db:sync:users` | `npx tsx packages/data-core/src/tooling/sync-users-sqlite-to-turso.ts` |
-| `npm run db:verify:sqlite` | `npx tsx packages/data-core/src/tooling/verify-sqlite-shards.ts` |
 | `npm run db:verify:turso` | `npx tsx packages/data-core/src/tooling/verify-turso-shards.ts` |
 | `npm run dependencies:install` | `node scripts/install-compatible-dependencies.mjs` |
 | `npm run dependencies:outdated` | `npx tsx scripts/check-environment-requirements.ts --scenario=all --check-outdated` |
@@ -142,7 +137,6 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run lint` | `eslint .` |
 | `npm run main:deploy` | `npx tsx scripts/deploy-main-app.ts` |
 | `npm run maplibre:sync` | `npx tsx scripts/sync-maplibre-worker.ts` |
-| `npm run notifications:check:local` | `npx tsx scripts/check-localhost-notifications.ts` |
 | `npm run notifications:deploy` | `npx tsx scripts/deploy-service.ts notifications` |
 | `npm run notifications:tokens:dedupe` | `npx tsx packages/data-core/src/tooling/enforce-notification-token-cardinality.ts` |
 | `npm run orders:deploy` | `npx tsx scripts/deploy-service.ts orders` |
@@ -166,7 +160,6 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run products:deploy` | `npx tsx scripts/deploy-service.ts products` |
 | `npm run profiles:deploy` | `npx tsx scripts/deploy-service.ts profiles` |
 | `npm run provision:mobile-push` | `npx tsx scripts/provision-mobile-push-credentials.ts` |
-| `npm run r2:migrate:folders` | `npx tsx packages/data-core/src/tooling/migrate-r2-cloud-folders.ts` |
 | `npm run r2:migrate:images` | `npx tsx packages/data-core/src/tooling/migrate-r2-image-public-url.ts` |
 | `npm run r2:sync:cors` | `npx tsx packages/storage-core/scripts/sync-cors.ts` |
 | `npm run r2:verify:cors` | `npx tsx packages/storage-core/scripts/verify-cors.ts` |
@@ -209,7 +202,6 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:architecture-core` | `npx tsx packages/architecture-core/src/tests/index.test.ts && npx tsx scripts/architecture/application-features-attack.test.ts` |
 | `npm run test:auth-core` | `npx tsx packages/auth-core/src/tests/index.test.ts` |
 | `npm run test:auth-email-uniqueness` | `cross-env NODE_OPTIONS=<redacted> npx tsx packages/data-core/src/domains/auth/tests/email-uniqueness.test.ts` |
-| `npm run test:backup-core` | `cross-env NODE_OPTIONS=<redacted> npx tsx packages/backup-core/src/tests/index.test.ts` |
 | `npm run test:branding-core` | `npm run branding:generate && npx tsx packages/branding-core/src/tests/index.test.ts` |
 | `npm run test:cart-pricing` | `npx tsx src/features/cart/tests/cart-catalogue-pricing.test.ts` |
 | `npm run test:catalog-core` | `npx tsx packages/catalog-core/src/tests/index.test.ts` |
@@ -222,14 +214,11 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:console-command-parity` | `npx tsx src/features/release-commands/tests/console-command-parity.test.ts` |
 | `npm run test:control` | `npx tsx scripts/tests/control-service.test.ts` |
 | `npm run test:cors-core` | `npx tsx packages/cors/src/tests/index.test.ts` |
-| `npm run test:data-core` | `npm run test:data-health-core && npm run test:backup-core && npm run test:sqlite-reconnect && npx tsx packages/data-core/src/tests/index.test.ts && npx tsx packages/data-core/src/tests/schema-parity.test.ts` |
-| `npm run test:data-health` | `npx tsx scripts/test-data-health-environment.ts && cross-env NODE_OPTIONS=<redacted> npx tsx src/features/data-health/tests/development-guard.test.ts && npx tsx packages/data-core/src/domains/data-health/tests/data-health-policy.test.ts && cross-env NODE_OPTIONS=<redacted> npx tsx packages/data-core/src/domains/data-health/tests/order-purge.test.ts` |
-| `npm run test:data-health-core` | `npx tsx packages/data-health-core/src/tests/index.test.ts` |
+| `npm run test:data-core` | `npx tsx packages/data-core/src/tests/index.test.ts && npx tsx packages/data-core/src/tests/schema-parity.test.ts` |
 | `npm run test:delivery-planner` | `npx tsx src/features/cart/tests/multi-seller-delivery-planner.test.ts` |
 | `npm run test:deploy-all-resume` | `npx tsx scripts/tests/deploy-all-resume.test.ts` |
 | `npm run test:deploy-runbook-execution` | `npx tsx scripts/architecture/deploy-runbook-execution.test.ts` |
 | `npm run test:deployment-tools` | `npx tsx scripts/tests/vercel-deployment-monitor.test.ts && npx tsx scripts/tests/run-deployment-npm-script.test.ts && npx tsx scripts/tests/deploy-all.test.ts && npx tsx scripts/tests/deploy-state-revision.test.ts && npm run test:deploy-all-resume && npx tsx scripts/tests/deploy-push.test.ts && npx tsx scripts/tests/main-push-deployment-isolation.test.ts && npx tsx scripts/tests/generic-service-tooling.test.ts && npx tsx scripts/tests/route-ownership-coverage.test.ts && npx tsx scripts/tests/mirror-status-parity.test.ts && npx tsx scripts/tests/service-cors-boundary.test.ts && npx tsx scripts/tests/vercelignore-contract.test.ts && npx tsx scripts/tests/pipeline-coverage.test.ts && npx tsx scripts/tests/github-ci-policy.test.ts && npx tsx scripts/tests/local-agent-related-core-tests.test.ts && npx tsx scripts/tests/vercel-deployment-guards.test.ts && npx tsx scripts/tests/secret-presence-status.test.ts && npx tsx scripts/tests/fastlane-secret-policy.test.ts && npx tsx scripts/tests/expected-deployed-release-marker.test.ts && npm run github:ci-policy && npm run test:local-agent-mode-c` |
-| `npm run test:dev-cloud-backup` | `cross-env NODE_OPTIONS=<redacted> npx tsx src/features/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts` |
 | `npm run test:dev-core` | `npx tsx packages/dev-core/src/tests/index.test.ts` |
 | `npm run test:env-core` | `npx tsx packages/env-core/src/tests/index.test.ts` |
 | `npm run test:favorites-core` | `npx tsx packages/favorites-core/src/tests/index.test.ts` |
@@ -290,7 +279,6 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:sharing` | `npx tsx src/features/sharing/tests/sharing-module.test.ts && npx tsx src/features/qr-code/tests/qr-code-module.test.ts` |
 | `npm run test:shipping-pricing` | `npx tsx src/features/cart/tests/shipping-pricing.test.ts` |
 | `npm run test:signed-token-core` | `npx tsx packages/signed-token-core/src/tests/index.test.ts` |
-| `npm run test:sqlite-reconnect` | `cross-env NODE_OPTIONS=<redacted> npx tsx packages/data-core/src/core/database/tests/cached-sqlite-connection.test.ts` |
 | `npm run test:storage-core` | `npx tsx packages/storage-core/src/tests/index.test.ts` |
 | `npm run test:storage-image-manager-core` | `npx tsx packages/storage-image-manager-core/src/tests/index.test.ts` |
 | `npm run test:store-name-draft` | `npx tsx src/features/profile/tests/store-name-draft.test.ts && npx tsx src/features/profile/tests/profile-edit-navigation.test.ts` |

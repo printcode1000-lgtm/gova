@@ -51,6 +51,10 @@ const REUSABLE_GATE_STEP_PATTERNS: readonly RegExp[] = [
   /^catalog:validate$/,
   /^category:validate$/,
   /^architecture:check$/,
+  // Read-only: it compares the desired-schema manifests with Turso and sends no
+  // DDL. `db:schema:sync` and `db:schema:sync:release` write and are absent by
+  // design.
+  /^db:schema:verify$/,
   /^validate:/,
   /^ios:push:validate$/,
   /^android:[a-z0-9-]+:validate$/,

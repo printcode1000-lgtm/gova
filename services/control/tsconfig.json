@@ -75,12 +75,6 @@
       "@asol/auth-core/super-admin": [
         "./generated/packages/auth-core/src/super-admin.ts"
       ],
-      "@asol/backup-core": [
-        "./generated/packages/backup-core/src/index.ts"
-      ],
-      "@asol/backup-core/server": [
-        "./generated/packages/backup-core/src/server.ts"
-      ],
       "@asol/control-composition": [
         "./generated/packages/control-composition/src/index.ts"
       ],
@@ -119,12 +113,6 @@
       ],
       "@asol/data-core/ota-runtime": [
         "./generated/packages/data-core/src/ota-runtime.ts"
-      ],
-      "@asol/data-core/data-health": [
-        "./generated/packages/data-core/src/domains/data-health/index.server.ts"
-      ],
-      "@asol/data-core/dev-cloud-backup": [
-        "./generated/packages/data-core/src/domains/dev-cloud-backup/index.server.ts"
       ],
       "@asol/data-core/feature-flags": [
         "./generated/packages/data-core/src/domains/feature-flags/index.server.ts"
@@ -197,12 +185,6 @@
       ],
       "@asol/data-core/tooling": [
         "./generated/packages/data-core/src/tooling/index.ts"
-      ],
-      "@asol/data-health-core": [
-        "./generated/packages/data-health-core/src/index.ts"
-      ],
-      "@asol/data-health-core/server": [
-        "./generated/packages/data-health-core/src/server.ts"
       ],
       "@asol/dev-core": [
         "./generated/packages/dev-core/src/index.ts"

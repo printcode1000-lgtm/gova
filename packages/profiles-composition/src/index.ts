@@ -24,9 +24,7 @@ export interface ProfilesRuntimeConfig {
  * It calls the application's single registrar rather than restating the port
  * here, so the six accounts and the main app cannot drift apart.
  */
-// This deployment is Turso-only: it aliases better-sqlite3 to a stub that
-// throws, so it must not let the environment pick a local data source.
-registerDataCoreRuntimeConfigPorts({ forceRemoteDataSource: true });
+registerDataCoreRuntimeConfigPorts();
 // This account reads profile rows, so it also needs the specialty-column catalog.
 registerDataCoreSpecialtyCatalogPort();
 

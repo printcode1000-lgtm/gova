@@ -209,14 +209,12 @@ async function main() {
   await patchSnapshot({ requestId, status: "running", stage: "dependencies" });
   await appendLog(`[remote-deploy] request ${requestId} started at ${new Date().toISOString()}\n`);
 
-  // better-sqlite3 bundles the Linux Node 24 binary this sandbox needs. npm 11
-  // nevertheless infers a node-gyp rebuild from its binding.gyp, but Vercel
-  // Sandboxes intentionally do not include make. Keep the bundled binary and
-  // prove it can load before starting the irreversible release pipeline.
+  // Lifecycle scripts stay off: Vercel Sandboxes intentionally ship no `make`,
+  // and nothing in the release closure needs a compiled native module. The
+  // sandbox used to install and then load-test a local SQLite driver here,
+  // which was only ever needed because Development ran against a filesystem
+  // database; the release runtime reaches Turso over HTTP.
   let outcome = await runStep("npm", ["ci", "--ignore-scripts", "--no-audit", "--no-fund"]);
-  if (outcome.exitCode === 0) {
-    outcome = await runStep("npx", ["tsx", "packages/data-core/src/tooling/verify-sqlite-runtime.ts"]);
-  }
   if (outcome.exitCode === 0) {
     await patchSnapshot({ stage: "preflight" });
     const extraDeployAllArgs = command === "deploy:all" ? deployAllArgs() : [];

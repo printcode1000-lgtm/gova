@@ -111,7 +111,7 @@ export function CloudErrorsContainer({
             أخطاء السحابة
           </h2>
           <p id='super-admin-presentation-logs-superadminlogspage-cloud-errors-text-6-5thlts' className="mt-1 text-xs text-muted-foreground">
-            أخطاء موثقة من الخادم فقط. يتم تحديثها تلقائيًا كل 20 ثانية.
+            أخطاء موثقة من الخادم فقط. يتم تحديثها تلقائيًا عند ورود حدث، مع فحص احتياطي كل 5 دقائق.
             {lastUpdatedAt && (
               <span id='super-admin-presentation-logs-superadminlogspage-cloud-errors-text-7-7r2igs' className="ms-1">
                 آخر تحديث: {formatAdminClock(lastUpdatedAt, { seconds: true })}

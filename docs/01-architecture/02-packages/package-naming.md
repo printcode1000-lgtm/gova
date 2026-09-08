@@ -29,7 +29,7 @@ packages/ota-core/        →  @asol/ota-core
 
 ### Multi-word domains
 
-Use kebab-case throughout: `data-health-core`, `google-play-store-assets-core`, `storage-image-manager-core`.
+Use kebab-case throughout: `google-play-store-assets-core`, `storage-image-manager-core`, `product-style-core`.
 
 ### Composition suffix
 

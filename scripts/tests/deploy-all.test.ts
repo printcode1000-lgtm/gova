@@ -76,7 +76,7 @@ for (const required of [
   "typecheck",
   "architecture:check",
   "test",
-  "db:ensure",
+  "db:schema:verify",
   "db:schema:sync:release",
   "build",
   "build:static",

@@ -18,7 +18,7 @@
 | `imageUploadDrafts` | Durable staged image uploads |
 | `imageCache` | Bounded remote image Blob cache with ETag metadata |
 
-**Rule:** IndexedDB is normally a local cache. Notification-center entries, notification analytics/badges, and notification-only conversation bodies are explicit local-only sources of truth and are never copied to SQLite/Turso.
+**Rule:** IndexedDB is normally a local cache. Notification-center entries, notification analytics/badges, and notification-only conversation bodies are explicit local-only sources of truth and are never copied to Turso.
 
 See [session-system.md](../05-platform-features/session-system.md) for session details.
 
@@ -82,8 +82,8 @@ Remote image rendering is fail-closed. A cache miss may invoke only the register
 1. **Clients are platform-agnostic** — Web, static export, Capacitor use the same `AsolApiClient`.
 2. **No SQL from the client** — only Business APIs with JSON payloads.
 3. **Repository builds queries** — Drizzle only in Repository on the server.
-4. **Database Client selects the driver** — dev → SQLite, prod → Turso.
-5. **SQLite defines schema** — Turso gets incremental DDL only, never row data.
+4. **One server database backend** — Turso/libSQL in every runtime, Development included. The Database Client routes to a shard, never to a backend.
+5. **Desired-schema manifests define schema** — Turso gets additive DDL only, never row data.
 6. **IndexedDB is a cache** — not the primary data store.
 
 ---
@@ -97,7 +97,7 @@ User
   → asolApi.get('/api/...')
   → Business API → Server Service.getX()
   → Query.execute() → Repository.select()
-  → DatabaseClient → SQLite (dev) | Turso (prod)
+  → DatabaseClient → Turso
   ← JSON ← same path back
   → Hook updates cache (optional: AsolDB)
   → UI renders
@@ -121,17 +121,21 @@ UI (submit)
 
 | Environment | Client → DB |
 |-------------|-------------|
-| `npm run dev` | Same-origin API → SQLite |
+| `npm run dev` | Deployed owner origins → Turso |
 | Vercel prod | API → Turso |
-| `build:static` | Remote API → Turso (no local DB) |
+| `build:static` | Remote API → Turso |
+
+Development addresses the Business APIs by canonical route owner and deployed
+origin, exactly as Static, Android and iOS do. It reaches the same databases, so
+the transport a developer exercises is the transport a user gets.
 
 ## Client/Server diagrams
 
 ### Development
 
 ```
-Browser → AsolApiClient → Business API → Server Service → Query/Command
-  → Repository → DatabaseClient → SQLite
+Browser → AsolApiClient → Business API (deployed owner origin) → Server Service
+  → Query/Command → Repository → DatabaseClient → Turso
 ```
 
 ### Production
@@ -163,14 +167,12 @@ flowchart LR
     G[DatabaseClient]
   end
   subgraph Storage
-    H[(SQLite)]
     I[(Turso)]
   end
   A --> D
   B --> D
   C --> D
   D --> E --> F --> G
-  G --> H
   G --> I
 ```
 

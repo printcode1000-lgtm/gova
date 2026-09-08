@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The Product Data Model defines how ASOL stores and exposes products across the UI, API, local SQLite, and Turso.
+The Product Data Model defines how ASOL stores and exposes products across the UI, API, and the Turso product database.
 
 Products are first-class structured records. They must not be stored as generic JSON documents or accessed through `product.data.fields`.
 
@@ -189,7 +189,7 @@ The storage component does not write to the product database. Product persistenc
 Development uses:
 
 ```text
-public/sync_data/sync_sqlite/product.db
+packages/data-core/src/provisioning/desired-schema/product.ts
 ```
 
 Production uses the configured product Turso database:
@@ -199,7 +199,7 @@ TURSO_PRODUCT_DATABASE_URL
 TURSO_PRODUCT_AUTH_TOKEN
 ```
 
-The local SQLite schema is the source of truth. `npm run db:schema:sync` syncs schema changes to Turso.
+The desired-schema manifest is the source of truth. `npm run db:schema:verify` compares it with Turso read-only; `npm run db:schema:sync:release` applies the missing additive DDL.
 
 ## Migration Policy
 

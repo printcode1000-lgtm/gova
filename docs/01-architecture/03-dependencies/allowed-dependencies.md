@@ -28,7 +28,6 @@ Application wiring modules (`src/features/**/*-ports.ts`, `src/core/composition/
 | Leaf capability → nothing | `orders-core`, `format-core`, `secrets-core` | Zero `@asol/*` edges |
 | Data hub | `data-core` → many `*-core` | Central DB owner composes domains |
 | Native consumer | `map-core` → `native-core` | Platform APIs through owner |
-| Storage consumer | `backup-core` → `storage-core/server` | R2 via port, not direct SDK |
 | Auth token | `auth-core` → `signed-token-core` | Shared envelope algorithm |
 | Observability | `observability-core` → `data-core/browser`, `./telemetry` | Browser telemetry path |
 | Release | `release-core` → `vercel-deploy-core`, `ota-core/publishing`, `env-core/process` | Console orchestration and shared release-tool env load |
@@ -44,7 +43,7 @@ Application wiring modules (`src/features/**/*-ports.ts`, `src/core/composition/
 
 | Module | Owner package(s) |
 |---|---|
-| `drizzle-orm`, `better-sqlite3`, `@libsql/client` | `@asol/data-core` |
+| `drizzle-orm`, `@libsql/client` | `@asol/data-core` |
 | `@aws-sdk/client-s3`, `@aws-sdk/s3-request-presigner` | `@asol/storage-core` |
 | `@aws-sdk/client-s3` (OTA artifacts) | `@asol/ota-core` |
 | `@capacitor/*`, `@capawesome/*`, `@capgo/*`, `@capacitor-mlkit/*` | `@asol/native-core` |

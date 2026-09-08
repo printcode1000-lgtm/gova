@@ -1,88 +1,123 @@
 import { existsSync, readFileSync, readdirSync } from 'fs';
-import { join } from 'path';
+import { join, relative } from 'path';
 
 import { ROOT, addViolation } from './architecture-types';
 
 /**
- * An isolated deployment pins the backend it is physically able to serve.
+ * There is one server database backend, and no source may reach for another.
  *
- * Every account service aliases `better-sqlite3` to a stub that throws: it runs
- * against Turso only, and bundling the native driver would force a native build
- * for unreachable code. But the backend is resolved from the runtime context,
- * and a data source of `local` selects sqlite in any deployment that asks. So
- * an account that cannot load the driver was still letting configuration choose
- * it.
+ * This used to be a per-account pin: every isolated deployment had to declare
+ * `forceRemoteDataSource: true` because a runtime that called itself development
+ * would otherwise select a filesystem SQLite backend, load a native driver the
+ * account does not ship, and answer 500 on every route reaching data while
+ * `/api/health` stayed 200 and Vercel reported READY. Six roots passed the pin
+ * because six were fixed by hand; the seventh was the one that would forget.
  *
- * That is not theoretical. During a real `deploy:all` the profiles account did
- * exactly this, loaded the driver it does not ship, and answered 500 on every
- * route reaching data — while `/api/health` stayed 200 and Vercel reported
- * READY. One environment variable reproduces it in production.
+ * The pin is gone because the choice is gone. Server application data is
+ * Turso/libSQL in every runtime, so what this now enforces is the property the
+ * pin was standing in for: no production, build, provisioning or tooling source
+ * imports `better-sqlite3` at all. An account cannot select a driver that
+ * nothing can reach.
  *
- * `forceRemoteDataSource: true` states the invariant in code. Six composition
- * roots pass it today because six were fixed by hand; the seventh account is
- * the one that will forget, and forgetting is silent. This check is what makes
- * it loud.
- *
- * The main application is deliberately not covered: it ships the real driver
- * and needs the local branch for development. Only a deployment that cannot
- * serve both branches pins one.
+ * `docs/08-troubleshooting/problems/every-server-route-500-unregistered-port.md`
+ * records the outage the registration half of this check still guards against.
  */
 const REGISTRAR = 'registerDataCoreRuntimeConfigPorts';
-const PIN = 'forceRemoteDataSource';
+const LOCAL_DATABASE_DRIVER = 'better-sqlite3';
 
-/** A composition package is an account's composition root: `<account>-composition`. */
-function isolatedCompositionFolders(): readonly string[] {
-  const packagesDir = join(ROOT, 'packages');
-  if (!existsSync(packagesDir)) return [];
-  return readdirSync(packagesDir).filter((folder) => folder.endsWith('-composition'));
+/** Source trees whose closures reach a deployed runtime or a build step. */
+const SCANNED_ROOTS = ['src', 'packages', 'scripts', 'services'] as const;
+
+const SKIPPED_DIRECTORIES = new Set([
+  'node_modules',
+  '.next',
+  'out',
+  'dist',
+  'build',
+  'generated',
+]);
+
+/**
+ * Where an isolated SQLite test may still live.
+ *
+ * A test file under a `tests/` directory, or named `*.test.ts`, may open an
+ * in-memory or temporary-directory database. It may never touch an application
+ * persistence path, and it is not part of any production closure.
+ */
+function isApprovedTestPath(relativePath: string): boolean {
+  const normalized = relativePath.replace(/\\/g, '/');
+  return /(^|\/)tests?\//.test(normalized) || /\.test\.tsx?$/.test(normalized);
 }
 
 /**
- * The stub must name the service it is in.
+ * A guard is allowed to name the driver — that is its whole job.
  *
- * All six stubs were copy-pasted and five reported a different account than the
- * one they ran in. When profiles failed, it said "not available in the
- * notifications service" — a cross-account red herring in the middle of an
- * outage, pointing the investigation at an account that was fine.
+ * This check itself, the deployment artifact gate, and the repository sweep all
+ * assert the driver's *absence*, so a match inside one of them is the contract
+ * working rather than a violation of it.
  */
-function checkStubNamesItsOwnService(): void {
-  const servicesDir = join(ROOT, 'services');
-  if (!existsSync(servicesDir)) return;
+const NEGATIVE_GUARD_FILES = new Set(
+  [
+    'packages/architecture-core/src/checks/isolated-deployment-backend-contract.ts',
+    'packages/architecture-core/src/checks/native-contract.ts',
+    'packages/architecture-core/src/checks/repository-sweep-contract.ts',
+    'packages/architecture-core/src/checks/vendor-ownership-contract.ts',
+    'packages/architecture-core/src/contracts/contract.ts',
+    'packages/architecture-core/src/registry/capability-registry.ts',
+    'packages/gova-deployment-core/src/artifact-gate.ts',
+    'packages/service-mirror-core/src/index.ts',
+    'scripts/check-environment-requirements.ts',
+  ].map((path) => path.replace(/\//g, '/')),
+);
 
-  for (const service of readdirSync(servicesDir)) {
-    const stub = join(servicesDir, service, 'stubs', 'better-sqlite3.js');
-    if (!existsSync(stub)) continue;
+function* walk(directory: string): Generator<string> {
+  if (!existsSync(directory)) return;
+  for (const item of readdirSync(directory, { withFileTypes: true })) {
+    if (SKIPPED_DIRECTORIES.has(item.name)) continue;
+    const full = join(directory, item.name);
+    if (item.isDirectory()) {
+      yield* walk(full);
+      continue;
+    }
+    if (/\.(tsx?|mts|cts|mjs|cjs|js)$/.test(item.name)) yield full;
+  }
+}
 
-    const content = readFileSync(stub, 'utf8');
-    const named = /is not available in the ([\w-]+) service/.exec(content);
-    if (!named) continue;
-    if (named[1] === service) continue;
+/** No production, build, provisioning or tooling source loads the local driver. */
+function checkNoLocalDatabaseDriverInProductionClosure(): void {
+  for (const root of SCANNED_ROOTS) {
+    for (const file of walk(join(ROOT, root))) {
+      const relativePath = relative(ROOT, file).replace(/\\/g, '/');
+      if (NEGATIVE_GUARD_FILES.has(relativePath)) continue;
+      if (isApprovedTestPath(relativePath)) continue;
 
-    addViolation(
-      'Isolated Deployment Backend',
-      stub,
-      `${service}'s better-sqlite3 stub reports the "${named[1]}" service.`,
-      `Name this service: a stub that blames another account sends the next outage after the wrong one.`,
-    );
+      const content = readFileSync(file, 'utf8');
+      if (!content.includes(LOCAL_DATABASE_DRIVER)) continue;
+
+      addViolation(
+        'Isolated Deployment Backend',
+        relativePath,
+        `${relativePath} reaches ${LOCAL_DATABASE_DRIVER} outside a test.`,
+        `Server application data is Turso/libSQL in every runtime. A local database driver in a ` +
+          `production, build, provisioning or tooling closure is a second backend by another name; ` +
+          `an isolated test may use one only in memory or a temporary directory.`,
+      );
+    }
   }
 }
 
 /**
  * Every deployed account registers the port, and something calls its root.
  *
- * The pin check below only looked at roots that already registered, so a
- * composition root with an empty body was skipped entirely — it had nothing to
- * pin, so it passed. `control` shipped exactly that way: `registerControlServerPorts`
- * was an empty function, nothing imported it, and every control route that
- * reached a shard answered 500 while the deployment reported READY and every
- * gate stayed green.
+ * A composition root with an empty body used to pass every check: it had nothing
+ * to pin, so it was skipped. `control` shipped exactly that way —
+ * `registerControlServerPorts` was an empty function, nothing imported it, and
+ * every control route that reached a shard answered 500 while the deployment
+ * reported READY and every gate stayed green.
  *
  * Registering is not enough either. A root that registers at module scope only
  * runs when something imports it, so the service must reach its composition
  * from its own sources — through `instrumentation.ts` or from its routes.
- *
- * `docs/08-troubleshooting/problems/every-server-route-500-unregistered-port.md`
- * records both halves of that outage.
  */
 function checkDeployedAccountRegistersItsPorts(): void {
   const servicesDir = join(ROOT, 'services');
@@ -109,7 +144,7 @@ function checkDeployedAccountRegistersItsPorts(): void {
         'Isolated Deployment Backend',
         entry,
         `${folder} never registers the data-core runtime port.`,
-        `Call ${REGISTRAR}({ ${PIN}: true }). Without it every route in services/${service} that reaches a shard answers 500 while /api/health stays 200.`,
+        `Call ${REGISTRAR}(). Without it every route in services/${service} that reaches a shard answers 500 while /api/health stays 200.`,
       );
       continue;
     }
@@ -145,25 +180,6 @@ function serviceReachesItsComposition(serviceSrc: string, folder: string): boole
 }
 
 export function checkIsolatedDeploymentBackendContract(): void {
-  checkStubNamesItsOwnService();
+  checkNoLocalDatabaseDriverInProductionClosure();
   checkDeployedAccountRegistersItsPorts();
-
-  for (const folder of isolatedCompositionFolders()) {
-    const entry = join(ROOT, 'packages', folder, 'src', 'index.ts');
-    if (!existsSync(entry)) continue;
-
-    const content = readFileSync(entry, 'utf8');
-    // Only the roots that register the port are in scope. A composition package
-    // that reaches no repository has nothing to pin. Whether a *deployed*
-    // account is allowed to reach nothing is checked above.
-    if (!content.includes(`${REGISTRAR}(`)) continue;
-    if (content.includes(PIN)) continue;
-
-    addViolation(
-      'Isolated Deployment Backend',
-      entry,
-      `${folder} registers the data-core runtime port without pinning its backend.`,
-      `Call ${REGISTRAR}({ ${PIN}: true }) — this deployment stubs better-sqlite3, so it must not let the environment select it.`,
-    );
-  }
 }

@@ -282,6 +282,62 @@ function testLocalFirstImageRenderRecoveryPolicy() {
   );
 }
 
+
+/**
+ * AsolDB image caching is required; a filesystem image provider is forbidden.
+ *
+ * These two are easy to confuse and were confused once already. `local-first`
+ * in this package means *client cache lookup first* — memory, then the AsolDB
+ * `imageCache`, then the network — and it is the reason a cached image renders
+ * without a second download, revalidates with `If-None-Match`, and survives an
+ * offline moment on stale bytes. It has nothing to do with where the server
+ * stores objects, which is Cloudflare R2 in every runtime.
+ *
+ * Removing server-side filesystem image storage must never be read as
+ * permission to remove this cache.
+ */
+function testAsolDbCacheIsRequiredAndFilesystemStorageIsNot(root: string) {
+  const cacheSource = readFileSync(
+    path.join(root, "packages/storage-image-manager-core/src/services/local-first-image-cache.ts"),
+    "utf8",
+  );
+
+  // The pipeline: memory, then AsolDB, then the network — in that order.
+  assert.match(cacheSource, /asoldb/i, "the AsolDB tier must remain in the resolution pipeline");
+  assert.match(cacheSource, /etag|If-None-Match/i, "conditional revalidation must remain");
+
+  const browserCacheEntry = path.join(root, "packages/data-core/src/browser/image-cache/image-cache.ts");
+  assert.ok(
+    readFileSync(browserCacheEntry, "utf8").length > 0,
+    "the AsolDB image-cache store must exist: it is the durable half of the render path",
+  );
+
+  const draftService = readFileSync(
+    path.join(root, "packages/storage-image-manager-core/src/services/image-upload-draft-service.ts"),
+    "utf8",
+  );
+  assert.ok(
+    draftService.length > 0,
+    "imageUploadDrafts persistence must exist: a selected image survives navigation before it is uploaded",
+  );
+
+  // The server side, asserted from the same place so the two cannot be conflated.
+  const resolver = readFileSync(
+    path.join(root, "packages/storage-core/src/server/providers/provider-resolver.ts"),
+    "utf8",
+  );
+  assert.doesNotMatch(
+    resolver,
+    /LocalStorageProvider/,
+    "there is no filesystem image provider: every runtime resolves the profile's R2 account",
+  );
+  assert.doesNotMatch(
+    resolver,
+    /sync_file/,
+    "no server upload path may write beneath the removed local image tree",
+  );
+}
+
 function testLocalFirstImageCacheIdentity() {
   assert.equal(isRemoteStorageImageUrl("https://cdn.example.com/a.webp"), true);
   assert.equal(isRemoteStorageImageUrl("http://localhost/a.webp"), true);
@@ -350,6 +406,7 @@ async function main() {
     /DropdownMenuTrigger asChild>[\s\S]{0,200}<button[^>]+className="absolute inset-0/,
     "the entire empty image card must not open the source picker",
   );
+  testAsolDbCacheIsRequiredAndFilesystemStorageIsNot(root);
   console.log("Image upload queue tests passed.");
 }
 

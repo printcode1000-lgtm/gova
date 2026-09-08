@@ -6,7 +6,7 @@
 
 `packages/data-core` is the exclusive ownership boundary for every application
 database operation. It contains runtime queries and commands, repositories,
-SQLite and Turso adapters, sharded database routing, schemas, migrations,
+Turso adapters, sharded database routing, schemas, migrations,
 database provisioning, and browser IndexedDB primitives.
 
 It is a **sealed package**, not a folder. Nothing outside it may import one of
@@ -25,7 +25,7 @@ Server data follows this path:
 ```text
 UI -> Client Service -> AsolApiClient -> Business API -> Server Service
    -> Data Access domain entry point -> Query/Command/Repository
-   -> Data Source Registry -> SQLite (development) | Turso (production)
+   -> Data Source Registry -> Turso (every runtime)
 ```
 
 Browser-local persistence and query state follow these paths:
@@ -45,7 +45,7 @@ Capacitor clients still use `AsolApiClient` to reach the hosted backend.
 | Directory | Single responsibility |
 |---|---|
 | `core/data-source-registry.ts` | Resolve a logical server data source and cache its runtime client |
-| `core/database/` | SQLite, Turso, and sharded database adapters plus schemas and migrations |
+| `core/database/` | Turso and sharded database adapters plus schemas and migrations |
 | `core/turso/` | Low-level users and advertisements libSQL clients |
 | `browser/asol-db/` | Typed AsolDB stores and IndexedDB transactions |
 | `browser/query/` | TanStack Query ownership, policies, provider, and durable lifecycle |
@@ -57,7 +57,8 @@ Capacitor clients still use `AsolApiClient` to reach the hosted backend.
 | `domains/<domain>/repositories/` | Persistence implementation for one domain |
 | `domains/<domain>/ports/` | Storage contracts that keep commands independent from adapters |
 | `domains/<domain>/index.server.ts` | The domain's server-only public entry point |
-| `provisioning/core/` | SQLite-to-Turso schema inspection, diff, sync, and Turso provisioning |
+| `provisioning/desired-schema/` | One desired-schema manifest per logical database — the provisioning SSOT |
+| `provisioning/core/` | Turso schema read-back, diff, sync, and Turso provisioning |
 | `tooling/` | Database creation, migration, verification, export, and maintenance executables |
 
 Cloudflare R2 is intentionally not part of this database module. Its clients
@@ -76,33 +77,28 @@ runtimes. Repositories request one of these logical sources:
 | `users` | `allusers.db` | Users Turso database |
 | `products` | `product.db` | Products Turso database |
 | `advertisements` | `advertisements.db` | Advertisements Turso database |
-| `profiles` | Profile SQLite shards | Matching profile Turso shards |
+| `profiles` | Profile Turso shards | Matching profile Turso shards |
 
 Marketplace orders use their typed `MarketplaceDb` port and the shared shard
 router. The adapter resolves each table to its declared order shard.
 
-### SQLite connection reuse
+### One backend, every runtime
 
-Every local SQLite adapter caches its connection through
-`core/database/cached-sqlite-connection.ts`. The cache is keyed by the file
-identity (device and inode) that `core/database/sqlite-file-identity.ts` reads
-from the database path, not by process lifetime.
+There is no backend to select. `resolveServerDatabaseBackend` used to answer
+`sqlite` whenever the runtime called itself development, so `npm run dev` served
+application data from files under `public/sync_data/sync_sqlite` while every
+deployed runtime served it from Turso. Development was therefore the one
+environment in which a data-path bug could not reproduce.
 
-This matters because a local database rebuild — `db:create:*`, a dev cloud
-restore, a shard split — unlinks the file and writes a new one at the same path.
-A connection held across that swap stays bound to the unlinked inode: reads keep
-returning the old rows and every write fails with
-`SQLITE_READONLY: attempt to write a readonly database` until the dev server is
-restarted. Comparing the identity before reusing a cached connection makes the
-rebuild cost one reconnect instead.
+The registry now instantiates only Turso clients, and the runtime policy answers
+a narrower question: whether *this* runtime may open a server database at all.
+Browser, native and static execution still cannot — they reach data through the
+Business APIs — and missing credentials fail loudly at the owning client rather
+than resolving to an emptier source.
 
-The dev migration guards (`ensure-*-migrations.ts`) are keyed by the same
-identity, so a rebuilt file has its migrations applied instead of inheriting the
-previous file's "already migrated" state. Production Turso adapters are
-unaffected: they hold no file handle.
-
-`npm run test:sqlite-reconnect` pins both halves of this behavior — reuse on an
-untouched file, reconnect after a replacement.
+The practical consequence is worth stating plainly: an ordinary create, update or
+delete performed in Development affects whichever cloud environment the
+configured credentials represent.
 
 ## Import rules
 
@@ -112,7 +108,7 @@ untouched file, reconnect after a replacement.
 - UI, hooks, and client services cannot import server data-access entry points.
 - Server services consume `@asol/data-core/<domain>` or a typed query or
   command. They do not import database adapters.
-- Only `packages/data-core/src` may import Drizzle, `better-sqlite3`, or
+- Only `packages/data-core/src` may import Drizzle or
   `@libsql/client` — and `src/core/database/`, where those live, has **no door
   at all**, so the seal enforces it rather than a path pattern.
 - Only `packages/data-core/src` may contain production SQL.
@@ -124,7 +120,7 @@ untouched file, reconnect after a replacement.
 - Database maintenance executables live in `src/tooling`; `scripts/`
   may orchestrate them but cannot contain SQL or open a database.
 - Cross-shard SQL is rejected by the shard router.
-- Browser code cannot choose SQLite or Turso and cannot access server secrets.
+- Browser code cannot reach a database client and cannot access server secrets.
 - Public `asol-push-sw.js` is generated from
   `browser/workers/asol-push-sw.js`; the architecture check rejects drift.
 
@@ -157,7 +153,7 @@ browser persistence artifacts.
 2. Add the logical source to `ServerDataSourceName`.
 3. Add its environment selection to `DataSourceRegistry.create`.
 4. Register shard table mappings when the database is sharded.
-5. Add provisioning credentials and SQLite-to-Turso schema synchronization.
+5. Add a desired-schema manifest, provisioning credentials, and schema synchronization.
 6. Run `npm run typecheck`, `npm run architecture:check`, and the domain tests.
 
 ## Domain entity ownership

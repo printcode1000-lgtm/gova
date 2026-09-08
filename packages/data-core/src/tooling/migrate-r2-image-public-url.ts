@@ -1,7 +1,12 @@
-import { existsSync, readdirSync } from "node:fs";
-import path from "node:path";
-import { resolveSqliteDirectory } from "@asol/dev-core/server";
-import Database from "better-sqlite3";
+/**
+ * Rewrites stored image URLs from a retired R2 public host to the current one,
+ * copying each object across on the way.
+ *
+ * Turso only. It used to run the same rewrite twice — once against a local
+ * SQLite copy of each database and once against the cloud — which meant the
+ * local pass could report success on rows no user would ever read. There is one
+ * copy of this data now, so there is one pass.
+ */
 import dotenv from "dotenv";
 import { createClient, type Client, type InStatement } from "@libsql/client";
 
@@ -24,13 +29,13 @@ const URL_PATTERN = /https:\/\/pub-[a-z0-9]+\.r2\.dev\/[^\s"'`<>)]*/gi;
 const NETWORK_TIMEOUT_MS = 20_000;
 
 const targets = [
-  { dbPrefix: "TURSO_PRODUCT", sqliteFile: "product.db", table: "products", id: "id", columns: ["images_json"] },
-  { dbPrefix: "TURSO_PRODUCT", sqliteFile: "product.db", table: "product_reviews", id: "id", columns: ["reviewer_avatar_url"] },
-  { dbPrefix: "PROFILE_SOCIAL", sqliteFile: "profile-social.db", table: "profile_reviews", id: "id", columns: ["reviewer_avatar_url"] },
-  { dbPrefix: "PROFILE_CATALOG", sqliteFile: "profile-catalog.db", table: "pharmacy_profile_product_overrides", id: "id", columns: ["image_url"] },
-  { dbPrefix: "ORDERS_ITEMS", sqliteFile: "orders-items.db", table: "custom_request_images", id: "id", columns: ["image_url"] },
-  { dbPrefix: "TURSO_ADVERTISEMENTS", sqliteFile: "advertisements.db", table: "hero_slider", id: "id", columns: ["config_json"] },
-  { dbPrefix: "TURSO_ADVERTISEMENTS", sqliteFile: "advertisements.db", table: "trending_ribbon", id: "id", columns: ["config_json"] },
+  { dbPrefix: "TURSO_PRODUCT", table: "products", id: "id", columns: ["images_json"] },
+  { dbPrefix: "TURSO_PRODUCT", table: "product_reviews", id: "id", columns: ["reviewer_avatar_url"] },
+  { dbPrefix: "PROFILE_SOCIAL", table: "profile_reviews", id: "id", columns: ["reviewer_avatar_url"] },
+  { dbPrefix: "PROFILE_CATALOG", table: "pharmacy_profile_product_overrides", id: "id", columns: ["image_url"] },
+  { dbPrefix: "ORDERS_ITEMS", table: "custom_request_images", id: "id", columns: ["image_url"] },
+  { dbPrefix: "TURSO_ADVERTISEMENTS", table: "hero_slider", id: "id", columns: ["config_json"] },
+  { dbPrefix: "TURSO_ADVERTISEMENTS", table: "trending_ribbon", id: "id", columns: ["config_json"] },
 ] as const;
 
 type Target = (typeof targets)[number];
@@ -39,7 +44,6 @@ interface MigrationSummary {
   copied: number;
   reused: number;
   failedCopies: Array<{ url: string; reason: string }>;
-  localUpdates: number;
   tursoUpdates: number;
 }
 
@@ -47,7 +51,6 @@ const summary: MigrationSummary = {
   copied: 0,
   reused: 0,
   failedCopies: [],
-  localUpdates: 0,
   tursoUpdates: 0,
 };
 
@@ -133,47 +136,6 @@ async function migrateText(value: string): Promise<{ value: string; changed: boo
   return { value: next, changed };
 }
 
-function sqliteTableExists(db: Database.Database, table: string): boolean {
-  const row = db
-    .prepare("SELECT 1 ok FROM sqlite_master WHERE type='table' AND name=? LIMIT 1")
-    .get(table);
-  return Boolean(row);
-}
-
-async function migrateSqliteTarget(target: Target): Promise<void> {
-  const dbPath = path.join(resolveSqliteDirectory(), target.sqliteFile);
-  if (!existsSync(dbPath)) return;
-
-  const db = new Database(dbPath);
-  try {
-    console.log(`scan sqlite ${target.sqliteFile}:${target.table}`);
-    if (!sqliteTableExists(db, target.table)) return;
-    for (const column of target.columns) {
-      const rows = db
-        .prepare(
-          `SELECT ${JSON.stringify(target.id)} id, ${JSON.stringify(column)} value FROM ${JSON.stringify(
-            target.table,
-          )} WHERE ${JSON.stringify(column)} LIKE ?`,
-        )
-        .all(`%${OLD_PUBLIC_URL}%`) as Array<{ id: unknown; value: unknown }>;
-
-      for (const row of rows) {
-        const current = String(row.value ?? "");
-        const migrated = await migrateText(current);
-        if (!migrated.changed) continue;
-        db.prepare(
-          `UPDATE ${JSON.stringify(target.table)} SET ${JSON.stringify(column)}=? WHERE ${JSON.stringify(
-            target.id,
-          )}=?`,
-        ).run(migrated.value, row.id);
-        summary.localUpdates += 1;
-      }
-    }
-  } finally {
-    db.close();
-  }
-}
-
 function credentialsFor(prefix: string): { url: string; authToken: string } | null {
   const url = process.env[`${prefix}_DATABASE_URL`];
   const authToken =
@@ -242,21 +204,15 @@ async function migrateExtraUrls(): Promise<void> {
 async function main(): Promise<void> {
   requireConfig();
   for (const target of targets) {
-    await migrateSqliteTarget(target);
     await migrateTursoTarget(target);
   }
   await migrateExtraUrls();
-
-  const sqliteFiles = readdirSync(resolveSqliteDirectory())
-    .filter((name) => name.endsWith(".db"))
-    .length;
 
   console.log(
     JSON.stringify(
       {
         oldPublicUrl: OLD_PUBLIC_URL,
         newPublicUrl: NEW_PUBLIC_URL,
-        sqliteFilesScanned: sqliteFiles,
         ...summary,
       },
       null,

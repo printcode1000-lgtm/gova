@@ -107,11 +107,14 @@ Health stayed `200`, the deployment reported `READY`, and the route answered
 `500 internalServerError` with the reason swallowed. The same shape as every
 other outage in this family.
 
-**Fix:** `forceRemoteDataSource` now pins `isDevRuntime` and `isDevelopment` too.
-A deployment that cannot run SQLite is not a development runtime, whatever the
-environment says — an account states both halves of that invariant or neither.
-Leaving one half to configuration is exactly what made the first half
-insufficient.
+**Fix at the time:** `forceRemoteDataSource` was extended to pin `isDevRuntime`
+and `isDevelopment` too, because stating one half of the invariant and leaving
+the other to configuration is what made the first half insufficient.
+
+**Fix since:** both halves are gone. Server application data is Turso in every
+runtime, so the per-database guards that refused a remote read during development
+no longer exist and the registrar takes no options. There is nothing left to pin,
+and nothing left to forget to pin.
 
 ## What now sweeps the whole surface
 

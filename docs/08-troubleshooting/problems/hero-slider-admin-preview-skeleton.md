@@ -10,7 +10,7 @@ Three preview bugs stacked:
 
 1. Admin-edit used a full-carousel skeleton until `next/image` fired `onLoad`. Failed image URLs could leave it visible.
 2. Slide transition class names were concatenated without spaces (`inset-0transition-transform…`), so the `fill` image parent had no size.
-3. Local uploaded files use `/sync_data/sync_file/...`; routing them through an image transformation layer made live-preview behavior fragile.
+3. Uploaded objects resolve to R2 public URLs; routing them through an image transformation layer made live-preview behavior fragile. (At the time this was recorded, Development served them from `/sync_data/sync_file/...`.)
 
 Selecting a file is not enough: `confirmUpload` keeps the picker preview inside `StorageImageManager` until the user confirms Upload. The carousel reads `slide.image` only after that.
 

@@ -71,8 +71,11 @@ const GATE_POLICY: Readonly<Record<GeneratedGateId, readonly GatePolicyStep[]>> 
     { kind: 'script', name: 'branding:generate' },
     { kind: 'script', name: 'app:init' },
     ...commonBuildChecks,
-    { kind: 'script', name: 'db:ensure' },
-    { kind: 'script', name: 'db:schema:sync' },
+    // Read-only. A generic build proves the code is consistent with the schema
+    // it expects; it must never be the thing that changes a cloud database.
+    // Authorized DDL application belongs to the release preflight, which is the
+    // step someone runs on purpose.
+    { kind: 'script', name: 'db:schema:verify' },
     { kind: 'command', command: 'next build' },
   ],
   'build:static': [

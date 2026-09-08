@@ -118,13 +118,15 @@ surface file exists (collector, boundary, global-error, traced-route, etc.).
 
 ## Storage
 
-Persistent logs are stored in the profile database table `system_logs`. The
-package repository creates or migrates the schema on first use, including
-origin/trust, truncation, and correlation columns. The Drizzle schema and
-`0013_system_logs.sql` mirror those columns. `db:ensure` idempotently adds them
-to an existing profile SQLite source before shard splitting; the offline
-schema-parity test prevents the runtime repository, migration, and upgrader
-from silently diverging. Correlation columns are:
+Persistent logs are stored in the `system-ops` Turso database, table
+`system_logs`. Its schema — including the origin/trust, truncation, and
+correlation columns — is declared in the `system-ops` desired-schema manifest and
+applied by provisioning. The repository is data-only: it used to create the
+table, add its own columns and build its own indexes on every call, which made it
+a second schema authority alongside provisioning. The Drizzle schema and
+`0013_system_logs.sql` mirror those columns, and the offline schema-parity test
+prevents the manifest, the Drizzle declaration and the migration history from
+silently diverging. Correlation columns are:
 
 - `correlation_id`
 - `request_flow_id`
@@ -157,13 +159,13 @@ resolver is not the production Control identity configuration.
 
 `/super-admin/logs` shows:
 
-- summary cards (total errors, last hour, top features)
+- summary cards (recent seven-day errors, last hour, top features)
 - search and platform filters
 - cloud error panel with HTTP/feature filters
 - live section tabs (normal / warning / error) always in one row at every
   breakpoint; narrow viewports use compact padding, smaller icons, and truncated
   Arabic labels so counts stay visible
-- SSE refresh plus 20s polling fallback
+- SSE refresh throttled to at most once per minute plus a 5-minute polling fallback
 
 Persisted entries are marked as saved. The floating error button deduplicates
 live and persisted counts by fingerprint. It is overlay chrome: tapping it
@@ -175,7 +177,10 @@ Telemetry ingest never emits the local `asol:system-logs-changed` refresh event.
 Only explicit mutations such as clearing logs notify local readers. This prevents
 a failed authenticated list request from becoming a feedback loop where the
 warning about that failure is ingested and immediately triggers the same failed
-list request again; normal freshness comes from the 20-second poll and SSE.
+list request again. Normal freshness comes from SSE throttled to one reload per
+minute and a five-minute polling fallback, and the Super Admin page requests only
+the recent seven-day window by default so large historical log tables are not
+rescanned during routine monitoring.
 
 Neither the page nor the floating button clears logs on tap. Both stage a
 `delete` operation in `@asol/page-save-core` (`super-admin-logs` and

@@ -408,6 +408,18 @@ export const systemLogs = sqliteTable(
   },
   (table) => [
     index("system_logs_level_time_idx").on(table.level, table.lastOccurredAt),
+    index("system_logs_time_id_idx").on(table.lastOccurredAt, table.id),
+    index("system_logs_origin_level_time_id_idx").on(
+      table.origin,
+      table.level,
+      table.lastOccurredAt,
+      table.id,
+    ),
+    index("system_logs_level_occurrences_time_idx").on(
+      table.level,
+      table.occurrences,
+      table.lastOccurredAt,
+    ),
     index("system_logs_platform_time_idx").on(table.platform, table.lastOccurredAt),
     index("system_logs_feature_idx").on(table.feature, table.operation),
     index("system_logs_origin_time_idx").on(table.origin, table.lastOccurredAt),

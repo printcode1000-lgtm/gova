@@ -42,7 +42,7 @@ async function main() {
 
   console.log("Turso provisioning and schema sync completed.");
   for (const [label, report] of Object.entries(reports)) {
-    console.log(`   [${label}] SQLite version : ${report.sqliteSchemaVersion}`);
+    console.log(`   [${label}] SQLite version : ${report.desiredSchemaVersion}`);
     console.log(`   [${label}] Turso after    : ${report.tursoSchemaVersionAfter}`);
     console.log(`   [${label}] DDL operations : ${report.operations.length}`);
   }

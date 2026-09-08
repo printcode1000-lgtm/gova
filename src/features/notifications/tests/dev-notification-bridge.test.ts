@@ -17,6 +17,11 @@ import { getNotificationsPublicUrl } from "@/core/config/public-env";
  *
  * A child process is the whole isolation mechanism: no module-cache busting, no
  * ordering between cases, and no way for one case to leak into the next.
+ *
+ * There is no longer a Development branch to cover. Development used to fall
+ * back to `window.location.origin` so fan-out would read the local
+ * `notifications.db`; with no local database, one canonical origin serves every
+ * runtime.
  */
 const CASE_FLAG = "--case";
 const TEST_FILE = "src/features/notifications/tests/dev-notification-bridge.test.ts";
@@ -24,12 +29,13 @@ const CONFIGURED_ORIGIN = "https://asol-notifications.vercel.app";
 
 function runCase(name: string): void {
   if (name === "unset") {
-    // No configured URL and no `window`: the bridge must not invent an origin.
-    // Guessing one would post grants somewhere nobody configured.
+    // Unset variable: the canonical deployed declaration answers, and it is the
+    // same address the static and native bundles are built with. What must never
+    // happen is a page-origin guess — Development included.
     assert.equal(
       getNotificationsPublicUrl(),
-      null,
-      "Without a configured URL and without window, the bridge must not guess an origin.",
+      CONFIGURED_ORIGIN,
+      "An unset variable must resolve to the canonical notifications declaration.",
     );
     return;
   }

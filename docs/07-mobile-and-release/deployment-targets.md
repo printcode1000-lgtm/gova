@@ -4,7 +4,7 @@
 
 | Target | Command | API | Database |
 |--------|---------|-----|----------|
-| Local development | `npm run dev` | Same origin `/api/*` | SQLite |
+| Local development | `npm run dev` | Deployed owner origins, as Static/Android/iOS | Turso |
 | Hosted backend | Local `npm run build` (correctness) then deploy. Vercel GitHub builds use `npm run build:vercel` | Same origin or remote | Turso |
 | Static export (GitHub Pages) | `npm run build:static` | Remote via `ASOL_API_BASE_URL` | None (SPA only) |
 | Capacitor (Android / iOS) | `npm run cap:build` | Baked API URL | None (shell over `out/`) |
@@ -118,7 +118,7 @@ discovered. Its sections are:
 | :-- | :-- |
 | environment and Vercel accounts | `doctor:environment:production`, `vercel:accounts:check` |
 | source quality and architecture | `lint`, `typecheck`, `architecture:check`, `test` |
-| database and runtime contracts | `db:ensure`, `db:schema:sync:release` |
+| database and runtime contracts | `db:schema:verify`, `db:schema:sync:release` |
 | main app builds | `build`, `build:static` |
 | isolated service deployments | `services:sync`, `services:verify`, `services:build` |
 
@@ -280,18 +280,20 @@ A probe that accepts a rejection prints the reason the account gave, so a green
 run still says which refusal it accepted. `ASOL_SERVICE_SMOKE_ONLY=<accounts>`
 restricts a run to named accounts while debugging one.
 
-#### A deployment pins what it cannot serve
+#### Remove the choice, not just the wrong answer
 
-Every isolated account is Turso-only and aliases `better-sqlite3` to a stub
-that throws. Each therefore registers its runtime-config port with
-`forceRemoteDataSource: true`, rather than letting the environment choose a
-backend it cannot load. The gate found this the first time it ran inside a
-real deploy: the profiles account answered 500 on every data route because the
-environment said `local`.
+Every runtime is Turso-only, including `npm run dev`. Each isolated account used
+to alias `better-sqlite3` to a throwing stub and pin its runtime-config port with
+`forceRemoteDataSource: true`, because the environment could otherwise select a
+filesystem backend the account cannot load. The gate found this the first time it
+ran inside a real deploy: the profiles account answered 500 on every data route
+because the environment said `local`.
 
-When a deployment physically cannot serve one branch of a runtime choice, pin
-it in code. Configuration can be set wrong; an invariant stated in the
-composition root cannot.
+Pinning was the right fix for a choice that had to exist. The better fix was to
+stop the choice existing: the port takes no options now, the stubs are gone, and
+`npm run architecture:check` fails on any `better-sqlite3` reference outside an
+isolated test. A configuration value that cannot be set wrong is stronger than
+one every new account has to remember to pin.
 
 #### Never let a catch hide which failure happened
 
@@ -610,7 +612,7 @@ See [capacitor.md](./capacitor/capacitor.md) for live reload, `cap:build`, and p
 ```
 npm run app:init
 npm run architecture:check
-npm run db:ensure
+npm run db:schema:verify
 npm run db:schema:sync
 next build
 ```
@@ -619,7 +621,7 @@ Schema sync requires Turso env vars on CI/Vercel — see [20-schema-provisioning
 
 The root `.vercelignore` trims repository-root Vercel uploads (`gova` via GitHub
 and `asol-submain` / `asol-sub2main` via CLI). It excludes native shells at the repository root only (`/android/`, `/ios/`,
-`/fastlane/`), `docs/`, local SQLite mirrors (`public/sync_data/`), service
+`/fastlane/`), `docs/`, generated schema-sync reports (`public/sync_data/`), service
 `generated/` trees, CI/editor folders, and secret archives. It keeps `src/`,
 `packages/` (including `packages/native-core/{android,ios}` for contract tests),
 hand-written `services/*` sources, `scripts/`, and runtime `public/` assets.

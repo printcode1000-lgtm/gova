@@ -436,46 +436,6 @@ export const ACCOUNT_DELETION_REGISTRY_EXEMPT_TABLES: DeletionRegistryExemptTabl
     reason: 'Operational audit log; not user-owned account data.',
   },
   {
-    database: 'profiles',
-    table: 'data_health_runs',
-    reason: 'Super-admin data health tooling.',
-  },
-  {
-    database: 'profiles',
-    table: 'data_health_findings',
-    reason: 'Super-admin data health tooling.',
-  },
-  {
-    database: 'profiles',
-    table: 'data_health_cleanup_plans',
-    reason: 'Super-admin data health tooling.',
-  },
-  {
-    database: 'profiles',
-    table: 'data_health_cleanup_audit',
-    reason: 'Super-admin data health tooling.',
-  },
-  {
-    database: 'profiles',
-    table: 'data_health_quarantine',
-    reason: 'Super-admin data health tooling.',
-  },
-  {
-    database: 'profiles',
-    table: 'data_health_locks',
-    reason: 'Super-admin data health tooling.',
-  },
-  {
-    database: 'profiles',
-    table: 'data_health_order_purge_plans',
-    reason: 'Super-admin data health tooling.',
-  },
-  {
-    database: 'profiles',
-    table: 'data_health_storage_deletion_tasks',
-    reason: 'Super-admin data health tooling.',
-  },
-  {
     database: 'users',
     table: 'user_notification_tokens',
     reason: 'Legacy users-db migration artifact; live table is in notifications database.',

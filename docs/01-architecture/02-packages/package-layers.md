@@ -53,7 +53,7 @@ Within `capability`, packages group by infrastructure ownership:
 
 | Cluster | Packages | Vendor owner |
 |---|---|---|
-| Data | `data-core`, `data-health-core`, `backup-core` | Drizzle, SQLite, Turso in `data-core` only |
+| Data | `data-core` | Drizzle and Turso/libSQL in `data-core` only |
 | Storage | `storage-core`, `storage-image-manager-core` | `@aws-sdk/client-s3` in `storage-core` |
 | Native | `native-core`, `map-core`, `ota-core`, `account-bridge` | Capacitor plugins in `native-core` |
 | Notifications | `notifications-core` | `web-push`, `google-auth-library` |

@@ -497,7 +497,7 @@ async function testStagedOperationsRunThroughRegistry() {
 
   const executed: string[] = [];
   stagePageSaveOperation({
-    scopeId: "data-health",
+    scopeId: "super-admin-users",
     itemId: "delete-image",
     kind: "delete",
     label: "Delete image",
@@ -506,32 +506,32 @@ async function testStagedOperationsRunThroughRegistry() {
     },
   });
   stagePageSaveOperation({
-    scopeId: "data-health",
+    scopeId: "super-admin-users",
     itemId: "clear-history",
     kind: "delete",
     label: "Clear history",
     execute: async () => false,
   });
 
-  const items = buildPageSaveOperationItems("data-health");
+  const items = buildPageSaveOperationItems("super-admin-users");
   assert.equal(items.length, 2);
   assert.equal(items[0]?.operation, "delete");
   assert.equal(
-    buildPageSaveOperationItems("data-health"),
+    buildPageSaveOperationItems("super-admin-users"),
     items,
     "item lists must be referentially stable between reads",
   );
 
   registerPageSave({
-    id: "data-health",
+    id: "super-admin-users",
     label: "Data health",
-    returnPath: "/super-admin/data-health",
+    returnPath: "/super-admin/users",
     items,
     isSaving: false,
     canSave: true,
     handle: {
       save: (selectedItemIds) =>
-        runPageSaveOperations("data-health", selectedItemIds),
+        runPageSaveOperations("super-admin-users", selectedItemIds),
     },
   });
 
@@ -539,14 +539,14 @@ async function testStagedOperationsRunThroughRegistry() {
   assert.equal(await executePageSave(), false, "a failed operation fails the save");
   assert.deepEqual(executed, ["delete-image"]);
   assert.deepEqual(
-    listPageSaveOperations("data-health").map((operation) => operation.itemId),
+    listPageSaveOperations("super-admin-users").map((operation) => operation.itemId),
     ["clear-history"],
     "only the failed operation stays staged",
   );
   assert.equal(getPageSaveSnapshot().lastResult, "failure");
 
-  unstagePageSaveOperation("data-health", "clear-history");
-  assert.deepEqual(listPageSaveOperations("data-health"), []);
+  unstagePageSaveOperation("super-admin-users", "clear-history");
+  assert.deepEqual(listPageSaveOperations("super-admin-users"), []);
 }
 
 async function testDropPageSaveItemsKeepsOtherPendingWork() {
@@ -650,7 +650,7 @@ async function testStagedOperationsAreNeverPersisted() {
   configurePageSaveCore({ storage });
 
   stagePageSaveOperation({
-    scopeId: "data-health",
+    scopeId: "super-admin-users",
     itemId: "order-purge",
     kind: "delete",
     label: "Purge orders",
@@ -658,12 +658,12 @@ async function testStagedOperationsAreNeverPersisted() {
   });
 
   registerPageSave({
-    id: "data-health",
+    id: "super-admin-users",
     label: "Data health",
-    returnPath: "/super-admin/data-health",
+    returnPath: "/super-admin/users",
     items: [
       { id: "notes", label: "Notes", isDirty: true, canSave: true },
-      ...buildPageSaveOperationItems("data-health"),
+      ...buildPageSaveOperationItems("super-admin-users"),
     ],
     isSaving: false,
     canSave: true,

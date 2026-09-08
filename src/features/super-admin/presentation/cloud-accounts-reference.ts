@@ -123,8 +123,8 @@ export const OTA_R2_CLOUD_ACCOUNT = {
 
 export const TURSO_CLOUD_ACCOUNTS: readonly TursoCloudAccountRow[] = [
   {
-    account: "hesham101",
-    email: "print.code.1000@gmail.com",
+    account: "hesham106",
+    email: "tenderx.engineer100@gmail.com",
     databases: 3,
     domainAr: "المستخدمون والمصادقة، الإعلانات، عمليات النظام",
     readByAr: "gova + submain + sub2main",

@@ -145,15 +145,17 @@ sqlite in any deployment that asks. During a real `deploy:all` the profiles
 account did exactly that, loaded a driver it does not ship, and answered 500 on
 every route reaching data — with a stub message naming a different account.
 
-An account that cannot run SQLite must not leave the choice to configuration.
-Every isolated composition root now pins it:
+Every composition root pinned the backend after that, which fixed the symptom.
+The choice itself is gone now — server application data is Turso in every
+runtime, so the registrar takes no options and there is no stub to alias:
 
 ```ts
-registerDataCoreRuntimeConfigPorts({ forceRemoteDataSource: true });
+registerDataCoreRuntimeConfigPorts();
 ```
 
-The stub is the backstop that makes the mistake loud. The pin is what prevents
-it. See `docs/08-troubleshooting/problems/every-server-route-500-unregistered-port.md`.
+`npm run architecture:check` fails on any `better-sqlite3` reference outside an
+isolated test, so no configuration value can reach a driver this account does not
+ship. See `docs/08-troubleshooting/problems/every-server-route-500-unregistered-port.md`.
 
 ## Deploying
 

@@ -16,7 +16,6 @@
     "@aws-sdk/s3-request-presigner": "3.1117.0",
     "@libsql/client": "0.17.4",
     "@vercel/sandbox": "2.4.0",
-    "better-sqlite3": "13.0.3",
     "drizzle-orm": "0.45.2",
     "fflate": "0.8.3",
     "google-auth-library": "11.0.2",

@@ -14,9 +14,8 @@ Derived list: `OWNED_VENDOR_MODULES` in `packages/architecture-core/src/registry
 
 | Vendor module | Owner package | Capability |
 |---|---|---|
-| `better-sqlite3` | `@asol/data-core` | Local SQLite |
 | `@libsql/client` | `@asol/data-core` | Turso remote |
-| `drizzle-orm`, `drizzle-orm/better-sqlite3`, `drizzle-orm/libsql` | `@asol/data-core` | Query layer |
+| `drizzle-orm`, `drizzle-orm/libsql` | `@asol/data-core` | Query layer |
 | `@aws-sdk/client-s3` | `@asol/storage-core`, `@asol/ota-core` | Product media vs OTA artifacts (dual ownership, distinct jobs) |
 | `@aws-sdk/s3-request-presigner` | `@asol/storage-core` | Presigned URLs |
 | `@capacitor/cli`, `@capacitor/core`, all `@capacitor/*` plugins listed in registry | `@asol/native-core` | Native shell |
@@ -47,7 +46,7 @@ When two packages share a vendor (e.g. `@aws-sdk/client-s3` for storage vs OTA),
 
 | Infrastructure | Architecture owner | Operations doc |
 |---|---|---|
-| Turso / SQLite | `@asol/data-core` | [docs/02-data-and-storage/](../../02-data-and-storage/) |
+| Turso / libSQL | `@asol/data-core` | [docs/02-data-and-storage/](../../02-data-and-storage/) |
 | Cloudflare R2 | `@asol/storage-core` | [docs/02-data-and-storage/](../../02-data-and-storage/) |
 | Vercel accounts | `@asol/vercel-deploy-core` | [super-admin-cloud-accounts.md](../../06-super-admin-and-operations/super-admin-cloud-accounts.md) |
 | Capacitor / mobile | `@asol/native-core` | [docs/07-mobile-and-release/](../../07-mobile-and-release/) |

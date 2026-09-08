@@ -170,7 +170,7 @@ Deleting a fixed product does not remove the source catalog item. It creates a `
 
 ## Database Compatibility
 
-The schema source is the local product SQLite database. The same schema is synced to Turso through the existing schema sync pipeline.
+The schema source is the `product` desired-schema manifest, applied to Turso through the existing schema sync pipeline.
 
 The migration file is:
 

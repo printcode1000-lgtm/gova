@@ -158,55 +158,55 @@ by `recipient-tokens`; it cannot forge grants because it does not hold
 
 ### Local development (`next dev`)
 
-Production web posts grants to the notifications service, which resolves device
-tokens from Turso. A `next dev` browser registers tokens into local
-`notifications.db` instead, so pointing the bridge at the remote service would
-always report `no_tokens`.
+`next dev` posts grants to the notifications service like any other runtime, and
+that service resolves device tokens from Turso — the same Turso a deployed
+browser registers into.
 
-When `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` is unset and `NODE_ENV` is
-`development`, `getNotificationsPublicUrl()` returns the page origin
-(`http://localhost:3001` by default). The bridge then posts to
-`/api/notifications/send` on the main app. That route exists only in
-development builds: it answers `404` in production and calls
-`deliverNotificationGrants` from `@asol/notifications-core/server`, the same
-entry point the notifications service uses.
+This used to be the one place the bridge diverged. A `next dev` browser
+registered tokens into a local `notifications.db`, so
+`getNotificationsPublicUrl()` returned the page origin whenever
+`NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` was unset, and grants went to a
+development-only `/api/notifications/send` on the main app rather than to the
+service. With one token store there is nothing left to redirect: an unset
+variable resolves to the canonical notifications deployment.
+
+`/api/notifications/send` remains a development-only route for exercising
+`deliverNotificationGrants` from `@asol/notifications-core/server` directly. It
+answers `404` in production, and the bridge no longer reaches for it on its own.
 
 Web Push from localhost still needs `WEB_PUSH_VAPID_PRIVATE_KEY` in
 `.env.local` (or Cloud Agent Secrets) so the Web Push provider can sign
 outbound messages. Grant signing needs `ASOL_NOTIFICATION_GRANT_SECRET`, or
 `ASOL_SESSION_SIGNING_SECRET` when the dedicated grant secret is unset.
 
-#### Preflight
+#### Development parity
 
-```bash
-npm run notifications:check:local
-```
+There is nothing to reconcile. Development posts grants to the same notifications
+origin every other runtime uses and reads the same Turso token store, so a device
+registered on the deployed site *is* reachable from localhost and the reverse is
+equally true.
 
-`scripts/check-localhost-notifications.ts` reports whether
-`http://localhost:3001` will behave like the deployed site, because every way
-that parity breaks is a configuration value and each one fails quietly:
+That parity is why the old `notifications:check:local` preflight is gone. It
+existed to confirm a set of localhost-only conditions —
+`NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` left *unset*, `notifications.db` present on
+disk — that were each a symptom of Development having its own token store. Two of
+its three failure modes were configuration values that are no longer optional,
+and the third was the divergence itself.
+
+The two configuration failures it also caught are still quiet, and still worth
+knowing:
 
 | Wrong value | What actually happens |
 |---|---|
 | No grant secret | `NotificationGrantCollector.issue` swallows the throw and yields zero grants. The order succeeds and nothing is ever sent. |
 | No `WEB_PUSH_VAPID_PRIVATE_KEY` | The provider answers `webPushNotConfigured` inside a delivery result nobody reads. |
-| `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` set | Grants go to the deployed service, which resolves tokens from Turso and can only answer `no_tokens` for a device registered on localhost. |
 
-It also checks `notifications.db` and `public/asol-push-sw.js`, and — when a dev
-server is answering — signs a real grant for a uid that owns no device and posts
-it to `/api/notifications/send`. A `200` carrying `no_tokens` proves the
-signature verified and the local database was read, without pushing to anyone.
-It exits non-zero on the first blocker. `ASOL_LOCAL_ORIGIN` overrides the port.
-
-Nothing else differs. The browser subscribes with the same VAPID public key,
-registers through the same Business API, and carries the same signed grant to
-the same `deliverNotificationGrants`. Only the token store changes: local
-SQLite instead of Turso, so a device registered on the deployed site is not
-reachable from localhost and the reverse is equally true.
+`scripts/probe-notifications-service.ts` exercises the deployed service directly
+when connectivity is the question.
 
 | Variable | Where | Notes |
 |---|---|---|
-| `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | main app, client-safe | Origin of the notifications service on production web and static builds. When unset in `next dev`, the bridge falls back to `window.location.origin` and posts to the main app's development-only `/api/notifications/send`, which fans out against local SQLite. Set explicitly to override (for example to exercise the deployed service from localhost). |
+| `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | main app, client-safe | Origin of the notifications service, in every runtime. When unset, it resolves to the canonical deployment declared in `@asol/native-core` — the same address the static and native bundles are built with. It used to fall back to `window.location.origin` in `next dev` so fan-out would read the local `notifications.db` that device registration wrote; with no local database, that fallback would only reach a gova runtime owning no notifications route. Set it explicitly to point Development at a different origin. |
 | `ASOL_MOBILE_PUSH_UNLOCK_KEY` | main app server only | 32-byte AES key (hex or base64). Decrypts the embedded blob at unlock. **Never** baked into client bundles. |
 | `ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` | main app server | Same ciphertext as the public blob; optional mismatch guard on unlock. |
 | `NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` | main app, client-safe | AES-256-GCM blob baked into static/Capacitor bundles. Useless without the unlock key. |

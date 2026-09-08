@@ -728,7 +728,7 @@ product entry point unusable.
 
 In `next dev`, the Service Bridge keeps product and review reads on the local
 Business API. This is required because the server-rendered public page reads the
-local SQLite product database; redirecting browser reads to a deployed products
+Turso product database; redirecting browser reads to a deployed products
 service would mix two datasets and report `productNotFound` for valid local
 products. Deployed web, static, and Capacitor builds retain the read-service
 split.

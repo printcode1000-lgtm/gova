@@ -4,6 +4,7 @@ import {
   LIST_MAX_LIMIT,
   MESSAGE_CLIP,
   STACK_CLIP,
+  SUMMARY_RECENT_WINDOW_DAYS,
   buildSystemLogFingerprint,
   type PersistentSystemLogEntry,
   type StoredSystemLogInput,
@@ -77,103 +78,21 @@ interface SystemLogsDatabase {
   execute(sql: string, params?: unknown[]): Promise<unknown>;
 }
 
+/**
+ * Reads and writes system log rows. Data only.
+ *
+ * It used to create its own table, add its own columns, build its own indexes
+ * and run a row backfill on every call, which made it a second schema authority
+ * alongside provisioning — two definitions of the same table, and whichever ran
+ * first won. The table is declared in the `system-ops` desired-schema manifest
+ * now; the one-time `origin` backfill moved to an explicit, idempotent
+ * migration (`tooling/migrate-system-log-origin.ts`) rather than riding along
+ * with every write.
+ */
 export class SystemLogsRepository {
-  private schemaReady = false;
-
   constructor(private readonly database: SystemLogsDatabase = profilesDataSource) {}
 
-  private async ensureColumn(name: string, definition: string) {
-    const database = this.database;
-    const columns = (await database.execute(
-      'PRAGMA table_info(system_logs)',
-    )) as Array<{ name?: string }>;
-    if (columns.some((column) => column.name === name)) return;
-    try {
-      await database.execute(
-        `ALTER TABLE system_logs ADD COLUMN ${name} ${definition}`,
-      );
-    } catch (error) {
-      const refreshed = (await database.execute(
-        'PRAGMA table_info(system_logs)',
-      )) as Array<{ name?: string }>;
-      if (!refreshed.some((column) => column.name === name)) throw error;
-    }
-  }
-
-  async ensureSchema() {
-    if (this.schemaReady) return;
-    const database = this.database;
-    await database.execute(`
-      CREATE TABLE IF NOT EXISTS system_logs (
-        id text PRIMARY KEY NOT NULL,
-        fingerprint text NOT NULL UNIQUE,
-        level text NOT NULL,
-        source text NOT NULL,
-        console_method text NOT NULL DEFAULT '',
-        message text NOT NULL,
-        page text NOT NULL DEFAULT '',
-        platform text NOT NULL DEFAULT 'server',
-        error_name text NOT NULL DEFAULT '',
-        source_file text NOT NULL DEFAULT '',
-        source_line integer,
-        source_column integer,
-        user_agent text NOT NULL DEFAULT '',
-        feature text NOT NULL DEFAULT '',
-        operation text NOT NULL DEFAULT '',
-        stack text NOT NULL DEFAULT '',
-        route_name text NOT NULL DEFAULT '',
-        status_code integer,
-        request_method text NOT NULL DEFAULT '',
-        app_version text NOT NULL DEFAULT '',
-        native_version text NOT NULL DEFAULT '',
-        uid text NOT NULL DEFAULT '',
-        origin text NOT NULL DEFAULT 'client',
-        trust_level text NOT NULL DEFAULT 'legacy',
-        message_truncated integer NOT NULL DEFAULT 0,
-        stack_truncated integer NOT NULL DEFAULT 0,
-        correlation_id text NOT NULL DEFAULT '',
-        request_flow_id text NOT NULL DEFAULT '',
-        session_id text NOT NULL DEFAULT '',
-        monitor_trace_id text NOT NULL DEFAULT '',
-        occurrences integer NOT NULL DEFAULT 1,
-        first_occurred_at text NOT NULL,
-        last_occurred_at text NOT NULL
-      )
-    `);
-    await this.ensureColumn('origin', "text NOT NULL DEFAULT 'client'");
-    await this.ensureColumn('trust_level', "text NOT NULL DEFAULT 'legacy'");
-    await this.ensureColumn('message_truncated', 'integer NOT NULL DEFAULT 0');
-    await this.ensureColumn('stack_truncated', 'integer NOT NULL DEFAULT 0');
-    await this.ensureColumn('correlation_id', "text NOT NULL DEFAULT ''");
-    await this.ensureColumn('request_flow_id', "text NOT NULL DEFAULT ''");
-    await this.ensureColumn('session_id', "text NOT NULL DEFAULT ''");
-    await this.ensureColumn('monitor_trace_id', "text NOT NULL DEFAULT ''");
-    await database.execute(
-      `UPDATE system_logs
-       SET origin = 'cloud'
-       WHERE trust_level = 'legacy'
-         AND (platform = 'server' OR source IN ('server', 'api'))`,
-    );
-    await database.execute(
-      'CREATE INDEX IF NOT EXISTS system_logs_level_time_idx ON system_logs(level, last_occurred_at)',
-    );
-    await database.execute(
-      'CREATE INDEX IF NOT EXISTS system_logs_platform_time_idx ON system_logs(platform, last_occurred_at)',
-    );
-    await database.execute(
-      'CREATE INDEX IF NOT EXISTS system_logs_feature_idx ON system_logs(feature, operation)',
-    );
-    await database.execute(
-      'CREATE INDEX IF NOT EXISTS system_logs_origin_time_idx ON system_logs(origin, last_occurred_at)',
-    );
-    await database.execute(
-      'CREATE INDEX IF NOT EXISTS system_logs_correlation_idx ON system_logs(correlation_id)',
-    );
-    this.schemaReady = true;
-  }
-
   async add(input: StoredSystemLogInput) {
-    await this.ensureSchema();
     const database = this.database;
     const now = nowIso();
     const key = buildSystemLogFingerprint(input);
@@ -238,7 +157,6 @@ export class SystemLogsRepository {
   }
 
   async list(options: SystemLogListOptions = {}): Promise<SystemLogListPage> {
-    await this.ensureSchema();
     const database = this.database;
     const limit = Math.max(
       1,
@@ -313,41 +231,58 @@ export class SystemLogsRepository {
   }
 
   async summary(): Promise<SystemLogSummary> {
-    await this.ensureSchema();
     const database = this.database;
     const hourAgo = new Date(Date.now() - 60 * 60 * 1_000).toISOString();
+    const recentWindowStart = new Date(
+      Date.now() - SUMMARY_RECENT_WINDOW_DAYS * 24 * 60 * 60 * 1_000,
+    ).toISOString();
 
-    const totals = (await database.execute(
-      `SELECT
-         SUM(CASE WHEN level = 'error' THEN occurrences ELSE 0 END) AS total_errors,
-         SUM(CASE WHEN level = 'warning' THEN occurrences ELSE 0 END) AS total_warnings,
-         SUM(CASE WHEN level = 'error' AND last_occurred_at >= ? THEN occurrences ELSE 0 END) AS last_hour_errors
-       FROM system_logs`,
+    const totalErrors = (await database.execute(
+      `SELECT SUM(occurrences) AS count
+       FROM system_logs
+       WHERE level = 'error' AND last_occurred_at >= ?`,
+      [recentWindowStart],
+    )) as Array<Record<string, unknown>>;
+
+    const totalWarnings = (await database.execute(
+      `SELECT SUM(occurrences) AS count
+       FROM system_logs
+       WHERE level = 'warning' AND last_occurred_at >= ?`,
+      [recentWindowStart],
+    )) as Array<Record<string, unknown>>;
+
+    const lastHourErrors = (await database.execute(
+      `SELECT SUM(occurrences) AS count
+       FROM system_logs
+       WHERE level = 'error' AND last_occurred_at >= ?`,
       [hourAgo],
     )) as Array<Record<string, unknown>>;
 
     const topFeatures = (await database.execute(
       `SELECT feature, SUM(occurrences) AS count
        FROM system_logs
-       WHERE level = 'error' AND feature != ''
+       WHERE level = 'error' AND feature != '' AND last_occurred_at >= ?
        GROUP BY feature
        ORDER BY count DESC
        LIMIT 5`,
+      [recentWindowStart],
     )) as Array<{ feature?: string; count?: number }>;
 
     const topFingerprints = (await database.execute(
       `SELECT fingerprint, message, occurrences, last_occurred_at
        FROM system_logs
-       WHERE level = 'error'
+       WHERE level = 'error' AND last_occurred_at >= ?
        ORDER BY occurrences DESC, last_occurred_at DESC
        LIMIT 5`,
+      [recentWindowStart],
     )) as Array<Record<string, unknown>>;
 
     const byPlatformRows = (await database.execute(
       `SELECT platform, SUM(occurrences) AS count
        FROM system_logs
-       WHERE level = 'error'
+       WHERE level = 'error' AND last_occurred_at >= ?
        GROUP BY platform`,
+      [recentWindowStart],
     )) as Array<{ platform?: string; count?: number }>;
 
     const byPlatform: Record<string, number> = {};
@@ -355,11 +290,10 @@ export class SystemLogsRepository {
       if (row.platform) byPlatform[row.platform] = Number(row.count ?? 0);
     }
 
-    const total = totals[0] ?? {};
     return {
-      totalErrors: Number(total.total_errors ?? 0),
-      totalWarnings: Number(total.total_warnings ?? 0),
-      lastHourErrors: Number(total.last_hour_errors ?? 0),
+      totalErrors: Number(totalErrors[0]?.count ?? 0),
+      totalWarnings: Number(totalWarnings[0]?.count ?? 0),
+      lastHourErrors: Number(lastHourErrors[0]?.count ?? 0),
       topFeatures: topFeatures.map((row) => ({
         feature: String(row.feature ?? 'unknown'),
         count: Number(row.count ?? 0),
@@ -375,7 +309,6 @@ export class SystemLogsRepository {
   }
 
   async clear(level?: string) {
-    await this.ensureSchema();
     const database = this.database;
     if (level) {
       await database.execute('DELETE FROM system_logs WHERE level = ?', [level]);
@@ -385,7 +318,6 @@ export class SystemLogsRepository {
   }
 
   async pruneOlderThan(cutoffIso: string) {
-    await this.ensureSchema();
     const database = this.database;
     const result = (await database.execute(
       'DELETE FROM system_logs WHERE last_occurred_at < ?',

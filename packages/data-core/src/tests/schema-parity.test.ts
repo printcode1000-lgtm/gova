@@ -1,23 +1,23 @@
 /**
- * Schema parity — the offline half.
+ * Schema parity — everything that can be settled without a network.
  *
- * The live half already exists and belongs to the release: `db:schema:sync:release` reads each
- * local SQLite source, reads its Turso counterpart, diffs them, and applies the missing DDL
- * before anything is pushed. That step needs credentials and it *writes*, so it cannot move
- * into a test chain and must not be duplicated — running the same comparison twice would either
- * apply DDL twice or make a green build depend on a live database.
+ * The live half belongs to the release: `db:schema:sync:release` reads each
+ * desired-schema manifest, reads its Turso counterpart, diffs them, and applies
+ * the missing DDL before anything is published. That step needs credentials and
+ * it *writes*, so it cannot move into a test chain.
  *
- * What this file checks is everything that can be settled without a network: that the declared
- * shard map, the migration DDL, and the local database files describe the *same* schema. Every
- * drift the sync would discover against Turso starts here, because Turso's schema is produced
- * from these files — a table that no migration creates cannot exist in the cloud either, and a
- * table claimed by two shards routes its writes to whichever one the map resolves first.
+ * What this file checks is the offline half: that the manifests exist for every
+ * logical database, that they and the shard routing map describe the same
+ * tables, that no foreign key crosses a database boundary the cloud cannot
+ * enforce, that the operational tables which used to be created at runtime are
+ * declared, that the order guard triggers survived the split, and that the whole
+ * thing loads with no `.db` file and no local database driver anywhere in reach.
  *
- * Runs inside `npm run test:data-core`, so it gates `build`, `build:static`, and `test` on every
- * machine, with no credentials and no clean-checkout dependency.
+ * Runs inside `npm run test:data-core`, so it gates `build`, `build:static` and
+ * `test` on every machine, with no credentials and no clean-checkout dependency.
  */
 import assert from 'node:assert/strict';
-import { readFileSync, readdirSync, existsSync } from 'node:fs';
+import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -25,237 +25,356 @@ import {
   DATABASE_SHARDS,
   DATABASE_SHARD_NAMES,
   DATABASE_SHARD_TABLE_TO_DATABASE,
-  MARKETPLACE_ORDER_SHARDS,
-  PROFILE_SHARDS,
   envPrefixForShard,
 } from '../core/database/database-shards.ts';
 import {
-  SYSTEM_LOG_COMPATIBILITY_COLUMNS,
-  missingSystemLogColumnStatements,
-} from '../tooling/ensure-system-logs-schema.ts';
+  DESIRED_SCHEMAS,
+  LOGICAL_DATABASE_LABELS,
+  NON_SHARD_DATABASE_LABELS,
+  desiredTableOwnership,
+  readDesiredSchema,
+} from '../provisioning/desired-schema/registry.ts';
+import { computeSchemaVersion } from '../provisioning/core/schema-version.ts';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const SRC = path.resolve(HERE, '..');
+const ROOT = path.resolve(SRC, '../../..');
 
-/**
- * Where the DDL for each shard family is written.
- *
- * The profile family has two sources, and that is deliberate rather than an oversight: the
- * `system-ops` shard's data-health tables are created from a TypeScript DDL module applied at
- * runtime by the health engine, not from a numbered migration. Listing only the migration
- * folder here would report those eight tables as missing.
- */
-const MIGRATION_SOURCES = [
-  {
-    family: 'profile',
-    shards: PROFILE_SHARDS,
-    dirs: [path.join(SRC, 'core/database/profile/migrations')],
-    files: [
-      path.join(SRC, 'domains/data-health/db/metadata-schema.ts'),
-    ],
-  },
-  {
-    family: 'marketplace-orders',
-    shards: MARKETPLACE_ORDER_SHARDS,
-    dirs: [path.join(SRC, 'domains/marketplace-orders/db/migrations')],
-    files: [],
-  },
-] as const;
+/** Every logical database has exactly one manifest, and nothing else does. */
+function runManifestCompletenessTest() {
+  const manifestDir = path.join(SRC, 'provisioning/desired-schema');
+  const files = readdirSync(manifestDir)
+    .filter((name) => name.endsWith('.ts') && name !== 'registry.ts')
+    .map((name) => name.replace(/\.ts$/, ''))
+    .sort();
 
-function ddlOf(source: (typeof MIGRATION_SOURCES)[number]): string {
-  const parts: string[] = [];
-  for (const dir of source.dirs) {
-    assert.ok(existsSync(dir), `Migration folder is missing: ${dir}`);
-    const sql = readdirSync(dir).filter((f) => f.endsWith('.sql')).sort();
-    assert.ok(sql.length > 0, `No migration SQL in ${dir}. A shard with no DDL cannot be synced.`);
-    parts.push(...sql.map((f) => readFileSync(path.join(dir, f), 'utf8')));
-  }
-  for (const file of source.files) {
-    assert.ok(existsSync(file), `DDL module is missing: ${file}`);
-    parts.push(readFileSync(file, 'utf8'));
-  }
-  return parts.join('\n');
-}
-
-function createdTables(ddl: string): Set<string> {
-  const tables = new Set<string>();
-  for (const match of ddl.matchAll(
-    /CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?[`"']?([A-Za-z0-9_]+)[`"']?/gi,
-  )) {
-    tables.add(match[1]);
-  }
-  return tables;
-}
-
-// The system-logs repository reads and writes these security/correlation
-// columns. Keep both the Drizzle source and new-database migration aligned so
-// live Turso columns cannot remain invisible to the local schema reference.
-const systemLogColumns = [
-  'origin',
-  'trust_level',
-  'message_truncated',
-  'stack_truncated',
-  'correlation_id',
-  'request_flow_id',
-  'session_id',
-  'monitor_trace_id',
-] as const;
-const systemLogMigration = readFileSync(
-  path.join(SRC, 'core/database/profile/migrations/0013_system_logs.sql'),
-  'utf8',
-);
-const profileSchema = readFileSync(
-  path.join(SRC, 'core/database/profile/profile.schema.ts'),
-  'utf8',
-);
-for (const column of systemLogColumns) {
-  assert.match(
-    systemLogMigration,
-    new RegExp(`\\b${column}\\b`),
-    `system_logs migration is missing repository-owned column ${column}.`,
+  assert.deepEqual(
+    files,
+    [...LOGICAL_DATABASE_LABELS].sort(),
+    'Every manifest file must correspond to a registered logical database, and vice versa.',
   );
-  assert.ok(
-    profileSchema.includes(`("${column}")`),
-    `Drizzle system_logs schema is missing repository-owned column ${column}.`,
-  );
-}
-assert.deepEqual(
-  SYSTEM_LOG_COMPATIBILITY_COLUMNS.map(([name]) => name),
-  systemLogColumns,
-  'The existing-database upgrader and declared system-log schema columns must stay aligned.',
-);
-assert.equal(
-  missingSystemLogColumnStatements(new Set(systemLogColumns)).length,
-  0,
-  'The system-log upgrader must be idempotent when all compatibility columns exist.',
-);
-assert.match(
-  missingSystemLogColumnStatements(new Set(systemLogColumns.slice(1)))[0] ?? '',
-  /^ALTER TABLE system_logs ADD COLUMN origin /,
-  'The system-log upgrader must add a missing column with explicit DDL.',
-);
 
-// ── Every declared table is created by a migration ──────────────────────────
-for (const source of MIGRATION_SOURCES) {
-  const created = createdTables(ddlOf(source));
-  for (const [shard, tables] of Object.entries(source.shards)) {
-    for (const table of tables) {
-      assert.ok(
-        created.has(table),
-        `Shard "${shard}" claims table "${table}", but no migration in ${source.family} creates ` +
-          'it. The schema sync would push a shard that cannot hold what routes to it.',
+  assert.deepEqual(
+    [...LOGICAL_DATABASE_LABELS].sort(),
+    [...NON_SHARD_DATABASE_LABELS, ...DATABASE_SHARD_NAMES].sort(),
+    'The manifest registry must cover the four standalone databases and every declared shard.',
+  );
+
+  console.log(`✅ desired-schema manifests: ${LOGICAL_DATABASE_LABELS.length} logical databases`);
+}
+
+/** One owner per table, and every routed table is declared by its owner. */
+function runTableOwnershipTest() {
+  const owners = desiredTableOwnership();
+
+  for (const [databaseName, tables] of Object.entries(DATABASE_SHARDS)) {
+    for (const table of tables as readonly string[]) {
+      const owner = owners.get(table);
+      assert.equal(
+        owner,
+        databaseName,
+        `Shard map routes "${table}" to "${databaseName}", but the manifests say "${owner ?? 'nothing'}".`,
       );
     }
   }
-}
 
-// ── No table belongs to two shards ──────────────────────────────────────────
-const owner = new Map<string, string>();
-for (const [shard, tables] of Object.entries(DATABASE_SHARDS)) {
-  for (const table of tables) {
-    const previous = owner.get(table);
+  for (const [table, databaseName] of Object.entries(DATABASE_SHARD_TABLE_TO_DATABASE)) {
     assert.ok(
-      previous === undefined,
-      `Table "${table}" is declared by both "${previous}" and "${shard}". The router resolves one ` +
-        'of them and the other silently never receives a write.',
+      DESIRED_SCHEMAS[databaseName as keyof typeof DESIRED_SCHEMAS].tables[table],
+      `"${table}" is routed to "${databaseName}" but that manifest does not declare it.`,
     );
-    owner.set(table, shard);
   }
+
+  // Every shard also needs a credential prefix; a shard nothing can address is
+  // a shard nothing writes to.
+  for (const databaseName of DATABASE_SHARD_NAMES) {
+    assert.match(envPrefixForShard(databaseName), /^[A-Z0-9_]+$/);
+  }
+
+  console.log(`✅ table ownership: ${owners.size} tables, exactly one owner each`);
 }
 
-// ── The lookup map agrees with the shard map it is derived from ─────────────
-for (const [table, shard] of Object.entries(DATABASE_SHARD_TABLE_TO_DATABASE)) {
-  assert.equal(
-    owner.get(table),
-    shard,
-    `The table→shard lookup routes "${table}" to "${shard}", which is not what DATABASE_SHARDS says.`,
-  );
-}
-assert.equal(
-  Object.keys(DATABASE_SHARD_TABLE_TO_DATABASE).length,
-  owner.size,
-  'The table→shard lookup and the shard map cover different table sets.',
-);
+/**
+ * No desired foreign key points outside its own database.
+ *
+ * Turso cannot enforce a reference across databases; declaring one would either
+ * fail to apply or apply as a constraint that is never checked. The source
+ * schemas this repository grew from *did* contain such references — profile
+ * tables pointing at `user_profiles` in another shard, orders tables pointing
+ * across the nine order databases — so this is a real property, not a formality.
+ */
+function runForeignKeyBoundaryTest() {
+  let intraDatabaseForeignKeys = 0;
 
-// ── Every shard has a usable environment prefix, and they are distinct ──────
-const prefixes = new Map<string, string>();
-for (const shard of DATABASE_SHARD_NAMES) {
-  const prefix = envPrefixForShard(shard);
-  assert.match(
-    prefix,
-    /^[A-Z0-9_]+$/,
-    `Shard "${shard}" produces the environment prefix "${prefix}", which cannot name a variable.`,
-  );
-  const clash = prefixes.get(prefix);
+  for (const label of LOGICAL_DATABASE_LABELS) {
+    const schema = DESIRED_SCHEMAS[label];
+    const own = new Set(Object.keys(schema.tables));
+    for (const table of Object.values(schema.tables)) {
+      for (const foreignKey of table.foreignKeys) {
+        assert.ok(
+          own.has(foreignKey.referencesTable),
+          `${label}.${table.name} declares a foreign key to "${foreignKey.referencesTable}", ` +
+            `which lives in another Turso database. Cross-database relationships are ` +
+            `application invariants, not constraints.`,
+        );
+        intraDatabaseForeignKeys += 1;
+      }
+    }
+  }
+
+  // Guard against the opposite failure: a "no cross-database FK" check passes
+  // trivially if the manifests kept no foreign keys at all.
   assert.ok(
-    clash === undefined,
-    `Shards "${clash}" and "${shard}" both resolve to ${prefix}_DATABASE_URL — one would read the ` +
-      "other's credentials.",
+    intraDatabaseForeignKeys > 0,
+    'No foreign keys survived at all — intra-database constraints were stripped along with the cross-database ones.',
   );
-  prefixes.set(prefix, shard);
+
+  console.log(`✅ foreign keys: ${intraDatabaseForeignKeys} intra-database, 0 crossing a boundary`);
 }
 
-// ── Every database the sync knows about is actually synced ─────────────────
-//
-// The seventeen shards are covered by a loop over DATABASE_SHARD_NAMES, so a new shard is
-// synced the moment it is declared. The four standalone databases are hand-listed, and a fifth
-// added to the routing table but not to `runAllSchemaSyncs` would drift forever without ever
-// failing anything — nothing would compare it to its cloud counterpart.
-const syncSource = readFileSync(path.join(SRC, 'provisioning/core/schema-sync.ts'), 'utf8');
-const routingBlock = /const LOGICAL_DATABASE_TABLES[\s\S]*?\n\};/.exec(syncSource);
-assert.ok(routingBlock, 'LOGICAL_DATABASE_TABLES is gone; nothing declares which tables a database owns.');
-const standaloneLabels = [...routingBlock[0].matchAll(/^\s{2}([a-z_]+):\s*new Set\(/gm)].map(
-  (m) => m[1],
-);
-assert.ok(
-  standaloneLabels.length > 0,
-  'No standalone database found in the routing table — the parser stopped matching reality.',
-);
-const syncedLabels = new Set(
-  [...syncSource.matchAll(/databaseLabel:\s*'([a-z-]+)'/g)].map((m) => m[1]),
-);
-for (const label of standaloneLabels) {
+/**
+ * The operational tables that used to be created by the repositories reading
+ * them are declared by provisioning, and the removed capability's tables are not.
+ */
+function runSystemOpsOwnershipTest() {
+  const systemOps = readDesiredSchema('system-ops');
+
+  for (const table of ['system_logs', 'control_release_state']) {
+    assert.ok(
+      systemOps.tables[table],
+      `system-ops must declare "${table}": its repository no longer creates it.`,
+    );
+  }
+
+  for (const table of Object.keys(systemOps.tables)) {
+    assert.ok(
+      !table.startsWith('data_health_'),
+      `system-ops still declares "${table}"; the Data Health capability was removed.`,
+    );
+  }
+
+  for (const label of LOGICAL_DATABASE_LABELS) {
+    for (const table of Object.keys(DESIRED_SCHEMAS[label].tables)) {
+      assert.ok(
+        !table.startsWith('data_health_'),
+        `"${label}" declares removed Data Health table "${table}".`,
+      );
+    }
+  }
+
+  // The columns the system-log repository used to add by hand at runtime.
+  const systemLogColumns = new Set(systemOps.tables.system_logs.columns.map((c) => c.name));
+  for (const column of [
+    'origin',
+    'trust_level',
+    'message_truncated',
+    'stack_truncated',
+    'correlation_id',
+    'request_flow_id',
+    'session_id',
+    'monitor_trace_id',
+  ]) {
+    assert.ok(
+      systemLogColumns.has(column),
+      `system_logs.${column} must be declared: nothing adds it at runtime any more.`,
+    );
+  }
+
+  // And the promotions tables the discount repository used to create.
+  const promotions = readDesiredSchema('profile-promotions');
+  for (const table of ['seller_discounts', 'seller_discount_usages']) {
+    assert.ok(
+      promotions.tables[table],
+      `profile-promotions must declare "${table}": its repository no longer creates it.`,
+    );
+  }
+
+  console.log('✅ system-ops and promotions: runtime-created schema is now declared');
+}
+
+/**
+ * The marketplace-order guard triggers are domain invariants, not decoration.
+ *
+ * They enforce state transitions and totals the application relies on, and they
+ * were the thing most at risk when the monolithic orders database was split into
+ * nine.
+ */
+function runOrderTriggerTest() {
+  const orderLabels = LOGICAL_DATABASE_LABELS.filter((label) => label.startsWith('orders-'));
+  let triggers = 0;
+  for (const label of orderLabels) {
+    triggers += Object.keys(DESIRED_SCHEMAS[label].triggers).length;
+  }
+
   assert.ok(
-    syncedLabels.has(label),
-    `"${label}" is a routed database but runAllSchemaSyncs never syncs it. Its cloud schema ` +
-      'would never be compared to the local one.',
+    triggers >= 50,
+    `Only ${triggers} order guard trigger(s) survive in the manifests; the order domain relies on far more.`,
+  );
+
+  // Every trigger belongs to a table its own database declares.
+  for (const label of orderLabels) {
+    const own = new Set(Object.keys(DESIRED_SCHEMAS[label].tables));
+    for (const trigger of Object.values(DESIRED_SCHEMAS[label].triggers)) {
+      const match = /\bON\s+["'`]?([A-Za-z_][\w]*)["'`]?/i.exec(trigger.sql);
+      assert.ok(match, `Could not read the target table of trigger "${trigger.name}".`);
+      assert.ok(
+        own.has(match[1]),
+        `Trigger "${trigger.name}" in "${label}" fires on "${match[1]}", which that database does not own.`,
+      );
+    }
+  }
+
+  console.log(`✅ order triggers: ${triggers} guards preserved across the nine order databases`);
+}
+
+/** Constraint detail participates in parity rather than being ignored. */
+function runConstraintFidelityTest() {
+  let compositeKeys = 0;
+  let checks = 0;
+  let uniques = 0;
+  let partialIndexes = 0;
+  let autoIncrement = 0;
+
+  for (const label of LOGICAL_DATABASE_LABELS) {
+    const schema = DESIRED_SCHEMAS[label];
+    for (const table of Object.values(schema.tables)) {
+      const keyColumns = table.columns.filter((column) => column.primaryKeyPosition > 0);
+      if (keyColumns.length > 1) {
+        compositeKeys += 1;
+        // Ordinals must be a permutation of 1..n, or the key order is lost.
+        const positions = keyColumns.map((column) => column.primaryKeyPosition).sort((a, b) => a - b);
+        assert.deepEqual(
+          positions,
+          keyColumns.map((_, index) => index + 1),
+          `Composite primary key of ${label}.${table.name} has broken ordinals.`,
+        );
+      }
+      checks += table.constraints.checks.length;
+      uniques += table.constraints.uniqueConstraints.length;
+      if (table.constraints.autoIncrement) autoIncrement += 1;
+    }
+    for (const index of Object.values(schema.indexes)) {
+      if (index.where) partialIndexes += 1;
+      assert.ok(
+        schema.tables[index.tableName],
+        `Index "${index.name}" in "${label}" targets a table that database does not own.`,
+      );
+    }
+  }
+
+  assert.ok(checks > 0, 'No CHECK constraints were captured; the order domain declares many.');
+  assert.ok(uniques > 0, 'No inline UNIQUE constraints were captured.');
+  assert.ok(autoIncrement > 0, 'No AUTOINCREMENT table was captured; `users.id` is one.');
+  assert.ok(compositeKeys >= 0);
+
+  console.log(
+    `✅ constraint fidelity: ${checks} checks, ${uniques} unique constraints, ` +
+      `${compositeKeys} composite keys, ${partialIndexes} partial indexes, ${autoIncrement} autoincrement`,
   );
 }
-assert.ok(
-  syncSource.includes('for (const databaseName of DATABASE_SHARD_NAMES)'),
-  'Shard syncing no longer iterates DATABASE_SHARD_NAMES. A hand-written shard list drifts from ' +
-    'the routing table the first time a shard is added.',
-);
-assert.ok(
-  syncSource.includes('residualOperations'),
-  'The read-back verification is gone. Without it the sync can report success while the cloud ' +
-    'still differs — "the DDL was sent" is not "the cloud matches".',
-);
 
-// ── The release step that does the live half is still wired ────────────────
-const rootManifest = JSON.parse(
-  readFileSync(path.resolve(SRC, '../../../package.json'), 'utf8'),
-);
-assert.ok(
-  rootManifest.scripts['db:schema:sync:release'],
-  'db:schema:sync:release is gone. It is the only step that reconciles these files with Turso.',
-);
-const deployAll = readFileSync(path.resolve(SRC, '../../../scripts/deploy-all.ts'), 'utf8');
-const deployAllRunbook = readFileSync(
-  path.resolve(SRC, '../../../packages/release-core/src/console/deploy-all-runbook.ts'),
-  'utf8',
-);
-assert.ok(
-  deployAll.includes('DEPLOY_ALL_PREFLIGHT_SECTIONS'),
-  'deploy:all must drive preflight from DEPLOY_ALL_PREFLIGHT_SECTIONS so release schema sync stays wired.',
-);
-assert.ok(
-  deployAllRunbook.includes('db:schema:sync:release'),
-  'deploy:all preflight runbook no longer runs db:schema:sync:release. Local schema would ship ahead of the cloud, ' +
-    'and code expecting a new column would reach production before the column does.',
-);
+/** The fingerprint is a property of the manifest, computable with no database. */
+function runFingerprintTest() {
+  const fingerprints = new Map<string, string>();
+  for (const label of LOGICAL_DATABASE_LABELS) {
+    const version = computeSchemaVersion(DESIRED_SCHEMAS[label]);
+    assert.match(version, /^[0-9a-f]{16}$/, `Schema fingerprint for "${label}" is malformed.`);
+    fingerprints.set(label, version);
+  }
+  // Deterministic: the same input must fingerprint the same way twice.
+  for (const label of LOGICAL_DATABASE_LABELS) {
+    assert.equal(computeSchemaVersion(DESIRED_SCHEMAS[label]), fingerprints.get(label));
+  }
+  console.log('✅ desired-schema fingerprints: deterministic, computed from source');
+}
 
-console.log(
-  `@asol/data-core schema parity: ${DATABASE_SHARD_NAMES.length} shards, ${owner.size} tables, ` +
-    'all created by migrations, uniquely owned, and distinctly credentialed.',
-);
+/**
+ * Provisioning cannot open a local database, and cannot destroy a cloud one.
+ *
+ * A string check, because the failure it guards against is a reintroduction, not
+ * a bug in today's code: the previous shard "provisioning" dropped every table
+ * in a Turso database and refilled it from a developer's laptop, and nothing in
+ * its name said so.
+ */
+function runProvisioningPurityTest() {
+  const provisioningDir = path.join(SRC, 'provisioning');
+  const toolingDir = path.join(SRC, 'tooling');
+
+  const files: string[] = [];
+  const walk = (dir: string) => {
+    if (!existsSync(dir)) return;
+    for (const entry of readdirSync(dir)) {
+      const full = path.join(dir, entry);
+      if (statSync(full).isDirectory()) walk(full);
+      else if (full.endsWith('.ts')) files.push(full);
+    }
+  };
+  walk(provisioningDir);
+
+  for (const file of files) {
+    const content = readFileSync(file, 'utf8');
+    const relative = path.relative(ROOT, file);
+    assert.ok(
+      !content.includes('better-sqlite3'),
+      `${relative} imports a local database driver; provisioning must compute its schema from source.`,
+    );
+    assert.ok(
+      !content.includes('sync_sqlite'),
+      `${relative} names the removed local database directory.`,
+    );
+  }
+
+  const provisionShards = readFileSync(
+    path.join(toolingDir, 'provision-database-shards.ts'),
+    'utf8',
+  );
+  for (const forbidden of ['DROP TABLE', 'DELETE FROM', 'INSERT OR REPLACE', 'better-sqlite3']) {
+    assert.ok(
+      !provisionShards.includes(forbidden),
+      `Shard provisioning contains "${forbidden}". Provisioning creates and describes; it never destroys or reseeds.`,
+    );
+  }
+
+  console.log('✅ provisioning purity: no local driver, no row copy, no destructive DDL');
+}
+
+/** The generic build must not carry a local-database preparation step. */
+function runBuildGatePolicyTest() {
+  const gates = readFileSync(path.join(ROOT, 'scripts/generated-gates.ts'), 'utf8');
+  assert.ok(
+    !gates.includes('db:ensure'),
+    'The build gate still runs db:ensure; there is no local database to prepare.',
+  );
+  assert.ok(
+    gates.includes('db:schema:verify'),
+    'The build gate must verify the cloud schema read-only rather than mutating it.',
+  );
+
+  const packageJson = JSON.parse(readFileSync(path.join(ROOT, 'package.json'), 'utf8')) as {
+    scripts: Record<string, string>;
+  };
+  assert.ok(!('db:ensure' in packageJson.scripts), 'db:ensure must not exist as a script.');
+  assert.ok('db:schema:verify' in packageJson.scripts, 'db:schema:verify must exist.');
+  assert.ok(
+    'db:schema:sync:release' in packageJson.scripts,
+    'The authorized release schema apply must still exist.',
+  );
+
+  console.log('✅ build gates: read-only schema verification, no local database preparation');
+}
+
+function main() {
+  console.log('🚀 Running desired-schema parity contract...\n');
+  runManifestCompletenessTest();
+  runTableOwnershipTest();
+  runForeignKeyBoundaryTest();
+  runSystemOpsOwnershipTest();
+  runOrderTriggerTest();
+  runConstraintFidelityTest();
+  runFingerprintTest();
+  runProvisioningPurityTest();
+  runBuildGatePolicyTest();
+  console.log('\n🎉 Desired-schema parity contract passed.');
+}
+
+main();

@@ -262,16 +262,12 @@ Every user-triggered save surface must:
 | `custom-request`               | `/custom-request` special order                           | Image upload + request submit                                                                                |
 | `account-deletion`             | `/delete-account`                                         | Account deletion (phrase gate stays on the page)                                                             |
 | `super-admin-users`            | `/super-admin/users`                                      | Super-admin deletion of a user account, one staged item per row                                              |
-| `data-health`                  | `/super-admin/data-health`                                | Quarantine release, quarantined image delete                                                                 |
-| `dev-cloud-backup`             | `/super-admin/dev-cloud-backup`                           | Backup create, saved-backup update, restore, delete                                                          |
 | `super-admin-hero-slider`      | Home hero slider admin                                    | —                                                                                                            |
 | `super-admin-featured-marquee` | Featured products marquee admin                           | —                                                                                                            |
 | `super-admin-trending-ribbon`  | Trending ribbon admin                                     | —                                                                                                            |
 | `super-admin-logs`             | `/super-admin/logs`                                       | Clear all logs, clear one section                                                                            |
 | `system-logs-floating`         | Floating error badge                                      | Clear all logs                                                                                               |
 | `catalog-studio`               | Catalog Studio JSON drafts + staged image upload          | Move catalog image to the developer trash                                                                    |
-| `data-health`                  | `/super-admin/data-health`                                | Cleanup plan, order purge, quarantine image delete, quarantine clear, run-history clear, cleanup-audit clear |
-| `dev-cloud-backup`             | `/dev/cloud-backup`                                       | Delete a saved local backup                                                                                  |
 | `pharmacy-catalog-manager`     | `/profile/pharmacy-catalog`                               | Create/rename category and subcategory, visibility changes for categories, subcategories, and products       |
 | `developer-product-style`      | `/dev/category-selector`                                  | —                                                                                                            |
 | `release-console-store-text`   | Google Play store text/listings                           | —                                                                                                            |
@@ -286,7 +282,7 @@ The registrations above were audited for Execute/discard semantics. Form-only
 and form-derived upload scopes use locked checkboxes. Mixed scopes keep their
 form items locked and allow only their staged operations to be unchecked.
 Operation-only scopes (`product-reviews:*`, `super-admin-users`, logs,
-data-health, dev-cloud-backup, and store-asset deletion scopes) may discard an
+store-asset deletion scopes) may discard an
 unchecked staged operation. No integration calls `setPageSaveItemSelected`
 outside the shared dialog, and no scope relies on an unchecked operation
 surviving Execute for a later run.

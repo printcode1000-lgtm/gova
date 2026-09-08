@@ -15,7 +15,7 @@ npm error stack Error: Could not find any Python installation to use
 
 After a failed run, `node_modules/better-sqlite3` may be missing entirely even
 when workspace packages under `node_modules/@asol/*` look complete. Later
-`npm run build` steps that touch SQLite (`db:ensure`, data-core tests) then fail.
+Historical: `better-sqlite3` was a production dependency then, because Development ran against a filesystem database. It is a devDependency now, used only by isolated in-memory tests, and no build, provisioning or release step loads it.
 
 The WindowsApps `python.exe` stub does **not** count:
 

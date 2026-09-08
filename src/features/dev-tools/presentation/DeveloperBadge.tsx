@@ -23,8 +23,6 @@ const pages = [
   { path: '/dev/category-selector', name: 'محدد الأقسام' },
   { path: '/dev/monitor', name: 'مراقب العمليات' },
   { path: '/dev/catalog-studio', name: 'استوديو الكتالوج' },
-  { path: '/dev/data-health', name: 'صحة البيانات' },
-  { path: '/dev/dev-cloud-backup', name: 'النسخ السحابي للتطوير' },
   { path: '/dev/release-console', name: 'وحدة الإصدار' },
   { path: '/dev/deploy-all', name: 'تشغيل Deploy' },
   { path: '/dev/cloud-accounts', name: 'الحسابات السحابية' },

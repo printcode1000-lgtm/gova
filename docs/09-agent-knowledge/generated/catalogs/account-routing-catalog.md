@@ -20,7 +20,7 @@ is listed as `gova/dev` and answered wherever the request lands.
 
 | Account | Vercel project | Origin variable | Owned pairs | Shipped | Unshipped |
 | --- | --- | --- | ---: | ---: | ---: |
-| `control` | `asol-control` | `NEXT_PUBLIC_ASOL_CONTROL_URL` | 57 | 57 | 0 |
+| `control` | `asol-control` | `NEXT_PUBLIC_ASOL_CONTROL_URL` | 36 | 36 | 0 |
 | `gova/dev` | — | — | 8 | 8 | 0 |
 | `notifications` | `asol-notifications` | `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | 5 | 1 | 4 |
 | `orders` | `asol-orders` | `NEXT_PUBLIC_ASOL_ORDERS_URL` | 1 | 1 | 0 |
@@ -46,27 +46,6 @@ is listed as `gova/dev` and answered wherever the request lands.
 | `GET` | `/api/super-admin/build-jobs/analysis` | shipped |
 | `GET` | `/api/super-admin/build-jobs/analysis/compare` | shipped |
 | `GET` | `/api/super-admin/build-jobs/catalog` | shipped |
-| `GET` | `/api/super-admin/data-health` | shipped |
-| `POST` | `/api/super-admin/data-health/cleanup` | shipped |
-| `GET` | `/api/super-admin/data-health/history` | shipped |
-| `POST` | `/api/super-admin/data-health/history/audit/clear` | shipped |
-| `POST` | `/api/super-admin/data-health/history/runs/clear` | shipped |
-| `POST` | `/api/super-admin/data-health/orders/plan` | shipped |
-| `POST` | `/api/super-admin/data-health/orders/purge` | shipped |
-| `POST` | `/api/super-admin/data-health/orders/retry-images` | shipped |
-| `POST` | `/api/super-admin/data-health/plan` | shipped |
-| `POST` | `/api/super-admin/data-health/quarantine/clear` | shipped |
-| `POST` | `/api/super-admin/data-health/quarantine/delete` | shipped |
-| `POST` | `/api/super-admin/data-health/quarantine/release` | shipped |
-| `GET` | `/api/super-admin/data-health/schema` | shipped |
-| `GET` | `/api/super-admin/dev-cloud-backup` | shipped |
-| `POST` | `/api/super-admin/dev-cloud-backup/backups/compare-saved` | shipped |
-| `POST` | `/api/super-admin/dev-cloud-backup/backups/create` | shipped |
-| `POST` | `/api/super-admin/dev-cloud-backup/backups/delete` | shipped |
-| `GET` | `/api/super-admin/dev-cloud-backup/backups/download` | shipped |
-| `POST` | `/api/super-admin/dev-cloud-backup/backups/inspect-saved` | shipped |
-| `POST` | `/api/super-admin/dev-cloud-backup/backups/restore-saved` | shipped |
-| `POST` | `/api/super-admin/dev-cloud-backup/backups/update-saved` | shipped |
 | `GET` | `/api/super-admin/google-play-console` | shipped |
 | `GET` | `/api/super-admin/google-play-store-assets` | shipped |
 | `PUT` | `/api/super-admin/google-play-store-assets` | shipped |

@@ -24,7 +24,7 @@ Repositories under `packages/data-core/src/domains/**/` and application reposito
 
 - UI, hooks, client code
 - Raw fetch or API routes
-- `@libsql/client` / `better-sqlite3` outside data-core database client modules
+- `@libsql/client` outside data-core database client modules
 
 ## Central owner
 

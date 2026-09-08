@@ -30,7 +30,7 @@ Enforced stack for all features. Source matrix: `packages/architecture-core/src/
 ├─────────────────────────────────────────────────────────────┤
 │  Database Client (@asol/data-core)                          │
 ├─────────────────────────────────────────────────────────────┤
-│  SQLite (local) / Turso (production)                        │
+│  Turso / libSQL — every runtime                             │
 └─────────────────────────────────────────────────────────────┘
 
 Configuration layer (src/core/config) — env reads only; crosses via injection
@@ -57,7 +57,7 @@ Configuration layer (src/core/config) — env reads only; crosses via injection
 | `fetch()`, axios, XHR | `asol-http-transport.ts` |
 | Raw SQL | Repository, database client, provisioning |
 | `drizzle-orm` | Repository, `packages/data-core/src/core/database/**` |
-| `@libsql/client`, `better-sqlite3` | Database client, provisioning |
+| `@libsql/client` | Database client, provisioning |
 | `process.env` | `src/core/config/*` |
 | Secrets in client bundles | Forbidden |
 | `server-only` in Client Components | Forbidden |

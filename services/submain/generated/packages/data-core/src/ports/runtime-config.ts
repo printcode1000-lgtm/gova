@@ -52,7 +52,6 @@ export interface DataCoreRuntimeConfigPort {
     platform: string;
     isStatic: boolean;
     supportsServerApi: boolean;
-    dataSource: string;
     isDevelopment: boolean;
     isProvisioning: boolean;
   };

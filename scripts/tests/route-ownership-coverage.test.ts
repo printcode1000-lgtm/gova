@@ -66,7 +66,11 @@ assert.deepEqual(
 
 /** The reader that finds handlers must actually find them, or the gate is blind. */
 const controlRoutes = shippedRoutes("services/control");
-assert.ok(controlRoutes.size > 40, "control ships its migrated route tree");
+// A floor, not a count: the point is that the reader finds a real route tree
+// rather than silently returning nothing. It moved down by 21 when the Data
+// Health and Dev Cloud Backup capabilities were removed, which is the only
+// legitimate reason for it to fall.
+assert.ok(controlRoutes.size > 25, "control ships its migrated route tree");
 assert.ok(
   controlRoutes.get("/api/system-logs")?.has("GET"),
   "the shipped-route reader must see a real exported handler",

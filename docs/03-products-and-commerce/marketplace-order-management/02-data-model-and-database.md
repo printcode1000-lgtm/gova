@@ -14,7 +14,7 @@ All monetary columns use integer minor units. For EGP, `1250` represents EGP 12.
 
 `shipment_items` has a database check requiring exactly one matching item reference. Partial unique indexes prevent the same item from being assigned to two active shipments. Completed, rejected, failed, returned, or closed assignments no longer block a later return or replacement movement.
 
-Custom image rows require the dedicated `spicialOrder` storage profile, a non-empty storage key, an allowed image MIME type, and a processed size no greater than 500 KB. The stored profile ID and key keep deletion and URL resolution tied to the same local/R2 object. Status guard triggers reject unsupported status values on insert and update. Money checks reject negative or non-integer persisted values.
+Custom image rows require the dedicated `spicialOrder` storage profile, a non-empty storage key, an allowed image MIME type, and a processed size no greater than 500 KB. The stored profile ID and key keep deletion and URL resolution tied to the same R2 object. Status guard triggers reject unsupported status values on insert and update. Money checks reject negative or non-integer persisted values.
 
 `shipping_quotes` keeps a versioned history per seller order. Partial unique indexes permit only one `pending_buyer` row and one `accepted` row. Base, special-vehicle, and total values use integer minor units and are guarded by database triggers.
 
@@ -27,7 +27,7 @@ links may contain one unified shipment or several hybrid group shipments.
 
 ## Development database
 
-Development uses generated order shard files in `public/sync_data/sync_sqlite` (`orders-core.db`, `orders-items.db`, and the remaining order shards). `npm run db:ensure` applies pending migrations under `marketplace-orders/db/migrations` to the local source database, refreshes the shards from it, and verifies all 17 profile/order shards exist. After adding a migration such as `0001_seller_order_fulfillment_snapshot.sql` (`seller_orders.fulfillment_snapshot_json`), run `npm run db:ensure` then `npm run db:schema:sync` before deploying code that reads the new column.
+Development reads and writes the nine Turso order shards, the same ones every deployed runtime uses. After adding a migration such as `0001_seller_order_fulfillment_snapshot.sql` (`seller_orders.fulfillment_snapshot_json`), update the matching desired-schema manifest under `packages/data-core/src/provisioning/desired-schema/`, confirm with `npm run db:schema:verify`, and apply with `npm run db:schema:sync:release` before deploying code that reads the new column.
 
 ## Production database
 

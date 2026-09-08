@@ -7,8 +7,8 @@
 
 Runtime coverage is inherited from each owner's owned source/test/script nodes, not only direct owner edges.
 
-Owners scored: **100**
-Average coverage: **83%**
+Owners scored: **96**
+Average coverage: **82%**
 Weak owners (<70%): **10**
 
 | Owner | Kind | Owner | Docs | Tests | Runtime | Consumers | Dependencies | Cmd/Cfg/Env | Runtime tests | Score |
@@ -26,7 +26,6 @@ Weak owners (<70%): **10**
 | `packages/account-declarations` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/api-contract-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/cors` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
-| `packages/data-health-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/dev-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/format-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/google-play-store-assets-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
@@ -58,7 +57,6 @@ Weak owners (<70%): **10**
 | `src/features/vehicle-catalog` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
 | `packages/account-bridge` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/architecture-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
-| `packages/backup-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/branding-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/control-composition` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/env-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
@@ -109,7 +107,5 @@ Weak owners (<70%): **10**
 | `packages/ota-core` | package | yes | yes | yes | yes | yes | yes | yes | yes | 100% |
 | `packages/release-core` | package | yes | yes | yes | yes | yes | yes | yes | yes | 100% |
 | `packages/storage-core` | package | yes | yes | yes | yes | yes | yes | yes | yes | 100% |
-| `src/features/data-health` | feature | yes | yes | yes | yes | yes | yes | yes | yes | 100% |
-| `src/features/dev-cloud-backup` | feature | yes | yes | yes | yes | yes | yes | yes | yes | 100% |
 | `src/features/google-play-console` | feature | yes | yes | yes | yes | yes | yes | yes | yes | 100% |
 | `src/features/notifications` | feature | yes | yes | yes | yes | yes | yes | yes | yes | 100% |

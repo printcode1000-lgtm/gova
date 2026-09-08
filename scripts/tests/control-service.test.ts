@@ -28,7 +28,11 @@ function pathnameOf(file: string): string {
 }
 
 const routes = routeModules(API);
-assert.ok(routes.length > 50, `only ${routes.length} control routes found; the scan is broken`);
+// A floor, not a count: the point is that the scan finds a real route tree
+// rather than silently returning nothing. It moved down by 21 when the Data
+// Health and Dev Cloud Backup capabilities were removed, which is the only
+// legitimate reason for it to fall.
+assert.ok(routes.length > 25, `only ${routes.length} control routes found; the scan is broken`);
 
 // ── Control serves exactly what it owns ──────────────────────────────────────
 //

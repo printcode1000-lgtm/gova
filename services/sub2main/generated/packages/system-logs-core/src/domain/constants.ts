@@ -12,3 +12,4 @@ export const MESSAGE_CLIP = 8_000;
 export const STACK_CLIP = 12_000;
 export const LIST_DEFAULT_LIMIT = 100;
 export const LIST_MAX_LIMIT = 500;
+export const SUMMARY_RECENT_WINDOW_DAYS = 7;

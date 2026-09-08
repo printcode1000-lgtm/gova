@@ -110,6 +110,16 @@ for (const origin of ['capacitor://localhost', 'https://localhost', 'ionic://loc
     `DEVELOPMENT_ORIGINS dropped ${origin}; every native shell build on a developer machine speaks from one of these.`,
   );
 }
+// Development addresses the deployed Business APIs cross-origin, so the browser
+// origins `next dev` actually serves from have to be in the list — the LAN host
+// `next.config.ts` declares in `allowedDevOrigins` included, or phone preview
+// loses every application read at once.
+for (const origin of ['http://localhost:3001', 'http://127.0.0.1:3001', 'http://192.168.1.2:3001']) {
+  assert.ok(
+    DEVELOPMENT_ORIGINS.includes(origin),
+    `DEVELOPMENT_ORIGINS dropped ${origin}; Development calls the deployed APIs from that origin.`,
+  );
+}
 
 // ── Policy invariants: no wildcard or reflected origin with credentials ─────
 //

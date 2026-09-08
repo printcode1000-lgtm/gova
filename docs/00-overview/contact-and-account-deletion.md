@@ -60,8 +60,7 @@ sharded marketplace-orders client. `DataSourceRegistry` resolves each one
 through `getServerDatabaseBackend()`, and the sharded client branches on
 `isDevRuntime()`.
 
-So `next dev` deletes out of the local SQLite shards under
-`public/sync_data/sync_sqlite/`, and a deployment deletes out of Turso, with no
+So `next dev` and a deployment both delete out of the same Turso shards, with no
 environment branch in the deletion code itself. Image removal is R2 in both,
 because there is no local blob store.
 
@@ -119,7 +118,7 @@ were superseded by `profile_images` and do not exist on the live
 - Authoritative table and image-source manifest: `packages/auth-core/src/domain/account-deletion-registry.ts`.
 - `npm run test:account-deletion-registry` scans SQL migrations for user-owned tables and fails if any table is not covered by the registry, an exempt list, or a documented `ON DELETE CASCADE` child of `user_profiles`.
 - `npm run test:account-deletion-schema` parses every repository `SELECT`, opens
-  the matching local SQLite shard when present, and fails when a referenced
+  the desired-schema manifest that owns each table, and fails when a referenced
   table or column does not exist. Absent optional shards are reported and
   skipped rather than causing `SQLITE_CANTOPEN`.
 - When adding migrations that store per-user data, update the registry in the same change.

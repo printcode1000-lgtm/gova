@@ -26,7 +26,7 @@ UI must never know: Provider, Cloudflare, Google Drive, Local Storage, Folder, B
 ## 3–5. Storage Profiles
 
 - Single source: `packages/storage-core/src/config/storage-profiles.json` (requires `version` + `profiles`)
-- Each profile: `id`, `enabled`, `provider`, `folder`, `maxImageSizeKB`, `outputFormat`, and optional validated `folderStrategy`
+- Each profile: `id`, `enabled`, `provider`, `folder` (one canonical R2 object prefix), `maxImageSizeKB`, `outputFormat`, and optional validated `folderStrategy`
 - No code defaults — missing/invalid config fails startup
 
 ## 6–8. Processing, Format, ImageKey
@@ -40,8 +40,9 @@ UI must never know: Provider, Cloudflare, Google Drive, Local Storage, Folder, B
 ## 9–12. Providers
 
 - Provider selection only in Storage Layer (`provider-resolver.server.ts`)
-- Dev: `LocalStorageProvider` → `public/sync_data/sync_file/images/`
-- Production: profile provider from JSON
+- Every runtime: the profile's provider from JSON, always Cloudflare R2
+- No filesystem image provider exists, and no server upload path may write beneath `public/sync_data/sync_file` — the architecture check fails on either
+- No fallback between R2 accounts: a missing credential fails for the account that is missing it
 
 ## 13–22. Metadata, APIs, Forbidden Practices
 

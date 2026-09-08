@@ -1,24 +1,15 @@
-export {
-  LOCAL_IMAGES_SEGMENT,
-  LOCAL_SQLITE_SEGMENT,
-  LOCAL_SYNC_DATA_SEGMENT,
-  LOCAL_SYNC_FILE_PUBLIC_PREFIX,
-  LOCAL_SYNC_FILE_SEGMENT,
-  SCHEMA_SYNC_REPORT_SEGMENT,
-} from "./domain/paths";
-
-export {
-  ADVERTISEMENTS_SQLITE_FILE,
-  LOCAL_RUNTIME_SQLITE_FILES,
-  MARKETPLACE_ORDERS_SOURCE_SQLITE_FILE,
-  NOTIFICATIONS_SQLITE_FILE,
-  PRIMARY_SQLITE_FILE,
-  PRODUCT_SQLITE_FILE,
-  PROFILE_SOURCE_SQLITE_FILE,
-} from "./domain/database-files";
-
-export { sqliteFileNameForShard } from "./domain/shards";
-
+/**
+ * dev-core — the Development-runtime guard, and nothing else.
+ *
+ * This package used to own local persistence too: SQLite filenames, the
+ * `public/sync_data` path segments, the shard-file naming rule, and the public
+ * URL a locally stored image was served from. None of that exists any more —
+ * server data is Turso and image objects are Cloudflare R2 in every runtime — so
+ * what remains is the one responsibility that was never about storage: deciding
+ * whether the current runtime is a developer's machine, so developer-only
+ * tooling can refuse to run on Vercel, during a static export, or in a
+ * production build.
+ */
 export {
   assertLocalDevelopmentAllowed,
   assertStrictLocalDevelopmentAllowed,
@@ -29,5 +20,3 @@ export {
   type LocalDevelopmentEnvironment,
   type LocalDevelopmentRuntimeInput,
 } from "./guards/development-guard";
-
-export { buildLocalSyncFilePublicUrl } from "./domain/public-url";

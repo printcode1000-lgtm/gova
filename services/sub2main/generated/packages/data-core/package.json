@@ -50,14 +50,6 @@
       "types": "./src/ota-runtime.ts",
       "default": "./src/ota-runtime.ts"
     },
-    "./data-health": {
-      "types": "./src/domains/data-health/index.server.ts",
-      "default": "./src/domains/data-health/index.server.ts"
-    },
-    "./dev-cloud-backup": {
-      "types": "./src/domains/dev-cloud-backup/index.server.ts",
-      "default": "./src/domains/dev-cloud-backup/index.server.ts"
-    },
     "./feature-flags": {
       "types": "./src/domains/feature-flags/index.server.ts",
       "default": "./src/domains/feature-flags/index.server.ts"

@@ -148,10 +148,12 @@ Inside one `deploy:all` invocation, a **read-only** gate step that already passe
 
 - generators (`branding:generate`, `app:init`, `maplibre:sync`)
 - `services:sync`
-- database steps (`db:ensure`, `db:schema:sync`)
+- schema-applying steps (`db:schema:sync`, `db:schema:sync:release`)
 - the build commands themselves
 
-Build-specific checks stay in the build path that owns them — `test:console-command-parity` and `test:deploy-runbook-execution` remain part of `build:static`, and the database steps remain part of `build`.
+`db:schema:verify` is reusable because it is read-only: it compares the desired-schema manifests with Turso and sends no DDL. The applying forms are not, for the same reason the generators are not — they change something outside the source tree.
+
+Build-specific checks stay in the build path that owns them — `test:console-command-parity` and `test:deploy-runbook-execution` remain part of `build:static`, and the read-only schema verification remains part of `build`.
 
 Reuse is scoped by a run id that only `deploy:all` sets. A standalone `npm run build` has no run id and re-proves everything, exactly as before.
 

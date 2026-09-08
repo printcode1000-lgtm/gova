@@ -1,21 +1,29 @@
 /**
- * Minimal runtime shape needed to pick a server DB backend.
- * Mirrors the fields of app `AppRuntimeContext` without importing `@/`.
+ * Minimal runtime shape needed to decide whether server database access is
+ * legal at all.
+ *
+ * Mirrors the fields of app `AppRuntimeContext` without importing `@/`. It
+ * carries no data-source field: there is one server application database
+ * backend — Turso/libSQL — in every runtime that may reach one, so the only
+ * question left is whether *this* runtime may reach a database, never which.
  */
 export interface DatabaseRuntimeContext {
   isNative: boolean;
   platform: string;
   isStatic: boolean;
   supportsServerApi: boolean;
-  dataSource: string;
 }
 
-export type ServerDatabaseBackend = "sqlite" | "turso";
-
-export function resolveServerDatabaseBackend(
+/**
+ * Throws when the caller is a runtime that must never open a server database.
+ *
+ * Browser, native and static execution reach data through the Business APIs;
+ * a database client in any of them would mean shipping credentials to a client.
+ */
+export function assertServerDatabaseRuntime(
   runtime: DatabaseRuntimeContext,
   browserRuntime: boolean,
-): ServerDatabaseBackend {
+): void {
   if (browserRuntime) {
     throw new Error("Server database access is unavailable in browser runtimes.");
   }
@@ -25,5 +33,4 @@ export function resolveServerDatabaseBackend(
   if (runtime.isStatic || !runtime.supportsServerApi) {
     throw new Error("Server database access is unavailable during static export.");
   }
-  return runtime.dataSource === "local" ? "sqlite" : "turso";
 }

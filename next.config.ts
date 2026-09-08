@@ -63,7 +63,7 @@ const nextConfig: NextConfig = {
   ...(isGovaUploadView
     ? {}
     : {
-        serverExternalPackages: ['@libsql/client', 'better-sqlite3', 'drizzle-orm'],
+        serverExternalPackages: ['@libsql/client', 'drizzle-orm'],
         outputFileTracingIncludes: {
           '/*': ['./node_modules/drizzle-orm/libsql/**/*'],
         },

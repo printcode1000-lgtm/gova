@@ -25,6 +25,7 @@ export {
   LIST_MAX_LIMIT,
   MESSAGE_CLIP,
   STACK_CLIP,
+  SUMMARY_RECENT_WINDOW_DAYS,
 } from './domain/constants';
 
 export {

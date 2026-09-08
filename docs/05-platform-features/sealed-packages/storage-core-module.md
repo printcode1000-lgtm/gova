@@ -65,14 +65,13 @@ registerStorageAccount({
   envPrefix: 'MARKETING_R2',
 });
 ```
-2. **Add storage profile in `storage-profiles.json`** using the dynamic provider form `CloudflareR2_<accountId>` (do not reuse another profile's `folder` / `cloudFolder` — `referenceFromObjectPath` reverses path → profile by longest folder match):
+2. **Add storage profile in `storage-profiles.json`** using the dynamic provider form `CloudflareR2_<accountId>`. A profile declares exactly one `folder` — its R2 object prefix — and it must not reuse another profile's, because `referenceFromObjectPath` reverses path → profile by longest folder match:
 ```json
 {
   "id": "marketingBanner",
   "enabled": true,
   "provider": "CloudflareR2_marketing",
   "folder": "images/marketing",
-  "cloudFolder": "images/marketing",
   "outputFormat": "webp",
   "maxImageSizeKB": 4096
 }
