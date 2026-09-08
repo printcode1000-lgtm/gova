@@ -118,15 +118,17 @@ Only image references are persisted in this flow. All other Profile slider setti
 interface HeroSliderProps {
   config: HeroSliderConfig;
   mode?: "view" | "admin-edit" | "images-edit";
+  isLoading?: boolean;
   onChange?: (config: HeroSliderConfig) => void;
 }
 ```
 
 | Property   | Required | Default  | Purpose                                                      |
 | ---------- | -------- | -------- | ------------------------------------------------------------ |
-| `config`   | Yes      | —        | Supplies slider behavior and slides.                         |
-| `mode`     | No       | `"view"` | Selects public display, full editing, or image-only editing. |
-| `onChange` | No       | —        | Receives the updated configuration after an editor change.   |
+| `config`     | Yes      | —        | Supplies slider behavior and slides. |
+| `mode`       | No       | `"view"` | Selects public display, full editing, or image-only editing. |
+| `isLoading`  | No       | `false`  | Keeps view mode in the loading skeleton while its configuration is still unresolved. |
+| `onChange`   | No       | —        | Receives the updated configuration after an editor change. |
 
 Both editing modes maintain internal editing state and synchronize it whenever the `config` property changes.
 
@@ -286,15 +288,22 @@ The cache contains the current configuration, version, update time, check interv
 
 Synchronization sequence:
 
-1. Home renders the built-in fallback or cached configuration immediately.
-2. The hook compares `lastCheckedAt` with `checkIntervalMinutes`.
-3. If the interval has not expired, no server request is made.
-4. When the interval expires, the hook requests only the version endpoint.
-5. The full current configuration is requested when no cache exists, or when either `version` or `updatedAt` differs. The comparison is inequality, not “greater than”, so a development database reset to a lower version cannot strand an older cache.
-6. The new configuration and check time are stored in IndexedDB.
-7. Network failures preserve the last usable local configuration.
+1. Home starts in an explicit unresolved loading state. The built-in empty fallback is not presented as a confirmed “no slides” configuration.
+2. The hook checks AsolDB first. A cached configuration is rendered immediately and clears the loading state.
+3. A transient AsolDB read failure is logged but does not prevent the cloud version/current check from recovering the Home slider.
+4. The hook compares `lastCheckedAt` with `checkIntervalMinutes`. If a usable cache is still inside the interval, no server request is made.
+5. When the interval expires, the hook requests only the version endpoint.
+6. The full current configuration is requested when no cache exists, or when either `version` or `updatedAt` differs. The comparison is inequality, not “greater than”, so a development database reset to a lower version cannot strand an older cache.
+7. A successful remote resolution clears the loading state and stores the new configuration and check time in IndexedDB.
+8. Network failures preserve the last usable local configuration. With no usable cache, the slider stays in its loading state and retries on the normal synchronization cycle instead of claiming that no slides exist.
 
 `checkIntervalMinutes`, each slide's `transitionDuration`, and each slide's `duration` are independent settings.
+
+### View-mode image recovery
+
+Remote slide images still follow the mandatory local-first path: memory, AsolDB image cache, then the network. The transparent local-first placeholder is never reported to `HeroSlider` as a successfully loaded remote image. If the local-first resolver reaches its terminal fallback or the resolved image cannot be decoded, the affected slide is retried with two bounded delayed probe cycles. While every usable slide is probing or retrying, the slider keeps its skeleton instead of showing the empty-state message.
+
+The “no slides” message is reserved for a resolved configuration that genuinely contains no image-bearing slides. If configured images remain unavailable after the bounded retries, view mode reports the image-unavailable state rather than pretending the configured slides do not exist.
 
 ## Home image storage
 

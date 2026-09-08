@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslation } from "@/shared/i18n";
+
 import { SettingsToggleRow } from "./SettingsToggleRow";
 import type { NotificationDeviceSettingsCardState } from "./use-notification-device-settings-card";
 
@@ -12,6 +14,8 @@ export function ChatMessagePreferencesSection({
 }: {
   state: NotificationDeviceSettingsCardState;
 }) {
+  const { locale } = useTranslation();
+
   return (
     <div id='features-settings-presentation-chatmessagepreferencessection-div-1-gq7fng' className="grid gap-3">
       <SettingsToggleRow id='features-settings-presentation-chatmessagepreferencessection-settingstogglerow-2-p3vb4f'
@@ -24,10 +28,12 @@ export function ChatMessagePreferencesSection({
         onChange={(enabled) => void state.updateSpecialtyRequests(enabled)}
       />
       <SettingsToggleRow id='features-settings-presentation-chatmessagepreferencessection-settingstogglerow-3-zmypyr'
-        title={state.t("notifications.deviceCard.productConversationsTitle")}
-        description={state.t(
-          "notifications.deviceCard.productConversationsDescription",
-        )}
+        title={locale === "ar" ? "مراسلة صاحب الصفحة والخدمة" : "Profile and service messaging"}
+        description={
+          locale === "ar"
+            ? "السماح للمستخدمين ببدء محادثة خاصة معك من صفحة ملفك أو من صفحة إحدى خدماتك. عند الإيقاف لن تبدأ محادثات مباشرة جديدة."
+            : "Allow users to start a private conversation with you from your profile page or a service page. When off, no new direct conversations can start."
+        }
         checked={state.productConversationsEnabled}
         disabled={!state.preferencesAvailable || state.productConversationsBusy}
         onChange={(enabled) => void state.updateProductConversations(enabled)}

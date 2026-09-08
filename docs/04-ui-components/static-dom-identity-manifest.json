@@ -37,7 +37,7 @@
     {
       "id": "${id}",
       "source": "src/features/advertisements/presentation/HeroSlider.tsx",
-      "line": 364,
+      "line": 440,
       "element": "div",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -557,7 +557,7 @@
     {
       "id": "${id}",
       "source": "src/features/product/presentation/style-editors/rating/RatingSettingsEditor.tsx",
-      "line": 50,
+      "line": 55,
       "element": "div",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -973,7 +973,7 @@
     {
       "id": "${PROFILE_SECTION_IDS.contact}",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 157,
+      "line": 167,
       "element": "div",
       "semanticName": "constant-reference",
       "kind": "constant-reference"
@@ -981,7 +981,7 @@
     {
       "id": "${PROFILE_SECTION_IDS.discounts}",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 227,
+      "line": 237,
       "element": "div",
       "semanticName": "constant-reference",
       "kind": "constant-reference"
@@ -989,7 +989,7 @@
     {
       "id": "${PROFILE_SECTION_IDS.fulfillment}",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 204,
+      "line": 214,
       "element": "div",
       "semanticName": "constant-reference",
       "kind": "constant-reference"
@@ -997,7 +997,7 @@
     {
       "id": "${PROFILE_SECTION_IDS.products}",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 133,
+      "line": 139,
       "element": "div",
       "semanticName": "constant-reference",
       "kind": "constant-reference"
@@ -1005,7 +1005,7 @@
     {
       "id": "${PROFILE_SECTION_IDS.registration}",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 60,
+      "line": 62,
       "element": "div",
       "semanticName": "constant-reference",
       "kind": "constant-reference"
@@ -1013,7 +1013,7 @@
     {
       "id": "${PROFILE_SECTION_IDS.specialties}",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 85,
+      "line": 87,
       "element": "div",
       "semanticName": "constant-reference",
       "kind": "constant-reference"
@@ -1021,7 +1021,7 @@
     {
       "id": "${PROFILE_SECTION_IDS.store}",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 110,
+      "line": 112,
       "element": "div",
       "semanticName": "constant-reference",
       "kind": "constant-reference"
@@ -1029,7 +1029,7 @@
     {
       "id": "${PROFILE_SECTION_IDS.workingHours}",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 181,
+      "line": 191,
       "element": "div",
       "semanticName": "constant-reference",
       "kind": "constant-reference"
@@ -1137,6 +1137,14 @@
       "element": "div",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
+    },
+    {
+      "id": "${STATIC_DOM_IDS.ids.profile.storeIdentityCardRoot}",
+      "source": "src/features/profile/presentation/StoreIdentityCard.tsx",
+      "line": 261,
+      "element": "div",
+      "semanticName": "constant-reference",
+      "kind": "constant-reference"
     },
     {
       "id": "${STATIC_DOM_IDS.ids.shell.appShellMain}",
@@ -4173,7 +4181,7 @@
     {
       "id": "features-advertisements-presentation-featuredmarquee-div-4-2sshlr",
       "source": "src/features/advertisements/presentation/FeaturedMarquee.tsx",
-      "line": 179,
+      "line": 181,
       "element": "div",
       "semanticName": "advertisements-presentation-featuredmarquee-div-4",
       "kind": "literal"
@@ -4181,7 +4189,7 @@
     {
       "id": "features-advertisements-presentation-featuredmarquee-div-5-xqrwq1",
       "source": "src/features/advertisements/presentation/FeaturedMarquee.tsx",
-      "line": 182,
+      "line": 184,
       "element": "div",
       "semanticName": "advertisements-presentation-featuredmarquee-div-5",
       "kind": "literal"
@@ -4189,7 +4197,7 @@
     {
       "id": "features-advertisements-presentation-featuredmarquee-div-6-mx4q2h",
       "source": "src/features/advertisements/presentation/FeaturedMarquee.tsx",
-      "line": 197,
+      "line": 199,
       "element": "div",
       "semanticName": "advertisements-presentation-featuredmarquee-div-6",
       "kind": "literal"
@@ -4203,9 +4211,17 @@
       "kind": "literal"
     },
     {
+      "id": "features-advertisements-presentation-featuredmarquee-icon-shine-5c81a4",
+      "source": "src/features/advertisements/presentation/FeaturedMarquee.tsx",
+      "line": 176,
+      "element": "span",
+      "semanticName": "advertisements-presentation-featuredmarquee-icon-shine",
+      "kind": "literal"
+    },
+    {
       "id": "features-advertisements-presentation-heroslider-div-4-8xkfkf",
       "source": "src/features/advertisements/presentation/HeroSlider.tsx",
-      "line": 376,
+      "line": 452,
       "element": "div",
       "semanticName": "advertisements-presentation-heroslider-div-4",
       "kind": "literal"
@@ -4213,7 +4229,7 @@
     {
       "id": "features-advertisements-presentation-heroslider-div-5-kf0ndd",
       "source": "src/features/advertisements/presentation/HeroSlider.tsx",
-      "line": 382,
+      "line": 458,
       "element": "div",
       "semanticName": "advertisements-presentation-heroslider-div-5",
       "kind": "literal"
@@ -4221,7 +4237,7 @@
     {
       "id": "features-advertisements-presentation-heroslider-div-6-xgxyww",
       "source": "src/features/advertisements/presentation/HeroSlider.tsx",
-      "line": 390,
+      "line": 468,
       "element": "div",
       "semanticName": "advertisements-presentation-heroslider-div-6",
       "kind": "literal"
@@ -4229,7 +4245,7 @@
     {
       "id": "features-advertisements-presentation-heroslider-div-7-zj73ya",
       "source": "src/features/advertisements/presentation/HeroSlider.tsx",
-      "line": 405,
+      "line": 483,
       "element": "div",
       "semanticName": "advertisements-presentation-heroslider-div-7",
       "kind": "literal"
@@ -4237,7 +4253,7 @@
     {
       "id": "features-advertisements-presentation-heroslider-section-3-dvjcjw",
       "source": "src/features/advertisements/presentation/HeroSlider.tsx",
-      "line": 365,
+      "line": 441,
       "element": "section",
       "semanticName": "advertisements-presentation-heroslider-section-3",
       "kind": "literal"
@@ -8797,7 +8813,7 @@
     {
       "id": "features-home-presentation-categoriesgrid-div-2-iecv8c",
       "source": "src/features/home/presentation/CategoriesGrid.tsx",
-      "line": 35,
+      "line": 44,
       "element": "div",
       "semanticName": "home-presentation-categoriesgrid-div-2",
       "kind": "literal"
@@ -8805,9 +8821,33 @@
     {
       "id": "features-home-presentation-categoriesgrid-section-1-evhumd",
       "source": "src/features/home/presentation/CategoriesGrid.tsx",
-      "line": 34,
+      "line": 35,
       "element": "section",
       "semanticName": "home-presentation-categoriesgrid-section-1",
+      "kind": "literal"
+    },
+    {
+      "id": "features-home-presentation-categoriesgrid-title-heading-90a211",
+      "source": "src/features/home/presentation/CategoriesGrid.tsx",
+      "line": 37,
+      "element": "h3",
+      "semanticName": "home-presentation-categoriesgrid-title-heading",
+      "kind": "literal"
+    },
+    {
+      "id": "features-home-presentation-categoriesgrid-title-line-a71565",
+      "source": "src/features/home/presentation/CategoriesGrid.tsx",
+      "line": 41,
+      "element": "div",
+      "semanticName": "home-presentation-categoriesgrid-title-line",
+      "kind": "literal"
+    },
+    {
+      "id": "features-home-presentation-categoriesgrid-title-row-603352",
+      "source": "src/features/home/presentation/CategoriesGrid.tsx",
+      "line": 36,
+      "element": "div",
+      "semanticName": "home-presentation-categoriesgrid-title-row",
       "kind": "literal"
     },
     {
@@ -10645,15 +10685,23 @@
     {
       "id": "features-profile-presentation-productscard-button-14-f9mfwe",
       "source": "src/features/profile/presentation/ProductsCard.tsx",
-      "line": 317,
+      "line": 365,
       "element": "button",
       "semanticName": "profile-presentation-productscard-button-14",
       "kind": "literal"
     },
     {
+      "id": "features-profile-presentation-productscard-button-16-a4c2f7",
+      "source": "src/features/profile/presentation/ProductsCard.tsx",
+      "line": 302,
+      "element": "button",
+      "semanticName": "profile-presentation-productscard-button-16",
+      "kind": "literal"
+    },
+    {
       "id": "features-profile-presentation-productscard-div-1-ayditq",
       "source": "src/features/profile/presentation/ProductsCard.tsx",
-      "line": 224,
+      "line": 248,
       "element": "div",
       "semanticName": "profile-presentation-productscard-div-1",
       "kind": "literal"
@@ -10661,7 +10709,7 @@
     {
       "id": "features-profile-presentation-productscard-div-12-bt5qic",
       "source": "src/features/profile/presentation/ProductsCard.tsx",
-      "line": 300,
+      "line": 348,
       "element": "div",
       "semanticName": "profile-presentation-productscard-div-12",
       "kind": "literal"
@@ -10669,7 +10717,7 @@
     {
       "id": "features-profile-presentation-productscard-div-15-q3oi7h",
       "source": "src/features/profile/presentation/ProductsCard.tsx",
-      "line": 327,
+      "line": 375,
       "element": "div",
       "semanticName": "profile-presentation-productscard-div-15",
       "kind": "literal"
@@ -10677,7 +10725,7 @@
     {
       "id": "features-profile-presentation-productscard-div-4-mrc96i",
       "source": "src/features/profile/presentation/ProductsCard.tsx",
-      "line": 276,
+      "line": 301,
       "element": "div",
       "semanticName": "profile-presentation-productscard-div-4",
       "kind": "literal"
@@ -10685,15 +10733,15 @@
     {
       "id": "features-profile-presentation-productscard-div-5-xcmjsg",
       "source": "src/features/profile/presentation/ProductsCard.tsx",
-      "line": 277,
-      "element": "div",
+      "line": 311,
+      "element": "span",
       "semanticName": "profile-presentation-productscard-div-5",
       "kind": "literal"
     },
     {
       "id": "features-profile-presentation-productscard-div-8-bhfpsg",
       "source": "src/features/profile/presentation/ProductsCard.tsx",
-      "line": 289,
+      "line": 332,
       "element": "div",
       "semanticName": "profile-presentation-productscard-div-8",
       "kind": "literal"
@@ -10701,7 +10749,7 @@
     {
       "id": "features-profile-presentation-productscard-div-9-mxirue",
       "source": "src/features/profile/presentation/ProductsCard.tsx",
-      "line": 290,
+      "line": 338,
       "element": "div",
       "semanticName": "profile-presentation-productscard-div-9",
       "kind": "literal"
@@ -10709,15 +10757,15 @@
     {
       "id": "features-profile-presentation-productscard-heading-6-q3prsv",
       "source": "src/features/profile/presentation/ProductsCard.tsx",
-      "line": 278,
-      "element": "h4",
+      "line": 317,
+      "element": "span",
       "semanticName": "profile-presentation-productscard-heading-6",
       "kind": "literal"
     },
     {
       "id": "features-profile-presentation-productscard-input-22-bmjfu5",
-      "source": "src/features/profile/presentation/ProductsCard.tsx",
-      "line": 368,
+      "source": "src/features/profile/presentation/CustomRequestSettingsSection.tsx",
+      "line": 53,
       "element": "input",
       "semanticName": "profile-presentation-productscard-input-22",
       "kind": "literal"
@@ -10725,23 +10773,23 @@
     {
       "id": "features-profile-presentation-productscard-label-10-9jamgw",
       "source": "src/features/profile/presentation/ProductsCard.tsx",
-      "line": 291,
+      "line": 339,
       "element": "label",
       "semanticName": "profile-presentation-productscard-label-10",
       "kind": "literal"
     },
     {
       "id": "features-profile-presentation-productscard-label-18-lou07b",
-      "source": "src/features/profile/presentation/ProductsCard.tsx",
-      "line": 357,
+      "source": "src/features/profile/presentation/CustomRequestSettingsSection.tsx",
+      "line": 42,
       "element": "label",
       "semanticName": "profile-presentation-productscard-label-18",
       "kind": "literal"
     },
     {
       "id": "features-profile-presentation-productscard-section-17-hkgevz",
-      "source": "src/features/profile/presentation/ProductsCard.tsx",
-      "line": 356,
+      "source": "src/features/profile/presentation/CustomRequestSettingsSection.tsx",
+      "line": 37,
       "element": "section",
       "semanticName": "profile-presentation-productscard-section-17",
       "kind": "literal"
@@ -10749,47 +10797,39 @@
     {
       "id": "features-profile-presentation-productscard-section-3-mqxepy",
       "source": "src/features/profile/presentation/ProductsCard.tsx",
-      "line": 275,
+      "line": 300,
       "element": "section",
       "semanticName": "profile-presentation-productscard-section-3",
       "kind": "literal"
     },
     {
-      "id": "features-profile-presentation-productscard-text-16-dzgb0i",
-      "source": "src/features/profile/presentation/ProductsCard.tsx",
-      "line": 346,
-      "element": "p",
-      "semanticName": "profile-presentation-productscard-text-16",
-      "kind": "literal"
-    },
-    {
       "id": "features-profile-presentation-productscard-text-19-ulb5hm",
-      "source": "src/features/profile/presentation/ProductsCard.tsx",
-      "line": 358,
+      "source": "src/features/profile/presentation/CustomRequestSettingsSection.tsx",
+      "line": 43,
       "element": "span",
       "semanticName": "profile-presentation-productscard-text-19",
       "kind": "literal"
     },
     {
       "id": "features-profile-presentation-productscard-text-20-zhkl1i",
-      "source": "src/features/profile/presentation/ProductsCard.tsx",
-      "line": 359,
+      "source": "src/features/profile/presentation/CustomRequestSettingsSection.tsx",
+      "line": 44,
       "element": "span",
       "semanticName": "profile-presentation-productscard-text-20",
       "kind": "literal"
     },
     {
       "id": "features-profile-presentation-productscard-text-21-309oz3",
-      "source": "src/features/profile/presentation/ProductsCard.tsx",
-      "line": 362,
+      "source": "src/features/profile/presentation/CustomRequestSettingsSection.tsx",
+      "line": 47,
       "element": "span",
       "semanticName": "profile-presentation-productscard-text-21",
       "kind": "literal"
     },
     {
       "id": "features-profile-presentation-productscard-text-23-hbodsi",
-      "source": "src/features/profile/presentation/ProductsCard.tsx",
-      "line": 374,
+      "source": "src/features/profile/presentation/CustomRequestSettingsSection.tsx",
+      "line": 61,
       "element": "span",
       "semanticName": "profile-presentation-productscard-text-23",
       "kind": "literal"
@@ -10797,7 +10837,7 @@
     {
       "id": "features-profile-presentation-productscard-text-7-ys6tmc",
       "source": "src/features/profile/presentation/ProductsCard.tsx",
-      "line": 281,
+      "line": 333,
       "element": "p",
       "semanticName": "profile-presentation-productscard-text-7",
       "kind": "literal"
@@ -11197,7 +11237,7 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-div-22-6umeqa",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 250,
+      "line": 177,
       "element": "div",
       "semanticName": "profile-presentation-profileregistrationinfocard-div-22",
       "kind": "literal"
@@ -11205,7 +11245,7 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-div-23-nm0dtg",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 254,
+      "line": 181,
       "element": "div",
       "semanticName": "profile-presentation-profileregistrationinfocard-div-23",
       "kind": "literal"
@@ -11213,7 +11253,7 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-div-27-gkksrd",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 278,
+      "line": 205,
       "element": "div",
       "semanticName": "profile-presentation-profileregistrationinfocard-div-27",
       "kind": "literal"
@@ -11221,7 +11261,7 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-div-31-0dvpi8",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 300,
+      "line": 227,
       "element": "div",
       "semanticName": "profile-presentation-profileregistrationinfocard-div-31",
       "kind": "literal"
@@ -11229,7 +11269,7 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-div-35-uv2m4q",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 144,
+      "line": 255,
       "element": "div",
       "semanticName": "profile-presentation-profileregistrationinfocard-div-35",
       "kind": "literal"
@@ -11237,7 +11277,7 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-div-39-yw6c1p",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 177,
+      "line": 288,
       "element": "div",
       "semanticName": "profile-presentation-profileregistrationinfocard-div-39",
       "kind": "literal"
@@ -11245,7 +11285,7 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-div-40-r8h5vc",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 181,
+      "line": 301,
       "element": "div",
       "semanticName": "profile-presentation-profileregistrationinfocard-div-40",
       "kind": "literal"
@@ -11253,7 +11293,7 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-div-41-j2b7fd",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 182,
+      "line": 302,
       "element": "div",
       "semanticName": "profile-presentation-profileregistrationinfocard-div-41",
       "kind": "literal"
@@ -11261,7 +11301,7 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-div-45-z7v3nm",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 205,
+      "line": 292,
       "element": "div",
       "semanticName": "profile-presentation-profileregistrationinfocard-div-45",
       "kind": "literal"
@@ -11269,7 +11309,7 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-div-50-v6n4qt",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 217,
+      "line": 144,
       "element": "div",
       "semanticName": "profile-presentation-profileregistrationinfocard-div-50",
       "kind": "literal"
@@ -11301,7 +11341,7 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-span-48-q1n7vc",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 160,
+      "line": 271,
       "element": "span",
       "semanticName": "profile-presentation-profileregistrationinfocard-span-48",
       "kind": "literal"
@@ -11309,7 +11349,7 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-span-49-x7m2qk",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 235,
+      "line": 162,
       "element": "span",
       "semanticName": "profile-presentation-profileregistrationinfocard-span-49",
       "kind": "literal"
@@ -11333,7 +11373,7 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-text-26-oylbyq",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 273,
+      "line": 200,
       "element": "p",
       "semanticName": "profile-presentation-profileregistrationinfocard-text-26",
       "kind": "literal"
@@ -11341,7 +11381,7 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-text-30-zvghgc",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 295,
+      "line": 222,
       "element": "p",
       "semanticName": "profile-presentation-profileregistrationinfocard-text-30",
       "kind": "literal"
@@ -11349,23 +11389,15 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-text-34-soxlb7",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 319,
+      "line": 246,
       "element": "p",
       "semanticName": "profile-presentation-profileregistrationinfocard-text-34",
       "kind": "literal"
     },
     {
-      "id": "features-profile-presentation-profileregistrationinfocard-text-43-a6c1wu",
-      "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 190,
-      "element": "p",
-      "semanticName": "profile-presentation-profileregistrationinfocard-text-43",
-      "kind": "literal"
-    },
-    {
       "id": "features-profile-presentation-profileregistrationinfocard-text-46-c4q8hy",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 206,
+      "line": 293,
       "element": "p",
       "semanticName": "profile-presentation-profileregistrationinfocard-text-46",
       "kind": "literal"
@@ -11373,7 +11405,7 @@
     {
       "id": "features-profile-presentation-profileregistrationinfocard-text-47-b9m2tk",
       "source": "src/features/profile/presentation/ProfileRegistrationInfoCard.tsx",
-      "line": 209,
+      "line": 296,
       "element": "p",
       "semanticName": "profile-presentation-profileregistrationinfocard-text-47",
       "kind": "literal"
@@ -11653,7 +11685,7 @@
     {
       "id": "features-profile-presentation-storeidentitycard-div-1-rcrnbl",
       "source": "src/features/profile/presentation/StoreIdentityCard.tsx",
-      "line": 246,
+      "line": 254,
       "element": "div",
       "semanticName": "profile-presentation-storeidentitycard-div-1",
       "kind": "literal"
@@ -11661,23 +11693,15 @@
     {
       "id": "features-profile-presentation-storeidentitycard-div-11-2pcih4",
       "source": "src/features/profile/presentation/StoreIdentityCard.tsx",
-      "line": 315,
+      "line": 323,
       "element": "div",
       "semanticName": "profile-presentation-storeidentitycard-div-11",
       "kind": "literal"
     },
     {
-      "id": "features-profile-presentation-storeidentitycard-div-2-s7nwrp",
-      "source": "src/features/profile/presentation/StoreIdentityCard.tsx",
-      "line": 253,
-      "element": "div",
-      "semanticName": "profile-presentation-storeidentitycard-div-2",
-      "kind": "literal"
-    },
-    {
       "id": "features-profile-presentation-storeidentitycard-div-3-tobwzh",
       "source": "src/features/profile/presentation/StoreIdentityCard.tsx",
-      "line": 255,
+      "line": 263,
       "element": "div",
       "semanticName": "profile-presentation-storeidentitycard-div-3",
       "kind": "literal"
@@ -11685,7 +11709,7 @@
     {
       "id": "features-profile-presentation-storeidentitycard-div-4-zbwfka",
       "source": "src/features/profile/presentation/StoreIdentityCard.tsx",
-      "line": 281,
+      "line": 289,
       "element": "div",
       "semanticName": "profile-presentation-storeidentitycard-div-4",
       "kind": "literal"
@@ -11693,7 +11717,7 @@
     {
       "id": "features-profile-presentation-storeidentitycard-div-7-pxecfi",
       "source": "src/features/profile/presentation/StoreIdentityCard.tsx",
-      "line": 295,
+      "line": 303,
       "element": "div",
       "semanticName": "profile-presentation-storeidentitycard-div-7",
       "kind": "literal"
@@ -11701,7 +11725,7 @@
     {
       "id": "features-profile-presentation-storeidentitycard-text-10-hq92lz",
       "source": "src/features/profile/presentation/StoreIdentityCard.tsx",
-      "line": 310,
+      "line": 318,
       "element": "p",
       "semanticName": "profile-presentation-storeidentitycard-text-10",
       "kind": "literal"
@@ -11709,7 +11733,7 @@
     {
       "id": "features-profile-presentation-storeidentitycard-text-14-wdxhdo",
       "source": "src/features/profile/presentation/StoreIdentityCard.tsx",
-      "line": 328,
+      "line": 336,
       "element": "p",
       "semanticName": "profile-presentation-storeidentitycard-text-14",
       "kind": "literal"
@@ -12557,7 +12581,7 @@
     {
       "id": "features-settings-presentation-notificationdevicesettingscard-div-1-ox3cup",
       "source": "src/features/settings/presentation/NotificationDeviceSettingsCard.tsx",
-      "line": 24,
+      "line": 25,
       "element": "div",
       "semanticName": "settings-presentation-notificationdevicesettingscard-div-1",
       "kind": "literal"
@@ -12565,7 +12589,7 @@
     {
       "id": "features-settings-presentation-notificationdevicesettingscard-div-2-njfsfo",
       "source": "src/features/settings/presentation/NotificationDeviceSettingsCard.tsx",
-      "line": 25,
+      "line": 26,
       "element": "div",
       "semanticName": "settings-presentation-notificationdevicesettingscard-div-2",
       "kind": "literal"
@@ -12573,7 +12597,7 @@
     {
       "id": "features-settings-presentation-notificationdevicesettingscard-div-5-txp3sj",
       "source": "src/features/settings/presentation/NotificationDeviceSettingsCard.tsx",
-      "line": 29,
+      "line": 30,
       "element": "div",
       "semanticName": "settings-presentation-notificationdevicesettingscard-div-5",
       "kind": "literal"
@@ -12581,7 +12605,7 @@
     {
       "id": "features-settings-presentation-notificationdevicesettingscard-div-9-qxx7hx",
       "source": "src/features/settings/presentation/NotificationDeviceSettingsCard.tsx",
-      "line": 65,
+      "line": 66,
       "element": "div",
       "semanticName": "settings-presentation-notificationdevicesettingscard-div-9",
       "kind": "literal"
@@ -12589,7 +12613,7 @@
     {
       "id": "features-settings-presentation-notificationdevicesettingscard-heading-6-pm0zdg",
       "source": "src/features/settings/presentation/NotificationDeviceSettingsCard.tsx",
-      "line": 30,
+      "line": 31,
       "element": "h2",
       "semanticName": "settings-presentation-notificationdevicesettingscard-heading-6",
       "kind": "literal"
@@ -12597,7 +12621,7 @@
     {
       "id": "features-settings-presentation-notificationdevicesettingscard-text-3-slikpy",
       "source": "src/features/settings/presentation/NotificationDeviceSettingsCard.tsx",
-      "line": 26,
+      "line": 27,
       "element": "span",
       "semanticName": "settings-presentation-notificationdevicesettingscard-text-3",
       "kind": "literal"
@@ -12605,7 +12629,7 @@
     {
       "id": "features-settings-presentation-notificationdevicesettingscard-text-7-s8pu2v",
       "source": "src/features/settings/presentation/NotificationDeviceSettingsCard.tsx",
-      "line": 37,
+      "line": 38,
       "element": "span",
       "semanticName": "settings-presentation-notificationdevicesettingscard-text-7",
       "kind": "literal"
@@ -12613,7 +12637,7 @@
     {
       "id": "features-settings-presentation-notificationdevicesettingscard-text-8-nb3oee",
       "source": "src/features/settings/presentation/NotificationDeviceSettingsCard.tsx",
-      "line": 52,
+      "line": 53,
       "element": "p",
       "semanticName": "settings-presentation-notificationdevicesettingscard-text-8",
       "kind": "literal"
@@ -22403,9 +22427,17 @@
       "kind": "literal"
     },
     {
+      "id": "presentation-style-editors-rating-ratingsettingseditor-button-10-b3f6a1",
+      "source": "src/features/product/presentation/style-editors/rating/RatingSettingsEditor.tsx",
+      "line": 57,
+      "element": "button",
+      "semanticName": "style-editors-rating-ratingsettingseditor-button-10",
+      "kind": "literal"
+    },
+    {
       "id": "presentation-style-editors-rating-ratingsettingseditor-div-3-uzbq92",
       "source": "src/features/product/presentation/style-editors/rating/RatingSettingsEditor.tsx",
-      "line": 60,
+      "line": 116,
       "element": "div",
       "semanticName": "style-editors-rating-ratingsettingseditor-div-3",
       "kind": "literal"
@@ -22413,7 +22445,7 @@
     {
       "id": "presentation-style-editors-rating-ratingsettingseditor-div-6-pmlxcm",
       "source": "src/features/product/presentation/style-editors/rating/RatingSettingsEditor.tsx",
-      "line": 71,
+      "line": 85,
       "element": "div",
       "semanticName": "style-editors-rating-ratingsettingseditor-div-6",
       "kind": "literal"
@@ -22421,7 +22453,7 @@
     {
       "id": "presentation-style-editors-rating-ratingsettingseditor-div-7-r6x3bk",
       "source": "src/features/product/presentation/style-editors/rating/RatingSettingsEditor.tsx",
-      "line": 51,
+      "line": 56,
       "element": "div",
       "semanticName": "style-editors-rating-ratingsettingseditor-div-7",
       "kind": "literal"
@@ -22429,15 +22461,23 @@
     {
       "id": "presentation-style-editors-rating-ratingsettingseditor-heading-2-5vcact",
       "source": "src/features/product/presentation/style-editors/rating/RatingSettingsEditor.tsx",
-      "line": 52,
-      "element": "h3",
+      "line": 72,
+      "element": "span",
       "semanticName": "style-editors-rating-ratingsettingseditor-heading-2",
+      "kind": "literal"
+    },
+    {
+      "id": "presentation-style-editors-rating-ratingsettingseditor-text-11-f2c5d8",
+      "source": "src/features/product/presentation/style-editors/rating/RatingSettingsEditor.tsx",
+      "line": 66,
+      "element": "span",
+      "semanticName": "style-editors-rating-ratingsettingseditor-text-11",
       "kind": "literal"
     },
     {
       "id": "presentation-style-editors-rating-ratingsettingseditor-text-4-abfumy",
       "source": "src/features/product/presentation/style-editors/rating/RatingSettingsEditor.tsx",
-      "line": 61,
+      "line": 117,
       "element": "span",
       "semanticName": "style-editors-rating-ratingsettingseditor-text-4",
       "kind": "literal"
@@ -22445,7 +22485,7 @@
     {
       "id": "presentation-style-editors-rating-ratingsettingseditor-text-8-n2q7vm",
       "source": "src/features/product/presentation/style-editors/rating/RatingSettingsEditor.tsx",
-      "line": 54,
+      "line": 87,
       "element": "p",
       "semanticName": "style-editors-rating-ratingsettingseditor-text-8",
       "kind": "literal"
@@ -22453,7 +22493,7 @@
     {
       "id": "presentation-style-editors-rating-ratingsettingseditor-text-9-p8k4zc",
       "source": "src/features/product/presentation/style-editors/rating/RatingSettingsEditor.tsx",
-      "line": 88,
+      "line": 107,
       "element": "p",
       "semanticName": "style-editors-rating-ratingsettingseditor-text-9",
       "kind": "literal"
@@ -23325,7 +23365,7 @@
     {
       "id": "profile-presentation-profile-page-profileeditworkspaceview-div-1-kpbevk",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 35,
+      "line": 37,
       "element": "div",
       "semanticName": "presentation-profile-page-profileeditworkspaceview-div-1",
       "kind": "literal"
@@ -23333,7 +23373,7 @@
     {
       "id": "profile-presentation-profile-page-profileeditworkspaceview-div-24-pqrdwg",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 256,
+      "line": 266,
       "element": "div",
       "semanticName": "presentation-profile-page-profileeditworkspaceview-div-24",
       "kind": "literal"
@@ -23341,7 +23381,7 @@
     {
       "id": "profile-presentation-profile-page-profileeditworkspaceview-div-6-ojpfuv",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 49,
+      "line": 51,
       "element": "div",
       "semanticName": "presentation-profile-page-profileeditworkspaceview-div-6",
       "kind": "literal"
@@ -23349,7 +23389,7 @@
     {
       "id": "profile-presentation-profile-page-profileeditworkspaceview-div-7-qnevwy",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 50,
+      "line": 52,
       "element": "div",
       "semanticName": "presentation-profile-page-profileeditworkspaceview-div-7",
       "kind": "literal"
@@ -23941,7 +23981,7 @@
     {
       "id": "storage-image-manager-core-src-components-storageimagemanager-div-12-fiebld",
       "source": "packages/storage-image-manager-core/src/components/StorageImageManager.tsx",
-      "line": 1128,
+      "line": 1141,
       "element": "div",
       "semanticName": "image-manager-core-src-components-storageimagemanager-div-12",
       "kind": "literal"
@@ -23949,7 +23989,7 @@
     {
       "id": "storage-image-manager-core-src-components-storageimagemanager-div-14-0scsyr",
       "source": "packages/storage-image-manager-core/src/components/StorageImageManager.tsx",
-      "line": 1132,
+      "line": 1145,
       "element": "div",
       "semanticName": "image-manager-core-src-components-storageimagemanager-div-14",
       "kind": "literal"
@@ -23957,7 +23997,7 @@
     {
       "id": "storage-image-manager-core-src-components-storageimagemanager-text-13-1kgun5",
       "source": "packages/storage-image-manager-core/src/components/StorageImageManager.tsx",
-      "line": 1130,
+      "line": 1143,
       "element": "p",
       "semanticName": "image-manager-core-src-components-storageimagemanager-text-13",
       "kind": "literal"
@@ -23965,7 +24005,7 @@
     {
       "id": "storage-image-manager-core-src-components-storageimagemanager-text-15-facw0k",
       "source": "packages/storage-image-manager-core/src/components/StorageImageManager.tsx",
-      "line": 1182,
+      "line": 1195,
       "element": "p",
       "semanticName": "image-manager-core-src-components-storageimagemanager-text-15",
       "kind": "literal"

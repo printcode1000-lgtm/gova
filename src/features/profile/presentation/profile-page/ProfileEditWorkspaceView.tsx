@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { FulfillmentSettingsCard } from "@/features/profile/presentation/FulfillmentSettingsCard";
 import { ProductsCard } from "@/features/profile/presentation/ProductsCard";
 import { ProfileContactsCard } from "@/features/profile/presentation/ProfileContactsCard";
@@ -31,6 +32,7 @@ import {
 
 export function ProfileEditWorkspaceView({ model }: { model: ProfilePageContentModel }) {
 const { t, locale, session, superAdmin, providerAccountEnabled, setProviderAccountEnabled, registrationRef, specialtiesRef, productsRef, contactsRef, storeRef, workingHoursRef, fulfillmentRef, discountsRef, activeTab, carouselHeight, animateCarouselHeight, carouselRef, panelRefs, handleCarouselScroll, sectionStatuses, saveError, handleRegistrationStatus, handleSpecialtiesStatus, handleProductsStatus, handleContactStatus, handleStoreStatus, handleWorkingHoursStatus, handleFulfillmentStatus, handleDiscountsStatus } = model;
+const [openProfileDisplayPanel, setOpenProfileDisplayPanel] = useState<"rating" | "trending" | null>(null);
 return (
         <div
           id='profile-presentation-profile-page-profileeditworkspaceview-div-1-kpbevk'
@@ -69,7 +71,7 @@ return (
                   >
                     <ProfileEditSectionFrame id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-9-ynox7w'
                       icon={faUserCircle}
-                      title={t("profile.registration.mainData")}
+                      title={locale === "ar" ? "بيانات التسجيل الأساسية" : t("profile.registration.mainData")}
                       status={sectionStatuses.registration}
                       locale={locale}
                       color={PROFILE_EDIT_TAB_COLORS.registration}
@@ -119,7 +121,7 @@ return (
                   >
                     <ProfileEditSectionFrame id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-13-krapbq'
                       icon={faBuilding}
-                      title={t("profile.storeIdentity.activityTitle")}
+                      title={locale === "ar" ? "بيانات البروفيل" : t("profile.storeIdentity.activityTitle")}
                       status={sectionStatuses.store}
                       locale={locale}
                       color={PROFILE_EDIT_TAB_COLORS.store}
@@ -127,6 +129,10 @@ return (
                       <StoreIdentityCard
                         ref={storeRef}
                         onStatusChange={handleStoreStatus}
+                        ratingSettingsOpen={openProfileDisplayPanel === "rating"}
+                        onToggleRatingSettings={() =>
+                          setOpenProfileDisplayPanel((current) => current === "rating" ? null : "rating")
+                        }
                       />
                     </ProfileEditSectionFrame>
                   </div>
@@ -151,6 +157,10 @@ return (
                         uid={session?.uid ?? ""}
                         ref={productsRef}
                         onStatusChange={handleProductsStatus}
+                        profileShowcaseOpen={openProfileDisplayPanel === "trending"}
+                        onToggleProfileShowcase={() =>
+                          setOpenProfileDisplayPanel((current) => current === "trending" ? null : "trending")
+                        }
                       />
                     </ProfileEditSectionFrame>
                   </div>

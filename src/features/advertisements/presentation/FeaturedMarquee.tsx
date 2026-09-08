@@ -170,13 +170,15 @@ export function FeaturedMarquee({ id, config }: FeaturedMarqueeProps & { id?: st
   if (!hasItems) return null;
 
   return (
-    <section id={id} className="space-y-3 overflow-hidden">
-      <div id="features-advertisements-presentation-featuredmarquee-div-2-hacoir" className="flex items-center mb-4">
-        <h3 id="features-advertisements-presentation-featuredmarquee-heading-3-kxhfmz" className="text-lg font-semibold text-tertiary flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-tertiary animate-pulse-subtle" aria-hidden />
-          {t(sectionTitle)}
+    <section id={id} className="overflow-hidden">
+      <div id="features-advertisements-presentation-featuredmarquee-div-2-hacoir" className="mb-[6px] flex items-center">
+        <h3 id="features-advertisements-presentation-featuredmarquee-heading-3-kxhfmz" className="featured-marquee-heading-shine text-[12px] font-semibold text-tertiary flex items-center gap-2">
+          <span id="features-advertisements-presentation-featuredmarquee-icon-shine-5c81a4" className="inline-flex h-5 w-5 shrink-0">
+            <Sparkles className="w-5 h-5 text-tertiary animate-pulse-subtle" aria-hidden />
+          </span>
+          المتميزة
         </h3>
-        <div id="features-advertisements-presentation-featuredmarquee-div-4-2sshlr" className="title-line-contact"></div>
+        <div id="features-advertisements-presentation-featuredmarquee-div-4-2sshlr" className="title-line-contact text-tertiary" style={{ background: "linear-gradient(90deg, currentColor 0, color-mix(in srgb, currentColor 40%, transparent) 50%, transparent 100%)", opacity: 0.6 }}></div>
       </div>
 
       <div id="features-advertisements-presentation-featuredmarquee-div-5-xqrwq1"
@@ -191,7 +193,7 @@ export function FeaturedMarquee({ id, config }: FeaturedMarqueeProps & { id?: st
           isDownRef.current = false;
           if (longPressTimerRef.current) window.clearTimeout(longPressTimerRef.current);
         }}
-        className="relative overflow-hidden py-4 rounded-xl asol-surface-neutral touch-pan-y cursor-grab active:cursor-grabbing pointer-events-auto"
+        className="relative overflow-hidden py-[6px] rounded-xl asol-surface-neutral touch-pan-y cursor-grab active:cursor-grabbing pointer-events-auto"
         dir="ltr"
       >
         <div id="features-advertisements-presentation-featuredmarquee-div-6-mx4q2h"

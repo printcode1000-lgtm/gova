@@ -18,6 +18,7 @@ export type { HomeHeroTransition, HomeHeroSlide, HomeHeroConfig };
 export interface HeroSliderProps {
   config: HeroSliderConfig;
   mode?: "view" | "admin-edit" | "images-edit";
+  isLoading?: boolean;
   onChange?: (config: HeroSliderConfig) => void;
   onSave?: (config: HeroSliderConfig) => void;
   onCancel?: () => void;

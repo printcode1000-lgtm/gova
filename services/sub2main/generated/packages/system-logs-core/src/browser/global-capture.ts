@@ -5,7 +5,10 @@ import {
   setMemoryCollectorAuthorized,
 } from './memory-store';
 import { systemLogsNativeCrash } from '../ports';
-import { isExpectedDevelopmentChunkFailure } from './development-chunk-policy';
+import {
+  isExpectedDevelopmentChunkFailure,
+  isExpectedDevelopmentRscReloadFailure,
+} from './development-chunk-policy';
 
 type ConsoleMethod = 'log' | 'info' | 'debug' | 'warn' | 'error';
 
@@ -130,13 +133,15 @@ export function installGlobalCapture(options: InstallGlobalCaptureOptions) {
       }
       const error = data.find((item): item is Error => item instanceof Error);
       const serialized = data.map(serialize).join(' ');
+      const developmentFailure = {
+        developmentBuild: options.developmentBuild,
+        currentOrigin: window.location.origin,
+        message: serialized,
+        errorName: error?.name,
+      };
       if (
-        isExpectedDevelopmentChunkFailure({
-          developmentBuild: options.developmentBuild,
-          currentOrigin: window.location.origin,
-          message: serialized,
-          errorName: error?.name,
-        })
+        isExpectedDevelopmentChunkFailure(developmentFailure) ||
+        isExpectedDevelopmentRscReloadFailure(developmentFailure)
       ) {
         return;
       }
@@ -164,13 +169,15 @@ export function installGlobalCapture(options: InstallGlobalCaptureOptions) {
 
   const handleError = (event: ErrorEvent) => {
     if (isBenignBrowserError(event.message)) return;
+    const developmentFailure = {
+      developmentBuild: options.developmentBuild,
+      currentOrigin: window.location.origin,
+      message: event.message,
+      errorName: event.error instanceof Error ? event.error.name : undefined,
+    };
     if (
-      isExpectedDevelopmentChunkFailure({
-        developmentBuild: options.developmentBuild,
-        currentOrigin: window.location.origin,
-        message: event.message,
-        errorName: event.error instanceof Error ? event.error.name : undefined,
-      })
+      isExpectedDevelopmentChunkFailure(developmentFailure) ||
+      isExpectedDevelopmentRscReloadFailure(developmentFailure)
     ) {
       return;
     }
@@ -200,13 +207,15 @@ export function installGlobalCapture(options: InstallGlobalCaptureOptions) {
 
   const handleRejection = (event: PromiseRejectionEvent) => {
     const reason = event.reason;
+    const developmentFailure = {
+      developmentBuild: options.developmentBuild,
+      currentOrigin: window.location.origin,
+      message: serialize(reason),
+      errorName: reason instanceof Error ? reason.name : undefined,
+    };
     if (
-      isExpectedDevelopmentChunkFailure({
-        developmentBuild: options.developmentBuild,
-        currentOrigin: window.location.origin,
-        message: serialize(reason),
-        errorName: reason instanceof Error ? reason.name : undefined,
-      })
+      isExpectedDevelopmentChunkFailure(developmentFailure) ||
+      isExpectedDevelopmentRscReloadFailure(developmentFailure)
     ) {
       return;
     }

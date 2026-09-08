@@ -20,7 +20,9 @@ import {
   heroSliderProbingEntries,
   heroSliderVisibleEntries,
   nextHeroSlideIndex,
+  shouldShowHeroSliderEmptyState,
   shouldShowHeroSliderSkeleton,
+  shouldShowHeroSliderUnavailableState,
   sortedHeroSlides,
 } from "./hero-slider-model";
 export type {
@@ -35,9 +37,23 @@ import {
   DEFAULT_HOME_HERO_TRANSITION_DURATION,
 } from "@asol/hero-slider-core";
 
+const HERO_IMAGE_RETRY_LIMIT = 2;
+const HERO_IMAGE_RETRY_DELAY_MS = 750;
+
+function withoutImageIndex(
+  state: Record<number, boolean>,
+  index: number,
+): Record<number, boolean> {
+  if (!(index in state)) return state;
+  const next = { ...state };
+  delete next[index];
+  return next;
+}
+
 export function HeroSlider({ id,
   config,
   mode = "view",
+  isLoading = false,
   onChange,
   onSave,
   onCancel,
@@ -50,6 +66,7 @@ export function HeroSlider({ id,
   const [previous, setPrevious] = useState<number | null>(null);
   const [loadedImages, setLoadedImages] = useState<Record<number, boolean>>({});
   const [failedImages, setFailedImages] = useState<Record<number, boolean>>({});
+  const [retryingImages, setRetryingImages] = useState<Record<number, boolean>>({});
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -61,6 +78,8 @@ export function HeroSlider({ id,
   const [navigationDirection, setNavigationDirection] =
     useState<HeroSliderNavigationDirection>("forward");
   const pressStartRef = useRef<number>(0);
+  const imageRetryAttemptsRef = useRef<Record<number, number>>({});
+  const imageRetryTimersRef = useRef<Record<number, number>>({});
   const activeConfig = mode === "view" ? config : draftConfig;
   const carouselConfig = useMemo(
     () =>
@@ -106,10 +125,23 @@ export function HeroSlider({ id,
   }, [config]);
 
   useEffect(() => {
+    for (const timer of Object.values(imageRetryTimersRef.current)) {
+      window.clearTimeout(timer);
+    }
+    imageRetryTimersRef.current = {};
+    imageRetryAttemptsRef.current = {};
+    setRetryingImages({});
     setFailedImages({});
     setLoadedImages({});
     setCurrent(0);
     setPrevious(null);
+
+    return () => {
+      for (const timer of Object.values(imageRetryTimersRef.current)) {
+        window.clearTimeout(timer);
+      }
+      imageRetryTimersRef.current = {};
+    };
   }, [slideImageSignature]);
 
   useEffect(() => {
@@ -146,6 +178,11 @@ export function HeroSlider({ id,
   );
 
   const hasSlides = carouselEntries.length > 0;
+  const configuredImageCount = useMemo(
+    () => sortedSlides.filter((slide) => Boolean(slide.image)).length,
+    [sortedSlides],
+  );
+  const retryingCount = Object.keys(retryingImages).length;
   const enteringSlide = carouselEntries[current]?.slide;
   const activeTransitionDuration =
     enteringSlide?.transitionDuration ?? DEFAULT_HOME_HERO_TRANSITION_DURATION;
@@ -156,10 +193,26 @@ export function HeroSlider({ id,
   );
   const isConfigLoaded =
     !!config && (isViewMode ? sortedSlides.some((slide) => slide.image) : hasSlides);
-  const showSkeleton = shouldShowHeroSliderSkeleton({
+  const showSkeleton =
+    (isViewMode && isLoading) ||
+    shouldShowHeroSliderSkeleton({
+      isViewMode,
+      probingCount: probingEntries.length + retryingCount,
+      visibleCount: carouselEntries.length,
+    });
+  const showEmptyState = shouldShowHeroSliderEmptyState({
     isViewMode,
-    probingCount: probingEntries.length,
+    isLoading,
+    configuredImageCount,
     visibleCount: carouselEntries.length,
+  });
+  const showUnavailableState = shouldShowHeroSliderUnavailableState({
+    isViewMode,
+    isLoading,
+    configuredImageCount,
+    visibleCount: carouselEntries.length,
+    probingCount: probingEntries.length,
+    retryingCount,
   });
 
   useEffect(() => {
@@ -257,18 +310,41 @@ export function HeroSlider({ id,
     isPaused,
   ]);
 
-  // Image load handler — keyed by the original slide index in sortedSlides.
+  // Image status is keyed by the original slide index in sortedSlides.
   const handleImageLoad = (originalIndex: number) => {
+    const timer = imageRetryTimersRef.current[originalIndex];
+    if (timer) window.clearTimeout(timer);
+    delete imageRetryTimersRef.current[originalIndex];
+    delete imageRetryAttemptsRef.current[originalIndex];
+    setRetryingImages((prev) => withoutImageIndex(prev, originalIndex));
+    setFailedImages((prev) => withoutImageIndex(prev, originalIndex));
     setLoadedImages((prev) => ({ ...prev, [originalIndex]: true }));
   };
 
   const handleImageError = (originalIndex: number, src: string) => {
+    const attempt = (imageRetryAttemptsRef.current[originalIndex] ?? 0) + 1;
+    imageRetryAttemptsRef.current[originalIndex] = attempt;
+    setFailedImages((prev) => ({ ...prev, [originalIndex]: true }));
+    setLoadedImages((prev) => withoutImageIndex(prev, originalIndex));
+
+    if (attempt <= HERO_IMAGE_RETRY_LIMIT) {
+      setRetryingImages((prev) => ({ ...prev, [originalIndex]: true }));
+      const previousTimer = imageRetryTimersRef.current[originalIndex];
+      if (previousTimer) window.clearTimeout(previousTimer);
+      imageRetryTimersRef.current[originalIndex] = window.setTimeout(() => {
+        delete imageRetryTimersRef.current[originalIndex];
+        setRetryingImages((prev) => withoutImageIndex(prev, originalIndex));
+        setFailedImages((prev) => withoutImageIndex(prev, originalIndex));
+      }, HERO_IMAGE_RETRY_DELAY_MS * attempt);
+      return;
+    }
+
+    setRetryingImages((prev) => withoutImageIndex(prev, originalIndex));
     console.warn("[HeroSlider] slide-image-unavailable", {
       index: originalIndex,
       src,
+      attempts: attempt,
     });
-    setFailedImages((prev) => ({ ...prev, [originalIndex]: true }));
-    setLoadedImages((prev) => ({ ...prev, [originalIndex]: true }));
   };
 
   // Phase 8 - Mobile Touch Gestures
@@ -378,11 +454,13 @@ export function HeroSlider({ id,
           </div>
         )}
 
-        {!hasSlides && !(isViewMode && probingEntries.length > 0) && (
+        {(showEmptyState || showUnavailableState) && (
           <div id="features-advertisements-presentation-heroslider-div-5-kf0ndd" className="absolute inset-0 flex items-center justify-center bg-muted px-6 text-center text-sm text-muted-foreground">
-            {mode !== "view"
-              ? t("heroSlider.addSlide")
-              : t("heroSlider.noSlides")}
+            {showUnavailableState
+              ? t("heroSlider.imageUnavailable")
+              : mode !== "view"
+                ? t("heroSlider.addSlide")
+                : t("heroSlider.noSlides")}
           </div>
         )}
 

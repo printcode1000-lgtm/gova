@@ -9,7 +9,7 @@ import { useTranslation } from "@/shared/i18n";
 
 import { NotificationDeviceSettingsCard } from "./NotificationDeviceSettingsCard";
 
-export function NotificationsSettingsPageContent() {
+export function NotificationsSettingsPageContent({ children }: { children?: React.ReactNode }) {
   const { t } = useTranslation();
   const router = useRouter();
   const { isLoggedIn, isLoading } = useSession();
@@ -52,7 +52,7 @@ export function NotificationsSettingsPageContent() {
           {t("settings.notifications.title")}
         </h1>
       </header>
-      <NotificationDeviceSettingsCard />
+      <NotificationDeviceSettingsCard>{children}</NotificationDeviceSettingsCard>
     </div>
   );
 }

@@ -260,6 +260,23 @@ function testRemoteImageRenderingBypassIsClosed(root: string) {
   assert.doesNotMatch(managerPreviewSource, /<img[\s\S]{0,160}src=\{(?:imageUrl|uploadedImage\?\.url)/);
 }
 
+function testLocalFirstImagePlaceholderEvents(root: string) {
+  const source = readFileSync(
+    path.join(root, "src/shared/ui/local-first-image.tsx"),
+    "utf8",
+  );
+  assert.match(
+    source,
+    /resolvedSrc === LOCAL_FIRST_IMAGE_PLACEHOLDER/,
+    "the local-first placeholder must not be reported as the loaded remote image",
+  );
+  assert.match(
+    source,
+    /onSourceUnavailable\?\.\(\)/,
+    "terminal local-first resolution must notify image consumers",
+  );
+}
+
 function testLocalFirstImageRenderRecoveryPolicy() {
   assert.equal(
     shouldRetryFailedLocalFirstImage({
@@ -387,6 +404,7 @@ async function main() {
   testLocalFirstImageRenderRecoveryPolicy();
   await testRemoteImageFailureNeverReturnsCloudUrl();
   const root = process.cwd();
+  testLocalFirstImagePlaceholderEvents(root);
   testRemoteImageRenderingBypassIsClosed(root);
   const managerSource = readFileSync(
     path.join(

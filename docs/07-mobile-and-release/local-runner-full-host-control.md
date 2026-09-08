@@ -112,7 +112,12 @@ The Local Runner can execute installed tooling including:
 - Git and repository commands;
 - Node.js and npm;
 - Python 3;
+- `ripgrep` through the `rg` command;
 - shell scripts and arbitrary executables available through the host, **except tools explicitly forbidden by Local Runner policy**.
+
+#### ripgrep (`rg`) verified installation
+
+As of 2026-09-08, `ripgrep` is installed and operational on the Linux Desktop used for Gova development. The verified executable is `/home/hesham/.local/bin/rg`, and `rg --version` reports `ripgrep 15.2.0 (rev e89fff89ac)`. A repository-level verification from `/home/hesham/gova` succeeded with `rg --files`, confirming that the command is available for project searches.
 
 Antigravity and `agy` are permanently forbidden regardless of whether their binaries are installed. They must not be invoked directly, through wrappers, through the monitor, or from a submitted `shell_command`.
 

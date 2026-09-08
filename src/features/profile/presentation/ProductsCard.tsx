@@ -1,6 +1,8 @@
 'use client';
 
 import * as React from 'react';
+import { createPortal } from 'react-dom';
+import { ChevronDown, TrendingUp } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Input } from '@/shared/ui/input';
 import { ProfileProductsTabs } from '@/features/profile-products/ui';
@@ -20,21 +22,32 @@ import type {
 import { useTranslation } from '@/shared/i18n';
 import { cloneShowcase, isShowcaseDirty } from './products-card-model';
 import { usePageSaveOperations } from '@/features/page-save/ui';
+import STATIC_DOM_IDS from '@/shared/dom/identity/static-ids.json';
 
 interface ProductsCardProps {
   uid: string;
   showSaveButton?: boolean;
   onStatusChange?: (status: ProfileSectionStatus) => void;
   readOnly?: boolean;
+  profileShowcaseOpen?: boolean;
+  onToggleProfileShowcase?: () => void;
 }
 
 export const ProductsCard = React.forwardRef<
   ProfileSpecialtiesController,
   ProductsCardProps
->(function ProductsCard({ uid, onStatusChange, readOnly = false }, ref) {
+>(function ProductsCard({
+  uid,
+  onStatusChange,
+  readOnly = false,
+  profileShowcaseOpen = true,
+  onToggleProfileShowcase,
+}, ref) {
   const { t, locale } = useTranslation();
   const router = useRouter();
   const productDeletions = usePageSaveOperations('profile-edit');
+  const [profileShowcasePortalTarget, setProfileShowcasePortalTarget] =
+    React.useState<HTMLElement | null>(null);
   const [newTrendingText, setNewTrendingText] = React.useState('');
   const [featuredProducts, setFeaturedProducts] = React.useState<ProductRecord[]>([]);
   const [isLoadingFeaturedProducts, setIsLoadingFeaturedProducts] = React.useState(false);
@@ -52,6 +65,24 @@ export const ProductsCard = React.forwardRef<
   const [savedShowcase, setSavedShowcase] =
     React.useState<ProfileShowcaseSettings>(EMPTY_PROFILE_SHOWCASE);
   const showcaseDirty = isShowcaseDirty(showcase, savedShowcase);
+
+  React.useEffect(() => {
+    const resolvePortalTarget = () => {
+      const target = document.getElementById(
+        STATIC_DOM_IDS.ids.profile.storeIdentityCardRoot,
+      );
+      if (!target) return false;
+      setProfileShowcasePortalTarget(target);
+      return true;
+    };
+
+    if (resolvePortalTarget()) return;
+    const observer = new MutationObserver(() => {
+      if (resolvePortalTarget()) observer.disconnect();
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, []);
 
   React.useEffect(() => {
     const next = cloneShowcase(storeDetails.profileShowcase ?? EMPTY_PROFILE_SHOWCASE);
@@ -213,13 +244,6 @@ export const ProductsCard = React.forwardRef<
     }));
   };
 
-  const toggleCustomRequest = () => {
-    setShowcase((current) => ({
-      ...current,
-      customRequestEnabled: !current.customRequestEnabled,
-    }));
-  };
-
   return (
     <div id='features-profile-presentation-productscard-div-1-ayditq' className="space-y-4">
       <ProfileProductsTabs id='features-profile-presentation-productscard-profileproductstabs-2-2ekrxl'
@@ -271,25 +295,49 @@ export const ProductsCard = React.forwardRef<
         onRefreshProducts={productsTabs.refetchActiveProducts}
       />
 
-      {!readOnly ? (
-        <section id='features-profile-presentation-productscard-section-3-mqxepy' className="rounded-xl border border-outline-variant bg-surface-container-low/40 p-3">
-          <div id='features-profile-presentation-productscard-div-4-mrc96i' className="flex flex-wrap items-center justify-between gap-2">
-            <div id='features-profile-presentation-productscard-div-5-xcmjsg'>
-              <h4 id='features-profile-presentation-productscard-heading-6-q3prsv' className="text-sm font-semibold text-on-surface">
-                {locale === 'ar' ? 'عرض البروفايل' : 'Profile display'}
-              </h4>
-              <p id='features-profile-presentation-productscard-text-7-ys6tmc' className="text-xs text-on-surface-variant">
-                {locale === 'ar'
-                  ? 'اختر المنتجات المميزة ونصوص الأكثر رواجًا التي تظهر للزوار.'
-                  : 'Choose featured products and trending texts shown to visitors.'}
-              </p>
-            </div>
+      {!readOnly && profileShowcasePortalTarget
+        ? createPortal(
+            <section id='features-profile-presentation-productscard-section-3-mqxepy' className="rounded-xl border border-outline-variant bg-surface-container-low/40 p-3">
+          <div id='features-profile-presentation-productscard-div-4-mrc96i'>
+            <button
+              id='features-profile-presentation-productscard-button-16-a4c2f7'
+              type="button"
+              onClick={onToggleProfileShowcase}
+              disabled={!onToggleProfileShowcase}
+              aria-expanded={profileShowcaseOpen}
+              aria-controls="features-profile-presentation-productscard-div-8-bhfpsg"
+              className="flex w-full items-center justify-between gap-3 text-start disabled:cursor-default"
+            >
+              <span id='features-profile-presentation-productscard-div-5-xcmjsg' className="flex min-w-0 items-center gap-2">
+                <TrendingUp
+                  id='features-profile-presentation-productscard-trendingup-18-c8f4b2'
+                  className="h-4 w-4 shrink-0 text-primary"
+                  aria-hidden
+                />
+                <span id='features-profile-presentation-productscard-heading-6-q3prsv' className="block text-sm font-semibold text-on-surface">
+                  {locale === 'ar' ? 'شريط الأكثر رواجًا' : 'Trending bar'}
+                </span>
+              </span>
+              {onToggleProfileShowcase ? (
+                <ChevronDown
+                  id='features-profile-presentation-productscard-chevrondown-17-b5d3e8'
+                  className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${profileShowcaseOpen ? 'rotate-180' : ''}`}
+                  aria-hidden
+                />
+              ) : null}
+            </button>
           </div>
 
+          {profileShowcaseOpen ? (
           <div id='features-profile-presentation-productscard-div-8-bhfpsg' className="mt-4 grid gap-3">
+            <p id='features-profile-presentation-productscard-text-7-ys6tmc' className="text-xs text-on-surface-variant">
+              {locale === 'ar'
+                ? 'تحكم في محتوى الأكثر رواجًا الذي يظهر للزوار.'
+                : 'Control the trending content shown to visitors.'}
+            </p>
             <div id='features-profile-presentation-productscard-div-9-mxirue' className="space-y-2">
               <label id='features-profile-presentation-productscard-label-10-9jamgw' className="text-xs font-semibold text-on-surface">
-                {locale === 'ar' ? 'عنوان شريط الأكثر رواجًا' : 'Trending title'}
+                {locale === 'ar' ? 'عنوان قسم الأكثر رواجًا' : 'Trending section title'}
               </label>
               <Input id='features-profile-presentation-productscard-input-11-tew4dx'
                 value={showcase.trending.label}
@@ -309,8 +357,8 @@ export const ProductsCard = React.forwardRef<
                 }}
                 placeholder={
                   locale === 'ar'
-                    ? 'أضف نصًا يظهر في الأكثر رواجًا'
-                    : 'Add a trending display text'
+                    ? 'أضف عنصرًا إلى قسم الأكثر رواجًا'
+                    : 'Add an item to the trending section'
                 }
                 maxLength={80}
               />
@@ -335,7 +383,7 @@ export const ProductsCard = React.forwardRef<
                       type="button"
                       onClick={() => removeTrendingItem(item.id)}
                       className="text-destructive"
-                      aria-label={locale === 'ar' ? 'إزالة النص' : 'Remove text'}
+                      aria-label={locale === 'ar' ? 'إزالة العنصر' : 'Remove item'}
                     >
                       ×
                     </button>
@@ -343,38 +391,13 @@ export const ProductsCard = React.forwardRef<
                 ))}
               </div>
             ) : null}
-            <p id='features-profile-presentation-productscard-text-16-dzgb0i' className="text-xs text-on-surface-variant">
-              {locale === 'ar'
-                ? `عدد المنتجات المميزة المختارة: ${showcase.featuredProductIds.length}`
-                : `Featured products selected: ${showcase.featuredProductIds.length}`}
-            </p>
           </div>
-        </section>
-      ) : null}
+          ) : null}
+            </section>,
+            profileShowcasePortalTarget,
+          )
+        : null}
 
-      {!readOnly ? (
-        <section id='features-profile-presentation-productscard-section-17-hkgevz' className="rounded-xl border border-primary/20 bg-primary/5 p-4">
-          <label id='features-profile-presentation-productscard-label-18-lou07b' className="flex items-center justify-between gap-4">
-            <span id='features-profile-presentation-productscard-text-19-ulb5hm' className="min-w-0">
-              <span id='features-profile-presentation-productscard-text-20-zhkl1i' className="block text-sm font-semibold text-on-surface">
-                {locale === 'ar' ? 'الطلب الخاص' : 'Custom requests'}
-              </span>
-              <span id='features-profile-presentation-productscard-text-21-309oz3' className="mt-1 block text-xs leading-5 text-on-surface-variant">
-                {locale === 'ar'
-                  ? 'يسمح للعميل بإرسال وصف وصور لطلب غير موجود ضمن منتجاتك، لتراجعه وترد عليه من الطلبات.'
-                  : 'Lets customers send a description and images for an item not listed in your products.'}
-              </span>
-            </span>
-            <input id='features-profile-presentation-productscard-input-22-bmjfu5'
-              type="checkbox"
-              className="peer sr-only"
-              checked={showcase.customRequestEnabled}
-              onChange={toggleCustomRequest}
-            />
-            <span id='features-profile-presentation-productscard-text-23-hbodsi' className="relative h-7 w-12 shrink-0 rounded-full bg-outline-variant transition peer-checked:bg-primary peer-focus-visible:ring-2 peer-focus-visible:ring-primary peer-focus-visible:ring-offset-2 after:absolute after:start-1 after:top-1 after:h-5 after:w-5 after:rounded-full after:bg-white after:shadow-sm after:transition-transform peer-checked:after:translate-x-5 rtl:peer-checked:after:-translate-x-5" />
-          </label>
-        </section>
-      ) : null}
     </div>
   );
 });

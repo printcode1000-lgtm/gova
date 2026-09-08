@@ -2,6 +2,7 @@
 
 import Image from "@/shared/ui/local-first-image";
 import Link from "next/link";
+import { LayoutGrid } from "lucide-react";
 import * as React from "react";
 
 import {
@@ -32,6 +33,14 @@ export function CategoriesGrid({ displayCategories }: CategoriesGridProps) {
 
   return (
     <section id='features-home-presentation-categoriesgrid-section-1-evhumd'>
+      <div id="features-home-presentation-categoriesgrid-title-row-603352" className="mb-[6px] flex items-center">
+        <h3 id="features-home-presentation-categoriesgrid-title-heading-90a211" className="text-[12px] font-semibold text-primary flex items-center gap-2">
+          <LayoutGrid className="categories-grid-icon-cycle h-5 w-5 origin-center text-primary" aria-hidden />
+          التصنيفات
+        </h3>
+        <div id="features-home-presentation-categoriesgrid-title-line-a71565" className="title-line-contact text-primary" style={{ background: "linear-gradient(90deg, currentColor 0, color-mix(in srgb, currentColor 40%, transparent) 50%, transparent 100%)", opacity: 0.6 }}></div>
+      </div>
+
       <div id='features-home-presentation-categoriesgrid-div-2-iecv8c' className={categoryGridClassName}>
         {displayCategories.map((cat, index) => {
           const name = locale === "ar" ? cat.nameAr : cat.nameEn;

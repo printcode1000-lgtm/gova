@@ -48697,6 +48697,17 @@
       ]
     },
     {
+      "id": "source:src/features/profile/presentation/CustomRequestSettingsSection.tsx",
+      "kind": "source",
+      "name": "CustomRequestSettingsSection.tsx",
+      "path": "src/features/profile/presentation/CustomRequestSettingsSection.tsx",
+      "tags": [
+        "src/features/profile/presentation/customrequestsettingssection",
+        "src/features/profile/presentation/customrequestsettingssection.tsx",
+        "tsx"
+      ]
+    },
+    {
       "id": "source:src/features/profile/presentation/fulfillment-settings/fulfillment-settings-copy.ts",
       "kind": "source",
       "name": "fulfillment-settings-copy.ts",
@@ -94752,6 +94763,12 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "source:src/features/profile/presentation/CustomRequestSettingsSection.tsx",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "source:src/features/profile/presentation/fulfillment-settings/fulfillment-settings-copy.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -104064,6 +104081,12 @@
     },
     {
       "from": "domain:ui-components",
+      "to": "source:src/features/profile/presentation/CustomRequestSettingsSection.tsx",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
       "to": "source:src/features/profile/presentation/fulfillment-settings/fulfillment-settings-copy.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -106307,6 +106330,11 @@
     },
     {
       "from": "feature:home",
+      "to": "external-dependency:lucide-react",
+      "kind": "imports"
+    },
+    {
+      "from": "feature:home",
       "to": "external-dependency:next",
       "kind": "imports"
     },
@@ -107023,6 +107051,11 @@
     {
       "from": "feature:profile",
       "to": "external-dependency:react",
+      "kind": "imports"
+    },
+    {
+      "from": "feature:profile",
+      "to": "external-dependency:react-dom",
       "kind": "imports"
     },
     {
@@ -128410,6 +128443,12 @@
     },
     {
       "from": "route:/settings/notifications:page",
+      "to": "feature:advertisements",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/settings/notifications:page",
       "to": "feature:app-reset",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -128422,7 +128461,19 @@
     },
     {
       "from": "route:/settings/notifications:page",
+      "to": "feature:categories",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/settings/notifications:page",
       "to": "feature:data",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/settings/notifications:page",
+      "to": "feature:follow",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -128452,7 +128503,49 @@
     },
     {
       "from": "route:/settings/notifications:page",
+      "to": "feature:product",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/settings/notifications:page",
+      "to": "feature:profile-products",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/settings/notifications:page",
+      "to": "feature:profile-working-hours",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/settings/notifications:page",
+      "to": "feature:profile",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/settings/notifications:page",
+      "to": "feature:seller-discounts",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/settings/notifications:page",
       "to": "feature:settings",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/settings/notifications:page",
+      "to": "feature:sharing",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/settings/notifications:page",
+      "to": "feature:specialty-chat",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -128465,6 +128558,18 @@
     {
       "from": "route:/settings/notifications:page",
       "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/settings/notifications:page",
+      "to": "package:@asol/api-contract-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/settings/notifications:page",
+      "to": "package:@asol/auth-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -128494,7 +128599,19 @@
     },
     {
       "from": "route:/settings/notifications:page",
+      "to": "package:@asol/featured-marquee-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/settings/notifications:page",
       "to": "package:@asol/format-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/settings/notifications:page",
+      "to": "package:@asol/hero-slider-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -128518,7 +128635,49 @@
     },
     {
       "from": "route:/settings/notifications:page",
+      "to": "package:@asol/orders-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/settings/notifications:page",
       "to": "package:@asol/ota-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/settings/notifications:page",
+      "to": "package:@asol/product-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/settings/notifications:page",
+      "to": "package:@asol/storage-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/settings/notifications:page",
+      "to": "package:@asol/storage-core",
+      "kind": "related-to",
+      "detail": "route write gateway"
+    },
+    {
+      "from": "route:/settings/notifications:page",
+      "to": "package:@asol/system-logs-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/settings/notifications:page",
+      "to": "package:@asol/trending-ribbon-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/settings/notifications:page",
+      "to": "package:@asol/vercel-deploy-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -180444,6 +180603,12 @@
     },
     {
       "from": "source:src/app/settings/notifications/page.tsx",
+      "to": "source:src/features/profile/ui.ts",
+      "kind": "imports",
+      "detail": "@/features/profile/ui"
+    },
+    {
+      "from": "source:src/app/settings/notifications/page.tsx",
       "to": "source:src/features/settings/ui.ts",
       "kind": "imports",
       "detail": "@/features/settings/ui"
@@ -195919,6 +196084,12 @@
     },
     {
       "from": "source:src/features/home/presentation/CategoriesGrid.tsx",
+      "to": "external-dependency:lucide-react",
+      "kind": "imports",
+      "detail": "lucide-react"
+    },
+    {
+      "from": "source:src/features/home/presentation/CategoriesGrid.tsx",
       "to": "external-dependency:next",
       "kind": "imports",
       "detail": "next/link"
@@ -210733,6 +210904,12 @@
     },
     {
       "from": "source:src/features/product/presentation/style-editors/rating/RatingSettingsEditor.tsx",
+      "to": "external-dependency:lucide-react",
+      "kind": "imports",
+      "detail": "lucide-react"
+    },
+    {
+      "from": "source:src/features/product/presentation/style-editors/rating/RatingSettingsEditor.tsx",
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
@@ -213999,6 +214176,60 @@
       "detail": "@/shared/ui/textarea"
     },
     {
+      "from": "source:src/features/profile/presentation/CustomRequestSettingsSection.tsx",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/profile/presentation/CustomRequestSettingsSection.tsx",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/profile/presentation/CustomRequestSettingsSection.tsx",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/profile/presentation/CustomRequestSettingsSection.tsx",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/profile/presentation/CustomRequestSettingsSection.tsx",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/profile/presentation/CustomRequestSettingsSection.tsx",
+      "to": "feature:profile",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:src/features/profile/presentation/CustomRequestSettingsSection.tsx",
+      "to": "external-dependency:react",
+      "kind": "imports",
+      "detail": "react"
+    },
+    {
+      "from": "source:src/features/profile/presentation/CustomRequestSettingsSection.tsx",
+      "to": "source:src/features/profile/domain/store-details.entity.ts",
+      "kind": "imports",
+      "detail": "../domain/store-details.entity"
+    },
+    {
+      "from": "source:src/features/profile/presentation/CustomRequestSettingsSection.tsx",
+      "to": "source:src/features/profile/presentation/hooks/use-store-details.ts",
+      "kind": "imports",
+      "detail": "./hooks/use-store-details"
+    },
+    {
+      "from": "source:src/features/profile/presentation/CustomRequestSettingsSection.tsx",
+      "to": "source:src/shared/i18n/index.ts",
+      "kind": "imports",
+      "detail": "@/shared/i18n"
+    },
+    {
       "from": "source:src/features/profile/presentation/fulfillment-settings/fulfillment-settings-copy.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -214960,9 +215191,21 @@
     },
     {
       "from": "source:src/features/profile/presentation/ProductsCard.tsx",
+      "to": "external-dependency:lucide-react",
+      "kind": "imports",
+      "detail": "lucide-react"
+    },
+    {
+      "from": "source:src/features/profile/presentation/ProductsCard.tsx",
       "to": "external-dependency:next",
       "kind": "imports",
       "detail": "next/navigation"
+    },
+    {
+      "from": "source:src/features/profile/presentation/ProductsCard.tsx",
+      "to": "external-dependency:react-dom",
+      "kind": "imports",
+      "detail": "react-dom"
     },
     {
       "from": "source:src/features/profile/presentation/ProductsCard.tsx",
@@ -215251,6 +215494,12 @@
       "to": "external-dependency:@fortawesome/free-solid-svg-icons",
       "kind": "imports",
       "detail": "@fortawesome/free-solid-svg-icons"
+    },
+    {
+      "from": "source:src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
+      "to": "external-dependency:react",
+      "kind": "imports",
+      "detail": "react"
     },
     {
       "from": "source:src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
@@ -217615,6 +217864,12 @@
     },
     {
       "from": "source:src/features/profile/ui.ts",
+      "to": "source:src/features/profile/presentation/CustomRequestSettingsSection.tsx",
+      "kind": "imports",
+      "detail": "./presentation/CustomRequestSettingsSection"
+    },
+    {
+      "from": "source:src/features/profile/ui.ts",
       "to": "source:src/features/profile/presentation/hooks/use-profile-carrier-labels.ts",
       "kind": "imports",
       "detail": "./presentation/hooks/use-profile-carrier-labels"
@@ -219463,6 +219718,12 @@
       "to": "external-dependency:lucide-react",
       "kind": "imports",
       "detail": "lucide-react"
+    },
+    {
+      "from": "source:src/features/settings/presentation/NotificationDeviceSettingsCard.tsx",
+      "to": "external-dependency:react",
+      "kind": "imports",
+      "detail": "react"
     },
     {
       "from": "source:src/features/settings/presentation/NotificationDeviceSettingsCard.tsx",

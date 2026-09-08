@@ -38,19 +38,34 @@ function normalizePublished(input: HomeHeroPublished): HomeHeroPublished {
 
 export function useHomeHeroSlider() {
   const [data, setData] = useState<HomeHeroPublished>(fallback);
+  const [isLoading, setIsLoading] = useState(true);
 
   const checkForUpdates = useCallback(async (force = false) => {
+    let cached: HomeHeroCache | null = null;
     try {
-      const cached = await asolDbGet<HomeHeroCache>(
+      cached = await asolDbGet<HomeHeroCache>(
         ASOL_DB_STORES.APP_SETTINGS,
         HOME_HERO_CACHE_KEY,
       );
       await asolDbDelete(ASOL_DB_STORES.APP_SETTINGS, HOME_HERO_LEGACY_CACHE_KEY);
-      if (cached) setData(normalizePublished(cached));
+      if (cached) {
+        setData(normalizePublished(cached));
+        setIsLoading(false);
+      }
+    } catch (error) {
+      reportSystemIssue({
+        level: "warning",
+        feature: "Home",
+        operation: "read-hero-slider-cache",
+        error,
+        page: "/home",
+      });
+    }
 
+    try {
       const intervalMs = (cached?.checkIntervalMinutes ?? 15) * 60_000;
       const lastCheck = cached ? Date.parse(cached.lastCheckedAt) : 0;
-      if (!force && Date.now() - lastCheck < intervalMs) return;
+      if (!force && cached && Date.now() - lastCheck < intervalMs) return;
 
       const version = await homeHeroSliderApiService.getVersion();
       let next: HomeHeroPublished = cached ?? fallback;
@@ -68,6 +83,7 @@ export function useHomeHeroSlider() {
         });
         setData(next);
       }
+      setIsLoading(false);
       await asolDbSet<HomeHeroCache>(
         ASOL_DB_STORES.APP_SETTINGS,
         HOME_HERO_CACHE_KEY,
@@ -102,5 +118,5 @@ export function useHomeHeroSlider() {
     return () => window.removeEventListener(HOME_HERO_UPDATED_EVENT, onHeroUpdated);
   }, [checkForUpdates]);
 
-  return { ...data, checkForUpdates };
+  return { ...data, isLoading, checkForUpdates };
 }

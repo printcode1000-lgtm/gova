@@ -82,22 +82,22 @@ export default function HomeScreen({ displayCategories }: HomeScreenProps) {
   );
 
   return (
-    <div id='features-home-presentation-homescreen-div-1-yfhfqc' className="space-y-6 pb-8">
-      <div id='features-home-presentation-homescreen-div-2-s008q1' className="px-4">
-        <HeroSlider id='features-home-presentation-homescreen-heroslider-3-1mzgle' config={homeHeroSliderConfig} />
+    <div id='features-home-presentation-homescreen-div-1-yfhfqc' className="pb-8">
+      <div id='features-home-presentation-homescreen-div-2-s008q1' className="mx-2 sm:mx-4">
+        <HeroSlider id='features-home-presentation-homescreen-heroslider-3-1mzgle' config={homeHeroSliderConfig} isLoading={homeHero.isLoading} />
       </div>
 
-      <section id='features-home-presentation-homescreen-section-4-b8ldus' className="mx-2 sm:mx-4">
+      <section id='features-home-presentation-homescreen-section-4-b8ldus' className="mt-[6px] mx-2 sm:mx-4">
         <FeaturedMarquee id='features-home-presentation-homescreen-featuredmarquee-5-9ge6a3' config={homeFeaturedMarqueeConfig} />
       </section>
 
       {homeTrendingRibbonConfig.items.length > 0 ? (
-        <section id='features-home-presentation-homescreen-section-6-f5vpov' className="overflow-hidden rounded-2xl border border-error/20 shadow-sm">
+        <section id='features-home-presentation-homescreen-section-6-f5vpov' className="mt-[6px] overflow-hidden rounded-2xl border border-error/20 shadow-sm">
           <TrendingRibbon id='features-home-presentation-homescreen-trendingribbon-7-91g9hh' config={homeTrendingRibbonConfig} />
         </section>
       ) : null}
 
-      <div id='features-home-presentation-homescreen-div-8-r3pjjb' className="asol-section-tonal asol-section-tonal-primary-soft mx-2 sm:mx-4">
+      <div id='features-home-presentation-homescreen-div-8-r3pjjb' className="asol-section-tonal asol-section-tonal-primary-soft mx-2 sm:mx-4" style={{ marginTop: 6, paddingTop: 0, paddingInline: 0 }}>
         <CategoriesGrid displayCategories={displayCategories} />
       </div>
 

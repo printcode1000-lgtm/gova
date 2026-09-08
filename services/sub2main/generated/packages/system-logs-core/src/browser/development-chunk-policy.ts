@@ -45,3 +45,27 @@ export function isExpectedDevelopmentChunkFailure(
   if (!urlMatch) return false;
   return isSameOriginNextChunk(urlMatch[0], input.currentOrigin);
 }
+
+export function isExpectedDevelopmentRscReloadFailure(
+  input: DevelopmentChunkFailureInput,
+): boolean {
+  if (!input.developmentBuild) return false;
+  if (input.errorName && input.errorName !== 'TypeError') return false;
+
+  const message = input.message ?? '';
+  const prefix = 'Failed to fetch RSC payload for ';
+  const fallback = '. Falling back to browser navigation.';
+  const start = message.indexOf(prefix);
+  if (start < 0 || !message.includes('Failed to fetch')) return false;
+
+  const urlStart = start + prefix.length;
+  const end = message.indexOf(fallback, urlStart);
+  if (end < 0) return false;
+
+  try {
+    const target = new URL(message.slice(urlStart, end));
+    return target.origin === new URL(input.currentOrigin).origin;
+  } catch {
+    return false;
+  }
+}

@@ -944,6 +944,7 @@ src/features/settings/presentation/NotificationsSettingsPageContent.tsx  the pag
 src/features/settings/presentation/NotificationDeviceSettingsCard.tsx    header, status line, section composition
 src/features/settings/presentation/NotificationDeviceToggleSection.tsx   this device's switch and blocked-permission actions
 src/features/settings/presentation/ChatMessagePreferencesSection.tsx     the account's chat intake switches
+src/features/profile/presentation/CustomRequestSettingsSection.tsx        the profile-owned custom-request availability switch composed into this route
 src/features/settings/presentation/SettingsToggleRow.tsx                 one labelled switch row, shared by both sections
 src/features/settings/presentation/SystemNotificationSettingsButton.tsx  the system notification settings shortcut
 src/features/settings/presentation/use-system-notification-settings.ts   its availability and open action
@@ -963,6 +964,16 @@ The surface is gated by `npm run test:settings-notifications`
 (`src/features/settings/tests/`), which asserts the login guard, the tone split,
 the skeleton, the "explain every disabled control" rule, and locale parity for
 the strings above.
+
+The **custom requests** switch on this page is deliberately not a notification
+preference. It is the profile-owned `profileShowcase.customRequestEnabled`
+setting moved from the profile products editor to `/settings/notifications`.
+`CustomRequestSettingsSection` remains inside the profile feature and reads and
+persists the setting through `useStoreDetails`. The App Router page composes that
+profile-owned UI into `NotificationsSettingsPageContent` through a generic child
+slot, so settings does not gain a dependency on profile and profile remains the
+single owner. The switch saves immediately because this settings route has no
+profile page-save transaction.
 
 ### The account's other devices
 

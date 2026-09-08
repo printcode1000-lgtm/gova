@@ -91,8 +91,8 @@ const passwordUiStart = registrationCard.indexOf(
 );
 assert.notEqual(passwordUiStart, -1, "password UI container must exist");
 assert.ok(
-  providerAccountUiStart < passwordUiStart,
-  "activity/provider activation must appear before the change-password disclosure",
+  providerAccountUiStart > passwordUiStart,
+  "activity/provider activation must appear after the change-password disclosure",
 );
 const providerAccountUi = registrationCard.slice(providerAccountUiStart);
 assert.match(

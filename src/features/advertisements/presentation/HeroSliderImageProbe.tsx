@@ -24,6 +24,7 @@ export function HeroSliderImageProbe({ id,
       aria-hidden
       onLoad={onLoad}
       onError={onError}
+      onSourceUnavailable={onError}
     />
   );
 }

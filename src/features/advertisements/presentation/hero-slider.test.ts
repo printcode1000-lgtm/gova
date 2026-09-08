@@ -2,7 +2,9 @@ import assert from "node:assert/strict";
 
 import {
   heroSliderAdminEntries,
+  shouldShowHeroSliderEmptyState,
   shouldShowHeroSliderSkeleton,
+  shouldShowHeroSliderUnavailableState,
 } from "./hero-slider-model";
 import { mergeHeroSliderAdminPreview } from "./hero-slider-admin-preview";
 import { getHeroSlideStyleAndClass } from "./hero-slider-styles";
@@ -51,6 +53,53 @@ function runSkeletonPolicyTest() {
     false,
   );
   console.log("✅ hero-slider skeleton policy passed");
+}
+
+
+function runViewStatePolicyTest() {
+  assert.equal(
+    shouldShowHeroSliderEmptyState({
+      isViewMode: true,
+      isLoading: true,
+      configuredImageCount: 0,
+      visibleCount: 0,
+    }),
+    false,
+    "unresolved Home data must not be presented as an empty slider",
+  );
+  assert.equal(
+    shouldShowHeroSliderEmptyState({
+      isViewMode: true,
+      isLoading: false,
+      configuredImageCount: 0,
+      visibleCount: 0,
+    }),
+    true,
+  );
+  assert.equal(
+    shouldShowHeroSliderUnavailableState({
+      isViewMode: true,
+      isLoading: false,
+      configuredImageCount: 3,
+      visibleCount: 0,
+      probingCount: 0,
+      retryingCount: 0,
+    }),
+    true,
+    "configured slides with exhausted image loading are unavailable, not absent",
+  );
+  assert.equal(
+    shouldShowHeroSliderUnavailableState({
+      isViewMode: true,
+      isLoading: false,
+      configuredImageCount: 3,
+      visibleCount: 0,
+      probingCount: 1,
+      retryingCount: 0,
+    }),
+    false,
+  );
+  console.log("✅ hero-slider view-state policy passed");
 }
 
 function runAdminEntriesTest() {
@@ -123,6 +172,7 @@ function runTransitionRuntimeTest() {
 }
 
 runSkeletonPolicyTest();
+runViewStatePolicyTest();
 runAdminEntriesTest();
 runSlideClassSpacingTest();
 runAdminPreviewMergeTest();

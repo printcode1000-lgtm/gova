@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { ChevronDown, Star } from "lucide-react";
 
 import { ToggleSwitch } from "@/shared/ui/toggle-switch";
 import {
@@ -30,6 +31,8 @@ interface RatingSettingsEditorProps {
   mode: RatingMode;
   labels: RatingSettingsEditorLabels;
   disabled?: boolean;
+  open?: boolean;
+  onToggle?: () => void;
   onChange: (next: { enabled: boolean; mode: RatingMode }) => void;
 }
 
@@ -38,6 +41,8 @@ export function RatingSettingsEditor({ id,
   mode,
   labels,
   disabled = false,
+  open = true,
+  onToggle,
   onChange,
 }: RatingSettingsEditorProps & { id?: string }) {
   const activeDescription = !enabled
@@ -48,27 +53,41 @@ export function RatingSettingsEditor({ id,
 
   return (
     <div id={id} className="space-y-4 rounded-xl border border-outline-variant p-4">
-      <div id='presentation-style-editors-rating-ratingsettingseditor-div-7-r6x3bk' className="space-y-1.5">
-        <h3 id='presentation-style-editors-rating-ratingsettingseditor-heading-2-5vcact' className="text-sm font-bold">{labels.title}</h3>
+      <div id='presentation-style-editors-rating-ratingsettingseditor-div-7-r6x3bk'>
+        <button
+          id='presentation-style-editors-rating-ratingsettingseditor-button-10-b3f6a1'
+          type="button"
+          onClick={onToggle}
+          disabled={!onToggle}
+          aria-expanded={open}
+          aria-controls="presentation-style-editors-rating-ratingsettingseditor-div-6-pmlxcm"
+          className="flex w-full items-center justify-between gap-3 text-start disabled:cursor-default"
+        >
+          <span id='presentation-style-editors-rating-ratingsettingseditor-text-11-f2c5d8' className="flex min-w-0 items-center gap-2">
+            <Star
+              id='presentation-style-editors-rating-ratingsettingseditor-star-13-f7c2a1'
+              className="h-4 w-4 shrink-0 text-primary"
+              aria-hidden
+            />
+            <span id='presentation-style-editors-rating-ratingsettingseditor-heading-2-5vcact' className="block text-sm font-bold">{labels.title}</span>
+          </span>
+          {onToggle ? (
+            <ChevronDown
+              id='presentation-style-editors-rating-ratingsettingseditor-chevrondown-12-d4e7c9'
+              className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
+              aria-hidden
+            />
+          ) : null}
+        </button>
+      </div>
+
+      {open ? (
+      <div id='presentation-style-editors-rating-ratingsettingseditor-div-6-pmlxcm' className="space-y-2">
         {labels.description ? (
           <p id='presentation-style-editors-rating-ratingsettingseditor-text-8-n2q7vm' className="text-xs leading-5 text-muted-foreground">
             {labels.description}
           </p>
         ) : null}
-      </div>
-
-      <div id='presentation-style-editors-rating-ratingsettingseditor-div-3-uzbq92' className="flex items-center gap-3">
-        <span id="presentation-style-editors-rating-ratingsettingseditor-text-4-abfumy" className="text-sm font-medium leading-none">{labels.enabled}</span>
-        <ToggleSwitch
-          id='presentation-style-editors-rating-ratingsettingseditor-toggleswitch-5-rkpa4m'
-          checked={enabled}
-          onChange={(checked) => onChange({ enabled: checked, mode })}
-          disabled={disabled}
-          label={labels.enabled}
-        />
-      </div>
-
-      <div id='presentation-style-editors-rating-ratingsettingseditor-div-6-pmlxcm' className="space-y-2">
         <Select
           value={mode}
           onValueChange={(value: RatingMode) => onChange({ enabled, mode: value })}
@@ -93,7 +112,19 @@ export function RatingSettingsEditor({ id,
             {activeDescription}
           </p>
         ) : null}
+
+        <div id='presentation-style-editors-rating-ratingsettingseditor-div-3-uzbq92' className="flex items-center gap-3">
+          <span id="presentation-style-editors-rating-ratingsettingseditor-text-4-abfumy" className="text-sm font-medium leading-none">{labels.enabled}</span>
+          <ToggleSwitch
+            id='presentation-style-editors-rating-ratingsettingseditor-toggleswitch-5-rkpa4m'
+            checked={enabled}
+            onChange={(checked) => onChange({ enabled: checked, mode })}
+            disabled={disabled}
+            label={labels.enabled}
+          />
+        </div>
       </div>
+      ) : null}
     </div>
   );
 }

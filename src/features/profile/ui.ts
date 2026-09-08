@@ -19,3 +19,4 @@ export * from './presentation/storefront-image-config';
 export * from './application/services/profile-api-service';
 export * from './application/services/profile-service';
 /* END GENERATED FEATURE DOOR EXPORTS */
+export { CustomRequestSettingsSection } from './presentation/CustomRequestSettingsSection';

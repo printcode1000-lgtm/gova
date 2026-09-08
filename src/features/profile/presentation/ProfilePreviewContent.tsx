@@ -313,7 +313,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
           <div id='features-profile-presentation-profilepreviewcontent-div-27-7jodgq' className="min-w-0">
             <h2 id='features-profile-presentation-profilepreviewcontent-heading-28-flolln' className="mb-3 flex min-w-0 items-center gap-2 break-words text-sm font-bold">
               <FontAwesomeIcon id='features-profile-presentation-profilepreviewcontent-fontawesomeicon-29-x1gf7d' icon={faShareNodes} className="text-primary" />
-              {t("profilePreview.quickContact")}
+              {locale === "ar" ? "تواصل عبر" : t("profilePreview.quickContact")}
             </h2>
             <ContactActionBar id='features-profile-presentation-profilepreviewcontent-contactactionbar-30-0tzr1u'
               data={contacts}

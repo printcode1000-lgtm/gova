@@ -7,6 +7,7 @@ import { Textarea } from "@/shared/ui/textarea";
 import type { HomeHeroConfig as HeroSliderConfig } from "@asol/hero-slider-core";
 import { RatingSettingsEditor } from "@/features/product/ui";
 import { useTranslation } from "@/shared/i18n";
+import STATIC_DOM_IDS from "@/shared/dom/identity/static-ids.json";
 import type { StoredImage } from "@asol/storage-core";
 import { useProfileStoreImages } from "@/features/profile/presentation/hooks/use-profile-store-images";
 import { useStoreDetails } from "@/features/profile/presentation/hooks/use-store-details";
@@ -31,12 +32,19 @@ interface StoreIdentityCardProps {
   showSaveButton?: boolean;
   onStatusChange?: (status: ProfileSectionStatus) => void;
   readOnly?: boolean;
+  ratingSettingsOpen?: boolean;
+  onToggleRatingSettings?: () => void;
 }
 
 export const StoreIdentityCard = React.forwardRef<
   StoreDetailsController,
   StoreIdentityCardProps
->(function StoreIdentityCard({ onStatusChange, readOnly = false }, ref) {
+>(function StoreIdentityCard({
+  onStatusChange,
+  readOnly = false,
+  ratingSettingsOpen = true,
+  onToggleRatingSettings,
+}, ref) {
   const { t } = useTranslation();
   const {
     storeImages,
@@ -250,7 +258,7 @@ export const StoreIdentityCard = React.forwardRef<
   }
 
   return (
-    <div id='features-profile-presentation-storeidentitycard-div-2-s7nwrp' className="space-y-5">
+    <div id={STATIC_DOM_IDS.ids.profile.storeIdentityCardRoot} className="space-y-5">
       {error || imagesError ? (
         <div id='features-profile-presentation-storeidentitycard-div-3-tobwzh' className="rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
           {error ?? imagesError}
@@ -334,6 +342,8 @@ export const StoreIdentityCard = React.forwardRef<
         enabled={details.ratingSettings.enabled}
         mode={details.ratingSettings.mode}
         disabled={readOnly}
+        open={ratingSettingsOpen}
+        onToggle={onToggleRatingSettings}
         labels={{
           title:
             "\u0625\u0639\u062F\u0627\u062F\u0627\u062A \u0627\u0644\u062A\u0642\u064A\u064A\u0645",
@@ -346,7 +356,7 @@ export const StoreIdentityCard = React.forwardRef<
           starsComments:
             "\u0646\u062C\u0648\u0645 \u0648\u062A\u0639\u0644\u064A\u0642\u0627\u062A",
           description:
-            "\u062A\u062D\u0643\u0645 \u0641\u064A \u0637\u0631\u064A\u0642\u0629 \u0638\u0647\u0648\u0631 \u062A\u0642\u064A\u064A\u0645\u0627\u062A \u0627\u0644\u0639\u0645\u0644\u0627\u0621 \u0641\u064A \u0645\u0644\u0641\u0643 \u0627\u0644\u0634\u062E\u0635\u064A.",
+            "\u062A\u062D\u0643\u0645 \u0641\u064A \u0637\u0631\u064A\u0642\u0629 \u0638\u0647\u0648\u0631 \u062A\u0642\u064A\u064A\u0645\u0627\u062A \u0627\u0644\u0639\u0645\u0644\u0627\u0621.",
           disabledDescription:
             "\u0627\u0644\u062A\u0642\u064A\u064A\u0645\u0627\u062A \u0645\u062E\u0641\u064A\u0629 \u062D\u0627\u0644\u064A\u064B\u0627 \u0648\u0644\u0646 \u062A\u0638\u0647\u0631 \u0646\u062C\u0648\u0645 \u0623\u0648 \u062A\u0639\u0644\u064A\u0642\u0627\u062A \u0644\u0644\u0632\u0648\u0627\u0631.",
           starsDescription:

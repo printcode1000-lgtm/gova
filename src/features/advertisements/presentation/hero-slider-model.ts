@@ -49,6 +49,34 @@ export function shouldShowHeroSliderSkeleton(input: {
   return input.probingCount > 0 && input.visibleCount === 0;
 }
 
+export function shouldShowHeroSliderEmptyState(input: {
+  isViewMode: boolean;
+  isLoading: boolean;
+  configuredImageCount: number;
+  visibleCount: number;
+}): boolean {
+  if (!input.isViewMode) return input.visibleCount === 0;
+  return !input.isLoading && input.configuredImageCount === 0;
+}
+
+export function shouldShowHeroSliderUnavailableState(input: {
+  isViewMode: boolean;
+  isLoading: boolean;
+  configuredImageCount: number;
+  visibleCount: number;
+  probingCount: number;
+  retryingCount: number;
+}): boolean {
+  return (
+    input.isViewMode &&
+    !input.isLoading &&
+    input.configuredImageCount > 0 &&
+    input.visibleCount === 0 &&
+    input.probingCount === 0 &&
+    input.retryingCount === 0
+  );
+}
+
 /** View mode shows only slides whose image loaded successfully. */
 export function heroSliderVisibleEntries(
   slides: HeroSliderSlide[],

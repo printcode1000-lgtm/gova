@@ -120,14 +120,14 @@ export function ProductCard({ id,
             <Package className="absolute inset-0 m-auto h-9 w-9 text-on-surface-variant" />
           )}
         </div>
-        <div id="features-product-card-presentation-productcard-div-4-etqpjb" className={isFeatured ? "min-w-0 space-y-1" : "min-w-0 space-y-1 p-2"}>
+        <div id="features-product-card-presentation-productcard-div-4-etqpjb" className={isFeatured ? "flex min-w-0 flex-nowrap items-center gap-1 overflow-hidden" : "flex min-w-0 flex-nowrap items-center gap-1 overflow-hidden p-2"}>
           {card.categoryLabel && !isFeatured ? (
             <p id="features-product-card-presentation-productcard-text-5-r5f7gs" className="truncate text-[10px] font-medium text-on-surface-variant">
               {card.categoryLabel}
             </p>
           ) : null}
           <p id="features-product-card-presentation-productcard-text-6-x9qfek"
-            className={isFeatured ? "truncate text-xs font-semibold text-on-surface" : "line-clamp-2 min-h-[32px] break-words text-xs font-semibold text-on-surface"}
+            className="min-w-0 truncate whitespace-nowrap text-xs font-semibold text-on-surface"
           >
             {card.title}
           </p>
@@ -136,26 +136,26 @@ export function ProductCard({ id,
               {card.subtitle}
             </p>
           ) : null}
-          <div id="features-product-card-presentation-productcard-div-8-vqimnm" className="flex min-w-0 flex-wrap items-center gap-1.5">
+          <div id="features-product-card-presentation-productcard-div-8-vqimnm" className="flex min-w-0 flex-nowrap items-center gap-1.5 overflow-hidden">
             {card.priceText ? (
-              <p id="features-product-card-presentation-productcard-text-9-3pfxek" className="min-w-0 break-words text-xs font-bold text-primary">{card.priceText}</p>
+              <p id="features-product-card-presentation-productcard-text-9-3pfxek" className="min-w-0 whitespace-nowrap text-xs font-bold text-primary">{card.priceText}</p>
             ) : null}
             {card.oldPriceText && !isFeatured ? (
-              <p id="features-product-card-presentation-productcard-text-10-cvmmoy" className="min-w-0 break-words text-[10px] text-on-surface-variant line-through">{card.oldPriceText}</p>
+              <p id="features-product-card-presentation-productcard-text-10-cvmmoy" className="min-w-0 whitespace-nowrap text-[10px] text-on-surface-variant line-through">{card.oldPriceText}</p>
             ) : null}
             {card.ratingText && !isFeatured ? (
-              <span id="features-product-card-presentation-productcard-text-11-8rb2w3" className="inline-flex min-w-0 items-center gap-1 break-words text-[10px] text-tertiary">
+              <span id="features-product-card-presentation-productcard-text-11-8rb2w3" className="inline-flex min-w-0 items-center gap-1 whitespace-nowrap text-[10px] text-tertiary">
                 <Star className="h-3 w-3 fill-current" />
                 {card.ratingText}
               </span>
             ) : null}
           </div>
           {card.badges.length > 0 && !isFeatured ? (
-            <div id="features-product-card-presentation-productcard-div-12-uqrfjm" className="flex min-w-0 flex-wrap gap-1 pt-1">
+            <div id="features-product-card-presentation-productcard-div-12-uqrfjm" className="flex min-w-0 flex-nowrap items-center gap-1 overflow-hidden">
               {card.badges.map((badge, badgeIndex) => (
                 <span
                   key={badge.label}
-                  className={`min-w-0 break-words rounded-full px-1.5 py-0.5 text-[10px] font-medium ${badgeClass(badge.tone)}`}
+                  className={`min-w-0 whitespace-nowrap rounded-full px-1.5 py-0.5 text-[10px] font-medium ${badgeClass(badge.tone)}`}
                 >
                   {badge.label}
                 </span>

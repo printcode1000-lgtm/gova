@@ -132,8 +132,8 @@ export function useStoreDetails(
     return msg;
   }, [detailsQuery.error, saveMutation.error, t]);
 
-  const saveAsync = async () => {
-    await saveMutation.mutateAsync(displayedDetails);
+  const saveAsync = async (nextDetails: StoreDetailsData = displayedDetails) => {
+    await saveMutation.mutateAsync(nextDetails);
     return true;
   };
 

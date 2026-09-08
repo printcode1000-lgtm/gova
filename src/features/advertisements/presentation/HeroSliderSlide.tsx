@@ -100,6 +100,7 @@ export function HeroSliderSlide({
             onImageLoad(index);
           }}
           onError={() => onImageError(index, slide.image)}
+          onSourceUnavailable={() => onImageError(index, slide.image)}
         />
       ) : (
         <div className="absolute inset-0 flex items-center justify-center bg-muted px-6 text-center text-sm text-muted-foreground">

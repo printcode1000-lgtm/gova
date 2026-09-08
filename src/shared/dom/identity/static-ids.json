@@ -3,6 +3,9 @@
   "ids": {
     "shell": {
       "appShellMain": "shared-layouts-appshell-main-2-6azk8n"
+    },
+    "profile": {
+      "storeIdentityCardRoot": "features-profile-presentation-storeidentitycard-div-2-s7nwrp"
     }
   }
 }

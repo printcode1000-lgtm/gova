@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import { Bell } from "lucide-react";
 
 import { cn } from "@/shared/utils";
@@ -17,7 +18,7 @@ import { useNotificationDeviceSettingsCard } from "./use-notification-device-set
  * The push switch here is per device: turning it off unregisters this device's
  * FCM/APNs token or drops its Web Push subscription; other devices stay opted in.
  */
-export function NotificationDeviceSettingsCard() {
+export function NotificationDeviceSettingsCard({ children }: { children?: React.ReactNode }) {
   const state = useNotificationDeviceSettingsCard();
 
   return (
@@ -68,6 +69,7 @@ export function NotificationDeviceSettingsCard() {
         <SystemNotificationSettingsButton state={state} />
         <AccountDevicesSection state={state} />
         <ChatMessagePreferencesSection state={state} />
+        {children}
       </div>
     </div>
   );
