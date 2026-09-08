@@ -79,13 +79,21 @@ assert.doesNotMatch(snapshotHooks, /\[context, value\]/);
 
 const registrationCard = source('src/features/profile/presentation/ProfileRegistrationInfoCard.tsx');
 assert.match(registrationCard, /useStoreDetails/);
-assert.match(registrationCard, /auth\.storeName\.label/);
+assert.match(registrationCard, /profile\.registration\.aliasLabel/);
 assert.match(registrationCard, /updateField\("storeName"/);
 
 const providerAccountUiStart = registrationCard.indexOf(
   "features-profile-presentation-profileregistrationinfocard-div-35-uv2m4q",
 );
 assert.notEqual(providerAccountUiStart, -1, "provider-account UI container must exist");
+const passwordUiStart = registrationCard.indexOf(
+  "features-profile-presentation-profileregistrationinfocard-div-50-v6n4qt",
+);
+assert.notEqual(passwordUiStart, -1, "password UI container must exist");
+assert.ok(
+  providerAccountUiStart < passwordUiStart,
+  "activity/provider activation must appear before the change-password disclosure",
+);
 const providerAccountUi = registrationCard.slice(providerAccountUiStart);
 assert.match(
   registrationCard,
@@ -110,6 +118,11 @@ assert.doesNotMatch(providerAccountUi, /asolApi|fetch\(/);
 const providerWorkspaceView = source(
   'src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx',
 );
+const providerWorkspaceChrome = source(
+  'src/features/profile/presentation/profile-page/ProfileEditWorkspaceChrome.tsx',
+);
+assert.match(providerWorkspaceView, /profile\.storeIdentity\.activityTitle/);
+assert.match(providerWorkspaceChrome, /profile\.storeIdentity\.activityTitle/);
 assert.match(
   providerWorkspaceView,
   /providerAccountEnabled \? \(\s*<ProfileEditTabsBar id='profile-presentation-profile-page-profileeditworkspaceview-profileedittabsbar-2-1zx3up'/,

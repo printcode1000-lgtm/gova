@@ -17,6 +17,8 @@ The visual tab bar and section carousel consume that state from the profile page
 ## Invariants
 
 - `PROFILE_SECTIONS` is the canonical ordered list of profile edit sections.
+- The registration section frame heading is localized independently from the shared primary-contact label; Arabic displays `بيانات البروفيل`. The specialties section keeps its independent heading `حدد تخصصاتك`.
+- The Store identity section and its tab use a profile-specific title; Arabic displays `النشاط` instead of reusing the onboarding `التعريف` title.
 - Selecting any tab must activate that exact section directly. A non-adjacent selection must never stop at an intermediate section.
 - Programmatic section selection may bypass CSS smooth scrolling and scroll snapping while positioning the target. This is required because `snap-always` must not turn an absolute selection into step-by-step navigation.
 - Programmatic navigation scrolls only the profile carousel and profile tab strip. It must never scroll the document.

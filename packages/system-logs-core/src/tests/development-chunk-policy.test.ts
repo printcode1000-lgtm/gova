@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict';
 
-import { isExpectedDevelopmentChunkFailure } from '../browser/development-chunk-policy';
+import {
+  isExpectedDevelopmentChunkFailure,
+  isExpectedDevelopmentRscReloadFailure,
+} from '../browser/development-chunk-policy';
 
 const origin = 'http://localhost:3001';
 
@@ -43,6 +46,36 @@ export function runDevelopmentChunkPolicyTest() {
       developmentBuild: true,
       currentOrigin: origin,
       resourceUrl: `${origin}/assets/app.js`,
+    }),
+    false,
+  );
+  assert.equal(
+    isExpectedDevelopmentRscReloadFailure({
+      developmentBuild: true,
+      currentOrigin: origin,
+      message:
+        'Failed to fetch RSC payload for http://localhost:3001/home. Falling back to browser navigation. TypeError: Failed to fetch',
+      errorName: 'TypeError',
+    }),
+    true,
+  );
+  assert.equal(
+    isExpectedDevelopmentRscReloadFailure({
+      developmentBuild: false,
+      currentOrigin: origin,
+      message:
+        'Failed to fetch RSC payload for http://localhost:3001/home. Falling back to browser navigation. TypeError: Failed to fetch',
+      errorName: 'TypeError',
+    }),
+    false,
+  );
+  assert.equal(
+    isExpectedDevelopmentRscReloadFailure({
+      developmentBuild: true,
+      currentOrigin: origin,
+      message:
+        'Failed to fetch RSC payload for https://other.example/home. Falling back to browser navigation. TypeError: Failed to fetch',
+      errorName: 'TypeError',
     }),
     false,
   );

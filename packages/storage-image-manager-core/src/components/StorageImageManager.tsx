@@ -557,7 +557,15 @@ const StorageImageSlot = React.forwardRef<
       size: file.size,
     });
     try {
-      const uploaded = await uploadFile(file, uploadingDraftId);
+      let uploadFileCandidate = file;
+      if (draftKey) {
+        const draft = await getImageUploadDraft(draftKey);
+        if (!draft || draft.draftId !== uploadingDraftId) {
+          throw new Error("Image upload draft is unavailable");
+        }
+        uploadFileCandidate = imageUploadDraftToFile(draft);
+      }
+      const uploaded = await uploadFile(uploadFileCandidate, uploadingDraftId);
       if (!uploaded) {
         traceStorageImageManager(config.id, "upload-failed", { index });
         setStage("ready");
@@ -659,9 +667,6 @@ const StorageImageSlot = React.forwardRef<
     setSourceError(null);
     try {
       setStage("reading");
-      traceStorageImageManager(config.id, "preview-read-started", { index });
-      const preview = await fileToDataUrl(normalizedFile);
-      setStage("previewing");
       if (!draftKey || !draftOwnerId || !draftPageKey) {
         throw new Error("Image draft storage is not ready");
       }
@@ -675,8 +680,12 @@ const StorageImageSlot = React.forwardRef<
         storageScope: config.storageScope,
         file: normalizedFile,
       });
+      const stagedFile = imageUploadDraftToFile(draft);
+      traceStorageImageManager(config.id, "preview-read-started", { index });
+      const preview = await fileToDataUrl(stagedFile);
+      setStage("previewing");
       hydratedDraftIdRef.current = draft.draftId;
-      setSelectedFile(normalizedFile);
+      setSelectedFile(stagedFile);
       setSelectedDraftId(draft.draftId);
       setDraftStatus("ready");
       setDraftQueuePosition(0);
@@ -845,17 +854,20 @@ const StorageImageSlot = React.forwardRef<
     }
   };
 
-  const handleDeviceFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+  const handleDeviceFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const input = event.currentTarget;
+    const file = input.files?.[0];
     traceStorageImageManager(config.id, "web-file-input-changed", {
       index,
       selected: Boolean(file),
     });
     if (file && canChoose) {
       setStage("selecting");
-      void processFile(file);
+      await processFile(file);
     }
-    event.target.value = "";
+    input.value = "";
   };
 
   const removeCurrent = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -1031,17 +1043,18 @@ const StorageImageSlot = React.forwardRef<
         accept="image/*"
         capture="environment"
         className="hidden"
-        onChange={(event) => {
-          const file = event.target.files?.[0];
+        onChange={async (event) => {
+          const input = event.currentTarget;
+          const file = input.files?.[0];
           traceStorageImageManager(config.id, "web-camera-input-changed", {
             index,
             selected: Boolean(file),
           });
           if (file && canChoose) {
             setStage("selecting");
-            void processFile(file);
+            await processFile(file);
           }
-          event.target.value = "";
+          input.value = "";
         }}
         disabled={busy}
       />

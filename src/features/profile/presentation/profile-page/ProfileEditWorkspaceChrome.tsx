@@ -21,7 +21,7 @@ function profileEditTabLabels(
     specialties: t("onboarding.storeIdentity.specialties"),
     products: t("onboarding.storeIdentity.products"),
     contact: t("onboarding.contactInfo.additionalContact"),
-    store: t("onboarding.storeIdentity.title"),
+    store: t("profile.storeIdentity.activityTitle"),
     workingHours: locale === "ar" ? "مواعيد العمل" : "Working hours",
     fulfillment: locale === "ar" ? "الشحن والإرجاع" : "Shipping",
     discounts: locale === "ar" ? "العروض" : "Offers",

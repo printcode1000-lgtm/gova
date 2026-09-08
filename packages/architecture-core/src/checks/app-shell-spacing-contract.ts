@@ -18,8 +18,8 @@ export function checkAppShellSpacingContract(): void {
   }
 
   const css = readFileSync(GLOBALS_PATH, 'utf8');
-  if (!/--asol-shell-main-gap:\s*3px\s*;/.test(css)) {
-    report(GLOBALS_RELATIVE_PATH, 'AppHeader-to-page gap must be exactly 3px on every screen size.');
+  if (!/--asol-shell-main-gap:\s*6px\s*;/.test(css)) {
+    report(GLOBALS_RELATIVE_PATH, 'AppHeader-to-page gap must be exactly 6px on every screen size.');
   }
 
   const firstChildRule = css.match(/\.asol-shell-main\s*>\s*:first-child\s*\{([\s\S]*?)\}/)?.[1] ?? '';

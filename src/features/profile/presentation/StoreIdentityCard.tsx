@@ -68,7 +68,7 @@ export const StoreIdentityCard = React.forwardRef<
   const heroConfigRef = React.useRef<HeroSliderConfig | null>(null);
   const logoTouchedRef = React.useRef(false);
   const heroTouchedRef = React.useRef(false);
-  const label = t("onboarding.storeIdentity.title");
+  const label = t("profile.storeIdentity.activityTitle");
 
   const savedLogoKey = storeImages.avatarImageKey ?? "";
   const savedCoverKeys = storeImages.coverImageKeys;
@@ -274,18 +274,19 @@ export const StoreIdentityCard = React.forwardRef<
           isSavingImages={isSavingImages}
           uploadingLabel={t("onboarding.common.uploading")}
           logoLabel={t("onboarding.storeIdentity.storeLogo")}
+          heroLabel={t("profile.storeIdentity.activityFacadeImages")}
         />
       ) : null}
 
       <div id='features-profile-presentation-storeidentitycard-div-4-zbwfka' className="space-y-2">
         <Label id='features-profile-presentation-storeidentitycard-label-5-uhtmev' htmlFor='features-profile-presentation-storeidentitycard-input-6-uqax9t'>
-          {t("onboarding.storeIdentity.storeName")}
+          {t("profile.storeIdentity.activityName")}
         </Label>
         <Input
           id='features-profile-presentation-storeidentitycard-input-6-uqax9t'
           value={details.storeName}
           onChange={(event) => updateField("storeName", event.target.value)}
-          placeholder={t("onboarding.storeIdentity.storeNamePlaceholder")}
+          placeholder={t("profile.storeIdentity.activityNamePlaceholder")}
           maxLength={120}
           disabled={readOnly}
         />
@@ -293,7 +294,7 @@ export const StoreIdentityCard = React.forwardRef<
 
       <div id='features-profile-presentation-storeidentitycard-div-7-pxecfi' className="space-y-2">
         <Label id='features-profile-presentation-storeidentitycard-label-8-w5qhti' htmlFor='features-profile-presentation-storeidentitycard-textarea-9-cj1jsp'>
-          {t("onboarding.storeIdentity.storeDescription")}
+          {t("profile.storeIdentity.activityDescription")}
         </Label>
         <Textarea
           id='features-profile-presentation-storeidentitycard-textarea-9-cj1jsp'
@@ -301,7 +302,7 @@ export const StoreIdentityCard = React.forwardRef<
           onChange={(event) =>
             updateField("storeDescription", event.target.value)
           }
-          placeholder={t("onboarding.storeIdentity.descriptionPlaceholder")}
+          placeholder={t("profile.storeIdentity.activityDescriptionPlaceholder")}
           rows={4}
           maxLength={100}
           disabled={readOnly}
@@ -313,13 +314,13 @@ export const StoreIdentityCard = React.forwardRef<
 
       <div id='features-profile-presentation-storeidentitycard-div-11-2pcih4' className="space-y-2">
         <Label id='features-profile-presentation-storeidentitycard-label-12-7dp6lw' htmlFor='features-profile-presentation-storeidentitycard-textarea-13-cslkw1'>
-          {t("onboarding.storeIdentity.storeStory")}
+          {t("profile.storeIdentity.activityStory")}
         </Label>
         <Textarea
           id='features-profile-presentation-storeidentitycard-textarea-13-cslkw1'
           value={details.storeStory}
           onChange={(event) => updateField("storeStory", event.target.value)}
-          placeholder={t("onboarding.storeIdentity.storyPlaceholder")}
+          placeholder={t("profile.storeIdentity.activityStoryPlaceholder")}
           rows={4}
           maxLength={500}
           disabled={readOnly}
@@ -344,6 +345,14 @@ export const StoreIdentityCard = React.forwardRef<
           stars: "\u0646\u062C\u0648\u0645 \u0641\u0642\u0637",
           starsComments:
             "\u0646\u062C\u0648\u0645 \u0648\u062A\u0639\u0644\u064A\u0642\u0627\u062A",
+          description:
+            "\u062A\u062D\u0643\u0645 \u0641\u064A \u0637\u0631\u064A\u0642\u0629 \u0638\u0647\u0648\u0631 \u062A\u0642\u064A\u064A\u0645\u0627\u062A \u0627\u0644\u0639\u0645\u0644\u0627\u0621 \u0641\u064A \u0645\u0644\u0641\u0643 \u0627\u0644\u0634\u062E\u0635\u064A.",
+          disabledDescription:
+            "\u0627\u0644\u062A\u0642\u064A\u064A\u0645\u0627\u062A \u0645\u062E\u0641\u064A\u0629 \u062D\u0627\u0644\u064A\u064B\u0627 \u0648\u0644\u0646 \u062A\u0638\u0647\u0631 \u0646\u062C\u0648\u0645 \u0623\u0648 \u062A\u0639\u0644\u064A\u0642\u0627\u062A \u0644\u0644\u0632\u0648\u0627\u0631.",
+          starsDescription:
+            "\u064A\u0638\u0647\u0631 \u0645\u062A\u0648\u0633\u0637 \u062A\u0642\u064A\u064A\u0645 \u0627\u0644\u0639\u0645\u0644\u0627\u0621 \u0628\u0627\u0644\u0646\u062C\u0648\u0645 \u0641\u0642\u0637 \u062F\u0648\u0646 \u0639\u0631\u0636 \u0627\u0644\u062A\u0639\u0644\u064A\u0642\u0627\u062A \u0627\u0644\u0645\u0643\u062A\u0648\u0628\u0629.",
+          starsCommentsDescription:
+            "\u064A\u0638\u0647\u0631 \u0627\u0644\u062A\u0642\u064A\u064A\u0645 \u0628\u0627\u0644\u0646\u062C\u0648\u0645 \u0645\u0639 \u062A\u0639\u0644\u064A\u0642\u0627\u062A \u0627\u0644\u0639\u0645\u0644\u0627\u0621 \u0627\u0644\u0645\u0643\u062A\u0648\u0628\u0629 \u0644\u062A\u0648\u0636\u064A\u062D \u062A\u062C\u0631\u0628\u062A\u0647\u0645 \u0628\u0634\u0643\u0644 \u0623\u0643\u0645\u0644.",
         }}
         onChange={(ratingSettings) =>
           updateField("ratingSettings", ratingSettings)

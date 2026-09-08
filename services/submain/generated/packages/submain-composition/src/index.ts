@@ -197,10 +197,11 @@ export function assertSubmainEnv(env: NodeJS.ProcessEnv = process.env): void {
  * deployment has no instrumentation, so the composition root must register the
  * runtime config, specialty catalog, and product-search field metadata before a
  * route reaches `@asol/data-core`. Missing any one of them produces a 500 while
- * `/api/health` can still stay 200 because health touches none of those ports. A deployment can therefore be READY while its search routes are broken.
+ * `/api/health` can still stay 200 because health touches none of those ports.
+ * A deployment can therefore be READY while its search routes are broken.
  *
- * It calls the application's single registrar rather than restating the port
- * here, so the six accounts and the main app cannot drift apart.
+ * It calls the application's focused registrars rather than restating port
+ * implementations here, so account services and the main app share one wiring source.
  */
 registerDataCoreRuntimeConfigPorts();
 registerDataCoreSpecialtyCatalogPort();

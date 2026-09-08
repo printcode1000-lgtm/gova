@@ -191,12 +191,12 @@ The feature that uses the component must save the `imageKey` in its own layer.
 
 Selecting an image prepares it for upload:
 
-1. Read the selected native or browser `File`.
+1. Read the selected native or browser `File` while its platform grant is still alive, then snapshot its bytes into an app-owned `Blob`; picker-backed `File` handles are never retained for a later save.
 2. Detect HEIC/HEIF files even when the browser returns an empty MIME type, and convert them to JPEG in the browser.
 3. Build a `data:` preview that works in Android WebView without a temporary Blob URL.
 4. Show the project `LoadingSpinner` and a localized description while reading, detecting, converting, and preparing the preview.
 5. Keep the selected image visible without changing the stored image reference.
-6. Persist the original image `Blob` and metadata in the `imageUploadDrafts` AsolDB store before displaying the preview. No local filesystem or cloud provider write occurs yet.
+6. Persist the app-owned image `Blob` snapshot and metadata in the `imageUploadDrafts` AsolDB store before displaying the preview. The preview and later upload are rebuilt from that durable snapshot, so Android document-provider permission expiry cannot break a delayed page save. No local filesystem or cloud provider write occurs yet.
 7. The slot always stages the file locally and marks the page dirty. Upload runs only through `@asol/page-save-core` (`prepareForSave` / `uploadPending()` from the header save icon). There is no per-slot upload button.
 8. Show the spinner through profile loading, compression, upload, persistence, and final-image loading when upload is triggered from the page-save flow.
 9. Compress and convert the image for the selected storage profile.

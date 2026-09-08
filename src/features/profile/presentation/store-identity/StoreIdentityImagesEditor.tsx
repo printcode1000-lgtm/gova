@@ -27,6 +27,7 @@ export function StoreIdentityImagesEditor({
   isSavingImages,
   uploadingLabel,
   logoLabel,
+  heroLabel,
 }: {
   imageTab: "logo" | "hero";
   setImageTab: (tab: "logo" | "hero") => void;
@@ -44,6 +45,7 @@ export function StoreIdentityImagesEditor({
   isSavingImages: boolean;
   uploadingLabel: string;
   logoLabel: string;
+  heroLabel: string;
 }) {
   return (
     <div id='profile-presentation-store-identity-storeidentityimageseditor-div-1-csqjgy' className="space-y-4">
@@ -70,7 +72,7 @@ export function StoreIdentityImagesEditor({
           }`}
         >
           <LayoutTemplate id='profile-presentation-store-identity-storeidentityimageseditor-layouttemplate-6-r7bpc6' className="h-4 w-4" />
-          صور واجهة المتجر
+          {heroLabel}
         </button>
       </div>
 

@@ -12,6 +12,7 @@ import {
   type ImageUploadDraft,
 } from "../services/image-upload-draft-service";
 import { StorageProfiles } from "@asol/storage-core";
+import { snapshotImageUploadDraftBlob } from "../services/image-upload-draft-file";
 import {
   buildStorageImageCacheKey,
   isRemoteStorageImageUrl,
@@ -120,6 +121,24 @@ function testDraftIdentityAndFileRestoration() {
   assert.equal(file.type, "image/png");
   assert.equal(file.size, 3);
   assert.equal(file.lastModified, 123);
+}
+
+async function testDraftBlobOwnsSelectedFileBytes() {
+  const source = new File([new Uint8Array([1, 2, 3, 4])], "picker.png", {
+    type: "image/png",
+    lastModified: 123,
+  });
+  const blob = await snapshotImageUploadDraftBlob(source);
+
+  Object.defineProperty(source, "arrayBuffer", {
+    configurable: true,
+    value: async () => {
+      throw new DOMException("picker grant expired", "NotReadableError");
+    },
+  });
+
+  assert.deepEqual([...new Uint8Array(await blob.arrayBuffer())], [1, 2, 3, 4]);
+  assert.equal(blob.type, "image/png");
 }
 
 async function testFailureDoesNotStopQueue() {
@@ -363,6 +382,7 @@ async function main() {
   await testFailureDoesNotStopQueue();
   await testQueuedCancellationAndDeduplication();
   testDraftIdentityAndFileRestoration();
+  await testDraftBlobOwnsSelectedFileBytes();
   testLocalFirstImageCacheIdentity();
   testLocalFirstImageRenderRecoveryPolicy();
   await testRemoteImageFailureNeverReturnsCloudUrl();
@@ -383,6 +403,9 @@ async function main() {
     "utf8",
   );
   assert.match(managerSource, /uploadPending:\s*async/);
+  assert.match(managerSource, /const stagedFile = imageUploadDraftToFile\(draft\)/);
+  assert.match(managerSource, /uploadFileCandidate = imageUploadDraftToFile\(draft\)/);
+  assert.doesNotMatch(managerSource, /fileToDataUrl\(normalizedFile\)/);
   assert.match(managerSource, /StorageImageSlotFrame/);
   assert.match(uiSource, /StorageImageSlotFrame[\s\S]*overflow-hidden/);
   assert.match(

@@ -65,7 +65,7 @@ export function ContactActionBar({
         <div id="shared-ui-contact-action-bar-div-4-nyy3qm"
           data-snapshot-scroll
           data-snapshot-id="profile-preview-contact-actions"
-          className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [&>*:first-child]:ms-auto [&>*:last-child]:me-auto"
         >
           {groups.map((group) => (
             <ContactActionGroup key={group.id} group={group} />

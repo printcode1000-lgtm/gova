@@ -2,7 +2,6 @@
 
 import * as React from "react";
 
-import { Label } from "@/shared/ui/label";
 import { ToggleSwitch } from "@/shared/ui/toggle-switch";
 import {
   Select,
@@ -20,6 +19,10 @@ export interface RatingSettingsEditorLabels {
   placeholder: string;
   stars: string;
   starsComments: string;
+  description?: string;
+  disabledDescription?: string;
+  starsDescription?: string;
+  starsCommentsDescription?: string;
 }
 
 interface RatingSettingsEditorProps {
@@ -37,9 +40,22 @@ export function RatingSettingsEditor({ id,
   disabled = false,
   onChange,
 }: RatingSettingsEditorProps & { id?: string }) {
+  const activeDescription = !enabled
+    ? labels.disabledDescription
+    : mode === "stars-comments"
+      ? labels.starsCommentsDescription
+      : labels.starsDescription;
+
   return (
     <div id={id} className="space-y-4 rounded-xl border border-outline-variant p-4">
-      <h3 id='presentation-style-editors-rating-ratingsettingseditor-heading-2-5vcact' className="text-sm font-bold">{labels.title}</h3>
+      <div id='presentation-style-editors-rating-ratingsettingseditor-div-7-r6x3bk' className="space-y-1.5">
+        <h3 id='presentation-style-editors-rating-ratingsettingseditor-heading-2-5vcact' className="text-sm font-bold">{labels.title}</h3>
+        {labels.description ? (
+          <p id='presentation-style-editors-rating-ratingsettingseditor-text-8-n2q7vm' className="text-xs leading-5 text-muted-foreground">
+            {labels.description}
+          </p>
+        ) : null}
+      </div>
 
       <div id='presentation-style-editors-rating-ratingsettingseditor-div-3-uzbq92' className="flex items-center gap-3">
         <span id="presentation-style-editors-rating-ratingsettingseditor-text-4-abfumy" className="text-sm font-medium leading-none">{labels.enabled}</span>
@@ -53,7 +69,6 @@ export function RatingSettingsEditor({ id,
       </div>
 
       <div id='presentation-style-editors-rating-ratingsettingseditor-div-6-pmlxcm' className="space-y-2">
-        <Label>{labels.mode}</Label>
         <Select
           value={mode}
           onValueChange={(value: RatingMode) => onChange({ enabled, mode: value })}
@@ -69,6 +84,15 @@ export function RatingSettingsEditor({ id,
             </SelectItem>
           </SelectContent>
         </Select>
+        {activeDescription ? (
+          <p
+            id='presentation-style-editors-rating-ratingsettingseditor-text-9-p8k4zc'
+            className="rounded-lg bg-surface-container-low px-3 py-2 text-xs leading-5 text-on-surface-variant"
+            aria-live="polite"
+          >
+            {activeDescription}
+          </p>
+        ) : null}
       </div>
     </div>
   );

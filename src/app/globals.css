@@ -46,7 +46,7 @@
       var(--asol-app-header-inset)
   );
   /* Small, uniform breathing room between AppHeader and every page. */
-  --asol-shell-main-gap: 3px;
+  --asol-shell-main-gap: 6px;
 
   /* Measured by BottomNavBar (its padding already includes the bottom inset). */
   --asol-bottom-nav-space: calc(5rem + var(--asol-safe-area-bottom));
@@ -134,7 +134,7 @@ body {
 }
 
 /*
- * Global page-start contract: the first rendered page surface starts 3px
+ * Global page-start contract: the first rendered page surface starts 6px
  * below AppHeader. Route roots may keep horizontal and bottom padding, but any
  * top margin/padding on the first surface is neutralized here so pages cannot
  * reintroduce an accidental blank band beneath the fixed header. Safe-area and

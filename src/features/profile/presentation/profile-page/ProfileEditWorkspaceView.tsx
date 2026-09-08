@@ -69,7 +69,7 @@ return (
                   >
                     <ProfileEditSectionFrame id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-9-ynox7w'
                       icon={faUserCircle}
-                      title={t("onboarding.contactInfo.primaryContact")}
+                      title={t("profile.registration.mainData")}
                       status={sectionStatuses.registration}
                       locale={locale}
                       color={PROFILE_EDIT_TAB_COLORS.registration}
@@ -94,7 +94,7 @@ return (
                   >
                     <ProfileEditSectionFrame id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-11-zfl6bg'
                       icon={faStar}
-                      title={t("onboarding.storeIdentity.specialties")}
+                      title={t("profile.specialties.select")}
                       status={sectionStatuses.specialties}
                       locale={locale}
                       color={PROFILE_EDIT_TAB_COLORS.specialties}
@@ -119,7 +119,7 @@ return (
                   >
                     <ProfileEditSectionFrame id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-13-krapbq'
                       icon={faBuilding}
-                      title={t("onboarding.storeIdentity.title")}
+                      title={t("profile.storeIdentity.activityTitle")}
                       status={sectionStatuses.store}
                       locale={locale}
                       color={PROFILE_EDIT_TAB_COLORS.store}

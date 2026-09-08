@@ -105,6 +105,10 @@ Shipping mode `by_location` stores no estimated numeric location value. It start
 
 Store details are split across real columns and tables. Store name, description, story, rating settings, custom request state, and trending label live directly on `user_profiles`. Featured products, trending items, and working hours live in dedicated tables.
 
+The `/profile?mode=edit` identity tab is titled `النشاط` in Arabic and uses activity/business wording in its presentation copy (`اسم النشاط`, `وصف النشاط`, `قصة النشاط`, and `صور واجهة النشاط`). Its story placeholder is profile-specific as well. This is a UI naming choice only; persisted field names such as `store_name`, `store_description`, and `store_story` remain unchanged.
+
+The profile rating editor explains the purpose of the setting and presents a live description of the current choice: ratings hidden, stars only, or stars with written comments. The mode selector is shown without a separate visible `وضع التقييم` label; its options and behavior are unchanged. This explanatory UI does not alter the persisted rating-settings contract.
+
 Registration may seed `store_name` when the optional alias field on `/registration` is filled. That write uses the same `upsertStoreDetails` command as the Store identity tab on `/profile?mode=edit`. An empty alias does not create a store-name write. The same optional alias field also appears on the Registration tab of `/profile?mode=edit`; it shares `user_profiles.store_name` with Store identity. Clearing it and saving persists an empty name. Editing either surface keeps the other in sync for the current session.
 
 Working hours are normalized by `src/features/profile-working-hours` and saved through the regular profile editor flow. They are stored in `profile_working_hours` and do not have a separate save button.

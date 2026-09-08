@@ -58,6 +58,12 @@ console/network panel still shows that failed request, but Global Capture does n
 persist it. This exemption is development-only: Web production, Static `out/`,
 Android, and iOS continue to persist real resource and `ChunkLoadError` failures.
 
+The same development-only transport policy also ignores Next.js RSC fetch failures
+that explicitly say `Falling back to browser navigation` when the target URL is
+same-origin. This is the normal recovery path during a Turbopack full reload, for
+example after a locale JSON module changes. It remains telemetry-visible outside
+`next dev`, and cross-origin or differently shaped fetch failures are never exempt.
+
 The pre-auth reporter imports `@asol/system-logs-core` statically. The root collector
 already owns that browser-safe package in the application graph, so creating a second
 dynamic package chunk adds failure surface without providing isolation.

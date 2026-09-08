@@ -557,7 +557,27 @@ export const SpecialtiesCard = React.forwardRef<
           Object.values(selectedSubcategories).some(
             (arr) => arr.length > 0,
           )) && (
-          <div id='features-profile-presentation-specialtiescard-div-8-gt0wxf' className="grid grid-flow-col auto-cols-max grid-rows-2 gap-1.5 overflow-x-auto overscroll-x-contain pt-2">
+          <div id='features-profile-presentation-specialtiescard-div-8-gt0wxf' className="space-y-1.5 pt-2">
+            <div
+              id='features-profile-presentation-specialtiescard-div-29-f3k8nd'
+              className="flex items-center"
+            >
+              <p
+                id='features-profile-presentation-specialtiescard-text-26-y4k2ns'
+                className="shrink-0 text-[11px] font-bold text-blue-600 dark:text-blue-400"
+              >
+                {locale === "ar" ? "ما تم اختيارة" : "Selected"}
+              </p>
+              <div
+                id='features-profile-presentation-specialtiescard-div-28-q7m5tr'
+                className="title-line-contact"
+                aria-hidden="true"
+              />
+            </div>
+            <div
+              id='features-profile-presentation-specialtiescard-div-27-h8q3mx'
+              className="grid grid-flow-col auto-cols-max grid-rows-2 gap-1.5 overflow-x-auto overscroll-x-contain"
+            >
             {selectedSpecialties.map((categoryId) => {
               const categoryName = getCategoryName(categoryId);
               const subIds = selectedSubcategories[categoryId] || [];
@@ -605,6 +625,7 @@ export const SpecialtiesCard = React.forwardRef<
                 </div>
               );
             })}
+            </div>
           </div>
         )}
       </div>

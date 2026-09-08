@@ -10073,27 +10073,42 @@
       "kind": "document",
       "name": "Profile Registration Info Card",
       "path": "docs/04-ui-components/profile-registration-info-card.md",
-      "summary": "`ProfileRegistrationInfoCard` owns the contact and registration controls shown in the profile edit registration section.",
+      "summary": "`ProfileRegistrationInfoCard` owns the contact and registration controls shown in the profile edit registration section. The card starts directly with its editable controls; it does not render the former primary-contact heading or hint text.",
       "tags": [
-        "`profileregistrationinfocard` owns the contact and registration controls shown in the profile edit registration section.",
+        "`profileregistrationinfocard` owns the contact and registration controls shown in the profile edit registration section. the card starts directly with its editable controls; it does not render the former primary-contact heading or hint text.",
         "and",
         "card",
         "contact",
         "controls",
+        "directly",
         "docs/04-ui-components/profile-registration-info-card",
         "docs/04-ui-components/profile-registration-info-card.md",
+        "does",
         "edit",
+        "editable",
+        "former",
+        "heading",
+        "hint",
         "in",
         "info",
+        "it",
+        "its",
         "md",
+        "not",
+        "or",
         "owns",
+        "primary-contact",
         "profile",
         "profile registration info card",
         "profileregistrationinfocard",
         "registration",
+        "render",
         "section",
         "shown",
-        "the"
+        "starts",
+        "text",
+        "the",
+        "with"
       ]
     },
     {
@@ -37743,6 +37758,17 @@
       "tags": [
         "packages/storage-image-manager-core/src/services/image-upload-client-lifecycle",
         "packages/storage-image-manager-core/src/services/image-upload-client-lifecycle.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/storage-image-manager-core/src/services/image-upload-draft-file.ts",
+      "kind": "source",
+      "name": "image-upload-draft-file.ts",
+      "path": "packages/storage-image-manager-core/src/services/image-upload-draft-file.ts",
+      "tags": [
+        "packages/storage-image-manager-core/src/services/image-upload-draft-file",
+        "packages/storage-image-manager-core/src/services/image-upload-draft-file.ts",
         "ts"
       ]
     },
@@ -82337,6 +82363,12 @@
     {
       "from": "domain:architecture",
       "to": "source:packages/storage-image-manager-core/src/services/image-upload-client-lifecycle.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/storage-image-manager-core/src/services/image-upload-draft-file.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -170128,6 +170160,36 @@
       "detail": "./image-upload-queue"
     },
     {
+      "from": "source:packages/storage-image-manager-core/src/services/image-upload-draft-file.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/services/image-upload-draft-file.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/services/image-upload-draft-file.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/services/image-upload-draft-file.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/services/image-upload-draft-file.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/services/image-upload-draft-file.ts",
+      "to": "package:@asol/storage-image-manager-core",
+      "kind": "belongs-to"
+    },
+    {
       "from": "source:packages/storage-image-manager-core/src/services/image-upload-draft-service.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -170168,6 +170230,12 @@
       "to": "package:@asol/storage-core",
       "kind": "imports",
       "detail": "@asol/storage-core"
+    },
+    {
+      "from": "source:packages/storage-image-manager-core/src/services/image-upload-draft-service.ts",
+      "to": "source:packages/storage-image-manager-core/src/services/image-upload-draft-file.ts",
+      "kind": "imports",
+      "detail": "./image-upload-draft-file"
     },
     {
       "from": "source:packages/storage-image-manager-core/src/services/image-upload-queue.ts",
@@ -210671,12 +210739,6 @@
     },
     {
       "from": "source:src/features/product/presentation/style-editors/rating/RatingSettingsEditor.tsx",
-      "to": "source:src/shared/ui/label.tsx",
-      "kind": "imports",
-      "detail": "@/shared/ui/label"
-    },
-    {
-      "from": "source:src/features/product/presentation/style-editors/rating/RatingSettingsEditor.tsx",
       "to": "source:src/shared/ui/product-style-settings.ts",
       "kind": "imports",
       "detail": "@/shared/ui/product-style-settings"
@@ -236816,6 +236878,12 @@
       "to": "package:@asol/storage-core",
       "kind": "imports",
       "detail": "@asol/storage-core"
+    },
+    {
+      "from": "test:packages/storage-image-manager-core/src/tests/index.test.ts",
+      "to": "source:packages/storage-image-manager-core/src/services/image-upload-draft-file.ts",
+      "kind": "imports",
+      "detail": "../services/image-upload-draft-file"
     },
     {
       "from": "test:packages/storage-image-manager-core/src/tests/index.test.ts",

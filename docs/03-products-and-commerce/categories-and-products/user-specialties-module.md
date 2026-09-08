@@ -204,6 +204,7 @@ The `SpecialtiesCard` component (`src/features/profile/presentation/SpecialtiesC
 - Exceeding the limit shows a toast: `"Cannot select more than 3 main categories"`.
 - The `unlimited` prop is passed as `true` by `ProfilePageContent` when `isSuperAdmin(session)` returns `true`.
 - No limit is applied to subcategories under an already-selected main specialty.
+- When at least one specialty or subcategory is selected, the selected-items area displays a compact bold blue heading above the chips: `ما تم اختيارة` in Arabic (`Selected` in English), with the shared `title-line-contact` decorative line beside it.
 
 ## Category Hierarchy Support
 

@@ -8,6 +8,7 @@ import {
   asolDbGet,
   asolDbSetStructured,
 } from "@asol/data-core/browser";
+import { snapshotImageUploadDraftBlob } from "./image-upload-draft-file";
 
 export type ImageUploadDraftStatus =
   | "ready"
@@ -105,6 +106,7 @@ export async function createImageUploadDraft(
   input: CreateImageUploadDraftInput,
 ): Promise<ImageUploadDraft> {
   clearing = false;
+  const blob = await snapshotImageUploadDraftBlob(input.file);
   const now = new Date().toISOString();
   const draft: ImageUploadDraft = {
     key: input.key,
@@ -115,10 +117,10 @@ export async function createImageUploadDraft(
     slotIndex: input.slotIndex,
     storageProfileId: input.storageProfileId,
     ...(input.storageScope ? { storageScope: input.storageScope } : {}),
-    blob: input.file,
+    blob,
     fileName: input.file.name,
     fileType: input.file.type,
-    fileSize: input.file.size,
+    fileSize: blob.size,
     lastModified: input.file.lastModified,
     status: "ready",
     queuePosition: 0,
