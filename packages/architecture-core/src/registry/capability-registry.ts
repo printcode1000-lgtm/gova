@@ -441,7 +441,7 @@ export const CAPABILITY_PACKAGES: readonly CapabilityPackage[] = [
   {
     folder: 'vercel-deploy-core',
     name: '@asol/vercel-deploy-core',
-    owns: 'Vercel deployment orchestration',
+    owns: 'Vercel account API and deployment orchestration',
     layer: 'capability',
     vendorModules: ['@vercel/sandbox'],
     mayImportApp: false,

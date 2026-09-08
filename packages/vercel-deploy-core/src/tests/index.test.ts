@@ -11,6 +11,8 @@ import {
   upsertEnv,
   runVercel,
   deployAccountService,
+  readVercelApiRateLimit,
+  readVercelBillingCharges,
 } from '../index';
 import { remoteDeployAllReadiness } from '../remote-deploy-sandbox';
 import {
@@ -57,6 +59,51 @@ async function runTests(): Promise<void> {
 
   // Test 1: Import does not deploy (D8)
   assert(typeof ensureProject === 'function', 'D8: Module exported functions without executing main');
+
+  // Test 1b: usage reads stay behind semantic Vercel package functions (D9)
+  const originalFetch = globalThis.fetch;
+  const usageCalls: Array<{ url: string; authorization: string | null }> = [];
+  globalThis.fetch = (async (input, init) => {
+    const url = typeof input === 'string' ? input : input instanceof URL ? input.toString() : input.url;
+    usageCalls.push({
+      url,
+      authorization: new Headers(init?.headers).get('Authorization'),
+    });
+    if (url.includes('/v10/projects?limit=1')) {
+      return new Response('', {
+        status: 200,
+        headers: {
+          'x-ratelimit-limit': '120',
+          'x-ratelimit-remaining': '119',
+          'x-ratelimit-reset': '1700000000',
+        },
+      });
+    }
+    if (url.includes('/v1/billing/charges?')) {
+      return new Response(
+        '{"BilledCost":"1.25","ServiceName":"Edge Requests"}\n{"BilledCost":0.75,"ServiceName":"Functions"}\n',
+        { status: 200 },
+      );
+    }
+    return new Response('', { status: 404 });
+  }) as typeof fetch;
+  try {
+    const rate = await readVercelApiRateLimit('usage-token', 'team one');
+    assert(rate.limit === 120 && rate.remaining === 119, 'D9: rate-limit headers are normalized inside the owner package');
+    assert(rate.reset === '2023-11-14T22:13:20.000Z', 'D9: rate-limit reset is normalized to ISO');
+    const charges = await readVercelBillingCharges(
+      'usage-token',
+      'team one',
+      new Date('2026-09-01T00:00:00.000Z'),
+      new Date('2026-09-08T00:00:00.000Z'),
+    );
+    assert(charges.length === 2 && charges[0]?.ServiceName === 'Edge Requests', 'D9: FOCUS NDJSON is parsed by the owner package');
+    assert(usageCalls.every((call) => call.authorization === 'Bearer usage-token'), 'D9: usage calls authenticate inside the owner package');
+    assert(usageCalls.every((call) => call.url.includes('teamId=team%20one')), 'D9: usage calls preserve the Vercel team scope');
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+  console.log('  ✔ Vercel usage API reads stay semantic and package-owned (D9).');
 
   // Test 2: Declarations purity & exact env key counts (C2 / 1.3)
   assert(GOVA_DECLARATION.project === 'gova', 'Gova project declaration');

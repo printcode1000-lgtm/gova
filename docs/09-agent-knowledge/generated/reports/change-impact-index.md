@@ -97,7 +97,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/submain-composition` | package | 9 | 3 | 0 | 0 | 38 | 18 |
 | `@asol/system-logs-core` | package | 9 | 4 | 118 | 0 | 58 | 0 |
 | `@asol/trending-ribbon-core` | package | 6 | 1 | 118 | 0 | 13 | 1 |
-| `@asol/vercel-deploy-core` | package | 11 | 7 | 123 | 0 | 45 | 2 |
+| `@asol/vercel-deploy-core` | package | 12 | 7 | 123 | 0 | 45 | 2 |
 | `control` | service | 2 | 0 | 0 | 0 | 0 | 17 |
 | `notifications` | service | 6 | 0 | 0 | 0 | 0 | 5 |
 | `orders` | service | 4 | 0 | 0 | 0 | 0 | 5 |

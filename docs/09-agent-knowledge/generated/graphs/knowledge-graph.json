@@ -12709,6 +12709,7 @@
         "/dev/cloud-accounts",
         "@asol/account-declarations",
         "@asol/storage-core",
+        "@asol/vercel-deploy-core",
         "`/dev/cloud-accounts` is a read-only reference, development-only.",
         "accounts",
         "admin",
@@ -23648,7 +23649,7 @@
       "kind": "package",
       "name": "@asol/vercel-deploy-core",
       "path": "packages/vercel-deploy-core",
-      "summary": "Vercel deployment orchestration; Layer: capability; Public exports: ., ./project-env, ./release-rollback, ./release-state, ./remote-deploy-contracts, ./remote-deploy-sandbox",
+      "summary": "Vercel account API and deployment orchestration; Layer: capability; Public exports: ., ./project-env, ./release-rollback, ./release-state, ./remote-deploy-contracts, ./remote-deploy-sandbox",
       "tags": [
         ".",
         "./project-env",
@@ -23663,12 +23664,15 @@
         "/remote-deploy-sandbox",
         "@asol/vercel-deploy-core",
         "@vercel/sandbox",
+        "account",
+        "and",
+        "api",
         "capability",
         "deployment",
         "orchestration",
         "packages/vercel-deploy-core",
         "vercel",
-        "vercel deployment orchestration"
+        "vercel account api and deployment orchestration"
       ]
     },
     {
@@ -38075,6 +38079,17 @@
       "tags": [
         "packages/vercel-deploy-core/src/vercel-deployment-monitor",
         "packages/vercel-deploy-core/src/vercel-deployment-monitor.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/vercel-deploy-core/src/vercel-usage.ts",
+      "kind": "source",
+      "name": "vercel-usage.ts",
+      "path": "packages/vercel-deploy-core/src/vercel-usage.ts",
+      "tags": [
+        "packages/vercel-deploy-core/src/vercel-usage",
+        "packages/vercel-deploy-core/src/vercel-usage.ts",
         "ts"
       ]
     },
@@ -72198,6 +72213,12 @@
     },
     {
       "from": "document:docs/06-super-admin-and-operations/super-admin-cloud-accounts.md",
+      "to": "package:@asol/vercel-deploy-core",
+      "kind": "references",
+      "detail": "@asol/vercel-deploy-core"
+    },
+    {
+      "from": "document:docs/06-super-admin-and-operations/super-admin-cloud-accounts.md",
       "to": "source:packages/account-declarations/src/accounts/submain.ts",
       "kind": "references",
       "detail": "packages/account-declarations/src/accounts/submain.ts"
@@ -82440,6 +82461,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/vercel-deploy-core/src/vercel-usage.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:src/core/composition/browser-application-ports.ts",
       "kind": "documents",
       "detail": "src/core/composition/"
@@ -88009,6 +88036,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "source:packages/vercel-deploy-core/src/vercel-deployment-monitor.ts",
+      "kind": "documents",
+      "detail": "packages/vercel-deploy-core/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:packages/vercel-deploy-core/src/vercel-usage.ts",
       "kind": "documents",
       "detail": "packages/vercel-deploy-core/"
     },
@@ -132735,6 +132768,12 @@
     },
     {
       "from": "script:scripts/update-cloud-accounts-r2-usage.ts",
+      "to": "source:src/features/super-admin/presentation/cloud-accounts-r2-usage-snapshot.ts",
+      "kind": "imports",
+      "detail": "../src/features/super-admin/presentation/cloud-accounts-r2-usage-snapshot"
+    },
+    {
+      "from": "script:scripts/update-cloud-accounts-r2-usage.ts",
       "to": "source:src/features/super-admin/presentation/cloud-accounts-reference.ts",
       "kind": "imports",
       "detail": "../src/features/super-admin/presentation/cloud-accounts-reference"
@@ -171278,6 +171317,12 @@
       "detail": "./vercel-deployment-monitor"
     },
     {
+      "from": "source:packages/vercel-deploy-core/src/index.ts",
+      "to": "source:packages/vercel-deploy-core/src/vercel-usage.ts",
+      "kind": "imports",
+      "detail": "./vercel-usage"
+    },
+    {
       "from": "source:packages/vercel-deploy-core/src/project-env.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -171478,6 +171523,36 @@
     },
     {
       "from": "source:packages/vercel-deploy-core/src/vercel-deployment-monitor.ts",
+      "to": "package:@asol/vercel-deploy-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/vercel-deploy-core/src/vercel-usage.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/vercel-deploy-core/src/vercel-usage.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/vercel-deploy-core/src/vercel-usage.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/vercel-deploy-core/src/vercel-usage.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/vercel-deploy-core/src/vercel-usage.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/vercel-deploy-core/src/vercel-usage.ts",
       "to": "package:@asol/vercel-deploy-core",
       "kind": "belongs-to"
     },

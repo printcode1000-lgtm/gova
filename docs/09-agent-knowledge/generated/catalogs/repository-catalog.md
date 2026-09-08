@@ -22,7 +22,7 @@
 | runtime | 7 |
 | script | 150 |
 | service | 7 |
-| source | 2133 |
+| source | 2134 |
 | test | 248 |
 
 ## Domains
@@ -89,7 +89,7 @@
 | @asol/submain-composition | `packages/submain-composition` | Composition root for the submain account; Layer: composition; Public exports: . |
 | @asol/system-logs-core | `packages/system-logs-core` | System log capture and persistence contract; Layer: capability; Public exports: ., ./server |
 | @asol/trending-ribbon-core | `packages/trending-ribbon-core` | Trending ribbon UI capability; Layer: capability; Public exports: ., ./server |
-| @asol/vercel-deploy-core | `packages/vercel-deploy-core` | Vercel deployment orchestration; Layer: capability; Public exports: ., ./project-env, ./release-rollback, ./release-state, ./remote-deploy-contracts, ./remote-deploy-sandbox |
+| @asol/vercel-deploy-core | `packages/vercel-deploy-core` | Vercel account API and deployment orchestration; Layer: capability; Public exports: ., ./project-env, ./release-rollback, ./release-state, ./remote-deploy-contracts, ./remote-deploy-sandbox |
 
 ## Features
 

@@ -37,12 +37,14 @@ reads only the generated safe snapshot in
 status text only, never token values or database URLs.
 
 The Vercel table follows the same snapshot model. `npm run
-cloud-accounts:vercel-usage` reads the declared Vercel tokens locally, captures
-API rate-limit headers and FOCUS billing-charge totals when the token has billing
-permission, then writes `cloud-accounts-vercel-usage-snapshot.ts`. The page also
-renders the default plan limits used for quick operational checks: edge requests,
-Fast Data Transfer, deployments per day, builds per hour, projects, runtime-log
-retention, and function duration. Vercel tokens never enter the client bundle.
+cloud-accounts:vercel-usage` reads the declared Vercel tokens locally and asks
+`@asol/vercel-deploy-core` to perform the Vercel REST reads for API rate-limit
+headers and FOCUS billing charges. The tooling script only summarizes those
+package-owned results and writes `cloud-accounts-vercel-usage-snapshot.ts`; it
+must not call `api.vercel.com` directly. The page also renders the default plan
+limits used for quick operational checks: edge requests, Fast Data Transfer,
+deployments per day, builds per hour, projects, runtime-log retention, and
+function duration. Vercel tokens never enter the client bundle.
 
 Cloudflare R2 usage is also snapshot-only. `npm run cloud-accounts:r2-usage`
 uses each R2 account id, bucket name, and local API token to query Cloudflare

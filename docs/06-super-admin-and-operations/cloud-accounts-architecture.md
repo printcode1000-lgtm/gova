@@ -162,15 +162,15 @@ The 8 Vercel runtime architecture is enforced and driven by sealed capability
 packages under `packages/`:
 
 1. **`@asol/account-declarations`** (`packages/account-declarations/`): The names-only account declarations for `gova`, `control`, and the six workload runtimes, including project names, token variable names, service directories, and per-runtime environment ownership.
-2. **`@asol/vercel-deploy-core`** (`packages/vercel-deploy-core/`): GitHub-free project creation (`POST /v10/projects`), credential upserting, the pinned Vercel CLI runner (`vercel@59.0.0`), deployment monitoring, exact-SHA release state, and rollback.
-2. **`@asol/service-mirror-core`** (`packages/service-mirror-core/`): Shared import-graph mirror walker that builds `generated/src` and `generated/public` for the four read-only microservices while keeping baseline files byte-identical.
-3. **`@asol/account-bridge`** (`packages/account-bridge/`): Pure route+method ownership registry plus the device-side inter-account channel. New clients use owner origins directly, and gova's compatibility boundary uses the same registry for stateless redirects.
-4. **`@asol/notifications-composition`** (`packages/notifications-composition/`): Composition layer re-exporting entry points for `asol-notifications`.
-5. **`@asol/products-composition`** (`packages/products-composition/`): Composition layer re-exporting entry points for `asol-products`.
-6. **`@asol/orders-composition`** (`packages/orders-composition/`): Composition layer re-exporting entry points for `asol-orders`.
-7. **`@asol/profiles-composition`** (`packages/profiles-composition/`): Composition layer re-exporting entry points for `asol-profiles`.
-8. **`@asol/control-composition`** (`packages/control-composition/`): Composition layer for the operational control runtime.
-9. **`@asol/gova-deployment-core`** (`packages/gova-deployment-core/`): Deterministic gova-only build view and post-build artifact gates that prove Business API handlers are absent from the frontend artifact.
+2. **`@asol/vercel-deploy-core`** (`packages/vercel-deploy-core/`): Sole owner of `api.vercel.com` access, including account/team verification, project and environment management, safe rate-limit and FOCUS billing reads for the development cloud-accounts snapshot, GitHub-free project creation (`POST /v10/projects`), the pinned Vercel CLI runner (`vercel@59.0.0`), deployment monitoring, exact-SHA release state, and rollback. Tooling outside this package consumes semantic functions and never calls the Vercel REST API directly.
+3. **`@asol/service-mirror-core`** (`packages/service-mirror-core/`): Shared import-graph mirror walker that builds `generated/src` and `generated/public` for the four read-only microservices while keeping baseline files byte-identical.
+4. **`@asol/account-bridge`** (`packages/account-bridge/`): Pure route+method ownership registry plus the device-side inter-account channel. New clients use owner origins directly, and gova's compatibility boundary uses the same registry for stateless redirects.
+5. **`@asol/notifications-composition`** (`packages/notifications-composition/`): Composition layer re-exporting entry points for `asol-notifications`.
+6. **`@asol/products-composition`** (`packages/products-composition/`): Composition layer re-exporting entry points for `asol-products`.
+7. **`@asol/orders-composition`** (`packages/orders-composition/`): Composition layer re-exporting entry points for `asol-orders`.
+8. **`@asol/profiles-composition`** (`packages/profiles-composition/`): Composition layer re-exporting entry points for `asol-profiles`.
+9. **`@asol/control-composition`** (`packages/control-composition/`): Composition layer for the operational control runtime.
+10. **`@asol/gova-deployment-core`** (`packages/gova-deployment-core/`): Deterministic gova-only build view and post-build artifact gates that prove Business API handlers are absent from the frontend artifact.
 
 See [16. Deployment Targets](../07-mobile-and-release/deployment-targets.md),
 [Service Bridge Module](../05-platform-features/service-bridge-module.md),

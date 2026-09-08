@@ -3,20 +3,13 @@ import path from "node:path";
 
 import {
   ACCOUNT_DECLARATIONS,
-  buildHeaders,
+  readVercelApiRateLimit,
+  readVercelBillingCharges,
   verifyAccountTokenAccess,
-  withTeam,
   type AccountDeclaration,
+  type VercelFocusCharge,
 } from "@asol/vercel-deploy-core";
 import { readEnvFiles } from "@asol/env-core/files";
-
-type FocusCharge = {
-  readonly BilledCost?: number | string | null;
-  readonly EffectiveCost?: number | string | null;
-  readonly ServiceName?: string | null;
-  readonly ConsumedQuantity?: number | string | null;
-  readonly ConsumedUnit?: string | null;
-};
 
 type VercelUsageMetricSnapshot = {
   readonly label: string;
@@ -86,40 +79,7 @@ function unavailable(status: "missingCredentials" | "apiError", message: string,
   };
 }
 
-async function readApiRateLimit(token: string, teamId?: string) {
-  const response = await fetch(withTeam("https://api.vercel.com/v10/projects?limit=1", teamId), {
-    headers: buildHeaders(token),
-  });
-  const resetSeconds = numberOrNull(response.headers.get("x-ratelimit-reset"));
-  return {
-    limit: numberOrNull(response.headers.get("x-ratelimit-limit")),
-    remaining: numberOrNull(response.headers.get("x-ratelimit-remaining")),
-    reset: resetSeconds === null ? null : new Date(resetSeconds * 1000).toISOString(),
-  };
-}
-
-async function readBillingCharges(token: string, teamId: string | undefined, from: Date, to: Date): Promise<FocusCharge[]> {
-  const url = withTeam(
-    `https://api.vercel.com/v1/billing/charges?from=${encodeURIComponent(from.toISOString())}&to=${encodeURIComponent(to.toISOString())}`,
-    teamId,
-  );
-  const response = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  if (!response.ok) {
-    throw new Error(`Vercel billing API returned HTTP ${response.status}`);
-  }
-  const body = await response.text();
-  return body
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .map((line) => JSON.parse(line) as FocusCharge);
-}
-
-function summarizeCharges(charges: readonly FocusCharge[]) {
+function summarizeCharges(charges: readonly VercelFocusCharge[]) {
   const billedCostUsd = charges.reduce((sum, charge) => sum + (numberOrNull(charge.BilledCost) ?? 0), 0);
   const effectiveCostUsd = charges.reduce((sum, charge) => sum + (numberOrNull(charge.EffectiveCost) ?? 0), 0);
   const serviceCounts = new Map<string, number>();
@@ -155,7 +115,7 @@ function compactQuantity(value: number, unit: string): string {
   return `${Number(value.toFixed(2))} ${unit}`.trim();
 }
 
-function summarizeDashboardMetrics(charges: readonly FocusCharge[]): VercelUsageMetricSnapshot[] {
+function summarizeDashboardMetrics(charges: readonly VercelFocusCharge[]): VercelUsageMetricSnapshot[] {
   const normalizedCharges = charges.map((charge) => ({
     name: normalizeMetricName(charge.ServiceName ?? ""),
     quantity: numberOrNull(charge.ConsumedQuantity),
@@ -236,7 +196,7 @@ async function snapshotAccount(
 
   try {
     const access = await verifyAccountTokenAccess(declaration, values);
-    const rate = await readApiRateLimit(token, access.teamId);
+    const rate = await readVercelApiRateLimit(token, access.teamId);
     let billing: {
       billedCostUsd: number | null;
       effectiveCostUsd: number | null;
@@ -259,7 +219,12 @@ async function snapshotAccount(
       billingMessage: null as string | null,
     };
     try {
-      const charges = await readBillingCharges(token, access.teamId, monthStart(new Date(capturedAt)), new Date(capturedAt));
+      const charges = await readVercelBillingCharges(
+        token,
+        access.teamId,
+        monthStart(new Date(capturedAt)),
+        new Date(capturedAt),
+      );
       billing = {
         ...summarizeCharges(charges),
         metrics: summarizeDashboardMetrics(charges),

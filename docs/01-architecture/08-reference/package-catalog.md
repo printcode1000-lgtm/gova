@@ -656,7 +656,7 @@ This Markdown file is **generated** and verified by `architecture:check`.
 |---|---|
 | **Package** | `@asol/vercel-deploy-core` |
 | **Folder** | `packages/vercel-deploy-core/` |
-| **Purpose** | Vercel deployment orchestration |
+| **Purpose** | Vercel account API and deployment orchestration |
 | **Architectural Layer** | capability |
 | **Public Exports** | `.` · `./project-env` · `./release-rollback` · `./release-state` · `./remote-deploy-contracts` · `./remote-deploy-sandbox` |
 | **Infrastructure Privileges** | `@vercel/sandbox` |

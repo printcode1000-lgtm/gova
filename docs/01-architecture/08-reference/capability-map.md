@@ -830,11 +830,11 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 
 ---
 
-## Vercel deployment orchestration
+## Vercel account API and deployment orchestration
 
 | Field | Value |
 |---|---|
-| **Capability** | Vercel deployment orchestration |
+| **Capability** | Vercel account API and deployment orchestration |
 | **Owner Package** | `@asol/vercel-deploy-core` |
 | **Architectural Layer** | capability |
 | **Public Gateway** | `@asol/vercel-deploy-core` · `@asol/vercel-deploy-core/project-env` · `@asol/vercel-deploy-core/release-rollback` · `@asol/vercel-deploy-core/release-state` · `@asol/vercel-deploy-core/remote-deploy-contracts` · `@asol/vercel-deploy-core/remote-deploy-sandbox` |
