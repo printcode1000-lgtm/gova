@@ -423,7 +423,7 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 | **Capability** | Observability and telemetry ports |
 | **Owner Package** | `@asol/observability-core` |
 | **Architectural Layer** | capability |
-| **Public Gateway** | `@asol/observability-core` · `@asol/observability-core/dev-trace` · `@asol/observability-core/server` |
+| **Public Gateway** | `@asol/observability-core` · `@asol/observability-core/api-monitor` · `@asol/observability-core/dev-trace` · `@asol/observability-core/server` |
 | **Allowed Consumers** | Application via declared doors; composition packages wire ports |
 | **Composition Root** | `N/A` (capability must not import `@/`) |
 | **Infrastructure Owner** | none (pure logic or ports) |

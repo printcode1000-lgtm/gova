@@ -37,6 +37,14 @@ export async function runPublishingExportsTests(): Promise<void> {
   assert.equal(typeof publishing.androidVersionNameFromCode, "function");
   assert.equal(typeof publishing.planAndroidNativeVersion, "function");
   assert.equal(typeof publishing.syncAndroidProjectVersions, "function");
+  assert.equal(typeof publishing.compareOtaVersions, "function");
+  assert.equal(typeof publishing.isOtaVersion, "function");
+  assert.equal(typeof publishing.isNativeVersion, "function");
+  assert.equal(typeof publishing.parseContentVersion, "function");
+  assert.equal(typeof publishing.nextContentVersion, "function");
+  assert.equal(typeof publishing.releaseContentVersion, "function");
+  assert.equal(typeof publishing.assertContentVersionAdvances, "function");
+  assert.equal(typeof publishing.assertContentLineDoesNotRegress, "function");
 
   console.log("  ✔ publishing-exports contract tests passed");
 }

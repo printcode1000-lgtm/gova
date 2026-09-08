@@ -13,11 +13,12 @@ concern lived on both sides of a seal.
 
 | Door | Import | Safe for | Contents |
 | :--- | :--- | :--- | :--- |
-| `.` | `@asol/observability-core` | Browser and server | Monitor store, API/DB monitors, query observer, `registerMonitorTelemetry`, dev-trace vocabulary |
+| `.` | `@asol/observability-core` | Browser application runtime | Monitor store, API/DB monitors, query observer, `registerMonitorTelemetry`, dev-trace vocabulary |
 | `./dev-trace` | `@asol/observability-core/dev-trace` | Anything | The trace header name and its parser — **nothing else** |
+| `./api-monitor` | `@asol/observability-core/api-monitor` | Browser + server / React Server | Load-safe HTTP tracking seam; server requests bypass browser monitor loading, development browsers lazy-load it |
 | `./server` | `@asol/observability-core/server` | Server only | `runWithDevTrace`, `traceServerLayer`, the drizzle logger, `registerServerMonitorTelemetry` |
 
-### Why three doors
+### Why four doors
 
 This package is the clearest case in the repository of a door being a **load-time contract**
 rather than a convenience barrel:
@@ -25,6 +26,10 @@ rather than a convenience barrel:
 - `src/core/api/api-response.ts` needs the trace header name and is mirrored into all six service
   deployments. Reaching it through `.` pulled the monitor store and `@asol/data-core/browser`
   behind it — into every one of them. `./dev-trace` has a single type import and no runtime edge.
+- `src/core/api/asol-api-client.ts` is shared by browser and server release tooling. It uses
+  `./api-monitor`, which executes directly on the server and lazy-loads the wide browser monitor
+  only when `window` exists and observability is enabled. This prevents React Server processes
+  from loading `@asol/data-core/browser` and TanStack Query merely to make an HTTP request.
 - `./server` deliberately does **not** re-export `emit-server-trace`: that module reads a trace
   header on the *browser* side and pulls the store with it, so a deployment that wanted only
   `traceServerLayer` would have carried the whole monitor.

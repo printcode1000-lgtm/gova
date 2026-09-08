@@ -5,7 +5,7 @@
 
 # Write Surface Map
 
-Detected write-like surfaces: **360**
+Detected write-like surfaces: **361**
 Unproven gateway paths: **141**
 
 | Source | Owner | Operations | Gateway | Proven | Route | Runtimes | Risk |
@@ -86,6 +86,7 @@ Unproven gateway paths: **141**
 | `packages/notifications-composition/src/index.ts` | `@asol/notifications-composition` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/notifications-core/src/ports/token-store.ts` | `@asol/notifications-core` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/notifications-core/src/tests/index.test.ts` | `@asol/notifications-core` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
+| `packages/observability-core/src/api-monitor.ts` | `@asol/observability-core` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/observability-core/src/index.ts` | `@asol/observability-core` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/observability-core/src/monitor/asol-db-monitor.ts` | `@asol/observability-core` | delete, insert | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/observability-core/src/monitor/data-core-telemetry.ts` | `@asol/observability-core` | delete, insert, update | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |

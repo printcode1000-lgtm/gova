@@ -39,6 +39,22 @@ export {
   androidVersionNameFromCode,
 } from "./domain/versioning/native-version";
 
+/** Pure version helpers for Node-side release tooling.
+ * Export them here so server commands never import the browser runtime root.
+ */
+export {
+  compareOtaVersions,
+  isOtaVersion,
+} from "./domain/versioning/version-ordering";
+export {
+  isNativeVersion,
+  parseContentVersion,
+  releaseContentVersion,
+  nextContentVersion,
+  assertContentVersionAdvances,
+  assertContentLineDoesNotRegress,
+} from "./domain/versioning/content-version";
+
 export {
   planAndroidNativeTarget,
   planAndroidNativeVersion,

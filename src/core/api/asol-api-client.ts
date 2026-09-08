@@ -9,7 +9,7 @@ import {
   readAsolApiLocalFirst,
   type AsolApiLocalReadPolicy,
 } from './browser-local-read-cache';
-import { trackAsolApiRequest } from '@asol/observability-core';
+import { trackAsolApiRequest } from '@asol/observability-core/api-monitor';
 import { scheduleNotificationGrantDelivery } from '@asol/account-bridge/notifications';
 
 export type AsolAbsoluteBinaryResult =

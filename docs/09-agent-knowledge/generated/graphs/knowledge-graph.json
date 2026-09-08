@@ -6305,6 +6305,7 @@
         "@asol/notifications-core/providers",
         "@asol/notifications-core/server",
         "@asol/observability-core",
+        "@asol/observability-core/api-monitor",
         "@asol/observability-core/dev-trace",
         "@asol/observability-core/server",
         "@asol/orders-composition",
@@ -11566,6 +11567,7 @@
         "@asol/data-core",
         "@asol/data-core/browser",
         "@asol/observability-core",
+        "@asol/observability-core/api-monitor",
         "@asol/observability-core/dev-trace",
         "@asol/observability-core/server",
         "`@asol/observability-core`",
@@ -11585,6 +11587,8 @@
         "recorded",
         "src/core/api/api-response",
         "src/core/api/api-response.ts",
+        "src/core/api/asol-api-client",
+        "src/core/api/asol-api-client.ts",
         "src/core/monitor/",
         "the",
         "the developer monitor: what the application observed about itself — traces, recorded operations, and the `/dev/monitor` data model.",
@@ -23168,11 +23172,13 @@
       "kind": "package",
       "name": "@asol/observability-core",
       "path": "packages/observability-core",
-      "summary": "Observability and telemetry ports; Layer: capability; Public exports: ., ./dev-trace, ./server",
+      "summary": "Observability and telemetry ports; Layer: capability; Public exports: ., ./api-monitor, ./dev-trace, ./server",
       "tags": [
         ".",
+        "./api-monitor",
         "./dev-trace",
         "./server",
+        "/api-monitor",
         "/dev-trace",
         "/server",
         "@asol/observability-core",
@@ -35123,6 +35129,17 @@
         "packages/notifications-core/src/services/providers/web-push-notification-provider",
         "packages/notifications-core/src/services/providers/web-push-notification-provider.server.ts",
         "server",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/observability-core/src/api-monitor.ts",
+      "kind": "source",
+      "name": "api-monitor.ts",
+      "path": "packages/observability-core/src/api-monitor.ts",
+      "tags": [
+        "packages/observability-core/src/api-monitor",
+        "packages/observability-core/src/api-monitor.ts",
         "ts"
       ]
     },
@@ -64358,6 +64375,12 @@
       "from": "document:docs/01-architecture/08-reference/capability-map.md",
       "to": "package:@asol/observability-core",
       "kind": "references",
+      "detail": "@asol/observability-core/api-monitor"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/capability-map.md",
+      "to": "package:@asol/observability-core",
+      "kind": "references",
       "detail": "@asol/observability-core/dev-trace"
     },
     {
@@ -70919,6 +70942,12 @@
       "from": "document:docs/05-platform-features/sealed-packages/observability-core-module.md",
       "to": "package:@asol/observability-core",
       "kind": "references",
+      "detail": "@asol/observability-core/api-monitor"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/observability-core-module.md",
+      "to": "package:@asol/observability-core",
+      "kind": "references",
       "detail": "@asol/observability-core/dev-trace"
     },
     {
@@ -70932,6 +70961,12 @@
       "to": "source:src/core/api/api-response.ts",
       "kind": "references",
       "detail": "src/core/api/api-response.ts"
+    },
+    {
+      "from": "document:docs/05-platform-features/sealed-packages/observability-core-module.md",
+      "to": "source:src/core/api/asol-api-client.ts",
+      "kind": "references",
+      "detail": "src/core/api/asol-api-client.ts"
     },
     {
       "from": "document:docs/05-platform-features/sealed-packages/orders-core-module.md",
@@ -80860,6 +80895,12 @@
     {
       "from": "domain:architecture",
       "to": "source:packages/notifications-core/src/services/providers/web-push-notification-provider.server.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/observability-core/src/api-monitor.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -97620,6 +97661,12 @@
       "to": "document:docs/09-agent-knowledge/runtime-contract.md",
       "kind": "contains",
       "detail": "read-first"
+    },
+    {
+      "from": "domain:super-admin-and-operations",
+      "to": "source:packages/observability-core/src/api-monitor.ts",
+      "kind": "documents",
+      "detail": "packages/observability-core/"
     },
     {
       "from": "domain:super-admin-and-operations",
@@ -159501,6 +159548,48 @@
       "detail": "./notification-provider.interface"
     },
     {
+      "from": "source:packages/observability-core/src/api-monitor.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/observability-core/src/api-monitor.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/observability-core/src/api-monitor.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/observability-core/src/api-monitor.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/observability-core/src/api-monitor.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/observability-core/src/api-monitor.ts",
+      "to": "package:@asol/observability-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/observability-core/src/api-monitor.ts",
+      "to": "source:packages/observability-core/src/monitor/asol-api-monitor.ts",
+      "kind": "imports",
+      "detail": "./monitor/asol-api-monitor"
+    },
+    {
+      "from": "source:packages/observability-core/src/api-monitor.ts",
+      "to": "source:packages/observability-core/src/ports/index.ts",
+      "kind": "imports",
+      "detail": "./ports"
+    },
+    {
       "from": "source:packages/observability-core/src/index.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -162642,6 +162731,12 @@
     },
     {
       "from": "source:packages/ota-core/src/publishing.ts",
+      "to": "source:packages/ota-core/src/domain/versioning/content-version.ts",
+      "kind": "imports",
+      "detail": "./domain/versioning/content-version"
+    },
+    {
+      "from": "source:packages/ota-core/src/publishing.ts",
       "to": "source:packages/ota-core/src/domain/versioning/native-version.ts",
       "kind": "imports",
       "detail": "./domain/versioning/native-version"
@@ -162651,6 +162746,12 @@
       "to": "source:packages/ota-core/src/domain/versioning/platform-version-truth.ts",
       "kind": "imports",
       "detail": "./domain/versioning/platform-version-truth"
+    },
+    {
+      "from": "source:packages/ota-core/src/publishing.ts",
+      "to": "source:packages/ota-core/src/domain/versioning/version-ordering.ts",
+      "kind": "imports",
+      "detail": "./domain/versioning/version-ordering"
     },
     {
       "from": "source:packages/ota-core/src/publishing.ts",
@@ -180801,7 +180902,7 @@
       "from": "source:src/core/api/asol-api-client.ts",
       "to": "package:@asol/observability-core",
       "kind": "imports",
-      "detail": "@asol/observability-core"
+      "detail": "@asol/observability-core/api-monitor"
     },
     {
       "from": "source:src/core/api/asol-api-client.ts",
@@ -240365,12 +240466,6 @@
       "to": "package:@asol/native-core",
       "kind": "imports",
       "detail": "@asol/native-core/scripts/validate-android-r8-policy"
-    },
-    {
-      "from": "test:src/features/release-commands/tests/release-commands.test.ts",
-      "to": "package:@asol/ota-core",
-      "kind": "imports",
-      "detail": "@asol/ota-core"
     },
     {
       "from": "test:src/features/release-commands/tests/release-commands.test.ts",

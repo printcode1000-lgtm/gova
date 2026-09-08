@@ -22,7 +22,7 @@
 | runtime | 7 |
 | script | 150 |
 | service | 7 |
-| source | 2134 |
+| source | 2135 |
 | test | 248 |
 
 ## Domains
@@ -66,7 +66,7 @@
 | @asol/native-core | `packages/native-core` | Capacitor / native device capabilities; Layer: capability; Public exports: ., ./capability-keys, ./platform-defaults, ./platform-globals, ./scripts/android-build-preflight, ./scripts/validate-android-r8-policy |
 | @asol/notifications-composition | `packages/notifications-composition` | Composition root for the notifications account; Layer: composition; Public exports: . |
 | @asol/notifications-core | `packages/notifications-core` | Push notification delivery (Web Push, FCM HTTP v1, APNs); Layer: capability; Public exports: ., ./builder, ./grant-collector, ./grant-envelope, ./grants, ./providers, ./server |
-| @asol/observability-core | `packages/observability-core` | Observability and telemetry ports; Layer: capability; Public exports: ., ./dev-trace, ./server |
+| @asol/observability-core | `packages/observability-core` | Observability and telemetry ports; Layer: capability; Public exports: ., ./api-monitor, ./dev-trace, ./server |
 | @asol/orders-composition | `packages/orders-composition` | Composition root for the orders account; Layer: composition; Public exports: . |
 | @asol/orders-core | `packages/orders-core` | Order domain meaning and policies; Layer: capability; Public exports: . |
 | @asol/ota-core | `packages/ota-core` | OTA publishing and update runtime; Layer: capability; Public exports: ., ./admin, ./ports, ./publishing, ./release-console, ./server |

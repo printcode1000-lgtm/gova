@@ -6305,6 +6305,7 @@
         "@asol/notifications-core/providers",
         "@asol/notifications-core/server",
         "@asol/observability-core",
+        "@asol/observability-core/api-monitor",
         "@asol/observability-core/dev-trace",
         "@asol/observability-core/server",
         "@asol/orders-composition",
@@ -11566,6 +11567,7 @@
         "@asol/data-core",
         "@asol/data-core/browser",
         "@asol/observability-core",
+        "@asol/observability-core/api-monitor",
         "@asol/observability-core/dev-trace",
         "@asol/observability-core/server",
         "`@asol/observability-core`",
@@ -11585,6 +11587,8 @@
         "recorded",
         "src/core/api/api-response",
         "src/core/api/api-response.ts",
+        "src/core/api/asol-api-client",
+        "src/core/api/asol-api-client.ts",
         "src/core/monitor/",
         "the",
         "the developer monitor: what the application observed about itself — traces, recorded operations, and the `/dev/monitor` data model.",
@@ -23168,11 +23172,13 @@
       "kind": "package",
       "name": "@asol/observability-core",
       "path": "packages/observability-core",
-      "summary": "Observability and telemetry ports; Layer: capability; Public exports: ., ./dev-trace, ./server",
+      "summary": "Observability and telemetry ports; Layer: capability; Public exports: ., ./api-monitor, ./dev-trace, ./server",
       "tags": [
         ".",
+        "./api-monitor",
         "./dev-trace",
         "./server",
+        "/api-monitor",
         "/dev-trace",
         "/server",
         "@asol/observability-core",
@@ -35123,6 +35129,17 @@
         "packages/notifications-core/src/services/providers/web-push-notification-provider",
         "packages/notifications-core/src/services/providers/web-push-notification-provider.server.ts",
         "server",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/observability-core/src/api-monitor.ts",
+      "kind": "source",
+      "name": "api-monitor.ts",
+      "path": "packages/observability-core/src/api-monitor.ts",
+      "tags": [
+        "packages/observability-core/src/api-monitor",
+        "packages/observability-core/src/api-monitor.ts",
         "ts"
       ]
     },

@@ -206,6 +206,9 @@
       "@asol/observability-core/dev-trace": [
         "./generated/packages/observability-core/src/traces/dev-trace-types.ts"
       ],
+      "@asol/observability-core/api-monitor": [
+        "./generated/packages/observability-core/src/api-monitor.ts"
+      ],
       "@asol/observability-core/server": [
         "./generated/packages/observability-core/src/server.ts"
       ],

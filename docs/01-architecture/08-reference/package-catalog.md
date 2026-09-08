@@ -336,7 +336,7 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Folder** | `packages/observability-core/` |
 | **Purpose** | Observability and telemetry ports |
 | **Architectural Layer** | capability |
-| **Public Exports** | `.` · `./dev-trace` · `./server` |
+| **Public Exports** | `.` · `./api-monitor` · `./dev-trace` · `./server` |
 | **Infrastructure Privileges** | none |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:observability-core` |

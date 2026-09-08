@@ -19,9 +19,9 @@ const manifest = JSON.parse(readFileSync(path.join(ROOT, PACKAGE, 'package.json'
 };
 assert.deepEqual(
   Object.keys(manifest.exports),
-  ['.', './dev-trace', './server'],
-  'Three doors, each a distinct load-time contract: the browser monitor, the trace-header ' +
-    'vocabulary alone, and the server tracing that needs node:async_hooks.',
+  ['.', './dev-trace', './api-monitor', './server'],
+  'Four doors, each a distinct load-time contract: the browser monitor, trace vocabulary, ' +
+    'the load-safe API monitor seam, and server tracing that needs node:async_hooks.',
 );
 
 // The narrow door exists because the wide one is expensive. `api-response.ts` runs in every
@@ -40,6 +40,22 @@ for (const match of devTraceSource.matchAll(/from\s+['"]([^'"]+)['"]/g)) {
 assert.ok(
   /import type \{[^}]*\} from '\.\.\/monitor\/types'/.test(devTraceSource),
   'Its only edge is a type import, which carries no runtime module with it.',
+);
+
+
+const apiMonitorSource = readFileSync(path.join(ROOT, PACKAGE, 'src/api-monitor.ts'), 'utf8');
+assert.ok(
+  apiMonitorSource.includes("await import('./monitor/asol-api-monitor')"),
+  'The API monitor door must lazily load the browser monitor implementation.',
+);
+assert.ok(
+  !/from\s+['\"]@asol\/data-core\/browser['\"]/.test(apiMonitorSource),
+  'The API monitor door must not statically reach the browser data/query graph.',
+);
+const apiClientSource = readFileSync(path.join(ROOT, 'src/core/api/asol-api-client.ts'), 'utf8');
+assert.ok(
+  apiClientSource.includes("@asol/observability-core/api-monitor"),
+  'AsolApiClient must use the load-safe observability door, never the wide browser door.',
 );
 
 const apiResponse = readFileSync(path.join(ROOT, 'src/core/api/api-response.ts'), 'utf8');
@@ -75,7 +91,7 @@ for (const file of browserReachable) {
 
 // ── It must not import the application ──────────────────────────────────────
 const DECLARED_DOORS = new Set(['@asol/data-core/browser', '@asol/data-core/telemetry']);
-for (const file of [...files('monitor'), ...files('traces'), ...files('ports'), 'index.ts', 'server.ts']) {
+for (const file of [...files('monitor'), ...files('traces'), ...files('ports'), 'api-monitor.ts', 'index.ts', 'server.ts']) {
   const text = readFileSync(path.join(ROOT, PACKAGE, 'src', file), 'utf8');
   for (const match of text.matchAll(/from\s+['"]([^'"]+)['"]/g)) {
     const specifier = match[1]!;
@@ -120,5 +136,5 @@ assert.ok(DEV_TRACE_HEADER.length > 0);
 assert.equal(typeof resolveMonitorLayer, 'function');
 
 console.log(
-  `@asol/observability-core contract: 3 doors, ${browserReachable.length} browser-safe modules, one port, no application import.`,
+  `@asol/observability-core contract: 4 doors, ${browserReachable.length} browser-safe modules, load-safe API seam, one port, no application import.`,
 );
