@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-07T23:42:21.533Z",
+  "generatedAt": "2026-09-08T06:52:16.291Z",
   "entryPoints": [
     "features/product/server/services/product-service.server.ts",
     "features/profile/server/services/profile-service.bootstrap.server.ts",
@@ -19,7 +19,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 431,
+  "fileCount": 432,
   "files": [
     "packages/account-declarations/src/accounts/products.ts",
     "packages/account-declarations/src/accounts/profiles.ts",
@@ -301,6 +301,7 @@
     "packages/storage-core/src/validation/schemas.ts",
     "packages/sub2main-composition/src/index.ts",
     "packages/system-logs-core/src/browser/capture-coordinator.ts",
+    "packages/system-logs-core/src/browser/development-chunk-policy.ts",
     "packages/system-logs-core/src/browser/global-capture.ts",
     "packages/system-logs-core/src/browser/memory-store.ts",
     "packages/system-logs-core/src/domain/constants.ts",

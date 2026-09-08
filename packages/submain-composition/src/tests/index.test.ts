@@ -29,6 +29,16 @@ function runTests(): void {
   );
   console.log('  ✔ notification-core ports are registered by the isolated submain root.');
 
+  assert(
+    compositionSource.includes('registerDataCoreProductSearchFieldsPort') && compositionSource.includes("@/features/product-search/server/services/product-search-fields.server"),
+    'submain composition imports the product-search field registrar',
+  );
+  assert(
+    compositionSource.includes('registerDataCoreProductSearchFieldsPort();'),
+    'submain composition invokes the product-search field registrar at module load',
+  );
+  console.log('  ✔ data-core runtime, specialty, and product-search field ports are registered.');
+
   const runtime = createSubmainRuntime();
   assert(runtime.accountName === SUBMAIN_DECLARATION.project, 'account name matches declaration');
   assert(typeof runtime.search.products === 'function', 'search.products bound');

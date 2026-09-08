@@ -81,7 +81,7 @@ export function NetworkStatusProvider({ children }: { children: ReactNode }) {
         setStatus(health === 'reachable' ? 'online' : 'server-unreachable');
       }
     } catch (error) {
-      if (controller.signal.aborted) return;
+      if (controller.signal.aborted || isExpectedNetworkCheckAbort(error)) return;
       reportPreAuthFailure('startup-network-health-check', error, {}, 'warn');
       if (sequence === checkSequence.current) {
         setStatus(browserIsOffline() ? 'offline' : 'check-failed');

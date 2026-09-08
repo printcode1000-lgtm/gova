@@ -45,8 +45,8 @@
     var(--asol-header-bar-height) + var(--asol-header-install-height) +
       var(--asol-app-header-inset)
   );
-  /* Breathing room between the header and page content. */
-  --asol-shell-main-gap: 1rem;
+  /* Small, uniform breathing room between AppHeader and every page. */
+  --asol-shell-main-gap: 3px;
 
   /* Measured by BottomNavBar (its padding already includes the bottom inset). */
   --asol-bottom-nav-space: calc(5rem + var(--asol-safe-area-bottom));
@@ -131,6 +131,25 @@ body {
   padding-top: calc(
     var(--asol-app-header-height) + var(--asol-shell-main-gap)
   );
+}
+
+/*
+ * Global page-start contract: the first rendered page surface starts 3px
+ * below AppHeader. Route roots may keep horizontal and bottom padding, but any
+ * top margin/padding on the first surface is neutralized here so pages cannot
+ * reintroduce an accidental blank band beneath the fixed header. Safe-area and
+ * install-row clearance remain owned by `.asol-shell-main` above.
+ */
+.asol-shell-main > :first-child {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Home is the canonical page-start reference: its first real child has no
+ * external top margin. Apply the same baseline to every page root without
+ * changing the child component's own internal padding. */
+.asol-shell-main > :first-child > :first-child {
+  margin-top: 0 !important;
 }
 
 /* Global speech-to-text controls */

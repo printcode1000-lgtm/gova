@@ -68,6 +68,15 @@ export function runScenarioCoverageTest() {
     preAuthReporter.includes('publicEnv.webBundleVersion'),
     'pre-auth-failure-reporter must attach app/native versions',
   );
+  assert.ok(
+    preAuthReporter.includes("from '@asol/system-logs-core'"),
+    'pre-auth-failure-reporter must use the already-loaded static system-logs door',
+  );
+  assert.equal(
+    preAuthReporter.includes("import('@asol/system-logs-core')"),
+    false,
+    'pre-auth-failure-reporter must not create a second lazy chunk for system-logs-core',
+  );
 
   const entities = readFileSync(
     path.join(workspaceRoot, 'packages/system-logs-core/src/domain/entities.ts'),

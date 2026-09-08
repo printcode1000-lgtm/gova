@@ -205,7 +205,7 @@ Valid HTTP error responses continue to use `ApiError` with their original status
 
 ### Aborted requests
 
-`AbortError` is passed through unchanged. Aborting an old health check is expected behavior and must not change the global status or be persisted as a `startup-network-health-check` failure. Network-authoritative probes are not deduplicated, so cancelling one probe cannot cancel the replacement probe.
+`AbortError` is passed through unchanged. Aborting an old health check is expected behavior and must not change the global status or be persisted as a `startup-network-health-check` failure. The provider checks both its own `AbortController` and the cross-realm `AbortError` name before reporting a failure. Network-authoritative probes are not deduplicated, so cancelling one probe cannot cancel the replacement probe.
 
 ### Logging
 

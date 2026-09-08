@@ -72,7 +72,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `ASOL_OTA_R2_WAREHOUSE_NAME` | server/tooling | 0 |  |
 | `ASOL_OTA_SIGNING_PRIVATE_KEY` | server/tooling | 2 | `packages/ota-core/src/publishing/config/ota-config.ts`, `packages/ota-core/src/publishing/config/ota-r2-target.ts` |
 | `ASOL_PRODUCTION_ORIGIN` | server/tooling | 1 | `scripts/check-deployed-release.ts` |
-| `ASOL_PROVISIONING` | server/tooling | 11 | `npm run db:provision:turso`, `npm run db:schema:sync:release`, `npm run db:schema:sync`, `npm run db:schema:verify`, `scripts/provision-turso.ts`, `scripts/schema-sync.ts` |
+| `ASOL_PROVISIONING` | server/tooling | 10 | `npm run db:provision:turso`, `npm run db:schema:sync:release`, `npm run db:schema:sync`, `npm run db:schema:verify`, `scripts/provision-turso.ts`, `scripts/schema-sync.ts` |
 | `ASOL_RELEASE_CHECK_ATTEMPTS` | server/tooling | 1 | `scripts/check-deployed-release.ts` |
 | `ASOL_REMOTE_DEPLOY_REQUEST_ID` | server/tooling | 1 | `scripts/run-remote-deploy-all.mjs` |
 | `ASOL_REMOTE_DEPLOY_SANDBOX` | server/tooling | 2 | `scripts/check-environment-requirements.ts`, `services/control/src/app/api/health/route.ts` |

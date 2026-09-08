@@ -5,6 +5,7 @@
 export {
   getEnabledProductSearchFields,
   getEnabledProductSearchFieldKeys,
+  registerDataCoreProductSearchFieldsPort,
 } from './server/services/product-search-fields.server';
 export { searchProducts, requireCategoryPair } from './server/services/product-search-products.server';
 export {

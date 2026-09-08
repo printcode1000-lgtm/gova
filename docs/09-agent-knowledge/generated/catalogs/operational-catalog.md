@@ -81,8 +81,6 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run db:migrate:system-log-origin` | `npx tsx packages/data-core/src/tooling/migrate-system-log-origin.ts` |
 | `npm run db:provision:turso` | `cross-env ASOL_PROVISIONING=<redacted> npx tsx scripts/provision-turso.ts` |
 | `npm run db:push:vercel-env` | `npx tsx scripts/push-vercel-turso-env.ts` |
-| `npm run db:reset:advertisements` | `npx tsx packages/data-core/src/tooling/reset-advertisements-db.ts` |
-| `npm run db:reset:advertisements:cloud` | `npx tsx packages/data-core/src/tooling/reset-advertisements-db.ts --cloud` |
 | `npm run db:schema:sync` | `cross-env ASOL_PROVISIONING=<redacted> npx tsx scripts/schema-sync.ts` |
 | `npm run db:schema:sync:release` | `cross-env ASOL_PROVISIONING=<redacted> ASOL_SCHEMA_SYNC_REQUIRED=<redacted> npx tsx scripts/schema-sync.ts` |
 | `npm run db:schema:verify` | `cross-env ASOL_PROVISIONING=<redacted> npx tsx scripts/schema-sync.ts --verify` |

@@ -61,7 +61,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/catalog-core` | package | 8 | 1 | 13 | 0 | 17 | 1 |
 | `@asol/control-composition` | package | 6 | 1 | 0 | 0 | 2 | 1 |
 | `@asol/cors` | package | 13 | 3 | 57 | 0 | 31 | 0 |
-| `@asol/data-core` | package | 60 | 24 | 126 | 0 | 183 | 21 |
+| `@asol/data-core` | package | 61 | 24 | 126 | 0 | 183 | 21 |
 | `@asol/dev-core` | package | 7 | 1 | 15 | 0 | 1 | 0 |
 | `@asol/env-core` | package | 7 | 1 | 125 | 0 | 25 | 1 |
 | `@asol/favorites-core` | package | 7 | 3 | 3 | 0 | 12 | 7 |
@@ -95,7 +95,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/storage-image-manager-core` | package | 10 | 2 | 28 | 0 | 18 | 8 |
 | `@asol/sub2main-composition` | package | 7 | 1 | 0 | 0 | 9 | 7 |
 | `@asol/submain-composition` | package | 9 | 3 | 0 | 0 | 38 | 18 |
-| `@asol/system-logs-core` | package | 9 | 4 | 118 | 0 | 58 | 0 |
+| `@asol/system-logs-core` | package | 9 | 5 | 118 | 0 | 59 | 0 |
 | `@asol/trending-ribbon-core` | package | 6 | 1 | 118 | 0 | 13 | 1 |
 | `@asol/vercel-deploy-core` | package | 12 | 7 | 123 | 0 | 45 | 2 |
 | `control` | service | 2 | 0 | 0 | 0 | 0 | 17 |

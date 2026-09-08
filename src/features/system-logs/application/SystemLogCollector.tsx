@@ -16,6 +16,7 @@ export function SystemLogCollector() {
     registerSystemLogsCoreBrowserPorts();
     return installGlobalCapture({
       authorized,
+      developmentBuild: publicEnv.developmentBuild,
       versions: () => ({
         appVersion: publicEnv.webBundleVersion,
         nativeVersion: publicEnv.nativeVersion,

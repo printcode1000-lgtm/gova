@@ -369,7 +369,7 @@ export function HeroSlider({ id,
         role="region"
         aria-label="Image Carousel"
         aria-live="polite"
-        className="mt-4 relative overflow-hidden rounded-xl shadow-sm h-48 sm:h-64 md:h-80 lg:h-96 w-full focus:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+        className="relative overflow-hidden rounded-xl shadow-sm h-48 sm:h-64 md:h-80 lg:h-96 w-full focus:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
       >
         {/* Phase 10 - Skeleton loading state */}
         {showSkeleton && (

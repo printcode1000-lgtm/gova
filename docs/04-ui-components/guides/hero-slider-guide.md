@@ -212,9 +212,9 @@ Runtime behavior uses one `hero_slider` record with the ID `home-hero-slider`. `
 | `updated_at`             | Last successful save time.                     |
 | `updated_by`             | UID that last saved the current configuration. |
 
-There are no draft, publication, history, normalized-slide, or cleanup tables. The advertisements database has one clean migration. During early development it can be recreated locally with `npm run db:reset:advertisements` or in both SQLite and configured Turso with `npm run db:reset:advertisements:cloud`.
+There are no draft, publication, history, normalized-slide, or cleanup tables. The advertisements database is cloud-owned and must not expose a destructive reset/reseed command. Schema provisioning and synchronization manage schema only; advertisement content is changed through its owning application/admin flows.
 
-The initial record is validated and seeded from:
+The repository retains the original seed document as reference data at:
 
 ```text
 src/features/advertisements/application/config/home-hero-slider.seed.json

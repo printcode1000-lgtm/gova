@@ -1,11 +1,6 @@
-import { configureDataCoreProductSearchFields } from '@asol/data-core/product-search-fields';
-import {
-  getDefaultProductSearchFieldKeys,
-  getProductSearchFieldByKey,
-  getProductSearchFields,
-} from '@/features/product-search';
 import { registerDataCoreRuntimeConfigPorts } from './data-core-runtime-config-ports';
 import { registerDataCoreSpecialtyCatalogPort } from './data-core-specialty-catalog-port';
+import { registerDataCoreProductSearchFieldsPort } from '@/features/product-search/server';
 
 /**
  * Everything `@asol/data-core` needs in the main application.
@@ -16,9 +11,5 @@ import { registerDataCoreSpecialtyCatalogPort } from './data-core-specialty-cata
 export function registerDataCorePorts(): void {
   registerDataCoreRuntimeConfigPorts();
   registerDataCoreSpecialtyCatalogPort();
-  configureDataCoreProductSearchFields({
-    getProductSearchFields,
-    getProductSearchFieldByKey,
-    getDefaultProductSearchFieldKeys,
-  });
+  registerDataCoreProductSearchFieldsPort();
 }

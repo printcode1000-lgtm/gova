@@ -179,8 +179,6 @@
     "secrets:verify": "npx tsx scripts/verify-project-secrets.ts",
     "secrets:key:init": "npx tsx scripts/initialize-secret-archive-key.ts",
     "db:setup:turso": "npm run db:schema:sync",
-    "db:reset:advertisements": "npx tsx packages/data-core/src/tooling/reset-advertisements-db.ts",
-    "db:reset:advertisements:cloud": "npx tsx packages/data-core/src/tooling/reset-advertisements-db.ts --cloud",
     "db:drop:factory-reset": "npx tsx packages/data-core/src/tooling/drop-factory-reset-tables.ts",
     "db:drop:factory-reset:cloud": "npx tsx packages/data-core/src/tooling/drop-factory-reset-tables.ts --cloud",
     "r2:sync:cors": "npx tsx packages/storage-core/scripts/sync-cors.ts",

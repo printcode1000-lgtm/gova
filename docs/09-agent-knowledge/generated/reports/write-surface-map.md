@@ -5,7 +5,7 @@
 
 # Write Surface Map
 
-Detected write-like surfaces: **361**
+Detected write-like surfaces: **362**
 Unproven gateway paths: **141**
 
 | Source | Owner | Operations | Gateway | Proven | Route | Runtimes | Risk |
@@ -294,6 +294,7 @@ Unproven gateway paths: **141**
 | `src/features/product-search/application/utils/arabic-search.ts` | `product-search` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/product-search/domain/product-search.types.ts` | `product-search` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/product-search/presentation/panel/ProductSearchFieldSelector.tsx` | `product-search` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |
+| `src/features/product-search/server/services/product-search-fields.server.ts` | `product-search` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/features/product-search/server/services/product-search-products.server.ts` | `product-search` | write-like | `@asol/data-core, @asol/storage-core` | yes | `` | development, web | medium |
 | `src/features/product/application/services/product-api-service.ts` | `product` | create, delete, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/features/product/application/services/product-review-api-service.ts` | `product` | create, delete, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |

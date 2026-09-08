@@ -96,6 +96,14 @@ function runTests(): void {
     'utf8',
   );
   assert(
+    compositionSource.includes('registerDataCoreProductSearchFieldsPort') && compositionSource.includes("@/features/product-search/server/services/product-search-fields.server"),
+    'products-composition must import the product-search field registrar',
+  );
+  assert(
+    compositionSource.includes('registerDataCoreProductSearchFieldsPort();'),
+    'products-composition must register product-search field metadata at module load',
+  );
+  assert(
     compositionSource.includes('registerPharmacyCatalogProductLookupPort()'),
     'products-composition must register PharmacyProductLookupPort at module load',
   );

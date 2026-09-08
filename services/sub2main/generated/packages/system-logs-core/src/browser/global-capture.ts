@@ -5,6 +5,7 @@ import {
   setMemoryCollectorAuthorized,
 } from './memory-store';
 import { systemLogsNativeCrash } from '../ports';
+import { isExpectedDevelopmentChunkFailure } from './development-chunk-policy';
 
 type ConsoleMethod = 'log' | 'info' | 'debug' | 'warn' | 'error';
 
@@ -107,6 +108,7 @@ function isBenignBrowserError(message: string): boolean {
 
 export interface InstallGlobalCaptureOptions {
   authorized: boolean;
+  developmentBuild: boolean;
   versions: () => { appVersion?: string; nativeVersion?: string };
 }
 
@@ -127,6 +129,17 @@ export function installGlobalCapture(options: InstallGlobalCaptureOptions) {
         return;
       }
       const error = data.find((item): item is Error => item instanceof Error);
+      const serialized = data.map(serialize).join(' ');
+      if (
+        isExpectedDevelopmentChunkFailure({
+          developmentBuild: options.developmentBuild,
+          currentOrigin: window.location.origin,
+          message: serialized,
+          errorName: error?.name,
+        })
+      ) {
+        return;
+      }
       const level = levelFor(method);
       const versions = options.versions();
       void captureSystemLog(
@@ -134,7 +147,7 @@ export function installGlobalCapture(options: InstallGlobalCaptureOptions) {
           level,
           source: 'client',
           consoleMethod: `console.${method}`,
-          message: data.map(serialize).join(' '),
+          message: serialized,
           page: page(),
           platform: platform(),
           errorName: error?.name,
@@ -151,6 +164,16 @@ export function installGlobalCapture(options: InstallGlobalCaptureOptions) {
 
   const handleError = (event: ErrorEvent) => {
     if (isBenignBrowserError(event.message)) return;
+    if (
+      isExpectedDevelopmentChunkFailure({
+        developmentBuild: options.developmentBuild,
+        currentOrigin: window.location.origin,
+        message: event.message,
+        errorName: event.error instanceof Error ? event.error.name : undefined,
+      })
+    ) {
+      return;
+    }
     const versions = options.versions();
     void captureSystemLog(
       {
@@ -177,6 +200,16 @@ export function installGlobalCapture(options: InstallGlobalCaptureOptions) {
 
   const handleRejection = (event: PromiseRejectionEvent) => {
     const reason = event.reason;
+    if (
+      isExpectedDevelopmentChunkFailure({
+        developmentBuild: options.developmentBuild,
+        currentOrigin: window.location.origin,
+        message: serialize(reason),
+        errorName: reason instanceof Error ? reason.name : undefined,
+      })
+    ) {
+      return;
+    }
     const versions = options.versions();
     void captureSystemLog(
       {
@@ -212,6 +245,15 @@ export function installGlobalCapture(options: InstallGlobalCaptureOptions) {
           : undefined;
     const safeUrl = safeResourceUrl(url);
     if (isExpectedExternalImageMiss(target.tagName, safeUrl, page())) return;
+    if (
+      isExpectedDevelopmentChunkFailure({
+        developmentBuild: options.developmentBuild,
+        currentOrigin: window.location.origin,
+        resourceUrl: safeUrl,
+      })
+    ) {
+      return;
+    }
     const versions = options.versions();
     void captureSystemLog(
       {

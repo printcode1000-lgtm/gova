@@ -51,6 +51,17 @@ POST /api/system-logs/ingest
 
 Normal console messages stay local and are not persisted.
 
+In `next dev`, same-origin `/_next/static/chunks/*` load failures are treated as
+development transport churn rather than production faults. Turbopack can invalidate
+a chunk URL while recompiling or while the development server restarts; the browser
+console/network panel still shows that failed request, but Global Capture does not
+persist it. This exemption is development-only: Web production, Static `out/`,
+Android, and iOS continue to persist real resource and `ChunkLoadError` failures.
+
+The pre-auth reporter imports `@asol/system-logs-core` statically. The root collector
+already owns that browser-safe package in the application graph, so creating a second
+dynamic package chunk adds failure surface without providing isolation.
+
 Explicit `reportPreAuthFailure()` and `reportSystemIssue()` calls in catch
 blocks remain required for failures that are caught before they reach global
 handlers.

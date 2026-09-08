@@ -955,37 +955,6 @@
       ]
     },
     {
-      "id": "command:db:reset:advertisements",
-      "kind": "command",
-      "name": "npm run db:reset:advertisements",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "advertisements",
-        "db",
-        "db:reset:advertisements",
-        "npm",
-        "npm run db:reset:advertisements",
-        "reset",
-        "run"
-      ]
-    },
-    {
-      "id": "command:db:reset:advertisements:cloud",
-      "kind": "command",
-      "name": "npm run db:reset:advertisements:cloud",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "advertisements",
-        "cloud",
-        "db",
-        "db:reset:advertisements:cloud",
-        "npm",
-        "npm run db:reset:advertisements:cloud",
-        "reset",
-        "run"
-      ]
-    },
-    {
       "id": "command:db:schema:sync",
       "kind": "command",
       "name": "npm run db:schema:sync",
@@ -15352,6 +15321,49 @@
       ]
     },
     {
+      "id": "document:docs/08-troubleshooting/problems/product-search-fields-port-not-configured.md",
+      "kind": "document",
+      "name": "Product search fields port not configured",
+      "path": "docs/08-troubleshooting/problems/product-search-fields-port-not-configured.md",
+      "summary": "`GET /api/search/products` returns HTTP 500 from an isolated service while `/api/health` remains 200. The response contains one of:",
+      "tags": [
+        "/api/health",
+        "/api/search/products",
+        "200",
+        "500",
+        "@asol/data-core",
+        "`get /api/search/products` returns http 500 from an isolated service while `/api/health` remains 200. the response contains one of:",
+        "an",
+        "configured",
+        "contains",
+        "docs/08-troubleshooting/problems/product-search-fields-port-not-configured",
+        "docs/08-troubleshooting/problems/product-search-fields-port-not-configured.md",
+        "fields",
+        "from",
+        "get",
+        "http",
+        "isolated",
+        "md",
+        "not",
+        "of",
+        "one",
+        "port",
+        "product",
+        "product search fields port not configured",
+        "remains",
+        "response",
+        "returns",
+        "search",
+        "server",
+        "service",
+        "src/features/product-search/server/services/product-search-fields",
+        "src/features/product-search/server/services/product-search-fields.server.ts",
+        "the",
+        "ts",
+        "while"
+      ]
+    },
+    {
       "id": "document:docs/08-troubleshooting/problems/profile-prerender-useSearchParams-suspense.md",
       "kind": "document",
       "name": "/profile prerender failure — useSearchParams without Suspense",
@@ -28745,6 +28757,17 @@
       ]
     },
     {
+      "id": "source:packages/architecture-core/src/checks/app-shell-spacing-contract.ts",
+      "kind": "source",
+      "name": "app-shell-spacing-contract.ts",
+      "path": "packages/architecture-core/src/checks/app-shell-spacing-contract.ts",
+      "tags": [
+        "packages/architecture-core/src/checks/app-shell-spacing-contract",
+        "packages/architecture-core/src/checks/app-shell-spacing-contract.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/architecture-core/src/checks/application-cycle-contract.ts",
       "kind": "source",
       "name": "application-cycle-contract.ts",
@@ -32261,17 +32284,6 @@
       "tags": [
         "packages/data-core/src/tooling/provision-database-shards",
         "packages/data-core/src/tooling/provision-database-shards.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/data-core/src/tooling/reset-advertisements-db.ts",
-      "kind": "source",
-      "name": "reset-advertisements-db.ts",
-      "path": "packages/data-core/src/tooling/reset-advertisements-db.ts",
-      "tags": [
-        "packages/data-core/src/tooling/reset-advertisements-db",
-        "packages/data-core/src/tooling/reset-advertisements-db.ts",
         "ts"
       ]
     },
@@ -37797,6 +37809,17 @@
       "tags": [
         "packages/system-logs-core/src/browser/capture-coordinator",
         "packages/system-logs-core/src/browser/capture-coordinator.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/system-logs-core/src/browser/development-chunk-policy.ts",
+      "kind": "source",
+      "name": "development-chunk-policy.ts",
+      "path": "packages/system-logs-core/src/browser/development-chunk-policy.ts",
+      "tags": [
+        "packages/system-logs-core/src/browser/development-chunk-policy",
+        "packages/system-logs-core/src/browser/development-chunk-policy.ts",
         "ts"
       ]
     },
@@ -53657,6 +53680,18 @@
       ]
     },
     {
+      "id": "test:packages/system-logs-core/src/tests/development-chunk-policy.test.ts",
+      "kind": "test",
+      "name": "development-chunk-policy.test.ts",
+      "path": "packages/system-logs-core/src/tests/development-chunk-policy.test.ts",
+      "tags": [
+        "packages/system-logs-core/src/tests/development-chunk-policy",
+        "packages/system-logs-core/src/tests/development-chunk-policy.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/system-logs-core/src/tests/index.test.ts",
       "kind": "test",
       "name": "index.test.ts",
@@ -55919,26 +55954,6 @@
     {
       "from": "command:db:push:vercel-env",
       "to": "runtime:web",
-      "kind": "targets-runtime"
-    },
-    {
-      "from": "command:db:reset:advertisements:cloud",
-      "to": "source:packages/data-core/src/tooling/reset-advertisements-db.ts",
-      "kind": "invokes"
-    },
-    {
-      "from": "command:db:reset:advertisements:cloud",
-      "to": "runtime:tooling",
-      "kind": "targets-runtime"
-    },
-    {
-      "from": "command:db:reset:advertisements",
-      "to": "source:packages/data-core/src/tooling/reset-advertisements-db.ts",
-      "kind": "invokes"
-    },
-    {
-      "from": "command:db:reset:advertisements",
-      "to": "runtime:tooling",
       "kind": "targets-runtime"
     },
     {
@@ -74741,6 +74756,23 @@
       "detail": "services/control/src/proxy.ts"
     },
     {
+      "from": "document:docs/08-troubleshooting/problems/product-search-fields-port-not-configured.md",
+      "to": "domain:troubleshooting",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/product-search-fields-port-not-configured.md",
+      "to": "package:@asol/data-core",
+      "kind": "references",
+      "detail": "@asol/data-core"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/product-search-fields-port-not-configured.md",
+      "to": "source:src/features/product-search/server/services/product-search-fields.server.ts",
+      "kind": "references",
+      "detail": "src/features/product-search/server/services/product-search-fields.server.ts"
+    },
+    {
       "from": "document:docs/08-troubleshooting/problems/profile-prerender-useSearchParams-suspense.md",
       "to": "domain:troubleshooting",
       "kind": "belongs-to"
@@ -77282,6 +77314,18 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/checks/app-shell-spacing-contract.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/architecture-core/src/checks/app-shell-spacing-contract.ts",
+      "kind": "documents",
+      "detail": "packages/architecture-core/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:packages/architecture-core/src/checks/application-cycle-contract.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -79377,12 +79421,6 @@
     {
       "from": "domain:architecture",
       "to": "source:packages/data-core/src/tooling/provision-database-shards.ts",
-      "kind": "documents",
-      "detail": "packages/"
-    },
-    {
-      "from": "domain:architecture",
-      "to": "source:packages/data-core/src/tooling/reset-advertisements-db.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -82340,6 +82378,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/system-logs-core/src/browser/development-chunk-policy.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:packages/system-logs-core/src/browser/global-capture.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -83385,6 +83429,12 @@
     {
       "from": "domain:architecture",
       "to": "test:packages/submain-composition/src/tests/index.test.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "test:packages/system-logs-core/src/tests/development-chunk-policy.test.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -84783,12 +84833,6 @@
     {
       "from": "domain:data-and-storage",
       "to": "source:packages/data-core/src/tooling/provision-database-shards.ts",
-      "kind": "documents",
-      "detail": "packages/data-core/"
-    },
-    {
-      "from": "domain:data-and-storage",
-      "to": "source:packages/data-core/src/tooling/reset-advertisements-db.ts",
       "kind": "documents",
       "detail": "packages/data-core/"
     },
@@ -97778,6 +97822,12 @@
     },
     {
       "from": "domain:super-admin-and-operations",
+      "to": "source:packages/system-logs-core/src/browser/development-chunk-policy.ts",
+      "kind": "documents",
+      "detail": "packages/system-logs-core/"
+    },
+    {
+      "from": "domain:super-admin-and-operations",
       "to": "source:packages/system-logs-core/src/browser/global-capture.ts",
       "kind": "documents",
       "detail": "packages/system-logs-core/"
@@ -98159,6 +98209,12 @@
       "to": "test:packages/observability-core/src/tests/index.test.ts",
       "kind": "documents",
       "detail": "packages/observability-core/"
+    },
+    {
+      "from": "domain:super-admin-and-operations",
+      "to": "test:packages/system-logs-core/src/tests/development-chunk-policy.test.ts",
+      "kind": "documents",
+      "detail": "packages/system-logs-core/"
     },
     {
       "from": "domain:super-admin-and-operations",
@@ -134716,6 +134772,42 @@
       "detail": "./architecture-types"
     },
     {
+      "from": "source:packages/architecture-core/src/checks/app-shell-spacing-contract.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/app-shell-spacing-contract.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/app-shell-spacing-contract.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/app-shell-spacing-contract.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/app-shell-spacing-contract.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/app-shell-spacing-contract.ts",
+      "to": "package:@asol/architecture-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/architecture-core/src/checks/app-shell-spacing-contract.ts",
+      "to": "source:packages/architecture-core/src/checks/architecture-types.ts",
+      "kind": "imports",
+      "detail": "./architecture-types"
+    },
+    {
       "from": "source:packages/architecture-core/src/checks/application-cycle-contract.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -136466,6 +136558,12 @@
       "to": "source:packages/architecture-core/src/checks/api-transport-contract.ts",
       "kind": "imports",
       "detail": "./checks/api-transport-contract"
+    },
+    {
+      "from": "source:packages/architecture-core/src/runner.ts",
+      "to": "source:packages/architecture-core/src/checks/app-shell-spacing-contract.ts",
+      "kind": "imports",
+      "detail": "./checks/app-shell-spacing-contract"
     },
     {
       "from": "source:packages/architecture-core/src/runner.ts",
@@ -147981,59 +148079,6 @@
       "to": "source:packages/data-core/src/provisioning/core/schema-sync.ts",
       "kind": "imports",
       "detail": "../provisioning/core/schema-sync"
-    },
-    {
-      "from": "source:packages/data-core/src/tooling/reset-advertisements-db.ts",
-      "to": "runtime:android",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/tooling/reset-advertisements-db.ts",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/tooling/reset-advertisements-db.ts",
-      "to": "runtime:ios",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/tooling/reset-advertisements-db.ts",
-      "to": "runtime:static-out",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/tooling/reset-advertisements-db.ts",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/tooling/reset-advertisements-db.ts",
-      "to": "package:@asol/data-core",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "source:packages/data-core/src/tooling/reset-advertisements-db.ts",
-      "to": "external-dependency:@libsql/client",
-      "kind": "imports",
-      "detail": "@libsql/client"
-    },
-    {
-      "from": "source:packages/data-core/src/tooling/reset-advertisements-db.ts",
-      "to": "external-dependency:dotenv",
-      "kind": "imports",
-      "detail": "dotenv"
-    },
-    {
-      "from": "source:packages/data-core/src/tooling/reset-advertisements-db.ts",
-      "to": "source:packages/data-core/src/provisioning/core/turso-provisioner.ts",
-      "kind": "imports",
-      "detail": "../provisioning/core/turso-provisioner"
-    },
-    {
-      "from": "source:packages/data-core/src/tooling/reset-advertisements-db.ts",
-      "to": "environment-key:ASOL_PROVISIONING",
-      "kind": "uses-environment"
     },
     {
       "from": "source:packages/data-core/src/tooling/strip-product-image-urls.ts",
@@ -170575,6 +170620,36 @@
       "detail": "../ports"
     },
     {
+      "from": "source:packages/system-logs-core/src/browser/development-chunk-policy.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/system-logs-core/src/browser/development-chunk-policy.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/system-logs-core/src/browser/development-chunk-policy.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/system-logs-core/src/browser/development-chunk-policy.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/system-logs-core/src/browser/development-chunk-policy.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/system-logs-core/src/browser/development-chunk-policy.ts",
+      "to": "package:@asol/system-logs-core",
+      "kind": "belongs-to"
+    },
+    {
       "from": "source:packages/system-logs-core/src/browser/global-capture.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -170609,6 +170684,12 @@
       "to": "source:packages/system-logs-core/src/browser/capture-coordinator.ts",
       "kind": "imports",
       "detail": "./capture-coordinator"
+    },
+    {
+      "from": "source:packages/system-logs-core/src/browser/global-capture.ts",
+      "to": "source:packages/system-logs-core/src/browser/development-chunk-policy.ts",
+      "kind": "imports",
+      "detail": "./development-chunk-policy"
     },
     {
       "from": "source:packages/system-logs-core/src/browser/global-capture.ts",
@@ -189883,12 +189964,6 @@
     },
     {
       "from": "source:src/features/data/ports/data-core-ports.ts",
-      "to": "package:@asol/data-core",
-      "kind": "imports",
-      "detail": "@asol/data-core/product-search-fields"
-    },
-    {
-      "from": "source:src/features/data/ports/data-core-ports.ts",
       "to": "source:src/features/data/ports/data-core-runtime-config-ports.ts",
       "kind": "imports",
       "detail": "./data-core-runtime-config-ports"
@@ -189901,9 +189976,9 @@
     },
     {
       "from": "source:src/features/data/ports/data-core-ports.ts",
-      "to": "source:src/features/product-search/index.ts",
+      "to": "source:src/features/product-search/server.ts",
       "kind": "imports",
-      "detail": "@/features/product-search"
+      "detail": "@/features/product-search/server"
     },
     {
       "from": "source:src/features/data/ports/data-core-runtime-config-ports.ts",
@@ -208613,6 +208688,12 @@
       "to": "external-dependency:server-only",
       "kind": "imports",
       "detail": "server-only"
+    },
+    {
+      "from": "source:src/features/product-search/server/services/product-search-fields.server.ts",
+      "to": "package:@asol/data-core",
+      "kind": "imports",
+      "detail": "@asol/data-core/product-search-fields"
     },
     {
       "from": "source:src/features/product-search/server/services/product-search-fields.server.ts",
@@ -236880,6 +236961,47 @@
       "kind": "tests"
     },
     {
+      "from": "test:packages/system-logs-core/src/tests/development-chunk-policy.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/system-logs-core/src/tests/development-chunk-policy.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/system-logs-core/src/tests/development-chunk-policy.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/system-logs-core/src/tests/development-chunk-policy.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/system-logs-core/src/tests/development-chunk-policy.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/system-logs-core/src/tests/development-chunk-policy.test.ts",
+      "to": "package:@asol/system-logs-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:packages/system-logs-core/src/tests/development-chunk-policy.test.ts",
+      "to": "source:packages/system-logs-core/src/browser/development-chunk-policy.ts",
+      "kind": "imports",
+      "detail": "../browser/development-chunk-policy"
+    },
+    {
+      "from": "test:packages/system-logs-core/src/tests/development-chunk-policy.test.ts",
+      "to": "package:@asol/system-logs-core",
+      "kind": "tests"
+    },
+    {
       "from": "test:packages/system-logs-core/src/tests/index.test.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -236929,6 +237051,12 @@
     },
     {
       "from": "test:packages/system-logs-core/src/tests/index.test.ts",
+      "to": "test:packages/system-logs-core/src/tests/development-chunk-policy.test.ts",
+      "kind": "imports",
+      "detail": "./development-chunk-policy.test"
+    },
+    {
+      "from": "test:packages/system-logs-core/src/tests/index.test.ts",
       "to": "test:packages/system-logs-core/src/tests/scenario-coverage.test.ts",
       "kind": "imports",
       "detail": "./scenario-coverage.test"
@@ -236967,6 +237095,12 @@
       "from": "test:packages/system-logs-core/src/tests/scenario-coverage.test.ts",
       "to": "package:@asol/system-logs-core",
       "kind": "belongs-to"
+    },
+    {
+      "from": "test:packages/system-logs-core/src/tests/scenario-coverage.test.ts",
+      "to": "package:@asol/system-logs-core",
+      "kind": "imports",
+      "detail": "@asol/system-logs-core"
     },
     {
       "from": "test:packages/system-logs-core/src/tests/scenario-coverage.test.ts",

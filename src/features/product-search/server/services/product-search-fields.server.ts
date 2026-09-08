@@ -7,8 +7,20 @@ import {
 import {
   getBaseProductSearchFields,
   getDefaultProductSearchFieldKeys,
+  getProductSearchFieldByKey,
+  getProductSearchFields,
 } from "../../application/config/product-search-fields";
 import type { ProductSearchField } from "../../domain/product-search.types";
+import { configureDataCoreProductSearchFields } from "@asol/data-core/product-search-fields";
+
+/** Register the search-field metadata required by `@asol/data-core`. */
+export function registerDataCoreProductSearchFieldsPort(): void {
+  configureDataCoreProductSearchFields({
+    getProductSearchFields,
+    getProductSearchFieldByKey,
+    getDefaultProductSearchFieldKeys,
+  });
+}
 
 export async function getEnabledProductSearchFields(
   mainCategoryId: string,

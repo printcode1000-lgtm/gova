@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-07T23:42:20.663Z",
+  "generatedAt": "2026-09-08T06:52:15.627Z",
   "entryPoints": [
     "features/product-search/server/services/product-search-service.server.ts",
     "features/product-search/server/services/product-search-products.server.ts",
@@ -10,7 +10,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 474,
+  "fileCount": 475,
   "files": [
     "packages/account-declarations/src/accounts/gova-runtime-env-keys.ts",
     "packages/account-declarations/src/accounts/submain-runtime-env-keys.ts",
@@ -329,6 +329,7 @@
     "packages/storage-core/src/validation/schemas.ts",
     "packages/submain-composition/src/index.ts",
     "packages/system-logs-core/src/browser/capture-coordinator.ts",
+    "packages/system-logs-core/src/browser/development-chunk-policy.ts",
     "packages/system-logs-core/src/browser/global-capture.ts",
     "packages/system-logs-core/src/browser/memory-store.ts",
     "packages/system-logs-core/src/domain/constants.ts",

@@ -186,6 +186,7 @@ function runPackageSealTest() {
 }
 
 import { runScenarioCoverageTest } from './scenario-coverage.test';
+import { runDevelopmentChunkPolicyTest } from './development-chunk-policy.test';
 
 async function main() {
   console.log('🚀 Running @asol/system-logs-core test suite...\n');
@@ -197,6 +198,7 @@ async function main() {
   runCountMergeTest();
   runPackageSealTest();
   runScenarioCoverageTest();
+  runDevelopmentChunkPolicyTest();
   await runPersistencePortIntegrationTest();
   console.log('\n🎉 All @asol/system-logs-core tests passed successfully!');
 }

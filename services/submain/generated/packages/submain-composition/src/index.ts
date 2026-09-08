@@ -2,7 +2,10 @@ import { SUBMAIN_DECLARATION } from '@asol/account-declarations/submain';
 import * as serverEnv from '@/core/config/server-env';
 import { resolveCartPrices } from '@/features/cart/server/services/cart-catalogue-pricing.server';
 import { productSearchService } from '@/features/product-search/server/services/product-search-service.server';
-import { getEnabledProductSearchFields } from '@/features/product-search/server/services/product-search-fields.server';
+import {
+  getEnabledProductSearchFields,
+  registerDataCoreProductSearchFieldsPort,
+} from '@/features/product-search/server/services/product-search-fields.server';
 import { categoryService } from '@/features/categories';
 import { authService } from '@/features/auth/server/services/auth-service.bootstrap.server';
 import { accountDeletionService } from '@/features/auth/server/services/account-deletion.bootstrap.server';
@@ -188,21 +191,20 @@ export function assertSubmainEnv(env: NodeJS.ProcessEnv = process.env): void {
 }
 
 /**
- * Register `@asol/data-core`'s runtime-config port.
+ * Register every `@asol/data-core` port required by this search runtime.
  *
  * The main application does this from `src/instrumentation.ts`. An isolated
- * deployment has no instrumentation, so nothing configured the port here and
- * every route that reached a repository answered
- * `dataCoreRuntimeConfig: getServerRuntimeContext is not configured` — a 500 on
- * this account's real traffic while `/api/health` stayed 200, because health
- * touches no shard. The service deployed READY and was broken.
+ * deployment has no instrumentation, so the composition root must register the
+ * runtime config, specialty catalog, and product-search field metadata before a
+ * route reaches `@asol/data-core`. Missing any one of them produces a 500 while
+ * `/api/health` can still stay 200 because health touches none of those ports. A deployment can therefore be READY while its search routes are broken.
  *
  * It calls the application's single registrar rather than restating the port
  * here, so the six accounts and the main app cannot drift apart.
  */
 registerDataCoreRuntimeConfigPorts();
-// This account reads profile rows, so it also needs the specialty-column catalog.
 registerDataCoreSpecialtyCatalogPort();
+registerDataCoreProductSearchFieldsPort();
 // The home surfaces resolve stored image keys through `@asol/storage-core`, and
 // its HTTP gateway is a port. Without it every advertisements read answered 500
 // while /api/health stayed 200 — the same shape as an unregistered data port.

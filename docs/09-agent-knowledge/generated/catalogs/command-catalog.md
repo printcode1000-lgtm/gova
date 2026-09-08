@@ -67,8 +67,6 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run db:migrate:system-log-origin` | `Tooling` | 1 |  | 0 |
 | `npm run db:provision:turso` | `Tooling` | 1 |  | 1 |
 | `npm run db:push:vercel-env` | `Tooling`, `Web` | 1 |  | 0 |
-| `npm run db:reset:advertisements` | `Tooling` | 1 |  | 0 |
-| `npm run db:reset:advertisements:cloud` | `Tooling` | 1 |  | 0 |
 | `npm run db:schema:sync` | `Tooling` | 1 |  | 1 |
 | `npm run db:schema:sync:release` | `Tooling` | 1 |  | 2 |
 | `npm run db:schema:verify` | `Tooling` | 1 |  | 1 |
