@@ -620,6 +620,48 @@
       ]
     },
     {
+      "id": "command:cloud-accounts:r2-usage",
+      "kind": "command",
+      "name": "npm run cloud-accounts:r2-usage",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "cloud-accounts",
+        "cloud-accounts:r2-usage",
+        "npm",
+        "npm run cloud-accounts:r2-usage",
+        "r2-usage",
+        "run"
+      ]
+    },
+    {
+      "id": "command:cloud-accounts:turso-usage",
+      "kind": "command",
+      "name": "npm run cloud-accounts:turso-usage",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "cloud-accounts",
+        "cloud-accounts:turso-usage",
+        "npm",
+        "npm run cloud-accounts:turso-usage",
+        "run",
+        "turso-usage"
+      ]
+    },
+    {
+      "id": "command:cloud-accounts:vercel-usage",
+      "kind": "command",
+      "name": "npm run cloud-accounts:vercel-usage",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "cloud-accounts",
+        "cloud-accounts:vercel-usage",
+        "npm",
+        "npm run cloud-accounts:vercel-usage",
+        "run",
+        "vercel-usage"
+      ]
+    },
+    {
       "id": "command:control:build",
       "kind": "command",
       "name": "npm run control:build",
@@ -27727,6 +27769,39 @@
       ]
     },
     {
+      "id": "script:scripts/update-cloud-accounts-r2-usage.ts",
+      "kind": "script",
+      "name": "update-cloud-accounts-r2-usage.ts",
+      "path": "scripts/update-cloud-accounts-r2-usage.ts",
+      "tags": [
+        "scripts/update-cloud-accounts-r2-usage",
+        "scripts/update-cloud-accounts-r2-usage.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/update-cloud-accounts-turso-usage.ts",
+      "kind": "script",
+      "name": "update-cloud-accounts-turso-usage.ts",
+      "path": "scripts/update-cloud-accounts-turso-usage.ts",
+      "tags": [
+        "scripts/update-cloud-accounts-turso-usage",
+        "scripts/update-cloud-accounts-turso-usage.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/update-cloud-accounts-vercel-usage.ts",
+      "kind": "script",
+      "name": "update-cloud-accounts-vercel-usage.ts",
+      "path": "scripts/update-cloud-accounts-vercel-usage.ts",
+      "tags": [
+        "scripts/update-cloud-accounts-vercel-usage",
+        "scripts/update-cloud-accounts-vercel-usage.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/validate-catalog.ts",
       "kind": "script",
       "name": "validate-catalog.ts",
@@ -50350,6 +50425,17 @@
       ]
     },
     {
+      "id": "source:src/features/super-admin/presentation/cloud-accounts-r2-usage-snapshot.ts",
+      "kind": "source",
+      "name": "cloud-accounts-r2-usage-snapshot.ts",
+      "path": "src/features/super-admin/presentation/cloud-accounts-r2-usage-snapshot.ts",
+      "tags": [
+        "src/features/super-admin/presentation/cloud-accounts-r2-usage-snapshot",
+        "src/features/super-admin/presentation/cloud-accounts-r2-usage-snapshot.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/super-admin/presentation/cloud-accounts-reference.ts",
       "kind": "source",
       "name": "cloud-accounts-reference.ts",
@@ -50357,6 +50443,28 @@
       "tags": [
         "src/features/super-admin/presentation/cloud-accounts-reference",
         "src/features/super-admin/presentation/cloud-accounts-reference.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/presentation/cloud-accounts-turso-usage-snapshot.ts",
+      "kind": "source",
+      "name": "cloud-accounts-turso-usage-snapshot.ts",
+      "path": "src/features/super-admin/presentation/cloud-accounts-turso-usage-snapshot.ts",
+      "tags": [
+        "src/features/super-admin/presentation/cloud-accounts-turso-usage-snapshot",
+        "src/features/super-admin/presentation/cloud-accounts-turso-usage-snapshot.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/presentation/cloud-accounts-vercel-usage-snapshot.ts",
+      "kind": "source",
+      "name": "cloud-accounts-vercel-usage-snapshot.ts",
+      "path": "src/features/super-admin/presentation/cloud-accounts-vercel-usage-snapshot.ts",
+      "tags": [
+        "src/features/super-admin/presentation/cloud-accounts-vercel-usage-snapshot",
+        "src/features/super-admin/presentation/cloud-accounts-vercel-usage-snapshot.ts",
         "ts"
       ]
     },
@@ -55519,6 +55627,41 @@
     {
       "from": "command:ci:coverage",
       "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:cloud-accounts:r2-usage",
+      "to": "script:scripts/update-cloud-accounts-r2-usage.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:cloud-accounts:r2-usage",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:cloud-accounts:turso-usage",
+      "to": "script:scripts/update-cloud-accounts-turso-usage.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:cloud-accounts:turso-usage",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:cloud-accounts:vercel-usage",
+      "to": "script:scripts/update-cloud-accounts-vercel-usage.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:cloud-accounts:vercel-usage",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:cloud-accounts:vercel-usage",
+      "to": "runtime:web",
       "kind": "targets-runtime"
     },
     {
@@ -86101,6 +86244,24 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "script:scripts/update-cloud-accounts-r2-usage.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/update-cloud-accounts-turso-usage.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/update-cloud-accounts-vercel-usage.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "script:scripts/validate-catalog.ts",
       "kind": "documents",
       "detail": "scripts/"
@@ -95407,7 +95568,25 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "source:src/features/super-admin/presentation/cloud-accounts-r2-usage-snapshot.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "source:src/features/super-admin/presentation/cloud-accounts-reference.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
+      "to": "source:src/features/super-admin/presentation/cloud-accounts-turso-usage-snapshot.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
+      "to": "source:src/features/super-admin/presentation/cloud-accounts-vercel-usage-snapshot.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -97621,7 +97800,25 @@
     },
     {
       "from": "domain:super-admin-and-operations",
+      "to": "source:src/features/super-admin/presentation/cloud-accounts-r2-usage-snapshot.ts",
+      "kind": "documents",
+      "detail": "src/features/super-admin/"
+    },
+    {
+      "from": "domain:super-admin-and-operations",
       "to": "source:src/features/super-admin/presentation/cloud-accounts-reference.ts",
+      "kind": "documents",
+      "detail": "src/features/super-admin/"
+    },
+    {
+      "from": "domain:super-admin-and-operations",
+      "to": "source:src/features/super-admin/presentation/cloud-accounts-turso-usage-snapshot.ts",
+      "kind": "documents",
+      "detail": "src/features/super-admin/"
+    },
+    {
+      "from": "domain:super-admin-and-operations",
+      "to": "source:src/features/super-admin/presentation/cloud-accounts-vercel-usage-snapshot.ts",
       "kind": "documents",
       "detail": "src/features/super-admin/"
     },
@@ -104665,7 +104862,25 @@
     },
     {
       "from": "domain:ui-components",
+      "to": "source:src/features/super-admin/presentation/cloud-accounts-r2-usage-snapshot.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
       "to": "source:src/features/super-admin/presentation/cloud-accounts-reference.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "source:src/features/super-admin/presentation/cloud-accounts-turso-usage-snapshot.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "source:src/features/super-admin/presentation/cloud-accounts-vercel-usage-snapshot.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -132500,6 +132715,63 @@
       "to": "source:src/core/config/runtime-context.ts",
       "kind": "imports",
       "detail": "../src/core/config/runtime-context"
+    },
+    {
+      "from": "script:scripts/update-cloud-accounts-r2-usage.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/update-cloud-accounts-r2-usage.ts",
+      "to": "package:@asol/env-core",
+      "kind": "imports",
+      "detail": "@asol/env-core/files"
+    },
+    {
+      "from": "script:scripts/update-cloud-accounts-r2-usage.ts",
+      "to": "package:@asol/storage-core",
+      "kind": "imports",
+      "detail": "@asol/storage-core"
+    },
+    {
+      "from": "script:scripts/update-cloud-accounts-r2-usage.ts",
+      "to": "source:src/features/super-admin/presentation/cloud-accounts-reference.ts",
+      "kind": "imports",
+      "detail": "../src/features/super-admin/presentation/cloud-accounts-reference"
+    },
+    {
+      "from": "script:scripts/update-cloud-accounts-turso-usage.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/update-cloud-accounts-turso-usage.ts",
+      "to": "package:@asol/env-core",
+      "kind": "imports",
+      "detail": "@asol/env-core/files"
+    },
+    {
+      "from": "script:scripts/update-cloud-accounts-turso-usage.ts",
+      "to": "source:src/features/super-admin/presentation/cloud-accounts-reference.ts",
+      "kind": "imports",
+      "detail": "../src/features/super-admin/presentation/cloud-accounts-reference"
+    },
+    {
+      "from": "script:scripts/update-cloud-accounts-vercel-usage.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/update-cloud-accounts-vercel-usage.ts",
+      "to": "package:@asol/env-core",
+      "kind": "imports",
+      "detail": "@asol/env-core/files"
+    },
+    {
+      "from": "script:scripts/update-cloud-accounts-vercel-usage.ts",
+      "to": "package:@asol/vercel-deploy-core",
+      "kind": "imports",
+      "detail": "@asol/vercel-deploy-core"
     },
     {
       "from": "script:scripts/validate-catalog.ts",
@@ -222366,6 +222638,36 @@
       "detail": "@asol/account-declarations"
     },
     {
+      "from": "source:src/features/super-admin/presentation/cloud-accounts-r2-usage-snapshot.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/cloud-accounts-r2-usage-snapshot.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/cloud-accounts-r2-usage-snapshot.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/cloud-accounts-r2-usage-snapshot.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/cloud-accounts-r2-usage-snapshot.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/cloud-accounts-r2-usage-snapshot.ts",
+      "to": "feature:super-admin",
+      "kind": "belongs-to"
+    },
+    {
       "from": "source:src/features/super-admin/presentation/cloud-accounts-reference.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -222406,6 +222708,84 @@
       "to": "package:@asol/storage-core",
       "kind": "imports",
       "detail": "@asol/storage-core"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/cloud-accounts-reference.ts",
+      "to": "source:src/features/super-admin/presentation/cloud-accounts-r2-usage-snapshot.ts",
+      "kind": "imports",
+      "detail": "./cloud-accounts-r2-usage-snapshot"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/cloud-accounts-reference.ts",
+      "to": "source:src/features/super-admin/presentation/cloud-accounts-turso-usage-snapshot.ts",
+      "kind": "imports",
+      "detail": "./cloud-accounts-turso-usage-snapshot"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/cloud-accounts-reference.ts",
+      "to": "source:src/features/super-admin/presentation/cloud-accounts-vercel-usage-snapshot.ts",
+      "kind": "imports",
+      "detail": "./cloud-accounts-vercel-usage-snapshot"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/cloud-accounts-turso-usage-snapshot.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/cloud-accounts-turso-usage-snapshot.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/cloud-accounts-turso-usage-snapshot.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/cloud-accounts-turso-usage-snapshot.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/cloud-accounts-turso-usage-snapshot.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/cloud-accounts-turso-usage-snapshot.ts",
+      "to": "feature:super-admin",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/cloud-accounts-vercel-usage-snapshot.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/cloud-accounts-vercel-usage-snapshot.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/cloud-accounts-vercel-usage-snapshot.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/cloud-accounts-vercel-usage-snapshot.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/cloud-accounts-vercel-usage-snapshot.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/cloud-accounts-vercel-usage-snapshot.ts",
+      "to": "feature:super-admin",
+      "kind": "belongs-to"
     },
     {
       "from": "source:src/features/super-admin/presentation/CloudAccountRoutesSection.tsx",

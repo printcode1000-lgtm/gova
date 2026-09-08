@@ -49,6 +49,18 @@ for (const declaration of Object.values(ACCOUNT_DECLARATIONS)) {
   assert.ok(row.accountLabel.trim(), `Vercel account "${declaration.name}" needs a display label`);
   assert.ok(row.servesAr.trim(), `Vercel account "${declaration.name}" needs Arabic serves text`);
   assert.ok(row.updatedByAr.trim(), `Vercel account "${declaration.name}" needs an updated-by value`);
+  assert.ok(
+    row.usage.edgeRequestsLimit > 0,
+    `Vercel account "${declaration.name}" must declare an edge request limit`,
+  );
+  assert.ok(
+    row.usage.deploymentsPerDayLimit > 0,
+    `Vercel account "${declaration.name}" must declare a deployment limit`,
+  );
+  assert.ok(
+    row.usage.buildsPerHourLimit > 0,
+    `Vercel account "${declaration.name}" must declare a build limit`,
+  );
 }
 
 assert.equal(
@@ -77,6 +89,24 @@ assert.ok(
   r2Rows.length >= registryEmails.length,
   'the page lists fewer R2 accounts than the storage registry declares',
 );
+for (const row of r2Rows) {
+  assert.ok(row.usage.classAOperationsLimit > 0, `R2 account "${row.id}" must declare a Class A limit`);
+  assert.ok(row.usage.classBOperationsLimit > 0, `R2 account "${row.id}" must declare a Class B limit`);
+  assert.ok(row.usage.storageBytesLimit > 0, `R2 account "${row.id}" must declare a storage limit`);
+  if (row.usage.status === 'ok') {
+    assert.equal(
+      typeof row.usage.classAOperations,
+      'number',
+      `R2 account "${row.id}" ok usage must include Class A operations`,
+    );
+    assert.equal(
+      typeof row.usage.classBOperations,
+      'number',
+      `R2 account "${row.id}" ok usage must include Class B operations`,
+    );
+    assert.ok(row.usage.capturedAt, `R2 account "${row.id}" ok usage must include capturedAt`);
+  }
+}
 
 for (const account of TURSO_CLOUD_ACCOUNTS) {
   assert.ok(
@@ -84,6 +114,39 @@ for (const account of TURSO_CLOUD_ACCOUNTS) {
     `Turso account "${account.account}" has no email (found "${account.email}")`,
   );
   assert.ok(account.databases > 0, `Turso account "${account.account}" must declare a database count`);
+  assert.ok(
+    account.usage.rowsReadLimit > 0,
+    `Turso account "${account.account}" must declare a positive rows-read limit`,
+  );
+  assert.ok(
+    account.usage.rowsWrittenLimit > 0,
+    `Turso account "${account.account}" must declare a positive rows-written limit`,
+  );
+  assert.ok(
+    account.usage.storageBytesLimit > 0,
+    `Turso account "${account.account}" must declare a positive storage limit`,
+  );
+  assert.ok(
+    account.usage.bytesSyncedLimit > 0,
+    `Turso account "${account.account}" must declare a positive sync limit`,
+  );
+  assert.ok(
+    account.usage.databasesLimit > 0,
+    `Turso account "${account.account}" must declare a positive database-count limit`,
+  );
+  if (account.usage.status === 'ok') {
+    assert.equal(
+      typeof account.usage.rowsRead,
+      'number',
+      `Turso account "${account.account}" ok usage must include rowsRead`,
+    );
+    assert.equal(
+      typeof account.usage.rowsWritten,
+      'number',
+      `Turso account "${account.account}" ok usage must include rowsWritten`,
+    );
+    assert.ok(account.usage.capturedAt, `Turso account "${account.account}" ok usage must include capturedAt`);
+  }
 }
 
 assert.equal(glance.vercel, vercelRows.length);

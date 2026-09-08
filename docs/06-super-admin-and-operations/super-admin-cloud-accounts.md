@@ -27,6 +27,33 @@ inventory from shipping in every static chunk after a barrel re-export.
 The page shows account names, project names, login emails, and what each account
 holds. It never displays tokens, keys, or secret values.
 
+The Turso table also shows a local usage snapshot: rows-read percentage, rows
+read, rows-written percentage, rows written, storage usage, embedded sync usage,
+database count, locations, groups, and capture time. Runtime code must not call
+the Turso Platform API because `TURSO_API_TOKEN` stays tooling-only, so the page
+reads only the generated safe snapshot in
+`cloud-accounts-turso-usage-snapshot.ts`. Refresh the snapshot locally with
+`npm run cloud-accounts:turso-usage`; the generated file contains numbers and
+status text only, never token values or database URLs.
+
+The Vercel table follows the same snapshot model. `npm run
+cloud-accounts:vercel-usage` reads the declared Vercel tokens locally, captures
+API rate-limit headers and FOCUS billing-charge totals when the token has billing
+permission, then writes `cloud-accounts-vercel-usage-snapshot.ts`. The page also
+renders the default plan limits used for quick operational checks: edge requests,
+Fast Data Transfer, deployments per day, builds per hour, projects, runtime-log
+retention, and function duration. Vercel tokens never enter the client bundle.
+
+Cloudflare R2 usage is also snapshot-only. `npm run cloud-accounts:r2-usage`
+uses each R2 account id, bucket name, and local API token to query Cloudflare
+GraphQL Analytics for the current month. The generated
+`cloud-accounts-r2-usage-snapshot.ts` stores only safe usage numbers and status
+text: Class A operations against the 1M/month free allotment, Class B operations
+against the 10M/month free allotment, total storage against the 10 GB-month free
+allotment, object count, upload count, and capture time. If a token lacks
+GraphQL Analytics permission, the page shows the allowed limit with an explicit
+unavailable status instead of guessing.
+
 The route is `force-dynamic`. Account tables are **derived at runtime** from sealed
 packages so the page stays aligned with declarations rather than a second hardcoded
 copy:

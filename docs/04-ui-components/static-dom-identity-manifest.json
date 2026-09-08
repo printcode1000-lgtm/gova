@@ -13685,7 +13685,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-code-55-xdqbbq",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 185,
+      "line": 277,
       "element": "code",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-code-55",
       "kind": "literal"
@@ -13693,7 +13693,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-div-9-svt8j1",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 76,
+      "line": 138,
       "element": "div",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-div-9",
       "kind": "literal"
@@ -13701,7 +13701,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-header-7-qohfcl",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 74,
+      "line": 136,
       "element": "header",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-header-7",
       "kind": "literal"
@@ -13709,7 +13709,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-heading-10-dc13q0",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 77,
+      "line": 139,
       "element": "h1",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-heading-10",
       "kind": "literal"
@@ -13717,7 +13717,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-main-6-4uw4oe",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 73,
+      "line": 135,
       "element": "main",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-main-6",
       "kind": "literal"
@@ -13725,7 +13725,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-pre-60-9eqvs9",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 196,
+      "line": 288,
       "element": "pre",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-pre-60",
       "kind": "literal"
@@ -13733,7 +13733,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-strong-107-odkixk",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 290,
+      "line": 412,
       "element": "strong",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-strong-107",
       "kind": "literal"
@@ -13741,7 +13741,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-strong-184-8tkco9",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 434,
+      "line": 556,
       "element": "strong",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-strong-184",
       "kind": "literal"
@@ -13749,7 +13749,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-strong-189-uwtrsg",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 441,
+      "line": 563,
       "element": "strong",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-strong-189",
       "kind": "literal"
@@ -13757,7 +13757,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-strong-194-pteahr",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 448,
+      "line": 570,
       "element": "strong",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-strong-194",
       "kind": "literal"
@@ -13765,7 +13765,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-strong-209-fe7hcw",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 485,
+      "line": 634,
       "element": "strong",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-strong-209",
       "kind": "literal"
@@ -13773,7 +13773,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-strong-37-d7qzfy",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 129,
+      "line": 191,
       "element": "strong",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-strong-37",
       "kind": "literal"
@@ -13781,7 +13781,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-strong-59-r7dypz",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 191,
+      "line": 283,
       "element": "strong",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-strong-59",
       "kind": "literal"
@@ -13789,7 +13789,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-strong-80-tcgoop",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 249,
+      "line": 371,
       "element": "strong",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-strong-80",
       "kind": "literal"
@@ -13797,7 +13797,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tbody-142-wni7bw",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 345,
+      "line": 467,
       "element": "tbody",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tbody-142",
       "kind": "literal"
@@ -13805,7 +13805,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tbody-164-lweqe5",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 410,
+      "line": 532,
       "element": "tbody",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tbody-164",
       "kind": "literal"
@@ -13813,7 +13813,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tbody-202-28vjfy",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 463,
+      "line": 586,
       "element": "tbody",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tbody-202",
       "kind": "literal"
@@ -13821,7 +13821,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tbody-23-cmwbkm",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 107,
+      "line": 169,
       "element": "tbody",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tbody-23",
       "kind": "literal"
@@ -13829,7 +13829,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tbody-52-wh9qso",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 150,
+      "line": 215,
       "element": "tbody",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tbody-52",
       "kind": "literal"
@@ -13837,7 +13837,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tbody-75-e5uxa4",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 227,
+      "line": 324,
       "element": "tbody",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tbody-75",
       "kind": "literal"
@@ -13845,7 +13845,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tbody-88-pwkxst",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 261,
+      "line": 383,
       "element": "tbody",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tbody-88",
       "kind": "literal"
@@ -13853,7 +13853,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-100-fxjuxp",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 279,
+      "line": 401,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-100",
       "kind": "literal"
@@ -13861,7 +13861,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-101-aie9ks",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 280,
+      "line": 402,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-101",
       "kind": "literal"
@@ -13869,7 +13869,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-144-xhkf9n",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 347,
+      "line": 469,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-144",
       "kind": "literal"
@@ -13877,7 +13877,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-146-atu1wu",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 355,
+      "line": 477,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-146",
       "kind": "literal"
@@ -13885,7 +13885,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-148-xbl84w",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 363,
+      "line": 485,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-148",
       "kind": "literal"
@@ -13893,7 +13893,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-150-1fiwck",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 371,
+      "line": 493,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-150",
       "kind": "literal"
@@ -13901,7 +13901,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-152-tmsmfc",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 379,
+      "line": 501,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-152",
       "kind": "literal"
@@ -13909,7 +13909,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-154-kkzpt4",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 387,
+      "line": 509,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-154",
       "kind": "literal"
@@ -13917,7 +13917,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-166-afsgum",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 412,
+      "line": 534,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-166",
       "kind": "literal"
@@ -13925,7 +13925,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-167-j2b7fp",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 413,
+      "line": 535,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-167",
       "kind": "literal"
@@ -13933,7 +13933,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-168-pkbf7h",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 414,
+      "line": 536,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-168",
       "kind": "literal"
@@ -13941,7 +13941,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-170-hweqoe",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 417,
+      "line": 539,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-170",
       "kind": "literal"
@@ -13949,7 +13949,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-171-2t3tvp",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 418,
+      "line": 540,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-171",
       "kind": "literal"
@@ -13957,7 +13957,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-172-0hczys",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 419,
+      "line": 541,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-172",
       "kind": "literal"
@@ -13965,7 +13965,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-174-1ko9lt",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 422,
+      "line": 544,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-174",
       "kind": "literal"
@@ -13973,7 +13973,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-175-vh4bqc",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 423,
+      "line": 545,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-175",
       "kind": "literal"
@@ -13981,7 +13981,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-176-a2mwxr",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 424,
+      "line": 546,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-176",
       "kind": "literal"
@@ -13989,7 +13989,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-178-mhasey",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 427,
+      "line": 549,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-178",
       "kind": "literal"
@@ -13997,7 +13997,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-179-glqthg",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 428,
+      "line": 550,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-179",
       "kind": "literal"
@@ -14005,7 +14005,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-180-cxnbnf",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 429,
+      "line": 551,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-180",
       "kind": "literal"
@@ -14013,7 +14013,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-182-6qaa5b",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 432,
+      "line": 554,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-182",
       "kind": "literal"
@@ -14021,7 +14021,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-183-mysvys",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 433,
+      "line": 555,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-183",
       "kind": "literal"
@@ -14029,7 +14029,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-185-bju5pc",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 436,
+      "line": 558,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-185",
       "kind": "literal"
@@ -14037,7 +14037,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-187-msgkxg",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 439,
+      "line": 561,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-187",
       "kind": "literal"
@@ -14045,7 +14045,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-188-3tsrtt",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 440,
+      "line": 562,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-188",
       "kind": "literal"
@@ -14053,7 +14053,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-190-u0bqeh",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 443,
+      "line": 565,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-190",
       "kind": "literal"
@@ -14061,7 +14061,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-192-ktltrl",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 446,
+      "line": 568,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-192",
       "kind": "literal"
@@ -14069,7 +14069,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-193-kgequq",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 447,
+      "line": 569,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-193",
       "kind": "literal"
@@ -14077,7 +14077,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-195-fyi99p",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 450,
+      "line": 572,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-195",
       "kind": "literal"
@@ -14085,7 +14085,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-25-6rvadk",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 109,
+      "line": 171,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-25",
       "kind": "literal"
@@ -14093,7 +14093,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-26-2mqulz",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 110,
+      "line": 172,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-26",
       "kind": "literal"
@@ -14101,7 +14101,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-27-lwuywl",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 111,
+      "line": 173,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-27",
       "kind": "literal"
@@ -14109,7 +14109,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-29-omtkwy",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 114,
+      "line": 176,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-29",
       "kind": "literal"
@@ -14117,7 +14117,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-30-ckrffm",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 115,
+      "line": 177,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-30",
       "kind": "literal"
@@ -14125,7 +14125,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-31-iip7gh",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 116,
+      "line": 178,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-31",
       "kind": "literal"
@@ -14133,7 +14133,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-33-e5nofm",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 121,
+      "line": 183,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-33",
       "kind": "literal"
@@ -14141,7 +14141,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-34-pxqt7i",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 122,
+      "line": 184,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-34",
       "kind": "literal"
@@ -14149,7 +14149,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-35-xnajed",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 123,
+      "line": 185,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-35",
       "kind": "literal"
@@ -14157,7 +14157,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-90-axk0rn",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 263,
+      "line": 385,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-90",
       "kind": "literal"
@@ -14165,7 +14165,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-91-ke22ds",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 264,
+      "line": 386,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-91",
       "kind": "literal"
@@ -14173,7 +14173,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-92-xrzkon",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 265,
+      "line": 387,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-92",
       "kind": "literal"
@@ -14181,7 +14181,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-95-gmn3vl",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 271,
+      "line": 393,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-95",
       "kind": "literal"
@@ -14189,7 +14189,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-96-mclhag",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 272,
+      "line": 394,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-96",
       "kind": "literal"
@@ -14197,7 +14197,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-97-rcddy5",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 273,
+      "line": 395,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-97",
       "kind": "literal"
@@ -14205,7 +14205,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-td-99-iloqek",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 278,
+      "line": 400,
       "element": "td",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-td-99",
       "kind": "literal"
@@ -14213,7 +14213,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-102-l70y4p",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 281,
+      "line": 403,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-102",
       "kind": "literal"
@@ -14221,7 +14221,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-103-1d4jxr",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 282,
+      "line": 404,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-103",
       "kind": "literal"
@@ -14229,7 +14229,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-105-cipahn",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 288,
+      "line": 410,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-105",
       "kind": "literal"
@@ -14237,7 +14237,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-106-xneqgq",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 289,
+      "line": 411,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-106",
       "kind": "literal"
@@ -14245,7 +14245,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-11-o4dt5l",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 80,
+      "line": 142,
       "element": "p",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-11",
       "kind": "literal"
@@ -14253,7 +14253,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-110-bt9gnh",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 296,
+      "line": 418,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-110",
       "kind": "literal"
@@ -14261,7 +14261,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-111-yhzm0d",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 297,
+      "line": 419,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-111",
       "kind": "literal"
@@ -14269,7 +14269,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-112-swywto",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 298,
+      "line": 420,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-112",
       "kind": "literal"
@@ -14277,7 +14277,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-115-7s2kh3",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 304,
+      "line": 426,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-115",
       "kind": "literal"
@@ -14285,7 +14285,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-116-zjrwem",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 305,
+      "line": 427,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-116",
       "kind": "literal"
@@ -14293,7 +14293,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-119-b5csdn",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 311,
+      "line": 433,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-119",
       "kind": "literal"
@@ -14301,7 +14301,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-12-oui7mt",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 83,
+      "line": 145,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-12",
       "kind": "literal"
@@ -14309,7 +14309,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-120-ojqqey",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 312,
+      "line": 434,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-120",
       "kind": "literal"
@@ -14317,7 +14317,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-121-jleafn",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 313,
+      "line": 435,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-121",
       "kind": "literal"
@@ -14325,7 +14325,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-122-lanntj",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 314,
+      "line": 436,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-122",
       "kind": "literal"
@@ -14333,7 +14333,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-123-39kr6b",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 315,
+      "line": 437,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-123",
       "kind": "literal"
@@ -14341,7 +14341,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-124-tienpp",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 316,
+      "line": 438,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-124",
       "kind": "literal"
@@ -14349,7 +14349,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-125-h9x13s",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 317,
+      "line": 439,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-125",
       "kind": "literal"
@@ -14357,7 +14357,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-126-lricw5",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 318,
+      "line": 440,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-126",
       "kind": "literal"
@@ -14365,7 +14365,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-127-ffvr6g",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 319,
+      "line": 441,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-127",
       "kind": "literal"
@@ -14373,7 +14373,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-13-7ykc78",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 84,
+      "line": 146,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-13",
       "kind": "literal"
@@ -14381,7 +14381,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-130-cl137w",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 324,
+      "line": 446,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-130",
       "kind": "literal"
@@ -14389,7 +14389,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-131-g32hnm",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 325,
+      "line": 447,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-131",
       "kind": "literal"
@@ -14397,7 +14397,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-132-gusd41",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 326,
+      "line": 448,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-132",
       "kind": "literal"
@@ -14405,7 +14405,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-133-mc11or",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 327,
+      "line": 449,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-133",
       "kind": "literal"
@@ -14413,7 +14413,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-134-i93cve",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 328,
+      "line": 450,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-134",
       "kind": "literal"
@@ -14421,7 +14421,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-135-bp5lua",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 329,
+      "line": 451,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-135",
       "kind": "literal"
@@ -14429,7 +14429,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-136-npccuc",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 330,
+      "line": 452,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-136",
       "kind": "literal"
@@ -14437,7 +14437,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-14-nf6z0e",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 85,
+      "line": 147,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-14",
       "kind": "literal"
@@ -14445,7 +14445,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-157-elycmc",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 400,
+      "line": 522,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-157",
       "kind": "literal"
@@ -14453,7 +14453,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-206-e0fiyt",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 480,
+      "line": 629,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-206",
       "kind": "literal"
@@ -14461,15 +14461,23 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-207-ul20ul",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 481,
+      "line": 630,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-207",
       "kind": "literal"
     },
     {
+      "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-211-zw4gfh",
+      "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
+      "line": 622,
+      "element": "span",
+      "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-211",
+      "kind": "literal"
+    },
+    {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-38-1bmhbo",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 130,
+      "line": 192,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-38",
       "kind": "literal"
@@ -14477,7 +14485,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-39-ic0ze6",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 132,
+      "line": 194,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-39",
       "kind": "literal"
@@ -14485,7 +14493,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-40-im26jc",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 133,
+      "line": 195,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-40",
       "kind": "literal"
@@ -14493,15 +14501,23 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-41-pmyjkj",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 134,
+      "line": 196,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-41",
       "kind": "literal"
     },
     {
+      "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-56-lmz9we",
+      "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
+      "line": 267,
+      "element": "span",
+      "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-56",
+      "kind": "literal"
+    },
+    {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-62-si8wd5",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 208,
+      "line": 300,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-62",
       "kind": "literal"
@@ -14509,7 +14525,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-63-tmdosd",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 210,
+      "line": 302,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-63",
       "kind": "literal"
@@ -14517,7 +14533,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-64-snmt1w",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 211,
+      "line": 303,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-64",
       "kind": "literal"
@@ -14525,7 +14541,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-65-cvhfhm",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 211,
+      "line": 303,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-65",
       "kind": "literal"
@@ -14533,7 +14549,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-77-31tbde",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 246,
+      "line": 368,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-77",
       "kind": "literal"
@@ -14541,7 +14557,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-78-ovadgv",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 246,
+      "line": 368,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-78",
       "kind": "literal"
@@ -14549,15 +14565,23 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-79-bvv1at",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 247,
+      "line": 369,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-79",
       "kind": "literal"
     },
     {
+      "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-80-qwp8so",
+      "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
+      "line": 364,
+      "element": "span",
+      "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-80",
+      "kind": "literal"
+    },
+    {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-text-93-bidpur",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 266,
+      "line": 388,
       "element": "span",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-text-93",
       "kind": "literal"
@@ -14565,7 +14589,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-141-jdhi0a",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 337,
+      "line": 459,
       "element": "th",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-141",
       "kind": "literal"
@@ -14573,7 +14597,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-161-fpxuik",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 405,
+      "line": 527,
       "element": "th",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-161",
       "kind": "literal"
@@ -14581,7 +14605,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-162-0lmg8o",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 406,
+      "line": 528,
       "element": "th",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-162",
       "kind": "literal"
@@ -14589,7 +14613,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-163-cuzr2a",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 407,
+      "line": 529,
       "element": "th",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-163",
       "kind": "literal"
@@ -14597,7 +14621,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-20-2n6tyd",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 102,
+      "line": 164,
       "element": "th",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-20",
       "kind": "literal"
@@ -14605,7 +14629,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-200-srun3z",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 459,
+      "line": 581,
       "element": "th",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-200",
       "kind": "literal"
@@ -14613,7 +14637,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-201-yfgkuw",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 460,
+      "line": 582,
       "element": "th",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-201",
       "kind": "literal"
@@ -14621,15 +14645,23 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-21-35pnqv",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 103,
+      "line": 165,
       "element": "th",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-21",
       "kind": "literal"
     },
     {
+      "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-210-jl6t8h",
+      "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
+      "line": 583,
+      "element": "th",
+      "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-210",
+      "kind": "literal"
+    },
+    {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-22-lqm6jx",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 104,
+      "line": 166,
       "element": "th",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-22",
       "kind": "literal"
@@ -14637,7 +14669,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-46-thebys",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 142,
+      "line": 204,
       "element": "th",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-46",
       "kind": "literal"
@@ -14645,7 +14677,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-47-dh8ebv",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 143,
+      "line": 205,
       "element": "th",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-47",
       "kind": "literal"
@@ -14653,7 +14685,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-48-fwfo58",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 144,
+      "line": 206,
       "element": "th",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-48",
       "kind": "literal"
@@ -14661,7 +14693,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-49-vdj2ng",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 145,
+      "line": 207,
       "element": "th",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-49",
       "kind": "literal"
@@ -14669,7 +14701,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-50-i5oj8w",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 146,
+      "line": 208,
       "element": "th",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-50",
       "kind": "literal"
@@ -14677,15 +14709,39 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-51-rpmial",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 147,
+      "line": 209,
       "element": "th",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-51",
       "kind": "literal"
     },
     {
+      "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-52-va7zye",
+      "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
+      "line": 210,
+      "element": "th",
+      "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-52",
+      "kind": "literal"
+    },
+    {
+      "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-53-km40vn",
+      "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
+      "line": 211,
+      "element": "th",
+      "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-53",
+      "kind": "literal"
+    },
+    {
+      "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-54-qbrdb7",
+      "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
+      "line": 212,
+      "element": "th",
+      "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-54",
+      "kind": "literal"
+    },
+    {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-70-krwwdc",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 220,
+      "line": 312,
       "element": "th",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-70",
       "kind": "literal"
@@ -14693,7 +14749,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-71-4cg4d3",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 221,
+      "line": 313,
       "element": "th",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-71",
       "kind": "literal"
@@ -14701,7 +14757,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-72-qeojyz",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 222,
+      "line": 314,
       "element": "th",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-72",
       "kind": "literal"
@@ -14709,7 +14765,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-73-x9wvce",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 223,
+      "line": 315,
       "element": "th",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-73",
       "kind": "literal"
@@ -14717,15 +14773,55 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-74-aej0xy",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 224,
+      "line": 316,
       "element": "th",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-74",
       "kind": "literal"
     },
     {
+      "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-75-wytx4q",
+      "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
+      "line": 317,
+      "element": "th",
+      "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-75",
+      "kind": "literal"
+    },
+    {
+      "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-76-zk4lcd",
+      "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
+      "line": 318,
+      "element": "th",
+      "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-76",
+      "kind": "literal"
+    },
+    {
+      "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-77-e21cgm",
+      "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
+      "line": 319,
+      "element": "th",
+      "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-77",
+      "kind": "literal"
+    },
+    {
+      "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-78-n1irqa",
+      "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
+      "line": 320,
+      "element": "th",
+      "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-78",
+      "kind": "literal"
+    },
+    {
+      "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-79-fh8lvp",
+      "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
+      "line": 321,
+      "element": "th",
+      "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-79",
+      "kind": "literal"
+    },
+    {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-85-fv4msv",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 256,
+      "line": 378,
       "element": "th",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-85",
       "kind": "literal"
@@ -14733,7 +14829,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-86-7fh8gd",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 257,
+      "line": 379,
       "element": "th",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-86",
       "kind": "literal"
@@ -14741,7 +14837,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-th-87-qzih5z",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 258,
+      "line": 380,
       "element": "th",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-th-87",
       "kind": "literal"
@@ -14749,7 +14845,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-thead-139-fxrsyj",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 335,
+      "line": 457,
       "element": "thead",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-thead-139",
       "kind": "literal"
@@ -14757,7 +14853,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-thead-159-qfklq9",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 403,
+      "line": 525,
       "element": "thead",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-thead-159",
       "kind": "literal"
@@ -14765,7 +14861,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-thead-18-nxt6xt",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 100,
+      "line": 162,
       "element": "thead",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-thead-18",
       "kind": "literal"
@@ -14773,7 +14869,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-thead-198-altt1b",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 457,
+      "line": 579,
       "element": "thead",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-thead-198",
       "kind": "literal"
@@ -14781,7 +14877,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-thead-44-dlxhv5",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 140,
+      "line": 202,
       "element": "thead",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-thead-44",
       "kind": "literal"
@@ -14789,7 +14885,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-thead-68-gcglt8",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 218,
+      "line": 310,
       "element": "thead",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-thead-68",
       "kind": "literal"
@@ -14797,7 +14893,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-thead-83-czijzj",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 254,
+      "line": 376,
       "element": "thead",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-thead-83",
       "kind": "literal"
@@ -14805,7 +14901,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tr-140-671noz",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 336,
+      "line": 458,
       "element": "tr",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tr-140",
       "kind": "literal"
@@ -14813,7 +14909,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tr-143-qw0jiq",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 346,
+      "line": 468,
       "element": "tr",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tr-143",
       "kind": "literal"
@@ -14821,7 +14917,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tr-145-4e82kq",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 354,
+      "line": 476,
       "element": "tr",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tr-145",
       "kind": "literal"
@@ -14829,7 +14925,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tr-147-tr9ba4",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 362,
+      "line": 484,
       "element": "tr",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tr-147",
       "kind": "literal"
@@ -14837,7 +14933,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tr-149-ebarey",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 370,
+      "line": 492,
       "element": "tr",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tr-149",
       "kind": "literal"
@@ -14845,7 +14941,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tr-151-zklnoa",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 378,
+      "line": 500,
       "element": "tr",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tr-151",
       "kind": "literal"
@@ -14853,7 +14949,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tr-153-x7ftf7",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 386,
+      "line": 508,
       "element": "tr",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tr-153",
       "kind": "literal"
@@ -14861,7 +14957,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tr-160-kjifte",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 404,
+      "line": 526,
       "element": "tr",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tr-160",
       "kind": "literal"
@@ -14869,7 +14965,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tr-165-qv9v56",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 411,
+      "line": 533,
       "element": "tr",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tr-165",
       "kind": "literal"
@@ -14877,7 +14973,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tr-169-50w4zg",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 416,
+      "line": 538,
       "element": "tr",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tr-169",
       "kind": "literal"
@@ -14885,7 +14981,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tr-173-qbewmy",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 421,
+      "line": 543,
       "element": "tr",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tr-173",
       "kind": "literal"
@@ -14893,7 +14989,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tr-177-6epqsk",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 426,
+      "line": 548,
       "element": "tr",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tr-177",
       "kind": "literal"
@@ -14901,7 +14997,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tr-181-0tup54",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 431,
+      "line": 553,
       "element": "tr",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tr-181",
       "kind": "literal"
@@ -14909,7 +15005,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tr-186-dnj3cy",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 438,
+      "line": 560,
       "element": "tr",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tr-186",
       "kind": "literal"
@@ -14917,7 +15013,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tr-19-i65ksz",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 101,
+      "line": 163,
       "element": "tr",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tr-19",
       "kind": "literal"
@@ -14925,7 +15021,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tr-191-mkj58p",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 445,
+      "line": 567,
       "element": "tr",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tr-191",
       "kind": "literal"
@@ -14933,7 +15029,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tr-199-9am5uz",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 458,
+      "line": 580,
       "element": "tr",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tr-199",
       "kind": "literal"
@@ -14941,7 +15037,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tr-24-gwnfpd",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 108,
+      "line": 170,
       "element": "tr",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tr-24",
       "kind": "literal"
@@ -14949,7 +15045,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tr-28-qydj3q",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 113,
+      "line": 175,
       "element": "tr",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tr-28",
       "kind": "literal"
@@ -14957,7 +15053,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tr-32-ac2lz1",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 120,
+      "line": 182,
       "element": "tr",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tr-32",
       "kind": "literal"
@@ -14965,7 +15061,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tr-45-tgshpw",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 141,
+      "line": 203,
       "element": "tr",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tr-45",
       "kind": "literal"
@@ -14973,7 +15069,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tr-69-qdyj4y",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 219,
+      "line": 311,
       "element": "tr",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tr-69",
       "kind": "literal"
@@ -14981,7 +15077,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tr-84-ayvq1s",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 255,
+      "line": 377,
       "element": "tr",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tr-84",
       "kind": "literal"
@@ -14989,7 +15085,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tr-89-cy3e7d",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 262,
+      "line": 384,
       "element": "tr",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tr-89",
       "kind": "literal"
@@ -14997,7 +15093,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tr-94-nnq5nc",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 270,
+      "line": 392,
       "element": "tr",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tr-94",
       "kind": "literal"
@@ -15005,7 +15101,7 @@
     {
       "id": "features-super-admin-presentation-superadmincloudaccountscontent-tr-98-qwdamg",
       "source": "src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx",
-      "line": 277,
+      "line": 399,
       "element": "tr",
       "semanticName": "super-admin-presentation-superadmincloudaccountscontent-tr-98",
       "kind": "literal"
@@ -15621,7 +15717,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-article-17-ngmuob",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 312,
+      "line": 340,
       "element": "article",
       "semanticName": "super-admin-presentation-superadminlogspage-article-17",
       "kind": "literal"
@@ -15629,7 +15725,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-article-20-pdtn0e",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 316,
+      "line": 344,
       "element": "article",
       "semanticName": "super-admin-presentation-superadminlogspage-article-20",
       "kind": "literal"
@@ -15637,7 +15733,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-article-23-hqruum",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 322,
+      "line": 350,
       "element": "article",
       "semanticName": "super-admin-presentation-superadminlogspage-article-23",
       "kind": "literal"
@@ -15645,7 +15741,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-div-10-kjmptk",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 283,
+      "line": 311,
       "element": "div",
       "semanticName": "super-admin-presentation-superadminlogspage-div-10",
       "kind": "literal"
@@ -15653,7 +15749,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-div-26-bmfwkm",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 335,
+      "line": 363,
       "element": "div",
       "semanticName": "super-admin-presentation-superadminlogspage-div-26",
       "kind": "literal"
@@ -15661,7 +15757,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-div-36-chwylh",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 365,
+      "line": 393,
       "element": "div",
       "semanticName": "super-admin-presentation-superadminlogspage-div-36",
       "kind": "literal"
@@ -15669,7 +15765,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-div-38-3woekn",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 401,
+      "line": 429,
       "element": "div",
       "semanticName": "super-admin-presentation-superadminlogspage-div-38",
       "kind": "literal"
@@ -15677,7 +15773,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-div-4-rwe6ny",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 272,
+      "line": 300,
       "element": "div",
       "semanticName": "super-admin-presentation-superadminlogspage-div-4",
       "kind": "literal"
@@ -15685,7 +15781,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-div-40-nk2xs8",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 406,
+      "line": 434,
       "element": "div",
       "semanticName": "super-admin-presentation-superadminlogspage-div-40",
       "kind": "literal"
@@ -15693,7 +15789,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-div-45-1l1o1n",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 430,
+      "line": 458,
       "element": "div",
       "semanticName": "super-admin-presentation-superadminlogspage-div-45",
       "kind": "literal"
@@ -15701,7 +15797,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-div-46-beqtkz",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 432,
+      "line": 460,
       "element": "div",
       "semanticName": "super-admin-presentation-superadminlogspage-div-46",
       "kind": "literal"
@@ -15709,7 +15805,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-div-6-xsbyjs",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 275,
+      "line": 303,
       "element": "div",
       "semanticName": "super-admin-presentation-superadminlogspage-div-6",
       "kind": "literal"
@@ -15717,7 +15813,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-header-3-pdbwdr",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 271,
+      "line": 299,
       "element": "header",
       "semanticName": "super-admin-presentation-superadminlogspage-header-3",
       "kind": "literal"
@@ -15725,7 +15821,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-heading-39-go2lxs",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 402,
+      "line": 430,
       "element": "h2",
       "semanticName": "super-admin-presentation-superadminlogspage-heading-39",
       "kind": "literal"
@@ -15733,7 +15829,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-heading-8-vopbcp",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 277,
+      "line": 305,
       "element": "h1",
       "semanticName": "super-admin-presentation-superadminlogspage-heading-8",
       "kind": "literal"
@@ -15741,7 +15837,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-input-29-ziibii",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 338,
+      "line": 366,
       "element": "input",
       "semanticName": "super-admin-presentation-superadminlogspage-input-29",
       "kind": "literal"
@@ -15749,7 +15845,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-label-27-iwkzqq",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 336,
+      "line": 364,
       "element": "label",
       "semanticName": "super-admin-presentation-superadminlogspage-label-27",
       "kind": "literal"
@@ -15757,7 +15853,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-main-1-lysbak",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 249,
+      "line": 277,
       "element": "main",
       "semanticName": "super-admin-presentation-superadminlogspage-main-1",
       "kind": "literal"
@@ -15765,7 +15861,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-main-2-rw6hhr",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 270,
+      "line": 298,
       "element": "main",
       "semanticName": "super-admin-presentation-superadminlogspage-main-2",
       "kind": "literal"
@@ -15773,7 +15869,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-option-31-hxg7wa",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 350,
+      "line": 378,
       "element": "option",
       "semanticName": "super-admin-presentation-superadminlogspage-option-31",
       "kind": "literal"
@@ -15781,7 +15877,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-option-32-uxgzqh",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 351,
+      "line": 379,
       "element": "option",
       "semanticName": "super-admin-presentation-superadminlogspage-option-32",
       "kind": "literal"
@@ -15789,7 +15885,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-option-33-xchknd",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 352,
+      "line": 380,
       "element": "option",
       "semanticName": "super-admin-presentation-superadminlogspage-option-33",
       "kind": "literal"
@@ -15797,7 +15893,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-option-34-c0ynh0",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 353,
+      "line": 381,
       "element": "option",
       "semanticName": "super-admin-presentation-superadminlogspage-option-34",
       "kind": "literal"
@@ -15805,7 +15901,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-option-35-ikacrr",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 354,
+      "line": 382,
       "element": "option",
       "semanticName": "super-admin-presentation-superadminlogspage-option-35",
       "kind": "literal"
@@ -15813,7 +15909,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-section-16-rkhbnm",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 311,
+      "line": 339,
       "element": "section",
       "semanticName": "super-admin-presentation-superadminlogspage-section-16",
       "kind": "literal"
@@ -15821,7 +15917,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-section-37-23vafr",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 400,
+      "line": 428,
       "element": "section",
       "semanticName": "super-admin-presentation-superadminlogspage-section-37",
       "kind": "literal"
@@ -15829,7 +15925,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-select-30-ixeufk",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 345,
+      "line": 373,
       "element": "select",
       "semanticName": "super-admin-presentation-superadminlogspage-select-30",
       "kind": "literal"
@@ -15837,7 +15933,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-text-18-de1nmb",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 313,
+      "line": 341,
       "element": "p",
       "semanticName": "super-admin-presentation-superadminlogspage-text-18",
       "kind": "literal"
@@ -15845,7 +15941,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-text-19-1xcw7a",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 314,
+      "line": 342,
       "element": "p",
       "semanticName": "super-admin-presentation-superadminlogspage-text-19",
       "kind": "literal"
@@ -15853,7 +15949,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-text-21-3jgjrl",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 317,
+      "line": 345,
       "element": "p",
       "semanticName": "super-admin-presentation-superadminlogspage-text-21",
       "kind": "literal"
@@ -15861,7 +15957,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-text-22-ryrnn9",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 318,
+      "line": 346,
       "element": "p",
       "semanticName": "super-admin-presentation-superadminlogspage-text-22",
       "kind": "literal"
@@ -15869,7 +15965,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-text-24-t5iaow",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 323,
+      "line": 351,
       "element": "p",
       "semanticName": "super-admin-presentation-superadminlogspage-text-24",
       "kind": "literal"
@@ -15877,7 +15973,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-text-25-nxx5u1",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 324,
+      "line": 352,
       "element": "p",
       "semanticName": "super-admin-presentation-superadminlogspage-text-25",
       "kind": "literal"
@@ -15885,7 +15981,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-text-47-zd4fe8",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 555,
+      "line": 583,
       "element": "p",
       "semanticName": "super-admin-presentation-superadminlogspage-text-47",
       "kind": "literal"
@@ -15893,7 +15989,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-text-7-5xlyzo",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 276,
+      "line": 304,
       "element": "p",
       "semanticName": "super-admin-presentation-superadminlogspage-text-7",
       "kind": "literal"
@@ -15901,7 +15997,7 @@
     {
       "id": "features-super-admin-presentation-superadminlogspage-text-9-s2twdv",
       "source": "src/features/super-admin/presentation/SuperAdminLogsPage.tsx",
-      "line": 278,
+      "line": 306,
       "element": "p",
       "semanticName": "super-admin-presentation-superadminlogspage-text-9",
       "kind": "literal"

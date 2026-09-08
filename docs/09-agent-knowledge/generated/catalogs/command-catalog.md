@@ -44,6 +44,9 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run catalog:validate` | `Tooling` | 2 |  | 0 |
 | `npm run category:validate` | `Tooling` | 1 |  | 0 |
 | `npm run ci:coverage` | `Tooling` | 1 |  | 0 |
+| `npm run cloud-accounts:r2-usage` | `Tooling` | 1 |  | 0 |
+| `npm run cloud-accounts:turso-usage` | `Tooling` | 1 |  | 0 |
+| `npm run cloud-accounts:vercel-usage` | `Tooling`, `Web` | 1 |  | 0 |
 | `npm run control:build` | `Tooling` | 1 |  | 0 |
 | `npm run control:deploy` | `Tooling` | 1 |  | 0 |
 | `npm run control:smoke` | `Tooling` | 1 |  | 0 |

@@ -64,6 +64,68 @@ function publicHost(url: string): string {
   return url.replace(/^https?:\/\//, "");
 }
 
+function formatInteger(value: number | null): string {
+  if (value === null) return "غير متاح";
+  return new Intl.NumberFormat("en-US").format(value);
+}
+
+function formatBytes(value: number | null): string {
+  if (value === null) return "غير متاح";
+  if (value < 1_000_000) return `${new Intl.NumberFormat("en-US").format(value)} B`;
+  if (value < 1_000_000_000) return `${(value / 1_000_000).toFixed(2)} MB`;
+  return `${(value / 1_000_000_000).toFixed(2)} GB`;
+}
+
+function formatUsd(value: number | null): string {
+  if (value === null) return "غير متاح";
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(value);
+}
+
+function usageLine(value: number | null, limit: number, formatter = formatInteger): string {
+  if (value === null) return "غير متاح";
+  const percent = (value / limit) * 100;
+  return `${percent.toFixed(2)}% · ${formatter(value)} / ${formatter(limit)}`;
+}
+
+function usageLineOrLimit(value: number | null, limit: number, formatter = formatInteger): string {
+  if (value === null) return `غير متاح / ${formatter(limit)}`;
+  return usageLine(value, limit, formatter);
+}
+
+function formatTursoUsageCapturedAt(account: (typeof TURSO_CLOUD_ACCOUNTS)[number]): string {
+  if (!account.usage.capturedAt) return "لا توجد لقطة";
+  return new Intl.DateTimeFormat("ar-EG", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date(account.usage.capturedAt));
+}
+
+function formatDateTime(value: string | null): string {
+  if (!value) return "لا توجد لقطة";
+  return new Intl.DateTimeFormat("ar-EG", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date(value));
+}
+
+function formatVercelApiLimit(account: (ReturnType<typeof listVercelCloudAccounts>)[number]): string {
+  if (account.usage.apiRateLimit === null || account.usage.apiRateLimitRemaining === null) {
+    return account.usage.message ?? "غير متاح";
+  }
+  return `${account.usage.apiRateLimitRemaining} / ${account.usage.apiRateLimit}`;
+}
+
+function vercelUsageUrl(account: (ReturnType<typeof listVercelCloudAccounts>)[number], slug: string): string {
+  return `https://vercel.com/${account.accountLabel}/~/usage/${slug}`;
+}
+
+function formatR2UsageCapturedAt(account: (ReturnType<typeof listR2CloudAccounts>)[number]): string {
+  return formatDateTime(account.usage.capturedAt);
+}
+
 export function SuperAdminCloudAccountsContent() {
   const glance = cloudAccountsGlance();
   const vercelAccounts = listVercelCloudAccounts();
@@ -145,6 +207,9 @@ export function SuperAdminCloudAccountsContent() {
             <th id='features-super-admin-presentation-superadmincloudaccountscontent-th-49-vdj2ng' className="p-2 text-start sm:p-3">يخدم</th>
             <th id='features-super-admin-presentation-superadmincloudaccountscontent-th-50-i5oj8w' className="p-2 text-start sm:p-3">GitHub</th>
             <th id='features-super-admin-presentation-superadmincloudaccountscontent-th-51-rpmial' className="p-2 text-start sm:p-3">يُحدَّث بواسطة</th>
+            <th id='features-super-admin-presentation-superadmincloudaccountscontent-th-52-va7zye' className="p-2 text-start sm:p-3">معدلات الاستخدام</th>
+            <th id='features-super-admin-presentation-superadmincloudaccountscontent-th-53-km40vn' className="p-2 text-start sm:p-3">API/Billing</th>
+            <th id='features-super-admin-presentation-superadmincloudaccountscontent-th-54-qbrdb7' className="p-2 text-start sm:p-3">آخر لقطة</th>
           </tr>
         </thead>
         <tbody id='features-super-admin-presentation-superadmincloudaccountscontent-tbody-52-wh9qso'>
@@ -172,10 +237,37 @@ export function SuperAdminCloudAccountsContent() {
               <td className="p-2 sm:p-3" dir="ltr">
                 {account.updatedByAr}
               </td>
+              <td className="p-2 sm:p-3" dir="ltr">
+                <ul className="space-y-1">
+                  {account.usage.metrics.map((metric) => (
+                    <li key={metric.slug}>
+                      <a href={vercelUsageUrl(account, metric.slug)} className="text-primary underline-offset-4 active:text-primary/70">
+                        {metric.label}
+                      </a>{" "}
+                      <strong>
+                        {metric.usedDisplay ?? "غير متاح"} / {metric.limitDisplay}
+                      </strong>
+                    </li>
+                  ))}
+                </ul>
+              </td>
+              <td className="p-2 sm:p-3">
+                <span dir="ltr">API {formatVercelApiLimit(account)}</span> ·{" "}
+                <span dir="ltr">Billing {formatUsd(account.usage.effectiveCostUsd)}</span> ·{" "}
+                <span dir="ltr">{formatInteger(account.usage.billingLineCount)} lines</span>
+                {account.usage.topServices.length > 0 ? ` · ${account.usage.topServices.join("، ")}` : ""}
+              </td>
+              <td className="p-2 sm:p-3">{formatDateTime(account.usage.capturedAt)}</td>
             </tr>
           ))}
         </tbody>
       </TableWrap>
+      <Note id='features-super-admin-presentation-superadmincloudaccountscontent-note-55-dxes2p'>
+        لقطة Vercel تُحدّث محليًا عبر{" "}
+        <span id='features-super-admin-presentation-superadmincloudaccountscontent-text-56-lmz9we' dir="ltr">npm run cloud-accounts:vercel-usage</span>. تعرض الصفحة
+        حدود Hobby/default وقيم FOCUS Billing عندما يسمح التوكن؛ ولا تحمل أي
+        توكن أو سر.
+      </Note>
 
       <SubTitle id='features-super-admin-presentation-superadmincloudaccountscontent-subtitle-53-gmrniv'>مسارات كل حساب</SubTitle>
       <Note id='features-super-admin-presentation-superadmincloudaccountscontent-note-54-dqrsnu'>
@@ -222,6 +314,11 @@ export function SuperAdminCloudAccountsContent() {
             <th id='features-super-admin-presentation-superadmincloudaccountscontent-th-72-qeojyz' className="p-2 text-start sm:p-3">البريد الإلكتروني</th>
             <th id='features-super-admin-presentation-superadmincloudaccountscontent-th-73-x9wvce' className="p-2 text-start sm:p-3">النطاق</th>
             <th id='features-super-admin-presentation-superadmincloudaccountscontent-th-74-aej0xy' className="p-2 text-start sm:p-3">يُقرأ بواسطة</th>
+            <th id='features-super-admin-presentation-superadmincloudaccountscontent-th-75-wytx4q' className="p-2 text-start sm:p-3">قراءة</th>
+            <th id='features-super-admin-presentation-superadmincloudaccountscontent-th-76-zk4lcd' className="p-2 text-start sm:p-3">كتابة</th>
+            <th id='features-super-admin-presentation-superadmincloudaccountscontent-th-77-e21cgm' className="p-2 text-start sm:p-3">تخزين</th>
+            <th id='features-super-admin-presentation-superadmincloudaccountscontent-th-78-n1irqa' className="p-2 text-start sm:p-3">مزامنة</th>
+            <th id='features-super-admin-presentation-superadmincloudaccountscontent-th-79-fh8lvp' className="p-2 text-start sm:p-3">تفاصيل</th>
           </tr>
         </thead>
         <tbody id='features-super-admin-presentation-superadmincloudaccountscontent-tbody-75-e5uxa4'>
@@ -238,11 +335,36 @@ export function SuperAdminCloudAccountsContent() {
               <td className="p-2 sm:p-3" dir="ltr">
                 {account.readByAr}
               </td>
+              <td className="p-2 sm:p-3" dir="ltr">
+                {usageLine(account.usage.rowsRead, account.usage.rowsReadLimit)}
+              </td>
+              <td className="p-2 sm:p-3" dir="ltr">
+                {usageLine(account.usage.rowsWritten, account.usage.rowsWrittenLimit)}
+              </td>
+              <td className="p-2 sm:p-3" dir="ltr">
+                {usageLine(account.usage.storageBytes, account.usage.storageBytesLimit, formatBytes)}
+              </td>
+              <td className="p-2 sm:p-3" dir="ltr">
+                {usageLine(account.usage.bytesSynced, account.usage.bytesSyncedLimit, formatBytes)}
+              </td>
+              <td className="p-2 sm:p-3">
+                <span dir="ltr">{formatInteger(account.usage.databases)}</span> قاعدة ·{" "}
+                <span dir="ltr">{formatInteger(account.usage.locations)}</span> مواقع ·{" "}
+                <span dir="ltr">{formatInteger(account.usage.groups)}</span> مجموعات ·{" "}
+                {formatTursoUsageCapturedAt(account)}
+                {account.usage.status !== "ok" ? ` · ${account.usage.message ?? "غير متاح"}` : ""}
+              </td>
             </tr>
           ))}
         </tbody>
       </TableWrap>
       <Note id='features-super-admin-presentation-superadmincloudaccountscontent-note-76-jx8k7w'>
+        نسب Turso هنا لقطة محلية آمنة مقابل حدود Free: 500M قراءة، 10M كتابة،
+        5GB تخزين، 3GB مزامنة، و100 قاعدة بيانات. حدّثها عبر{" "}
+        <span id='features-super-admin-presentation-superadmincloudaccountscontent-text-80-qwp8so' dir="ltr">npm run cloud-accounts:turso-usage</span>؛ الصفحة لا
+        تستدعي Turso ولا تحمل أي رمز API.
+      </Note>
+      <Note id='features-super-admin-presentation-superadmincloudaccountscontent-note-81-qa15kh'>
         <span id='features-super-admin-presentation-superadmincloudaccountscontent-text-77-31tbde' dir="ltr">gova</span> و<span id='features-super-admin-presentation-superadmincloudaccountscontent-text-78-ovadgv' dir="ltr">submain</span> يحملان
         اعتمادات التشغيل الكاملة. <span id='features-super-admin-presentation-superadmincloudaccountscontent-text-79-bvv1at' dir="ltr">sub2main</span> يحمل
         اعتمادات المنتجات وشظايا البروفايل والمستخدمين لكتابات البائع. كل
@@ -458,6 +580,7 @@ export function SuperAdminCloudAccountsContent() {
           <tr id='features-super-admin-presentation-superadmincloudaccountscontent-tr-199-9am5uz'>
             <th id='features-super-admin-presentation-superadmincloudaccountscontent-th-200-srun3z' className="p-2 text-start sm:p-3">الحاوية</th>
             <th id='features-super-admin-presentation-superadmincloudaccountscontent-th-201-yfgkuw' className="p-2 text-start sm:p-3">الاستخدام</th>
+            <th id="features-super-admin-presentation-superadmincloudaccountscontent-th-210-jl6t8h" className="p-2 text-start sm:p-3">آخر لقطة</th>
           </tr>
         </thead>
         <tbody id='features-super-admin-presentation-superadmincloudaccountscontent-tbody-202-28vjfy'>
@@ -467,12 +590,38 @@ export function SuperAdminCloudAccountsContent() {
                 <span dir="ltr">{account.bucketName}</span> ({account.columnLabelAr})
               </td>
               <td className="p-2 sm:p-3" dir="ltr">
-                {account.targetLabel}
+                <ul className="space-y-1">
+                  <li>
+                    Class A Operations{" "}
+                    <strong>{usageLineOrLimit(account.usage.classAOperations, account.usage.classAOperationsLimit)}</strong>
+                  </li>
+                  <li>
+                    Class B Operations{" "}
+                    <strong>{usageLineOrLimit(account.usage.classBOperations, account.usage.classBOperationsLimit)}</strong>
+                  </li>
+                  <li>
+                    Total storage{" "}
+                    <strong>{usageLineOrLimit(account.usage.storageBytes, account.usage.storageBytesLimit, formatBytes)}</strong>
+                  </li>
+                  <li>
+                    Objects <strong>{formatInteger(account.usage.objectCount)}</strong> · Uploads{" "}
+                    <strong>{formatInteger(account.usage.uploadCount)}</strong>
+                  </li>
+                </ul>
+                {account.usage.status !== "ok" ? (
+                  <span className="mt-1 block text-on-surface-variant">{account.usage.message ?? "غير متاح"}</span>
+                ) : null}
               </td>
+              <td className="p-2 sm:p-3">{formatR2UsageCapturedAt(account)}</td>
             </tr>
           ))}
         </tbody>
       </TableWrap>
+      <Note id="features-super-admin-presentation-superadmincloudaccountscontent-note-212-gc9mkw">
+        حدّث لقطة Cloudflare R2 محليًا عبر{" "}
+        <span id="features-super-admin-presentation-superadmincloudaccountscontent-text-211-zw4gfh" dir="ltr">npm run cloud-accounts:r2-usage</span>. تعرض الصفحة أرقام
+        GraphQL Analytics الآمنة فقط، ولا تستورد مفاتيح Cloudflare.
+      </Note>
 
       <SectionTitle id='features-super-admin-presentation-superadmincloudaccountscontent-sectiontitle-203-ajqlzx'>أين تعيش الاعتمادات (credentials)</SectionTitle>
       <Note id='features-super-admin-presentation-superadmincloudaccountscontent-note-204-ex3vdr'>لا شيء هنا هو مخزن أسرار. كل قيمة هي متغير بيئة في الملفات المحلية والنسخ الاحتياطي المشفّر فقط.</Note>

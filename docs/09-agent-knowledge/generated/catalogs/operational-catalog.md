@@ -58,6 +58,9 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run catalog:validate` | `npx tsx scripts/validate-catalog.ts && npm run test:catalog-display` |
 | `npm run category:validate` | `npx tsx scripts/validate-categories.ts` |
 | `npm run ci:coverage` | `npx tsx scripts/github-ci-policy.ts` |
+| `npm run cloud-accounts:r2-usage` | `npx tsx scripts/update-cloud-accounts-r2-usage.ts` |
+| `npm run cloud-accounts:turso-usage` | `npx tsx scripts/update-cloud-accounts-turso-usage.ts` |
+| `npm run cloud-accounts:vercel-usage` | `npx tsx scripts/update-cloud-accounts-vercel-usage.ts` |
 | `npm run control:build` | `npm run control:sync && npm --prefix services/control ci --ignore-scripts && npm --prefix services/control run build` |
 | `npm run control:deploy` | `npx tsx scripts/deploy-control-service.ts` |
 | `npm run control:smoke` | `npx tsx scripts/smoke-control-service.ts` |

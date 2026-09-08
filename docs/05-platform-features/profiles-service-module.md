@@ -36,9 +36,10 @@ profile-core · profile-contact · profile-media · profile-social
 profile-catalog · profile-promotions · profile-fulfillment
 ```
 
-17 tables. **`system-ops` did not move.** Despite living in the same shard family
+17 tables. **`system-ops` did not move to the profiles account.** Despite living in the same shard family
 — it is split out of the same `profile.db` source — it holds `system_logs` and
-the `data_health_*` tables, which are not profile data. It stays on `hesham101`.
+`control_release_state`, which are not profile data. It stays with users/auth
+operations on `hesham106`.
 
 ## Which reads moved, and which did not
 

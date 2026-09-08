@@ -68,6 +68,16 @@ accounts are Turso *organizations* reached through `TURSO_*_ORGANIZATION` and
 to. Inventing one to hold a single string would be a package that exists to satisfy
 a test.
 
+Usage display follows the same boundary. The app runtime never calls the Turso
+Platform API; a local tooling command (`npm run cloud-accounts:turso-usage`)
+queries organization usage and rewrites a safe snapshot beside the page
+reference. `/dev/cloud-accounts` renders that snapshot as rows-read,
+rows-written, storage, embedded sync, database-count, location, and group usage.
+Percentages use the Free plan limits: 500,000,000 rows read, 10,000,000 rows
+written, 5 GB storage, 3 GB embedded sync, and 100 databases. A stale snapshot
+is acceptable operational evidence; live API tokens in a route or client
+component are not.
+
 `npm run test:cloud-accounts` covers all three anyway, and it is also what makes
 updating the reference mandatory rather than customary. The page renders from
 `cloud-accounts-reference.ts` (Vercel from `ACCOUNT_DECLARATIONS`, R2 from
@@ -109,6 +119,21 @@ Only `gova` is connected to GitHub. All six other accounts deploy from
 CLI deploy metadata uses `asolDeployment*` keys only; `githubCommit*` metadata is
 reserved for the GitHub-linked `gova` project so CLI full-app deploys cannot appear on
 the repository's Deployments tab.
+
+Vercel usage display is also snapshot-only. `npm run
+cloud-accounts:vercel-usage` uses the declarations' Vercel token names locally,
+queries the documented REST API for rate-limit headers and FOCUS billing charges
+when available, and writes a generated safe snapshot for `/dev/cloud-accounts`.
+The client page renders limits and sanitized totals only; it never imports or
+calls the Vercel API directly.
+
+Cloudflare R2 usage follows the same rule. `npm run cloud-accounts:r2-usage`
+queries Cloudflare GraphQL Analytics locally for the current month and rewrites
+`cloud-accounts-r2-usage-snapshot.ts`. The page renders Class A operations,
+Class B operations, total storage, object count, upload count, capture time, and
+the documented free-tier limits. Tokens are tooling-only; if GraphQL Analytics is
+not authorized for an account, the snapshot records that status and the page
+shows the limit rather than a fabricated usage value.
 
 The Vercel CLI also probes the local repository on its own and attaches the last
 commit (sha, branch, message, remote URL) to every upload, which the dashboard
@@ -157,7 +182,7 @@ and [Notification Bridge Module](../05-platform-features/notification-bridge-mod
 
 | Account | Email | Databases | Domain | Read by |
 |---|---|---:|---|---|
-| `hesham101` | `print.code.1000@gmail.com` | 3 | users and auth, advertisements, system operations | `gova` + `submain` + `sub2main` + `control` (users/system-ops only) |
+| `hesham106` | `tenderx.engineer100@gmail.com` | 3 | users and auth, advertisements, system operations | `gova` + `submain` + `sub2main` + `control` (users/system-ops only) |
 | `hesham102` | `bs.bid.story@gmail.com` | 1 | notifications | `gova` + `asol-notifications` |
 | `hesham103` | `gnagnahesham@gmail.com` | 1 | products | `gova` + `asol-products` + `sub2main` + `control` (product counts only) |
 | `hesham104` | `tenderx10@gmail.com` | 9 | marketplace order shards | `gova` + `asol-orders` + `submain` |
@@ -171,13 +196,13 @@ product credentials are required so `/api/super-admin/users/search` can combine
 identity/specialties with product counts; it does not receive the other profile
 shards or workload write credentials.
 
-### hesham101 — 3 databases
+### hesham106 — 3 databases
 
 | Database | Tables | Contents |
 |---|---:|---|
-| `allusers` | 6 | `users`, password recovery, feature flags, OTA releases and audit |
-| `advertisements` | 4 | hero slider, featured marquee, trending ribbon |
-| `system-ops` | 9 | `system_logs`, `data_health_*` |
+| `allusers` | 5 | `users`, password recovery, feature flags, OTA releases and audit |
+| `advertisements` | 3 | hero slider, featured marquee, trending ribbon |
+| `system-ops` | 2 | `system_logs`, `control_release_state` |
 
 ### hesham102 — notifications
 

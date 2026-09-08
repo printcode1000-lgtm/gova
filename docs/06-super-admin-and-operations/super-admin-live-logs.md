@@ -133,7 +133,11 @@ silently diverging. Correlation columns are:
 - `session_id`
 - `monitor_trace_id`
 
-Retention runs on write (`SYSTEM_LOGS_RETENTION_DAYS`, default 90).
+Retention runs on write (`SYSTEM_LOGS_RETENTION_DAYS`, default 90). Summary
+reads are deliberately bounded to the recent seven-day window and backed by the
+`system_logs` timestamp/level/feature indexes so `/api/system-logs/summary`
+does not perform an unbounded aggregate scan over the whole operational log
+table.
 
 ## Super Admin APIs
 

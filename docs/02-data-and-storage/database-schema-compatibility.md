@@ -71,10 +71,11 @@ ASOL_SCHEMA_SYNC_EXACT=true npm run db:schema:sync
 
 Never the default. It keeps the same additive behavior and *also* drops Turso
 objects the manifests do not declare. Historical tables from removed
-capabilities live in production databases — the eight `data_health_*` tables are
-the current example — and a code refactor is not authorization to destroy cloud
-data. Use this only after confirming that every extra object is genuinely
-unwanted and that each Turso database is dedicated to its own manifest.
+capabilities can live in older production databases — previous
+`data_health_*` tables are the example this rule was written for — and a code
+refactor is not authorization to destroy cloud data. Use this only after
+confirming that every extra object is genuinely unwanted and that each Turso
+database is dedicated to its own manifest.
 
 ## Provisioning
 
