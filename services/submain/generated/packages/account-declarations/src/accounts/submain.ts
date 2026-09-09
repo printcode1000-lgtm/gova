@@ -21,9 +21,10 @@ export const SUBMAIN_DECLARATION = {
   deployFromRepositoryRoot: undefined,
   requiredEnv: SUBMAIN_RUNTIME_REQUIRED_ENV_KEYS,
   optionalEnv: SUBMAIN_RUNTIME_OPTIONAL_ENV_KEYS,
-  // Nothing is copied in beside the walked module graph: the storage profile file now travels
-  // with `@asol/storage-core`, which imports it.
-  runtimeAssets: [],
+  // Product-style settings are resolved by filename at runtime, so the import walker cannot see
+  // them. Mirror the whole directory so every category pair saved by /dev/category-selector
+  // reaches search without maintaining a per-file allowlist.
+  runtimeAssets: ['public/product/style'],
   mirrorEntryPoints: [
     'features/product-search/server/services/product-search-service.server.ts',
     'features/product-search/server/services/product-search-products.server.ts',

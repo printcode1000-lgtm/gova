@@ -95,6 +95,7 @@ function readPreviousGeneratedAtWhenManifestBodyMatches(
     entryPoints: readonly string[];
     fileCount: number;
     files: readonly string[];
+    runtimeAssets: readonly string[];
   },
 ): string | null {
   if (!existsSync(manifestPath)) return null;
@@ -105,6 +106,7 @@ function readPreviousGeneratedAtWhenManifestBodyMatches(
       entryPoints?: unknown;
       fileCount?: unknown;
       files?: unknown;
+      runtimeAssets?: unknown;
     };
     if (typeof previous.generatedAt !== 'string') return null;
 
@@ -112,11 +114,13 @@ function readPreviousGeneratedAtWhenManifestBodyMatches(
       entryPoints: previous.entryPoints,
       fileCount: previous.fileCount,
       files: previous.files,
+      runtimeAssets: previous.runtimeAssets ?? [],
     };
     const nextBody = {
       entryPoints: nextManifest.entryPoints,
       fileCount: nextManifest.fileCount,
       files: nextManifest.files,
+      runtimeAssets: nextManifest.runtimeAssets ?? [],
     };
 
     return JSON.stringify(previousBody) === JSON.stringify(nextBody)
@@ -442,15 +446,27 @@ export function syncServiceMirror(options: ServiceMirrorOptions): { fileCount: n
   rmSync(packagesTargetRoot, { recursive: true, force: true });
 
   const runtimeAssets = options.runtimeAssets ?? [];
-  let assetCount = 0;
+  const copiedRuntimeAssets: string[] = [];
+  const copyRuntimeAsset = (source: string, relative: string): void => {
+    const sourceStat = statSync(source);
+    if (sourceStat.isDirectory()) {
+      for (const entry of readdirSync(source, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name, 'en'))) {
+        copyRuntimeAsset(path.join(source, entry.name), path.join(relative, entry.name));
+      }
+      return;
+    }
+    if (!sourceStat.isFile()) return;
+    const destination = path.join(outputRoot, relative);
+    mkdirSync(path.dirname(destination), { recursive: true });
+    copyFileSync(source, destination);
+    copiedRuntimeAssets.push(relative.split(path.sep).join('/'));
+  };
   for (const relative of runtimeAssets) {
     const source = path.join(root, relative);
     if (!existsSync(source)) throw new Error(`Runtime asset missing: ${relative}`);
-    const destination = path.join(serviceDir, relative);
-    mkdirSync(path.dirname(destination), { recursive: true });
-    copyFileSync(source, destination);
-    assetCount++;
+    copyRuntimeAsset(source, relative);
   }
+  const assetCount = copiedRuntimeAssets.length;
 
   // The service's own `src/` is uploaded verbatim, so it was never mirrored — and was
   // therefore never walked either. That blind spot meant a route importing `@asol/*`
@@ -517,6 +533,7 @@ export function syncServiceMirror(options: ServiceMirrorOptions): { fileCount: n
     entryPoints: options.entryPoints,
     fileCount: files.length,
     files: manifestFiles,
+    runtimeAssets: copiedRuntimeAssets.sort(),
   };
 
   mkdirSync(outputRoot, { recursive: true });

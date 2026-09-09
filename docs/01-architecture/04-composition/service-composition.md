@@ -43,6 +43,8 @@ Each composition:
 
 `@asol/service-mirror-core` copies sealed package sources into `services/*/generated/` by walking import graphs.
 
+Runtime files resolved dynamically rather than through imports must be declared in the owning account's `runtimeAssets`. Directory assets are copied recursively into the service `generated/` tree while preserving repository-relative paths, and the generated manifest records every copied runtime file. `submain` uses this contract for `public/product/style/`, so search-field settings saved by `/dev/category-selector` are available to the isolated search service.
+
 | Risk | Mitigation |
 |---|---|
 | Dynamic import invisible to walker | Prefer static imports in composition entry |

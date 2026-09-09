@@ -5,7 +5,7 @@
 
 # Write Surface Map
 
-Detected write-like surfaces: **362**
+Detected write-like surfaces: **361**
 Unproven gateway paths: **141**
 
 | Source | Owner | Operations | Gateway | Proven | Route | Runtimes | Risk |
@@ -15,7 +15,6 @@ Unproven gateway paths: **141**
 | `packages/account-declarations/src/accounts/products.ts` | `@asol/account-declarations` | write-like | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/account-declarations/src/accounts/profiles.ts` | `@asol/account-declarations` | write-like | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/account-declarations/src/accounts/sub2main.ts` | `@asol/account-declarations` | upload | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
-| `packages/account-declarations/src/accounts/submain.ts` | `@asol/account-declarations` | write-like | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/architecture-core/src/checks/api-transport-contract.ts` | `@asol/architecture-core` | create, delete, insert, update | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/architecture-core/src/checks/application-cycle-contract.ts` | `@asol/architecture-core` | delete, save, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/architecture-core/src/checks/feature-application-door-purity-contract.ts` | `@asol/architecture-core` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |

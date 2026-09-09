@@ -244,7 +244,7 @@ export const AppSidebar = React.memo(function AppSidebar({ id,
             aria-modal={isOpen}
             aria-label={t("sidebar.menu")}
             className={cn(
-              "fixed top-0 inset-inline-start-0 z-[61] flex h-dvh max-h-dvh w-[min(20rem,calc(100vw-0.75rem))] flex-col border-e transition-transform duration-300 ease-out sm:w-80",
+              "fixed top-0 inset-inline-start-0 z-[61] flex h-dvh max-h-dvh w-[min(19rem,calc(100vw-0.75rem))] flex-col border-e transition-transform duration-300 ease-out sm:w-[19rem]",
               resolvedScheme === "dark" ? "asol-drawer-panel" : "bg-[#F8FBFF]",
               isOpen
                 ? "translate-x-0"
@@ -423,7 +423,7 @@ export const AppSidebar = React.memo(function AppSidebar({ id,
                   />
                 </button>
                 {settingsGroupOpen && (
-                  <div id={id ? `${id}-div-32-chgu3k` : undefined} className="flex flex-wrap justify-center gap-2 px-2 pb-2 pt-1">
+                  <div id={id ? `${id}-div-32-chgu3k` : undefined} className="flex flex-nowrap justify-center gap-2 px-2 pb-2 pt-1 whitespace-nowrap [&>*]:shrink-0">
                     <button id={id ? `${id}-button-33-fswgms` : undefined}
                       type="button"
                       onClick={handleToggleLanguage}

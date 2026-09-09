@@ -98,6 +98,8 @@ Field availability per category is controlled by product style settings saved fr
 `@asol/product-style-core/server` (`readNormalizedStyleComponents`,
 `filterSearchFieldsByStyle`).
 
+`submain` mirrors `public/product/style/` as runtime assets because category-pair files are resolved dynamically and are invisible to import-graph walking. `product-style-core` reads the canonical path in the main application and falls back to `generated/public/product/style/` inside the service mirror, so profile search and `/search` use the same settings saved by `/dev/category-selector`.
+
 Inside "component settings", the developer can enable or disable each searchable column per component. A field is available only when:
 
 - The main category and subcategory are selected.

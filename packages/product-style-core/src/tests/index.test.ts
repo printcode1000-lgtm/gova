@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -48,6 +49,26 @@ function runPathsTest() {
   console.log("✅ product-style-core paths test passed");
 }
 
+async function runGeneratedMirrorReadTest() {
+  const root = path.join(workspaceRoot, "tmp", "product-style-generated-read-test");
+  const generatedStyle = path.join(root, "generated", "public", "product", "style");
+  try {
+    mkdirSync(generatedStyle, { recursive: true });
+    const components = createDefaultProductStyleComponents();
+    components.searchColumns.mainData.manufacturer = false;
+    writeFileSync(
+      path.join(generatedStyle, "1__1.json"),
+      `${JSON.stringify({ mainCategoryId: "1", subcategoryId: "1", components }, null, 2)}\n`,
+      "utf8",
+    );
+    const settings = await readProductStyleSettingsOrDefault(root, "1", "1");
+    assert.equal(settings?.components.searchColumns.mainData.manufacturer, false);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+  console.log("✅ product-style-core generated mirror read test passed");
+}
+
 async function runIntegrationTest() {
   const defaultPath = resolveProductStyleDefaultPath(workspaceRoot);
   const settings = await readProductStyleSettingsOrDefault(
@@ -84,6 +105,7 @@ async function main() {
   runValidationTest();
   runPathsTest();
   await runIntegrationTest();
+  await runGeneratedMirrorReadTest();
   runPublicSurfaceTest();
   console.log("\n🎉 All @asol/product-style-core tests passed successfully!");
 }

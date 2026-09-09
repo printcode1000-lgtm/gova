@@ -1,4 +1,5 @@
 import { mkdir, readFile, readdir, rename, writeFile } from "node:fs/promises";
+import path from "node:path";
 
 import { normalizeProductStyleComponents } from "../domain/style-defaults";
 import { productStyleFileName } from "../domain/selection-ids";
@@ -16,21 +17,38 @@ import {
   resolveProductStyleIndexPath,
 } from "./paths";
 
+async function readFirstProductStyleSettings(
+  filePaths: readonly string[],
+): Promise<ProductStyleSettings | null> {
+  for (const filePath of filePaths) {
+    try {
+      const content = await readFile(filePath, "utf8");
+      return parseProductStyleSettings(JSON.parse(content));
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code === "ENOENT") continue;
+      throw error;
+    }
+  }
+  return null;
+}
+
+function mirroredWorkspaceRoot(workspaceRoot: string): string {
+  return path.join(workspaceRoot, "generated");
+}
+
 export async function readProductStyleSettings(
   workspaceRoot: string,
   mainCategoryId: string,
   subcategoryId: string,
 ): Promise<ProductStyleSettings | null> {
-  try {
-    const content = await readFile(
-      resolveProductStyleFilePath(workspaceRoot, mainCategoryId, subcategoryId),
-      "utf8",
-    );
-    return parseProductStyleSettings(JSON.parse(content));
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
-    throw error;
-  }
+  return readFirstProductStyleSettings([
+    resolveProductStyleFilePath(workspaceRoot, mainCategoryId, subcategoryId),
+    resolveProductStyleFilePath(
+      mirroredWorkspaceRoot(workspaceRoot),
+      mainCategoryId,
+      subcategoryId,
+    ),
+  ]);
 }
 
 export async function readProductStyleSettingsOrDefault(
@@ -44,19 +62,16 @@ export async function readProductStyleSettingsOrDefault(
     subcategoryId,
   );
   if (custom) return custom;
-  try {
-    const content = await readFile(resolveProductStyleDefaultPath(workspaceRoot), "utf8");
-    const parsed = parseProductStyleSettings(JSON.parse(content));
-    if (!parsed) return null;
-    return {
-      ...parsed,
-      mainCategoryId,
-      subcategoryId,
-    };
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
-    throw error;
-  }
+  const parsed = await readFirstProductStyleSettings([
+    resolveProductStyleDefaultPath(workspaceRoot),
+    resolveProductStyleDefaultPath(mirroredWorkspaceRoot(workspaceRoot)),
+  ]);
+  if (!parsed) return null;
+  return {
+    ...parsed,
+    mainCategoryId,
+    subcategoryId,
+  };
 }
 
 export async function writeProductStyleSettings(

@@ -153,4 +153,11 @@ assert.match(sidebarSource, /\? "translate-x-full"/);
 assert.match(sidebarSource, /: "-translate-x-full"/);
 assert.doesNotMatch(sidebarSource, /rtl:translate-x-full ltr:-translate-x-full/);
 
+const appHeaderSource = readFileSync(
+  path.join(root, "src/shared/layouts/AppHeader.tsx"),
+  "utf8",
+);
+assert.match(appHeaderSource, /onClick=\{toggleSidebar\}/);
+assert.doesNotMatch(appHeaderSource, /onPointerDown=\{toggleSidebar\}/);
+
 console.log("overlay chrome keeps project dialogs and the sidebar open.");

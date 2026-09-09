@@ -35,9 +35,7 @@ export function AppHeader({ id,
     setIsSidebarOpen(false);
   }, [pathname]);
 
-  const toggleSidebar = (e: React.PointerEvent) => {
-    e.stopPropagation();
-    e.preventDefault();
+  const toggleSidebar = () => {
     setIsSidebarOpen((prev) => !prev);
   };
 
@@ -64,7 +62,7 @@ export function AppHeader({ id,
               )}
               aria-pressed={isSidebarOpen}
               aria-label={t('sidebar.menu')}
-              onPointerDown={toggleSidebar}
+              onClick={toggleSidebar}
             >
               <Menu id='shared-layouts-appheader-menu-5-qvbs67' className="w-5 h-5" />
             </button>

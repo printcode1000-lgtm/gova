@@ -28,6 +28,7 @@ Services do **not** share a Node process or memory with main or each other. Each
 | Rule | Rationale |
 |---|---|
 | Import graph determines synced code | `service-mirror-core` copies only reachable sealed sources |
+| Runtime file assets are explicit | Files or directories resolved dynamically must be declared in the owning account's `runtimeAssets`; they are mirrored under `generated/` and listed in the service manifest |
 | Dynamic import hides edges | Prefer static imports in composition entry files |
 | No cross-service imports | Services are separate repos-on-disk |
 | Account declarations per door | Prevents env key leakage across accounts |

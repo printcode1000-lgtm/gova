@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, rmSync } from 'fs';
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'fs';
 import path from 'path';
 import {
   collectSpecifiers,
@@ -74,6 +74,30 @@ function runTests(): void {
   assert(NOTIFICATIONS_DECLARATION.runtimeAssets.length === 0, 'M4: notifications receives 0 runtime assets');
   assert(ORDERS_DECLARATION.runtimeAssets.length === 0, 'M4: orders receives 0 runtime assets');
   console.log('  ✔ Runtime assets configuration verified (M4).');
+
+  const runtimeFixture = path.join(root, 'tmp', 'service-mirror-runtime-assets-fixture');
+  const runtimeOutput = path.join(root, '.tmp-test-runtime-asset-out');
+  try {
+    mkdirSync(path.join(runtimeFixture, 'nested'), { recursive: true });
+    writeFileSync(path.join(runtimeFixture, 'nested', 'asset.json'), '{\"ok\":true}\n', 'utf8');
+    const relativeFixture = path.relative(root, runtimeFixture);
+    const result = syncServiceMirror({
+      serviceName: 'notifications',
+      serviceDir: 'services/notifications',
+      entryPoints: NOTIFICATIONS_DECLARATION.mirrorEntryPoints,
+      runtimeAssets: [relativeFixture],
+      outOverride: runtimeOutput,
+    });
+    assert(result.assetCount === 1, 'M4: runtime directory reports copied file count');
+    assert(
+      existsSync(path.join(runtimeOutput, relativeFixture, 'nested', 'asset.json')),
+      'M4: runtime directory is copied recursively into generated output',
+    );
+  } finally {
+    rmSync(runtimeFixture, { recursive: true, force: true });
+    rmSync(runtimeOutput, { recursive: true, force: true });
+  }
+  console.log('  ✔ Runtime asset directories mirror recursively.');
 
   // Test M5: Drift detection via --out throwaway directory
   const throwawayDir = path.join(root, '.tmp-test-mirror-out');

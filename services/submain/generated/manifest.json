@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-08T06:52:15.627Z",
+  "generatedAt": "2026-09-09T06:56:33.122Z",
   "entryPoints": [
     "features/product-search/server/services/product-search-service.server.ts",
     "features/product-search/server/services/product-search-products.server.ts",
@@ -487,5 +487,17 @@
     "src/features/system-logs/server.ts",
     "src/features/system-logs/server/control-persistence.server.ts",
     "src/features/system-logs/server/services/persistent-system-log-service.server.ts"
+  ],
+  "runtimeAssets": [
+    "public/product/style/0__23.json",
+    "public/product/style/0__44.json",
+    "public/product/style/16__1.json",
+    "public/product/style/1__1.json",
+    "public/product/style/1__13.json",
+    "public/product/style/20__204.json",
+    "public/product/style/46__1.json",
+    "public/product/style/7__1.json",
+    "public/product/style/default.json",
+    "public/product/style/index.json"
   ]
 }

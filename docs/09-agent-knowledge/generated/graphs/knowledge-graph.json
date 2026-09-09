@@ -26639,6 +26639,28 @@
       ]
     },
     {
+      "id": "script:scripts/cloud-accounts-r2-usage-classification.ts",
+      "kind": "script",
+      "name": "cloud-accounts-r2-usage-classification.ts",
+      "path": "scripts/cloud-accounts-r2-usage-classification.ts",
+      "tags": [
+        "scripts/cloud-accounts-r2-usage-classification",
+        "scripts/cloud-accounts-r2-usage-classification.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/cloudflare-browser-graphql.ts",
+      "kind": "script",
+      "name": "cloudflare-browser-graphql.ts",
+      "path": "scripts/cloudflare-browser-graphql.ts",
+      "tags": [
+        "scripts/cloudflare-browser-graphql",
+        "scripts/cloudflare-browser-graphql.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/configure-ios-share-extension.rb",
       "kind": "script",
       "name": "configure-ios-share-extension.rb",
@@ -85756,6 +85778,18 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "script:scripts/cloud-accounts-r2-usage-classification.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/cloudflare-browser-graphql.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "script:scripts/configure-ios-share-extension.rb",
       "kind": "documents",
       "detail": "scripts/"
@@ -130961,6 +130995,16 @@
       "kind": "affects-runtime"
     },
     {
+      "from": "script:scripts/cloud-accounts-r2-usage-classification.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/cloudflare-browser-graphql.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
       "from": "script:scripts/configure-ios-share-extension.rb",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
@@ -133052,6 +133096,18 @@
       "to": "package:@asol/storage-core",
       "kind": "imports",
       "detail": "@asol/storage-core"
+    },
+    {
+      "from": "script:scripts/update-cloud-accounts-r2-usage.ts",
+      "to": "script:scripts/cloud-accounts-r2-usage-classification.ts",
+      "kind": "imports",
+      "detail": "./cloud-accounts-r2-usage-classification"
+    },
+    {
+      "from": "script:scripts/update-cloud-accounts-r2-usage.ts",
+      "to": "script:scripts/cloudflare-browser-graphql.ts",
+      "kind": "imports",
+      "detail": "./cloudflare-browser-graphql"
     },
     {
       "from": "script:scripts/update-cloud-accounts-r2-usage.ts",

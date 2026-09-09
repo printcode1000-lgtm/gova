@@ -183,6 +183,7 @@ function runTests(): void {
   assert(SUBMAIN_DECLARATION.serviceDir === 'services/submain', 'submain deploys from services/submain');
   assert(SUBMAIN_DECLARATION.deployFromRepositoryRoot === undefined, 'submain is not a root deploy');
   assert(SUBMAIN_DECLARATION.tokenEnvVar === 'VERCEL_SUBMAIN_TOKEN', 'submain token var');
+  assert(SUBMAIN_DECLARATION.runtimeAssets.includes('public/product/style'), 'submain mirrors product-style runtime assets');
   assert(
     !SUBMAIN_DECLARATION.requiredEnv.some((key) => key.startsWith('VERCEL_')),
     'submain runtime env must not include deploy tokens',

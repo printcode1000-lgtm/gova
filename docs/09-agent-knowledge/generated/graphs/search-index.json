@@ -26639,6 +26639,28 @@
       ]
     },
     {
+      "id": "script:scripts/cloud-accounts-r2-usage-classification.ts",
+      "kind": "script",
+      "name": "cloud-accounts-r2-usage-classification.ts",
+      "path": "scripts/cloud-accounts-r2-usage-classification.ts",
+      "tags": [
+        "scripts/cloud-accounts-r2-usage-classification",
+        "scripts/cloud-accounts-r2-usage-classification.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/cloudflare-browser-graphql.ts",
+      "kind": "script",
+      "name": "cloudflare-browser-graphql.ts",
+      "path": "scripts/cloudflare-browser-graphql.ts",
+      "tags": [
+        "scripts/cloudflare-browser-graphql",
+        "scripts/cloudflare-browser-graphql.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/configure-ios-share-extension.rb",
       "kind": "script",
       "name": "configure-ios-share-extension.rb",

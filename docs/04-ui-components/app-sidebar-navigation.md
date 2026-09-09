@@ -37,6 +37,11 @@ preview with blank space and sliced content. The current contract is:
 `npm run test:overlay-chrome` pins both the clipped overlay wrapper and the
 direction-derived closed transform.
 
+The AppHeader menu trigger opens the drawer on `click`, not `pointerdown`. The
+opening pointer gesture must finish before the drawer installs its document-level
+`pointerdown` outside-dismiss listener; otherwise a touch device can race the new
+drawer against the same gesture and immediately close it again.
+
 ## Overlay chrome and other dialogs
 
 A pointer on overlay chrome (the attribute inspector, the floating error
