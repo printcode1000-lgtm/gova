@@ -138,12 +138,14 @@ See [Environment Variables](../02-data-and-storage/environment-variables.md).
 
 ## Linux Cloudflare account launcher
 
-The repository-local browser launcher lives in `test_profile/` and is Linux-native.
-Run `./test_profile/run.sh` to open the four documented Cloudflare R2 account
-sessions in separate Chrome windows. `./test_profile/open-cloudflare.sh` performs
-the launch without regenerating desktop shortcuts.
+`test_profile/` intentionally contains exactly one executable command:
+`./test_profile/open-cloudflare.sh`. It opens the four documented Cloudflare R2
+accounts in separate Chrome windows.
 
-The launcher reuses an existing Chrome profile when its signed-in Google email
-matches the documented account email. If no matching profile exists, it creates
-a persistent isolated Chrome user-data directory under `test_profile/profiles/`
-so the Cloudflare login can be completed once without mixing account sessions.
+The launcher resolves the four persistent Cloudflare Chrome sessions under
+`~/.config/google-chrome-test-profiles/` by the Google email stored inside each
+profile's `Default/Preferences`; directory names are not treated as identity. It
+then opens each account's exact R2 bucket URL. If invoked from a non-graphical
+agent shell, it recovers the active desktop display, runtime, and D-Bus
+environment before launching Chrome. `test_profile/` remains a single-command
+directory and contains no browser session data.

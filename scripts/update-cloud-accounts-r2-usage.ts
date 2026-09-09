@@ -5,6 +5,8 @@ import { readEnvFiles } from "@asol/env-core/files";
 import { getAllStorageAccounts, type StorageAccountDefinition } from "@asol/storage-core";
 
 import { OTA_R2_CLOUD_ACCOUNT } from "../src/features/super-admin/presentation/cloud-accounts-reference";
+import { classifyR2Operation } from "./cloud-accounts-r2-usage-classification";
+import { postCloudflareGraphqlViaBrowser } from "./cloudflare-browser-graphql";
 import { R2_USAGE_SNAPSHOT } from "../src/features/super-admin/presentation/cloud-accounts-r2-usage-snapshot";
 
 type R2UsageSnapshotRow = {
@@ -30,6 +32,7 @@ type R2UsageAccount = {
   readonly accountIdEnvVar: string;
   readonly bucketName: string;
   readonly apiTokenEnvVar: string;
+  readonly browserDebugPort: number | null;
 };
 
 type GraphqlOperationGroup = {
@@ -73,15 +76,12 @@ const FREE_LIMITS = {
   storageBytes: 10_000_000_000,
 } as const;
 
-const READ_ACTION_HINTS = [
-  "get",
-  "head",
-  "list",
-  "read",
-  "download",
-  "select",
-  "copyobject",
-] as const;
+const BROWSER_DEBUG_PORTS: Readonly<Record<string, number>> = {
+  general: 9321,
+  products: 9322,
+  "products-apparel-pets": 9323,
+  ota: 9324,
+};
 
 const GRAPHQL_QUERY = `
 query R2UsageSnapshot($accountTag: string!, $startDate: Time, $endDate: Time, $bucketName: string) {
@@ -164,6 +164,7 @@ function listAccounts(): R2UsageAccount[] {
       accountIdEnvVar: `${account.envPrefix}_ACCOUNT_ID`,
       bucketName: account.bucketName,
       apiTokenEnvVar: tokenEnvVarFor(account),
+      browserDebugPort: BROWSER_DEBUG_PORTS[account.id] ?? null,
     })),
     {
       id: OTA_R2_CLOUD_ACCOUNT.id,
@@ -171,13 +172,9 @@ function listAccounts(): R2UsageAccount[] {
       accountIdEnvVar: `${OTA_R2_CLOUD_ACCOUNT.envPrefix}_ACCOUNT_ID`,
       bucketName: OTA_R2_CLOUD_ACCOUNT.bucketName,
       apiTokenEnvVar: `${OTA_R2_CLOUD_ACCOUNT.envPrefix}_API_TOKEN`,
+      browserDebugPort: BROWSER_DEBUG_PORTS.ota,
     },
   ];
-}
-
-function isClassBAction(actionType: string): boolean {
-  const normalized = actionType.toLowerCase().replace(/[^a-z0-9]+/g, "");
-  return READ_ACTION_HINTS.some((hint) => normalized.includes(hint));
 }
 
 function latestStorage(groups: readonly GraphqlStorageGroup[]): GraphqlStorageGroup | undefined {
@@ -188,13 +185,22 @@ function latestStorage(groups: readonly GraphqlStorageGroup[]): GraphqlStorageGr
   })[0];
 }
 
-async function readR2Usage(
+function graphqlVariables(account: R2UsageAccount, accountId: string, startDate: Date, endDate: Date) {
+  return {
+    accountTag: accountId,
+    startDate: startDate.toISOString(),
+    endDate: endDate.toISOString(),
+    bucketName: account.bucketName,
+  };
+}
+
+async function readGraphqlWithApiToken(
   account: R2UsageAccount,
   accountId: string,
   apiToken: string,
   startDate: Date,
   endDate: Date,
-): Promise<R2UsageSnapshotRow> {
+): Promise<GraphqlR2Response> {
   const response = await fetch("https://api.cloudflare.com/client/v4/graphql", {
     method: "POST",
     headers: {
@@ -203,22 +209,44 @@ async function readR2Usage(
     },
     body: JSON.stringify({
       query: GRAPHQL_QUERY,
-      variables: {
-        accountTag: accountId,
-        startDate: startDate.toISOString(),
-        endDate: endDate.toISOString(),
-        bucketName: account.bucketName,
-      },
+      variables: graphqlVariables(account, accountId, startDate, endDate),
     }),
   });
   const text = await response.text();
-  if (!response.ok) {
-    throw new Error(`Cloudflare GraphQL API returned HTTP ${response.status}`);
-  }
-  const payload = JSON.parse(text) as GraphqlR2Response;
+  if (!response.ok) throw new Error(`Cloudflare GraphQL API returned HTTP ${response.status}`);
+  return JSON.parse(text) as GraphqlR2Response;
+}
+
+async function readGraphqlWithBrowserSession(
+  account: R2UsageAccount,
+  accountId: string,
+  startDate: Date,
+  endDate: Date,
+): Promise<GraphqlR2Response> {
+  if (!account.browserDebugPort) throw new Error(`No browser fallback is configured for ${account.id}`);
+  return postCloudflareGraphqlViaBrowser<GraphqlR2Response>(
+    account.browserDebugPort,
+    GRAPHQL_QUERY,
+    graphqlVariables(account, accountId, startDate, endDate),
+  );
+}
+
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
+
+function assertGraphqlSuccess(payload: GraphqlR2Response): void {
   if (payload.errors?.length) {
     throw new Error(payload.errors.map((error) => error.message).filter(Boolean).join("; "));
   }
+}
+
+function usageRowFromPayload(
+  payload: GraphqlR2Response,
+  startDate: Date,
+  endDate: Date,
+): R2UsageSnapshotRow {
+  assertGraphqlSuccess(payload);
   const resultAccount = payload.data?.viewer?.accounts?.[0];
   const operationGroups = resultAccount?.r2OperationsAdaptiveGroups ?? [];
   const storageGroups = resultAccount?.r2StorageAdaptiveGroups ?? [];
@@ -229,11 +257,9 @@ async function readR2Usage(
     const actionType = group.dimensions?.actionType?.trim() ?? "unknown";
     const requests = group.sum?.requests ?? 0;
     operationTypes.push(`${actionType}:${requests}`);
-    if (isClassBAction(actionType)) {
-      classBOperations += requests;
-    } else {
-      classAOperations += requests;
-    }
+    const billingClass = classifyR2Operation(actionType);
+    if (billingClass === "B") classBOperations += requests;
+    if (billingClass === "A") classAOperations += requests;
   }
   const storage = latestStorage(storageGroups)?.max ?? null;
   const payloadSize = storage?.payloadSize ?? null;
@@ -254,6 +280,32 @@ async function readR2Usage(
     operationTypes,
     message: null,
   };
+}
+
+async function readR2Usage(
+  account: R2UsageAccount,
+  accountId: string,
+  apiToken: string | null,
+  startDate: Date,
+  endDate: Date,
+): Promise<R2UsageSnapshotRow> {
+  let apiError: unknown = apiToken ? null : new Error(`Missing ${account.apiTokenEnvVar}`);
+  if (apiToken) {
+    try {
+      const payload = await readGraphqlWithApiToken(account, accountId, apiToken, startDate, endDate);
+      assertGraphqlSuccess(payload);
+      return usageRowFromPayload(payload, startDate, endDate);
+    } catch (error) {
+      apiError = error;
+    }
+  }
+
+  try {
+    const payload = await readGraphqlWithBrowserSession(account, accountId, startDate, endDate);
+    return usageRowFromPayload(payload, startDate, endDate);
+  } catch (browserError) {
+    throw new Error(`${errorMessage(apiError)}; browser fallback failed: ${errorMessage(browserError)}`);
+  }
 }
 
 function generatedHeader(): string {

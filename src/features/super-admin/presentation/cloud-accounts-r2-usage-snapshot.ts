@@ -51,13 +51,13 @@ export const R2_USAGE_SNAPSHOT = {
       "ListMultipartUploads:1",
       "GetObject:691"
     ],
-    "message": "Captured through the connected Cloudflare account in Codex; local API token still lacks GraphQL Analytics access. Latest refresh: not authorized for that account."
+    "message": "Captured through the connected Cloudflare account in Codex; local API token still lacks GraphQL Analytics access. Latest refresh: not authorized for that account. Latest refresh: not authorized for that account. Latest refresh: not authorized for that account."
   },
   "products": {
     "status": "apiError",
-    "capturedAt": "2026-09-08T04:33:13.290Z",
+    "capturedAt": "2026-09-09T04:38:40.962Z",
     "periodStart": "2026-09-01T00:00:00.000Z",
-    "periodEnd": "2026-09-08T04:33:13.290Z",
+    "periodEnd": "2026-09-09T04:38:40.962Z",
     "classAOperations": null,
     "classAOperationsLimit": 1000000,
     "classBOperations": null,
@@ -71,9 +71,9 @@ export const R2_USAGE_SNAPSHOT = {
   },
   "products-apparel-pets": {
     "status": "apiError",
-    "capturedAt": "2026-09-08T04:33:13.290Z",
+    "capturedAt": "2026-09-09T04:38:40.962Z",
     "periodStart": "2026-09-01T00:00:00.000Z",
-    "periodEnd": "2026-09-08T04:33:13.290Z",
+    "periodEnd": "2026-09-09T04:38:40.962Z",
     "classAOperations": null,
     "classAOperationsLimit": 1000000,
     "classBOperations": null,
