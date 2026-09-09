@@ -1,39 +1,38 @@
 const ASOL_DB_NAME = 'AsolDB';
-const ASOL_DB_VERSION = 12;
 const ASOL_NOTIFICATION_STORES = [
-  'guestSessions',
-  'appSettings',
-  'auth',
-  'sellerOnboarding',
-  'queryCache',
   'notifications',
-  'notificationDeviceTokens',
   'notificationSettings',
   'notificationBadges',
-  'notificationAnalytics',
-  'notificationOfflineQueue',
-  'pageSnapshots',
-  'pageSavePending',
-  'pageSaveJournal',
-  'favorites',
-  'cart',
-  'imageUploadDrafts',
-  'imageCache',
 ];
 const ASOL_NOTIFICATION_CHANGED_EVENT = 'asol:notifications:changed';
 
 function openAsolDb() {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open(ASOL_DB_NAME, ASOL_DB_VERSION);
+    // Open the installed schema as-is. The push worker must never upgrade the
+    // shared application database just because a newer app added unrelated stores.
+    const request = indexedDB.open(ASOL_DB_NAME);
     request.onerror = () => reject(request.error);
-    request.onsuccess = () => resolve(request.result);
     request.onupgradeneeded = () => {
+      // A brand-new database has no application schema yet. Creating only the
+      // stores owned by web-push is safe; the application can upgrade the rest.
       const db = request.result;
       for (const storeName of ASOL_NOTIFICATION_STORES) {
         if (!db.objectStoreNames.contains(storeName)) {
           db.createObjectStore(storeName, { keyPath: 'key' });
         }
       }
+    };
+    request.onsuccess = () => {
+      const db = request.result;
+      const missing = ASOL_NOTIFICATION_STORES.filter(
+        (storeName) => !db.objectStoreNames.contains(storeName),
+      );
+      if (missing.length > 0) {
+        db.close();
+        reject(new Error(`AsolDB notification stores unavailable: ${missing.join(', ')}`));
+        return;
+      }
+      resolve(db);
     };
   });
 }

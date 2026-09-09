@@ -12,9 +12,9 @@ No page, dialog, card, or list row anywhere in `src/` or `packages/` may carry i
 
 The registry stores registrations keyed by scope id. Each editable surface registers through `usePageSaveRegistration` in `src/features/page-save/presentation/hooks/use-page-save-registration.ts`.
 
-IndexedDB belongs to `@asol/data-core`. The package names a `PageSaveStoragePort`; `src/features/page-save/application/page-save-core-bootstrap.ts` binds it to `ASOL_DB_STORES.PAGE_SAVE_PENDING` and `ASOL_DB_STORES.PAGE_SAVE_JOURNAL` (DB version 11), and `src/core/composition/browser-ports.ts` registers it. No IndexedDB code lives inside `@asol/page-save-core`.
+IndexedDB belongs to `@asol/data-core`. The package names a `PageSaveStoragePort`; `src/features/page-save/application/page-save-core-bootstrap.ts` binds it to `ASOL_DB_STORES.PAGE_SAVE_PENDING` and `ASOL_DB_STORES.PAGE_SAVE_JOURNAL` (stores introduced by version 11; current AsolDB version 12), and `src/core/composition/browser-ports.ts` registers it. No IndexedDB code lives inside `@asol/page-save-core`.
 
-The generated push service worker mirrors the same database name, version, and store list; edit `packages/data-core/src/browser/workers/asol-push-sw.js` and run `npm run data-access:sync-public`.
+The generated push service worker shares only the `AsolDB` database name and the notification stores it actually uses. It deliberately does not pin or upgrade the global database version; edit `packages/data-core/src/browser/workers/asol-push-sw.js` and run `npm run data-access:sync-public`.
 
 ## Contract
 

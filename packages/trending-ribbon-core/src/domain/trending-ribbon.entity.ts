@@ -1,6 +1,6 @@
 export const TRENDING_RIBBON_ID = "home-trending-ribbon";
 export const TRENDING_RIBBON_CACHE_KEY = "advertisements:trending-ribbon:v1";
-export const TRENDING_RIBBON_FALLBACK_LABEL = "home.trending.label";
+export const TRENDING_RIBBON_FALLBACK_LABEL = "الأكثر رواجاً:";
 
 export interface TrendingRibbonItem {
   label: string;

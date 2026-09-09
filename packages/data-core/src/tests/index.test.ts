@@ -189,6 +189,23 @@ function closureFrom(entry: string): Set<string> {
   return seen;
 }
 
+const asolDbSource = readFileSync(path.join(SRC, 'browser', 'asol-db', 'index.ts'), 'utf8');
+assert.match(
+  asolDbSource,
+  /error\?\.name === 'VersionError'/,
+  'AsolDB must recover when an already-installed database is newer than the requested version.',
+);
+assert.match(
+  asolDbSource,
+  /indexedDB\.open\(DB_NAME\);/,
+  'VersionError recovery must reopen the installed database without requesting a downgrade.',
+);
+assert.match(
+  asolDbSource,
+  /missingRequiredStores\(db\)/,
+  'A newer AsolDB may be reused only after its required stores are verified.',
+);
+
 const localReadSource = readFileSync(
   path.join(SRC, 'browser', 'query', 'local-read.ts'),
   'utf8',

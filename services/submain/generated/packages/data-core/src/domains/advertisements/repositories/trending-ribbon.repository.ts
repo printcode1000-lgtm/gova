@@ -7,13 +7,19 @@ import { trendingRibbon } from "../../../core/database/advertisements/advertisem
 import type { IDatabaseClient } from "../../../core/database/database-client.interface";
 import {
   DEFAULT_TRENDING_RIBBON_CONFIG,
+  TRENDING_RIBBON_FALLBACK_LABEL,
   TRENDING_RIBBON_ID,
   type TrendingRibbonConfig,
   type TrendingRibbonRecord,
 } from "@asol/trending-ribbon-core";
 
+const LEGACY_TRANSLATION_LABEL = "home.trending.label";
+
 function parseConfig(raw: string): TrendingRibbonConfig {
-  return JSON.parse(raw) as TrendingRibbonConfig;
+  const config = JSON.parse(raw) as TrendingRibbonConfig;
+  return config.label === LEGACY_TRANSLATION_LABEL
+    ? { ...config, label: TRENDING_RIBBON_FALLBACK_LABEL }
+    : config;
 }
 
 export class TrendingRibbonRepository {

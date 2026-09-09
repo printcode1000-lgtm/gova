@@ -45,10 +45,10 @@
 | contains | 344 |
 | declares-dependency | 97 |
 | documents | 4832 |
-| imports | 8443 |
+| imports | 8444 |
 | invokes | 396 |
 | produces | 18 |
-| references | 2484 |
+| references | 2483 |
 | related-to | 3049 |
 | targets-runtime | 372 |
 | tests | 353 |

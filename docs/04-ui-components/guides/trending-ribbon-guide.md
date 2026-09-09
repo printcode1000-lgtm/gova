@@ -33,7 +33,7 @@ display data and never talks to persistence directly.
 
 | Property | Type | Description |
 | :--- | :--- | :--- |
-| `label` | `string` | The prefix badge text shown before the scrolling items (e.g., `"Trending:"`). |
+| `label` | `string` | The prefix badge text shown before the scrolling items. An empty string is valid and renders the badge icon without text. |
 | `items` | `TrendingRibbonItem[]` | List of trending items to display in the ribbon. |
 | `onAction` | `(action: string) => void` | (Optional) Callback fired when a trending item is clicked. |
 

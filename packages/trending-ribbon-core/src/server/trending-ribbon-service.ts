@@ -63,7 +63,11 @@ export function createTrendingRibbonService(ports: TrendingRibbonServicePorts) {
       checkIntervalMinutes: number,
     ): Promise<TrendingRibbonRecord> {
       assertAdmin(ports.auth, identity);
-      const config = trendingRibbonConfigSchema.parse(rawConfig) as TrendingRibbonConfig;
+      const parsedConfig = trendingRibbonConfigSchema.safeParse(rawConfig);
+      if (!parsedConfig.success) {
+        throw new Error("invalidTrendingRibbonConfig");
+      }
+      const config = parsedConfig.data as TrendingRibbonConfig;
       return ports.repository.save(
         config,
         clampTrendingRibbonCheckInterval(checkIntervalMinutes),

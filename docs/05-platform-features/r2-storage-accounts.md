@@ -135,3 +135,15 @@ npm run test:storage-core
 6. No reference to `ASOL_OTA_LEGACY_R2_` anywhere in `packages/ota-core/src`, `src`, or `scripts`.
 
 See [Environment Variables](../02-data-and-storage/environment-variables.md).
+
+## Linux Cloudflare account launcher
+
+The repository-local browser launcher lives in `test_profile/` and is Linux-native.
+Run `./test_profile/run.sh` to open the four documented Cloudflare R2 account
+sessions in separate Chrome windows. `./test_profile/open-cloudflare.sh` performs
+the launch without regenerating desktop shortcuts.
+
+The launcher reuses an existing Chrome profile when its signed-in Google email
+matches the documented account email. If no matching profile exists, it creates
+a persistent isolated Chrome user-data directory under `test_profile/profiles/`
+so the Cloudflare login can be completed once without mixing account sessions.

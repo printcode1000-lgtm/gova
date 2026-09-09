@@ -21,6 +21,7 @@ import { Label } from "@/shared/ui/label";
 import {
   TRENDING_RIBBON_CACHE_KEY,
   TRENDING_RIBBON_FALLBACK_LABEL,
+  trendingRibbonConfigSchema,
   type TrendingRibbonRecord,
 } from "@asol/trending-ribbon-core";
 import { trendingRibbonApiService } from "@/features/advertisements";
@@ -149,15 +150,20 @@ export function SuperAdminTrendingRibbonPage() {
     setSaveBusy(true);
     setMessage(null);
     try {
+      const parsedConfig = trendingRibbonConfigSchema.safeParse({
+        label: badgeLabel.trim(),
+        items: items.map((item) => ({
+          label: item.label.trim(),
+          action: item.action.trim(),
+        })),
+      });
+      if (!parsedConfig.success) {
+        setMessage("إعداد شريط النصوص غير صالح، يرجى مراجعة البيانات.");
+        return false;
+      }
       const saved = await trendingRibbonApiService.save(
         session,
-        {
-          label: badgeLabel.trim(),
-          items: items.map((item) => ({
-            label: item.label.trim(),
-            action: item.action.trim(),
-          })),
-        },
+        parsedConfig.data,
         intervalMinutes,
       );
       // Invalidate IndexedDB cache so that the home page updates immediately
@@ -195,16 +201,20 @@ export function SuperAdminTrendingRibbonPage() {
         intervalMinutes: record.checkIntervalMinutes,
       })
     : "";
-  const currentFingerprint = JSON.stringify({
+  const currentConfig = {
     label: badgeLabel.trim(),
     items: items.map((item) => ({
       label: item.label.trim(),
       action: item.action.trim(),
     })),
+  };
+  const currentFingerprint = JSON.stringify({
+    ...currentConfig,
     intervalMinutes,
   });
   const isRibbonDirty =
     Boolean(record) && currentFingerprint !== savedFingerprint;
+  const isRibbonConfigValid = trendingRibbonConfigSchema.safeParse(currentConfig).success;
 
   usePageSaveRegistration({
     id: "super-admin-trending-ribbon",
@@ -216,11 +226,11 @@ export function SuperAdminTrendingRibbonPage() {
         id: "trending-ribbon",
         label: "عناصر الشريط",
         isDirty: isRibbonDirty,
-        canSave: isRibbonDirty && !saveBusy && items.length > 0,
+        canSave: isRibbonDirty && !saveBusy && items.length > 0 && isRibbonConfigValid,
       },
     ],
     isSaving: saveBusy,
-    canSave: isRibbonDirty && !saveBusy && items.length > 0,
+    canSave: isRibbonDirty && !saveBusy && items.length > 0 && isRibbonConfigValid,
     save: async (selectedItemIds) => {
       if (!selectedItemIds.includes("trending-ribbon")) return true;
       return save();
@@ -339,12 +349,13 @@ export function SuperAdminTrendingRibbonPage() {
           </Label>
           <Input
             id='features-super-admin-presentation-superadmintrendingribbonpage-input-31-ain0d9'
-            placeholder="مثال: home.trending.label أو الأكثر طلباً"
+            placeholder="مثال: الأكثر رواجاً:"
             value={badgeLabel}
+            maxLength={80}
             onChange={(e) => setBadgeLabel(e.target.value)}
           />
           <p id='features-super-admin-presentation-superadmintrendingribbonpage-text-32-pvo1d5' className="text-xs text-muted-foreground">
-            النص المعروض في المربع الملون قبل الشريط. يدعم مفاتيح الترجمة أو النصوص المباشرة.
+            اكتب النص كما تريد أن يظهر، أو اترك الحقل فارغًا لعرض الأيقونة فقط.
           </p>
         </div>
       </section>
@@ -362,6 +373,7 @@ export function SuperAdminTrendingRibbonPage() {
               id='features-super-admin-presentation-superadmintrendingribbonpage-input-40-kgldsr'
               placeholder="مثال: خصم 20% على العطور"
               value={newItemLabel}
+              maxLength={100}
               onChange={(e) => setNewItemLabel(e.target.value)}
             />
           </div>
@@ -371,6 +383,7 @@ export function SuperAdminTrendingRibbonPage() {
               id="new-item-action"
               placeholder="مثال: /profile أو معرف المنتج"
               value={newItemAction}
+              maxLength={200}
               onChange={(e) => setNewItemAction(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter") addItem();

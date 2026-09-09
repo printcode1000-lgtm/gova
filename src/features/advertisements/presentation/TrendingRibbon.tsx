@@ -21,7 +21,7 @@ export interface TrendingRibbonProps {
 }
 
 export function TrendingRibbon({ id, config }: TrendingRibbonProps & { id?: string }) {
-  const { t, isRTL } = useTranslation();
+  const { isRTL } = useTranslation();
   const { label, items, onAction } = config || {};
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -206,7 +206,6 @@ export function TrendingRibbon({ id, config }: TrendingRibbonProps & { id?: stri
   };
 
   if (!hasItems) return null;
-  const displayLabel = label.includes(".") ? t(label) : label;
 
   return (
     <div id={id}
@@ -233,9 +232,11 @@ export function TrendingRibbon({ id, config }: TrendingRibbonProps & { id?: stri
           className="w-5 h-5 text-error animate-pulse-subtle"
           aria-hidden
         />
-        <span id="features-advertisements-presentation-trendingribbon-text-3-hb8uyz" className="text-xs font-bold text-on-error-container">
-          {displayLabel}
-        </span>
+        {label ? (
+          <span id="features-advertisements-presentation-trendingribbon-text-3-hb8uyz" className="text-xs font-bold text-on-error-container">
+            {label}
+          </span>
+        ) : null}
       </div>
 
       <div id="features-advertisements-presentation-trendingribbon-div-4-dtb2il" className="flex-1 overflow-hidden" dir="ltr">

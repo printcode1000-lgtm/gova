@@ -15,14 +15,14 @@ import { createTrendingRibbonService } from "../server";
 function runContractTest() {
   assert.equal(TRENDING_RIBBON_ID, "home-trending-ribbon");
   assert.equal(TRENDING_RIBBON_CACHE_KEY, "advertisements:trending-ribbon:v1");
-  assert.equal(TRENDING_RIBBON_FALLBACK_LABEL, "home.trending.label");
+  assert.equal(TRENDING_RIBBON_FALLBACK_LABEL, "الأكثر رواجاً:");
   assert.equal("createTrendingRibbonService" in runtimeApi, false);
   console.log("✅ trending-ribbon-core contract test passed");
 }
 
 function runValidationTest() {
   assert.equal(trendingRibbonConfigSchema.safeParse(DEFAULT_TRENDING_RIBBON_CONFIG).success, true);
-  assert.equal(trendingRibbonConfigSchema.safeParse({ label: "", items: [] }).success, false);
+  assert.equal(trendingRibbonConfigSchema.safeParse({ label: "", items: [] }).success, true);
   assert.equal(isTrendingRibbonPublished({ config: DEFAULT_TRENDING_RIBBON_CONFIG, version: 1, checkIntervalMinutes: 15, updatedAt: "" }), true);
   assert.equal(clampTrendingRibbonCheckInterval(1), 5);
   assert.equal(clampTrendingRibbonCheckInterval(1500), 1440);
@@ -62,6 +62,15 @@ async function runServiceTest() {
   );
   assert.equal(saved.checkIntervalMinutes, 5);
   assert.equal(saved.updatedBy, "admin");
+  await assert.rejects(
+    () =>
+      service.save(
+        { uid: "admin", phone: "+201000000000" },
+        { label: "Valid", items: [{ label: "", action: "go" }] },
+        15,
+      ),
+    /invalidTrendingRibbonConfig/,
+  );
   console.log("✅ trending-ribbon-core service test passed");
 }
 

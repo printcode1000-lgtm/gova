@@ -4,7 +4,7 @@ The shopping cart is stored only in the local `AsolDB` IndexedDB database. It do
 
 ## Storage
 
-- AsolDB version: `11`
+- AsolDB current version: `12` (the `cart` store predates this version)
 - Object store: `cart`
 - Record key: `asol:cart:v1`
 - Value: normalized `CartItem[]`

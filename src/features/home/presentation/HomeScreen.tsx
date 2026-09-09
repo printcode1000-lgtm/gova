@@ -40,7 +40,7 @@ export default function HomeScreen({ displayCategories }: HomeScreenProps) {
   const { config: trendingRibbonData } = useHomeTrendingRibbon();
   const homeTrendingRibbonConfig = useMemo<TrendingRibbonConfig>(
     () => ({
-      label: trendingRibbonData?.label ?? "home.trending.label",
+      label: trendingRibbonData?.label ?? "الأكثر رواجاً:",
       items: Array.isArray(trendingRibbonData?.items)
         ? trendingRibbonData.items
         : [],
@@ -92,7 +92,7 @@ export default function HomeScreen({ displayCategories }: HomeScreenProps) {
       </section>
 
       {homeTrendingRibbonConfig.items.length > 0 ? (
-        <section id='features-home-presentation-homescreen-section-6-f5vpov' className="mt-[6px] overflow-hidden rounded-2xl border border-error/20 shadow-sm">
+        <section id='features-home-presentation-homescreen-section-6-f5vpov' className="mt-[6px] mx-2 sm:mx-4 overflow-hidden rounded-2xl border border-error/20 shadow-sm">
           <TrendingRibbon id='features-home-presentation-homescreen-trendingribbon-7-91g9hh' config={homeTrendingRibbonConfig} />
         </section>
       ) : null}

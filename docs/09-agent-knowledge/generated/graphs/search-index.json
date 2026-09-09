@@ -10764,7 +10764,6 @@
         "packages/account-bridge/src/tests/mobile-push.test.ts",
         "packages/architecture-core/src/contracts/notification-contract",
         "packages/architecture-core/src/contracts/notification-contract.ts",
-        "packages/data-core/src/browser/asol-db",
         "packages/data-core/src/browser/workers/asol-push-sw",
         "packages/data-core/src/browser/workers/asol-push-sw.js",
         "packages/native-core/android/src/main/java/hgh/asol/app/",

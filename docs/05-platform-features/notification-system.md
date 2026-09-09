@@ -368,7 +368,7 @@ Violations report file, line, and remediation.
 
 ## AsolDB Storage
 
-The module uses the existing `AsolDB` IndexedDB database. The database version is `9`.
+The module uses the existing `AsolDB` IndexedDB database. The current application database version is `12`; notification stores were introduced earlier and remain backward-compatible.
 
 Dedicated stores:
 
@@ -2339,11 +2339,13 @@ that carry the `badge` target.
 Specialty-chat receipt pushes are handled before display: they update the
 matching outgoing notification and never call `showNotification`.
 
-The service worker duplicates the AsolDB name, version, and store list from
-`packages/data-core/src/browser/asol-db`, because a static worker cannot import
-the module. `notification-local-storage-contract.test.ts` compares the two and
-fails the build when they drift — opening IndexedDB with a stale version there
-throws and silently drops every browser push.
+The service worker duplicates only the AsolDB **name** and the three object
+stores it actually transacts against (`notifications`, `notificationSettings`,
+and `notificationBadges`), because a static worker cannot import the module. It
+deliberately opens the installed database version without specifying a version,
+so a worker from a newer deployment cannot upgrade AsolDB underneath an older
+live tab. `notification-local-storage-contract.test.ts` pins this rule and also
+verifies that the three worker-owned stores still exist in the application schema.
 
 The worker source is `packages/data-core/src/browser/workers/asol-push-sw.js`.
 `public/asol-push-sw.js` is generated from it by `npm run data-access:sync-public`,

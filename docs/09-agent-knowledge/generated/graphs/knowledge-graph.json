@@ -10764,7 +10764,6 @@
         "packages/account-bridge/src/tests/mobile-push.test.ts",
         "packages/architecture-core/src/contracts/notification-contract",
         "packages/architecture-core/src/contracts/notification-contract.ts",
-        "packages/data-core/src/browser/asol-db",
         "packages/data-core/src/browser/workers/asol-push-sw",
         "packages/data-core/src/browser/workers/asol-push-sw.js",
         "packages/native-core/android/src/main/java/hgh/asol/app/",
@@ -70038,12 +70037,6 @@
       "to": "source:packages/architecture-core/src/contracts/notification-contract.ts",
       "kind": "references",
       "detail": "packages/architecture-core/src/contracts/notification-contract.ts"
-    },
-    {
-      "from": "document:docs/05-platform-features/notification-system.md",
-      "to": "source:packages/data-core/src/browser/asol-db/index.ts",
-      "kind": "references",
-      "detail": "packages/data-core/src/browser/asol-db"
     },
     {
       "from": "document:docs/05-platform-features/notification-system.md",
@@ -219646,6 +219639,12 @@
       "to": "source:src/features/settings/presentation/use-notification-device-settings-card.ts",
       "kind": "imports",
       "detail": "./use-notification-device-settings-card"
+    },
+    {
+      "from": "source:src/features/settings/presentation/ChatMessagePreferencesSection.tsx",
+      "to": "source:src/shared/i18n/index.ts",
+      "kind": "imports",
+      "detail": "@/shared/i18n"
     },
     {
       "from": "source:src/features/settings/presentation/notification-device-settings-card-model.ts",

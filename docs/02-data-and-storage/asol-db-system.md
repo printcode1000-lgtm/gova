@@ -21,6 +21,12 @@ Asol uses IndexedDB (AsolDB) as its primary client-side persistent storage mecha
 - **Low-level Implementation:** `packages/data-core/src/browser/asol-db/index.ts`
 - **Object Stores Schema:** Every object store is configured with `{ keyPath: 'key' }` and stores key-value pairs (where value can be a structured cloneable object).
 
+### Version-skew safety
+
+`@asol/data-core/browser` owns schema upgrades. If an already-open browser or WebView has a newer AsolDB version than the current bundle requests, the browser adapter handles IndexedDB `VersionError` by reopening the installed version without requesting a downgrade and verifies that every store required by the current bundle exists before using it. This protects an older live tab during a newer deployment while still failing closed for an incompatible schema.
+
+The Web Push service worker does **not** own the global AsolDB version and must never upgrade the shared database for unrelated application stores. It opens the installed database version as-is and owns only `notifications`, `notificationSettings`, and `notificationBadges`. On a brand-new database it may create only those three stores; the application remains the sole owner of full schema upgrades.
+
 ---
 
 ## Object Stores and Keys

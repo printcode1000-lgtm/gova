@@ -280,20 +280,24 @@ will answer it, and every route gova keeps must be one no other runtime owns. A
 business route added without an owner fails here rather than shipping as a 404
 behind the compatibility boundary.
 
-**Delete the view after a local release.** `.tmp-gova-build/` is gitignored and
-disposable, but nothing removes it — not the uploader, not `deploy:all`. Left in
-place it is an unauthorized top-level source directory, and the Repository Sweep
-in `npm run architecture:check` fails on it:
+**The release uploader deletes the view after every main-app deploy attempt.**
+`deploy-main-app.ts` removes `.tmp-gova-build/` in a `finally` block, whether the
+Vercel deployment succeeds or fails. The directory remains gitignored and
+disposable. A manually generated view from `npm run gova:tree` is intentionally
+left in place for inspection, and must be removed when that inspection ends. If
+it remains, the Repository Sweep in `npm run architecture:check` fails on it:
 
 ```text
 Unauthorized top-level source directory ".tmp-gova-build" contains N script file(s).
 ```
 
 Every other reported violation then comes from files copied inside it, not from
-repository source. Remove the directory and re-run the check:
+repository source. Remove a manually generated directory and re-run the check:
 
 ```bash
 rm -rf .tmp-gova-build
+# or generate-and-clean in one command
+npm run gova:tree -- --clean
 ```
 
 ### Persistent external Vercel experiment sandbox

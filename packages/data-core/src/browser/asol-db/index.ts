@@ -48,6 +48,39 @@ function hasIndexedDb(): boolean {
   return typeof indexedDB !== 'undefined';
 }
 
+function missingRequiredStores(db: IDBDatabase): string[] {
+  return Object.values(ASOL_DB_STORES).filter((storeName) => !db.objectStoreNames.contains(storeName));
+}
+
+function attachDatabaseLifecycle(db: IDBDatabase): IDBDatabase {
+  dbInstance = db;
+  dbInstance.onversionchange = () => {
+    dbInstance?.close();
+    dbInstance = null;
+  };
+  dbInstance.onclose = () => {
+    dbInstance = null;
+  };
+  return dbInstance;
+}
+
+function openExistingCompatibleDatabase(): Promise<IDBDatabase> {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME);
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => {
+      const db = request.result;
+      const missing = missingRequiredStores(db);
+      if (missing.length > 0) {
+        db.close();
+        reject(new Error(`AsolDB schema is newer but incompatible; missing stores: ${missing.join(', ')}`));
+        return;
+      }
+      resolve(attachDatabaseLifecycle(db));
+    };
+  });
+}
+
 async function getDB(): Promise<IDBDatabase> {
   if (dbInstance) return dbInstance;
   if (dbOpening) return dbOpening;
@@ -59,20 +92,26 @@ async function getDB(): Promise<IDBDatabase> {
     const request = indexedDB.open(DB_NAME, DB_VERSION);
 
     request.onerror = () => {
+      const error = request.error;
+      if (error?.name === 'VersionError') {
+        openExistingCompatibleDatabase().then(
+          (db) => {
+            dbOpening = null;
+            resolve(db);
+          },
+          (fallbackError) => {
+            dbOpening = null;
+            reject(fallbackError);
+          },
+        );
+        return;
+      }
       dbOpening = null;
-      reject(request.error);
+      reject(error);
     };
     request.onsuccess = () => {
-      dbInstance = request.result;
       dbOpening = null;
-      dbInstance.onversionchange = () => {
-        dbInstance?.close();
-        dbInstance = null;
-      };
-      dbInstance.onclose = () => {
-        dbInstance = null;
-      };
-      resolve(dbInstance);
+      resolve(attachDatabaseLifecycle(request.result));
     };
 
     request.onupgradeneeded = (event) => {

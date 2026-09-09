@@ -37,7 +37,13 @@ assert.doesNotMatch(
 assert.match(read('packages/vercel-deploy-core/src/index.ts'), /Direct Vercel account deployment is disabled/);
 assert.match(read('scripts/deploy-service.ts'), /assertReleaseDeploymentContext/);
 assert.match(read('scripts/deploy-control-service.ts'), /assertReleaseDeploymentContext/);
-assert.match(read('scripts/deploy-main-app.ts'), /assertReleaseDeploymentContext/);
+const mainAppDeploySource = read('scripts/deploy-main-app.ts');
+assert.match(mainAppDeploySource, /assertReleaseDeploymentContext/);
+assert.match(
+  mainAppDeploySource,
+  /finally\s*\{[\s\S]*rmSync\(deploymentDirectory, \{ recursive: true, force: true \}\);/,
+  'The transient gova upload view must be deleted after every main-app deploy attempt.',
+);
 assert.match(read('scripts/run-remote-deploy-all.mjs'), /\["run", "deploy:push:fast"\]/);
 assert.doesNotMatch(read('.githooks/pre-push.d/10-main-only'), /deploy|vercel/i);
 

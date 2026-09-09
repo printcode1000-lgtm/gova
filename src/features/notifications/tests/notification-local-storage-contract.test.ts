@@ -30,10 +30,9 @@ assert.match(localRepository, /ASOL_DB_STORES\.NOTIFICATIONS/);
 assert.match(localRepository, /asolDbSet\(/);
 assert.match(serviceWorker, /indexedDB\.open\(ASOL_DB_NAME/);
 
-// The service worker is a static file and cannot import the AsolDB module, so
-// it restates the database name, version, and store list. Opening IndexedDB
-// with a stale version there throws and silently drops every web push, so the
-// two copies are pinned to each other here.
+// The service worker is static and cannot import the AsolDB module. It may
+// duplicate the database name, but it must not pin or upgrade the shared schema
+// version. Only the three stores it actually transacts against are owned here.
 function capture(source: string, pattern: RegExp, label: string): string {
   const match = source.match(pattern);
   assert.ok(match?.[1], `Could not read ${label}.`);
@@ -52,16 +51,24 @@ assert.equal(
   capture(asolDb, /const DB_NAME = '([^']+)'/, "AsolDB database name"),
   "Service worker and AsolDB disagree on the database name.",
 );
-assert.equal(
-  capture(serviceWorker, /const ASOL_DB_VERSION = (\d+)/, "service worker database version"),
-  capture(asolDb, /const DB_VERSION = (\d+)/, "AsolDB database version"),
-  "Service worker and AsolDB disagree on the database version.",
+assert.doesNotMatch(serviceWorker, /ASOL_DB_VERSION/, "The push worker must not own AsolDB schema versioning.");
+assert.match(
+  serviceWorker,
+  /indexedDB\.open\(ASOL_DB_NAME\)/,
+  "The push worker must open the installed AsolDB version without upgrading it.",
 );
-assert.deepEqual(
-  storeNames(serviceWorker, /ASOL_NOTIFICATION_STORES = \[([\s\S]*?)\]/, "service worker stores"),
+const notificationWorkerStores = storeNames(
+  serviceWorker,
+  /ASOL_NOTIFICATION_STORES = \[([\s\S]*?)\]/,
+  "service worker stores",
+);
+assert.deepEqual(notificationWorkerStores, ["notificationBadges", "notificationSettings", "notifications"]);
+const applicationStores = new Set(
   storeNames(asolDb, /ASOL_DB_STORES = \{([\s\S]*?)\} as const/, "AsolDB stores"),
-  "Service worker and AsolDB disagree on the object store list.",
 );
+for (const storeName of notificationWorkerStores) {
+  assert.ok(applicationStores.has(storeName), `Push worker store ${storeName} is not owned by AsolDB.`);
+}
 
 const clientNotificationFiles = [
   ...filesBelow(path.join(root, "src/features/notifications")),

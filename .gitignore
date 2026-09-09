@@ -31,6 +31,7 @@ tsconfig.tsbuildinfo
 
 # Chrome profile cache / heavy data (scripts in test_profile/ are tracked, but heavy caches/dumps stay out)
 test_profile/manageProfile/
+test_profile/profiles/
 test_profile/**/Cache/
 test_profile/**/Code Cache/
 test_profile/**/GPUCache/

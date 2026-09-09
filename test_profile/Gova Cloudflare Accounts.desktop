@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=Gova Cloudflare Accounts
+Exec=/home/hesham/gova/test_profile/open-cloudflare.sh
+Terminal=false
+Categories=Development;
