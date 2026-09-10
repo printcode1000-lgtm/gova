@@ -118141,12 +118141,6 @@
     },
     {
       "from": "route:/api/specialty-chat/messages:handler",
-      "to": "package:@asol/storage-image-manager-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/specialty-chat/messages:handler",
       "to": "package:@asol/system-logs-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -118327,12 +118321,6 @@
       "to": "package:@asol/storage-core",
       "kind": "related-to",
       "detail": "route write gateway"
-    },
-    {
-      "from": "route:/api/specialty-chat/preferences:handler",
-      "to": "package:@asol/storage-image-manager-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
     },
     {
       "from": "route:/api/specialty-chat/preferences:handler",
@@ -118519,12 +118507,6 @@
     },
     {
       "from": "route:/api/specialty-chat/product-conversations:handler",
-      "to": "package:@asol/storage-image-manager-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/specialty-chat/product-conversations:handler",
       "to": "package:@asol/system-logs-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -118705,12 +118687,6 @@
       "to": "package:@asol/storage-core",
       "kind": "related-to",
       "detail": "route write gateway"
-    },
-    {
-      "from": "route:/api/specialty-chat/profile-conversations:handler",
-      "to": "package:@asol/storage-image-manager-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
     },
     {
       "from": "route:/api/specialty-chat/profile-conversations:handler",
@@ -118897,12 +118873,6 @@
     },
     {
       "from": "route:/api/specialty-chat/receipts:handler",
-      "to": "package:@asol/storage-image-manager-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/specialty-chat/receipts:handler",
       "to": "package:@asol/system-logs-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -119083,12 +119053,6 @@
       "to": "package:@asol/storage-core",
       "kind": "related-to",
       "detail": "route write gateway"
-    },
-    {
-      "from": "route:/api/specialty-chat/requests:handler",
-      "to": "package:@asol/storage-image-manager-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
     },
     {
       "from": "route:/api/specialty-chat/requests:handler",
@@ -126724,12 +126688,6 @@
     },
     {
       "from": "route:/notifications/chat:page",
-      "to": "package:@asol/storage-image-manager-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/notifications/chat:page",
       "to": "package:@asol/vercel-deploy-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -128795,12 +128753,6 @@
     {
       "from": "route:/specialty-request:page",
       "to": "package:@asol/observability-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/specialty-request:page",
-      "to": "package:@asol/storage-image-manager-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -221855,9 +221807,9 @@
     },
     {
       "from": "source:src/features/specialty-chat/presentation/SpecialtyRequestPageContent.tsx",
-      "to": "source:src/shared/ui/local-first-image.tsx",
+      "to": "source:src/shared/ui/category-tabs-strip.tsx",
       "kind": "imports",
-      "detail": "@/shared/ui/local-first-image"
+      "detail": "@/shared/ui/category-tabs-strip"
     },
     {
       "from": "source:src/features/specialty-chat/server.ts",

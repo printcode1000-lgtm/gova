@@ -92,7 +92,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/service-runtime-core` | package | 9 | 2 | 0 | 0 | 27 | 2 |
 | `@asol/signed-token-core` | package | 7 | 1 | 84 | 0 | 8 | 0 |
 | `@asol/storage-core` | package | 34 | 22 | 119 | 0 | 53 | 5 |
-| `@asol/storage-image-manager-core` | package | 10 | 2 | 28 | 0 | 18 | 8 |
+| `@asol/storage-image-manager-core` | package | 10 | 2 | 20 | 0 | 18 | 8 |
 | `@asol/sub2main-composition` | package | 7 | 1 | 0 | 0 | 9 | 7 |
 | `@asol/submain-composition` | package | 9 | 3 | 0 | 0 | 38 | 18 |
 | `@asol/system-logs-core` | package | 9 | 5 | 119 | 0 | 59 | 0 |

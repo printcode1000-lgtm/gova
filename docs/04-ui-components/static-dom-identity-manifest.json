@@ -53,7 +53,7 @@
     {
       "id": "${id}",
       "source": "src/features/advertisements/presentation/TrendingRibbon.tsx",
-      "line": 212,
+      "line": 211,
       "element": "div",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -485,7 +485,7 @@
     {
       "id": "${id}",
       "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 195,
+      "line": 475,
       "element": "section",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -861,7 +861,7 @@
     {
       "id": "${id}",
       "source": "src/shared/ui/category-tabs-strip.tsx",
-      "line": 70,
+      "line": 72,
       "element": "div",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -4469,7 +4469,7 @@
     {
       "id": "features-advertisements-presentation-trendingribbon-div-2-zon8aw",
       "source": "src/features/advertisements/presentation/TrendingRibbon.tsx",
-      "line": 231,
+      "line": 230,
       "element": "div",
       "semanticName": "advertisements-presentation-trendingribbon-div-2",
       "kind": "literal"
@@ -4477,7 +4477,7 @@
     {
       "id": "features-advertisements-presentation-trendingribbon-div-4-dtb2il",
       "source": "src/features/advertisements/presentation/TrendingRibbon.tsx",
-      "line": 241,
+      "line": 242,
       "element": "div",
       "semanticName": "advertisements-presentation-trendingribbon-div-4",
       "kind": "literal"
@@ -4485,7 +4485,7 @@
     {
       "id": "features-advertisements-presentation-trendingribbon-div-5-b4pqrx",
       "source": "src/features/advertisements/presentation/TrendingRibbon.tsx",
-      "line": 242,
+      "line": 243,
       "element": "div",
       "semanticName": "advertisements-presentation-trendingribbon-div-5",
       "kind": "literal"
@@ -10275,9 +10275,41 @@
       "kind": "literal"
     },
     {
+      "id": "features-product-search-presentation-productsearchpagecontent-categories-block-srch00",
+      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
+      "line": 478,
+      "element": "div",
+      "semanticName": "product-search-presentation-productsearchpagecontent-categories-block",
+      "kind": "literal"
+    },
+    {
+      "id": "features-product-search-presentation-productsearchpagecontent-categories-title-heading-srch02",
+      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
+      "line": 490,
+      "element": "h2",
+      "semanticName": "product-search-presentation-productsearchpagecontent-categories-title-heading",
+      "kind": "literal"
+    },
+    {
+      "id": "features-product-search-presentation-productsearchpagecontent-categories-title-line-srch03",
+      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
+      "line": 509,
+      "element": "span",
+      "semanticName": "product-search-presentation-productsearchpagecontent-categories-title-line",
+      "kind": "literal"
+    },
+    {
+      "id": "features-product-search-presentation-productsearchpagecontent-categories-title-row-srch01",
+      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
+      "line": 486,
+      "element": "div",
+      "semanticName": "product-search-presentation-productsearchpagecontent-categories-title-row",
+      "kind": "literal"
+    },
+    {
       "id": "features-product-search-presentation-productsearchpagecontent-div-2-vykpvt",
       "source": "src/features/product-search/presentation/ProductSearchPageContent.tsx",
-      "line": 16,
+      "line": 19,
       "element": "div",
       "semanticName": "product-search-presentation-productsearchpagecontent-div-2",
       "kind": "literal"
@@ -10285,7 +10317,7 @@
     {
       "id": "features-product-search-presentation-productsearchpagecontent-header-3-johmxy",
       "source": "src/features/product-search/presentation/ProductSearchPageContent.tsx",
-      "line": 17,
+      "line": 23,
       "element": "header",
       "semanticName": "product-search-presentation-productsearchpagecontent-header-3",
       "kind": "literal"
@@ -10293,7 +10325,7 @@
     {
       "id": "features-product-search-presentation-productsearchpagecontent-heading-4-phvbts",
       "source": "src/features/product-search/presentation/ProductSearchPageContent.tsx",
-      "line": 18,
+      "line": 27,
       "element": "h1",
       "semanticName": "product-search-presentation-productsearchpagecontent-heading-4",
       "kind": "literal"
@@ -10304,14 +10336,6 @@
       "line": 15,
       "element": "main",
       "semanticName": "product-search-presentation-productsearchpagecontent-main-1",
-      "kind": "literal"
-    },
-    {
-      "id": "features-product-search-presentation-productsearchpagecontent-text-6-yyyrgi",
-      "source": "src/features/product-search/presentation/ProductSearchPageContent.tsx",
-      "line": 22,
-      "element": "p",
-      "semanticName": "product-search-presentation-productsearchpagecontent-text-6",
       "kind": "literal"
     },
     {
@@ -11773,7 +11797,7 @@
     {
       "id": "features-profile-products-presentation-profileproductstabs-button-13-rlai7m",
       "source": "src/features/profile-products/presentation/ProfileProductsTabs.tsx",
-      "line": 252,
+      "line": 254,
       "element": "button",
       "semanticName": "profile-products-presentation-profileproductstabs-button-13",
       "kind": "literal"
@@ -11781,7 +11805,7 @@
     {
       "id": "features-profile-products-presentation-profileproductstabs-button-5-9hq1of",
       "source": "src/features/profile-products/presentation/ProfileProductsTabs.tsx",
-      "line": 167,
+      "line": 169,
       "element": "button",
       "semanticName": "profile-products-presentation-profileproductstabs-button-5",
       "kind": "literal"
@@ -11789,7 +11813,7 @@
     {
       "id": "features-profile-products-presentation-profileproductstabs-button-9-q06bmx",
       "source": "src/features/profile-products/presentation/ProfileProductsTabs.tsx",
-      "line": 196,
+      "line": 198,
       "element": "button",
       "semanticName": "profile-products-presentation-profileproductstabs-button-9",
       "kind": "literal"
@@ -11797,7 +11821,7 @@
     {
       "id": "features-profile-products-presentation-profileproductstabs-div-11-n2561e",
       "source": "src/features/profile-products/presentation/ProfileProductsTabs.tsx",
-      "line": 227,
+      "line": 229,
       "element": "div",
       "semanticName": "profile-products-presentation-profileproductstabs-div-11",
       "kind": "literal"
@@ -11805,7 +11829,7 @@
     {
       "id": "features-profile-products-presentation-profileproductstabs-div-12-mijnqv",
       "source": "src/features/profile-products/presentation/ProfileProductsTabs.tsx",
-      "line": 251,
+      "line": 253,
       "element": "div",
       "semanticName": "profile-products-presentation-profileproductstabs-div-12",
       "kind": "literal"
@@ -11813,7 +11837,7 @@
     {
       "id": "features-profile-products-presentation-profileproductstabs-div-7-ggokra",
       "source": "src/features/profile-products/presentation/ProfileProductsTabs.tsx",
-      "line": 182,
+      "line": 184,
       "element": "div",
       "semanticName": "profile-products-presentation-profileproductstabs-div-7",
       "kind": "literal"
@@ -11821,15 +11845,23 @@
     {
       "id": "features-profile-products-presentation-profileproductstabs-div-8-wbfjxa",
       "source": "src/features/profile-products/presentation/ProfileProductsTabs.tsx",
-      "line": 195,
+      "line": 197,
       "element": "div",
       "semanticName": "profile-products-presentation-profileproductstabs-div-8",
       "kind": "literal"
     },
     {
+      "id": "features-profile-products-presentation-profileproductstabs-div-category-tabs-pair-q6px01",
+      "source": "src/features/profile-products/presentation/ProfileProductsTabs.tsx",
+      "line": 142,
+      "element": "div",
+      "semanticName": "profile-products-presentation-profileproductstabs-div-category-tabs-pair",
+      "kind": "literal"
+    },
+    {
       "id": "features-profile-products-presentation-profileproductstabs-section-4-cucold",
       "source": "src/features/profile-products/presentation/ProfileProductsTabs.tsx",
-      "line": 166,
+      "line": 168,
       "element": "section",
       "semanticName": "profile-products-presentation-profileproductstabs-section-4",
       "kind": "literal"
@@ -11837,7 +11869,7 @@
     {
       "id": "features-profile-products-presentation-profileproductstabs-text-10-q5wi8f",
       "source": "src/features/profile-products/presentation/ProfileProductsTabs.tsx",
-      "line": 208,
+      "line": 210,
       "element": "span",
       "semanticName": "profile-products-presentation-profileproductstabs-text-10",
       "kind": "literal"
@@ -11845,7 +11877,7 @@
     {
       "id": "features-profile-products-presentation-profileproductstabs-text-6-n9fe03",
       "source": "src/features/profile-products/presentation/ProfileProductsTabs.tsx",
-      "line": 173,
+      "line": 175,
       "element": "span",
       "semanticName": "profile-products-presentation-profileproductstabs-text-6",
       "kind": "literal"
@@ -12565,7 +12597,7 @@
     {
       "id": "features-settings-presentation-chatmessagepreferencessection-div-1-gq7fng",
       "source": "src/features/settings/presentation/ChatMessagePreferencesSection.tsx",
-      "line": 16,
+      "line": 20,
       "element": "div",
       "semanticName": "settings-presentation-chatmessagepreferencessection-div-1",
       "kind": "literal"
@@ -12573,7 +12605,7 @@
     {
       "id": "features-settings-presentation-chatmessagepreferencessection-text-4-uh8mzn",
       "source": "src/features/settings/presentation/ChatMessagePreferencesSection.tsx",
-      "line": 36,
+      "line": 42,
       "element": "p",
       "semanticName": "settings-presentation-chatmessagepreferencessection-text-4",
       "kind": "literal"
@@ -13395,17 +13427,9 @@
       "kind": "literal"
     },
     {
-      "id": "features-specialty-chat-presentation-specialtyrequestpagecontent-button-10-v4ykhw",
-      "source": "src/features/specialty-chat/presentation/SpecialtyRequestPageContent.tsx",
-      "line": 117,
-      "element": "button",
-      "semanticName": "specialty-chat-presentation-specialtyrequestpagecontent-button-10",
-      "kind": "literal"
-    },
-    {
       "id": "features-specialty-chat-presentation-specialtyrequestpagecontent-button-30-dd6gpv",
       "source": "src/features/specialty-chat/presentation/SpecialtyRequestPageContent.tsx",
-      "line": 162,
+      "line": 167,
       "element": "button",
       "semanticName": "specialty-chat-presentation-specialtyrequestpagecontent-button-30",
       "kind": "literal"
@@ -13413,7 +13437,7 @@
     {
       "id": "features-specialty-chat-presentation-specialtyrequestpagecontent-div-14-s2gqvh",
       "source": "src/features/specialty-chat/presentation/SpecialtyRequestPageContent.tsx",
-      "line": 121,
+      "line": 117,
       "element": "div",
       "semanticName": "specialty-chat-presentation-specialtyrequestpagecontent-div-14",
       "kind": "literal"
@@ -13421,33 +13445,9 @@
     {
       "id": "features-specialty-chat-presentation-specialtyrequestpagecontent-div-19-ploqh2",
       "source": "src/features/specialty-chat/presentation/SpecialtyRequestPageContent.tsx",
-      "line": 126,
+      "line": 122,
       "element": "div",
       "semanticName": "specialty-chat-presentation-specialtyrequestpagecontent-div-19",
-      "kind": "literal"
-    },
-    {
-      "id": "features-specialty-chat-presentation-specialtyrequestpagecontent-div-21-jyuzl3",
-      "source": "src/features/specialty-chat/presentation/SpecialtyRequestPageContent.tsx",
-      "line": 128,
-      "element": "div",
-      "semanticName": "specialty-chat-presentation-specialtyrequestpagecontent-div-21",
-      "kind": "literal"
-    },
-    {
-      "id": "features-specialty-chat-presentation-specialtyrequestpagecontent-div-22-llld4j",
-      "source": "src/features/specialty-chat/presentation/SpecialtyRequestPageContent.tsx",
-      "line": 139,
-      "element": "div",
-      "semanticName": "specialty-chat-presentation-specialtyrequestpagecontent-div-22",
-      "kind": "literal"
-    },
-    {
-      "id": "features-specialty-chat-presentation-specialtyrequestpagecontent-div-24-17swxo",
-      "source": "src/features/specialty-chat/presentation/SpecialtyRequestPageContent.tsx",
-      "line": 141,
-      "element": "div",
-      "semanticName": "specialty-chat-presentation-specialtyrequestpagecontent-div-24",
       "kind": "literal"
     },
     {
@@ -13461,7 +13461,7 @@
     {
       "id": "features-specialty-chat-presentation-specialtyrequestpagecontent-fieldset-18-mdxwtk",
       "source": "src/features/specialty-chat/presentation/SpecialtyRequestPageContent.tsx",
-      "line": 125,
+      "line": 121,
       "element": "fieldset",
       "semanticName": "specialty-chat-presentation-specialtyrequestpagecontent-fieldset-18",
       "kind": "literal"
@@ -13469,7 +13469,7 @@
     {
       "id": "features-specialty-chat-presentation-specialtyrequestpagecontent-form-17-1govqx",
       "source": "src/features/specialty-chat/presentation/SpecialtyRequestPageContent.tsx",
-      "line": 124,
+      "line": 120,
       "element": "form",
       "semanticName": "specialty-chat-presentation-specialtyrequestpagecontent-form-17",
       "kind": "literal"
@@ -13477,7 +13477,7 @@
     {
       "id": "features-specialty-chat-presentation-specialtyrequestpagecontent-heading-15-oogfb5",
       "source": "src/features/specialty-chat/presentation/SpecialtyRequestPageContent.tsx",
-      "line": 121,
+      "line": 117,
       "element": "h1",
       "semanticName": "specialty-chat-presentation-specialtyrequestpagecontent-heading-15",
       "kind": "literal"
@@ -13493,7 +13493,7 @@
     {
       "id": "features-specialty-chat-presentation-specialtyrequestpagecontent-label-25-xn6mhj",
       "source": "src/features/specialty-chat/presentation/SpecialtyRequestPageContent.tsx",
-      "line": 152,
+      "line": 157,
       "element": "label",
       "semanticName": "specialty-chat-presentation-specialtyrequestpagecontent-label-25",
       "kind": "literal"
@@ -13523,41 +13523,17 @@
       "kind": "literal"
     },
     {
-      "id": "features-specialty-chat-presentation-specialtyrequestpagecontent-text-12-zvpby7",
-      "source": "src/features/specialty-chat/presentation/SpecialtyRequestPageContent.tsx",
-      "line": 120,
-      "element": "span",
-      "semanticName": "specialty-chat-presentation-specialtyrequestpagecontent-text-12",
-      "kind": "literal"
-    },
-    {
       "id": "features-specialty-chat-presentation-specialtyrequestpagecontent-text-16-vqsp8n",
       "source": "src/features/specialty-chat/presentation/SpecialtyRequestPageContent.tsx",
-      "line": 121,
+      "line": 117,
       "element": "p",
       "semanticName": "specialty-chat-presentation-specialtyrequestpagecontent-text-16",
       "kind": "literal"
     },
     {
-      "id": "features-specialty-chat-presentation-specialtyrequestpagecontent-text-20-ymkoyn",
-      "source": "src/features/specialty-chat/presentation/SpecialtyRequestPageContent.tsx",
-      "line": 127,
-      "element": "p",
-      "semanticName": "specialty-chat-presentation-specialtyrequestpagecontent-text-20",
-      "kind": "literal"
-    },
-    {
-      "id": "features-specialty-chat-presentation-specialtyrequestpagecontent-text-23-i0xfjl",
-      "source": "src/features/specialty-chat/presentation/SpecialtyRequestPageContent.tsx",
-      "line": 140,
-      "element": "p",
-      "semanticName": "specialty-chat-presentation-specialtyrequestpagecontent-text-23",
-      "kind": "literal"
-    },
-    {
       "id": "features-specialty-chat-presentation-specialtyrequestpagecontent-text-27-bnkpac",
       "source": "src/features/specialty-chat/presentation/SpecialtyRequestPageContent.tsx",
-      "line": 154,
+      "line": 159,
       "element": "span",
       "semanticName": "specialty-chat-presentation-specialtyrequestpagecontent-text-27",
       "kind": "literal"
@@ -13565,7 +13541,7 @@
     {
       "id": "features-specialty-chat-presentation-specialtyrequestpagecontent-text-28-9hi09l",
       "source": "src/features/specialty-chat/presentation/SpecialtyRequestPageContent.tsx",
-      "line": 158,
+      "line": 163,
       "element": "p",
       "semanticName": "specialty-chat-presentation-specialtyrequestpagecontent-text-28",
       "kind": "literal"
@@ -13581,7 +13557,7 @@
     {
       "id": "features-specialty-chat-presentation-specialtyrequestpagecontent-textarea-26-umyz1m",
       "source": "src/features/specialty-chat/presentation/SpecialtyRequestPageContent.tsx",
-      "line": 153,
+      "line": 158,
       "element": "textarea",
       "semanticName": "specialty-chat-presentation-specialtyrequestpagecontent-textarea-26",
       "kind": "literal"
@@ -16837,7 +16813,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-div-11-dxk9g0",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 269,
+      "line": 279,
       "element": "div",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-div-11",
       "kind": "literal"
@@ -16845,7 +16821,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-div-14-u5upxa",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 273,
+      "line": 283,
       "element": "div",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-div-14",
       "kind": "literal"
@@ -16853,7 +16829,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-div-18-n5ydgy",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 283,
+      "line": 293,
       "element": "div",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-div-18",
       "kind": "literal"
@@ -16861,7 +16837,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-div-21-bnkbco",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 287,
+      "line": 297,
       "element": "div",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-div-21",
       "kind": "literal"
@@ -16869,7 +16845,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-div-22-0vyw7q",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 288,
+      "line": 298,
       "element": "div",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-div-22",
       "kind": "literal"
@@ -16877,7 +16853,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-div-27-buvpbt",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 326,
+      "line": 336,
       "element": "div",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-div-27",
       "kind": "literal"
@@ -16885,7 +16861,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-div-29-up1g6a",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 336,
+      "line": 346,
       "element": "div",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-div-29",
       "kind": "literal"
@@ -16893,7 +16869,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-div-34-920dim",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 354,
+      "line": 365,
       "element": "div",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-div-34",
       "kind": "literal"
@@ -16901,7 +16877,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-div-37-qpk7up",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 358,
+      "line": 369,
       "element": "div",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-div-37",
       "kind": "literal"
@@ -16909,7 +16885,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-div-38-oyorrk",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 359,
+      "line": 370,
       "element": "div",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-div-38",
       "kind": "literal"
@@ -16917,7 +16893,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-div-4-l1evms",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 253,
+      "line": 263,
       "element": "div",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-div-4",
       "kind": "literal"
@@ -16925,7 +16901,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-div-41-i1pgp8",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 368,
+      "line": 380,
       "element": "div",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-div-41",
       "kind": "literal"
@@ -16933,7 +16909,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-div-44-27revj",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 381,
+      "line": 394,
       "element": "div",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-div-44",
       "kind": "literal"
@@ -16941,7 +16917,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-div-48-rn4lbh",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 395,
+      "line": 408,
       "element": "div",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-div-48",
       "kind": "literal"
@@ -16949,7 +16925,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-div-50-b7q2kk",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 397,
+      "line": 410,
       "element": "div",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-div-50",
       "kind": "literal"
@@ -16957,7 +16933,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-div-54-6gtpjv",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 416,
+      "line": 429,
       "element": "div",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-div-54",
       "kind": "literal"
@@ -16965,7 +16941,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-div-57-1rvehy",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 469,
+      "line": 482,
       "element": "div",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-div-57",
       "kind": "literal"
@@ -16973,7 +16949,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-div-6-oa0bhi",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 256,
+      "line": 266,
       "element": "div",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-div-6",
       "kind": "literal"
@@ -16981,7 +16957,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-div-60-pm1gno",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 473,
+      "line": 486,
       "element": "div",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-div-60",
       "kind": "literal"
@@ -16989,7 +16965,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-header-3-bqyuqt",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 252,
+      "line": 262,
       "element": "header",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-header-3",
       "kind": "literal"
@@ -16997,7 +16973,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-heading-20-njwy9u",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 285,
+      "line": 295,
       "element": "h2",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-heading-20",
       "kind": "literal"
@@ -17005,7 +16981,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-heading-36-3ibcn0",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 356,
+      "line": 367,
       "element": "h2",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-heading-36",
       "kind": "literal"
@@ -17013,7 +16989,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-heading-49-rierp5",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 396,
+      "line": 409,
       "element": "h2",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-heading-49",
       "kind": "literal"
@@ -17021,7 +16997,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-heading-59-yykuhp",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 471,
+      "line": 484,
       "element": "h2",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-heading-59",
       "kind": "literal"
@@ -17029,7 +17005,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-heading-8-w0lbj9",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 258,
+      "line": 268,
       "element": "h1",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-heading-8",
       "kind": "literal"
@@ -17037,7 +17013,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-main-1-t04iz3",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 241,
+      "line": 251,
       "element": "main",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-main-1",
       "kind": "literal"
@@ -17045,7 +17021,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-main-2-drdy11",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 250,
+      "line": 260,
       "element": "main",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-main-2",
       "kind": "literal"
@@ -17053,7 +17029,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-section-10-jad16v",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 268,
+      "line": 278,
       "element": "section",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-section-10",
       "kind": "literal"
@@ -17061,7 +17037,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-section-17-8gbaka",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 282,
+      "line": 292,
       "element": "section",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-section-17",
       "kind": "literal"
@@ -17069,7 +17045,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-section-28-zx41qq",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 335,
+      "line": 345,
       "element": "section",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-section-28",
       "kind": "literal"
@@ -17077,7 +17053,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-section-33-bl3vyy",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 353,
+      "line": 364,
       "element": "section",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-section-33",
       "kind": "literal"
@@ -17085,7 +17061,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-section-47-119p5q",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 394,
+      "line": 407,
       "element": "section",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-section-47",
       "kind": "literal"
@@ -17093,7 +17069,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-section-56-rordbk",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 468,
+      "line": 481,
       "element": "section",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-section-56",
       "kind": "literal"
@@ -17101,7 +17077,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-text-12-rzk01b",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 270,
+      "line": 280,
       "element": "p",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-text-12",
       "kind": "literal"
@@ -17109,7 +17085,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-text-13-28ngo2",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 271,
+      "line": 281,
       "element": "p",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-text-13",
       "kind": "literal"
@@ -17117,7 +17093,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-text-15-cmgs4o",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 274,
+      "line": 284,
       "element": "p",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-text-15",
       "kind": "literal"
@@ -17125,7 +17101,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-text-16-cltmzp",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 275,
+      "line": 285,
       "element": "p",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-text-16",
       "kind": "literal"
@@ -17133,7 +17109,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-text-32-pvo1d5",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 346,
+      "line": 357,
       "element": "p",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-text-32",
       "kind": "literal"
@@ -17141,7 +17117,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-text-53-swujqq",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 412,
+      "line": 425,
       "element": "p",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-text-53",
       "kind": "literal"
@@ -17149,7 +17125,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-text-55-epac21",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 460,
+      "line": 473,
       "element": "p",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-text-55",
       "kind": "literal"
@@ -17157,7 +17133,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-text-7-zbw2oa",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 257,
+      "line": 267,
       "element": "p",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-text-7",
       "kind": "literal"
@@ -17165,7 +17141,7 @@
     {
       "id": "features-super-admin-presentation-superadmintrendingribbonpage-text-9-smppqc",
       "source": "src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx",
-      "line": 261,
+      "line": 271,
       "element": "p",
       "semanticName": "super-admin-presentation-superadmintrendingribbonpage-text-9",
       "kind": "literal"
@@ -19397,7 +19373,7 @@
     {
       "id": "id ? `${id}-div-2-1yazbt` : undefined",
       "source": "src/shared/layouts/AppHeader.tsx",
-      "line": 52,
+      "line": 50,
       "element": "div",
       "semanticName": "div-2",
       "kind": "scoped-template"
@@ -19485,7 +19461,7 @@
     {
       "id": "id ? `${id}-div-3-8w7vil` : undefined",
       "source": "src/shared/layouts/AppHeader.tsx",
-      "line": 53,
+      "line": 51,
       "element": "div",
       "semanticName": "div-3",
       "kind": "scoped-template"
@@ -19629,7 +19605,7 @@
     {
       "id": "id ? `${id}-div-6-aoh3is` : undefined",
       "source": "src/shared/layouts/AppHeader.tsx",
-      "line": 77,
+      "line": 75,
       "element": "div",
       "semanticName": "div-6",
       "kind": "scoped-template"
@@ -19733,7 +19709,7 @@
     {
       "id": "id ? `${id}-header-1-uaolwp` : undefined",
       "source": "src/shared/layouts/AppHeader.tsx",
-      "line": 46,
+      "line": 44,
       "element": "header",
       "semanticName": "header-1",
       "kind": "scoped-template"
@@ -19741,7 +19717,7 @@
     {
       "id": "id ? `${id}-header-menu-button` : undefined",
       "source": "src/shared/layouts/AppHeader.tsx",
-      "line": 54,
+      "line": 52,
       "element": "button",
       "semanticName": "header-menu",
       "kind": "scoped-template"
@@ -19909,7 +19885,7 @@
     {
       "id": "id ? `${id}-text-11-43en61` : undefined",
       "source": "src/shared/layouts/AppHeader.tsx",
-      "line": 113,
+      "line": 111,
       "element": "span",
       "semanticName": "text-11",
       "kind": "scoped-template"
@@ -22555,14 +22531,6 @@
       "kind": "literal"
     },
     {
-      "id": "product-search-presentation-panel-productsearchfieldselector-button-6-kflij7",
-      "source": "src/features/product-search/presentation/panel/ProductSearchFieldSelector.tsx",
-      "line": 46,
-      "element": "button",
-      "semanticName": "search-presentation-panel-productsearchfieldselector-button-6",
-      "kind": "literal"
-    },
-    {
       "id": "product-search-presentation-panel-productsearchfieldselector-div-2-sphbyg",
       "source": "src/features/product-search/presentation/panel/ProductSearchFieldSelector.tsx",
       "line": 40,
@@ -22581,7 +22549,7 @@
     {
       "id": "product-search-presentation-panel-productsearchfieldselector-div-7-jsb2yp",
       "source": "src/features/product-search/presentation/panel/ProductSearchFieldSelector.tsx",
-      "line": 62,
+      "line": 47,
       "element": "div",
       "semanticName": "search-presentation-panel-productsearchfieldselector-div-7",
       "kind": "literal"
@@ -22605,7 +22573,7 @@
     {
       "id": "product-search-presentation-panel-productsearchpanel-button-6-xekvwl",
       "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 239,
+      "line": 445,
       "element": "button",
       "semanticName": "search-presentation-panel-productsearchpanel-button-6",
       "kind": "literal"
@@ -22613,15 +22581,47 @@
     {
       "id": "product-search-presentation-panel-productsearchpanel-button-7-cqgpqc",
       "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 249,
+      "line": 456,
       "element": "button",
       "semanticName": "search-presentation-panel-productsearchpanel-button-7",
       "kind": "literal"
     },
     {
+      "id": "product-search-presentation-panel-productsearchpanel-categories-content-acc003",
+      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
+      "line": 528,
+      "element": "div",
+      "semanticName": "search-presentation-panel-productsearchpanel-categories-content",
+      "kind": "literal"
+    },
+    {
+      "id": "product-search-presentation-panel-productsearchpanel-categories-section-acc001",
+      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
+      "line": 482,
+      "element": "section",
+      "semanticName": "search-presentation-panel-productsearchpanel-categories-section",
+      "kind": "literal"
+    },
+    {
+      "id": "product-search-presentation-panel-productsearchpanel-categories-toggle-acc002",
+      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
+      "line": 494,
+      "element": "button",
+      "semanticName": "search-presentation-panel-productsearchpanel-categories-toggle",
+      "kind": "literal"
+    },
+    {
+      "id": "product-search-presentation-panel-productsearchpanel-categories-toggle-text-acc010",
+      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
+      "line": 506,
+      "element": "span",
+      "semanticName": "search-presentation-panel-productsearchpanel-categories-toggle-text",
+      "kind": "literal"
+    },
+    {
       "id": "product-search-presentation-panel-productsearchpanel-div-1-gwaoyg",
       "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 166,
+      "line": 178,
       "element": "div",
       "semanticName": "search-presentation-panel-productsearchpanel-div-1",
       "kind": "literal"
@@ -22629,7 +22629,7 @@
     {
       "id": "product-search-presentation-panel-productsearchpanel-div-24-o5mpun",
       "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 347,
+      "line": 364,
       "element": "div",
       "semanticName": "search-presentation-panel-productsearchpanel-div-24",
       "kind": "literal"
@@ -22637,23 +22637,15 @@
     {
       "id": "product-search-presentation-panel-productsearchpanel-div-3-3vt1bi",
       "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 197,
+      "line": 214,
       "element": "div",
       "semanticName": "search-presentation-panel-productsearchpanel-div-3",
       "kind": "literal"
     },
     {
-      "id": "product-search-presentation-panel-productsearchpanel-div-34-2zqrum",
-      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 379,
-      "element": "div",
-      "semanticName": "search-presentation-panel-productsearchpanel-div-34",
-      "kind": "literal"
-    },
-    {
       "id": "product-search-presentation-panel-productsearchpanel-div-4-cgyfzm",
       "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 222,
+      "line": 421,
       "element": "div",
       "semanticName": "search-presentation-panel-productsearchpanel-div-4",
       "kind": "literal"
@@ -22661,7 +22653,7 @@
     {
       "id": "product-search-presentation-panel-productsearchpanel-div-5-4zdjvh",
       "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 223,
+      "line": 425,
       "element": "div",
       "semanticName": "search-presentation-panel-productsearchpanel-div-5",
       "kind": "literal"
@@ -22669,31 +22661,15 @@
     {
       "id": "product-search-presentation-panel-productsearchpanel-div-8-so8ca4",
       "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 273,
+      "line": 256,
       "element": "div",
       "semanticName": "search-presentation-panel-productsearchpanel-div-8",
       "kind": "literal"
     },
     {
-      "id": "product-search-presentation-panel-productsearchpanel-input-23-jtt8qv",
-      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 331,
-      "element": "input",
-      "semanticName": "search-presentation-panel-productsearchpanel-input-23",
-      "kind": "literal"
-    },
-    {
-      "id": "product-search-presentation-panel-productsearchpanel-label-22-xrxlql",
-      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 330,
-      "element": "label",
-      "semanticName": "search-presentation-panel-productsearchpanel-label-22",
-      "kind": "literal"
-    },
-    {
       "id": "product-search-presentation-panel-productsearchpanel-option-10-oonbuk",
       "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 281,
+      "line": 273,
       "element": "option",
       "semanticName": "search-presentation-panel-productsearchpanel-option-10",
       "kind": "literal"
@@ -22701,7 +22677,7 @@
     {
       "id": "product-search-presentation-panel-productsearchpanel-option-11-csfcqx",
       "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 284,
+      "line": 279,
       "element": "option",
       "semanticName": "search-presentation-panel-productsearchpanel-option-11",
       "kind": "literal"
@@ -22709,7 +22685,7 @@
     {
       "id": "product-search-presentation-panel-productsearchpanel-option-12-ihxcyi",
       "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 287,
+      "line": 285,
       "element": "option",
       "semanticName": "search-presentation-panel-productsearchpanel-option-12",
       "kind": "literal"
@@ -22717,7 +22693,7 @@
     {
       "id": "product-search-presentation-panel-productsearchpanel-option-13-u2t8de",
       "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 290,
+      "line": 291,
       "element": "option",
       "semanticName": "search-presentation-panel-productsearchpanel-option-13",
       "kind": "literal"
@@ -22725,7 +22701,7 @@
     {
       "id": "product-search-presentation-panel-productsearchpanel-option-14-fv0hep",
       "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 293,
+      "line": 297,
       "element": "option",
       "semanticName": "search-presentation-panel-productsearchpanel-option-14",
       "kind": "literal"
@@ -22733,7 +22709,7 @@
     {
       "id": "product-search-presentation-panel-productsearchpanel-option-15-fmzepw",
       "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 296,
+      "line": 303,
       "element": "option",
       "semanticName": "search-presentation-panel-productsearchpanel-option-15",
       "kind": "literal"
@@ -22741,7 +22717,7 @@
     {
       "id": "product-search-presentation-panel-productsearchpanel-option-17-pnarlj",
       "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 312,
+      "line": 329,
       "element": "option",
       "semanticName": "search-presentation-panel-productsearchpanel-option-17",
       "kind": "literal"
@@ -22749,7 +22725,7 @@
     {
       "id": "product-search-presentation-panel-productsearchpanel-option-18-cqmy9e",
       "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 315,
+      "line": 335,
       "element": "option",
       "semanticName": "search-presentation-panel-productsearchpanel-option-18",
       "kind": "literal"
@@ -22757,7 +22733,7 @@
     {
       "id": "product-search-presentation-panel-productsearchpanel-option-19-azp0f2",
       "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 318,
+      "line": 341,
       "element": "option",
       "semanticName": "search-presentation-panel-productsearchpanel-option-19",
       "kind": "literal"
@@ -22765,7 +22741,7 @@
     {
       "id": "product-search-presentation-panel-productsearchpanel-option-20-hx1ysj",
       "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 321,
+      "line": 347,
       "element": "option",
       "semanticName": "search-presentation-panel-productsearchpanel-option-20",
       "kind": "literal"
@@ -22773,31 +22749,15 @@
     {
       "id": "product-search-presentation-panel-productsearchpanel-option-21-xrjc8o",
       "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 324,
+      "line": 353,
       "element": "option",
       "semanticName": "search-presentation-panel-productsearchpanel-option-21",
       "kind": "literal"
     },
     {
-      "id": "product-search-presentation-panel-productsearchpanel-option-26-znk2sz",
-      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 353,
-      "element": "option",
-      "semanticName": "search-presentation-panel-productsearchpanel-option-26",
-      "kind": "literal"
-    },
-    {
-      "id": "product-search-presentation-panel-productsearchpanel-option-27-wtfryf",
-      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 356,
-      "element": "option",
-      "semanticName": "search-presentation-panel-productsearchpanel-option-27",
-      "kind": "literal"
-    },
-    {
       "id": "product-search-presentation-panel-productsearchpanel-option-29-7h1io5",
       "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 367,
+      "line": 385,
       "element": "option",
       "semanticName": "search-presentation-panel-productsearchpanel-option-29",
       "kind": "literal"
@@ -22805,7 +22765,7 @@
     {
       "id": "product-search-presentation-panel-productsearchpanel-option-30-aohmas",
       "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 370,
+      "line": 391,
       "element": "option",
       "semanticName": "search-presentation-panel-productsearchpanel-option-30",
       "kind": "literal"
@@ -22813,7 +22773,7 @@
     {
       "id": "product-search-presentation-panel-productsearchpanel-option-31-rohsur",
       "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 371,
+      "line": 397,
       "element": "option",
       "semanticName": "search-presentation-panel-productsearchpanel-option-31",
       "kind": "literal"
@@ -22821,7 +22781,7 @@
     {
       "id": "product-search-presentation-panel-productsearchpanel-option-32-iiqtup",
       "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 372,
+      "line": 403,
       "element": "option",
       "semanticName": "search-presentation-panel-productsearchpanel-option-32",
       "kind": "literal"
@@ -22829,31 +22789,151 @@
     {
       "id": "product-search-presentation-panel-productsearchpanel-option-33-kak4lj",
       "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 373,
+      "line": 409,
       "element": "option",
       "semanticName": "search-presentation-panel-productsearchpanel-option-33",
       "kind": "literal"
     },
     {
+      "id": "product-search-presentation-panel-productsearchpanel-order-content-acc009",
+      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
+      "line": 642,
+      "element": "div",
+      "semanticName": "search-presentation-panel-productsearchpanel-order-content",
+      "kind": "literal"
+    },
+    {
+      "id": "product-search-presentation-panel-productsearchpanel-order-section-acc007",
+      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
+      "line": 594,
+      "element": "section",
+      "semanticName": "search-presentation-panel-productsearchpanel-order-section",
+      "kind": "literal"
+    },
+    {
+      "id": "product-search-presentation-panel-productsearchpanel-order-toggle-acc008",
+      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
+      "line": 606,
+      "element": "button",
+      "semanticName": "search-presentation-panel-productsearchpanel-order-toggle",
+      "kind": "literal"
+    },
+    {
+      "id": "product-search-presentation-panel-productsearchpanel-order-toggle-text-acc012",
+      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
+      "line": 618,
+      "element": "span",
+      "semanticName": "search-presentation-panel-productsearchpanel-order-toggle-text",
+      "kind": "literal"
+    },
+    {
+      "id": "product-search-presentation-panel-productsearchpanel-pre-search-group-rsg001",
+      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
+      "line": 654,
+      "element": "div",
+      "semanticName": "search-presentation-panel-productsearchpanel-pre-search-group",
+      "kind": "literal"
+    },
+    {
+      "id": "product-search-presentation-panel-productsearchpanel-rating-label-rat001",
+      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
+      "line": 312,
+      "element": "label",
+      "semanticName": "search-presentation-panel-productsearchpanel-rating-label",
+      "kind": "literal"
+    },
+    {
+      "id": "product-search-presentation-panel-productsearchpanel-results-order-heading-rso003",
+      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
+      "line": 602,
+      "element": "h2",
+      "semanticName": "search-presentation-panel-productsearchpanel-results-order-heading",
+      "kind": "literal"
+    },
+    {
+      "id": "product-search-presentation-panel-productsearchpanel-results-order-line-rso004",
+      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
+      "line": 623,
+      "element": "span",
+      "semanticName": "search-presentation-panel-productsearchpanel-results-order-line",
+      "kind": "literal"
+    },
+    {
+      "id": "product-search-presentation-panel-productsearchpanel-results-order-title-row-rso002",
+      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
+      "line": 598,
+      "element": "div",
+      "semanticName": "search-presentation-panel-productsearchpanel-results-order-title-row",
+      "kind": "literal"
+    },
+    {
+      "id": "product-search-presentation-panel-productsearchpanel-scope-content-acc006",
+      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
+      "line": 585,
+      "element": "div",
+      "semanticName": "search-presentation-panel-productsearchpanel-scope-content",
+      "kind": "literal"
+    },
+    {
+      "id": "product-search-presentation-panel-productsearchpanel-scope-section-acc004",
+      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
+      "line": 537,
+      "element": "section",
+      "semanticName": "search-presentation-panel-productsearchpanel-scope-section",
+      "kind": "literal"
+    },
+    {
+      "id": "product-search-presentation-panel-productsearchpanel-scope-toggle-acc005",
+      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
+      "line": 549,
+      "element": "button",
+      "semanticName": "search-presentation-panel-productsearchpanel-scope-toggle",
+      "kind": "literal"
+    },
+    {
+      "id": "product-search-presentation-panel-productsearchpanel-scope-toggle-text-acc011",
+      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
+      "line": 561,
+      "element": "span",
+      "semanticName": "search-presentation-panel-productsearchpanel-scope-toggle-text",
+      "kind": "literal"
+    },
+    {
+      "id": "product-search-presentation-panel-productsearchpanel-search-scope-heading-g7h8i9",
+      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
+      "line": 545,
+      "element": "h2",
+      "semanticName": "search-presentation-panel-productsearchpanel-search-scope-heading",
+      "kind": "literal"
+    },
+    {
+      "id": "product-search-presentation-panel-productsearchpanel-search-scope-line-j0k1l2",
+      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
+      "line": 566,
+      "element": "span",
+      "semanticName": "search-presentation-panel-productsearchpanel-search-scope-line",
+      "kind": "literal"
+    },
+    {
+      "id": "product-search-presentation-panel-productsearchpanel-search-scope-title-row-d4e5f6",
+      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
+      "line": 541,
+      "element": "div",
+      "semanticName": "search-presentation-panel-productsearchpanel-search-scope-title-row",
+      "kind": "literal"
+    },
+    {
       "id": "product-search-presentation-panel-productsearchpanel-select-16-0xybkk",
       "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 301,
+      "line": 317,
       "element": "select",
       "semanticName": "search-presentation-panel-productsearchpanel-select-16",
       "kind": "literal"
     },
     {
-      "id": "product-search-presentation-panel-productsearchpanel-select-25-r9zhv3",
-      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 348,
-      "element": "select",
-      "semanticName": "search-presentation-panel-productsearchpanel-select-25",
-      "kind": "literal"
-    },
-    {
       "id": "product-search-presentation-panel-productsearchpanel-select-28-ut5apt",
       "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 358,
+      "line": 375,
       "element": "select",
       "semanticName": "search-presentation-panel-productsearchpanel-select-28",
       "kind": "literal"
@@ -22861,9 +22941,41 @@
     {
       "id": "product-search-presentation-panel-productsearchpanel-select-9-m7j5v1",
       "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
-      "line": 274,
+      "line": 265,
       "element": "select",
       "semanticName": "search-presentation-panel-productsearchpanel-select-9",
+      "kind": "literal"
+    },
+    {
+      "id": "product-search-presentation-panel-productsearchpanel-seller-rating-label-slr001",
+      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
+      "line": 368,
+      "element": "label",
+      "semanticName": "search-presentation-panel-productsearchpanel-seller-rating-label",
+      "kind": "literal"
+    },
+    {
+      "id": "product-search-presentation-panel-productsearchpanel-service-providers-button-prv002",
+      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
+      "line": 230,
+      "element": "button",
+      "semanticName": "search-presentation-panel-productsearchpanel-service-providers-button",
+      "kind": "literal"
+    },
+    {
+      "id": "product-search-presentation-panel-productsearchpanel-services-button-srv001",
+      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
+      "line": 218,
+      "element": "button",
+      "semanticName": "search-presentation-panel-productsearchpanel-services-button",
+      "kind": "literal"
+    },
+    {
+      "id": "product-search-presentation-panel-productsearchpanel-sort-label-srt001",
+      "source": "src/features/product-search/presentation/panel/ProductSearchPanel.tsx",
+      "line": 260,
+      "element": "label",
+      "semanticName": "search-presentation-panel-productsearchpanel-sort-label",
       "kind": "literal"
     },
     {

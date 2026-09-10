@@ -1,10 +1,10 @@
 "use client";
 
 import * as React from "react";
-import Image from "@/shared/ui/local-first-image";
+import { CATEGORY_TABS_PAIR_CLASS, CategoryTabsStrip } from "@/shared/ui/category-tabs-strip";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Loader2, MessageCircle, Send, Users } from "lucide-react";
+import { Loader2, MessageCircle, Send, Users } from "lucide-react";
 import { categoryService } from "@/features/categories";
 import { useSession } from "@/features/auth/ui";
 import { useTranslation } from "@/shared/i18n";
@@ -114,40 +114,45 @@ export function SpecialtyRequestPageContent() {
   return (
     <main id='features-specialty-chat-presentation-specialtyrequestpagecontent-main-8-l1lg2k' className="mx-auto w-full max-w-5xl px-4 pb-28 pt-5 sm:px-6 sm:pt-8" dir={isRTL ? "rtl" : "ltr"}>
       <div id='features-specialty-chat-presentation-specialtyrequestpagecontent-div-9-udkylx' className="mb-5 flex items-start gap-3">
-        <button id='features-specialty-chat-presentation-specialtyrequestpagecontent-button-10-v4ykhw' type="button" onClick={() => router.back()} className="asol-control-icon mt-1 shrink-0 rounded-full" aria-label={locale === "ar" ? "رجوع" : "Back"}>
-          <ArrowLeft id='features-specialty-chat-presentation-specialtyrequestpagecontent-arrowleft-11-8lh6qg' className={isRTL ? "h-5 w-5 rotate-180" : "h-5 w-5"} />
-        </button>
-        <span id='features-specialty-chat-presentation-specialtyrequestpagecontent-text-12-zvpby7' className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary-container text-primary"><Users id='features-specialty-chat-presentation-specialtyrequestpagecontent-users-13-c2jcbh' className="h-6 w-6" /></span>
         <div id='features-specialty-chat-presentation-specialtyrequestpagecontent-div-14-s2gqvh'><h1 id='features-specialty-chat-presentation-specialtyrequestpagecontent-heading-15-oogfb5' className="text-2xl font-bold">{copy.title}</h1><p id='features-specialty-chat-presentation-specialtyrequestpagecontent-text-16-vqsp8n' className="mt-1 max-w-2xl text-sm leading-6 text-on-surface-variant">{copy.subtitle}</p></div>
       </div>
 
       <form id="features-specialty-chat-presentation-specialtyrequestpagecontent-form-17-1govqx" onSubmit={submit} className="space-y-6 rounded-3xl border border-outline-variant bg-surface p-4 shadow-sm sm:p-6">
         <fieldset id='features-specialty-chat-presentation-specialtyrequestpagecontent-fieldset-18-mdxwtk' disabled={busy || result?.kind === "success"} className="min-w-0 space-y-6 disabled:opacity-70">
-          <div id='features-specialty-chat-presentation-specialtyrequestpagecontent-div-19-ploqh2' className="min-w-0">
-            <p id='features-specialty-chat-presentation-specialtyrequestpagecontent-text-20-ymkoyn' className="mb-3 font-bold">{copy.main}</p>
-            <div id='features-specialty-chat-presentation-specialtyrequestpagecontent-div-21-jyuzl3' className="flex w-full max-w-full gap-3 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              {mains.map((item) => {
-                const selected = mainId === String(item.id);
-                return <button key={item.id} type="button" aria-pressed={selected} onClick={() => { setMainId(String(item.id)); setSubId(""); setResult(null); }} className={`inline-flex shrink-0 items-center gap-3 rounded-2xl border py-2 pe-4 ps-2 text-sm font-bold transition ${selected ? "border-primary bg-primary text-on-primary shadow-md" : "border-outline-variant bg-surface-container text-on-surface"}`}>
-                  {item.imageUrl ? <Image src={item.imageUrl} alt="" width={56} height={56} className="h-12 w-12 rounded-xl object-cover sm:h-14 sm:w-14" /> : <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-current/10 sm:h-14 sm:w-14"><Users className="h-5 w-5" /></span>}
-                  {locale === "ar" ? item.nameAr : item.nameEn}
-                </button>;
-              })}
-            </div>
-          </div>
+          <div id='features-specialty-chat-presentation-specialtyrequestpagecontent-div-19-ploqh2' className={`${CATEGORY_TABS_PAIR_CLASS} min-w-0`}>
+            <CategoryTabsStrip
+              id="features-specialty-chat-presentation-specialtyrequestpagecontent-div-21-jyuzl3"
+              items={mains.map((item) => ({
+                id: String(item.id),
+                label: locale === "ar" ? item.nameAr : item.nameEn,
+                imageUrl: item.imageUrl,
+              }))}
+              level="main"
+              selectedId={mainId}
+              onSelect={(id) => {
+                setMainId(id);
+                setSubId("");
+                setResult(null);
+              }}
+            />
 
-          {main ? <div id='features-specialty-chat-presentation-specialtyrequestpagecontent-div-22-llld4j' className="min-w-0">
-            <p id='features-specialty-chat-presentation-specialtyrequestpagecontent-text-23-i0xfjl' className="mb-3 font-bold">{copy.sub}</p>
-            <div id='features-specialty-chat-presentation-specialtyrequestpagecontent-div-24-17swxo' className="flex w-full max-w-full gap-3 overflow-x-auto rounded-2xl bg-surface-container-low p-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              {subs.map((item) => {
-                const value = String(item.originalId); const selected = subId === value;
-                return <button key={value} type="button" aria-pressed={selected} onClick={() => { setSubId(value); setResult(null); }} className={`inline-flex shrink-0 items-center gap-3 rounded-2xl border py-2 pe-4 ps-2 text-sm font-bold transition ${selected ? "border-secondary bg-secondary text-secondary-foreground shadow-md" : "border-outline-variant bg-surface text-on-surface"}`}>
-                  {item.imageUrl ? <Image src={item.imageUrl} alt="" width={48} height={48} className="h-11 w-11 rounded-xl object-cover sm:h-12 sm:w-12" /> : <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-current/10 sm:h-12 sm:w-12"><Users className="h-5 w-5" /></span>}
-                  {locale === "ar" ? item.nameAr : item.nameEn}
-                </button>;
-              })}
-            </div>
-          </div> : null}
+            {main ? (
+              <CategoryTabsStrip
+                id="features-specialty-chat-presentation-specialtyrequestpagecontent-div-24-17swxo"
+                items={subs.map((item) => ({
+                  id: String(item.originalId),
+                  label: locale === "ar" ? item.nameAr : item.nameEn,
+                  imageUrl: item.imageUrl,
+                }))}
+                level="sub"
+                selectedId={subId}
+                onSelect={(id) => {
+                  setSubId(id);
+                  setResult(null);
+                }}
+              />
+            ) : null}
+          </div>
 
           <label id='features-specialty-chat-presentation-specialtyrequestpagecontent-label-25-xn6mhj' className="grid gap-2 font-bold">{copy.message}
             <textarea id="features-specialty-chat-presentation-specialtyrequestpagecontent-textarea-26-umyz1m" value={message} onChange={(event) => { setMessage(event.target.value.slice(0, 800)); setResult(null); }} maxLength={800} rows={6} className="min-h-40 w-full min-w-0 max-w-full resize-y rounded-2xl border border-outline-variant bg-surface px-4 py-3 font-normal" placeholder={copy.placeholder} required />

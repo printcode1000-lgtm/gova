@@ -22,8 +22,10 @@ interface CategoryTabsStripProps {
   onSelect: (id: string) => void;
 }
 
+export const CATEGORY_TABS_PAIR_CLASS = "flex flex-col gap-[6px]";
+
 const STRIP_CLASS =
-  "flex snap-x snap-mandatory scroll-smooth gap-2 overflow-x-auto overscroll-x-contain pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden";
+  "flex snap-x snap-mandatory scroll-smooth gap-[6px] overflow-x-auto overscroll-x-contain pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden";
 
 const LEVEL_STYLE: Record<
   CategoryTabsStripLevel,
@@ -36,14 +38,14 @@ const LEVEL_STYLE: Record<
 > = {
   main: {
     button:
-      "flex h-12 min-w-fit shrink-0 snap-center snap-always items-center gap-2 rounded-lg border px-3 text-xs font-semibold transition",
+      "flex h-12 min-w-fit shrink-0 snap-center snap-always items-center gap-[6px] rounded-lg border px-[6px] text-xs font-semibold transition",
     selected: "border-primary bg-primary text-on-primary",
     idle: "border-outline-variant bg-surface text-on-surface",
     image: "relative h-7 w-7 overflow-hidden rounded-md bg-surface-bright",
   },
   sub: {
     button:
-      "flex h-10 min-w-fit shrink-0 snap-center snap-always items-center gap-2 rounded-lg border px-3 text-[11px] font-semibold transition",
+      "flex h-10 min-w-fit shrink-0 snap-center snap-always items-center gap-[6px] rounded-lg border px-[6px] text-[11px] font-semibold transition",
     selected: "border-tertiary bg-tertiary text-on-tertiary",
     idle: "border-outline-variant bg-surface-container-low text-on-surface",
     image: "relative h-6 w-6 overflow-hidden rounded bg-surface-bright",

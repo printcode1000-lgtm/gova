@@ -37,29 +37,14 @@ export function ProductSearchFieldSelector({
   };
 
   return (
-    <div id='product-search-presentation-panel-productsearchfieldselector-div-2-sphbyg' className="space-y-2">
-      <div id='product-search-presentation-panel-productsearchfieldselector-div-3-jv1vja' className="flex items-center justify-between gap-3">
+    <div id='product-search-presentation-panel-productsearchfieldselector-div-2-sphbyg' className="overflow-hidden rounded-lg border border-outline-variant bg-surface">
+      <div id='product-search-presentation-panel-productsearchfieldselector-div-3-jv1vja' className="flex items-center justify-between gap-3 border-b border-outline-variant bg-surface-container-low px-3 py-2">
         <span id='product-search-presentation-panel-productsearchfieldselector-text-4-75qoly' className="inline-flex items-center gap-2 text-xs font-semibold text-on-surface">
           <SlidersHorizontal id='product-search-presentation-panel-productsearchfieldselector-slidershorizontal-5-jihwkh' className="h-4 w-4" />
-          {locale === "ar" ? "أعمدة البحث" : "Search fields"}
+          {locale === "ar" ? "سوف يتم البحث في" : "Search in"}
         </span>
-        <button id='product-search-presentation-panel-productsearchfieldselector-button-6-kflij7'
-          type="button"
-          onClick={() =>
-            onChange(selectedKeys.length === fields.length ? [] : fields.map((field) => field.key))
-          }
-          className="text-xs font-semibold text-primary"
-        >
-          {selectedKeys.length === fields.length
-            ? locale === "ar"
-              ? "إلغاء الكل"
-              : "Clear all"
-            : locale === "ar"
-              ? "اختيار الكل"
-              : "Select all"}
-        </button>
       </div>
-      <div id='product-search-presentation-panel-productsearchfieldselector-div-7-jsb2yp' className="flex flex-wrap gap-2">
+      <div id='product-search-presentation-panel-productsearchfieldselector-div-7-jsb2yp' className="flex flex-wrap gap-2 p-2">
         {fields.map((field) => (
           <label
             key={field.key}

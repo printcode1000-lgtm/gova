@@ -14,7 +14,7 @@ The server stores only device push tokens and one per-user preference record con
 
 1. A logged-in buyer opens the paper-plane action in the application header,
    which navigates to the full `/specialty-request` page.
-2. The buyer selects exactly one main category and one selectable child specialty.
+2. The buyer selects exactly one main category and one selectable child specialty. Both selector rows render through the shared `CategoryTabsStrip` used by global product search and profile product category tabs, with search owning the canonical main/sub tab presentation. The specialty-request page supplies only its own category data and selection callbacks.
 3. The buyer enters text of 1–800 characters. Images and attachments are not supported.
 4. The server resolves profiles indexed for that exact pair, excludes the buyer and opted-out providers, and attempts one private push per provider.
 5. The browser waits for the notifications service and counts only recipients

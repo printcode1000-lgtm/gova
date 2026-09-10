@@ -453,5 +453,6 @@
     "src/features/system-logs/server.ts",
     "src/features/system-logs/server/control-persistence.server.ts",
     "src/features/system-logs/server/services/persistent-system-log-service.server.ts"
-  ]
+  ],
+  "runtimeAssets": []
 }

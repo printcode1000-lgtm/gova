@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { ChevronDown, Plus, Search, Star } from "lucide-react";
-import { CategoryTabsStrip } from "@/shared/ui/category-tabs-strip";
+import { CATEGORY_TABS_PAIR_CLASS, CategoryTabsStrip } from "@/shared/ui/category-tabs-strip";
 import { ProductSearchPanel } from "@/features/product-search/ui";
 import type { ProductRecord } from "@asol/product-core";
 import {
@@ -139,28 +139,30 @@ export function ProfileProductsTabs({ id,
 
   return (
     <section id={id} className="space-y-4">
-      <CategoryTabsStrip id="profile-products-tabs-profile-products-tabs-category-tabs-strip-67783d"
-        items={tabs}
-        level="main"
-        selectedId={selectedMainId}
-        snapshotId={`profile-products-main-${mode}-${ownerUid}`}
-        onSelect={onSelectMain}
-      />
-
-      {activeMain?.subTabs.length ? (
-        <CategoryTabsStrip id="profile-products-tabs-profile-products-tabs-category-tabs-strip-c49da8"
-          items={activeMain.subTabs.map((tab) => ({
-            id: tab.id,
-            label: tab.label,
-            imageUrl: tab.imageUrl,
-            count: tab.productCount,
-          }))}
-          level="sub"
-          selectedId={selectedSubId}
-          snapshotId={`profile-products-sub-${mode}-${ownerUid}`}
-          onSelect={onSelectSub}
+      <div id="features-profile-products-presentation-profileproductstabs-div-category-tabs-pair-q6px01" className={CATEGORY_TABS_PAIR_CLASS}>
+        <CategoryTabsStrip id="profile-products-tabs-profile-products-tabs-category-tabs-strip-67783d"
+          items={tabs}
+          level="main"
+          selectedId={selectedMainId}
+          snapshotId={`profile-products-main-${mode}-${ownerUid}`}
+          onSelect={onSelectMain}
         />
-      ) : null}
+
+        {activeMain?.subTabs.length ? (
+          <CategoryTabsStrip id="profile-products-tabs-profile-products-tabs-category-tabs-strip-c49da8"
+            items={activeMain.subTabs.map((tab) => ({
+              id: tab.id,
+              label: tab.label,
+              imageUrl: tab.imageUrl,
+              count: tab.productCount,
+            }))}
+            level="sub"
+            selectedId={selectedSubId}
+            snapshotId={`profile-products-sub-${mode}-${ownerUid}`}
+            onSelect={onSelectSub}
+          />
+        ) : null}
+      </div>
 
       {activeSubTab ? (
         <section id="features-profile-products-presentation-profileproductstabs-section-4-cucold" className="overflow-hidden rounded-xl border border-outline-variant bg-surface-container-low/30">
