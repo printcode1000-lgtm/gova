@@ -7,6 +7,14 @@ import { withBasePath } from "@/core/config/public-env";
 import { notificationApiService } from "../http/notification-api-service";
 import { readNotificationLocale } from "../preferences/read-notification-locale";
 import { nativePermissionService } from "../native/native-permission.service";
+import {
+  NotificationError,
+  NotificationErrorCodes,
+} from "../../domain/notification-error";
+import {
+  isTransientWebPushServiceError,
+  subscribeWithWebPushRetry,
+} from "./web-push-subscription-retry";
 
 const DEVICE_ID_KEY = "web-push-device-id";
 
@@ -123,9 +131,8 @@ export class WebPushBrowserService {
    */
   async hasSubscription(): Promise<boolean> {
     if (!this.isSupported()) return false;
-    const registration = await navigator.serviceWorker.getRegistration(
-      serviceWorkerScope(),
-    );
+    const registration =
+      await navigator.serviceWorker.getRegistration(serviceWorkerScope());
     return Boolean(await registration?.pushManager.getSubscription());
   }
 
@@ -143,13 +150,28 @@ export class WebPushBrowserService {
         scope: serviceWorkerScope(),
       }),
     );
-    const existing = await registration.pushManager.getSubscription();
-    const subscription =
-      existing ??
-      (await registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(WEB_PUSH_VAPID_PUBLIC_KEY),
-      }));
+    let subscription: PushSubscription;
+    try {
+      subscription = await subscribeWithWebPushRetry({
+        readExisting: () => registration.pushManager.getSubscription(),
+        subscribe: () =>
+          registration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: urlBase64ToUint8Array(
+              WEB_PUSH_VAPID_PUBLIC_KEY,
+            ),
+          }),
+      });
+    } catch (error) {
+      if (isTransientWebPushServiceError(error)) {
+        throw new NotificationError(
+          NotificationErrorCodes.DeliveryFailed,
+          "webPushRegistrationFailed",
+          { cause: error },
+        );
+      }
+      throw error;
+    }
     const deviceId = await getDeviceId();
     const token = JSON.stringify(subscription.toJSON());
     await notificationApiService.registerToken({
@@ -173,9 +195,8 @@ export class WebPushBrowserService {
    */
   async refreshLocale(uid: string, phone: string): Promise<boolean> {
     if (!this.isSupported()) return false;
-    const registration = await navigator.serviceWorker.getRegistration(
-      serviceWorkerScope(),
-    );
+    const registration =
+      await navigator.serviceWorker.getRegistration(serviceWorkerScope());
     const subscription = await registration?.pushManager.getSubscription();
     if (!subscription) return false;
     await notificationApiService.registerToken(
@@ -198,9 +219,8 @@ export class WebPushBrowserService {
 
   async unsubscribe(uid: string, phone: string) {
     if (!this.isSupported()) return false;
-    const registration = await navigator.serviceWorker.getRegistration(
-      serviceWorkerScope(),
-    );
+    const registration =
+      await navigator.serviceWorker.getRegistration(serviceWorkerScope());
     const subscription = await registration?.pushManager.getSubscription();
     if (subscription) await subscription.unsubscribe();
     const deviceId = await getDeviceId();

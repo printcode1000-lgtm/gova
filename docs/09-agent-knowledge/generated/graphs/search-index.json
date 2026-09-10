@@ -45816,6 +45816,17 @@
       ]
     },
     {
+      "id": "source:src/features/notifications/infrastructure/web-push/web-push-subscription-retry.ts",
+      "kind": "source",
+      "name": "web-push-subscription-retry.ts",
+      "path": "src/features/notifications/infrastructure/web-push/web-push-subscription-retry.ts",
+      "tags": [
+        "src/features/notifications/infrastructure/web-push/web-push-subscription-retry",
+        "src/features/notifications/infrastructure/web-push/web-push-subscription-retry.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/notifications/ports/notifications-core-ports.ts",
       "kind": "source",
       "name": "notifications-core-ports.ts",
@@ -54800,6 +54811,18 @@
       "tags": [
         "src/features/notifications/tests/web-push-provider",
         "src/features/notifications/tests/web-push-provider.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/features/notifications/tests/web-push-subscription-retry.test.ts",
+      "kind": "test",
+      "name": "web-push-subscription-retry.test.ts",
+      "path": "src/features/notifications/tests/web-push-subscription-retry.test.ts",
+      "tags": [
+        "src/features/notifications/tests/web-push-subscription-retry",
+        "src/features/notifications/tests/web-push-subscription-retry.test.ts",
         "test",
         "ts"
       ]

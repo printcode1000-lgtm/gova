@@ -11,9 +11,24 @@ import {
 } from "../application/notification-permission-prompt-policy";
 import { NotificationPermissionPrompt } from "./NotificationPermissionPrompt";
 import { notificationLog } from "../domain/notification-redaction";
+import {
+  isNotificationError,
+  NotificationErrorCodes,
+} from "../domain/notification-error";
 import { useNotificationRuntime } from "./NotificationRuntimeProvider";
 
 const POST_LOGIN_PROMPT_DELAY_MS = 4_200;
+
+function logRegistrationFailure(message: string, error: unknown): void {
+  if (
+    isNotificationError(error) &&
+    error.code === NotificationErrorCodes.DeliveryFailed
+  ) {
+    notificationLog.warn(message, error);
+    return;
+  }
+  notificationLog.error(message, error);
+}
 
 interface PermissionPromptState {
   uid: string;
@@ -99,17 +114,23 @@ export function NotificationOptInController() {
     void inspectFreshLogin(loginCompleted);
   }, [inspectFreshLogin, loginCompleted]);
 
-  useEffect(() => () => {
-    if (promptTimerRef.current !== null) {
-      window.clearTimeout(promptTimerRef.current);
-      promptTimerRef.current = null;
-    }
-  }, []);
+  useEffect(
+    () => () => {
+      if (promptTimerRef.current !== null) {
+        window.clearTimeout(promptTimerRef.current);
+        promptTimerRef.current = null;
+      }
+    },
+    [],
+  );
 
-  const enablePromptDevice = useCallback(async (state: PermissionPromptState) => {
-    await notificationDeviceTokenService.enable(state.uid, state.phone);
-    setPermissionPrompt(null);
-  }, []);
+  const enablePromptDevice = useCallback(
+    async (state: PermissionPromptState) => {
+      await notificationDeviceTokenService.enable(state.uid, state.phone);
+      setPermissionPrompt(null);
+    },
+    [],
+  );
 
   const checkAfterSettings = useCallback(async () => {
     const current = permissionPrompt;
@@ -122,7 +143,7 @@ export function NotificationOptInController() {
     try {
       await enablePromptDevice(current);
     } catch (error) {
-      notificationLog.error(
+      logRegistrationFailure(
         "Device registration after settings failed.",
         error,
       );
@@ -186,7 +207,7 @@ export function NotificationOptInController() {
       }
       await enablePromptDevice(current);
     } catch (error) {
-      notificationLog.error("Push opt-in failed.", error);
+      logRegistrationFailure("Push opt-in failed.", error);
       setPermissionPrompt((value) =>
         value ? { ...value, busy: false, failed: true } : value,
       );

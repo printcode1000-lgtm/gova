@@ -45816,6 +45816,17 @@
       ]
     },
     {
+      "id": "source:src/features/notifications/infrastructure/web-push/web-push-subscription-retry.ts",
+      "kind": "source",
+      "name": "web-push-subscription-retry.ts",
+      "path": "src/features/notifications/infrastructure/web-push/web-push-subscription-retry.ts",
+      "tags": [
+        "src/features/notifications/infrastructure/web-push/web-push-subscription-retry",
+        "src/features/notifications/infrastructure/web-push/web-push-subscription-retry.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/notifications/ports/notifications-core-ports.ts",
       "kind": "source",
       "name": "notifications-core-ports.ts",
@@ -54805,6 +54816,18 @@
       ]
     },
     {
+      "id": "test:src/features/notifications/tests/web-push-subscription-retry.test.ts",
+      "kind": "test",
+      "name": "web-push-subscription-retry.test.ts",
+      "path": "src/features/notifications/tests/web-push-subscription-retry.test.ts",
+      "tags": [
+        "src/features/notifications/tests/web-push-subscription-retry",
+        "src/features/notifications/tests/web-push-subscription-retry.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:src/features/orders/tests/order-party-helpers.test.ts",
       "kind": "test",
       "name": "order-party-helpers.test.ts",
@@ -58461,6 +58484,11 @@
     {
       "from": "command:test:notifications",
       "to": "test:src/features/notifications/tests/web-push-provider.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:notifications",
+      "to": "test:src/features/notifications/tests/web-push-subscription-retry.test.ts",
       "kind": "invokes"
     },
     {
@@ -93404,6 +93432,12 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "source:src/features/notifications/infrastructure/web-push/web-push-subscription-retry.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "source:src/features/notifications/ports/notifications-core-ports.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -96621,6 +96655,12 @@
     {
       "from": "domain:platform-features",
       "to": "test:src/features/notifications/tests/web-push-provider.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
+      "to": "test:src/features/notifications/tests/web-push-subscription-retry.test.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -102722,6 +102762,12 @@
     },
     {
       "from": "domain:ui-components",
+      "to": "source:src/features/notifications/infrastructure/web-push/web-push-subscription-retry.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
       "to": "source:src/features/notifications/ports/notifications-core-ports.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -105837,6 +105883,12 @@
     {
       "from": "domain:ui-components",
       "to": "test:src/features/notifications/tests/web-push-provider.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "test:src/features/notifications/tests/web-push-subscription-retry.test.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -199425,6 +199477,12 @@
     },
     {
       "from": "source:src/features/notifications/infrastructure/web-push/web-push-browser.service.ts",
+      "to": "source:src/features/notifications/domain/notification-error.ts",
+      "kind": "imports",
+      "detail": "../../domain/notification-error"
+    },
+    {
+      "from": "source:src/features/notifications/infrastructure/web-push/web-push-browser.service.ts",
       "to": "source:src/features/notifications/infrastructure/http/notification-api-service.ts",
       "kind": "imports",
       "detail": "../http/notification-api-service"
@@ -199440,6 +199498,42 @@
       "to": "source:src/features/notifications/infrastructure/preferences/read-notification-locale.ts",
       "kind": "imports",
       "detail": "../preferences/read-notification-locale"
+    },
+    {
+      "from": "source:src/features/notifications/infrastructure/web-push/web-push-browser.service.ts",
+      "to": "source:src/features/notifications/infrastructure/web-push/web-push-subscription-retry.ts",
+      "kind": "imports",
+      "detail": "./web-push-subscription-retry"
+    },
+    {
+      "from": "source:src/features/notifications/infrastructure/web-push/web-push-subscription-retry.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/notifications/infrastructure/web-push/web-push-subscription-retry.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/notifications/infrastructure/web-push/web-push-subscription-retry.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/notifications/infrastructure/web-push/web-push-subscription-retry.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/notifications/infrastructure/web-push/web-push-subscription-retry.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/notifications/infrastructure/web-push/web-push-subscription-retry.ts",
+      "to": "feature:notifications",
+      "kind": "belongs-to"
     },
     {
       "from": "source:src/features/notifications/ports/notifications-core-ports.ts",
@@ -199758,6 +199852,12 @@
       "to": "source:src/features/notifications/application/permission-service.ts",
       "kind": "imports",
       "detail": "../application/permission-service"
+    },
+    {
+      "from": "source:src/features/notifications/presentation/NotificationOptInController.tsx",
+      "to": "source:src/features/notifications/domain/notification-error.ts",
+      "kind": "imports",
+      "detail": "../domain/notification-error"
     },
     {
       "from": "source:src/features/notifications/presentation/NotificationOptInController.tsx",
@@ -240731,6 +240831,47 @@
     {
       "from": "test:src/features/notifications/tests/web-push-provider.test.ts",
       "to": "package:@asol/notifications-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/notifications/tests/web-push-subscription-retry.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/web-push-subscription-retry.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/web-push-subscription-retry.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/web-push-subscription-retry.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/web-push-subscription-retry.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/web-push-subscription-retry.test.ts",
+      "to": "feature:notifications",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:src/features/notifications/tests/web-push-subscription-retry.test.ts",
+      "to": "source:src/features/notifications/infrastructure/web-push/web-push-subscription-retry.ts",
+      "kind": "imports",
+      "detail": "../infrastructure/web-push/web-push-subscription-retry"
+    },
+    {
+      "from": "test:src/features/notifications/tests/web-push-subscription-retry.test.ts",
+      "to": "feature:notifications",
       "kind": "tests"
     },
     {

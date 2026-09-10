@@ -788,7 +788,12 @@ therefore explain that the user must open the site's controls beside the address
 bar, change Notifications to **Allow**, and select **Try again**. The retry
 first reads the permission again and only creates/registers the Web Push
 subscription after it is granted; it never exposes the internal
-`notificationPermissionDenied` error to the user.
+`notificationPermissionDenied` error to the user. Chromium can also transiently
+return `AbortError: Registration failed - push service error` while Android's
+push service reconnects. The Web Push adapter retries only that transport error
+up to three total attempts, re-checking for a subscription between attempts; a
+final transport failure becomes `notifications/delivery-failed` and is logged as
+a warning by the opt-in surface instead of leaking a raw DOM exception.
 
 The `visibilitychange` listener is harmless where it cannot fire usefully, so it
 stays attached for any blocked state.
