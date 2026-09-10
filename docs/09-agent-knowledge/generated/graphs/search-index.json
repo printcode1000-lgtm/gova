@@ -14090,6 +14090,8 @@
         "scripts/cleanup-gova-deployment-history",
         "scripts/cleanup-gova-deployment-history.ts",
         "serve",
+        "src/core/config/app-version",
+        "src/core/config/app-version.ts",
         "the",
         "to",
         "ts",

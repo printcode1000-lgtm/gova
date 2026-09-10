@@ -10,7 +10,7 @@ The canonical implementation is `@asol/gova-deployment-core`, specifically `buil
 
 The 2026-09-10 sandbox investigation measured the former repository-copy approach after the old `.vercelignore` at **141.56 MiB and about 3,790 files**. `.tools` alone contributed **120.60 MiB**.
 
-The proven minimal-tree implementation produces **13.36 MiB and 2,243 upload files** on the same project state. This is about a **90.6% file-size reduction** before Vercel content deduplication.
+The proven minimal-tree implementation produces **13.35 MiB and 2,243 files before `.vercelignore`** on the current project state. Applying the generated `.vercelignore` locally with gitignore semantics leaves **11.62 MiB and 2,064 logical source files**. This is more than a **91% logical source-size reduction** from the former 141.56 MiB candidate set, before Vercel content deduplication and transfer hashing.
 
 The build output and Vercel build cache are not upload bytes. They are created on the build machine after the source upload.
 
@@ -40,6 +40,8 @@ Root build inputs such as `package.json`, `package-lock.json`, `tsconfig.json`, 
 
 The generated `.vercelignore` is a second line of defense. It repeats local-only/test/native/tooling exclusions even though the tree builder normally removes those paths physically. This prevents accidental upload growth if copy behavior changes later.
 
+Repository-root directory exclusions in that generated file are always root-anchored with a leading `/`, for example `/config/`, `/assets/`, and `/.tools/`. An unanchored `config/` rule also matches nested directories and can silently remove runtime code such as `src/core/config/app-version.ts` after the dependency graph has already proved it reachable. Recursive exclusions are used only when matching nested paths is intentional.
+
 The repository-root `.vercelignore` contains only exclusions that are safe for every repository-root Vercel target. Gova-specific exclusions belong to the generated Gova upload view so submain and sub2main cannot lose files they may require.
 
 ## Upload budget
@@ -57,11 +59,13 @@ A later directory-only pruning experiment removed implementation folders while l
 
 The first compiler-based prototype also resolved a workspace package from the developer checkout above `.tmp-gova-build`. A clean `npm ci` sandbox exposed the missing `@asol/env-core/process` file. The final implementation creates temporary workspace links before graph construction, then removes and recreates those links after pruning so resolution is isolated to the upload tree.
 
+A production redeploy on 2026-09-10 exposed a second-layer ignore bug: the generated tree correctly retained `src/core/config/app-version.ts`, but the unanchored defense-in-depth rule `config/` removed it during Vercel upload, causing `next.config.ts` to fail with `MODULE_NOT_FOUND`. The release transaction rolled every runtime back to its captured production baseline. The rule was corrected to `/config/`, the same root-anchoring policy was applied to every repository-root directory rule, and a post-`.vercelignore` clean sandbox proof (`npm ci` plus `build:vercel`) was added to the maintenance requirement.
+
 These failures are part of the proof: no failed or partially verified exclusion was promoted to the production rules.
 
 ## Required maintenance workflow
 
-Use `npm run test:gova-deployment-core`, `npm run typecheck`, and `npm run gova:tree` when changing the tree builder. For changes that affect pruning, workspace exports, build scripts, public assets, or the upload budget, also repeat the clean sandbox `npm ci` plus `npm run build:vercel` proof before production deployment.
+Use `npm run test:gova-deployment-core`, `npm run typecheck`, and `npm run gova:tree` when changing the tree builder. For changes that affect pruning, workspace exports, build scripts, public assets, `.vercelignore`, or the upload budget, first apply the generated `.vercelignore` to the generated tree in the sandbox, then repeat clean `npm ci` plus `npm run build:vercel` on that filtered copy before production deployment.
 
 Do not replace this mechanism with a repository-wide allowlist assembled by hand. The dependency graph is intentionally recomputed from the current code so a newly imported local module becomes part of the Gova upload automatically.
 

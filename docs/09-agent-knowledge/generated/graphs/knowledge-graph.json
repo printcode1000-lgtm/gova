@@ -14090,6 +14090,8 @@
         "scripts/cleanup-gova-deployment-history",
         "scripts/cleanup-gova-deployment-history.ts",
         "serve",
+        "src/core/config/app-version",
+        "src/core/config/app-version.ts",
         "the",
         "to",
         "ts",
@@ -73994,6 +73996,12 @@
       "to": "script:scripts/cleanup-gova-deployment-history.ts",
       "kind": "references",
       "detail": "scripts/cleanup-gova-deployment-history.ts"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/gova-vercel-minimal-upload.md",
+      "to": "source:src/core/config/app-version.ts",
+      "kind": "references",
+      "detail": "src/core/config/app-version.ts"
     },
     {
       "from": "document:docs/07-mobile-and-release/ios-remote-access.md",
