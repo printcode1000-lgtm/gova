@@ -56,7 +56,7 @@ gova-agent lock-recover
 # Schema & database
 npm run db:drizzle -- generate
 npm run db:drizzle -- generate --config drizzle.profile.config.ts
-npm run db:schema:verify
+npm run db:schema:verify       # read-only Turso comparison; retries transient transport failures only
 npm run db:schema:sync
 npm run db:schema:sync:release   # required credentials; used by deploy:all preflight
 npm run db:provision:turso
@@ -91,7 +91,7 @@ npm run r2:sync:cors
 # 1. Edit packages/data-core/src/core/database/schema.ts
 npm run db:drizzle -- generate
 npm run dev                    # migrations on first API call
-npm run build                  # sync DDL to Turso
+npm run build                  # read-only schema verification; never applies DDL
 git push
 ```
 
@@ -99,6 +99,14 @@ All executable database implementations are under
 `packages/data-core/src/tooling/`. Package commands are the supported entry
 points. Files under `scripts/` may coordinate builds and configuration, but the
 architecture check rejects database drivers, SQL, and IndexedDB access there.
+
+`db:schema:verify` is network-dependent because it reads the live Turso schema.
+Its provisioning owner retries only transient transport failures such as `fetch failed`,
+timeouts, DNS retry conditions, and connection resets, with a bounded four-attempt
+policy. Schema drift, invalid credentials, missing configuration, and other logical
+errors fail immediately and are never hidden by retry. If the machine has no Internet
+connection, the verification still fails closed after the bounded retries; reconnect
+network access and rerun the gate rather than treating the offline result as schema proof.
 
 ## Release tooling ownership
 

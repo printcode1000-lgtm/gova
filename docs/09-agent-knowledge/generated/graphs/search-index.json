@@ -14057,6 +14057,7 @@
       "tags": [
         "@asol/env-core/process",
         "@asol/gova-deployment-core",
+        "@asol/vercel-deploy-core",
         "and",
         "assets",
         "build",
@@ -14086,9 +14087,12 @@
         "repository",
         "required",
         "runtime",
+        "scripts/cleanup-gova-deployment-history",
+        "scripts/cleanup-gova-deployment-history.ts",
         "serve",
         "the",
         "to",
+        "ts",
         "upload",
         "valid",
         "vercel"
@@ -26686,6 +26690,17 @@
       ]
     },
     {
+      "id": "script:scripts/cleanup-gova-deployment-history.ts",
+      "kind": "script",
+      "name": "cleanup-gova-deployment-history.ts",
+      "path": "scripts/cleanup-gova-deployment-history.ts",
+      "tags": [
+        "scripts/cleanup-gova-deployment-history",
+        "scripts/cleanup-gova-deployment-history.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/cloud-accounts-r2-usage-classification.ts",
       "kind": "script",
       "name": "cloud-accounts-r2-usage-classification.ts",
@@ -38136,6 +38151,17 @@
       "tags": [
         "packages/trending-ribbon-core/src/server/trending-ribbon-service",
         "packages/trending-ribbon-core/src/server/trending-ribbon-service.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/vercel-deploy-core/src/deployment-retention.ts",
+      "kind": "source",
+      "name": "deployment-retention.ts",
+      "path": "packages/vercel-deploy-core/src/deployment-retention.ts",
+      "tags": [
+        "packages/vercel-deploy-core/src/deployment-retention",
+        "packages/vercel-deploy-core/src/deployment-retention.ts",
         "ts"
       ]
     },
@@ -52633,6 +52659,18 @@
       ]
     },
     {
+      "id": "test:packages/data-core/src/tests/schema-sync-retry.test.ts",
+      "kind": "test",
+      "name": "schema-sync-retry.test.ts",
+      "path": "packages/data-core/src/tests/schema-sync-retry.test.ts",
+      "tags": [
+        "packages/data-core/src/tests/schema-sync-retry",
+        "packages/data-core/src/tests/schema-sync-retry.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/dev-core/src/tests/index.test.ts",
       "kind": "test",
       "name": "index.test.ts",
@@ -53828,6 +53866,18 @@
       "tags": [
         "packages/trending-ribbon-core/src/tests/index",
         "packages/trending-ribbon-core/src/tests/index.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/vercel-deploy-core/src/tests/deployment-retention.test.ts",
+      "kind": "test",
+      "name": "deployment-retention.test.ts",
+      "path": "packages/vercel-deploy-core/src/tests/deployment-retention.test.ts",
+      "tags": [
+        "packages/vercel-deploy-core/src/tests/deployment-retention",
+        "packages/vercel-deploy-core/src/tests/deployment-retention.test.ts",
         "test",
         "ts"
       ]

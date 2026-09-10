@@ -84,6 +84,7 @@ import {
   captureReleaseRollbackBaseline,
   rollbackReleaseBaseline,
 } from "./release-rollback-baseline";
+import { cleanupGovaDeploymentHistory } from "./cleanup-gova-deployment-history";
 
 loadReleaseEnvironment();
 
@@ -1753,11 +1754,20 @@ async function main(): Promise<void> {
   );
   if (runningFullRelease && coveredEveryBranch) {
     reportNativeSurfaceStatus();
-    console.log(formatSuccessLine(flags.skipPreflight));
     const state = readDeployAllState();
     if (!state || state.revision !== publishContext.revision) {
       throw new Error("Final deploy state is not bound to the published revision.");
     }
+    const mainReport = reports.find((report) => report.target === "gova" && report.state === "READY");
+    const govaBaseline = rollbackBaselines.current.find((baseline) => baseline.account === "gova");
+    if (mainReport) {
+      await cleanupGovaDeploymentHistory({
+        currentDeploymentId: mainReport.deploymentId,
+        rollbackDeploymentId: govaBaseline?.deploymentId,
+        logPrefix: "[deploy:all]",
+      });
+    }
+    console.log(formatSuccessLine(flags.skipPreflight));
     return;
   }
 

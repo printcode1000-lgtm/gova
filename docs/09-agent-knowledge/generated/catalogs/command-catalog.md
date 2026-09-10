@@ -201,7 +201,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:console-command-parity` | `Tooling` | 1 |  | 0 |
 | `npm run test:control` | `Tooling` | 1 |  | 0 |
 | `npm run test:cors-core` | `Tooling` | 1 |  | 0 |
-| `npm run test:data-core` | `Tooling` | 2 |  | 0 |
+| `npm run test:data-core` | `Tooling` | 3 |  | 0 |
 | `npm run test:delivery-planner` | `Tooling` | 1 |  | 0 |
 | `npm run test:deploy-all-resume` | `Tooling` | 1 |  | 0 |
 | `npm run test:deploy-runbook-execution` | `Tooling` | 1 |  | 0 |
@@ -277,7 +277,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:system-logs-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:trending-ribbon-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:turso-read-retry` | `Tooling` | 1 |  | 0 |
-| `npm run test:vercel-deploy-core` | `Tooling`, `Web` | 2 |  | 0 |
+| `npm run test:vercel-deploy-core` | `Tooling`, `Web` | 3 |  | 0 |
 | `npm run typecheck` | `Tooling` | 0 |  | 0 |
 | `npm run validate-storage-profiles` | `Tooling` | 1 |  | 0 |
 | `npm run validate:app-versions` | `Tooling` | 1 |  | 0 |

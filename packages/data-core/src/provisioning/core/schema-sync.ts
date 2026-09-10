@@ -97,6 +97,35 @@ function writeReport(reportPath: string, report: SchemaSyncReport): void {
   }
 }
 
+const TURSO_READ_MAX_ATTEMPTS = 4;
+
+export function isTransientTursoReadError(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error);
+  return /fetch failed|failed to fetch|ECONNRESET|ETIMEDOUT|EAI_AGAIN|UND_ERR_|socket hang up|network error|connection reset/i.test(message);
+}
+
+export async function retryTransientTursoRead<T>(
+  label: string,
+  operation: () => Promise<T>,
+  options: { maxAttempts?: number; delayMs?: number } = {},
+): Promise<T> {
+  const maxAttempts = Math.max(1, options.maxAttempts ?? TURSO_READ_MAX_ATTEMPTS);
+  const delayMs = Math.max(0, options.delayMs ?? 300);
+  for (let attempt = 1; ; attempt += 1) {
+    try {
+      return await operation();
+    } catch (error) {
+      if (!isTransientTursoReadError(error) || attempt >= maxAttempts) throw error;
+      console.warn(
+        `[schema-sync] transient Turso read failed for ${label} on attempt ${attempt}/${maxAttempts}; retrying.`,
+      );
+      if (delayMs > 0) {
+        await new Promise((resolve) => setTimeout(resolve, delayMs * attempt));
+      }
+    }
+  }
+}
+
 function buildSkippedReport(reason: string): SchemaSyncReport {
   return {
     executedAt: new Date().toISOString(),
@@ -144,7 +173,10 @@ export async function runSchemaSync(options: RunSchemaSyncOptions = {}): Promise
   const desiredVersion = computeSchemaVersion(desiredSchema);
   const client = createClient({ url: credentials.url, authToken: credentials.authToken });
 
-  const tursoSchemaBefore = await readTursoSchema(client as Parameters<typeof readTursoSchema>[0]);
+  const tursoSchemaBefore = await retryTransientTursoRead(
+    `${databaseLabel} schema`,
+    () => readTursoSchema(client as Parameters<typeof readTursoSchema>[0]),
+  );
   const tursoVersionBefore = computeSchemaVersion(tursoSchemaBefore);
 
   const diffOptions = {
@@ -177,7 +209,10 @@ export async function runSchemaSync(options: RunSchemaSyncOptions = {}): Promise
 
   const tursoSchemaAfter = options.verifyOnly
     ? tursoSchemaBefore
-    : await readTursoSchema(client as Parameters<typeof readTursoSchema>[0]);
+    : await retryTransientTursoRead(
+        `${databaseLabel} schema read-back`,
+        () => readTursoSchema(client as Parameters<typeof readTursoSchema>[0]),
+      );
   const tursoVersionAfter = options.verifyOnly
     ? tursoVersionBefore
     : computeSchemaVersion(tursoSchemaAfter);

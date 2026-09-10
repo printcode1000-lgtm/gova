@@ -23,6 +23,7 @@ export * from './vercel-deployment-monitor';
 export * from './vercel-usage';
 export * from './release-state';
 export * from './release-rollback';
+export * from './deployment-retention';
 export { deleteProjectEnv } from './project-env';
 
 export const RELEASE_ROLLBACK_ACCOUNTS = ["gova", "control", ...RELEASE_WORKLOADS] as const;

@@ -264,6 +264,16 @@ assert.ok(
     transactionBody.indexOf("await deployMainRuntime("),
   "Readiness must be published before the explicit gova deployment.",
 );
+assert.ok(
+  transactionBody.indexOf("await deployMainRuntime(") <
+    transactionBody.indexOf("cleanupGovaDeploymentHistory({"),
+  "Gova history cleanup must run only after the new main deployment is verified.",
+);
+assert.match(
+  transactionBody,
+  /rollbackDeploymentId: govaBaseline\?\.deploymentId/,
+  "Gova history cleanup must preserve the rollback baseline captured before mutation.",
+);
 
 /**
  * A mirror that does not build is a deployment that fails after the push. The

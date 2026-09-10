@@ -41,6 +41,7 @@ import {
   captureReleaseRollbackBaseline,
   rollbackReleaseBaseline,
 } from "./release-rollback-baseline";
+import { cleanupGovaDeploymentHistory } from "./cleanup-gova-deployment-history";
 
 loadReleaseEnvironment();
 
@@ -709,6 +710,12 @@ async function runReleaseTransaction(input: {
     if (mainReport.state !== "READY") {
       throw new Error(`main deployment is ${mainReport.state}: ${mainReport.message}`);
     }
+    const govaBaseline = baselines.find((baseline) => baseline.account === "gova");
+    await cleanupGovaDeploymentHistory({
+      currentDeploymentId: mainReport.deploymentId,
+      rollbackDeploymentId: govaBaseline?.deploymentId,
+      logPrefix: input.logPrefix,
+    });
     return reports;
   } catch (error) {
     const partial = (error as { reports?: VercelDeploymentReport[] }).reports;

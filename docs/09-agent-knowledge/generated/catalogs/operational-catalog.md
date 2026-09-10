@@ -215,7 +215,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:console-command-parity` | `npx tsx src/features/release-commands/tests/console-command-parity.test.ts` |
 | `npm run test:control` | `npx tsx scripts/tests/control-service.test.ts` |
 | `npm run test:cors-core` | `npx tsx packages/cors/src/tests/index.test.ts` |
-| `npm run test:data-core` | `npx tsx packages/data-core/src/tests/index.test.ts && npx tsx packages/data-core/src/tests/schema-parity.test.ts` |
+| `npm run test:data-core` | `npx tsx packages/data-core/src/tests/index.test.ts && npx tsx packages/data-core/src/tests/schema-parity.test.ts && npx tsx packages/data-core/src/tests/schema-sync-retry.test.ts` |
 | `npm run test:delivery-planner` | `npx tsx src/features/cart/tests/multi-seller-delivery-planner.test.ts` |
 | `npm run test:deploy-all-resume` | `npx tsx scripts/tests/deploy-all-resume.test.ts` |
 | `npm run test:deploy-runbook-execution` | `npx tsx scripts/architecture/deploy-runbook-execution.test.ts` |
@@ -291,7 +291,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:system-logs-core` | `npx tsx packages/system-logs-core/src/tests/index.test.ts` |
 | `npm run test:trending-ribbon-core` | `npx tsx packages/trending-ribbon-core/src/tests/index.test.ts` |
 | `npm run test:turso-read-retry` | `npx tsx packages/data-core/src/core/database/tests/turso-read-retry.test.ts` |
-| `npm run test:vercel-deploy-core` | `npx tsx packages/vercel-deploy-core/src/tests/index.test.ts && npx tsx packages/vercel-deploy-core/src/tests/release-rollback.test.ts` |
+| `npm run test:vercel-deploy-core` | `npx tsx packages/vercel-deploy-core/src/tests/index.test.ts && npx tsx packages/vercel-deploy-core/src/tests/release-rollback.test.ts && npx tsx packages/vercel-deploy-core/src/tests/deployment-retention.test.ts` |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run validate-storage-profiles` | `npx tsx packages/storage-core/scripts/validate-storage-profiles.ts` |
 | `npm run validate:app-versions` | `npx tsx packages/ota-core/scripts/validate-app-versions.ts` |

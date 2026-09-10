@@ -277,6 +277,16 @@ assert.match(
   /rollbackCapturedBaseline/,
   "deploy:all must execute automatic rollback after production mutation failures.",
 );
+assert.match(
+  deployAllSource,
+  /cleanupGovaDeploymentHistory/,
+  "deploy:all must prune obsolete Gova deployments after a fully verified release.",
+);
+assert.match(
+  deployAllSource,
+  /rollbackDeploymentId: govaBaseline\?\.deploymentId/,
+  "deploy:all history cleanup must preserve the captured Gova rollback baseline.",
+);
 const environmentDoctor = readFileSync(new URL("../check-environment-requirements.ts", import.meta.url), "utf8");
 assert.match(
   environmentDoctor,

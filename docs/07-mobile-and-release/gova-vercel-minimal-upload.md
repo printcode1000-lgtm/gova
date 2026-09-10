@@ -64,3 +64,21 @@ These failures are part of the proof: no failed or partially verified exclusion 
 Use `npm run test:gova-deployment-core`, `npm run typecheck`, and `npm run gova:tree` when changing the tree builder. For changes that affect pruning, workspace exports, build scripts, public assets, or the upload budget, also repeat the clean sandbox `npm ci` plus `npm run build:vercel` proof before production deployment.
 
 Do not replace this mechanism with a repository-wide allowlist assembled by hand. The dependency graph is intentionally recomputed from the current code so a newly imported local module becomes part of the Gova upload automatically.
+
+## Deployment-history retention
+
+Source minimization and deployment retention are separate controls. A small upload prevents new storage from growing quickly, while deployment-history cleanup prevents immutable Vercel artifacts from accumulating indefinitely.
+
+The production release paths `deploy:push` and full `deploy:all` therefore run Gova history cleanup only after the new Gova deployment is verified `READY` and the release transaction has no remaining production mutation.
+
+The cleanup protects exactly two release identities when both exist: the new Gova production deployment and the Gova production baseline captured before the release. The second identity is the rollback target proven by the release transaction, not an arbitrary "second newest" dashboard row.
+
+`@asol/vercel-deploy-core` owns the Vercel list/delete API calls. `scripts/cleanup-gova-deployment-history.ts` is only release orchestration and must not duplicate the Vercel transport layer.
+
+The cleaner skips deployments still in `QUEUED`, `INITIALIZING`, or `BUILDING` state. It is capped at 180 deletes per release invocation, below Vercel's observed deletion quota, so a backlog cannot consume the entire API window during a normal release.
+
+A `429` deletion response stops the cleanup and records the server-provided reset time. Cleanup failures are deliberately best-effort: storage hygiene must never transform an otherwise verified release into a rollback. The next successful release retries remaining stale deployments.
+
+The 2026-09-10 cleanup incident started with 1,125 Gova deployments. Vercel enforced an observed `now-rm` limit of 200 deployment deletions per window, so the one-time cleanup was executed in resumable SDK batches while protecting current production and one rollback deployment. This incident is the reason the application-level retention rule is now part of the release contract.
+
+Vercel's dashboard Deployment Retention Policy remains useful as defense in depth, but it is not the authoritative two-version rule: Vercel may protect a minimum set of recent or aliased deployments from policy deletion. The application-level post-release cleaner is what enforces Gova's tighter history target when the API permits deletion.
