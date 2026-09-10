@@ -1,9 +1,9 @@
-import { existsSync, readFileSync, readdirSync, statSync } from 'fs';
-import { join } from 'path';
+import { existsSync, readFileSync, readdirSync, statSync } from "fs";
+import { join } from "path";
 
-import { ROOT, addViolation, rel } from './architecture-types';
-import { checkPackageSealContract } from './package-seal-contract';
-import { checkVendorOwnershipContract } from './vendor-ownership-contract';
+import { ROOT, addViolation, rel } from "./architecture-types";
+import { checkPackageSealContract } from "./package-seal-contract";
+import { checkVendorOwnershipContract } from "./vendor-ownership-contract";
 
 /**
  * Default-deny: infrastructure ownership holds everywhere, not in four folders.
@@ -29,37 +29,44 @@ import { checkVendorOwnershipContract } from './vendor-ownership-contract';
  * excluded for what it is rather than for being inconvenient:
  */
 const NOT_SOURCE = new Set([
-  'node_modules',
-  '.git',
-  '.next',
-  '.turbo',
-  'out', // static export output
-  'dist',
-  'build',
-  'coverage',
-  'android', // Capacitor store shell — Java/Gradle, rebuilt by the pipeline
-  'ios', // Capacitor store shell — Swift/Xcode
-  'docs',
-  'public',
-  '.claude',
-  '.github',
-  '.vscode',
-  '.deploy-all',
-  '.backups',
-  '.private-backups',
-  '.secret-archive',
-  '.ota',
-  'test_profile', // gitignored local Chrome profiles
-  '.local', // local agent control plane runtime: runner installs, their _work
+  "node_modules",
+  ".git",
+  ".next",
+  ".turbo",
+  ".tmp-gova-build", // transient minimal Vercel upload/build view, generated from repository source
+  ".tmp-static-build", // transient static-export build view, generated from repository source
+  "out", // static export output
+  "dist",
+  "build",
+  "coverage",
+  "android", // Capacitor store shell — Java/Gradle, rebuilt by the pipeline
+  "ios", // Capacitor store shell — Swift/Xcode
+  "docs",
+  "public",
+  ".claude",
+  ".github",
+  ".vscode",
+  ".deploy-all",
+  ".backups",
+  ".private-backups",
+  ".secret-archive",
+  ".ota",
+  "test_profile", // gitignored local Chrome profiles
+  ".local", // local agent control plane runtime: runner installs, their _work
   // checkouts, and agent worktrees. Copies of this repository, not this
   // repository — sweeping them would judge the same files twice.
 ]);
 
 /** Roots the runner already walks in full; sweeping them again is wasted work. */
-const ALREADY_SWEPT = new Set(['src', 'packages', 'scripts', 'services']);
+const ALREADY_SWEPT = new Set(["src", "packages", "scripts", "services"]);
 
 /** Only these top-level directories may hold TypeScript/JavaScript source. */
-const APPROVED_TOP_LEVEL_SOURCE_DIRS = new Set(['src', 'packages', 'scripts', 'services']);
+const APPROVED_TOP_LEVEL_SOURCE_DIRS = new Set([
+  "src",
+  "packages",
+  "scripts",
+  "services",
+]);
 
 function sweep(directory: string, found: string[] = []): string[] {
   for (const entry of readdirSync(directory)) {
@@ -88,19 +95,23 @@ export function checkRepositorySweepContract(): void {
         : [];
 
     // Structural default-deny: no new top-level source trees outside approved roots.
-    if (isDir && !APPROVED_TOP_LEVEL_SOURCE_DIRS.has(entry) && files.length > 0) {
+    if (
+      isDir &&
+      !APPROVED_TOP_LEVEL_SOURCE_DIRS.has(entry) &&
+      files.length > 0
+    ) {
       addViolation(
-        'Repository Sweep',
+        "Repository Sweep",
         full,
         `Unauthorized top-level source directory "${entry}" contains ${files.length} script file(s).`,
-        'Application and package code belongs under src/, packages/, scripts/, or services/. Move the code or remove the directory.',
+        "Application and package code belongs under src/, packages/, scripts/, or services/. Move the code or remove the directory.",
       );
     }
 
     if (ALREADY_SWEPT.has(entry)) continue;
 
     for (const file of files) {
-      const content = readFileSync(file, 'utf8');
+      const content = readFileSync(file, "utf8");
       // `rel` is used so a violation reports a repository-relative path even
       // for a directory no other check has ever seen.
       void rel(file);

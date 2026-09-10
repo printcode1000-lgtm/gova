@@ -40,6 +40,8 @@ service so the super-admin result does not depend on an open browser.
 | Serves | frontend, `/api/health`, legacy `307` redirects | Super Admin operations, System Logs, OTA administration, release/readiness | isolated full-app staging | isolated full-app staging | push fan-out only | product reads only | the order list only | five profile reads |
 | Turso account | none | `hesham106` users/system-ops shard | same runtime env as `gova` | same runtime env as `gova` | `hesham102` | `hesham103` | `hesham104` | `hesham105` |
 
+The main app's `gova deployment view` is a programmatically minimized upload tree, not a repository copy. On the 2026-09-10 proof baseline it contains 2,243 upload files totaling 13.36 MiB, versus 141.56 MiB under the former copy-then-ignore approach. The tree is dependency-pruned with TypeScript's resolver, keeps `public/` intact as a runtime-data contract, and fails closed above 16 MiB or 2,400 files. See [Gova Vercel Minimal Upload Contract](./gova-vercel-minimal-upload.md).
+
 The connectors are driven by sealed capability packages under `packages/`: `@asol/vercel-deploy-core`, `@asol/service-mirror-core`, `@asol/account-bridge`, `@asol/control-composition`, `@asol/notifications-composition`, `@asol/products-composition`, `@asol/orders-composition`, `@asol/profiles-composition`, `@asol/submain-composition`, and `@asol/sub2main-composition`. See [26-cloud-accounts.md](../06-super-admin-and-operations/cloud-accounts-architecture.md), [Notification Bridge Module](../05-platform-features/notification-bridge-module.md), and [Service Bridge Module](../05-platform-features/service-bridge-module.md).
 
 Keep the main project's GitHub connection as it is. The deploy command runs the

@@ -13,5 +13,8 @@
   },
   "scripts": {
     "test": "npx tsx src/tests/index.test.ts"
+  },
+  "dependencies": {
+    "typescript": "5.x"
   }
 }

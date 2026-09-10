@@ -14049,6 +14049,52 @@
       ]
     },
     {
+      "id": "document:docs/07-mobile-and-release/gova-vercel-minimal-upload.md",
+      "kind": "document",
+      "name": "Gova Vercel Minimal Upload Contract",
+      "path": "docs/07-mobile-and-release/gova-vercel-minimal-upload.md",
+      "summary": "Production Gova releases must upload only the files required to install dependencies, build the hosted frontend, and serve its runtime public assets. The full repository is not a valid Gova upload input.",
+      "tags": [
+        "@asol/env-core/process",
+        "@asol/gova-deployment-core",
+        "and",
+        "assets",
+        "build",
+        "contract",
+        "dependencies",
+        "docs/07-mobile-and-release/gova-vercel-minimal-upload",
+        "docs/07-mobile-and-release/gova-vercel-minimal-upload.md",
+        "files",
+        "frontend",
+        "full",
+        "gova",
+        "gova vercel minimal upload contract",
+        "hosted",
+        "input",
+        "install",
+        "is",
+        "its",
+        "md",
+        "minimal",
+        "must",
+        "not",
+        "only",
+        "production",
+        "production gova releases must upload only the files required to install dependencies, build the hosted frontend, and serve its runtime public assets. the full repository is not a valid gova upload input.",
+        "public",
+        "releases",
+        "repository",
+        "required",
+        "runtime",
+        "serve",
+        "the",
+        "to",
+        "upload",
+        "valid",
+        "vercel"
+      ]
+    },
+    {
       "id": "document:docs/07-mobile-and-release/ios-remote-access.md",
       "kind": "document",
       "name": "iPhone Network Access and Wireless Installation",
@@ -22085,8 +22131,9 @@
       "id": "external-dependency:typescript",
       "kind": "external-dependency",
       "name": "typescript",
-      "summary": "External package imported by repository source",
+      "summary": "Declared dependency range observed: 5.x",
       "tags": [
+        "5.x",
         "dependency",
         "external",
         "external dependency npm package",
@@ -73605,6 +73652,12 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/deployment-targets.md",
+      "to": "document:docs/07-mobile-and-release/gova-vercel-minimal-upload.md",
+      "kind": "references",
+      "detail": "./gova-vercel-minimal-upload.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/deployment-targets.md",
       "to": "document:docs/07-mobile-and-release/release-commands.md",
       "kind": "references",
       "detail": "./release-commands.md"
@@ -73852,6 +73905,23 @@
       "from": "document:docs/07-mobile-and-release/github-ci-policy.md",
       "to": "domain:mobile-and-release",
       "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/gova-vercel-minimal-upload.md",
+      "to": "domain:mobile-and-release",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/gova-vercel-minimal-upload.md",
+      "to": "package:@asol/env-core",
+      "kind": "references",
+      "detail": "@asol/env-core/process"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/gova-vercel-minimal-upload.md",
+      "to": "package:@asol/gova-deployment-core",
+      "kind": "references",
+      "detail": "@asol/gova-deployment-core"
     },
     {
       "from": "document:docs/07-mobile-and-release/ios-remote-access.md",
@@ -108030,7 +108100,18 @@
     },
     {
       "from": "package:@asol/gova-deployment-core",
+      "to": "external-dependency:typescript",
+      "kind": "declares-dependency",
+      "detail": "dependencies:5.x"
+    },
+    {
+      "from": "package:@asol/gova-deployment-core",
       "to": "external-dependency:react",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/gova-deployment-core",
+      "to": "external-dependency:typescript",
       "kind": "imports"
     },
     {
@@ -149814,6 +149895,12 @@
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
+    },
+    {
+      "from": "source:packages/gova-deployment-core/src/tree.ts",
+      "to": "external-dependency:typescript",
+      "kind": "imports",
+      "detail": "typescript"
     },
     {
       "from": "source:packages/gova-deployment-core/src/tree.ts",
@@ -219649,12 +219736,6 @@
       "detail": "./use-notification-device-settings-card"
     },
     {
-      "from": "source:src/features/settings/presentation/ChatMessagePreferencesSection.tsx",
-      "to": "source:src/shared/i18n/index.ts",
-      "kind": "imports",
-      "detail": "@/shared/i18n"
-    },
-    {
       "from": "source:src/features/settings/presentation/notification-device-settings-card-model.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -232816,6 +232897,12 @@
       "from": "test:packages/gova-deployment-core/src/tests/index.test.ts",
       "to": "package:@asol/gova-deployment-core",
       "kind": "belongs-to"
+    },
+    {
+      "from": "test:packages/gova-deployment-core/src/tests/index.test.ts",
+      "to": "package:@asol/gova-deployment-core",
+      "kind": "imports",
+      "detail": "@asol/gova-deployment-core"
     },
     {
       "from": "test:packages/gova-deployment-core/src/tests/index.test.ts",

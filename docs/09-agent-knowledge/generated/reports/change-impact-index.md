@@ -63,12 +63,12 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/cors` | package | 13 | 3 | 57 | 0 | 31 | 0 |
 | `@asol/data-core` | package | 61 | 24 | 126 | 0 | 183 | 21 |
 | `@asol/dev-core` | package | 7 | 1 | 15 | 0 | 1 | 0 |
-| `@asol/env-core` | package | 7 | 1 | 125 | 0 | 25 | 1 |
+| `@asol/env-core` | package | 8 | 1 | 125 | 0 | 25 | 1 |
 | `@asol/favorites-core` | package | 7 | 3 | 3 | 0 | 12 | 7 |
 | `@asol/featured-marquee-core` | package | 6 | 1 | 119 | 0 | 14 | 1 |
 | `@asol/format-core` | package | 7 | 2 | 41 | 0 | 33 | 0 |
 | `@asol/google-play-store-assets-core` | package | 7 | 2 | 15 | 0 | 23 | 0 |
-| `@asol/gova-deployment-core` | package | 4 | 2 | 0 | 0 | 5 | 3 |
+| `@asol/gova-deployment-core` | package | 5 | 2 | 0 | 0 | 6 | 4 |
 | `@asol/hero-slider-core` | package | 7 | 2 | 119 | 0 | 23 | 1 |
 | `@asol/map-core` | package | 10 | 1 | 2 | 0 | 9 | 7 |
 | `@asol/native-core` | package | 38 | 21 | 50 | 0 | 87 | 27 |

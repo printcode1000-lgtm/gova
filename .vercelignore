@@ -36,6 +36,22 @@ test_profile/
 .ssh_config
 /docs/
 scripts/tests/
+.tools/
+.backups/
+.agents/
+.claude/
+.secret-archive/
+.bundle/
+.devcontainer/
+.vscode/
+.githooks/
+note/
+*.tsbuildinfo
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+Gemfile
+Gemfile.lock
 
 # ── Local-only data and secret archives ───────────────────────────────────
 public/sync_data/

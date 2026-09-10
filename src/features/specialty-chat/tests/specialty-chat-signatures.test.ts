@@ -15,7 +15,10 @@ registerSessionSigningSecret(() => "audit-only-secret-0123456789abcdef");
 
 const session = createSignedSessionToken("buyer", "01000000000");
 assert.equal(verifySignedSessionToken(session).uid, "buyer");
-assert.throws(() => verifySignedSessionToken(`${session}x`), /sessionTokenInvalid/);
+assert.throws(
+  () => verifySignedSessionToken(`${session}x`),
+  /sessionTokenInvalid/,
+);
 
 const capability = createSpecialtyChatCapability({
   requestId: "req_12345678",
@@ -33,14 +36,23 @@ const expired = createSpecialtyChatCapability({
   sellerUid: "seller",
   expiresAt: Date.now() - 1,
 });
-assert.throws(() => verifySpecialtyChatCapability(expired), /specialtyChatCapabilityExpired/);
+assert.throws(
+  () => verifySpecialtyChatCapability(expired),
+  /specialtyChatCapabilityExpired/,
+);
 
 const serviceSource = readFileSync(
-  path.join(process.cwd(), "src/features/specialty-chat/server/services/specialty-chat-service.server.ts"),
+  path.join(
+    process.cwd(),
+    "src/features/specialty-chat/server/services/specialty-chat-service.server.ts",
+  ),
   "utf8",
 );
 const clientSource = readFileSync(
-  path.join(process.cwd(), "src/features/specialty-chat/application/specialty-chat-client.ts"),
+  path.join(
+    process.cwd(),
+    "src/features/specialty-chat/application/specialty-chat-client.ts",
+  ),
   "utf8",
 );
 // The chat preferences live beside this device's notification state, which is
@@ -82,7 +94,10 @@ const profileConversationRoute = path.join(
   process.cwd(),
   "src/app/api/specialty-chat/profile-conversations/route.ts",
 );
-assert.match(serviceSource, /productService\.get\(input\.productId\.trim\(\)\)/);
+assert.match(
+  serviceSource,
+  /productService\.get\(input\.productId\.trim\(\)\)/,
+);
 assert.match(serviceSource, /product\.uid !== sellerUid/);
 assert.match(serviceSource, /createSpecialtyChatCapability\(/);
 assert.match(clientSource, /conversationKey: `chat:conversation:/);
@@ -95,20 +110,34 @@ assert.match(serviceSource, /SPECIALTY_CHAT_KINDS\.ProfileRequest/);
 assert.match(clientSource, /SPECIALTY_CHAT_KINDS\.ProfileRequest/);
 assert.equal(existsSync(profileConversationRoute), true);
 assert.match(clientSource, /\/api\/specialty-chat\/preferences/);
-assert.doesNotMatch(clientSource, /productConversationPreference|\.preference\(/);
+assert.doesNotMatch(
+  clientSource,
+  /productConversationPreference|\.preference\(/,
+);
 assert.equal(existsSync(unifiedPreferenceRoute), true);
 assert.equal(
-  existsSync(path.join(process.cwd(), "src/app/api/specialty-chat/preference/route.ts")),
+  existsSync(
+    path.join(process.cwd(), "src/app/api/specialty-chat/preference/route.ts"),
+  ),
   false,
 );
 assert.equal(
   existsSync(
-    path.join(process.cwd(), "src/app/api/specialty-chat/product-preference/route.ts"),
+    path.join(
+      process.cwd(),
+      "src/app/api/specialty-chat/product-preference/route.ts",
+    ),
   ),
   false,
 );
-assert.match(settingsSource, /notifications\.deviceCard\.productConversationsTitle/);
-assert.match(arabicDictionarySource, /"notifications\.deviceCard\.productConversationsTitle":\s*"مراسلة صاحب الصفحة والمنتج"/);
+assert.match(
+  settingsSource,
+  /notifications\.deviceCard\.productConversationsTitle/,
+);
+assert.match(
+  arabicDictionarySource,
+  /"notifications\.deviceCard\.productConversationsTitle":\s*"مراسلة صاحب الصفحة والخدمة"/,
+);
 assert.match(settingsSource, /updateProductConversations/);
 assert.match(settingsStateSource, /updateProductConversations/);
 assert.match(notificationSchemaSource, /productConversationsEnabled/);
