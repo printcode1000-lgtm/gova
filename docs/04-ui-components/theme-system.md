@@ -240,6 +240,26 @@ Labels are translated via i18n keys: `theme.light`, `density.compact`, `motion.s
 
 ---
 
+## Arabic text on iOS / WKWebView
+
+The Capacitor iOS shell must render Arabic with a font stack that is available natively on Apple platforms. English and other Latin text keep the normal project stack, while Arabic documents explicitly select an Apple Arabic-capable font first:
+
+```css
+body {
+  font-family: 'Roboto', 'Google Sans', system-ui, sans-serif;
+}
+
+html[lang='ar'] body {
+  font-family: 'Geeza Pro', 'SF Arabic', system-ui, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+}
+```
+
+`Geeza Pro` is deliberately first for Arabic because the iOS 26.3 WKWebView simulator rendered Arabic as missing-glyph boxes when `system-ui` was first, while the same bundle rendered correctly with `Geeza Pro` first. Form controls (`button`, `input`, `textarea`, `select`) inherit the body font so WKWebView cannot fall back to a glyph-incomplete control font.
+
+When Arabic appears as boxes or question-mark glyphs on iOS, first verify that the exported `ios/App/App/public` files still contain valid Arabic UTF-8. If the text is intact there, treat the problem as font selection/rendering rather than encoding. After a typography change, rebuild the static bundle, run `npm run cap:sync`, rebuild the iOS Simulator app, and verify with a direct `simctl io ... screenshot`.
+
+---
+
 ## Build script
 
 ```bash

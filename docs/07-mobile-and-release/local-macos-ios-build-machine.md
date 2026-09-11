@@ -60,7 +60,7 @@ The verified local toolchain state is:
 - The verified companion versions are npx 11.19.0 and Corepack 0.35.0.
 - System Ruby remains 2.6.10.
 - A user-local Ruby 3.3.12 exists through rbenv with Psych 5.1.2 and Bundler 2.5.22. A user-local libyaml build is available under `/Users/hesham/.local/libyaml` for the Ruby/Psych toolchain.
-- The project Fastlane bundle is not yet available under Ruby 3.3.12, and the lockfile currently lacks a macOS platform entry.
+- The project Fastlane bundle is available under Ruby 3.3.12 with Fastlane 2.239.0 installed in the macOS-local `vendor/bundle`. `Gemfile.lock` includes the `x86_64-darwin-24` platform so the dependency graph is reproducible on the VM. `vendor/bundle` remains machine-local and is ignored by Git/synchronization.
 
 For Xcode commands that need the full Xcode installation before any system-wide selector change, set `DEVELOPER_DIR` to the installed Xcode application's Developer directory for that command only.
 
@@ -203,6 +203,10 @@ This boundary is important because these directories can contain platform-specif
 
 Project source and project-owned configuration are synchronized. `.git` metadata is not synchronized. The two checkouts therefore keep independent Git internals while their managed working-tree content stays aligned.
 
+Generated machine-local trees such as `vendor/bundle`, `.swiftpm`, Xcode user data, DerivedData, and temporary device-only Xcode projects are excluded from managed-source snapshots. They must never be pulled from macOS into Linux merely to make file counts match. A healthy sync compares only source-controlled or intentionally managed project files.
+
+The only supported local environment source on either operating system is `.env.local`. Legacy `.env` or `fastlane/.env` files must not remain in the project tree. If discovered, first confirm that their key names already exist in `.env.local`, move the legacy files to a private machine-local backup outside the repository, then run `npm run env:verify:single-source`.
+
 ## Backups and Conflict Reports
 
 Before the synchronizer deletes or replaces a managed item, it preserves the prior copy in the synchronization backup tree. Linux-side backups live below the Linux synchronization state directory, and macOS-side backups live below the corresponding user-local state directory in the guest.
@@ -266,7 +270,7 @@ If a non-interactive shell cannot reach the user service bus, use the logged-in 
 | Post-sync snapshots differ | Cycle fails and baseline is not advanced. |
 | Desktop notification cannot be delivered | Conflict reports remain authoritative; notification failure is separately visible in service output. |
 | Xcode command requires the full application but the selector still targets Command Line Tools | Use command-scoped `DEVELOPER_DIR`; privileged global selector changes remain separate. |
-| Fastlane bundle is requested before the macOS Ruby bundle is installed | The native lane is unavailable until the Ruby dependency state is completed. |
+| Fastlane bundle is missing or stale | Reinstall with the documented Ruby 3.3.12/Bundler toolchain; keep `vendor/bundle` local and preserve the macOS platform entry in `Gemfile.lock`. |
 
 ## Runtime Surfaces
 

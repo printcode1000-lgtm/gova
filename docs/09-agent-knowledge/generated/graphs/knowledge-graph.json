@@ -10216,6 +10216,7 @@
         "flash",
         "implements",
         "init",
+        "ios/app/app/public",
         "load",
         "material",
         "md",
@@ -13910,7 +13911,6 @@
         "md",
         "note",
         "operational",
-        "packages/native-core/android/build/",
         "packages/release-core/src/pipeline/phases",
         "packages/release-core/src/pipeline/phases.ts",
         "packages/release-core/src/pipeline/run-deployment-npm-script",
@@ -14218,8 +14218,11 @@
         "docs/07-mobile-and-release/local-macos-ios-build-machine",
         "docs/07-mobile-and-release/local-macos-ios-build-machine.md",
         "document",
+        "env",
         "environment",
         "established",
+        "fastlane/",
+        "fastlane/.env",
         "for",
         "gova",
         "gova uses a local macos virtual machine as the native ios/xcode build environment while linux remains the canonical development host. this document records the operational contract established for that machine, the bidirectional project synchronization model, local-only configura",
@@ -73781,12 +73784,6 @@
       "to": "package:@asol/native-core",
       "kind": "references",
       "detail": "@asol/native-core"
-    },
-    {
-      "from": "document:docs/07-mobile-and-release/deployment-targets.md",
-      "to": "package:@asol/native-core",
-      "kind": "references",
-      "detail": "packages/native-core/android/build/"
     },
     {
       "from": "document:docs/07-mobile-and-release/deployment-targets.md",

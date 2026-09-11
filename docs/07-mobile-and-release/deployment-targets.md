@@ -159,8 +159,8 @@ branches: `main-ready` (match commit SHA and wait for `READY`), `main-serving`
    `@asol/<package>/<door>` through the mirrored package's own `exports` map;
 6. refuses to publish scratch files (`__probe*`, `*.log`, `*.tmp`, `*.bak`,
    scratchpad paths), since `git add -A` stages whatever is in the tree;
-   `packages/native-core/android/build/` is gitignored so local Gradle output
-   never enters a deployment commit;
+   the native-core Android Gradle build output is gitignored, so local generated
+   Gradle files never enter a deployment commit;
 7. refuses a downgrade of `releaseId`, `version`, or `minimumNativeVersion` in
    `public/asol-web-manifest.json` — what a verification-only `build:static`
    produces when the release environment variables are unset;

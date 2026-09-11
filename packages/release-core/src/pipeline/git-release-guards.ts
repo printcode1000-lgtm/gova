@@ -65,13 +65,16 @@ function hasProcessHoldingLock(lock: string): boolean {
     ["lsof", ["-t", "--", lock]],
   ] as const) {
     try {
-      execFileSync(command, [...args], {
-        stdio: "ignore",
+      const output = execFileSync(command, [...args], {
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "ignore"],
       });
-      return true;
+      // macOS `fuser` can exit 0 even when no process owns the file.
+      // Treat a probe as positive only when it reports an actual PID.
+      if (output.trim().length > 0) return true;
     } catch {
-      // Both probes return a non-zero status when this exact file has no holder.
-      // A missing probe is also harmless because the other probe may exist.
+      // A non-zero status or a missing probe means this tool found no holder.
+      // The other probe still gets a chance to report one.
     }
   }
   return false;

@@ -169,3 +169,11 @@ tmp/
 # Python bytecode from tools/local-agent
 __pycache__/
 *.pyc
+
+# Machine-local Apple/Ruby build state. These artifacts are reproducible and
+# must never cross the Linux <-> macOS source synchronization boundary.
+vendor/bundle/
+**/.swiftpm/
+ios/App/App.iPhoneDev.xcodeproj/
+ios/App/App.Device.xcodeproj/
+ios/App/AppDevice2.xcodeproj/
