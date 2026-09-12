@@ -54,6 +54,9 @@ const apiService = read(
 );
 const globalError = read("src/app/global-error.tsx");
 const collector = read("src/features/system-logs/application/SystemLogCollector.tsx");
+const floatingButton = read("src/features/system-logs/application/SuperAdminErrorFloatingButton.tsx");
+const errorBoundary = read("src/features/system-logs/application/SystemLogErrorBoundary.tsx");
+const simulationHook = read("src/shared/ui/use-simulation-active.ts");
 
 assert.equal(listRoute.includes("assertSuperAdminRequest(request)"), true);
 assert.equal(listRoute.includes('searchParams.get("uid")'), false);
@@ -83,5 +86,17 @@ assert.equal(listRoute.includes("sessionTokenInvalid"), true);
 assert.equal(listRoute.includes("invalidSystemLogLevel"), true);
 assert.equal(globalError.includes("reportSystemIssue"), true);
 assert.equal(collector.includes("installGlobalCapture"), true);
+for (const source of [collector, floatingButton, errorBoundary]) {
+  assert.equal(source.includes("isDevelopment"), true);
+  assert.equal(source.includes("useSimulationActive"), true);
+}
+assert.equal(floatingButton.includes("adminAuthorized"), true);
+assert.equal(floatingButton.includes("enabled: adminAuthorized"), true);
+assert.equal(
+  floatingButton.includes("errorCount === 0 && !simulationActive"),
+  true,
+);
+assert.equal(errorBoundary.includes("isDevelopment && simulationActive"), true);
+assert.equal(simulationHook.includes("SIMULATION_ACTIVE_ATTRIBUTE"), true);
 
 console.log("System log security tests passed.");

@@ -32,6 +32,10 @@ assert.match(gateway, /direct backend must reject unsigned simulation actor head
 assert.match(gateway, /cross-origin actor session bootstrap must be 403/);
 assert.match(gateway, /cleanupStaleRuntime/);
 assert.match(gateway, /resetSimulationRuntimeState\(\)/);
+assert.match(gateway, /requestPathname\(request\)\.startsWith\("\/api\/"\)/);
+assert.match(gateway, /disabled actor API must proxy without a cross-port redirect/);
+assert.match(gateway, /disabled actor Business API must bypass port/);
+assert.match(gateway, /closeAllConnections/);
 assert.doesNotMatch(runtime, /title=/);
 
 console.log("Live simulation contract tests passed.");

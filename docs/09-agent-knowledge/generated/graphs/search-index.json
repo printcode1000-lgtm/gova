@@ -52651,6 +52651,17 @@
       ]
     },
     {
+      "id": "source:src/shared/ui/use-simulation-active.ts",
+      "kind": "source",
+      "name": "use-simulation-active.ts",
+      "path": "src/shared/ui/use-simulation-active.ts",
+      "tags": [
+        "src/shared/ui/use-simulation-active",
+        "src/shared/ui/use-simulation-active.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/shared/utils.ts",
       "kind": "source",
       "name": "utils.ts",

@@ -5,8 +5,8 @@
 
 # Write Surface Map
 
-Detected write-like surfaces: **366**
-Unproven gateway paths: **144**
+Detected write-like surfaces: **367**
+Unproven gateway paths: **145**
 
 | Source | Owner | Operations | Gateway | Proven | Route | Runtimes | Risk |
 |---|---|---|---|---|---|---|---|
@@ -376,3 +376,4 @@ Unproven gateway paths: **144**
 | `src/shared/installation/installation-bootstrap.ts` | `unknown` | update | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/shared/preferences/app-preferences-storage.ts` | `unknown` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/shared/theme/runtime/storage.ts` | `unknown` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
+| `src/shared/ui/use-simulation-active.ts` | `unknown` | publish | `unproven` | NO | `` | android, development, ios, static-out, web | high |

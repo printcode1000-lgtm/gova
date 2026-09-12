@@ -2,10 +2,12 @@
 
 import { Component, type ErrorInfo, type ReactNode } from "react";
 
+import { isDevelopment } from "@/core/config";
 import { useSession } from "@/features/auth/ui";
 import { isSuperAdmin } from "@/features/auth";
 import { reportSystemIssue } from '@asol/system-logs-core';
 import { setSystemLogCollectorAuthorized } from "@/features/system-logs/application/system-log-store";
+import { useSimulationActive } from "@/shared/ui/use-simulation-active";
 
 interface Props {
   children: ReactNode;
@@ -41,7 +43,7 @@ class SystemLogErrorBoundaryInner extends Component<Props, State> {
       <main id='features-system-logs-application-systemlogerrorboundary-main-1-gfdjro' className="container mx-auto max-w-lg px-4 py-12 text-center" dir="rtl">
         <h1 id='features-system-logs-application-systemlogerrorboundary-heading-2-ouotdg' className="text-xl font-bold text-error">حدث خطأ غير متوقع</h1>
         <p id='features-system-logs-application-systemlogerrorboundary-text-3-bojs3p' className="mt-2 text-sm text-on-surface-variant">
-          تم التقاط تفاصيل العطل في سجل السوبر أدمن.
+          تم التقاط تفاصيل العطل في سجل الأخطاء.
         </p>
         <button id='features-system-logs-application-systemlogerrorboundary-button-4-nublwv'
           type="button"
@@ -57,8 +59,11 @@ class SystemLogErrorBoundaryInner extends Component<Props, State> {
 
 export function SystemLogErrorBoundary({ children }: { children: ReactNode }) {
   const { session } = useSession();
+  const simulationActive = useSimulationActive();
+  const authorized =
+    isSuperAdmin(session) || (isDevelopment && simulationActive);
   return (
-    <SystemLogErrorBoundaryInner authorized={isSuperAdmin(session)}>
+    <SystemLogErrorBoundaryInner authorized={authorized}>
       {children}
     </SystemLogErrorBoundaryInner>
   );

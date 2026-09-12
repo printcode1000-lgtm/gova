@@ -52651,6 +52651,17 @@
       ]
     },
     {
+      "id": "source:src/shared/ui/use-simulation-active.ts",
+      "kind": "source",
+      "name": "use-simulation-active.ts",
+      "path": "src/shared/ui/use-simulation-active.ts",
+      "tags": [
+        "src/shared/ui/use-simulation-active",
+        "src/shared/ui/use-simulation-active.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/shared/utils.ts",
       "kind": "source",
       "name": "utils.ts",
@@ -227973,6 +227984,12 @@
     },
     {
       "from": "source:src/features/system-logs/application/SuperAdminErrorFloatingButton.tsx",
+      "to": "source:src/core/config/index.ts",
+      "kind": "imports",
+      "detail": "@/core/config"
+    },
+    {
+      "from": "source:src/features/system-logs/application/SuperAdminErrorFloatingButton.tsx",
       "to": "source:src/features/auth/index.ts",
       "kind": "imports",
       "detail": "@/features/auth"
@@ -228030,6 +228047,12 @@
       "to": "source:src/shared/ui/overlay-chrome.ts",
       "kind": "imports",
       "detail": "@/shared/ui/overlay-chrome"
+    },
+    {
+      "from": "source:src/features/system-logs/application/SuperAdminErrorFloatingButton.tsx",
+      "to": "source:src/shared/ui/use-simulation-active.ts",
+      "kind": "imports",
+      "detail": "@/shared/ui/use-simulation-active"
     },
     {
       "from": "source:src/features/system-logs/application/system-log-copy-text.ts",
@@ -228195,6 +228218,12 @@
     },
     {
       "from": "source:src/features/system-logs/application/SystemLogCollector.tsx",
+      "to": "source:src/core/config/index.ts",
+      "kind": "imports",
+      "detail": "@/core/config"
+    },
+    {
+      "from": "source:src/features/system-logs/application/SystemLogCollector.tsx",
       "to": "source:src/core/config/public-env.ts",
       "kind": "imports",
       "detail": "@/core/config/public-env"
@@ -228216,6 +228245,12 @@
       "to": "source:src/features/system-logs/application/system-logs-core-bootstrap.ts",
       "kind": "imports",
       "detail": "./system-logs-core-bootstrap"
+    },
+    {
+      "from": "source:src/features/system-logs/application/SystemLogCollector.tsx",
+      "to": "source:src/shared/ui/use-simulation-active.ts",
+      "kind": "imports",
+      "detail": "@/shared/ui/use-simulation-active"
     },
     {
       "from": "source:src/features/system-logs/application/SystemLogErrorBoundary.tsx",
@@ -228261,6 +228296,12 @@
     },
     {
       "from": "source:src/features/system-logs/application/SystemLogErrorBoundary.tsx",
+      "to": "source:src/core/config/index.ts",
+      "kind": "imports",
+      "detail": "@/core/config"
+    },
+    {
+      "from": "source:src/features/system-logs/application/SystemLogErrorBoundary.tsx",
       "to": "source:src/features/auth/index.ts",
       "kind": "imports",
       "detail": "@/features/auth"
@@ -228276,6 +228317,12 @@
       "to": "source:src/features/system-logs/application/system-log-store.ts",
       "kind": "imports",
       "detail": "@/features/system-logs/application/system-log-store"
+    },
+    {
+      "from": "source:src/features/system-logs/application/SystemLogErrorBoundary.tsx",
+      "to": "source:src/shared/ui/use-simulation-active.ts",
+      "kind": "imports",
+      "detail": "@/shared/ui/use-simulation-active"
     },
     {
       "from": "source:src/features/system-logs/domain/persistent-system-log.entity.ts",
@@ -232743,6 +232790,43 @@
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
+    },
+    {
+      "from": "source:src/shared/ui/use-simulation-active.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/use-simulation-active.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/use-simulation-active.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/use-simulation-active.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/use-simulation-active.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/shared/ui/use-simulation-active.ts",
+      "to": "external-dependency:react",
+      "kind": "imports",
+      "detail": "react"
+    },
+    {
+      "from": "source:src/shared/ui/use-simulation-active.ts",
+      "to": "source:src/shared/ui/overlay-chrome.ts",
+      "kind": "imports",
+      "detail": "./overlay-chrome"
     },
     {
       "from": "source:src/shared/utils.ts",

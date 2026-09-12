@@ -231,6 +231,16 @@ function createNormalServer(): http.Server {
 function createActorServer(actor: SimulationActor): http.Server {
   const server = http.createServer((request, response) => {
     if (!readSimulationRuntimeState().enabled) {
+      // A stale actor tab can still finish background API work after the Super Admin
+      // turns simulation off. Redirecting that API request to port 3001 changes the
+      // browser origin (for example 3010 -> 3001), which forces a CORS preflight and
+      // turns an otherwise healthy Business API request into NetworkUnavailableError.
+      // Keep API traffic on the actor origin and proxy it as ordinary development
+      // traffic with no actor identity. Page navigations still return to port 3001.
+      if (requestPathname(request).startsWith("/api/")) {
+        proxyNormalHttp(request, response);
+        return;
+      }
       response.writeHead(307, {
         location: normalDevelopmentUrl(request),
         "cache-control": "no-store",
@@ -416,15 +426,28 @@ async function stopNextProcess(): Promise<void> {
   });
 }
 
+async function closeHttpServer(server: http.Server): Promise<void> {
+  await new Promise<void>((resolve) => {
+    let settled = false;
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      resolve();
+    };
+    server.close(finish);
+    server.closeIdleConnections?.();
+    setTimeout(() => {
+      server.closeAllConnections?.();
+      finish();
+    }, 500).unref();
+  });
+}
+
 async function shutdown(exitCode = 0): Promise<never> {
   if (shuttingDown) process.exit(exitCode);
   shuttingDown = true;
   resetSimulationRuntimeState();
-  await Promise.all(
-    servers.map(
-      (server) => new Promise<void>((resolve) => server.close(() => resolve())),
-    ),
-  );
+  await Promise.all(servers.map(closeHttpServer));
   await stopNextProcess();
   removeRuntimeMetadata();
   process.exit(exitCode);
@@ -499,21 +522,40 @@ async function runSmoke(): Promise<void> {
   }
 
   setSimulationEnabled(false);
-  const redirected = await fetch(
+  const disabledActorApi = await fetch(
     `http://${LOOPBACK}:${SIMULATION_ACTORS[0].port}/api/health`,
-    {
-      redirect: "manual",
-    },
+    { redirect: "manual" },
+  );
+  if (!disabledActorApi.ok) {
+    throw new Error(
+      `disabled actor API must proxy without a cross-port redirect, got ${disabledActorApi.status}`,
+    );
+  }
+
+  const disabledProfileApi = await fetch(
+    `http://${LOOPBACK}:${SIMULATION_ACTORS[0].port}/api/profile/store-details?uid=usr_sim_buyer_01`,
+    { redirect: "manual" },
+  );
+  const profileLocation = disabledProfileApi.headers.get("location") ?? "";
+  if (disabledProfileApi.status !== 307 || profileLocation.includes(`:${NORMAL_PORT}/`)) {
+    throw new Error(
+      `disabled actor Business API must bypass port ${NORMAL_PORT}; got ${disabledProfileApi.status} ${profileLocation}`,
+    );
+  }
+
+  const redirected = await fetch(
+    `http://${LOOPBACK}:${SIMULATION_ACTORS[0].port}/home`,
+    { redirect: "manual" },
   );
   if (redirected.status !== 307) {
     throw new Error(
-      `disabled actor origin must redirect to normal development, got ${redirected.status}`,
+      `disabled actor page must redirect to normal development, got ${redirected.status}`,
     );
   }
   const location = redirected.headers.get("location") ?? "";
-  if (!location.includes(`:${NORMAL_PORT}/api/health`)) {
+  if (!location.includes(`:${NORMAL_PORT}/home`)) {
     throw new Error(
-      `disabled actor redirect must target port ${NORMAL_PORT}, got ${location}`,
+      `disabled actor page redirect must target port ${NORMAL_PORT}, got ${location}`,
     );
   }
 }

@@ -106,9 +106,11 @@ The fixed actor origins are:
 
 Each origin owns its own browser storage, Service Worker, and Web Push subscription. The internal Next.js backend runs on `3199`; it is not a user-facing actor origin.
 
+During Simulation Mode, every actor origin also receives the development DOM inspector and local system-error capture/floating error indicator. Administrative persistent-log listing, deletion, and the `/super-admin/logs` surface remain restricted to the real Super Admin session.
+
 ### Operating the mode
 
-The Super Admin `ASOL DEV` menu contains the Simulation Mode switch. Turning it ON records the normal route and opens the Super Admin actor origin. The fixed toolbar then switches actors by full cross-origin navigation and restores each actor's last safe route. Turning the Super Admin toolbar switch OFF returns to the normal `3001` origin without deleting actor storage.
+The Super Admin `ASOL DEV` menu contains the Simulation Mode switch. Turning it ON records the normal route and opens the Super Admin actor origin. The fixed toolbar then switches actors by full cross-origin navigation and restores each actor's last safe route. Turning the Super Admin toolbar switch OFF returns to the normal `3001` origin without deleting actor storage. A stale actor tab may briefly finish background `/api/*` work after shutdown; those API requests are proxied internally without actor identity instead of being redirected across ports, preventing false `Unable to reach the server` CORS failures while page navigations still return to `3001`.
 
 Actor sessions are created only by development-only server routes. The gateway supplies the actor identity from the listening port, the nine users authenticate through the ordinary login service, and Super Admin receives the canonical signed Super Admin session. Plaintext credentials never enter client bundles.
 

@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "reac
 import { mergeLiveAndPersistentCounts } from "@asol/system-logs-core";
 import { NativeCore } from "@asol/native-core";
 
+import { isDevelopment } from "@/core/config";
 import { usePageSaveOperationScope } from "@/features/page-save/ui";
 import { useSession } from "@/features/auth/ui";
 import { isSuperAdmin } from "@/features/auth";
@@ -25,6 +26,7 @@ import {
   OVERLAY_CHROME_ATTRIBUTE,
   isOverlayChromeTarget,
 } from "@/shared/ui/overlay-chrome";
+import { useSimulationActive } from "@/shared/ui/use-simulation-active";
 import { OverlayChromeBranch } from "@/shared/ui/overlay-chrome-branch";
 
 const REFRESH_MS = 20_000;
@@ -40,7 +42,11 @@ const FLOATING_POSITION_CLASS =
 export function SuperAdminErrorFloatingButton() {
   const router = useRouter();
   const { session, isLoading } = useSession();
-  const authorized = !isLoading && isSuperAdmin(session);
+  const simulationActive = useSimulationActive();
+  const adminAuthorized = !isLoading && isSuperAdmin(session);
+  const authorized =
+    !isLoading &&
+    (adminAuthorized || (isDevelopment && simulationActive));
   const liveLogs = useSyncExternalStore(
     subscribeToSystemLogs,
     getSystemLogsSnapshot,
@@ -55,12 +61,12 @@ export function SuperAdminErrorFloatingButton() {
     id: "system-logs-floating",
     label: "سجل الأخطاء",
     returnPath: pathname || LOGS_ROUTE,
-    enabled: authorized,
+    enabled: adminAuthorized,
   });
 
   useEffect(() => {
     const sessionToken = session?.sessionToken;
-    if (!authorized || !sessionToken) {
+    if (!adminAuthorized || !sessionToken) {
       setPersistentLogs([]);
       return;
     }
@@ -87,7 +93,7 @@ export function SuperAdminErrorFloatingButton() {
       window.clearInterval(timer);
       window.removeEventListener("asol:system-logs-changed", onChanged);
     };
-  }, [authorized, session?.sessionToken]);
+  }, [adminAuthorized, session?.sessionToken]);
 
   // The toolbar folds itself back to the bare count so it never keeps covering
   // page content after the tap that opened it. `copied` restarts the countdown
@@ -152,6 +158,7 @@ export function SuperAdminErrorFloatingButton() {
   };
 
   const stageClearAllLogs = () => {
+    if (!adminAuthorized) return;
     logOperations.stage({
       itemId: "system-logs-clear-all",
       kind: "delete",
@@ -176,7 +183,7 @@ export function SuperAdminErrorFloatingButton() {
     setExpanded(false);
   };
 
-  if (!authorized || errorCount === 0) return null;
+  if (!authorized || (errorCount === 0 && !simulationActive)) return null;
 
   if (!expanded) {
     return (
@@ -214,11 +221,17 @@ export function SuperAdminErrorFloatingButton() {
         <button id='features-system-logs-application-superadminerrorfloatingbutton-button-6-wc77mn'
           type="button"
           onClick={() => {
+            if (!adminAuthorized) return;
             setExpanded(false);
             router.push(LOGS_ROUTE);
           }}
+          disabled={!adminAuthorized}
           className="flex items-center gap-1 rounded-full px-2 py-1 active:bg-on-error/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-error"
-          aria-label={`فتح سجل الأخطاء: ${errorCount}`}
+          aria-label={
+            adminAuthorized
+              ? `فتح سجل الأخطاء: ${errorCount}`
+              : `أخطاء المحاكاة المحلية: ${errorCount}`
+          }
         >
           <span id='features-system-logs-application-superadminerrorfloatingbutton-text-7-1k5jx6' className="relative flex h-4 w-4 shrink-0 items-center justify-center">
             <Bug id='features-system-logs-application-superadminerrorfloatingbutton-bug-8-1cjsdu' className="h-4 w-4" />
@@ -246,6 +259,7 @@ export function SuperAdminErrorFloatingButton() {
         <button id='features-system-logs-application-superadminerrorfloatingbutton-button-17-gdfc5m'
           type="button"
           onClick={stageClearAllLogs}
+          disabled={!adminAuthorized}
           className="rounded-full px-1.5 py-1 active:bg-on-error/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-error"
           aria-label="إضافة حذف جميع السجلات إلى الحفظ"
         >
