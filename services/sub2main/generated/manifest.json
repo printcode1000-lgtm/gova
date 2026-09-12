@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-08T06:52:16.291Z",
+  "generatedAt": "2026-09-12T05:02:56.894Z",
   "entryPoints": [
     "features/product/server/services/product-service.server.ts",
     "features/profile/server/services/profile-service.bootstrap.server.ts",
@@ -19,7 +19,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 432,
+  "fileCount": 442,
   "files": [
     "packages/account-declarations/src/accounts/products.ts",
     "packages/account-declarations/src/accounts/profiles.ts",
@@ -106,6 +106,10 @@
     "packages/data-core/src/domains/auth/operations/queries/get-user-by-uid.query.ts",
     "packages/data-core/src/domains/auth/repositories/user-repository.interface.ts",
     "packages/data-core/src/domains/auth/repositories/user-repository.ts",
+    "packages/data-core/src/domains/follow/entities/follow.types.ts",
+    "packages/data-core/src/domains/follow/entities/index.ts",
+    "packages/data-core/src/domains/follow/index.server.ts",
+    "packages/data-core/src/domains/follow/repositories/follow-repository.ts",
     "packages/data-core/src/domains/marketplace-orders/application/access.server.ts",
     "packages/data-core/src/domains/marketplace-orders/application/service-result-boundary.server.ts",
     "packages/data-core/src/domains/marketplace-orders/commands/marketplace-order-service-parts/marketplace-order-service.part-01.ts",
@@ -370,6 +374,8 @@
     "src/features/cart/application/multi-seller-delivery-planner.ts",
     "src/features/cart/application/shipping-pricing.ts",
     "src/features/cart/index.ts",
+    "src/features/cart/server.ts",
+    "src/features/cart/server/services/cart-catalogue-pricing.server.ts",
     "src/features/categories/application/services/category.service.ts",
     "src/features/categories/domain/constants/category-constants.ts",
     "src/features/categories/domain/entities/category.entity.ts",
@@ -380,6 +386,10 @@
     "src/features/categories/infrastructure/catalog-data.loader.ts",
     "src/features/data/ports/data-core-runtime-config-ports.ts",
     "src/features/data/ports/data-core-specialty-catalog-port.ts",
+    "src/features/follow/domain/follow.types.ts",
+    "src/features/follow/server.ts",
+    "src/features/follow/server/services/follow-service.bootstrap.server.ts",
+    "src/features/follow/server/services/follow-service.server.ts",
     "src/features/notifications/application/shared/notification-money.ts",
     "src/features/notifications/domain/notification-error.ts",
     "src/features/notifications/ports/notifications-core-ports.ts",

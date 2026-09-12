@@ -329,6 +329,17 @@ export const profilePromotionsDesiredSchema: DatabaseSchema = {
       ],
       "where": null
     },
+    "seller_discounts_coupon_unique_idx": {
+      "name": "seller_discounts_coupon_unique_idx",
+      "tableName": "seller_discounts",
+      "sql": "CREATE UNIQUE INDEX seller_discounts_coupon_unique_idx ON seller_discounts(seller_uid, coupon_code) WHERE coupon_code <> ''",
+      "unique": true,
+      "columns": [
+        "seller_uid",
+        "coupon_code"
+      ],
+      "where": "coupon_code <> ''"
+    },
     "seller_discount_usages_discount_idx": {
       "name": "seller_discount_usages_discount_idx",
       "tableName": "seller_discount_usages",

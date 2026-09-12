@@ -42,8 +42,11 @@ assert.match(preview, /className="flex min-w-0 items-start gap-3 sm:gap-4"/);
 assert.match(productGrid, /className="grid min-w-0 grid-cols-2/);
 assert.match(productGrid, /variant=\{showManagement \? "profile-edit" : "profile-preview"\}[\s\S]*?className="min-w-0"/);
 assert.match(productCard, /className=\{`relative min-w-0 overflow-hidden/);
-assert.match(productCard, /line-clamp-2 min-h-\[32px\] break-words/);
-assert.match(productCard, /min-w-0 break-words text-xs font-bold text-primary/);
+assert.match(productCard, /className="min-w-0 truncate whitespace-nowrap text-xs font-semibold text-on-surface"/);
+assert.match(productCard, /aria-label=\{card\.title\}/);
+assert.match(productCard, /flex min-w-0 flex-nowrap items-center gap-1 overflow-hidden p-2/);
+assert.match(productCard, /flex min-w-0 flex-nowrap items-center gap-1\.5 overflow-hidden/);
+assert.match(productCard, /min-w-0 whitespace-nowrap text-xs font-bold text-primary/);
 
 assert.match(sellerDiscounts, /className="mx-2 min-w-0 rounded-3xl/);
 assert.match(sellerDiscounts, /className="mt-2 inline-flex max-w-full break-all/);

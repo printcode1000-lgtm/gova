@@ -123,6 +123,45 @@ export class ShardedRawDatabaseClient {
     return this.executeTurso(shard, sql, params);
   }
 
+  async batch(
+    statements: Array<{ sql: string; params?: unknown[] }>,
+  ): Promise<Record<string, unknown>[][]> {
+    if (statements.length === 0) return [];
+
+    const shards = new Set<DatabaseShardName>();
+    for (const statement of statements) {
+      if (isTransactionControl(statement.sql)) {
+        throw new Error("Transaction control statements are not allowed inside an atomic batch.");
+      }
+      const tables = extractReferencedTables(statement.sql, Object.keys(this.tableMap));
+      if (tables.length === 0) {
+        if (!this.forcedShard) {
+          throw new Error(`Cannot route batch SQL without a known shard table: ${statement.sql}`);
+        }
+        shards.add(this.forcedShard);
+        continue;
+      }
+      for (const table of tables) shards.add(this.tableMap[table]);
+    }
+
+    if (shards.size !== 1) {
+      throw new Error(`Atomic batch must target exactly one shard: ${[...shards].join(", ")}`);
+    }
+    const shard = [...shards][0];
+    const results = await this.turso(shard).batch(
+      statements.map((statement) => ({
+        sql: statement.sql,
+        args: normalizeParams(statement.params ?? []) as any[],
+      })),
+      "write",
+    );
+    return results.map((result) =>
+      result.rows.length > 0
+        ? (result.rows as Record<string, unknown>[])
+        : [{ changes: result.rowsAffected }],
+    );
+  }
+
   async transaction<T>(
     work: (db: ShardedRawDatabaseClient) => Promise<T>,
   ): Promise<T> {

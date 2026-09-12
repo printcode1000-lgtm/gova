@@ -65,6 +65,15 @@ async function collectVisibleOrderIdsForUser(
 export class OrderQueryRepository {
   constructor(private db: MarketplaceDb) {}
 
+  async hasBuyerOrders(buyerId: string): Promise<boolean> {
+    if (!buyerId) return false;
+    const rows = await this.db.execute(
+      "SELECT id FROM orders WHERE buyer_id=? LIMIT 1",
+      [buyerId],
+    );
+    return rows.length > 0;
+  }
+
   async listForUser(
     userId: string,
     options: { limit?: number; offset?: number; isAdmin?: boolean } = {},

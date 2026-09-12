@@ -1,8 +1,12 @@
-import { PUT as saveDiscounts } from '@/app/api/profile/discounts/route';
+import { GET as getDiscounts, PUT as saveDiscounts } from '@/app/api/profile/discounts/route';
 import { preflight, withCors } from '../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
+
+export async function GET(request: Request): Promise<Response> {
+  return withCors(request, await getDiscounts(request));
+}
 
 export async function PUT(request: Request): Promise<Response> {
   return withCors(request, await saveDiscounts(request));

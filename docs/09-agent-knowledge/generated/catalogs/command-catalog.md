@@ -256,7 +256,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:runtime-context` | `Tooling` | 2 |  | 0 |
 | `npm run test:secrets-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:seller-card-core` | `Tooling` | 1 |  | 0 |
-| `npm run test:seller-discounts` | `Tooling` | 1 |  | 0 |
+| `npm run test:seller-discounts` | `Tooling` | 3 |  | 1 |
 | `npm run test:service-bridge` | `Tooling` | 1 |  | 0 |
 | `npm run test:service-cors` | `Tooling` | 1 |  | 0 |
 | `npm run test:service-mirror-core` | `Tooling` | 1 |  | 0 |

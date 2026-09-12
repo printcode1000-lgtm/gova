@@ -132,9 +132,12 @@ function toRow(input: SaveSellerDiscountInput, timestamp: string) {
     combinable: input.combinable,
     startsAt: input.startsAt || "",
     endsAt: input.endsAt || "",
-    couponCode: input.couponCode.trim(),
+    couponCode: input.couponCode.trim().toUpperCase(),
     valueType: input.valueType,
-    value: Math.max(0, Math.floor(input.value || 0)),
+    value:
+      input.valueType === "percentage"
+        ? Math.min(100, Math.max(0, Math.floor(input.value || 0)))
+        : Math.max(0, Math.floor(input.value || 0)),
     maxDiscountMinor: Math.max(0, Math.floor(input.maxDiscountMinor || 0)),
     minSubtotalMinor: Math.max(0, Math.floor(input.conditions.minSubtotalMinor || 0)),
     minQuantity: Math.max(0, Math.floor(input.conditions.minQuantity || 0)),
@@ -263,14 +266,50 @@ export class SellerDiscountRepository {
   }
 
   async replaceSellerDiscounts(sellerUid: string, input: SaveSellerDiscountInput[]) {
+    const couponCodes = new Set<string>();
+    for (const discount of input) {
+      const couponCode = discount.couponCode.trim().toUpperCase();
+      if (!couponCode) continue;
+      if (couponCodes.has(couponCode)) throw new Error("duplicateSellerCouponCode");
+      couponCodes.add(couponCode);
+    }
+
     const timestamp = nowIso();
     const rows = input.map((discount) =>
       toDatabaseRow({ ...discount, sellerUid }, timestamp),
     );
-    await this.database.delete("seller_discounts", { seller_uid: sellerUid });
-    for (const row of rows) {
-      await this.database.insert("seller_discounts", row);
+    const ids = rows.map((row) => String(row.id));
+    if (ids.length > 0) {
+      const existing = await this.database.execute(
+        `SELECT id,seller_uid sellerUid FROM seller_discounts WHERE id IN (${ids.map(() => "?").join(",")})`,
+        ids,
+      );
+      if (existing.some((row) => String(row.sellerUid) !== sellerUid)) {
+        throw new Error("forbidden");
+      }
     }
+
+    if (!this.database.batch) throw new Error("sellerDiscountAtomicBatchUnavailable");
+    const statements = rows.map((row) => {
+      const keys = Object.keys(row);
+      const mutableKeys = keys.filter((key) => key !== "id" && key !== "created_at");
+      return {
+        sql: `INSERT INTO seller_discounts (${keys.join(",")}) VALUES (${keys.map(() => "?").join(",")}) ON CONFLICT(id) DO UPDATE SET ${mutableKeys.map((key) => `${key}=excluded.${key}`).join(",")} WHERE seller_discounts.seller_uid=excluded.seller_uid`,
+        params: Object.values(row),
+      };
+    });
+    statements.push(
+      ids.length > 0
+        ? {
+            sql: `DELETE FROM seller_discounts WHERE seller_uid=? AND id NOT IN (${ids.map(() => "?").join(",")})`,
+            params: [sellerUid, ...ids],
+          }
+        : {
+            sql: "DELETE FROM seller_discounts WHERE seller_uid=?",
+            params: [sellerUid],
+          },
+    );
+    await this.database.batch(statements);
     return this.listBySeller(sellerUid, true);
   }
 

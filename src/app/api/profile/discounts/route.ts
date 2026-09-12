@@ -1,6 +1,8 @@
 import { apiSuccess, mapServiceError, readJsonBody } from "@/core/api/api-response";
 import type { SaveSellerDiscountInput } from "@/features/seller-discounts";
 import { sellerDiscountService } from "@/features/seller-discounts/server";
+import { assertSignedInRequest } from "@/features/auth/server";
+import { resolveCartPrices } from "@/features/cart/server";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export async function GET(request: Request) {
@@ -9,6 +11,10 @@ export async function GET(request: Request) {
       const { searchParams } = new URL(request.url);
       const sellerUid = searchParams.get("sellerUid") ?? "";
       const includeInactive = searchParams.get("includeInactive") !== "0";
+      if (includeInactive) {
+        const claims = assertSignedInRequest(request);
+        if (!sellerUid || claims.uid !== sellerUid) throw new Error("forbidden");
+      }
       const discounts = await sellerDiscountService.listSellerDiscounts(
         sellerUid,
         includeInactive,
@@ -27,9 +33,29 @@ export async function PUT(request: Request) {
         sellerUid: string;
         discounts: SaveSellerDiscountInput[];
       };
+      const claims = assertSignedInRequest(request);
+      if (body.sellerUid && body.sellerUid !== claims.uid) throw new Error("forbidden");
+      const requestedDiscounts = Array.isArray(body.discounts) ? body.discounts : [];
+      const referencedProductIds = Array.from(
+        new Set(
+          requestedDiscounts.flatMap((discount) => [
+            ...(discount.scope?.productIds ?? []),
+            ...(discount.scope?.excludedProductIds ?? []),
+            ...(discount.scope?.bundleProductIds ?? []),
+            ...(discount.scope?.giftProductId ? [discount.scope.giftProductId] : []),
+          ]).map((id) => id.trim()).filter(Boolean),
+        ),
+      );
+      if (referencedProductIds.length > 0) {
+        const products = await resolveCartPrices(referencedProductIds);
+        for (const productId of referencedProductIds) {
+          const product = products.get(productId);
+          if (!product || product.sellerId !== claims.uid) throw new Error("invalidDiscountProductScope");
+        }
+      }
       const discounts = await sellerDiscountService.saveSellerDiscounts(
-        body.sellerUid,
-        Array.isArray(body.discounts) ? body.discounts : [],
+        claims.uid,
+        requestedDiscounts,
       );
       return apiSuccess(discounts);
     } catch (error) {

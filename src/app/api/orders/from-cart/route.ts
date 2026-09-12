@@ -8,9 +8,11 @@ import { fulfillmentSettingsToSnapshot, moneyMinor } from "@asol/orders-core";
 import { sellerDiscountService } from "@/features/seller-discounts/server";
 import { authService } from "@/features/auth/server";
 import { logServerSystemIssue } from "@/features/system-logs/server";
-import { getMarketplaceOrderService } from "@asol/data-core/marketplace-orders";
+import { getMarketplaceOrderQueries, getMarketplaceOrderService } from "@asol/data-core/marketplace-orders";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 import { actorFromInput } from "@asol/orders-core";
+import { assertSignedInRequest } from "@/features/auth/server";
+import { followService } from "@/features/follow/server";
 import { mapOrderError } from "../order-api-helpers";
 import { grantBuyerOrderCreated, grantSellerOrderCreated } from "@/features/orders/server";
 
@@ -28,8 +30,6 @@ interface CartOrderItemInput {
 }
 
 interface FromCartInput {
-  uid: string;
-  phone?: string;
   couponCodes?: string[];
   items: CartOrderItemInput[];
 }
@@ -60,28 +60,34 @@ function shippingForSeller(
   };
 }
 
+const NATIVE_ORIGINS = new Set(["capacitor://localhost", "https://localhost", "ionic://localhost"]);
+
+function isNativeRequest(request: Request): boolean {
+  return NATIVE_ORIGINS.has(request.headers.get("origin")?.trim() ?? "");
+}
+
 export async function POST(request: Request) {
   return runTracedBusinessRoute("POST /api/orders/from-cart", async () => {
     try {
       const body = await readJsonBody<FromCartInput>(request);
+      const session = assertSignedInRequest(request);
+      const buyerUid = session.uid;
       const actor = actorFromInput(
-        { uid: body.uid, phone: body.phone },
+        { uid: buyerUid, phone: session.phone },
         "buyer",
       );
-      const notificationGrants = notificationsServer.createGrantIssuer(
-        body.uid,
-      );
+      const notificationGrants = notificationsServer.createGrantIssuer(buyerUid);
       if (!Array.isArray(body.items) || body.items.length === 0) {
         throw new Error("Cart items are required");
       }
 
       const [buyerContacts, authPhone] = await Promise.all([
-        profileService.getContacts(body.uid),
-        authService.getUserPhone(body.uid),
+        profileService.getContacts(buyerUid),
+        authService.getUserPhone(buyerUid),
       ]);
       const buyerPhone =
         buyerContacts.phones[0]?.number?.trim() ||
-        body.phone?.trim() ||
+        session.phone?.trim() ||
         authPhone ||
         "";
       const buyerLocation = buyerContacts.locations[0] ?? null;
@@ -99,8 +105,11 @@ export async function POST(request: Request) {
       body.items = body.items.map((item) => {
         const authoritative = catalogue.get(item.productId.trim());
         if (!authoritative) throw new Error("productUnavailable");
+        if (!Number.isSafeInteger(item.quantity) || item.quantity <= 0) {
+          throw new Error("invalidCartQuantity");
+        }
         return {
-          productId: item.productId,
+          productId: item.productId.trim(),
           sellerId: authoritative.sellerId,
           name: authoritative.name,
           description: item.description,
@@ -109,7 +118,7 @@ export async function POST(request: Request) {
           unitPriceMinor: authoritative.unitPriceMinor,
           priceLabel: authoritative.priceLabel,
           requiresSpecialVehicle: authoritative.requiresSpecialVehicle,
-          mainCategoryId: item.mainCategoryId,
+          mainCategoryId: authoritative.mainCategoryId,
         };
       });
 
@@ -159,6 +168,25 @@ export async function POST(request: Request) {
           ),
         );
       }
+      const [hasPreviousOrders, followStatuses] = await Promise.all([
+        getMarketplaceOrderQueries().hasBuyerOrders(buyerUid),
+        Promise.all(
+          sellerIds.map((sellerId) =>
+            followService.getStatus({
+              targetType: "store",
+              targetId: sellerId,
+              targetOwnerUid: sellerId,
+              viewerUid: buyerUid,
+            }),
+          ),
+        ),
+      ]);
+      const isFollowerBySeller = Object.fromEntries(
+        sellerIds.map((sellerId, index) => [
+          sellerId,
+          followStatuses[index]?.isFollowing === true,
+        ]),
+      );
       const discountQuote = await sellerDiscountService.quoteCart({
         items: body.items.map((item) => ({
           id: `${item.productId}:${item.sellerId}`,
@@ -170,11 +198,11 @@ export async function POST(request: Request) {
           mainCategoryId: item.mainCategoryId ?? "",
         })),
         context: {
-          buyerUid: body.uid,
+          buyerUid,
           couponCodes: Array.isArray(body.couponCodes) ? body.couponCodes : [],
-          isApp: true,
-          isFirstOrder: false,
-          isFollower: false,
+          isApp: isNativeRequest(request),
+          isFirstOrder: !hasPreviousOrders,
+          isFollowerBySeller,
         },
       });
       const deliveryDraft = createMultiSellerDeliveryDraft(
@@ -197,10 +225,10 @@ export async function POST(request: Request) {
       const service = getMarketplaceOrderService();
       const order = await service.createProductOrder(
         {
-          buyerId: body.uid,
+          buyerId: buyerUid,
           currency: "EGP",
           deliveryAddress: {
-            buyerUid: body.uid,
+            buyerUid,
             phone: buyerPhone,
             address: buyerLocation?.address ?? "",
             latitude: buyerLocation?.latitude ?? null,
@@ -394,7 +422,7 @@ export async function POST(request: Request) {
       }
 
       await sellerDiscountService.recordAppliedUsages({
-        buyerUid: body.uid,
+        buyerUid,
         orderId: String(order.id),
         applied: appliedDiscountUsages,
       });
@@ -406,7 +434,7 @@ export async function POST(request: Request) {
         routeName: "POST /api/orders/from-cart",
       });
       grantBuyerOrderCreated(notificationGrants, {
-        buyerUid: body.uid,
+        buyerUid,
         orderId: String(order.id),
         routeName: "POST /api/orders/from-cart",
       });

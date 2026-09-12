@@ -270,7 +270,7 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:runtime-context` | `npx tsx scripts/test-runtime-context.ts && npx tsx packages/data-core/src/core/database-runtime-policy.test.ts` |
 | `npm run test:secrets-core` | `npx tsx packages/secrets-core/src/tests/index.test.ts` |
 | `npm run test:seller-card-core` | `npx tsx packages/seller-card-core/src/tests/index.test.ts` |
-| `npm run test:seller-discounts` | `npx tsx src/features/seller-discounts/tests/seller-discount-engine.test.ts` |
+| `npm run test:seller-discounts` | `npx tsx src/features/seller-discounts/tests/seller-discount-engine.test.ts && cross-env NODE_OPTIONS=<redacted> npx tsx packages/data-core/src/domains/seller-discounts/tests/seller-discount-repository.test.ts && npx tsx src/features/seller-discounts/tests/seller-discount-security-contract.test.ts` |
 | `npm run test:service-bridge` | `npx tsx packages/account-bridge/src/tests/service-bridge.client.test.ts` |
 | `npm run test:service-cors` | `npx tsx scripts/tests/service-cors-boundary.test.ts` |
 | `npm run test:service-mirror-core` | `npx tsx packages/service-mirror-core/src/tests/index.test.ts` |

@@ -67,6 +67,8 @@ export const ROUTE_OWNERSHIP: readonly RouteOwnership[] = [
   // routing choice is how least privilege is lost.
   { owner: 'sub2main', pattern: '/api/profile/reviews/**', methods: ALL },
   { owner: 'sub2main', pattern: '/api/profile/reviews', methods: ALL },
+  // Inactive discount reads and discount writes require the session-signing capability.
+  { owner: 'sub2main', pattern: '/api/profile/discounts', methods: ALL },
   { owner: 'sub2main', pattern: '/api/profile/**', methods: WRITE },
   { owner: 'profiles', pattern: '/api/profile/**', methods: READ },
   { owner: 'sub2main', pattern: '/api/pharmacy-profile-catalog', methods: WRITE },

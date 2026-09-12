@@ -27,6 +27,7 @@ export interface ResolvedCartPrice {
   sellerId: string;
   name: string;
   requiresSpecialVehicle: boolean;
+  mainCategoryId: string;
 }
 
 export class CartProductUnavailableError extends Error {
@@ -77,6 +78,7 @@ export async function resolveCartPrices(
       sellerId: product.uid,
       name: product.mainData.name,
       requiresSpecialVehicle: product.price.needsCar,
+      mainCategoryId: product.mainCategoryId,
     });
   }
 

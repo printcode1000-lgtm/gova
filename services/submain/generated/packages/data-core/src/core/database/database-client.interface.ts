@@ -1,3 +1,8 @@
+export interface DatabaseBatchStatement {
+  sql: string;
+  params?: any[];
+}
+
 export interface IDatabaseClient {
   /**
    * Drizzle ORM database instance.
@@ -8,6 +13,9 @@ export interface IDatabaseClient {
    * Executes a raw SQL query with parameters.
    */
   execute(sql: string, params?: any[]): Promise<any[]>;
+
+  /** Executes statements atomically when the backing database supports it. */
+  batch?(statements: DatabaseBatchStatement[]): Promise<any[][]>;
 
   /**
    * Generic INSERT helper.

@@ -70,8 +70,11 @@ export function normalizeForSave(discount: SellerDiscountRule): SaveSellerDiscou
     ...discount,
     title: discount.title.trim(),
     description: discount.description.trim(),
-    couponCode: discount.couponCode.trim(),
-    value: Math.max(0, Math.floor(discount.value || 0)),
+    couponCode: discount.couponCode.trim().toUpperCase(),
+    value:
+      discount.valueType === "percentage"
+        ? Math.min(100, Math.max(0, Math.floor(discount.value || 0)))
+        : Math.max(0, Math.floor(discount.value || 0)),
     maxDiscountMinor: Math.max(0, Math.floor(discount.maxDiscountMinor || 0)),
   };
 }

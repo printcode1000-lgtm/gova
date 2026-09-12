@@ -9434,43 +9434,56 @@
       "kind": "document",
       "name": "Seller Discounts System",
       "path": "docs/03-products-and-commerce/seller-discounts-system.md",
-      "summary": "The Seller Discounts System gives every seller a complete offers module that is managed from the profile editor and shown to buyers in the public profile and cart. Discounts are stored as calculable rules, not display text.",
+      "summary": "The Seller Discounts System gives each seller calculable offer rules that are managed in the profile editor, advertised in the public profile, previewed in the cart, and recalculated authoritatively during checkout. Display text is never the pricing source of truth.",
       "tags": [
+        "advertised",
         "and",
         "are",
-        "as",
-        "buyers",
+        "authoritatively",
         "calculable",
         "cart",
-        "complete",
+        "checkout",
         "discounts",
         "display",
         "docs/03-products-and-commerce/seller-discounts-system",
         "docs/03-products-and-commerce/seller-discounts-system.md",
+        "during",
+        "each",
         "editor",
-        "every",
-        "from",
         "gives",
         "in",
         "is",
         "managed",
         "md",
-        "module",
-        "not",
-        "offers",
+        "never",
+        "of",
+        "offer",
+        "packages/data-core/src/core/database/profile/migrations/0012_seller_discounts",
+        "packages/data-core/src/core/database/profile/migrations/0012_seller_discounts.sql",
+        "packages/data-core/src/core/database/profile/migrations/0017_seller_discount_coupon_unique",
+        "packages/data-core/src/core/database/profile/migrations/0017_seller_discount_coupon_unique.sql",
+        "packages/data-core/src/core/database/profile/profile",
+        "packages/data-core/src/core/database/profile/profile.schema.ts",
+        "packages/data-core/src/provisioning/desired-schema/profile-promotions",
+        "packages/data-core/src/provisioning/desired-schema/profile-promotions.ts",
+        "previewed",
+        "pricing",
         "profile",
         "public",
+        "recalculated",
         "rules",
+        "schema",
         "seller",
         "seller discounts system",
-        "shown",
-        "stored",
+        "source",
+        "sql",
         "system",
         "text",
         "that",
         "the",
-        "the seller discounts system gives every seller a complete offers module that is managed from the profile editor and shown to buyers in the public profile and cart. discounts are stored as calculable rules, not display text.",
-        "to"
+        "the seller discounts system gives each seller calculable offer rules that are managed in the profile editor, advertised in the public profile, previewed in the cart, and recalculated authoritatively during checkout. display text is never the pricing source of truth.",
+        "truth",
+        "ts"
       ]
     },
     {
@@ -12685,6 +12698,60 @@
         "through",
         "transport",
         "without"
+      ]
+    },
+    {
+      "id": "document:docs/06-super-admin-and-operations/simulation-users.md",
+      "kind": "document",
+      "name": "Live Simulation Users",
+      "path": "docs/06-super-admin-and-operations/simulation-users.md",
+      "summary": "Gova has nine persistent simulation identities in the real Turso development data plane. They are not mocks and are not an in-memory seed. The accounts use the same users/auth database, profile shards, specialty indexes, and contact data used by ordinary application users.",
+      "tags": [
+        "accounts",
+        "an",
+        "and",
+        "application",
+        "are",
+        "by",
+        "contact",
+        "data",
+        "database",
+        "development",
+        "docs/06-super-admin-and-operations/simulation-users",
+        "docs/06-super-admin-and-operations/simulation-users.md",
+        "gova",
+        "gova has nine persistent simulation identities in the real turso development data plane. they are not mocks and are not an in-memory seed. the accounts use the same users/auth database, profile shards, specialty indexes, and contact data used by ordinary application users.",
+        "has",
+        "identities",
+        "in",
+        "in-memory",
+        "indexes",
+        "live",
+        "live simulation users",
+        "md",
+        "mocks",
+        "nine",
+        "not",
+        "ordinary",
+        "packages/auth-core/src/server/password",
+        "packages/auth-core/src/server/password.ts",
+        "persistent",
+        "plane",
+        "profile",
+        "real",
+        "same",
+        "seed",
+        "shards",
+        "simulation",
+        "specialty",
+        "the",
+        "they",
+        "ts",
+        "turso",
+        "use",
+        "used",
+        "users",
+        "users/auth"
       ]
     },
     {
@@ -28044,6 +28111,17 @@
       "tags": [
         "scripts/verify-service-mirrors",
         "scripts/verify-service-mirrors.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/verify-simulation-users.ts",
+      "kind": "script",
+      "name": "verify-simulation-users.ts",
+      "path": "scripts/verify-simulation-users.ts",
+      "tags": [
+        "scripts/verify-simulation-users",
+        "scripts/verify-simulation-users.ts",
         "ts"
       ]
     },
@@ -52639,6 +52717,18 @@
       ]
     },
     {
+      "id": "test:packages/data-core/src/domains/seller-discounts/tests/seller-discount-repository.test.ts",
+      "kind": "test",
+      "name": "seller-discount-repository.test.ts",
+      "path": "packages/data-core/src/domains/seller-discounts/tests/seller-discount-repository.test.ts",
+      "tags": [
+        "packages/data-core/src/domains/seller-discounts/tests/seller-discount-repository",
+        "packages/data-core/src/domains/seller-discounts/tests/seller-discount-repository.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/data-core/src/domains/system-logs/tests/persistent-system-log-repository.test.ts",
       "kind": "test",
       "name": "persistent-system-log-repository.test.ts",
@@ -55006,6 +55096,18 @@
       "tags": [
         "src/features/seller-discounts/tests/seller-discount-engine",
         "src/features/seller-discounts/tests/seller-discount-engine.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/features/seller-discounts/tests/seller-discount-security-contract.test.ts",
+      "kind": "test",
+      "name": "seller-discount-security-contract.test.ts",
+      "path": "src/features/seller-discounts/tests/seller-discount-security-contract.test.ts",
+      "tags": [
+        "src/features/seller-discounts/tests/seller-discount-security-contract",
+        "src/features/seller-discounts/tests/seller-discount-security-contract.test.ts",
         "test",
         "ts"
       ]
@@ -58896,13 +58998,28 @@
     },
     {
       "from": "command:test:seller-discounts",
+      "to": "test:packages/data-core/src/domains/seller-discounts/tests/seller-discount-repository.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:seller-discounts",
       "to": "test:src/features/seller-discounts/tests/seller-discount-engine.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:seller-discounts",
+      "to": "test:src/features/seller-discounts/tests/seller-discount-security-contract.test.ts",
       "kind": "invokes"
     },
     {
       "from": "command:test:seller-discounts",
       "to": "runtime:tooling",
       "kind": "targets-runtime"
+    },
+    {
+      "from": "command:test:seller-discounts",
+      "to": "environment-key:NODE_OPTIONS",
+      "kind": "uses-environment"
     },
     {
       "from": "command:test:service-bridge",
@@ -68906,6 +69023,30 @@
       "kind": "belongs-to"
     },
     {
+      "from": "document:docs/03-products-and-commerce/seller-discounts-system.md",
+      "to": "package:@asol/data-core",
+      "kind": "references",
+      "detail": "packages/data-core/src/core/database/profile/migrations/0012_seller_discounts.sql"
+    },
+    {
+      "from": "document:docs/03-products-and-commerce/seller-discounts-system.md",
+      "to": "package:@asol/data-core",
+      "kind": "references",
+      "detail": "packages/data-core/src/core/database/profile/migrations/0017_seller_discount_coupon_unique.sql"
+    },
+    {
+      "from": "document:docs/03-products-and-commerce/seller-discounts-system.md",
+      "to": "source:packages/data-core/src/core/database/profile/profile.schema.ts",
+      "kind": "references",
+      "detail": "packages/data-core/src/core/database/profile/profile.schema.ts"
+    },
+    {
+      "from": "document:docs/03-products-and-commerce/seller-discounts-system.md",
+      "to": "source:packages/data-core/src/provisioning/desired-schema/profile-promotions.ts",
+      "kind": "references",
+      "detail": "packages/data-core/src/provisioning/desired-schema/profile-promotions.ts"
+    },
+    {
       "from": "document:docs/04-ui-components/app-sidebar-navigation.md",
       "to": "domain:ui-components",
       "kind": "belongs-to"
@@ -72405,6 +72546,17 @@
       "from": "document:docs/06-super-admin-and-operations/remote-desktop-commander-mode.md",
       "to": "domain:super-admin-and-operations",
       "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/06-super-admin-and-operations/simulation-users.md",
+      "to": "domain:super-admin-and-operations",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/06-super-admin-and-operations/simulation-users.md",
+      "to": "source:packages/auth-core/src/server/password.ts",
+      "kind": "references",
+      "detail": "packages/auth-core/src/server/password.ts"
     },
     {
       "from": "document:docs/06-super-admin-and-operations/super-admin-cloud-accounts.md",
@@ -83079,6 +83231,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "test:packages/data-core/src/domains/seller-discounts/tests/seller-discount-repository.test.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "test:packages/data-core/src/domains/system-logs/tests/persistent-system-log-repository.test.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -85587,6 +85745,12 @@
     },
     {
       "from": "domain:data-and-storage",
+      "to": "test:packages/data-core/src/domains/seller-discounts/tests/seller-discount-repository.test.ts",
+      "kind": "documents",
+      "detail": "packages/data-core/"
+    },
+    {
+      "from": "domain:data-and-storage",
       "to": "test:packages/data-core/src/domains/system-logs/tests/persistent-system-log-repository.test.ts",
       "kind": "documents",
       "detail": "packages/data-core/"
@@ -86710,6 +86874,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "script:scripts/verify-service-mirrors.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/verify-simulation-users.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -96753,6 +96923,12 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "test:src/features/seller-discounts/tests/seller-discount-security-contract.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "test:src/features/settings/tests/notifications-settings-login-guard.test.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -97996,6 +98172,12 @@
     {
       "from": "domain:products-and-commerce",
       "to": "test:src/features/seller-discounts/tests/seller-discount-engine.test.ts",
+      "kind": "documents",
+      "detail": "src/features/seller-discounts/"
+    },
+    {
+      "from": "domain:products-and-commerce",
+      "to": "test:src/features/seller-discounts/tests/seller-discount-security-contract.test.ts",
       "kind": "documents",
       "detail": "src/features/seller-discounts/"
     },
@@ -105976,6 +106158,12 @@
     {
       "from": "domain:ui-components",
       "to": "test:src/features/seller-discounts/tests/seller-discount-engine.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "test:src/features/seller-discounts/tests/seller-discount-security-contract.test.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -114655,6 +114843,12 @@
     },
     {
       "from": "route:/api/orders/from-cart:handler",
+      "to": "feature:follow",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/orders/from-cart:handler",
       "to": "feature:notifications",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -116233,7 +116427,25 @@
     },
     {
       "from": "route:/api/profile/discounts:handler",
+      "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/profile/discounts:handler",
+      "to": "feature:cart",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/profile/discounts:handler",
       "to": "feature:seller-discounts",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/profile/discounts:handler",
+      "to": "feature:storage",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -116312,6 +116524,12 @@
     {
       "from": "route:/api/profile/discounts:handler",
       "to": "package:@asol/product-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/profile/discounts:handler",
+      "to": "package:@asol/signed-token-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -116362,13 +116580,49 @@
     },
     {
       "from": "route:/api/profile/discounts/quote:handler",
+      "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/profile/discounts/quote:handler",
+      "to": "feature:cart",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/profile/discounts/quote:handler",
+      "to": "feature:follow",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/profile/discounts/quote:handler",
+      "to": "feature:notifications",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/profile/discounts/quote:handler",
       "to": "feature:seller-discounts",
       "kind": "related-to",
       "detail": "route source dependency"
     },
     {
       "from": "route:/api/profile/discounts/quote:handler",
+      "to": "feature:storage",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/profile/discounts/quote:handler",
       "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/profile/discounts/quote:handler",
+      "to": "package:@asol/account-declarations",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -116381,6 +116635,18 @@
     {
       "from": "route:/api/profile/discounts/quote:handler",
       "to": "package:@asol/auth-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/profile/discounts/quote:handler",
+      "to": "package:@asol/branding-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/profile/discounts/quote:handler",
+      "to": "package:@asol/cors",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -116441,6 +116707,12 @@
     {
       "from": "route:/api/profile/discounts/quote:handler",
       "to": "package:@asol/product-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/profile/discounts/quote:handler",
+      "to": "package:@asol/signed-token-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -133566,6 +133838,17 @@
       "detail": "@asol/vercel-deploy-core"
     },
     {
+      "from": "script:scripts/verify-simulation-users.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/verify-simulation-users.ts",
+      "to": "external-dependency:dotenv",
+      "kind": "imports",
+      "detail": "dotenv"
+    },
+    {
       "from": "script:scripts/verify-single-env-source.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
@@ -140395,6 +140678,12 @@
       "from": "source:packages/data-core/src/core/database/profile/profile.schema.ts",
       "to": "package:@asol/data-core",
       "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/data-core/src/core/database/profile/profile.schema.ts",
+      "to": "external-dependency:drizzle-orm",
+      "kind": "imports",
+      "detail": "drizzle-orm"
     },
     {
       "from": "source:packages/data-core/src/core/database/profile/profile.schema.ts",
@@ -176849,6 +177138,12 @@
     },
     {
       "from": "source:src/app/api/orders/from-cart/route.ts",
+      "to": "source:src/features/follow/server.ts",
+      "kind": "imports",
+      "detail": "@/features/follow/server"
+    },
+    {
+      "from": "source:src/app/api/orders/from-cart/route.ts",
       "to": "source:src/features/notifications/server.ts",
       "kind": "imports",
       "detail": "@/features/notifications/server"
@@ -177233,6 +177528,12 @@
     },
     {
       "from": "source:src/app/api/profile/discounts/quote/route.ts",
+      "to": "package:@asol/data-core",
+      "kind": "imports",
+      "detail": "@asol/data-core/marketplace-orders"
+    },
+    {
+      "from": "source:src/app/api/profile/discounts/quote/route.ts",
       "to": "source:src/core/api/api-response.ts",
       "kind": "imports",
       "detail": "@/core/api/api-response"
@@ -177242,6 +177543,24 @@
       "to": "source:src/core/api/traced-route.ts",
       "kind": "imports",
       "detail": "@/core/api/traced-route"
+    },
+    {
+      "from": "source:src/app/api/profile/discounts/quote/route.ts",
+      "to": "source:src/features/auth/server.ts",
+      "kind": "imports",
+      "detail": "@/features/auth/server"
+    },
+    {
+      "from": "source:src/app/api/profile/discounts/quote/route.ts",
+      "to": "source:src/features/cart/server.ts",
+      "kind": "imports",
+      "detail": "@/features/cart/server"
+    },
+    {
+      "from": "source:src/app/api/profile/discounts/quote/route.ts",
+      "to": "source:src/features/follow/server.ts",
+      "kind": "imports",
+      "detail": "@/features/follow/server"
     },
     {
       "from": "source:src/app/api/profile/discounts/quote/route.ts",
@@ -177276,6 +177595,18 @@
       "to": "source:src/core/api/traced-route.ts",
       "kind": "imports",
       "detail": "@/core/api/traced-route"
+    },
+    {
+      "from": "source:src/app/api/profile/discounts/route.ts",
+      "to": "source:src/features/auth/server.ts",
+      "kind": "imports",
+      "detail": "@/features/auth/server"
+    },
+    {
+      "from": "source:src/app/api/profile/discounts/route.ts",
+      "to": "source:src/features/cart/server.ts",
+      "kind": "imports",
+      "detail": "@/features/cart/server"
     },
     {
       "from": "source:src/app/api/profile/discounts/route.ts",
@@ -219409,6 +219740,12 @@
     },
     {
       "from": "source:src/features/seller-discounts/presentation/discount-editor/SellerDiscountsManager.form-controls.tsx",
+      "to": "source:src/shared/ui/confirm-dialog.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/confirm-dialog"
+    },
+    {
+      "from": "source:src/features/seller-discounts/presentation/discount-editor/SellerDiscountsManager.form-controls.tsx",
       "to": "source:src/shared/ui/input.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/input"
@@ -219546,6 +219883,12 @@
       "detail": "../../domain/seller-discount.entity"
     },
     {
+      "from": "source:src/features/seller-discounts/presentation/hooks/use-cart-discount-quote.ts",
+      "to": "source:src/shared/session-runtime/index.ts",
+      "kind": "imports",
+      "detail": "@/shared/session-runtime"
+    },
+    {
       "from": "source:src/features/seller-discounts/presentation/hooks/use-seller-discounts.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -219598,6 +219941,12 @@
       "to": "source:src/shared/i18n/index.ts",
       "kind": "imports",
       "detail": "@/shared/i18n"
+    },
+    {
+      "from": "source:src/features/seller-discounts/presentation/hooks/use-seller-discounts.ts",
+      "to": "source:src/shared/session-runtime/index.ts",
+      "kind": "imports",
+      "detail": "@/shared/session-runtime"
     },
     {
       "from": "source:src/features/seller-discounts/presentation/SellerDiscountsManager.tsx",
@@ -232608,6 +232957,59 @@
       "kind": "tests"
     },
     {
+      "from": "test:packages/data-core/src/domains/seller-discounts/tests/seller-discount-repository.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/data-core/src/domains/seller-discounts/tests/seller-discount-repository.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/data-core/src/domains/seller-discounts/tests/seller-discount-repository.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/data-core/src/domains/seller-discounts/tests/seller-discount-repository.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/data-core/src/domains/seller-discounts/tests/seller-discount-repository.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/data-core/src/domains/seller-discounts/tests/seller-discount-repository.test.ts",
+      "to": "package:@asol/data-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:packages/data-core/src/domains/seller-discounts/tests/seller-discount-repository.test.ts",
+      "to": "source:packages/data-core/src/core/database/database-client.interface.ts",
+      "kind": "imports",
+      "detail": "../../../core/database/database-client.interface"
+    },
+    {
+      "from": "test:packages/data-core/src/domains/seller-discounts/tests/seller-discount-repository.test.ts",
+      "to": "source:packages/data-core/src/domains/seller-discounts/entities/index.ts",
+      "kind": "imports",
+      "detail": "../entities"
+    },
+    {
+      "from": "test:packages/data-core/src/domains/seller-discounts/tests/seller-discount-repository.test.ts",
+      "to": "source:packages/data-core/src/domains/seller-discounts/repositories/seller-discount-repository.ts",
+      "kind": "imports",
+      "detail": "../repositories/seller-discount-repository"
+    },
+    {
+      "from": "test:packages/data-core/src/domains/seller-discounts/tests/seller-discount-repository.test.ts",
+      "to": "package:@asol/data-core",
+      "kind": "tests"
+    },
+    {
       "from": "test:packages/data-core/src/domains/system-logs/tests/persistent-system-log-repository.test.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -241586,6 +241988,41 @@
     {
       "from": "test:src/features/seller-discounts/tests/seller-discount-engine.test.ts",
       "to": "package:@asol/format-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/seller-discounts/tests/seller-discount-security-contract.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/seller-discounts/tests/seller-discount-security-contract.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/seller-discounts/tests/seller-discount-security-contract.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/seller-discounts/tests/seller-discount-security-contract.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/seller-discounts/tests/seller-discount-security-contract.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/seller-discounts/tests/seller-discount-security-contract.test.ts",
+      "to": "feature:seller-discounts",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:src/features/seller-discounts/tests/seller-discount-security-contract.test.ts",
+      "to": "feature:seller-discounts",
       "kind": "tests"
     },
     {

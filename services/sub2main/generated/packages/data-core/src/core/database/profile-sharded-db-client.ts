@@ -1,6 +1,6 @@
 import "server-only";
 
-import type { IDatabaseClient } from "./database-client.interface";
+import type { DatabaseBatchStatement, IDatabaseClient } from "./database-client.interface";
 import { PROFILE_SHARD_TABLE_TO_DATABASE } from "./database-shards";
 import { ShardedRawDatabaseClient } from "./sharded-raw-database-client";
 
@@ -13,6 +13,10 @@ export class ProfileShardedDatabaseClient implements IDatabaseClient {
 
   execute(sql: string, params?: any[]): Promise<any[]> {
     return this.client.execute(sql, params);
+  }
+
+  batch(statements: DatabaseBatchStatement[]): Promise<any[][]> {
+    return this.client.batch(statements);
   }
 
   insert(table: string, data: Record<string, any>): Promise<any> {

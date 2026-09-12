@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-09T06:56:33.122Z",
+  "generatedAt": "2026-09-12T05:02:55.914Z",
   "entryPoints": [
     "features/product-search/server/services/product-search-service.server.ts",
     "features/product-search/server/services/product-search-products.server.ts",
@@ -10,7 +10,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 475,
+  "fileCount": 476,
   "files": [
     "packages/account-declarations/src/accounts/gova-runtime-env-keys.ts",
     "packages/account-declarations/src/accounts/submain-runtime-env-keys.ts",
@@ -411,6 +411,7 @@
     "src/features/feature-flags/application/types.ts",
     "src/features/feature-flags/server/services/feature-flag-service.server.ts",
     "src/features/follow/domain/follow.types.ts",
+    "src/features/follow/server.ts",
     "src/features/follow/server/services/follow-service.bootstrap.server.ts",
     "src/features/follow/server/services/follow-service.server.ts",
     "src/features/notifications/application/shared/notification-money.ts",

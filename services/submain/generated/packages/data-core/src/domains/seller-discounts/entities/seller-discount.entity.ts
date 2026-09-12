@@ -84,6 +84,7 @@ export interface DiscountBuyerContext {
   buyerUid?: string;
   couponCodes?: string[];
   isFollower?: boolean;
+  isFollowerBySeller?: Record<string, boolean>;
   isFirstOrder?: boolean;
   isApp?: boolean;
 }

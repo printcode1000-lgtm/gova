@@ -107,6 +107,14 @@ The component receives:
 - `compact`
   Reserved for dense future surfaces.
 
+## Responsive layout
+
+Card metadata uses a single row with `min-w-0`, non-wrapping content, and
+contained overflow. Product names truncate visually while the primary action
+keeps the complete name in `aria-label`; prices remain on one line. The profile
+preview regression suite checks this layout alongside the two-column product
+grid and the preview container's overflow boundary.
+
 ## Actions
 
 Actions are passed from the host page because permissions and behavior differ by context.

@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm";
 import {
   index,
   integer,
@@ -5,6 +6,7 @@ import {
   sqliteTable,
   text,
   unique,
+  uniqueIndex,
 } from "drizzle-orm/sqlite-core";
 
 export const userProfiles = sqliteTable("user_profiles", {
@@ -347,6 +349,9 @@ export const sellerDiscounts = sqliteTable(
   (table) => [
     index("seller_discounts_seller_status_idx").on(table.sellerUid, table.status),
     index("seller_discounts_coupon_idx").on(table.sellerUid, table.couponCode),
+    uniqueIndex("seller_discounts_coupon_unique_idx")
+      .on(table.sellerUid, table.couponCode)
+      .where(sql`${table.couponCode} <> ''`),
   ],
 );
 

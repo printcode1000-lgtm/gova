@@ -669,7 +669,7 @@
     {
       "id": "${id}",
       "source": "src/features/seller-discounts/presentation/discount-editor/SellerDiscountsManager.form-controls.tsx",
-      "line": 96,
+      "line": 98,
       "element": "article",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -677,7 +677,7 @@
     {
       "id": "${id}",
       "source": "src/features/seller-discounts/presentation/discount-editor/SellerDiscountsManager.form-controls.tsx",
-      "line": 351,
+      "line": 376,
       "element": "label",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -12597,7 +12597,7 @@
     {
       "id": "features-settings-presentation-chatmessagepreferencessection-div-1-gq7fng",
       "source": "src/features/settings/presentation/ChatMessagePreferencesSection.tsx",
-      "line": 20,
+      "line": 16,
       "element": "div",
       "semanticName": "settings-presentation-chatmessagepreferencessection-div-1",
       "kind": "literal"
@@ -12605,7 +12605,7 @@
     {
       "id": "features-settings-presentation-chatmessagepreferencessection-text-4-uh8mzn",
       "source": "src/features/settings/presentation/ChatMessagePreferencesSection.tsx",
-      "line": 42,
+      "line": 41,
       "element": "p",
       "semanticName": "settings-presentation-chatmessagepreferencessection-text-4",
       "kind": "literal"
@@ -20061,7 +20061,7 @@
     {
       "id": "id ? `${id}-text-25-m2nrhl` : undefined",
       "source": "src/features/seller-discounts/presentation/discount-editor/SellerDiscountsManager.form-controls.tsx",
-      "line": 352,
+      "line": 377,
       "element": "span",
       "semanticName": "text-25",
       "kind": "scoped-template"
@@ -20069,7 +20069,7 @@
     {
       "id": "id ? `${id}-text-26-yj1gif` : undefined",
       "source": "src/features/seller-discounts/presentation/discount-editor/SellerDiscountsManager.form-controls.tsx",
-      "line": 353,
+      "line": 378,
       "element": "span",
       "semanticName": "text-26",
       "kind": "scoped-template"
@@ -23853,7 +23853,7 @@
     {
       "id": "seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-button-14-uqyhls",
       "source": "src/features/seller-discounts/presentation/discount-editor/SellerDiscountsManager.form-controls.tsx",
-      "line": 123,
+      "line": 125,
       "element": "button",
       "semanticName": "discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-button-14",
       "kind": "literal"
@@ -23861,7 +23861,7 @@
     {
       "id": "seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-div-15-7daduj",
       "source": "src/features/seller-discounts/presentation/discount-editor/SellerDiscountsManager.form-controls.tsx",
-      "line": 134,
+      "line": 152,
       "element": "div",
       "semanticName": "discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-div-15",
       "kind": "literal"
@@ -23869,7 +23869,7 @@
     {
       "id": "seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-div-2-lmmbzr",
       "source": "src/features/seller-discounts/presentation/discount-editor/SellerDiscountsManager.form-controls.tsx",
-      "line": 97,
+      "line": 99,
       "element": "div",
       "semanticName": "discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-div-2",
       "kind": "literal"
@@ -23877,7 +23877,7 @@
     {
       "id": "seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-div-22-j0sfdr",
       "source": "src/features/seller-discounts/presentation/discount-editor/SellerDiscountsManager.form-controls.tsx",
-      "line": 294,
+      "line": 319,
       "element": "div",
       "semanticName": "discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-div-22",
       "kind": "literal"
@@ -23885,7 +23885,7 @@
     {
       "id": "seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-div-3-fkktmt",
       "source": "src/features/seller-discounts/presentation/discount-editor/SellerDiscountsManager.form-controls.tsx",
-      "line": 98,
+      "line": 100,
       "element": "div",
       "semanticName": "discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-div-3",
       "kind": "literal"
@@ -23893,7 +23893,7 @@
     {
       "id": "seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-div-5-09ihtz",
       "source": "src/features/seller-discounts/presentation/discount-editor/SellerDiscountsManager.form-controls.tsx",
-      "line": 102,
+      "line": 104,
       "element": "div",
       "semanticName": "discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-div-5",
       "kind": "literal"
@@ -23901,7 +23901,7 @@
     {
       "id": "seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-div-8-fxbikf",
       "source": "src/features/seller-discounts/presentation/discount-editor/SellerDiscountsManager.form-controls.tsx",
-      "line": 110,
+      "line": 112,
       "element": "div",
       "semanticName": "discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-div-8",
       "kind": "literal"
@@ -23909,7 +23909,7 @@
     {
       "id": "seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-heading-6-lavugs",
       "source": "src/features/seller-discounts/presentation/discount-editor/SellerDiscountsManager.form-controls.tsx",
-      "line": 103,
+      "line": 105,
       "element": "h4",
       "semanticName": "discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-heading-6",
       "kind": "literal"
@@ -23917,7 +23917,7 @@
     {
       "id": "seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-option-10-bvsrxc",
       "source": "src/features/seller-discounts/presentation/discount-editor/SellerDiscountsManager.form-controls.tsx",
-      "line": 118,
+      "line": 120,
       "element": "option",
       "semanticName": "discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-option-10",
       "kind": "literal"
@@ -23925,7 +23925,7 @@
     {
       "id": "seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-option-11-vz8psq",
       "source": "src/features/seller-discounts/presentation/discount-editor/SellerDiscountsManager.form-controls.tsx",
-      "line": 119,
+      "line": 121,
       "element": "option",
       "semanticName": "discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-option-11",
       "kind": "literal"
@@ -23933,7 +23933,7 @@
     {
       "id": "seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-option-12-s9izrr",
       "source": "src/features/seller-discounts/presentation/discount-editor/SellerDiscountsManager.form-controls.tsx",
-      "line": 120,
+      "line": 122,
       "element": "option",
       "semanticName": "discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-option-12",
       "kind": "literal"
@@ -23941,7 +23941,7 @@
     {
       "id": "seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-option-13-3qy8yo",
       "source": "src/features/seller-discounts/presentation/discount-editor/SellerDiscountsManager.form-controls.tsx",
-      "line": 121,
+      "line": 123,
       "element": "option",
       "semanticName": "discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-option-13",
       "kind": "literal"
@@ -23949,7 +23949,7 @@
     {
       "id": "seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-option-17-ypblro",
       "source": "src/features/seller-discounts/presentation/discount-editor/SellerDiscountsManager.form-controls.tsx",
-      "line": 158,
+      "line": 176,
       "element": "option",
       "semanticName": "discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-option-17",
       "kind": "literal"
@@ -23957,7 +23957,7 @@
     {
       "id": "seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-option-18-6iu1gz",
       "source": "src/features/seller-discounts/presentation/discount-editor/SellerDiscountsManager.form-controls.tsx",
-      "line": 159,
+      "line": 177,
       "element": "option",
       "semanticName": "discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-option-18",
       "kind": "literal"
@@ -23965,7 +23965,7 @@
     {
       "id": "seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-option-19-kjd48s",
       "source": "src/features/seller-discounts/presentation/discount-editor/SellerDiscountsManager.form-controls.tsx",
-      "line": 160,
+      "line": 178,
       "element": "option",
       "semanticName": "discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-option-19",
       "kind": "literal"
@@ -23973,7 +23973,7 @@
     {
       "id": "seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-option-20-pkbr0z",
       "source": "src/features/seller-discounts/presentation/discount-editor/SellerDiscountsManager.form-controls.tsx",
-      "line": 161,
+      "line": 179,
       "element": "option",
       "semanticName": "discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-option-20",
       "kind": "literal"
@@ -23981,7 +23981,7 @@
     {
       "id": "seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-option-21-if2ynr",
       "source": "src/features/seller-discounts/presentation/discount-editor/SellerDiscountsManager.form-controls.tsx",
-      "line": 162,
+      "line": 180,
       "element": "option",
       "semanticName": "discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-option-21",
       "kind": "literal"
@@ -23989,7 +23989,7 @@
     {
       "id": "seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-select-16-uafsia",
       "source": "src/features/seller-discounts/presentation/discount-editor/SellerDiscountsManager.form-controls.tsx",
-      "line": 151,
+      "line": 169,
       "element": "select",
       "semanticName": "discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-select-16",
       "kind": "literal"
@@ -23997,7 +23997,7 @@
     {
       "id": "seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-select-9-pikffr",
       "source": "src/features/seller-discounts/presentation/discount-editor/SellerDiscountsManager.form-controls.tsx",
-      "line": 111,
+      "line": 113,
       "element": "select",
       "semanticName": "discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-select-9",
       "kind": "literal"
@@ -24005,7 +24005,7 @@
     {
       "id": "seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-text-23-7kovrm",
       "source": "src/features/seller-discounts/presentation/discount-editor/SellerDiscountsManager.form-controls.tsx",
-      "line": 321,
+      "line": 346,
       "element": "p",
       "semanticName": "discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-text-23",
       "kind": "literal"
@@ -24013,7 +24013,7 @@
     {
       "id": "seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-text-4-8vpzwe",
       "source": "src/features/seller-discounts/presentation/discount-editor/SellerDiscountsManager.form-controls.tsx",
-      "line": 99,
+      "line": 101,
       "element": "span",
       "semanticName": "discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-text-4",
       "kind": "literal"
@@ -24021,7 +24021,7 @@
     {
       "id": "seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-text-7-uuip2n",
       "source": "src/features/seller-discounts/presentation/discount-editor/SellerDiscountsManager.form-controls.tsx",
-      "line": 104,
+      "line": 106,
       "element": "p",
       "semanticName": "discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-text-7",
       "kind": "literal"

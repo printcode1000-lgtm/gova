@@ -8,9 +8,11 @@ import type {
 } from "../../domain/seller-discount.entity";
 
 import { useTranslation } from "@/shared/i18n";
+import { useSessionRuntime } from "@/shared/session-runtime";
 
 export function useSellerDiscounts(sellerUid: string, includeInactive = true) {
   const { formatApiError } = useTranslation();
+  const { session } = useSessionRuntime();
   const [discounts, setDiscounts] = React.useState<SellerDiscountRule[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
@@ -27,6 +29,7 @@ export function useSellerDiscounts(sellerUid: string, includeInactive = true) {
         await sellerDiscountApiService.listSellerDiscounts(
           sellerUid,
           includeInactive,
+          includeInactive ? session?.sessionToken : undefined,
         ),
       );
     } catch (nextError) {
@@ -34,7 +37,7 @@ export function useSellerDiscounts(sellerUid: string, includeInactive = true) {
     } finally {
       setIsLoading(false);
     }
-  }, [formatApiError, includeInactive, sellerUid]);
+  }, [formatApiError, includeInactive, sellerUid, session?.sessionToken]);
 
   React.useEffect(() => {
     void reload();
@@ -56,11 +59,12 @@ export function useSellerDiscounts(sellerUid: string, includeInactive = true) {
       const saved = await sellerDiscountApiService.saveSellerDiscounts(
         sellerUid,
         next,
+        session?.sessionToken ?? "",
       );
       setDiscounts(saved);
       return saved;
     },
-    [sellerUid],
+    [sellerUid, session?.sessionToken],
   );
 
   return { discounts, setDiscounts, isLoading, error, reload, save };

@@ -13,6 +13,7 @@ import {
   Truck,
 } from "lucide-react";
 import { Button } from "@/shared/ui/button";
+import { ConfirmDialog } from "@/shared/ui/confirm-dialog";
 import { Input } from "@/shared/ui/input";
 import type { ProfileSectionStatus } from "@/features/profile/ui";
 import {
@@ -45,6 +46,7 @@ export function DiscountEditor({ id,
   onChange: (updater: (discount: SellerDiscountRule) => SellerDiscountRule) => void;
 } & { id?: string }) {
   const ar = locale === "ar";
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
   const Icon =
     discount.type === "free_shipping"
       ? Truck
@@ -122,7 +124,7 @@ export function DiscountEditor({ id,
           </select>
           <button id="seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-button-14-uqyhls"
             type="button"
-            onClick={onRemove}
+            onClick={() => setDeleteConfirmOpen(true)}
             className="flex h-9 w-9 items-center justify-center rounded-lg border border-error/30 text-error"
             aria-label={ar ? "إزالة الخصم" : "Delete discount"}
           >
@@ -130,6 +132,22 @@ export function DiscountEditor({ id,
           </button>
         </div>
       </div>
+
+      <ConfirmDialog
+        id={`seller-discounts-presentation-discount-editor-${discount.id}-delete-confirm`}
+        open={deleteConfirmOpen}
+        title={ar ? "تأكيد حذف الخصم" : "Confirm discount deletion"}
+        message={
+          ar
+            ? "هل أنت متأكد من حذف هذا الخصم؟ لا يمكن التراجع عن هذا الإجراء."
+            : "Are you sure you want to delete this discount? This action cannot be undone."
+        }
+        confirmLabel={ar ? "حذف" : "Delete"}
+        cancelLabel={ar ? "إلغاء" : "Cancel"}
+        tone="destructive"
+        onConfirm={onRemove}
+        onOpenChange={setDeleteConfirmOpen}
+      />
 
       <div id="seller-discounts-presentation-discount-editor-sellerdiscountsmanager-form-controls-div-15-7daduj" className="mt-4 grid gap-3 md:grid-cols-2">
         <Field id="seller-discounts-manager-form-controls-discount-editor-field-51f293" label={ar ? "عنوان العرض" : "Title"} description={ar ? "اسم واضح وقصير يراه العميل." : "A clear, short name customers will see."}>
@@ -206,6 +224,13 @@ export function DiscountEditor({ id,
             value={discount.conditions.buyQuantity}
             onChange={(value) => setCondition("buyQuantity", value)}
             placeholder={ar ? "مثال: 3" : "Example: 3"}
+          />
+        </Field>
+        <Field id="seller-discounts-manager-form-controls-discount-editor-field-get-quantity-8f3c2a" label={ar ? "كمية الاستفادة" : "Discounted quantity"} description={ar ? "عدد القطع الأرخص داخل كل مجموعة شراء التي يطبق عليها الخصم؛ اتركه فارغًا لتطبيق الخصم على المجموعة المؤهلة كلها." : "Number of cheapest units discounted in each qualifying group; leave empty to discount the whole eligible set."}>
+          <NumberInput
+            value={discount.conditions.getQuantity}
+            onChange={(value) => setCondition("getQuantity", value)}
+            placeholder={ar ? "مثال: 1" : "Example: 1"}
           />
         </Field>
         <Field id="seller-discounts-manager-form-controls-discount-editor-field-0701c2" label={ar ? "كود الكوبون" : "Coupon code"} description={ar ? "الكود الذي يدخله العميل للاستفادة من العرض." : "Code customers enter to redeem the offer."}>

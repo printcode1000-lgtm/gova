@@ -12,7 +12,7 @@
 | artifact | 4 |
 | command | 278 |
 | config | 12 |
-| document | 278 |
+| document | 279 |
 | domain | 10 |
 | environment-key | 238 |
 | external-dependency | 107 |
@@ -20,10 +20,10 @@
 | package | 46 |
 | route | 151 |
 | runtime | 7 |
-| script | 153 |
+| script | 154 |
 | service | 7 |
 | source | 2140 |
-| test | 252 |
+| test | 254 |
 
 ## Domains
 

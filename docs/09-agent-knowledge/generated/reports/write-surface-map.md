@@ -5,8 +5,8 @@
 
 # Write Surface Map
 
-Detected write-like surfaces: **361**
-Unproven gateway paths: **141**
+Detected write-like surfaces: **363**
+Unproven gateway paths: **142**
 
 | Source | Owner | Operations | Gateway | Proven | Route | Runtimes | Risk |
 |---|---|---|---|---|---|---|---|
@@ -64,7 +64,8 @@ Unproven gateway paths: **141**
 | `packages/data-core/src/domains/profile/repositories/profile-repository-parts/profile-repository.part-03.ts` | `@asol/data-core` | delete, update | `unproven` | NO | `` | development, web | high |
 | `packages/data-core/src/domains/profile/repositories/profile-repository-parts/profile-repository.part-04.ts` | `@asol/data-core` | delete, insert, update | `unproven` | NO | `` | development, web | high |
 | `packages/data-core/src/domains/profile/repositories/profile-review-repository.ts` | `@asol/data-core` | create, delete, insert, update | `unproven` | NO | `` | development, web | high |
-| `packages/data-core/src/domains/seller-discounts/repositories/seller-discount-repository.ts` | `@asol/data-core` | create, delete, insert | `unproven` | NO | `` | development, web | high |
+| `packages/data-core/src/domains/seller-discounts/repositories/seller-discount-repository.ts` | `@asol/data-core` | create, delete, insert, update | `unproven` | NO | `` | development, web | high |
+| `packages/data-core/src/domains/seller-discounts/tests/seller-discount-repository.test.ts` | `@asol/data-core` | delete, insert, save, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/data-core/src/index.ts` | `@asol/data-core` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/data-core/src/ports/product-search-fields.ts` | `@asol/data-core` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/data-core/src/ports/runtime-config.ts` | `@asol/data-core` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
@@ -173,6 +174,7 @@ Unproven gateway paths: **141**
 | `src/app/api/orders/route.ts` | `unknown` | write-like | `@asol/data-core` | yes | `/api/orders` | development, web | medium |
 | `src/app/api/products/reviews/route.ts` | `unknown` | create, delete, update | `unproven` | NO | `/api/products/reviews` | development, web | high |
 | `src/app/api/products/route.ts` | `unknown` | create, delete, update | `unproven` | NO | `/api/products` | development, web | high |
+| `src/app/api/profile/discounts/quote/route.ts` | `unknown` | write-like | `@asol/data-core` | yes | `/api/profile/discounts/quote` | development, web | medium |
 | `src/app/api/profile/fulfillment-settings/route.ts` | `unknown` | write-like | `@asol/data-core` | yes | `/api/profile/fulfillment-settings` | development, web | medium |
 | `src/app/api/profile/reviews/route.ts` | `unknown` | create, delete, update | `unproven` | NO | `/api/profile/reviews` | development, web | high |
 | `src/app/api/storage/images/upload/route.ts` | `unknown` | upload | `@asol/storage-core` | yes | `/api/storage/images/upload` | development, web | medium |

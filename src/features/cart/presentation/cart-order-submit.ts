@@ -13,11 +13,10 @@ export async function submitCartOrder({
   couponCodes: string[];
   items: CartItem[];
 }) {
+  if (!session.sessionToken?.trim()) throw new Error("sessionTokenInvalid");
   const result = await asolApi.post<{ orderId: string }>(
     ASOL_API_ROUTES.orders.fromCart,
     {
-      uid: session.uid,
-      phone: session.phone,
       couponCodes,
       items: items.map((item) => ({
         productId: item.productId,
@@ -32,7 +31,10 @@ export async function submitCartOrder({
         mainCategoryId: item.mainCategoryId,
       })),
     },
-    { suppressErrorLog: true },
+    {
+      suppressErrorLog: true,
+      headers: { "x-asol-session-token": session.sessionToken },
+    },
   );
   await notifications.publishEvent({
     event: {

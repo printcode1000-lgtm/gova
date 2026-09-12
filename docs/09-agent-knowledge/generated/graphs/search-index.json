@@ -9434,43 +9434,56 @@
       "kind": "document",
       "name": "Seller Discounts System",
       "path": "docs/03-products-and-commerce/seller-discounts-system.md",
-      "summary": "The Seller Discounts System gives every seller a complete offers module that is managed from the profile editor and shown to buyers in the public profile and cart. Discounts are stored as calculable rules, not display text.",
+      "summary": "The Seller Discounts System gives each seller calculable offer rules that are managed in the profile editor, advertised in the public profile, previewed in the cart, and recalculated authoritatively during checkout. Display text is never the pricing source of truth.",
       "tags": [
+        "advertised",
         "and",
         "are",
-        "as",
-        "buyers",
+        "authoritatively",
         "calculable",
         "cart",
-        "complete",
+        "checkout",
         "discounts",
         "display",
         "docs/03-products-and-commerce/seller-discounts-system",
         "docs/03-products-and-commerce/seller-discounts-system.md",
+        "during",
+        "each",
         "editor",
-        "every",
-        "from",
         "gives",
         "in",
         "is",
         "managed",
         "md",
-        "module",
-        "not",
-        "offers",
+        "never",
+        "of",
+        "offer",
+        "packages/data-core/src/core/database/profile/migrations/0012_seller_discounts",
+        "packages/data-core/src/core/database/profile/migrations/0012_seller_discounts.sql",
+        "packages/data-core/src/core/database/profile/migrations/0017_seller_discount_coupon_unique",
+        "packages/data-core/src/core/database/profile/migrations/0017_seller_discount_coupon_unique.sql",
+        "packages/data-core/src/core/database/profile/profile",
+        "packages/data-core/src/core/database/profile/profile.schema.ts",
+        "packages/data-core/src/provisioning/desired-schema/profile-promotions",
+        "packages/data-core/src/provisioning/desired-schema/profile-promotions.ts",
+        "previewed",
+        "pricing",
         "profile",
         "public",
+        "recalculated",
         "rules",
+        "schema",
         "seller",
         "seller discounts system",
-        "shown",
-        "stored",
+        "source",
+        "sql",
         "system",
         "text",
         "that",
         "the",
-        "the seller discounts system gives every seller a complete offers module that is managed from the profile editor and shown to buyers in the public profile and cart. discounts are stored as calculable rules, not display text.",
-        "to"
+        "the seller discounts system gives each seller calculable offer rules that are managed in the profile editor, advertised in the public profile, previewed in the cart, and recalculated authoritatively during checkout. display text is never the pricing source of truth.",
+        "truth",
+        "ts"
       ]
     },
     {
@@ -12685,6 +12698,60 @@
         "through",
         "transport",
         "without"
+      ]
+    },
+    {
+      "id": "document:docs/06-super-admin-and-operations/simulation-users.md",
+      "kind": "document",
+      "name": "Live Simulation Users",
+      "path": "docs/06-super-admin-and-operations/simulation-users.md",
+      "summary": "Gova has nine persistent simulation identities in the real Turso development data plane. They are not mocks and are not an in-memory seed. The accounts use the same users/auth database, profile shards, specialty indexes, and contact data used by ordinary application users.",
+      "tags": [
+        "accounts",
+        "an",
+        "and",
+        "application",
+        "are",
+        "by",
+        "contact",
+        "data",
+        "database",
+        "development",
+        "docs/06-super-admin-and-operations/simulation-users",
+        "docs/06-super-admin-and-operations/simulation-users.md",
+        "gova",
+        "gova has nine persistent simulation identities in the real turso development data plane. they are not mocks and are not an in-memory seed. the accounts use the same users/auth database, profile shards, specialty indexes, and contact data used by ordinary application users.",
+        "has",
+        "identities",
+        "in",
+        "in-memory",
+        "indexes",
+        "live",
+        "live simulation users",
+        "md",
+        "mocks",
+        "nine",
+        "not",
+        "ordinary",
+        "packages/auth-core/src/server/password",
+        "packages/auth-core/src/server/password.ts",
+        "persistent",
+        "plane",
+        "profile",
+        "real",
+        "same",
+        "seed",
+        "shards",
+        "simulation",
+        "specialty",
+        "the",
+        "they",
+        "ts",
+        "turso",
+        "use",
+        "used",
+        "users",
+        "users/auth"
       ]
     },
     {
@@ -28044,6 +28111,17 @@
       "tags": [
         "scripts/verify-service-mirrors",
         "scripts/verify-service-mirrors.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/verify-simulation-users.ts",
+      "kind": "script",
+      "name": "verify-simulation-users.ts",
+      "path": "scripts/verify-simulation-users.ts",
+      "tags": [
+        "scripts/verify-simulation-users",
+        "scripts/verify-simulation-users.ts",
         "ts"
       ]
     },
@@ -52639,6 +52717,18 @@
       ]
     },
     {
+      "id": "test:packages/data-core/src/domains/seller-discounts/tests/seller-discount-repository.test.ts",
+      "kind": "test",
+      "name": "seller-discount-repository.test.ts",
+      "path": "packages/data-core/src/domains/seller-discounts/tests/seller-discount-repository.test.ts",
+      "tags": [
+        "packages/data-core/src/domains/seller-discounts/tests/seller-discount-repository",
+        "packages/data-core/src/domains/seller-discounts/tests/seller-discount-repository.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/data-core/src/domains/system-logs/tests/persistent-system-log-repository.test.ts",
       "kind": "test",
       "name": "persistent-system-log-repository.test.ts",
@@ -55006,6 +55096,18 @@
       "tags": [
         "src/features/seller-discounts/tests/seller-discount-engine",
         "src/features/seller-discounts/tests/seller-discount-engine.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/features/seller-discounts/tests/seller-discount-security-contract.test.ts",
+      "kind": "test",
+      "name": "seller-discount-security-contract.test.ts",
+      "path": "src/features/seller-discounts/tests/seller-discount-security-contract.test.ts",
+      "tags": [
+        "src/features/seller-discounts/tests/seller-discount-security-contract",
+        "src/features/seller-discounts/tests/seller-discount-security-contract.test.ts",
         "test",
         "ts"
       ]

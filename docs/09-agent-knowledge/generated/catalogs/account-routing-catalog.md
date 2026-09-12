@@ -25,8 +25,8 @@ is listed as `gova/dev` and answered wherever the request lands.
 | `notifications` | `asol-notifications` | `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | 5 | 1 | 4 |
 | `orders` | `asol-orders` | `NEXT_PUBLIC_ASOL_ORDERS_URL` | 1 | 1 | 0 |
 | `products` | `asol-products` | `NEXT_PUBLIC_ASOL_PRODUCTS_URL` | 3 | 3 | 0 |
-| `profiles` | `asol-profiles` | `NEXT_PUBLIC_ASOL_PROFILES_URL` | 8 | 8 | 0 |
-| `sub2main` | `asol-sub2main` | `NEXT_PUBLIC_ASOL_SUB2MAIN_URL` | 27 | 27 | 0 |
+| `profiles` | `asol-profiles` | `NEXT_PUBLIC_ASOL_PROFILES_URL` | 7 | 7 | 0 |
+| `sub2main` | `asol-sub2main` | `NEXT_PUBLIC_ASOL_SUB2MAIN_URL` | 28 | 28 | 0 |
 | `submain` | `asol-submain` | `NEXT_PUBLIC_ASOL_SUBMAIN_URL` | 47 | 46 | 1 |
 
 ## `control`
@@ -115,7 +115,6 @@ routes, which are omitted from the production artifact entirely.
 | Method | Route | Status |
 | --- | --- | --- |
 | `GET` | `/api/profile/contacts` | shipped |
-| `GET` | `/api/profile/discounts` | shipped |
 | `GET` | `/api/profile/fulfillment-settings` | shipped |
 | `GET` | `/api/profile/specialties` | shipped |
 | `GET` | `/api/profile/store-details` | shipped |
@@ -138,6 +137,7 @@ routes, which are omitted from the production artifact entirely.
 | `DELETE` | `/api/products/reviews/reply` | shipped |
 | `POST` | `/api/products/reviews/reply` | shipped |
 | `PUT` | `/api/profile/contacts` | shipped |
+| `GET` | `/api/profile/discounts` | shipped |
 | `PUT` | `/api/profile/discounts` | shipped |
 | `POST` | `/api/profile/discounts/quote` | shipped |
 | `PUT` | `/api/profile/editor` | shipped |

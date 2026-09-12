@@ -1,6 +1,6 @@
 import "server-only";
 
-import type { IDatabaseClient } from "./database/database-client.interface";
+import type { DatabaseBatchStatement, IDatabaseClient } from "./database/database-client.interface";
 import { assertServerDataAccessRuntime } from "./database/environment";
 import { TursoDatabaseClient } from "./database/turso-db-client";
 import { ProductTursoDatabaseClient } from "./database/product-turso-db-client";
@@ -64,6 +64,11 @@ function lazyDataSource(name: ServerDataSourceName): IDatabaseClient {
       return dataSources.get(name).db;
     },
     execute: (sql, params) => dataSources.get(name).execute(sql, params),
+    batch: (statements: DatabaseBatchStatement[]) => {
+      const source = dataSources.get(name);
+      if (!source.batch) throw new Error(`Atomic batch is not available for ${name}`);
+      return source.batch(statements);
+    },
     insert: (table, data) => dataSources.get(name).insert(table, data),
     select: (table, where, limit) => dataSources.get(name).select(table, where, limit),
     update: (table, data, where) => dataSources.get(name).update(table, data, where),

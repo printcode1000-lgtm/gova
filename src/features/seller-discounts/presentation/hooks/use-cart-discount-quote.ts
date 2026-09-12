@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import type { CartItem } from "@/features/cart/ui";
+import { useSessionRuntime } from "@/shared/session-runtime";
 import { sellerDiscountApiService } from "../../application/services/seller-discount-api-service";
 import type {
   DiscountBuyerContext,
@@ -12,6 +13,7 @@ export function useCartDiscountQuote(
   items: CartItem[],
   context: DiscountBuyerContext,
 ) {
+  const { session } = useSessionRuntime();
   const [quote, setQuote] = React.useState<SellerDiscountCartQuote | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -34,6 +36,7 @@ export function useCartDiscountQuote(
           mainCategoryId: item.mainCategoryId,
         })),
         context,
+        session?.sessionToken,
       )
       .then((next) => {
         if (!cancelled) setQuote(next);
@@ -54,6 +57,7 @@ export function useCartDiscountQuote(
     context.isApp,
     context.isFirstOrder,
     context.isFollower,
+    session?.sessionToken,
   ]);
 
   return { quote, isLoading };

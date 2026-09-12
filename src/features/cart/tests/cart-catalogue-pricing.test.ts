@@ -36,7 +36,7 @@ assert.match(
 
 // ── …and must overwrite the client's values, not merely read them ────────────
 
-for (const field of ["unitPriceMinor", "sellerId", "name", "requiresSpecialVehicle"]) {
+for (const field of ["unitPriceMinor", "sellerId", "name", "requiresSpecialVehicle", "mainCategoryId"]) {
   assert.match(
     route,
     new RegExp(`${field}:\\s*authoritative\\.${field}`),
