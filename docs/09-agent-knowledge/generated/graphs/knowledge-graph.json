@@ -12244,6 +12244,52 @@
       ]
     },
     {
+      "id": "document:docs/06-super-admin-and-operations/agent-development-tooling.md",
+      "kind": "document",
+      "name": "Agent Development Tooling",
+      "path": "docs/06-super-admin-and-operations/agent-development-tooling.md",
+      "summary": "Gova agents have a shared development toolbox for repository discovery, structural and semantic analysis, browser verification, static analysis, shell/workflow checks, and external-service operations. The policy applies to execution Modes A, B, and C; the selected mode still deci",
+      "tags": [
+        "agent",
+        "agent development tooling",
+        "agents",
+        "analysis",
+        "and",
+        "applies",
+        "browser",
+        "checks",
+        "deci",
+        "development",
+        "discovery",
+        "docs/06-super-admin-and-operations/agent-development-tooling",
+        "docs/06-super-admin-and-operations/agent-development-tooling.md",
+        "execution",
+        "external-service",
+        "for",
+        "gova",
+        "gova agents have a shared development toolbox for repository discovery, structural and semantic analysis, browser verification, static analysis, shell/workflow checks, and external-service operations. the policy applies to execution modes a, b, and c; the selected mode still deci",
+        "have",
+        "md",
+        "mode",
+        "modes",
+        "operations",
+        "policy",
+        "repository",
+        "selected",
+        "semantic",
+        "shared",
+        "shell/workflow",
+        "static",
+        "still",
+        "structural",
+        "the",
+        "to",
+        "toolbox",
+        "tooling",
+        "verification"
+      ]
+    },
+    {
       "id": "document:docs/06-super-admin-and-operations/catalog-studio.md",
       "kind": "document",
       "name": "Catalog Studio",
@@ -72132,6 +72178,11 @@
       "detail": "src/features/voice-input/presentation/VoiceInputController.tsx"
     },
     {
+      "from": "document:docs/06-super-admin-and-operations/agent-development-tooling.md",
+      "to": "domain:super-admin-and-operations",
+      "kind": "belongs-to"
+    },
+    {
       "from": "document:docs/06-super-admin-and-operations/catalog-studio.md",
       "to": "domain:super-admin-and-operations",
       "kind": "belongs-to"
@@ -72421,6 +72472,12 @@
     },
     {
       "from": "document:docs/06-super-admin-and-operations/local-agent-runtime.md",
+      "to": "document:docs/06-super-admin-and-operations/agent-development-tooling.md",
+      "kind": "references",
+      "detail": "./agent-development-tooling.md"
+    },
+    {
+      "from": "document:docs/06-super-admin-and-operations/local-agent-runtime.md",
       "to": "document:docs/06-super-admin-and-operations/local-agent-recovery.md",
       "kind": "references",
       "detail": "docs/06-super-admin-and-operations/local-agent-recovery.md"
@@ -72475,6 +72532,12 @@
       "from": "document:docs/06-super-admin-and-operations/README.md",
       "to": "domain:super-admin-and-operations",
       "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/06-super-admin-and-operations/README.md",
+      "to": "document:docs/06-super-admin-and-operations/agent-development-tooling.md",
+      "kind": "references",
+      "detail": "./agent-development-tooling.md"
     },
     {
       "from": "document:docs/06-super-admin-and-operations/README.md",

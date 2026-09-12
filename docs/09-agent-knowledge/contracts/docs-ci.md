@@ -44,7 +44,7 @@ npm run docs:check
 - **No deploy.** No Vercel deployment, no `deploy:all` phase, no environment promotion.
 - **No OTA.** No `@asol/ota-core` publish, no store-facing artifact upload.
 - **No database operation.** No schema sync, no migration, no seed/reset against Turso or any database.
-- **No browser/computer-use verification.** Documentation correctness is validated by static analysis of the repository graph and registries, never by rendering pages or driving a browser.
+- **No browser automation inside the documentation-only workflow.** `docs:ci` validates documentation correctness statically; this narrow CI-scope restriction does not prohibit agents from using Playwright/browser verification for application or UI work outside this workflow.
 - **No application build.** `next build`, `build:static`, native Android/iOS builds are out of scope for this workflow.
 
 If a documentation change appears to need one of these to "prove" correctness, that is a signal the change actually needs a local, non-CI verification step (see [Runtime Compatibility Contract](./runtime-compatibility.md) for the safe non-publishing checks an agent runs by hand instead).

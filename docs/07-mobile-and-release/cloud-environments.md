@@ -34,4 +34,4 @@ All remote workspaces use the same repository requirements:
 - `npm ci` for dependency installation.
 - Runtime secrets supplied through the workspace secret store, never committed files.
 - Project-wide instructions from the root instruction surfaces and task context from `scripts/docs/context.ts`.
-- Non-visual verification through tests, type checks, lint, architecture checks, runtime checks, and builds when required.
+- Layered verification through tests, type checks, lint, architecture checks, runtime checks, builds, and Playwright/browser verification when runtime or UI behavior warrants it.

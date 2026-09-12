@@ -22,7 +22,7 @@ A disciplined 4-phase framework to diagnose and fix issues without introducing r
 - Maintain Single Responsibility (Rule 8) and Package Boundaries (Rule 1 & 5).
 - Ensure the fix respects all 5 runtime environments (Dev, Web, Static out/, Android, iOS).
 
-## Phase 4: Non-Visual Verification & Regression Defense
+## Phase 4: Layered Verification & Regression Defense
 - Verify the fix against the reproduction test case.
 - Run project validation suites to ensure no regressions were introduced:
   ```bash
@@ -32,3 +32,4 @@ A disciplined 4-phase framework to diagnose and fix issues without introducing r
   npm run runtime:check
   ```
 - Add automated regression tests covering the fixed edge case.
+- When the defect is UI, navigation, rendering, browser API, or client-runtime specific, reproduce and verify it with Playwright/browser tooling as direct evidence.

@@ -17,12 +17,16 @@ GitHub contains exactly two recognized remote branches: `main` and `integration`
 - Optional local client: `/home/hesham/.local/bin/gova-agent`
 - Read-only local monitor: `/home/hesham/.local/bin/gova-agent-monitor`
 
+## Shared development toolbox for Modes A/B/C
+
+All three execution modes use the development-tool policy in [Agent Development Tooling](./agent-development-tooling.md): `rg` plus ast-grep, TypeScript semantic tooling, Playwright, Knip, Semgrep/ESLint/Biome, fd/fzf/bat/delta, ShellCheck/shfmt/actionlint, and gh/Vercel/Turso. Browser verification is allowed when appropriate; each mode still obeys its own execution transport and authorization boundary.
+
 ## Mode B: direct local editing
 
 1. Work in `/home/hesham/gova` on its current local branch and working tree.
 2. Preserve every pre-existing local modification; never reset or relocate it merely to obtain isolation.
 3. Read the required project context and modify the requested files directly.
-4. Run the smallest relevant non-browser verification locally.
+4. Run the smallest relevant verification locally. Use automated/static checks and add Playwright/browser verification when UI or browser-runtime behavior needs direct evidence.
 5. Stop with the verified changes still local unless the user explicitly asks for commit, push, integration, or deployment.
 
 Mode B does **not** register an agent with localhost control, create a task/worktree, create an `agent/*` branch, acquire Gateway locks, or submit anything to `integration`.

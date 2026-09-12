@@ -9,7 +9,7 @@ Binding on every agent and developer working on this project.
    - When behavior, APIs, data, architecture, configuration, or runtime operation changes, update the related editable documentation in the same change.
    - Follow `docs/09-agent-knowledge/document-mutability.md`: do not modify protected docs without explicit user authorization, and never edit generated docs by hand; update their source and regenerate them.
    - Keep `npm run architecture:check`, `npm run docs:ci`, and the relevant `test:*-core` tests passing.
-2. **Browser-based verification is forbidden.** Never use browser tools, preview tools, or computer-control tools to test or verify code. Use code analysis, tests, and non-visual tools only.
+2. **Use the shared development toolbox, including browser verification when appropriate.** The tooling policy in `docs/06-super-admin-and-operations/agent-development-tooling.md` applies to Modes A, B, and C within each mode's execution-transport rules. Use `rg` for text search, structural/semantic tools for code understanding, and Playwright/browser verification for UI or runtime behavior when it materially improves confidence; keep applicable automated tests, type checks, lint, architecture, and runtime checks.
 3. **Communicate in Arabic.** Always reply to the user in Arabic. Code, paths, and commands may remain in the repository's language.
 4. **Keep responses extremely concise.** Answer with the shortest wording possible without losing essential meaning. No filler, repetition, or unrelated content.
 5. **English documentation inside `docs/` only.** All project documentation must be written in English and live inside `docs/`. Root instruction surfaces are agent instructions, not substitutes for project documentation.

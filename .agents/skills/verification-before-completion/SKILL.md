@@ -1,11 +1,11 @@
 ---
 name: verification-before-completion
-description: Non-visual verification, automated test suites, static analysis, and runtime contract validation before claiming completion. Use as the final validation gate before finishing any coding task or pull request.
+description: Layered verification using automated tests, static analysis, runtime checks, and browser/Playwright validation when appropriate before claiming completion.
 ---
 
 # Verification Before Completion Guide
 
-Comprehensive verification protocol to validate functionality, integrity, and safety without browser tools or visual shortcuts.
+Comprehensive verification protocol combining automated checks with browser/Playwright validation when runtime or UI behavior needs direct evidence.
 
 ## 1. Golden Verification Stack
 
@@ -26,11 +26,15 @@ npm run runtime:check
 
 # 5. Documentation & knowledge graph CI
 npm run docs:ci
+
+# 6. When UI/browser-runtime behavior changed, add direct Playwright verification
+# playwright-cli open http://127.0.0.1:3001
 ```
 
-## 2. Non-Visual Verification Rules (Rule 2)
-- **Browser-based verification is strictly forbidden**: Do not use browser preview, web page inspection tools, or visual simulation to verify code.
-- Rely solely on automated unit/integration test suites, static analysis, type checks, and architecture scanners.
+## 2. Layered Verification Rules (Rule 2)
+- Browser and Playwright verification are allowed and encouraged when UI, navigation, rendering, browser APIs, or runtime behavior materially benefit from direct execution evidence.
+- Browser evidence supplements rather than replaces automated unit/integration tests, static analysis, type checks, architecture checks, and runtime checks.
+- Use the shared toolbox documented in `docs/06-super-admin-and-operations/agent-development-tooling.md`, while preserving the selected A/B/C transport rules.
 
 ## 3. Targeted Test Execution
 Run the specific test suites for modified capabilities:
