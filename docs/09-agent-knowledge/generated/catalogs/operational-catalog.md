@@ -91,10 +91,14 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run deploy:all` | `npx tsx scripts/deploy-all.ts` |
 | `npm run deploy:push` | `npx tsx scripts/deploy-push.ts --vercel-target=all` |
 | `npm run deploy:push:fast` | `npx tsx scripts/deploy-push.ts --fast --vercel-target=all` |
-| `npm run dev` | `next dev --turbo --port 3001` |
-| `npm run dev:checked` | `npm run server:stop && npm run branding:generate && npm run app:init && npm run catalog:validate && next dev --turbo --port 3001` |
+| `npm run dev` | `npx tsx scripts/dev-simulation.ts` |
+| `npm run dev:checked` | `npm run server:stop && npm run branding:generate && npm run app:init && npm run catalog:validate && npx tsx scripts/dev-simulation.ts` |
 | `npm run dev:distributed` | `npx tsx scripts/dev-distributed.ts` |
 | `npm run dev:distributed:smoke` | `npx tsx scripts/dev-distributed.ts --smoke` |
+| `npm run dev:simulation` | `npx tsx scripts/dev-simulation.ts` |
+| `npm run dev:simulation:adb` | `npx tsx scripts/dev-simulation-adb.ts` |
+| `npm run dev:simulation:adb:remove` | `npx tsx scripts/dev-simulation-adb.ts --remove` |
+| `npm run dev:simulation:smoke` | `npx tsx scripts/dev-simulation.ts --smoke` |
 | `npm run docs:check` | `npx tsx scripts/docs/check.ts` |
 | `npm run docs:ci` | `npx tsx scripts/docs/docs-ci.ts` |
 | `npm run docs:coverage` | `npx tsx scripts/docs/coverage-cli.ts` |
@@ -155,6 +159,8 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run prebuild:vercel` | `npm run env:verify:single-source` |
 | `npm run predev` | `npm run env:verify:single-source` |
 | `npm run predev:checked` | `npm run env:verify:single-source` |
+| `npm run predev:simulation` | `npm run env:verify:single-source` |
+| `npm run predev:simulation:smoke` | `npm run env:verify:single-source` |
 | `npm run prepare` | `git config core.hooksPath .githooks \|\| exit 0` |
 | `npm run prestart` | `npm run env:verify:single-source` |
 | `npm run preview:static` | `npx tsx packages/ota-core/scripts/serve-static.ts` |
@@ -280,6 +286,8 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:sharing` | `npx tsx src/features/sharing/tests/sharing-module.test.ts && npx tsx src/features/qr-code/tests/qr-code-module.test.ts` |
 | `npm run test:shipping-pricing` | `npx tsx src/features/cart/tests/shipping-pricing.test.ts` |
 | `npm run test:signed-token-core` | `npx tsx packages/signed-token-core/src/tests/index.test.ts` |
+| `npm run test:simulation-contract` | `npx tsx src/features/dev-tools/tests/live-simulation-contract.test.ts` |
+| `npm run test:simulation-core` | `npx tsx packages/simulation-core/src/tests/index.test.ts` |
 | `npm run test:storage-core` | `npx tsx packages/storage-core/src/tests/index.test.ts` |
 | `npm run test:storage-image-manager-core` | `npx tsx packages/storage-image-manager-core/src/tests/index.test.ts` |
 | `npm run test:store-name-draft` | `npx tsx src/features/profile/tests/store-name-draft.test.ts && npx tsx src/features/profile/tests/profile-edit-navigation.test.ts` |

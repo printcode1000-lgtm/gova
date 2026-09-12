@@ -10,20 +10,20 @@
 | Kind | Count |
 |---|---:|
 | artifact | 4 |
-| command | 278 |
+| command | 286 |
 | config | 12 |
 | document | 280 |
 | domain | 10 |
-| environment-key | 238 |
+| environment-key | 240 |
 | external-dependency | 107 |
 | feature | 43 |
-| package | 46 |
-| route | 151 |
+| package | 47 |
+| route | 154 |
 | runtime | 7 |
-| script | 154 |
+| script | 156 |
 | service | 7 |
-| source | 2140 |
-| test | 254 |
+| source | 2150 |
+| test | 256 |
 
 ## Domains
 
@@ -83,6 +83,7 @@
 | @asol/service-mirror-core | `packages/service-mirror-core` | Service source mirroring into services/*; Layer: capability; Public exports: . |
 | @asol/service-runtime-core | `packages/service-runtime-core` | Shared service runtime helpers; Layer: capability; Public exports: . |
 | @asol/signed-token-core | `packages/signed-token-core` | Signed token create/verify; Layer: capability; Public exports: . |
+| @asol/simulation-core | `packages/simulation-core` | Development-only live simulation actor topology and runtime state; Layer: capability; Public exports: ., ./server |
 | @asol/storage-core | `packages/storage-core` | Object storage (R2/S3) access; Layer: capability; Public exports: ., ./profiles-config, ./server |
 | @asol/storage-image-manager-core | `packages/storage-image-manager-core` | Image manager UI and client lifecycle over storage ports; Layer: capability; Public exports: ., ./client-lifecycle, ./image-cache, ./services |
 | @asol/sub2main-composition | `packages/sub2main-composition` | Composition root for the sub2main account; Layer: composition; Public exports: . |

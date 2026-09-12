@@ -36,10 +36,13 @@
   /* Anything pinned above the header (e.g. the impersonation banner) reports
      its own height here; it already includes the top safe area. */
   --asol-top-overlay-height: 0px;
+  /* Development simulation toolbar, isolated from the impersonation banner. */
+  --asol-simulation-toolbar-height: 0px;
   /* Free space the header must leave at its top edge. */
   --asol-app-header-inset: max(
     var(--asol-safe-area-top),
-    var(--asol-top-overlay-height)
+    var(--asol-top-overlay-height),
+    var(--asol-simulation-toolbar-height)
   );
   --asol-app-header-height: calc(
     var(--asol-header-bar-height) + var(--asol-header-install-height) +
@@ -86,6 +89,12 @@ html {
 
 body {
   overscroll-behavior-y: none;
+}
+
+/* In live simulation the actor toolbar is the only development chrome. */
+html[data-asol-simulation-active="true"]
+  [data-asol-overlay-chrome="true"]:not([data-asol-simulation-toolbar="true"]) {
+  display: none !important;
 }
 
 /* Terminal / log panes: keep vertical scroll obvious and touch-friendly. */

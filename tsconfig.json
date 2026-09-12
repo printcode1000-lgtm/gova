@@ -379,6 +379,12 @@
       ],
       "@asol/orders-core/transport": [
         "./packages/orders-core/src/domain/transport-contract.ts"
+      ],
+      "@asol/simulation-core": [
+        "./packages/simulation-core/src/index.ts"
+      ],
+      "@asol/simulation-core/server": [
+        "./packages/simulation-core/src/server.ts"
       ]
     }
   },

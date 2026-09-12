@@ -9,7 +9,7 @@ Safe non-publishing checks only. This report does not deploy, publish OTA, uploa
 
 | Surface | Graph node | Check status | Error count |
 |---|---|---|---:|
-| Development | present | pass | 0 |
+| Development | present | FAIL | 1 |
 | Web | present | pass | 0 |
 | Static out | present | pass | 0 |
 | Android | present | pass | 0 |
@@ -17,4 +17,4 @@ Safe non-publishing checks only. This report does not deploy, publish OTA, uploa
 
 ## Failures
 
-- none
+- **Development:** dev script must target port 3001

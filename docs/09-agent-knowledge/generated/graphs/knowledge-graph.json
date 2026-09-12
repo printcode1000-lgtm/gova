@@ -1157,6 +1157,66 @@
       ]
     },
     {
+      "id": "command:dev:simulation",
+      "kind": "command",
+      "name": "npm run dev:simulation",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "dev",
+        "dev:simulation",
+        "npm",
+        "npm run dev:simulation",
+        "run",
+        "simulation"
+      ]
+    },
+    {
+      "id": "command:dev:simulation:adb",
+      "kind": "command",
+      "name": "npm run dev:simulation:adb",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "adb",
+        "dev",
+        "dev:simulation:adb",
+        "npm",
+        "npm run dev:simulation:adb",
+        "run",
+        "simulation"
+      ]
+    },
+    {
+      "id": "command:dev:simulation:adb:remove",
+      "kind": "command",
+      "name": "npm run dev:simulation:adb:remove",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "adb",
+        "dev",
+        "dev:simulation:adb:remove",
+        "npm",
+        "npm run dev:simulation:adb:remove",
+        "remove",
+        "run",
+        "simulation"
+      ]
+    },
+    {
+      "id": "command:dev:simulation:smoke",
+      "kind": "command",
+      "name": "npm run dev:simulation:smoke",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "dev",
+        "dev:simulation:smoke",
+        "npm",
+        "npm run dev:simulation:smoke",
+        "run",
+        "simulation",
+        "smoke"
+      ]
+    },
+    {
       "id": "command:docs:check",
       "kind": "command",
       "name": "npm run docs:check",
@@ -2026,6 +2086,35 @@
         "predev",
         "predev:checked",
         "run"
+      ]
+    },
+    {
+      "id": "command:predev:simulation",
+      "kind": "command",
+      "name": "npm run predev:simulation",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run predev:simulation",
+        "predev",
+        "predev:simulation",
+        "run",
+        "simulation"
+      ]
+    },
+    {
+      "id": "command:predev:simulation:smoke",
+      "kind": "command",
+      "name": "npm run predev:simulation:smoke",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run predev:simulation:smoke",
+        "predev",
+        "predev:simulation:smoke",
+        "run",
+        "simulation",
+        "smoke"
       ]
     },
     {
@@ -3779,6 +3868,34 @@
         "signed-token-core",
         "test",
         "test:signed-token-core"
+      ]
+    },
+    {
+      "id": "command:test:simulation-contract",
+      "kind": "command",
+      "name": "npm run test:simulation-contract",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run test:simulation-contract",
+        "run",
+        "simulation-contract",
+        "test",
+        "test:simulation-contract"
+      ]
+    },
+    {
+      "id": "command:test:simulation-core",
+      "kind": "command",
+      "name": "npm run test:simulation-core",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run test:simulation-core",
+        "run",
+        "simulation-core",
+        "test",
+        "test:simulation-core"
       ]
     },
     {
@@ -6054,6 +6171,7 @@
         "@asol/product-style-core",
         "@asol/release-core",
         "@asol/seller-card-core",
+        "@asol/simulation-core",
         "@asol/storage-core",
         "@asol/storage-image-manager-core",
         "@asol/system-logs-core",
@@ -6305,6 +6423,8 @@
         "@asol/service-mirror-core",
         "@asol/service-runtime-core",
         "@asol/signed-token-core",
+        "@asol/simulation-core",
+        "@asol/simulation-core/server",
         "@asol/storage-core",
         "@asol/storage-core/profiles-config",
         "@asol/storage-core/server",
@@ -6387,6 +6507,7 @@
         "packages/service-mirror-core/",
         "packages/service-runtime-core/",
         "packages/signed-token-core/",
+        "packages/simulation-core/",
         "packages/storage-core/",
         "packages/storage-image-manager-core/",
         "packages/sub2main-composition/",
@@ -6471,6 +6592,7 @@
         "@asol/service-mirror-core",
         "@asol/service-runtime-core",
         "@asol/signed-token-core",
+        "@asol/simulation-core",
         "@asol/storage-core",
         "@asol/storage-image-manager-core",
         "@asol/storage-image-manager-core/image-cache",
@@ -6622,6 +6744,7 @@
         "@asol/service-mirror-core",
         "@asol/service-runtime-core",
         "@asol/signed-token-core",
+        "@asol/simulation-core",
         "@asol/storage-core",
         "@asol/storage-image-manager-core",
         "@asol/sub2main-composition",
@@ -6692,6 +6815,7 @@
         "packages/service-mirror-core/",
         "packages/service-runtime-core/",
         "packages/signed-token-core/",
+        "packages/simulation-core/",
         "packages/storage-core/",
         "packages/storage-image-manager-core/",
         "packages/sub2main-composition/",
@@ -18642,6 +18766,32 @@
       ]
     },
     {
+      "id": "environment-key:ASOL_SIMULATION_PROXY_SECRET",
+      "kind": "environment-key",
+      "name": "ASOL_SIMULATION_PROXY_SECRET",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "asol_simulation_proxy_secret",
+        "environment",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:ASOL_SIMULATION_RUNTIME",
+      "kind": "environment-key",
+      "name": "ASOL_SIMULATION_RUNTIME",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "asol_simulation_runtime",
+        "environment",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
       "id": "environment-key:ASOL_SMOKE_PORT",
       "kind": "environment-key",
       "name": "ASOL_SMOKE_PORT",
@@ -23714,6 +23864,30 @@
       ]
     },
     {
+      "id": "package:@asol/simulation-core",
+      "kind": "package",
+      "name": "@asol/simulation-core",
+      "path": "packages/simulation-core",
+      "summary": "Development-only live simulation actor topology and runtime state; Layer: capability; Public exports: ., ./server",
+      "tags": [
+        ".",
+        "./server",
+        "/server",
+        "@asol/simulation-core",
+        "actor",
+        "and",
+        "capability",
+        "development-only",
+        "development-only live simulation actor topology and runtime state",
+        "live",
+        "packages/simulation-core",
+        "runtime",
+        "simulation",
+        "state",
+        "topology"
+      ]
+    },
+    {
       "id": "package:@asol/storage-core",
       "kind": "package",
       "name": "@asol/storage-core",
@@ -24228,6 +24402,54 @@
         "handler api",
         "src/app/api/dev/product-style/route",
         "src/app/api/dev/product-style/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "route:/api/dev/simulation/checkpoint:handler",
+      "kind": "route",
+      "name": "/api/dev/simulation/checkpoint",
+      "path": "src/app/api/dev/simulation/checkpoint/route.ts",
+      "summary": "App Router request handler",
+      "tags": [
+        "/api/dev/simulation/checkpoint",
+        "api",
+        "handler",
+        "handler api",
+        "src/app/api/dev/simulation/checkpoint/route",
+        "src/app/api/dev/simulation/checkpoint/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "route:/api/dev/simulation/session:handler",
+      "kind": "route",
+      "name": "/api/dev/simulation/session",
+      "path": "src/app/api/dev/simulation/session/route.ts",
+      "summary": "App Router request handler",
+      "tags": [
+        "/api/dev/simulation/session",
+        "api",
+        "handler",
+        "handler api",
+        "src/app/api/dev/simulation/session/route",
+        "src/app/api/dev/simulation/session/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "route:/api/dev/simulation/state:handler",
+      "kind": "route",
+      "name": "/api/dev/simulation/state",
+      "path": "src/app/api/dev/simulation/state/route.ts",
+      "summary": "App Router request handler",
+      "tags": [
+        "/api/dev/simulation/state",
+        "api",
+        "handler",
+        "handler api",
+        "src/app/api/dev/simulation/state/route",
+        "src/app/api/dev/simulation/state/route.ts",
         "ts"
       ]
     },
@@ -26947,6 +27169,28 @@
       "tags": [
         "scripts/dev-distributed",
         "scripts/dev-distributed.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/dev-simulation-adb.ts",
+      "kind": "script",
+      "name": "dev-simulation-adb.ts",
+      "path": "scripts/dev-simulation-adb.ts",
+      "tags": [
+        "scripts/dev-simulation-adb",
+        "scripts/dev-simulation-adb.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/dev-simulation.ts",
+      "kind": "script",
+      "name": "dev-simulation.ts",
+      "path": "scripts/dev-simulation.ts",
+      "tags": [
+        "scripts/dev-simulation",
+        "scripts/dev-simulation.ts",
         "ts"
       ]
     },
@@ -37401,6 +37645,28 @@
       ]
     },
     {
+      "id": "source:packages/simulation-core/src/index.ts",
+      "kind": "source",
+      "name": "index.ts",
+      "path": "packages/simulation-core/src/index.ts",
+      "tags": [
+        "packages/simulation-core/src/index",
+        "packages/simulation-core/src/index.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/simulation-core/src/server.ts",
+      "kind": "source",
+      "name": "server.ts",
+      "path": "packages/simulation-core/src/server.ts",
+      "tags": [
+        "packages/simulation-core/src/server",
+        "packages/simulation-core/src/server.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/storage-core/scripts/sync-cors.ts",
       "kind": "source",
       "name": "sync-cors.ts",
@@ -40298,6 +40564,39 @@
       ]
     },
     {
+      "id": "source:src/app/api/dev/simulation/checkpoint/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "src/app/api/dev/simulation/checkpoint/route.ts",
+      "tags": [
+        "src/app/api/dev/simulation/checkpoint/route",
+        "src/app/api/dev/simulation/checkpoint/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/app/api/dev/simulation/session/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "src/app/api/dev/simulation/session/route.ts",
+      "tags": [
+        "src/app/api/dev/simulation/session/route",
+        "src/app/api/dev/simulation/session/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/app/api/dev/simulation/state/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "src/app/api/dev/simulation/state/route.ts",
+      "tags": [
+        "src/app/api/dev/simulation/state/route",
+        "src/app/api/dev/simulation/state/route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/app/api/feature-flags/route.ts",
       "kind": "source",
       "name": "route.ts",
@@ -42307,6 +42606,18 @@
       ]
     },
     {
+      "id": "source:src/core/config/simulation.server.ts",
+      "kind": "source",
+      "name": "simulation.server.ts",
+      "path": "src/core/config/simulation.server.ts",
+      "tags": [
+        "server",
+        "src/core/config/simulation",
+        "src/core/config/simulation.server.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/core/config/system-logs.server.ts",
       "kind": "source",
       "name": "system-logs.server.ts",
@@ -43990,6 +44301,17 @@
       ]
     },
     {
+      "id": "source:src/features/dev-tools/application/simulation-api.ts",
+      "kind": "source",
+      "name": "simulation-api.ts",
+      "path": "src/features/dev-tools/application/simulation-api.ts",
+      "tags": [
+        "src/features/dev-tools/application/simulation-api",
+        "src/features/dev-tools/application/simulation-api.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/dev-tools/index.ts",
       "kind": "source",
       "name": "index.ts",
@@ -44031,6 +44353,40 @@
         "src/features/dev-tools/presentation/developerrecorddetails",
         "src/features/dev-tools/presentation/developerrecorddetails.tsx",
         "tsx"
+      ]
+    },
+    {
+      "id": "source:src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
+      "kind": "source",
+      "name": "SimulationRuntimeController.tsx",
+      "path": "src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
+      "tags": [
+        "src/features/dev-tools/presentation/simulationruntimecontroller",
+        "src/features/dev-tools/presentation/simulationruntimecontroller.tsx",
+        "tsx"
+      ]
+    },
+    {
+      "id": "source:src/features/dev-tools/server.ts",
+      "kind": "source",
+      "name": "server.ts",
+      "path": "src/features/dev-tools/server.ts",
+      "tags": [
+        "src/features/dev-tools/server",
+        "src/features/dev-tools/server.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/dev-tools/server/simulation-session.server.ts",
+      "kind": "source",
+      "name": "simulation-session.server.ts",
+      "path": "src/features/dev-tools/server/simulation-session.server.ts",
+      "tags": [
+        "server",
+        "src/features/dev-tools/server/simulation-session",
+        "src/features/dev-tools/server/simulation-session.server.ts",
+        "ts"
       ]
     },
     {
@@ -53711,6 +54067,18 @@
       ]
     },
     {
+      "id": "test:packages/simulation-core/src/tests/index.test.ts",
+      "kind": "test",
+      "name": "index.test.ts",
+      "path": "packages/simulation-core/src/tests/index.test.ts",
+      "tags": [
+        "packages/simulation-core/src/tests/index",
+        "packages/simulation-core/src/tests/index.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/storage-core/src/tests/contract/no-paired-functions.test.ts",
       "kind": "test",
       "name": "no-paired-functions.test.ts",
@@ -54590,6 +54958,18 @@
       "tags": [
         "src/features/catalog-studio/tests/catalog-studio",
         "src/features/catalog-studio/tests/catalog-studio.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/features/dev-tools/tests/live-simulation-contract.test.ts",
+      "kind": "test",
+      "name": "live-simulation-contract.test.ts",
+      "path": "src/features/dev-tools/tests/live-simulation-contract.test.ts",
+      "tags": [
+        "src/features/dev-tools/tests/live-simulation-contract",
+        "src/features/dev-tools/tests/live-simulation-contract.test.ts",
         "test",
         "ts"
       ]
@@ -56444,6 +56824,11 @@
     },
     {
       "from": "command:dev:checked",
+      "to": "script:scripts/dev-simulation.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:dev:checked",
       "to": "runtime:development",
       "kind": "targets-runtime"
     },
@@ -56471,6 +56856,51 @@
       "from": "command:dev:distributed",
       "to": "runtime:tooling",
       "kind": "targets-runtime"
+    },
+    {
+      "from": "command:dev:simulation:adb:remove",
+      "to": "script:scripts/dev-simulation-adb.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:dev:simulation:adb:remove",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:dev:simulation:adb",
+      "to": "script:scripts/dev-simulation-adb.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:dev:simulation:adb",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:dev:simulation:smoke",
+      "to": "script:scripts/dev-simulation.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:dev:simulation:smoke",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:dev:simulation",
+      "to": "script:scripts/dev-simulation.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:dev:simulation",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:dev",
+      "to": "script:scripts/dev-simulation.ts",
+      "kind": "invokes"
     },
     {
       "from": "command:dev",
@@ -57309,6 +57739,26 @@
     },
     {
       "from": "command:predev:checked",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:predev:simulation:smoke",
+      "to": "command:env:verify:single-source",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:predev:simulation:smoke",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:predev:simulation",
+      "to": "command:env:verify:single-source",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:predev:simulation",
       "to": "runtime:tooling",
       "kind": "targets-runtime"
     },
@@ -59164,6 +59614,26 @@
     },
     {
       "from": "command:test:signed-token-core",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:test:simulation-contract",
+      "to": "test:src/features/dev-tools/tests/live-simulation-contract.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:simulation-contract",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
+      "from": "command:test:simulation-core",
+      "to": "test:packages/simulation-core/src/tests/index.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:simulation-core",
       "to": "runtime:tooling",
       "kind": "targets-runtime"
     },
@@ -63965,6 +64435,12 @@
     },
     {
       "from": "document:docs/01-architecture/08-reference/application-feature-catalog.md",
+      "to": "package:@asol/simulation-core",
+      "kind": "references",
+      "detail": "@asol/simulation-core"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/application-feature-catalog.md",
       "to": "package:@asol/storage-core",
       "kind": "references",
       "detail": "@asol/storage-core"
@@ -65037,6 +65513,24 @@
     },
     {
       "from": "document:docs/01-architecture/08-reference/capability-map.md",
+      "to": "package:@asol/simulation-core",
+      "kind": "references",
+      "detail": "@asol/simulation-core"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/capability-map.md",
+      "to": "package:@asol/simulation-core",
+      "kind": "references",
+      "detail": "@asol/simulation-core/server"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/capability-map.md",
+      "to": "package:@asol/simulation-core",
+      "kind": "references",
+      "detail": "packages/simulation-core/"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/capability-map.md",
       "to": "package:@asol/storage-core",
       "kind": "references",
       "detail": "@asol/storage-core"
@@ -65573,6 +66067,12 @@
       "to": "package:@asol/signed-token-core",
       "kind": "references",
       "detail": "@asol/signed-token-core"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/dependency-map.md",
+      "to": "package:@asol/simulation-core",
+      "kind": "references",
+      "detail": "@asol/simulation-core"
     },
     {
       "from": "document:docs/01-architecture/08-reference/dependency-map.md",
@@ -66152,6 +66652,18 @@
       "to": "package:@asol/signed-token-core",
       "kind": "references",
       "detail": "packages/signed-token-core/"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/package-catalog.md",
+      "to": "package:@asol/simulation-core",
+      "kind": "references",
+      "detail": "@asol/simulation-core"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/package-catalog.md",
+      "to": "package:@asol/simulation-core",
+      "kind": "references",
+      "detail": "packages/simulation-core/"
     },
     {
       "from": "document:docs/01-architecture/08-reference/package-catalog.md",
@@ -77522,6 +78034,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "package:@asol/simulation-core",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "package:@asol/storage-core",
       "kind": "documents",
       "detail": "packages/"
@@ -82478,6 +82996,18 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/simulation-core/src/index.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/simulation-core/src/server.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:packages/storage-core/scripts/sync-cors.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -83763,6 +84293,12 @@
     {
       "from": "domain:architecture",
       "to": "test:packages/signed-token-core/src/tests/index.test.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "test:packages/simulation-core/src/tests/index.test.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -86277,6 +86813,18 @@
     {
       "from": "domain:mobile-and-release",
       "to": "script:scripts/dev-distributed.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/dev-simulation-adb.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/dev-simulation.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -92606,6 +93154,12 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "source:src/features/dev-tools/application/simulation-api.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "source:src/features/dev-tools/index.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -92625,6 +93179,24 @@
     {
       "from": "domain:platform-features",
       "to": "source:src/features/dev-tools/presentation/DeveloperRecordDetails.tsx",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
+      "to": "source:src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
+      "to": "source:src/features/dev-tools/server.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
+      "to": "source:src/features/dev-tools/server/simulation-session.server.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -96710,6 +97282,12 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "test:src/features/dev-tools/tests/live-simulation-contract.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "test:src/features/feature-flags/tests/feature-flag-service.test.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -99248,6 +99826,24 @@
     },
     {
       "from": "domain:ui-components",
+      "to": "route:/api/dev/simulation/checkpoint:handler",
+      "kind": "documents",
+      "detail": "src/app/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "route:/api/dev/simulation/session:handler",
+      "kind": "documents",
+      "detail": "src/app/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "route:/api/dev/simulation/state:handler",
+      "kind": "documents",
+      "detail": "src/app/"
+    },
+    {
+      "from": "domain:ui-components",
       "to": "route:/api/feature-flags:handler",
       "kind": "documents",
       "detail": "src/app/"
@@ -100227,6 +100823,24 @@
     {
       "from": "domain:ui-components",
       "to": "source:src/app/api/dev/product-style/route.ts",
+      "kind": "documents",
+      "detail": "src/app/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "source:src/app/api/dev/simulation/checkpoint/route.ts",
+      "kind": "documents",
+      "detail": "src/app/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "source:src/app/api/dev/simulation/session/route.ts",
+      "kind": "documents",
+      "detail": "src/app/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "source:src/app/api/dev/simulation/state/route.ts",
       "kind": "documents",
       "detail": "src/app/"
     },
@@ -101948,6 +102562,12 @@
     },
     {
       "from": "domain:ui-components",
+      "to": "source:src/features/dev-tools/application/simulation-api.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
       "to": "source:src/features/dev-tools/index.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -101967,6 +102587,24 @@
     {
       "from": "domain:ui-components",
       "to": "source:src/features/dev-tools/presentation/DeveloperRecordDetails.tsx",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "source:src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "source:src/features/dev-tools/server.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "source:src/features/dev-tools/server/simulation-session.server.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -105950,6 +106588,12 @@
     },
     {
       "from": "domain:ui-components",
+      "to": "test:src/features/dev-tools/tests/live-simulation-contract.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
       "to": "test:src/features/feature-flags/tests/feature-flag-service.test.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -106659,6 +107303,16 @@
     },
     {
       "from": "feature:dev-tools",
+      "to": "external-dependency:server-only",
+      "kind": "imports"
+    },
+    {
+      "from": "feature:dev-tools",
+      "to": "feature:auth",
+      "kind": "imports"
+    },
+    {
+      "from": "feature:dev-tools",
       "to": "feature:categories",
       "kind": "imports"
     },
@@ -106679,7 +107333,17 @@
     },
     {
       "from": "feature:dev-tools",
+      "to": "package:@asol/auth-core",
+      "kind": "imports"
+    },
+    {
+      "from": "feature:dev-tools",
       "to": "package:@asol/data-core",
+      "kind": "imports"
+    },
+    {
+      "from": "feature:dev-tools",
+      "to": "package:@asol/simulation-core",
       "kind": "imports"
     },
     {
@@ -112115,6 +112779,459 @@
       "detail": "route source dependency"
     },
     {
+      "from": "route:/api/dev/simulation/checkpoint:handler",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "route:/api/dev/simulation/checkpoint:handler",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "route:/api/dev/simulation/checkpoint:handler",
+      "to": "source:src/app/api/dev/simulation/checkpoint/route.ts",
+      "kind": "contains"
+    },
+    {
+      "from": "route:/api/dev/simulation/checkpoint:handler",
+      "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/checkpoint:handler",
+      "to": "feature:dev-tools",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/checkpoint:handler",
+      "to": "feature:storage",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/checkpoint:handler",
+      "to": "feature:super-admin",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/checkpoint:handler",
+      "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/checkpoint:handler",
+      "to": "package:@asol/api-contract-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/checkpoint:handler",
+      "to": "package:@asol/auth-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/checkpoint:handler",
+      "to": "package:@asol/data-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/checkpoint:handler",
+      "to": "package:@asol/data-core",
+      "kind": "related-to",
+      "detail": "route write gateway"
+    },
+    {
+      "from": "route:/api/dev/simulation/checkpoint:handler",
+      "to": "package:@asol/dev-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/checkpoint:handler",
+      "to": "package:@asol/env-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/checkpoint:handler",
+      "to": "package:@asol/featured-marquee-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/checkpoint:handler",
+      "to": "package:@asol/hero-slider-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/checkpoint:handler",
+      "to": "package:@asol/notifications-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/checkpoint:handler",
+      "to": "package:@asol/observability-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/checkpoint:handler",
+      "to": "package:@asol/orders-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/checkpoint:handler",
+      "to": "package:@asol/product-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/checkpoint:handler",
+      "to": "package:@asol/signed-token-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/checkpoint:handler",
+      "to": "package:@asol/simulation-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/checkpoint:handler",
+      "to": "package:@asol/storage-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/checkpoint:handler",
+      "to": "package:@asol/storage-core",
+      "kind": "related-to",
+      "detail": "route write gateway"
+    },
+    {
+      "from": "route:/api/dev/simulation/checkpoint:handler",
+      "to": "package:@asol/system-logs-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/checkpoint:handler",
+      "to": "package:@asol/trending-ribbon-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/checkpoint:handler",
+      "to": "package:@asol/vercel-deploy-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/session:handler",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "route:/api/dev/simulation/session:handler",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "route:/api/dev/simulation/session:handler",
+      "to": "source:src/app/api/dev/simulation/session/route.ts",
+      "kind": "contains"
+    },
+    {
+      "from": "route:/api/dev/simulation/session:handler",
+      "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/session:handler",
+      "to": "feature:dev-tools",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/session:handler",
+      "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/session:handler",
+      "to": "package:@asol/api-contract-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/session:handler",
+      "to": "package:@asol/auth-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/session:handler",
+      "to": "package:@asol/data-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/session:handler",
+      "to": "package:@asol/data-core",
+      "kind": "related-to",
+      "detail": "route write gateway"
+    },
+    {
+      "from": "route:/api/dev/simulation/session:handler",
+      "to": "package:@asol/dev-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/session:handler",
+      "to": "package:@asol/env-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/session:handler",
+      "to": "package:@asol/featured-marquee-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/session:handler",
+      "to": "package:@asol/hero-slider-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/session:handler",
+      "to": "package:@asol/notifications-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/session:handler",
+      "to": "package:@asol/observability-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/session:handler",
+      "to": "package:@asol/orders-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/session:handler",
+      "to": "package:@asol/product-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/session:handler",
+      "to": "package:@asol/signed-token-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/session:handler",
+      "to": "package:@asol/simulation-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/session:handler",
+      "to": "package:@asol/storage-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/session:handler",
+      "to": "package:@asol/storage-core",
+      "kind": "related-to",
+      "detail": "route write gateway"
+    },
+    {
+      "from": "route:/api/dev/simulation/session:handler",
+      "to": "package:@asol/system-logs-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/session:handler",
+      "to": "package:@asol/trending-ribbon-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/session:handler",
+      "to": "package:@asol/vercel-deploy-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/state:handler",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "route:/api/dev/simulation/state:handler",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "route:/api/dev/simulation/state:handler",
+      "to": "source:src/app/api/dev/simulation/state/route.ts",
+      "kind": "contains"
+    },
+    {
+      "from": "route:/api/dev/simulation/state:handler",
+      "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/state:handler",
+      "to": "feature:super-admin",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/state:handler",
+      "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/state:handler",
+      "to": "package:@asol/api-contract-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/state:handler",
+      "to": "package:@asol/auth-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/state:handler",
+      "to": "package:@asol/data-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/state:handler",
+      "to": "package:@asol/data-core",
+      "kind": "related-to",
+      "detail": "route write gateway"
+    },
+    {
+      "from": "route:/api/dev/simulation/state:handler",
+      "to": "package:@asol/dev-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/state:handler",
+      "to": "package:@asol/env-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/state:handler",
+      "to": "package:@asol/featured-marquee-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/state:handler",
+      "to": "package:@asol/hero-slider-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/state:handler",
+      "to": "package:@asol/notifications-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/state:handler",
+      "to": "package:@asol/observability-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/state:handler",
+      "to": "package:@asol/orders-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/state:handler",
+      "to": "package:@asol/product-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/state:handler",
+      "to": "package:@asol/signed-token-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/state:handler",
+      "to": "package:@asol/simulation-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/state:handler",
+      "to": "package:@asol/storage-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/state:handler",
+      "to": "package:@asol/storage-core",
+      "kind": "related-to",
+      "detail": "route write gateway"
+    },
+    {
+      "from": "route:/api/dev/simulation/state:handler",
+      "to": "package:@asol/system-logs-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/state:handler",
+      "to": "package:@asol/trending-ribbon-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/state:handler",
+      "to": "package:@asol/vercel-deploy-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
       "from": "route:/api/feature-flags:handler",
       "to": "runtime:development",
       "kind": "affects-runtime"
@@ -125883,6 +127000,12 @@
     },
     {
       "from": "route:/dev/category-selector:page",
+      "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/category-selector:page",
       "to": "feature:categories",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -125974,6 +127097,12 @@
     {
       "from": "route:/dev/category-selector:page",
       "to": "package:@asol/product-style-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/category-selector:page",
+      "to": "package:@asol/simulation-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -131867,6 +132996,34 @@
       "to": "package:@asol/env-core",
       "kind": "imports",
       "detail": "@asol/env-core/process"
+    },
+    {
+      "from": "script:scripts/dev-simulation-adb.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/dev-simulation-adb.ts",
+      "to": "package:@asol/simulation-core",
+      "kind": "imports",
+      "detail": "@asol/simulation-core"
+    },
+    {
+      "from": "script:scripts/dev-simulation.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/dev-simulation.ts",
+      "to": "package:@asol/simulation-core",
+      "kind": "imports",
+      "detail": "@asol/simulation-core"
+    },
+    {
+      "from": "script:scripts/dev-simulation.ts",
+      "to": "package:@asol/simulation-core",
+      "kind": "imports",
+      "detail": "@asol/simulation-core/server"
     },
     {
       "from": "script:scripts/docs/account-routing-catalog.ts",
@@ -168771,6 +169928,57 @@
       "detail": "./domain/signed-envelope"
     },
     {
+      "from": "source:packages/simulation-core/src/index.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/simulation-core/src/index.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/simulation-core/src/index.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/simulation-core/src/index.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/simulation-core/src/index.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/simulation-core/src/index.ts",
+      "to": "package:@asol/simulation-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/simulation-core/src/server.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/simulation-core/src/server.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/simulation-core/src/server.ts",
+      "to": "package:@asol/simulation-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/simulation-core/src/server.ts",
+      "to": "source:packages/simulation-core/src/index.ts",
+      "kind": "imports",
+      "detail": "./index"
+    },
+    {
       "from": "source:packages/storage-core/scripts/sync-cors.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -176634,6 +177842,144 @@
       "detail": "@/features/categories"
     },
     {
+      "from": "source:src/app/api/dev/simulation/checkpoint/route.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/app/api/dev/simulation/checkpoint/route.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/app/api/dev/simulation/checkpoint/route.ts",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core/server"
+    },
+    {
+      "from": "source:src/app/api/dev/simulation/checkpoint/route.ts",
+      "to": "package:@asol/simulation-core",
+      "kind": "imports",
+      "detail": "@asol/simulation-core/server"
+    },
+    {
+      "from": "source:src/app/api/dev/simulation/checkpoint/route.ts",
+      "to": "source:src/core/api/api-response.ts",
+      "kind": "imports",
+      "detail": "@/core/api/api-response"
+    },
+    {
+      "from": "source:src/app/api/dev/simulation/checkpoint/route.ts",
+      "to": "source:src/core/config/development-guard.server.ts",
+      "kind": "imports",
+      "detail": "@/core/config/development-guard.server"
+    },
+    {
+      "from": "source:src/app/api/dev/simulation/checkpoint/route.ts",
+      "to": "source:src/features/auth/index.ts",
+      "kind": "imports",
+      "detail": "@/features/auth"
+    },
+    {
+      "from": "source:src/app/api/dev/simulation/checkpoint/route.ts",
+      "to": "source:src/features/auth/server.ts",
+      "kind": "imports",
+      "detail": "@/features/auth/server"
+    },
+    {
+      "from": "source:src/app/api/dev/simulation/checkpoint/route.ts",
+      "to": "source:src/features/dev-tools/server.ts",
+      "kind": "imports",
+      "detail": "@/features/dev-tools/server"
+    },
+    {
+      "from": "source:src/app/api/dev/simulation/checkpoint/route.ts",
+      "to": "source:src/features/super-admin/server.ts",
+      "kind": "imports",
+      "detail": "@/features/super-admin/server"
+    },
+    {
+      "from": "source:src/app/api/dev/simulation/session/route.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/app/api/dev/simulation/session/route.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/app/api/dev/simulation/session/route.ts",
+      "to": "package:@asol/simulation-core",
+      "kind": "imports",
+      "detail": "@asol/simulation-core/server"
+    },
+    {
+      "from": "source:src/app/api/dev/simulation/session/route.ts",
+      "to": "source:src/core/api/api-response.ts",
+      "kind": "imports",
+      "detail": "@/core/api/api-response"
+    },
+    {
+      "from": "source:src/app/api/dev/simulation/session/route.ts",
+      "to": "source:src/core/config/development-guard.server.ts",
+      "kind": "imports",
+      "detail": "@/core/config/development-guard.server"
+    },
+    {
+      "from": "source:src/app/api/dev/simulation/session/route.ts",
+      "to": "source:src/features/dev-tools/server.ts",
+      "kind": "imports",
+      "detail": "@/features/dev-tools/server"
+    },
+    {
+      "from": "source:src/app/api/dev/simulation/state/route.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/app/api/dev/simulation/state/route.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/app/api/dev/simulation/state/route.ts",
+      "to": "package:@asol/simulation-core",
+      "kind": "imports",
+      "detail": "@asol/simulation-core"
+    },
+    {
+      "from": "source:src/app/api/dev/simulation/state/route.ts",
+      "to": "package:@asol/simulation-core",
+      "kind": "imports",
+      "detail": "@asol/simulation-core/server"
+    },
+    {
+      "from": "source:src/app/api/dev/simulation/state/route.ts",
+      "to": "source:src/core/api/api-response.ts",
+      "kind": "imports",
+      "detail": "@/core/api/api-response"
+    },
+    {
+      "from": "source:src/app/api/dev/simulation/state/route.ts",
+      "to": "source:src/core/config/development-guard.server.ts",
+      "kind": "imports",
+      "detail": "@/core/config/development-guard.server"
+    },
+    {
+      "from": "source:src/app/api/dev/simulation/state/route.ts",
+      "to": "source:src/core/config/simulation.server.ts",
+      "kind": "imports",
+      "detail": "@/core/config/simulation.server"
+    },
+    {
+      "from": "source:src/app/api/dev/simulation/state/route.ts",
+      "to": "source:src/features/super-admin/server.ts",
+      "kind": "imports",
+      "detail": "@/features/super-admin/server"
+    },
+    {
       "from": "source:src/app/api/feature-flags/route.ts",
       "to": "runtime:development",
       "kind": "affects-runtime"
@@ -183532,6 +184878,38 @@
     {
       "from": "source:src/core/config/server-env/server-env.values.turso-env.ts",
       "to": "environment-key:WEB_PUSH_VAPID_PRIVATE_KEY",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "source:src/core/config/simulation.server.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/core/config/simulation.server.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/core/config/simulation.server.ts",
+      "to": "external-dependency:server-only",
+      "kind": "imports",
+      "detail": "server-only"
+    },
+    {
+      "from": "source:src/core/config/simulation.server.ts",
+      "to": "package:@asol/simulation-core",
+      "kind": "imports",
+      "detail": "@asol/simulation-core"
+    },
+    {
+      "from": "source:src/core/config/simulation.server.ts",
+      "to": "environment-key:ASOL_SIMULATION_PROXY_SECRET",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "source:src/core/config/simulation.server.ts",
+      "to": "environment-key:ASOL_SIMULATION_RUNTIME",
       "kind": "uses-environment"
     },
     {
@@ -191067,6 +192445,54 @@
       "detail": "./ports/data-core-specialty-catalog-port"
     },
     {
+      "from": "source:src/features/dev-tools/application/simulation-api.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/dev-tools/application/simulation-api.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/dev-tools/application/simulation-api.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/dev-tools/application/simulation-api.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/dev-tools/application/simulation-api.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/dev-tools/application/simulation-api.ts",
+      "to": "feature:dev-tools",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:src/features/dev-tools/application/simulation-api.ts",
+      "to": "package:@asol/simulation-core",
+      "kind": "imports",
+      "detail": "@asol/simulation-core"
+    },
+    {
+      "from": "source:src/features/dev-tools/application/simulation-api.ts",
+      "to": "source:src/core/api/index.ts",
+      "kind": "imports",
+      "detail": "@/core/api"
+    },
+    {
+      "from": "source:src/features/dev-tools/application/simulation-api.ts",
+      "to": "source:src/features/auth/index.ts",
+      "kind": "imports",
+      "detail": "@/features/auth"
+    },
+    {
       "from": "source:src/features/dev-tools/index.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -191152,9 +192578,33 @@
     },
     {
       "from": "source:src/features/dev-tools/presentation/DeveloperBadge.tsx",
+      "to": "package:@asol/simulation-core",
+      "kind": "imports",
+      "detail": "@asol/simulation-core"
+    },
+    {
+      "from": "source:src/features/dev-tools/presentation/DeveloperBadge.tsx",
       "to": "source:src/core/config/index.ts",
       "kind": "imports",
       "detail": "@/core/config"
+    },
+    {
+      "from": "source:src/features/dev-tools/presentation/DeveloperBadge.tsx",
+      "to": "source:src/features/auth/index.ts",
+      "kind": "imports",
+      "detail": "@/features/auth"
+    },
+    {
+      "from": "source:src/features/dev-tools/presentation/DeveloperBadge.tsx",
+      "to": "source:src/features/auth/ui.ts",
+      "kind": "imports",
+      "detail": "@/features/auth/ui"
+    },
+    {
+      "from": "source:src/features/dev-tools/presentation/DeveloperBadge.tsx",
+      "to": "source:src/features/dev-tools/application/simulation-api.ts",
+      "kind": "imports",
+      "detail": "../application/simulation-api"
     },
     {
       "from": "source:src/features/dev-tools/presentation/DeveloperBadge.tsx",
@@ -191185,6 +192635,12 @@
       "to": "source:src/shared/ui/overlay-chrome.ts",
       "kind": "imports",
       "detail": "@/shared/ui/overlay-chrome"
+    },
+    {
+      "from": "source:src/features/dev-tools/presentation/DeveloperBadge.tsx",
+      "to": "source:src/shared/ui/switch.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/switch"
     },
     {
       "from": "source:src/features/dev-tools/presentation/DeveloperCategorySelector.tsx",
@@ -191319,6 +192775,186 @@
       "kind": "belongs-to"
     },
     {
+      "from": "source:src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
+      "to": "feature:dev-tools",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
+      "to": "external-dependency:lucide-react",
+      "kind": "imports",
+      "detail": "lucide-react"
+    },
+    {
+      "from": "source:src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
+      "to": "external-dependency:next",
+      "kind": "imports",
+      "detail": "next/navigation"
+    },
+    {
+      "from": "source:src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
+      "to": "external-dependency:react",
+      "kind": "imports",
+      "detail": "react"
+    },
+    {
+      "from": "source:src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
+      "to": "package:@asol/simulation-core",
+      "kind": "imports",
+      "detail": "@asol/simulation-core"
+    },
+    {
+      "from": "source:src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
+      "to": "source:src/features/auth/index.ts",
+      "kind": "imports",
+      "detail": "@/features/auth"
+    },
+    {
+      "from": "source:src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
+      "to": "source:src/features/auth/ui.ts",
+      "kind": "imports",
+      "detail": "@/features/auth/ui"
+    },
+    {
+      "from": "source:src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
+      "to": "source:src/features/dev-tools/application/simulation-api.ts",
+      "kind": "imports",
+      "detail": "../application/simulation-api"
+    },
+    {
+      "from": "source:src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
+      "to": "source:src/shared/ui/button.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/button"
+    },
+    {
+      "from": "source:src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
+      "to": "source:src/shared/ui/overlay-chrome-branch.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/overlay-chrome-branch"
+    },
+    {
+      "from": "source:src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
+      "to": "source:src/shared/ui/switch.tsx",
+      "kind": "imports",
+      "detail": "@/shared/ui/switch"
+    },
+    {
+      "from": "source:src/features/dev-tools/server.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/dev-tools/server.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/dev-tools/server.ts",
+      "to": "feature:dev-tools",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:src/features/dev-tools/server.ts",
+      "to": "source:src/features/dev-tools/server/simulation-session.server.ts",
+      "kind": "imports",
+      "detail": "./server/simulation-session.server"
+    },
+    {
+      "from": "source:src/features/dev-tools/server/simulation-session.server.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/dev-tools/server/simulation-session.server.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/dev-tools/server/simulation-session.server.ts",
+      "to": "feature:dev-tools",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:src/features/dev-tools/server/simulation-session.server.ts",
+      "to": "external-dependency:server-only",
+      "kind": "imports",
+      "detail": "server-only"
+    },
+    {
+      "from": "source:src/features/dev-tools/server/simulation-session.server.ts",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core/server"
+    },
+    {
+      "from": "source:src/features/dev-tools/server/simulation-session.server.ts",
+      "to": "package:@asol/data-core",
+      "kind": "imports",
+      "detail": "@asol/data-core/auth"
+    },
+    {
+      "from": "source:src/features/dev-tools/server/simulation-session.server.ts",
+      "to": "package:@asol/data-core",
+      "kind": "imports",
+      "detail": "@asol/data-core/profile"
+    },
+    {
+      "from": "source:src/features/dev-tools/server/simulation-session.server.ts",
+      "to": "package:@asol/simulation-core",
+      "kind": "imports",
+      "detail": "@asol/simulation-core"
+    },
+    {
+      "from": "source:src/features/dev-tools/server/simulation-session.server.ts",
+      "to": "package:@asol/simulation-core",
+      "kind": "imports",
+      "detail": "@asol/simulation-core/server"
+    },
+    {
+      "from": "source:src/features/dev-tools/server/simulation-session.server.ts",
+      "to": "source:src/core/config/simulation.server.ts",
+      "kind": "imports",
+      "detail": "@/core/config/simulation.server"
+    },
+    {
+      "from": "source:src/features/dev-tools/server/simulation-session.server.ts",
+      "to": "source:src/features/auth/index.ts",
+      "kind": "imports",
+      "detail": "@/features/auth"
+    },
+    {
+      "from": "source:src/features/dev-tools/server/simulation-session.server.ts",
+      "to": "source:src/features/auth/server.ts",
+      "kind": "imports",
+      "detail": "@/features/auth/server"
+    },
+    {
       "from": "source:src/features/dev-tools/ui.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -191359,6 +192995,12 @@
       "to": "source:src/features/dev-tools/presentation/DeveloperCategorySelector.tsx",
       "kind": "imports",
       "detail": "./presentation/DeveloperCategorySelector"
+    },
+    {
+      "from": "source:src/features/dev-tools/ui.ts",
+      "to": "source:src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
+      "kind": "imports",
+      "detail": "./presentation/SimulationRuntimeController"
     },
     {
       "from": "source:src/features/favorites/presentation/FavoritesHostProvider.tsx",
@@ -236856,6 +238498,53 @@
       "kind": "tests"
     },
     {
+      "from": "test:packages/simulation-core/src/tests/index.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/simulation-core/src/tests/index.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/simulation-core/src/tests/index.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/simulation-core/src/tests/index.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/simulation-core/src/tests/index.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/simulation-core/src/tests/index.test.ts",
+      "to": "package:@asol/simulation-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:packages/simulation-core/src/tests/index.test.ts",
+      "to": "source:packages/simulation-core/src/index.ts",
+      "kind": "imports",
+      "detail": "../index"
+    },
+    {
+      "from": "test:packages/simulation-core/src/tests/index.test.ts",
+      "to": "source:packages/simulation-core/src/server.ts",
+      "kind": "imports",
+      "detail": "../server"
+    },
+    {
+      "from": "test:packages/simulation-core/src/tests/index.test.ts",
+      "to": "package:@asol/simulation-core",
+      "kind": "tests"
+    },
+    {
       "from": "test:packages/storage-core/src/tests/contract/no-paired-functions.test.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -239804,6 +241493,41 @@
     {
       "from": "test:src/features/catalog-studio/tests/catalog-studio.test.ts",
       "to": "feature:catalog-studio",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/dev-tools/tests/live-simulation-contract.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/dev-tools/tests/live-simulation-contract.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/dev-tools/tests/live-simulation-contract.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/dev-tools/tests/live-simulation-contract.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/dev-tools/tests/live-simulation-contract.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/dev-tools/tests/live-simulation-contract.test.ts",
+      "to": "feature:dev-tools",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:src/features/dev-tools/tests/live-simulation-contract.test.ts",
+      "to": "feature:dev-tools",
       "kind": "tests"
     },
     {

@@ -7,16 +7,15 @@
 
 Runtime coverage is inherited from each owner's owned source/test/script nodes, not only direct owner edges.
 
-Owners scored: **96**
+Owners scored: **97**
 Average coverage: **82%**
-Weak owners (<70%): **10**
+Weak owners (<70%): **9**
 
 | Owner | Kind | Owner | Docs | Tests | Runtime | Consumers | Dependencies | Cmd/Cfg/Env | Runtime tests | Score |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | `services/orders` | service | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
 | `services/profiles` | service | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
 | `src/features/account-bridge` | feature | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
-| `src/features/dev-tools` | feature | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
 | `src/features/home` | feature | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
 | `src/features/location` | feature | yes | yes | NO | yes | yes | NO | NO | yes | 63% |
 | `src/features/navigation` | feature | yes | yes | NO | yes | NO | yes | NO | yes | 63% |
@@ -35,6 +34,7 @@ Weak owners (<70%): **10**
 | `packages/product-style-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/secrets-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/signed-token-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
+| `packages/simulation-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/system-logs-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `services/control` | service | yes | yes | NO | yes | NO | yes | yes | yes | 75% |
 | `services/notifications` | service | yes | yes | NO | yes | NO | yes | yes | yes | 75% |
@@ -45,6 +45,7 @@ Weak owners (<70%): **10**
 | `src/features/categories` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
 | `src/features/contact` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
 | `src/features/data` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
+| `src/features/dev-tools` | feature | yes | yes | yes | yes | NO | yes | NO | yes | 75% |
 | `src/features/favorites` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
 | `src/features/network` | feature | yes | yes | yes | yes | NO | yes | NO | yes | 75% |
 | `src/features/onboarding` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |

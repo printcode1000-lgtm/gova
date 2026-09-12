@@ -307,6 +307,10 @@ ALLOWED_TO_IMPORT → `@asol/cors`
 
 `@asol/signed-token-core` has no production `@asol/*` imports.
 
+### @asol/simulation-core
+
+`@asol/simulation-core` has no production `@asol/*` imports.
+
 ### @asol/storage-core
 
 `@asol/storage-core`
@@ -359,5 +363,5 @@ ALLOWED_TO_IMPORT → `@asol/account-declarations`
 
 | Metric | Value |
 |---|---|
-| Packages | 46 |
+| Packages | 47 |
 | Import edges | 58 |

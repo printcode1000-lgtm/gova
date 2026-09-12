@@ -77,10 +77,14 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run deploy:all` | `Tooling`, `Web` | 1 |  | 0 |
 | `npm run deploy:push` | `Tooling`, `Web` | 1 |  | 0 |
 | `npm run deploy:push:fast` | `Tooling`, `Web` | 1 |  | 0 |
-| `npm run dev` | `Development`, `Tooling` | 0 |  | 0 |
-| `npm run dev:checked` | `Development`, `Tooling` | 4 |  | 0 |
+| `npm run dev` | `Development`, `Tooling` | 1 |  | 0 |
+| `npm run dev:checked` | `Development`, `Tooling` | 5 |  | 0 |
 | `npm run dev:distributed` | `Tooling` | 1 |  | 0 |
 | `npm run dev:distributed:smoke` | `Tooling` | 1 |  | 0 |
+| `npm run dev:simulation` | `Tooling` | 1 |  | 0 |
+| `npm run dev:simulation:adb` | `Tooling` | 1 |  | 0 |
+| `npm run dev:simulation:adb:remove` | `Tooling` | 1 |  | 0 |
+| `npm run dev:simulation:smoke` | `Tooling` | 1 |  | 0 |
 | `npm run docs:check` | `Tooling` | 1 |  | 0 |
 | `npm run docs:ci` | `Tooling` | 1 |  | 0 |
 | `npm run docs:coverage` | `Tooling` | 1 |  | 0 |
@@ -141,6 +145,8 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run prebuild:vercel` | `Tooling`, `Web` | 1 |  | 0 |
 | `npm run predev` | `Tooling` | 1 |  | 0 |
 | `npm run predev:checked` | `Tooling` | 1 |  | 0 |
+| `npm run predev:simulation` | `Tooling` | 1 |  | 0 |
+| `npm run predev:simulation:smoke` | `Tooling` | 1 |  | 0 |
 | `npm run prepare` | `Tooling` | 0 |  | 0 |
 | `npm run prestart` | `Tooling` | 1 |  | 0 |
 | `npm run preview:static` | `Static out`, `Tooling` | 1 |  | 0 |
@@ -266,6 +272,8 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:sharing` | `Tooling` | 2 |  | 0 |
 | `npm run test:shipping-pricing` | `Tooling` | 1 |  | 0 |
 | `npm run test:signed-token-core` | `Tooling` | 1 |  | 0 |
+| `npm run test:simulation-contract` | `Tooling` | 1 |  | 0 |
+| `npm run test:simulation-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:storage-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:storage-image-manager-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:store-name-draft` | `Tooling` | 2 |  | 0 |

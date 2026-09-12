@@ -7,7 +7,7 @@
 
 Key **names only**. Values are never emitted. Command assignments are redacted elsewhere in generated catalogs.
 
-Keys: **238**
+Keys: **240**
 
 | Key | Visibility | Static/native | Consumers (sample) | Relevance | Classification | Runtime checks |
 |---|---|---|---|---|---|---|
@@ -86,6 +86,8 @@ Keys: **238**
 | `ASOL_SERVICE_SMOKE_PORT` | server-only | unknown | `scripts/check-service-smoke.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_SERVICE_SMOKE_REBUILD` | server-only | unknown | `packages/release-core/src/pipeline/service-build-cache.ts`, `scripts/deploy-all.ts`, `scripts/tests/deploy-all-resume.test.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_SESSION_SIGNING_SECRET` | server-only | dangerous | `npm run test:follow`, `npm run test:notifications`, `packages/auth-core/src/ports/session-signing-secret.port.ts`, `scripts/probe-notifications-service.ts`, `services/control/src/app/api/health/route.ts`, `services/control/src/control/super-admin-route.ts`, `services/notifications/src/app/api/health/route.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
+| `ASOL_SIMULATION_PROXY_SECRET` | server-only | dangerous | `src/core/config/simulation.server.ts` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
+| `ASOL_SIMULATION_RUNTIME` | server-only | unknown | `src/core/config/simulation.server.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_SMOKE_PORT` | server-only | unknown | `scripts/check-production-smoke.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_STATIC_PREVIEW_API_BASE_URL` | server-only | unknown | `packages/ota-core/scripts/serve-static.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_TEST_DEPLOY_TOKEN` | server-only | dangerous | `packages/release-core/src/tests/index.test.ts` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |

@@ -3797,7 +3797,7 @@
     {
       "id": "app-layout-body-4-6nnrel",
       "source": "src/app/layout.tsx",
-      "line": 86,
+      "line": 92,
       "element": "body",
       "semanticName": "layout-body-4",
       "kind": "literal"
@@ -3805,7 +3805,7 @@
     {
       "id": "app-layout-head-2-8ph014",
       "source": "src/app/layout.tsx",
-      "line": 82,
+      "line": 88,
       "element": "head",
       "semanticName": "layout-head-2",
       "kind": "literal"
@@ -3813,7 +3813,7 @@
     {
       "id": "app-layout-html-1-paikae",
       "source": "src/app/layout.tsx",
-      "line": 74,
+      "line": 80,
       "element": "html",
       "semanticName": "layout-html-1",
       "kind": "literal"
@@ -3821,7 +3821,7 @@
     {
       "id": "app-layout-meta-3-kl59np",
       "source": "src/app/layout.tsx",
-      "line": 83,
+      "line": 89,
       "element": "meta",
       "semanticName": "layout-meta-3",
       "kind": "literal"
@@ -7883,6 +7883,38 @@
       "kind": "literal"
     },
     {
+      "id": "features-dev-tools-presentation-developerbadge-div-6-sim001",
+      "source": "src/features/dev-tools/presentation/DeveloperBadge.tsx",
+      "line": 181,
+      "element": "div",
+      "semanticName": "dev-tools-presentation-developerbadge-div-6",
+      "kind": "literal"
+    },
+    {
+      "id": "features-dev-tools-presentation-developerbadge-div-7-sim002",
+      "source": "src/features/dev-tools/presentation/DeveloperBadge.tsx",
+      "line": 182,
+      "element": "div",
+      "semanticName": "dev-tools-presentation-developerbadge-div-7",
+      "kind": "literal"
+    },
+    {
+      "id": "features-dev-tools-presentation-developerbadge-div-8-sim003",
+      "source": "src/features/dev-tools/presentation/DeveloperBadge.tsx",
+      "line": 183,
+      "element": "div",
+      "semanticName": "dev-tools-presentation-developerbadge-div-8",
+      "kind": "literal"
+    },
+    {
+      "id": "features-dev-tools-presentation-developerbadge-div-9-sim004",
+      "source": "src/features/dev-tools/presentation/DeveloperBadge.tsx",
+      "line": 184,
+      "element": "div",
+      "semanticName": "dev-tools-presentation-developerbadge-div-9",
+      "kind": "literal"
+    },
+    {
       "id": "features-dev-tools-presentation-developercategoryselector-button-37-zsx0td",
       "source": "src/features/dev-tools/presentation/DeveloperCategorySelector.tsx",
       "line": 498,
@@ -8120,6 +8152,54 @@
       "line": 309,
       "element": "p",
       "semanticName": "dev-tools-presentation-developercategoryselector-text-8",
+      "kind": "literal"
+    },
+    {
+      "id": "features-dev-tools-presentation-simulationruntimecontroller-div-2-sim101",
+      "source": "src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
+      "line": 163,
+      "element": "div",
+      "semanticName": "dev-tools-presentation-simulationruntimecontroller-div-2",
+      "kind": "literal"
+    },
+    {
+      "id": "features-dev-tools-presentation-simulationruntimecontroller-div-3-sim102",
+      "source": "src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
+      "line": 164,
+      "element": "div",
+      "semanticName": "dev-tools-presentation-simulationruntimecontroller-div-3",
+      "kind": "literal"
+    },
+    {
+      "id": "features-dev-tools-presentation-simulationruntimecontroller-div-4-sim103",
+      "source": "src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
+      "line": 183,
+      "element": "div",
+      "semanticName": "dev-tools-presentation-simulationruntimecontroller-div-4",
+      "kind": "literal"
+    },
+    {
+      "id": "features-dev-tools-presentation-simulationruntimecontroller-label-6-sim105",
+      "source": "src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
+      "line": 188,
+      "element": "label",
+      "semanticName": "dev-tools-presentation-simulationruntimecontroller-label-6",
+      "kind": "literal"
+    },
+    {
+      "id": "features-dev-tools-presentation-simulationruntimecontroller-text-5-sim104",
+      "source": "src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
+      "line": 184,
+      "element": "span",
+      "semanticName": "dev-tools-presentation-simulationruntimecontroller-text-5",
+      "kind": "literal"
+    },
+    {
+      "id": "features-dev-tools-presentation-simulationruntimecontroller-text-7-sim106",
+      "source": "src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
+      "line": 190,
+      "element": "span",
+      "semanticName": "dev-tools-presentation-simulationruntimecontroller-text-7",
       "kind": "literal"
     },
     {

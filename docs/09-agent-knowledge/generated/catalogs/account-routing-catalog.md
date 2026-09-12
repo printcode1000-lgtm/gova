@@ -21,7 +21,7 @@ is listed as `gova/dev` and answered wherever the request lands.
 | Account | Vercel project | Origin variable | Owned pairs | Shipped | Unshipped |
 | --- | --- | --- | ---: | ---: | ---: |
 | `control` | `asol-control` | `NEXT_PUBLIC_ASOL_CONTROL_URL` | 36 | 36 | 0 |
-| `gova/dev` | — | — | 8 | 8 | 0 |
+| `gova/dev` | — | — | 12 | 12 | 0 |
 | `notifications` | `asol-notifications` | `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | 5 | 1 | 4 |
 | `orders` | `asol-orders` | `NEXT_PUBLIC_ASOL_ORDERS_URL` | 1 | 1 | 0 |
 | `products` | `asol-products` | `NEXT_PUBLIC_ASOL_PRODUCTS_URL` | 3 | 3 | 0 |
@@ -84,6 +84,10 @@ routes, which are omitted from the production artifact entirely.
 | `POST` | `/api/dev/catalog-studio/images` | gova |
 | `GET` | `/api/dev/product-style` | gova |
 | `PUT` | `/api/dev/product-style` | gova |
+| `POST` | `/api/dev/simulation/checkpoint` | gova |
+| `POST` | `/api/dev/simulation/session` | gova |
+| `GET` | `/api/dev/simulation/state` | gova |
+| `POST` | `/api/dev/simulation/state` | gova |
 | `GET` | `/api/health` | gova |
 
 ## `notifications`

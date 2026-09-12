@@ -5,8 +5,8 @@
 
 # Write Surface Map
 
-Detected write-like surfaces: **363**
-Unproven gateway paths: **142**
+Detected write-like surfaces: **365**
+Unproven gateway paths: **143**
 
 | Source | Owner | Operations | Gateway | Proven | Route | Runtimes | Risk |
 |---|---|---|---|---|---|---|---|
@@ -222,6 +222,8 @@ Unproven gateway paths: **142**
 | `src/features/data/ports/data-core-runtime-config-ports.ts` | `data` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/data/ports/data-core-specialty-catalog-port.ts` | `data` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/dev-tools/presentation/DeveloperBadge.tsx` | `dev-tools` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
+| `src/features/dev-tools/presentation/SimulationRuntimeController.tsx` | `dev-tools` | publish | `unproven` | NO | `` | android, development, ios, static-out, web | high |
+| `src/features/dev-tools/server/simulation-session.server.ts` | `dev-tools` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/features/feature-flags/server/services/feature-flag-service.server.ts` | `feature-flags` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/features/follow/domain/follow.types.ts` | `follow` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/follow/server/services/follow-service.server.ts` | `follow` | write-like | `@asol/data-core` | yes | `` | development, web | medium |

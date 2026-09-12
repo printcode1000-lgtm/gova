@@ -49,6 +49,12 @@ const DeveloperBadge = isDevelopment
     )
   : () => null;
 
+const SimulationRuntimeController = isDevelopment
+  ? dynamic(() =>
+      import("@/features/dev-tools/ui").then((m) => m.SimulationRuntimeController),
+    )
+  : () => null;
+
 export const metadata: Metadata = {
   metadataBase: new URL(PUBLIC_SHARE_ORIGIN),
   title: "Asol",
@@ -100,6 +106,7 @@ export default function RootLayout({
                       <NetworkStatusProvider>
                         <OtaUpdateProvider>
                           <SafeAreaController />
+                          <SimulationRuntimeController />
                           <Suspense
                             fallback={<ShellLayout id='app-layout-shelllayout-5-5zkajn'>{children}</ShellLayout>}
                           >

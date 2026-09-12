@@ -3,8 +3,13 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import { simulationActorUrl } from '@asol/simulation-core';
 import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';
+import { Switch } from '@/shared/ui/switch';
+import { useSession } from '@/features/auth/ui';
+import { isSuperAdmin } from '@/features/auth';
+import { getSimulationState, setSimulationMode, type SimulationStateView } from '../application/simulation-api';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,12 +38,25 @@ const SPLASH_NAV_TOGGLE_KEY = 'asol-dev-splash-nav-toggle';
 
 export function DeveloperBadge() {
   const pathname = usePathname();
+  const { session, isLoading: sessionLoading } = useSession();
+  const [simulationState, setSimulationState] = useState<SimulationStateView | null>(null);
+  const [simulationBusy, setSimulationBusy] = useState(false);
   const [position, setPosition] = useState({ x: 16, y: 0 });
   const [isMounted, setIsMounted] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [isSplashNavEnabled, setIsSplashNavEnabled] = useState(true);
   const dragStartRef = useRef({ x: 0, y: 0 });
   const badgeRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (sessionLoading || !isSuperAdmin(session)) {
+      setSimulationState(null);
+      return;
+    }
+    let active = true;
+    void getSimulationState().then((next) => { if (active) setSimulationState(next); }).catch(() => { if (active) setSimulationState(null); });
+    return () => { active = false; };
+  }, [session?.uid, sessionLoading]);
 
   useEffect(() => {
     setIsMounted(true);
@@ -100,6 +118,24 @@ export function DeveloperBadge() {
     );
   };
 
+  const toggleSimulation = async (enabled: boolean) => {
+    if (!session?.sessionToken || !isSuperAdmin(session) || simulationBusy) return;
+    setSimulationBusy(true);
+    try {
+      const normalRoute = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+      const next = await setSimulationMode(enabled, session.sessionToken, enabled ? normalRoute : undefined);
+      setSimulationState(next);
+      if (enabled) {
+        const admin = next.actors.find((actor) => actor.role === 'super-admin');
+        if (!admin) throw new Error('simulationSuperAdminActorMissing');
+        window.location.assign(simulationActorUrl(admin, admin.resumePath, window.location.hostname));
+      }
+    } catch (error) {
+      console.error('[Simulation] Mode switch failed', error);
+      setSimulationBusy(false);
+    }
+  };
+
   const handleMouseDown = (event: React.MouseEvent) => {
     setIsDragging(true);
     dragStartRef.current = {
@@ -117,7 +153,7 @@ export function DeveloperBadge() {
     };
   };
 
-  if (!isDevelopment || !isMounted) {
+  if (!isDevelopment || !isMounted || (simulationState?.enabled && simulationState.actorKey)) {
     return null;
   }
 
@@ -141,6 +177,20 @@ export function DeveloperBadge() {
           {...{ [OVERLAY_CHROME_ATTRIBUTE]: 'true' }}
         >
           <DropdownMenuLabel id='features-dev-tools-presentation-developerbadge-dropdownmenulabel-4-yt2lba'>صفحات المشروع</DropdownMenuLabel>
+          {isSuperAdmin(session) ? (
+            <div id="features-dev-tools-presentation-developerbadge-div-6-sim001" className="flex items-center justify-between gap-3 px-2 py-2">
+              <div id="features-dev-tools-presentation-developerbadge-div-7-sim002" className="min-w-0">
+                <div id="features-dev-tools-presentation-developerbadge-div-8-sim003" className="text-sm font-semibold">محاكاة الحسابات</div>
+                <div id="features-dev-tools-presentation-developerbadge-div-9-sim004" className="text-[11px] text-muted-foreground">{simulationState?.runtimeAvailable ? '10 حسابات حقيقية معزولة' : 'تحتاج npm run dev'}</div>
+              </div>
+              <Switch
+                checked={simulationState?.enabled === true}
+                disabled={!simulationState?.runtimeAvailable || simulationBusy}
+                onCheckedChange={(checked) => void toggleSimulation(checked)}
+                aria-label="وضع محاكاة الحسابات"
+              />
+            </div>
+          ) : null}
           <DropdownMenuSeparator id='features-dev-tools-presentation-developerbadge-dropdownmenuseparator-5-zdzvtx' />
           {pages.map((page) => (
             <div key={page.path} className="flex items-center justify-between px-2">

@@ -391,6 +391,14 @@ export const CAPABILITY_PACKAGES: readonly CapabilityPackage[] = [
     mayImportApp: false,
   },
   {
+    folder: 'simulation-core',
+    name: '@asol/simulation-core',
+    owns: 'Development-only live simulation actor topology and runtime state',
+    layer: 'capability',
+    vendorModules: [],
+    mayImportApp: false,
+  },
+  {
     folder: 'storage-core',
     name: '@asol/storage-core',
     owns: 'Object storage (R2/S3) access',

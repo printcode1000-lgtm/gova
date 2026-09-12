@@ -1157,6 +1157,66 @@
       ]
     },
     {
+      "id": "command:dev:simulation",
+      "kind": "command",
+      "name": "npm run dev:simulation",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "dev",
+        "dev:simulation",
+        "npm",
+        "npm run dev:simulation",
+        "run",
+        "simulation"
+      ]
+    },
+    {
+      "id": "command:dev:simulation:adb",
+      "kind": "command",
+      "name": "npm run dev:simulation:adb",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "adb",
+        "dev",
+        "dev:simulation:adb",
+        "npm",
+        "npm run dev:simulation:adb",
+        "run",
+        "simulation"
+      ]
+    },
+    {
+      "id": "command:dev:simulation:adb:remove",
+      "kind": "command",
+      "name": "npm run dev:simulation:adb:remove",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "adb",
+        "dev",
+        "dev:simulation:adb:remove",
+        "npm",
+        "npm run dev:simulation:adb:remove",
+        "remove",
+        "run",
+        "simulation"
+      ]
+    },
+    {
+      "id": "command:dev:simulation:smoke",
+      "kind": "command",
+      "name": "npm run dev:simulation:smoke",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "dev",
+        "dev:simulation:smoke",
+        "npm",
+        "npm run dev:simulation:smoke",
+        "run",
+        "simulation",
+        "smoke"
+      ]
+    },
+    {
       "id": "command:docs:check",
       "kind": "command",
       "name": "npm run docs:check",
@@ -2026,6 +2086,35 @@
         "predev",
         "predev:checked",
         "run"
+      ]
+    },
+    {
+      "id": "command:predev:simulation",
+      "kind": "command",
+      "name": "npm run predev:simulation",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run predev:simulation",
+        "predev",
+        "predev:simulation",
+        "run",
+        "simulation"
+      ]
+    },
+    {
+      "id": "command:predev:simulation:smoke",
+      "kind": "command",
+      "name": "npm run predev:simulation:smoke",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run predev:simulation:smoke",
+        "predev",
+        "predev:simulation:smoke",
+        "run",
+        "simulation",
+        "smoke"
       ]
     },
     {
@@ -3779,6 +3868,34 @@
         "signed-token-core",
         "test",
         "test:signed-token-core"
+      ]
+    },
+    {
+      "id": "command:test:simulation-contract",
+      "kind": "command",
+      "name": "npm run test:simulation-contract",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run test:simulation-contract",
+        "run",
+        "simulation-contract",
+        "test",
+        "test:simulation-contract"
+      ]
+    },
+    {
+      "id": "command:test:simulation-core",
+      "kind": "command",
+      "name": "npm run test:simulation-core",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run test:simulation-core",
+        "run",
+        "simulation-core",
+        "test",
+        "test:simulation-core"
       ]
     },
     {
@@ -6054,6 +6171,7 @@
         "@asol/product-style-core",
         "@asol/release-core",
         "@asol/seller-card-core",
+        "@asol/simulation-core",
         "@asol/storage-core",
         "@asol/storage-image-manager-core",
         "@asol/system-logs-core",
@@ -6305,6 +6423,8 @@
         "@asol/service-mirror-core",
         "@asol/service-runtime-core",
         "@asol/signed-token-core",
+        "@asol/simulation-core",
+        "@asol/simulation-core/server",
         "@asol/storage-core",
         "@asol/storage-core/profiles-config",
         "@asol/storage-core/server",
@@ -6387,6 +6507,7 @@
         "packages/service-mirror-core/",
         "packages/service-runtime-core/",
         "packages/signed-token-core/",
+        "packages/simulation-core/",
         "packages/storage-core/",
         "packages/storage-image-manager-core/",
         "packages/sub2main-composition/",
@@ -6471,6 +6592,7 @@
         "@asol/service-mirror-core",
         "@asol/service-runtime-core",
         "@asol/signed-token-core",
+        "@asol/simulation-core",
         "@asol/storage-core",
         "@asol/storage-image-manager-core",
         "@asol/storage-image-manager-core/image-cache",
@@ -6622,6 +6744,7 @@
         "@asol/service-mirror-core",
         "@asol/service-runtime-core",
         "@asol/signed-token-core",
+        "@asol/simulation-core",
         "@asol/storage-core",
         "@asol/storage-image-manager-core",
         "@asol/sub2main-composition",
@@ -6692,6 +6815,7 @@
         "packages/service-mirror-core/",
         "packages/service-runtime-core/",
         "packages/signed-token-core/",
+        "packages/simulation-core/",
         "packages/storage-core/",
         "packages/storage-image-manager-core/",
         "packages/sub2main-composition/",
@@ -18642,6 +18766,32 @@
       ]
     },
     {
+      "id": "environment-key:ASOL_SIMULATION_PROXY_SECRET",
+      "kind": "environment-key",
+      "name": "ASOL_SIMULATION_PROXY_SECRET",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "asol_simulation_proxy_secret",
+        "environment",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:ASOL_SIMULATION_RUNTIME",
+      "kind": "environment-key",
+      "name": "ASOL_SIMULATION_RUNTIME",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "asol_simulation_runtime",
+        "environment",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
       "id": "environment-key:ASOL_SMOKE_PORT",
       "kind": "environment-key",
       "name": "ASOL_SMOKE_PORT",
@@ -23714,6 +23864,30 @@
       ]
     },
     {
+      "id": "package:@asol/simulation-core",
+      "kind": "package",
+      "name": "@asol/simulation-core",
+      "path": "packages/simulation-core",
+      "summary": "Development-only live simulation actor topology and runtime state; Layer: capability; Public exports: ., ./server",
+      "tags": [
+        ".",
+        "./server",
+        "/server",
+        "@asol/simulation-core",
+        "actor",
+        "and",
+        "capability",
+        "development-only",
+        "development-only live simulation actor topology and runtime state",
+        "live",
+        "packages/simulation-core",
+        "runtime",
+        "simulation",
+        "state",
+        "topology"
+      ]
+    },
+    {
       "id": "package:@asol/storage-core",
       "kind": "package",
       "name": "@asol/storage-core",
@@ -24228,6 +24402,54 @@
         "handler api",
         "src/app/api/dev/product-style/route",
         "src/app/api/dev/product-style/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "route:/api/dev/simulation/checkpoint:handler",
+      "kind": "route",
+      "name": "/api/dev/simulation/checkpoint",
+      "path": "src/app/api/dev/simulation/checkpoint/route.ts",
+      "summary": "App Router request handler",
+      "tags": [
+        "/api/dev/simulation/checkpoint",
+        "api",
+        "handler",
+        "handler api",
+        "src/app/api/dev/simulation/checkpoint/route",
+        "src/app/api/dev/simulation/checkpoint/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "route:/api/dev/simulation/session:handler",
+      "kind": "route",
+      "name": "/api/dev/simulation/session",
+      "path": "src/app/api/dev/simulation/session/route.ts",
+      "summary": "App Router request handler",
+      "tags": [
+        "/api/dev/simulation/session",
+        "api",
+        "handler",
+        "handler api",
+        "src/app/api/dev/simulation/session/route",
+        "src/app/api/dev/simulation/session/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "route:/api/dev/simulation/state:handler",
+      "kind": "route",
+      "name": "/api/dev/simulation/state",
+      "path": "src/app/api/dev/simulation/state/route.ts",
+      "summary": "App Router request handler",
+      "tags": [
+        "/api/dev/simulation/state",
+        "api",
+        "handler",
+        "handler api",
+        "src/app/api/dev/simulation/state/route",
+        "src/app/api/dev/simulation/state/route.ts",
         "ts"
       ]
     },
@@ -26947,6 +27169,28 @@
       "tags": [
         "scripts/dev-distributed",
         "scripts/dev-distributed.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/dev-simulation-adb.ts",
+      "kind": "script",
+      "name": "dev-simulation-adb.ts",
+      "path": "scripts/dev-simulation-adb.ts",
+      "tags": [
+        "scripts/dev-simulation-adb",
+        "scripts/dev-simulation-adb.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/dev-simulation.ts",
+      "kind": "script",
+      "name": "dev-simulation.ts",
+      "path": "scripts/dev-simulation.ts",
+      "tags": [
+        "scripts/dev-simulation",
+        "scripts/dev-simulation.ts",
         "ts"
       ]
     },
@@ -37401,6 +37645,28 @@
       ]
     },
     {
+      "id": "source:packages/simulation-core/src/index.ts",
+      "kind": "source",
+      "name": "index.ts",
+      "path": "packages/simulation-core/src/index.ts",
+      "tags": [
+        "packages/simulation-core/src/index",
+        "packages/simulation-core/src/index.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/simulation-core/src/server.ts",
+      "kind": "source",
+      "name": "server.ts",
+      "path": "packages/simulation-core/src/server.ts",
+      "tags": [
+        "packages/simulation-core/src/server",
+        "packages/simulation-core/src/server.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/storage-core/scripts/sync-cors.ts",
       "kind": "source",
       "name": "sync-cors.ts",
@@ -40298,6 +40564,39 @@
       ]
     },
     {
+      "id": "source:src/app/api/dev/simulation/checkpoint/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "src/app/api/dev/simulation/checkpoint/route.ts",
+      "tags": [
+        "src/app/api/dev/simulation/checkpoint/route",
+        "src/app/api/dev/simulation/checkpoint/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/app/api/dev/simulation/session/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "src/app/api/dev/simulation/session/route.ts",
+      "tags": [
+        "src/app/api/dev/simulation/session/route",
+        "src/app/api/dev/simulation/session/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/app/api/dev/simulation/state/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "src/app/api/dev/simulation/state/route.ts",
+      "tags": [
+        "src/app/api/dev/simulation/state/route",
+        "src/app/api/dev/simulation/state/route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/app/api/feature-flags/route.ts",
       "kind": "source",
       "name": "route.ts",
@@ -42307,6 +42606,18 @@
       ]
     },
     {
+      "id": "source:src/core/config/simulation.server.ts",
+      "kind": "source",
+      "name": "simulation.server.ts",
+      "path": "src/core/config/simulation.server.ts",
+      "tags": [
+        "server",
+        "src/core/config/simulation",
+        "src/core/config/simulation.server.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/core/config/system-logs.server.ts",
       "kind": "source",
       "name": "system-logs.server.ts",
@@ -43990,6 +44301,17 @@
       ]
     },
     {
+      "id": "source:src/features/dev-tools/application/simulation-api.ts",
+      "kind": "source",
+      "name": "simulation-api.ts",
+      "path": "src/features/dev-tools/application/simulation-api.ts",
+      "tags": [
+        "src/features/dev-tools/application/simulation-api",
+        "src/features/dev-tools/application/simulation-api.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/dev-tools/index.ts",
       "kind": "source",
       "name": "index.ts",
@@ -44031,6 +44353,40 @@
         "src/features/dev-tools/presentation/developerrecorddetails",
         "src/features/dev-tools/presentation/developerrecorddetails.tsx",
         "tsx"
+      ]
+    },
+    {
+      "id": "source:src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
+      "kind": "source",
+      "name": "SimulationRuntimeController.tsx",
+      "path": "src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
+      "tags": [
+        "src/features/dev-tools/presentation/simulationruntimecontroller",
+        "src/features/dev-tools/presentation/simulationruntimecontroller.tsx",
+        "tsx"
+      ]
+    },
+    {
+      "id": "source:src/features/dev-tools/server.ts",
+      "kind": "source",
+      "name": "server.ts",
+      "path": "src/features/dev-tools/server.ts",
+      "tags": [
+        "src/features/dev-tools/server",
+        "src/features/dev-tools/server.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/dev-tools/server/simulation-session.server.ts",
+      "kind": "source",
+      "name": "simulation-session.server.ts",
+      "path": "src/features/dev-tools/server/simulation-session.server.ts",
+      "tags": [
+        "server",
+        "src/features/dev-tools/server/simulation-session",
+        "src/features/dev-tools/server/simulation-session.server.ts",
+        "ts"
       ]
     },
     {
@@ -53711,6 +54067,18 @@
       ]
     },
     {
+      "id": "test:packages/simulation-core/src/tests/index.test.ts",
+      "kind": "test",
+      "name": "index.test.ts",
+      "path": "packages/simulation-core/src/tests/index.test.ts",
+      "tags": [
+        "packages/simulation-core/src/tests/index",
+        "packages/simulation-core/src/tests/index.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/storage-core/src/tests/contract/no-paired-functions.test.ts",
       "kind": "test",
       "name": "no-paired-functions.test.ts",
@@ -54590,6 +54958,18 @@
       "tags": [
         "src/features/catalog-studio/tests/catalog-studio",
         "src/features/catalog-studio/tests/catalog-studio.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/features/dev-tools/tests/live-simulation-contract.test.ts",
+      "kind": "test",
+      "name": "live-simulation-contract.test.ts",
+      "path": "src/features/dev-tools/tests/live-simulation-contract.test.ts",
+      "tags": [
+        "src/features/dev-tools/tests/live-simulation-contract",
+        "src/features/dev-tools/tests/live-simulation-contract.test.ts",
         "test",
         "ts"
       ]

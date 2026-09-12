@@ -11,7 +11,7 @@ Machine-readable capability ownership reference. Each capability has exactly one
 
 ## Scope
 
-All 46 sealed `@asol/*` packages. Application-layer orchestration lives under `src/features/*` — see [application-feature-catalog.md](./application-feature-catalog.md).
+All 47 sealed `@asol/*` packages. Application-layer orchestration lives under `src/features/*` — see [application-feature-catalog.md](./application-feature-catalog.md).
 
 ## Source of Truth
 
@@ -722,6 +722,24 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 
 ---
 
+## Development-only live simulation actor topology and runtime state
+
+| Field | Value |
+|---|---|
+| **Capability** | Development-only live simulation actor topology and runtime state |
+| **Owner Package** | `@asol/simulation-core` |
+| **Architectural Layer** | capability |
+| **Public Gateway** | `@asol/simulation-core` · `@asol/simulation-core/server` |
+| **Allowed Consumers** | Application via declared doors; composition packages wire ports |
+| **Composition Root** | `N/A` (capability must not import `@/`) |
+| **Infrastructure Owner** | none (pure logic or ports) |
+| **Status** | CLOSED (sealed package with registry entry) |
+| **Canonical Documents** | [package-catalog.md](./package-catalog.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+
+**Source Map:** `packages/simulation-core/` · registry: `packages/architecture-core/src/registry/capability-registry.ts`
+
+---
+
 ## Object storage (R2/S3) access
 
 | Field | Value |
@@ -852,9 +870,9 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 
 | Metric | Value |
 |---|---|
-| Sealed packages | 46 |
+| Sealed packages | 47 |
 | Layer `bridge` | 1 |
-| Layer `capability` | 36 |
+| Layer `capability` | 37 |
 | Layer `composition` | 7 |
 | Layer `declarations` | 1 |
 | Layer `enforcement` | 1 |

@@ -1,10 +1,8 @@
 /**
- * Public ui door for `@/features/dev-tools/ui`.
+ * Public server door for `@/features/dev-tools/server`.
  * Cross-feature consumers MUST import through this file only.
  */
 /* BEGIN GENERATED FEATURE DOOR EXPORTS */
 /** Auto-maintained sealed-door re-exports. Do not edit by hand. */
-export * from './presentation/DeveloperBadge';
-export * from './presentation/DeveloperCategorySelector';
-export * from './presentation/SimulationRuntimeController';
+export * from "./server/simulation-session.server";
 /* END GENERATED FEATURE DOOR EXPORTS */

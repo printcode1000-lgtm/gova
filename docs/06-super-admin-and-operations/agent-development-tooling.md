@@ -64,3 +64,13 @@ Use `gh`, `vercel`, and `turso` for authorized repository, deployment, and datab
 7. Git diff, architecture/runtime/documentation checks, and the applicable project release gates.
 
 No single tool is a completion certificate. Use the smallest combination that directly tests the risk introduced by the change, and preserve the project's five-runtime compatibility contract.
+
+## Live Account Simulation
+
+The development runtime includes a multi-origin live-account simulation system. `npm run dev` keeps ordinary development on port `3001` and starts the internal Next.js runtime plus actor gateway. Simulation Mode is OFF by default and is controlled by the Super Admin switch in `ASOL DEV`.
+
+Actor ports are `3002` through `3011`; each port is a distinct browser origin so IndexedDB/AsolDB, query persistence, storage, Service Workers, Web Push, and BroadcastChannel remain isolated. Do not replace this with client-side UID switching or shared-origin storage namespacing.
+
+Use `npm run dev:simulation:smoke` after gateway changes. For a cable-connected Android device, use `npm run dev:simulation:adb` to reverse `3001` through `3011`; use `npm run dev:simulation:adb:remove` to remove those mappings. The no-Wi-Fi/hotspot development workflow remains supported.
+
+Simulation credentials are server-only `.env.local` values. Agents must never print or copy `SIM_*_PASSWORD` values into prompts, logs, commits, or documentation. See `simulation-users.md` for the actor registry and runtime behavior.

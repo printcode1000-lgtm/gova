@@ -156,11 +156,11 @@ src/
 | **Feature** | `dev-tools` |
 | **Source** | `src/features/dev-tools/` |
 | **Owns** | Developer-only tooling pages |
-| **Public Doors** | `@/features/dev-tools` · `@/features/dev-tools/ui` |
-| **Runtime Targets** | `web`, `android`, `ios` |
-| **Capability Owners** | `@asol/dev-core` |
-| **Permitted Feature Dependencies** | `categories`, `page-save`, `pharmacy-profile-catalog`, `product` |
-| **Surfaces** | browser=true · server=false · ui=true |
+| **Public Doors** | `@/features/dev-tools` · `@/features/dev-tools/ui` · `@/features/dev-tools/server` |
+| **Runtime Targets** | `web`, `android`, `ios`, `server` |
+| **Capability Owners** | `@asol/dev-core`, `@asol/simulation-core` |
+| **Permitted Feature Dependencies** | `auth`, `categories`, `page-save`, `pharmacy-profile-catalog`, `product` |
+| **Surfaces** | browser=true · server=true · ui=true |
 
 ### favorites
 
@@ -597,5 +597,5 @@ src/
 |---|---|
 | Application features | 43 |
 | Features with UI door | 31 |
-| Features with server door | 24 |
-| Sealed capability packages | 46 |
+| Features with server door | 25 |
+| Sealed capability packages | 47 |
