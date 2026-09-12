@@ -5,8 +5,8 @@
 
 # Write Surface Map
 
-Detected write-like surfaces: **365**
-Unproven gateway paths: **143**
+Detected write-like surfaces: **366**
+Unproven gateway paths: **144**
 
 | Source | Owner | Operations | Gateway | Proven | Route | Runtimes | Risk |
 |---|---|---|---|---|---|---|---|
@@ -366,6 +366,7 @@ Unproven gateway paths: **143**
 | `src/features/super-admin/presentation/SuperAdminImpersonationBanner.tsx` | `super-admin` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/super-admin/presentation/SuperAdminNotificationBroadcastPage.tsx` | `super-admin` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/features/super-admin/presentation/SuperAdminTrendingRibbonPage.tsx` | `super-admin` | delete, save | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
+| `src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx` | `super-admin` | mutate, publish | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/features/super-admin/presentation/SuperAdminUsersPage.tsx` | `super-admin` | delete, save | `@asol/page-save-core, @asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/super-admin/presentation/use-super-admin-hero-slider-save.ts` | `super-admin` | save | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/super-admin/server/services/super-admin-user-service.server.ts` | `super-admin` | delete | `@asol/data-core` | yes | `` | development, web | medium |

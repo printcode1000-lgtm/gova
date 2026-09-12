@@ -112,6 +112,8 @@ The Super Admin `ASOL DEV` menu contains the Simulation Mode switch. Turning it 
 
 Actor sessions are created only by development-only server routes. The gateway supplies the actor identity from the listening port, the nine users authenticate through the ordinary login service, and Super Admin receives the canonical signed Super Admin session. Plaintext credentials never enter client bundles.
 
+While Live Simulation Mode is active, the Super Admin DOM attribute inspector is exposed on every actor origin, including all buyers, sellers, service providers, and the Super Admin actor. Outside Simulation Mode, the inspector keeps its normal Super Admin-only authorization.
+
 For an Android device connected by ADB, bind normal development plus all ten actor origins with:
 
 ```text

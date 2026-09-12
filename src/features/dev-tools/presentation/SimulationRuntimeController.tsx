@@ -16,6 +16,7 @@ import { isSuperAdmin } from "@/features/auth";
 import { Button } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui/switch";
 import { OverlayChromeBranch } from "@/shared/ui/overlay-chrome-branch";
+import { SIMULATION_ACTIVE_ATTRIBUTE } from "@/shared/ui/overlay-chrome";
 import {
   checkpointSimulationPath,
   createSimulationSession,
@@ -24,7 +25,6 @@ import {
   type SimulationStateView,
 } from "../application/simulation-api";
 
-const SIMULATION_ACTIVE_ATTRIBUTE = "data-asol-simulation-active";
 const SIMULATION_TOOLBAR_ATTRIBUTE = "data-asol-simulation-toolbar";
 const SIMULATION_HEIGHT_VAR = "--asol-simulation-toolbar-height";
 function currentRoute(): string {

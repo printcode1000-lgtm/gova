@@ -4,11 +4,13 @@ import { Check, ScanLine, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { NativeCore } from "@asol/native-core";
 
+import { isDevelopment } from "@/core/config";
 import { isSuperAdmin } from "@/features/auth";
 import { useSession } from "@/features/auth/ui";
 import {
   INSPECTOR_ACTIVE_ATTRIBUTE,
   INSPECTOR_CONTROL_ATTRIBUTE,
+  SIMULATION_ACTIVE_ATTRIBUTE,
 } from "@/shared/ui/overlay-chrome";
 import { OverlayChromeBranch } from "@/shared/ui/overlay-chrome-branch";
 
@@ -23,7 +25,10 @@ type CopyState = "idle" | "copied" | "failed";
 
 /** True for the inspector's own controls, which are never selectable. */
 function isInspectorControl(element: InspectedElement | null): boolean {
-  return element !== null && element.closest(`[${INSPECTOR_CONTROL_ATTRIBUTE}]`) !== null;
+  return (
+    element !== null &&
+    element.closest(`[${INSPECTOR_CONTROL_ATTRIBUTE}]`) !== null
+  );
 }
 
 function attributesFor(element: InspectedElement): Record<string, string> {
@@ -36,24 +41,47 @@ function attributesFor(element: InspectedElement): Record<string, string> {
 }
 
 /**
- * Super-admin-only touch inspector. While active, a pointer selects the DOM
+ * Super-admin touch inspector, also exposed to every actor while live simulation is active.
+ * While active, a pointer selects the DOM
  * element it lands on, or its closest identified ancestor for unowned internal
  * DOM, copies that id, and never triggers the touched element itself.
  */
 export function SuperAdminUiAttributeInspector() {
   const { session, isLoading } = useSession();
-  const authorized = !isLoading && isSuperAdmin(session);
+  const [simulationActive, setSimulationActive] = useState(false);
+  const authorized =
+    !isLoading &&
+    (isSuperAdmin(session) || (isDevelopment && simulationActive));
   const [enabled, setEnabled] = useState(false);
   const [copiedText, setCopiedText] = useState("");
   const [copyState, setCopyState] = useState<CopyState>("idle");
   const selectedRef = useRef<InspectedElement | null>(null);
-  const selectedOutlineRef = useRef<{ outline: string; outlineOffset: string } | null>(null);
+  const selectedOutlineRef = useRef<{
+    outline: string;
+    outlineOffset: string;
+  } | null>(null);
   const copySequenceRef = useRef(0);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const publish = () =>
+      setSimulationActive(
+        root.getAttribute(SIMULATION_ACTIVE_ATTRIBUTE) === "true",
+      );
+    publish();
+    const observer = new MutationObserver(publish);
+    observer.observe(root, {
+      attributes: true,
+      attributeFilter: [SIMULATION_ACTIVE_ATTRIBUTE],
+    });
+    return () => observer.disconnect();
+  }, []);
 
   const clearSelection = () => {
     if (selectedRef.current && selectedOutlineRef.current) {
       selectedRef.current.style.outline = selectedOutlineRef.current.outline;
-      selectedRef.current.style.outlineOffset = selectedOutlineRef.current.outlineOffset;
+      selectedRef.current.style.outlineOffset =
+        selectedOutlineRef.current.outlineOffset;
     }
     selectedRef.current = null;
     selectedOutlineRef.current = null;
@@ -149,11 +177,16 @@ export function SuperAdminUiAttributeInspector() {
       {...{ [INSPECTOR_CONTROL_ATTRIBUTE]: "true" }}
     >
       {enabled ? (
-        <pre id="features-super-admin-presentation-superadminuiattributeinspector-pre-1-9xaqvo" className="max-h-32 max-w-64 overflow-auto whitespace-pre-wrap break-words rounded-2xl bg-surface px-3 py-2 text-xs font-semibold text-on-surface shadow-lg" dir="auto">
+        <pre
+          id="features-super-admin-presentation-superadminuiattributeinspector-pre-1-9xaqvo"
+          className="max-h-32 max-w-64 overflow-auto whitespace-pre-wrap break-words rounded-2xl bg-surface px-3 py-2 text-xs font-semibold text-on-surface shadow-lg"
+          dir="auto"
+        >
           {status}
         </pre>
       ) : null}
-      <button id="features-super-admin-presentation-superadminuiattributeinspector-button-2-kal5qx"
+      <button
+        id="features-super-admin-presentation-superadminuiattributeinspector-button-2-kal5qx"
         type="button"
         onClick={() => {
           setEnabled((current) => !current);
@@ -165,7 +198,24 @@ export function SuperAdminUiAttributeInspector() {
         aria-pressed={enabled}
         {...{ [INSPECTOR_CONTROL_ATTRIBUTE]: "true" }}
       >
-        {enabled ? copyState === "copied" ? <Check id='features-super-admin-presentation-superadminuiattributeinspector-check-3-ffcpeh' className="h-5 w-5" /> : <X id='features-super-admin-presentation-superadminuiattributeinspector-x-4-wqxro2' className="h-5 w-5" /> : <ScanLine id='features-super-admin-presentation-superadminuiattributeinspector-scanline-5-rhdyhy' className="h-5 w-5" />}
+        {enabled ? (
+          copyState === "copied" ? (
+            <Check
+              id="features-super-admin-presentation-superadminuiattributeinspector-check-3-ffcpeh"
+              className="h-5 w-5"
+            />
+          ) : (
+            <X
+              id="features-super-admin-presentation-superadminuiattributeinspector-x-4-wqxro2"
+              className="h-5 w-5"
+            />
+          )
+        ) : (
+          <ScanLine
+            id="features-super-admin-presentation-superadminuiattributeinspector-scanline-5-rhdyhy"
+            className="h-5 w-5"
+          />
+        )}
       </button>
     </OverlayChromeBranch>
   );

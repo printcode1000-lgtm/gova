@@ -192860,6 +192860,12 @@
     },
     {
       "from": "source:src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
+      "to": "source:src/shared/ui/overlay-chrome.ts",
+      "kind": "imports",
+      "detail": "@/shared/ui/overlay-chrome"
+    },
+    {
+      "from": "source:src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
       "to": "source:src/shared/ui/switch.tsx",
       "kind": "imports",
       "detail": "@/shared/ui/switch"
@@ -227166,6 +227172,12 @@
       "to": "package:@asol/native-core",
       "kind": "imports",
       "detail": "@asol/native-core"
+    },
+    {
+      "from": "source:src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx",
+      "to": "source:src/core/config/index.ts",
+      "kind": "imports",
+      "detail": "@/core/config"
     },
     {
       "from": "source:src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx",

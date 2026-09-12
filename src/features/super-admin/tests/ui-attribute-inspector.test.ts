@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
-import { formatInspectorOutput, isInspectableId, selectedElementId } from "../presentation/ui-attribute-inspector-model";
+import {
+  formatInspectorOutput,
+  isInspectableId,
+  selectedElementId,
+} from "../presentation/ui-attribute-inspector-model";
 import {
   pickIdentifiedElement,
   pickInspectedElement,
@@ -39,8 +43,14 @@ for (const tagLike of [
 
 // A text node has no attributes of its own, so it resolves to its parent.
 const parentElement = { nodeType: ELEMENT_NODE, tag: "span" };
-assert.equal(pickInspectedElement({ nodeType: TEXT_NODE, parentElement }), parentElement);
-assert.equal(pickInspectedElement({ nodeType: TEXT_NODE, parentElement: null }), null);
+assert.equal(
+  pickInspectedElement({ nodeType: TEXT_NODE, parentElement }),
+  parentElement,
+);
+assert.equal(
+  pickInspectedElement({ nodeType: TEXT_NODE, parentElement: null }),
+  null,
+);
 assert.equal(pickInspectedElement(null), null);
 assert.equal(pickInspectedElement(undefined), null);
 assert.equal(pickInspectedElement({}), null);
@@ -58,7 +68,8 @@ assert.equal(isInspectableId(""), false);
 // repository element that owns a real id.
 const identifiedRoot = {
   nodeType: ELEMENT_NODE,
-  getAttribute: (name: string) => name === "id" ? "toolbar-copy-button-a1b2c3" : null,
+  getAttribute: (name: string) =>
+    name === "id" ? "toolbar-copy-button-a1b2c3" : null,
   parentElement: null,
 };
 const internalSvg = {
@@ -68,37 +79,85 @@ const internalSvg = {
 };
 assert.equal(pickIdentifiedElement(identifiedRoot), identifiedRoot);
 assert.equal(pickIdentifiedElement(internalSvg), identifiedRoot);
-assert.equal(pickIdentifiedElement({ ...internalSvg, parentElement: null }), null);
+assert.equal(
+  pickIdentifiedElement({ ...internalSvg, parentElement: null }),
+  null,
+);
 
 // ── Inspector output ───────────────────────────────────────────────────────
-assert.equal(selectedElementId({ id: "auth.otp-input.div" }), "auth.otp-input.div");
+assert.equal(
+  selectedElementId({ id: "auth.otp-input.div" }),
+  "auth.otp-input.div",
+);
 assert.equal(selectedElementId({ id: "Private Order 42" }), "Private Order 42");
 assert.equal(selectedElementId({}), null);
 assert.equal(selectedElementId(undefined), null);
 
-assert.equal(formatInspectorOutput({ id: "page-save.dialog.execute" }), "page-save.dialog.execute");
-assert.equal(formatInspectorOutput({ id: "Private Order 42" }), "Private Order 42");
+assert.equal(
+  formatInspectorOutput({ id: "page-save.dialog.execute" }),
+  "page-save.dialog.execute",
+);
+assert.equal(
+  formatInspectorOutput({ id: "Private Order 42" }),
+  "Private Order 42",
+);
 assert.equal(formatInspectorOutput({}), "مفقود");
 assert.equal(formatInspectorOutput(undefined), "مفقود");
 
 // ── The inspector stays decoupled ──────────────────────────────────────────
 // Its whole point after the registry was removed is that it depends on nothing
 // but the DOM. A reintroduced lookup would make it silently stale again.
-const inspectorSource = readFileSync("src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx", "utf8");
-const modelSource = readFileSync("src/features/super-admin/presentation/ui-attribute-inspector-model.ts", "utf8");
+const inspectorSource = readFileSync(
+  "src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx",
+  "utf8",
+);
+const modelSource = readFileSync(
+  "src/features/super-admin/presentation/ui-attribute-inspector-model.ts",
+  "utf8",
+);
 for (const [name, source] of [
   ["inspector", inspectorSource],
   ["model", modelSource],
 ] as const) {
-  assert.doesNotMatch(source, /ui-registry-core|simulation-core/, `${name} must not import a removed package`);
-  assert.doesNotMatch(source, /data-ui|data-simulation/, `${name} must not read a removed attribute family`);
+  assert.doesNotMatch(
+    source,
+    /ui-registry-core|simulation-core/,
+    `${name} must not import the DOM registry or simulation package directly`,
+  );
+  assert.doesNotMatch(
+    source,
+    /data-ui/,
+    `${name} must not read the removed DOM registry attribute family`,
+  );
 }
 
 // The add/register control is gone, and with it any way to enqueue a UI entry.
-assert.doesNotMatch(inspectorSource, /Registration|Pending|registry/i, "no registration path may remain");
+assert.doesNotMatch(
+  inspectorSource,
+  /Registration|Pending|registry/i,
+  "no registration path may remain",
+);
 assert.doesNotMatch(inspectorSource, /<Plus\b/, "the add button must be gone");
-assert.match(inspectorSource, /pickIdentifiedElement\(touched\)/, "internal DOM must resolve to the closest id owner");
-assert.match(inspectorSource, /event\.stopImmediatePropagation\(\)/, "selection must not trigger or dismiss touched UI");
+assert.match(
+  inspectorSource,
+  /pickIdentifiedElement\(touched\)/,
+  "internal DOM must resolve to the closest id owner",
+);
+assert.match(
+  inspectorSource,
+  /SIMULATION_ACTIVE_ATTRIBUTE/,
+  "the inspector must follow the shared live-simulation activity marker",
+);
+assert.match(
+  inspectorSource,
+  /isDevelopment && simulationActive/,
+  "every live-simulation actor must receive the inspector without weakening production authorization",
+);
+assert.match(
+  inspectorSource,
+  /event\.stopImmediatePropagation\(\)/,
+  "selection must not trigger or dismiss touched UI",
+);
 assert.match(
   inspectorSource,
   /NativeCore\.writeClipboard\(\{ string: text \}\)/,

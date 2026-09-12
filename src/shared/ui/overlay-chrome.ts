@@ -1,13 +1,16 @@
 export const OVERLAY_CHROME_ATTRIBUTE = "data-asol-overlay-chrome";
 export const INSPECTOR_CONTROL_ATTRIBUTE = "data-asol-ui-inspector-control";
 export const INSPECTOR_ACTIVE_ATTRIBUTE = "data-asol-ui-inspector-active";
+export const SIMULATION_ACTIVE_ATTRIBUTE = "data-asol-simulation-active";
 
 type ClosestLike = {
   getAttribute?: (name: string) => string | null;
   parentElement?: ClosestLike | null;
 };
 
-function asClosestLike(target: EventTarget | null | undefined): ClosestLike | null {
+function asClosestLike(
+  target: EventTarget | null | undefined,
+): ClosestLike | null {
   if (!target || typeof target !== "object") return null;
   const candidate = target as ClosestLike;
   if (typeof candidate.getAttribute === "function") return candidate;
@@ -21,7 +24,9 @@ function isChromeNode(node: ClosestLike): boolean {
   return inspector === "" || inspector === "true";
 }
 
-export function isOverlayChromeTarget(target: EventTarget | null | undefined): boolean {
+export function isOverlayChromeTarget(
+  target: EventTarget | null | undefined,
+): boolean {
   let current = asClosestLike(target);
   while (current) {
     if (isChromeNode(current)) return true;
@@ -40,12 +45,16 @@ function isDialogLayerTarget(target: EventTarget | null | undefined): boolean {
 }
 
 /** Overlay chrome or another project dialog — outside dismiss must not close the host. */
-export function isOutsideDismissExempt(target: EventTarget | null | undefined): boolean {
+export function isOutsideDismissExempt(
+  target: EventTarget | null | undefined,
+): boolean {
   return isOverlayChromeTarget(target) || isDialogLayerTarget(target);
 }
 
 export function isInspectorActive(
-  root: ClosestLike | null = typeof document === "undefined" ? null : document.documentElement,
+  root: ClosestLike | null = typeof document === "undefined"
+    ? null
+    : document.documentElement,
 ): boolean {
   const value = root?.getAttribute?.(INSPECTOR_ACTIVE_ATTRIBUTE);
   return value === "" || value === "true";
@@ -62,7 +71,9 @@ type DismissEvent = {
   };
 };
 
-export function dismissEventTarget(event: DismissEvent): EventTarget | null | undefined {
+export function dismissEventTarget(
+  event: DismissEvent,
+): EventTarget | null | undefined {
   const original = event.detail?.originalEvent;
   const path = original?.composedPath?.();
   if (path && path.length > 0) return path[0];
