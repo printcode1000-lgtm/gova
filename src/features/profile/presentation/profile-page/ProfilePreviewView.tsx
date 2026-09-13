@@ -13,6 +13,7 @@ return (
             session={session}
             isOwner={isPreviewOwner}
             isSuperAdmin={superAdmin}
+            providerAccountEnabled={model.providerAccountEnabled}
             storeImages={storeImages}
             storeDetails={storeDetails}
             contacts={previewContacts}

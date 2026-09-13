@@ -57,6 +57,7 @@ interface ProfilePreviewContentProps {
   session: SessionRuntimeUser | null;
   isOwner: boolean;
   isSuperAdmin: boolean;
+  providerAccountEnabled: boolean;
   storeImages: StoreImagesData;
   storeDetails: StoreDetailsData;
   contacts: ProfileContactsData | null;
@@ -159,6 +160,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
       data-snapshot-id="profile-preview-root"
       className="mx-auto w-full max-w-6xl min-w-0 space-y-5 overflow-x-clip px-0 sm:space-y-6 sm:px-4"
     >
+      {props.providerAccountEnabled ? <>
       <div id='features-profile-presentation-profilepreviewcontent-div-2-pblfex' className="min-w-0">
         {loading.images ? (
           <div id='features-profile-presentation-profilepreviewcontent-div-3-qlnbzd' className="py-8 text-center text-sm text-on-surface-variant">
@@ -407,6 +409,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
           />
         </section>
       ) : null}
+      </> : null}
     </div>
   );
 }
