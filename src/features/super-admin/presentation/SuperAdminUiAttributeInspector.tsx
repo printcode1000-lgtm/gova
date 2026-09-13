@@ -11,6 +11,7 @@ import {
   INSPECTOR_ACTIVE_ATTRIBUTE,
   INSPECTOR_CONTROL_ATTRIBUTE,
   SIMULATION_ACTIVE_ATTRIBUTE,
+  SIMULATION_VISIBLE_CHROME_ATTRIBUTE,
 } from "@/shared/ui/overlay-chrome";
 import { OverlayChromeBranch } from "@/shared/ui/overlay-chrome-branch";
 
@@ -174,7 +175,10 @@ export function SuperAdminUiAttributeInspector() {
   return (
     <OverlayChromeBranch
       className="pointer-events-auto fixed bottom-[calc(10rem+var(--asol-safe-area-bottom))] end-4 z-[150] flex max-w-[calc(100vw-2rem)] items-center gap-2"
-      {...{ [INSPECTOR_CONTROL_ATTRIBUTE]: "true" }}
+      {...{
+        [INSPECTOR_CONTROL_ATTRIBUTE]: "true",
+        [SIMULATION_VISIBLE_CHROME_ATTRIBUTE]: "true",
+      }}
     >
       {enabled ? (
         <pre

@@ -7,7 +7,7 @@
 
 Key **names only**. Values are never emitted. Command assignments are redacted elsewhere in generated catalogs.
 
-Keys: **240**
+Keys: **241**
 
 | Key | Visibility | Static/native | Consumers (sample) | Relevance | Classification | Runtime checks |
 |---|---|---|---|---|---|---|
@@ -139,6 +139,7 @@ Keys: **240**
 | `GOOGLE_PLAY_SERVICE_ACCOUNT_UNIQUE_ID` | server-only | unknown | `packages/ota-core/src/publishing/adapters/google-play.adapter.ts`, `src/features/google-play-console/domain/development-guard.server.ts` | native/fastlane | server-only | npm run runtime:check:changed |
 | `GOOGLE_PLAY_SERVICE_ACCOUNT_UNIVERSE_DOMAIN` | server-only | unknown | `packages/ota-core/src/publishing/adapters/google-play.adapter.ts`, `src/features/google-play-console/domain/development-guard.server.ts` | native/fastlane | server-only | npm run runtime:check:changed |
 | `GOOGLE_PLAY_TRACK` | server-only | unknown | none | native/fastlane | missing/unknown consumers | npm run runtime:check:changed |
+| `GOVA_DEV_PORT` | server-only | unknown | `npm run dev`, `npm run dev:checked`, `scripts/dev-simulation.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `HOME` | server-only | unknown | `packages/native-core/scripts/android-build-preflight.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `HOST` | server-only | unknown | `packages/ota-core/scripts/serve-static.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `JAVA_HOME` | server-only | unknown | `packages/native-core/scripts/android-build-preflight.ts`, `scripts/check-environment-requirements.ts` | unclassified | server-only | npm run runtime:check:changed |

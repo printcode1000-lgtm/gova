@@ -91,9 +91,11 @@ body {
   overscroll-behavior-y: none;
 }
 
-/* In live simulation the actor toolbar is the only development chrome. */
+/* In live simulation keep only the actor toolbar plus explicitly allowed diagnostic chrome. */
 html[data-asol-simulation-active="true"]
-  [data-asol-overlay-chrome="true"]:not([data-asol-simulation-toolbar="true"]) {
+  [data-asol-overlay-chrome="true"]:not([data-asol-simulation-toolbar="true"]):not(
+    [data-asol-simulation-visible-chrome="true"]
+  ) {
   display: none !important;
 }
 

@@ -19455,6 +19455,19 @@
       ]
     },
     {
+      "id": "environment-key:GOVA_DEV_PORT",
+      "kind": "environment-key",
+      "name": "GOVA_DEV_PORT",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "environment",
+        "gova_dev_port",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
       "id": "environment-key:HOME",
       "kind": "environment-key",
       "name": "HOME",

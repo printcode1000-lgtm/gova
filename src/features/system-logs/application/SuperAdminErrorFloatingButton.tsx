@@ -24,6 +24,7 @@ import {
 import { isEventTargetInside } from "@/features/system-logs/application/is-event-target-inside";
 import {
   OVERLAY_CHROME_ATTRIBUTE,
+  SIMULATION_VISIBLE_CHROME_ATTRIBUTE,
   isOverlayChromeTarget,
 } from "@/shared/ui/overlay-chrome";
 import { useSimulationActive } from "@/shared/ui/use-simulation-active";
@@ -187,7 +188,7 @@ export function SuperAdminErrorFloatingButton() {
 
   if (!expanded) {
     return (
-      <OverlayChromeBranch id='features-system-logs-application-superadminerrorfloatingbutton-overlaychromebranch-1-otjh9i' className="contents">
+      <OverlayChromeBranch id='features-system-logs-application-superadminerrorfloatingbutton-overlaychromebranch-1-otjh9i' className="contents" {...{ [SIMULATION_VISIBLE_CHROME_ATTRIBUTE]: "true" }}>
         <button id="features-system-logs-application-superadminerrorfloatingbutton-button-2-kbzlqo"
           type="button"
           onClick={() => setExpanded(true)}
@@ -198,7 +199,10 @@ export function SuperAdminErrorFloatingButton() {
           }
           aria-expanded={false}
           aria-label={`أخطاء النظام: ${errorCount} — عرض الأدوات`}
-          {...{ [OVERLAY_CHROME_ATTRIBUTE]: "true" }}
+          {...{
+            [OVERLAY_CHROME_ATTRIBUTE]: "true",
+            [SIMULATION_VISIBLE_CHROME_ATTRIBUTE]: "true",
+          }}
         >
           <span id='features-system-logs-application-superadminerrorfloatingbutton-text-3-ashfqo' className="tabular-nums">{errorCount}</span>
         </button>
@@ -207,7 +211,7 @@ export function SuperAdminErrorFloatingButton() {
   }
 
   return (
-    <OverlayChromeBranch id='features-system-logs-application-superadminerrorfloatingbutton-overlaychromebranch-4-8hpupz' className="contents">
+    <OverlayChromeBranch id='features-system-logs-application-superadminerrorfloatingbutton-overlaychromebranch-4-8hpupz' className="contents" {...{ [SIMULATION_VISIBLE_CHROME_ATTRIBUTE]: "true" }}>
       <div id="features-system-logs-application-superadminerrorfloatingbutton-div-5-zyud1f"
         ref={toolbarRef}
         className={
@@ -216,7 +220,10 @@ export function SuperAdminErrorFloatingButton() {
         }
         role="group"
         aria-label={`أخطاء النظام: ${errorCount}`}
-        {...{ [OVERLAY_CHROME_ATTRIBUTE]: "true" }}
+        {...{
+          [OVERLAY_CHROME_ATTRIBUTE]: "true",
+          [SIMULATION_VISIBLE_CHROME_ATTRIBUTE]: "true",
+        }}
       >
         <button id='features-system-logs-application-superadminerrorfloatingbutton-button-6-wc77mn'
           type="button"

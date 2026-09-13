@@ -153,6 +153,19 @@ assert.match(
   /isDevelopment && simulationActive/,
   "every live-simulation actor must receive the inspector without weakening production authorization",
 );
+
+const globalStyles = readFileSync("src/app/globals.css", "utf8");
+assert.match(
+  inspectorSource,
+  /SIMULATION_VISIBLE_CHROME_ATTRIBUTE/,
+  "the inspector chrome must opt into visibility while simulation hides ordinary dev chrome",
+);
+assert.match(
+  globalStyles,
+  /data-asol-simulation-visible-chrome/,
+  "simulation CSS must preserve explicitly allowed diagnostic chrome",
+);
+
 assert.match(
   inspectorSource,
   /event\.stopImmediatePropagation\(\)/,

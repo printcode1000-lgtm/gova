@@ -137,6 +137,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `GOOGLE_PLAY_SERVICE_ACCOUNT_UNIQUE_ID` | server/tooling | 2 | `packages/ota-core/src/publishing/adapters/google-play.adapter.ts`, `src/features/google-play-console/domain/development-guard.server.ts` |
 | `GOOGLE_PLAY_SERVICE_ACCOUNT_UNIVERSE_DOMAIN` | server/tooling | 2 | `packages/ota-core/src/publishing/adapters/google-play.adapter.ts`, `src/features/google-play-console/domain/development-guard.server.ts` |
 | `GOOGLE_PLAY_TRACK` | server/tooling | 0 |  |
+| `GOVA_DEV_PORT` | server/tooling | 3 | `npm run dev:checked`, `npm run dev`, `scripts/dev-simulation.ts` |
 | `HOME` | server/tooling | 1 | `packages/native-core/scripts/android-build-preflight.ts` |
 | `HOST` | server/tooling | 1 | `packages/ota-core/scripts/serve-static.ts` |
 | `JAVA_HOME` | server/tooling | 2 | `scripts/check-environment-requirements.ts`, `packages/native-core/scripts/android-build-preflight.ts` |

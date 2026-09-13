@@ -21,11 +21,23 @@ Use `ast-grep` for syntax-aware structural search, lint-style rules, and control
 ### 2. TypeScript semantic tooling
 
 Use project `typescript`/`tsc` plus `typescript-language-server` for type-aware diagnosis, definitions, references, imports, and semantic relationships. Repository-local TypeScript remains authoritative over a global copy.
-### 3. Playwright browser tooling
+### 3. Browser verification: agent-browser + Playwright
 
-Use `playwright-cli` for direct browser evidence when a change affects UI, navigation, rendering, browser APIs, client-side state, network behavior, or runtime interaction. Browser verification is allowed and encouraged when it materially improves confidence; it supplements rather than replaces automated checks.
+Use `agent-browser` as the fast interactive browser-verification CLI for development-server UI work: open a route, wait for the page, inspect interactive elements, evaluate live DOM/computed styles, interact with controls, and capture screenshots. Prefer live browser evidence for changes whose correctness depends on rendered layout, navigation, browser APIs, client-side state, pointer/touch behavior, or runtime interaction; source inspection and type checking alone do not prove those behaviors.
 
-The Desktop host has the Playwright CLI, Chromium, Chromium Headless Shell, FFmpeg, and the global Playwright agent skill installed. Browser binaries are stored under `~/.cache/ms-playwright`, and the shared skill is under `~/.agents/skills/playwright-cli`.
+The Desktop host has `agent-browser` installed as a user-level CLI at `~/.local/bin/agent-browser` (version `0.37.1`). `~/.local/bin` is on the normal shell `PATH`, so agents may invoke `agent-browser` directly. The installation uses the user npm prefix under `~/.local`; do not require root or a project dependency merely to run it.
+
+Recommended UI verification flow:
+
+```bash
+agent-browser open http://127.0.0.1:3001/<route>
+agent-browser wait --load networkidle
+agent-browser snapshot -i
+agent-browser eval '<focused live-DOM assertion>'
+agent-browser screenshot
+```
+
+Use `playwright-cli` when a broader scripted browser test, Playwright-specific debugging, or existing project test flow is the better fit. The Desktop host also has the Playwright CLI, Chromium, Chromium Headless Shell, FFmpeg, and the global Playwright agent skill installed. Browser binaries are stored under `~/.cache/ms-playwright`, and the shared skill is under `~/.agents/skills/playwright-cli`. `agent-browser` and Playwright complement automated tests; neither replaces the repository's type, lint, architecture, or targeted test gates.
 
 ### 4. Knip
 
@@ -60,7 +72,7 @@ Use `gh`, `vercel`, and `turso` for authorized repository, deployment, and datab
 3. TypeScript semantic tooling for symbols, types, imports, and references.
 4. Knip/Semgrep/ESLint/Biome for dependency and static-analysis evidence.
 5. Targeted tests plus shell/workflow validators for changed automation.
-6. Playwright when direct browser evidence is relevant.
+6. `agent-browser` for fast live UI/DOM verification; use Playwright when a broader scripted browser flow is the better fit.
 7. Git diff, architecture/runtime/documentation checks, and the applicable project release gates.
 
 No single tool is a completion certificate. Use the smallest combination that directly tests the risk introduced by the change, and preserve the project's five-runtime compatibility contract.

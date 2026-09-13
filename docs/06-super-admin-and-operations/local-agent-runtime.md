@@ -19,14 +19,14 @@ GitHub contains exactly two recognized remote branches: `main` and `integration`
 
 ## Shared development toolbox for Modes A/B/C
 
-All three execution modes use the development-tool policy in [Agent Development Tooling](./agent-development-tooling.md): `rg` plus ast-grep, TypeScript semantic tooling, Playwright, Knip, Semgrep/ESLint/Biome, fd/fzf/bat/delta, ShellCheck/shfmt/actionlint, and gh/Vercel/Turso. Browser verification is allowed when appropriate; each mode still obeys its own execution transport and authorization boundary.
+All three execution modes use the development-tool policy in [Agent Development Tooling](./agent-development-tooling.md): `rg` plus ast-grep, TypeScript semantic tooling, `agent-browser`/Playwright browser verification, Knip, Semgrep/ESLint/Biome, fd/fzf/bat/delta, ShellCheck/shfmt/actionlint, and gh/Vercel/Turso. On the Desktop host, `agent-browser` is available directly from `~/.local/bin/agent-browser`. Browser verification is allowed when appropriate; each mode still obeys its own execution transport and authorization boundary.
 
 ## Mode B: direct local editing
 
 1. Work in `/home/hesham/gova` on its current local branch and working tree.
 2. Preserve every pre-existing local modification; never reset or relocate it merely to obtain isolation.
 3. Read the required project context and modify the requested files directly.
-4. Run the smallest relevant verification locally. Use automated/static checks and add Playwright/browser verification when UI or browser-runtime behavior needs direct evidence.
+4. Run the smallest relevant verification locally. Use automated/static checks and add `agent-browser` live verification or Playwright when UI or browser-runtime behavior needs direct evidence.
 5. Stop with the verified changes still local unless the user explicitly asks for commit, push, integration, or deployment.
 
 Mode B does **not** register an agent with localhost control, create a task/worktree, create an `agent/*` branch, acquire Gateway locks, or submit anything to `integration`.
@@ -49,7 +49,7 @@ python3 /home/hesham/gova/tools/local-agent/mode_c_preflight.py
 
 and that command itself must be executed through Remote Desktop Commander. A failed preflight stops Mode C. A missing Remote Desktop Commander capability also stops Mode C; the agent must not fall back to the Gateway, GitHub Actions, cloud Mode-B projection, a GitHub connector, direct cloud shell/file tools, or another execution transport.
 
-Mode C works in `/home/hesham/gova`, preserves pre-existing changes, and leaves commit/push/integration/deployment authorization unchanged. The Gateway may record `execution_mode=C` with `execution_transport=remote-desktop-commander` for observability, but its managed execution paths reject C.
+Mode C works in `/home/hesham/gova`, preserves pre-existing changes, and leaves commit/push/integration/deployment authorization unchanged. Device-side tools such as `agent-browser` must be launched through a Remote Desktop Commander terminal/process invocation, so live browser verification remains a Mode-C operation rather than a transport fallback. The Gateway may record `execution_mode=C` with `execution_transport=remote-desktop-commander` for observability, but its managed execution paths reject C.
 
 See [Remote Desktop Commander Execution Mode C](./remote-desktop-commander-mode.md).
 

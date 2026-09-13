@@ -21,7 +21,7 @@ interface FavoriteButtonProps {
   variant?: "favorite" | "follow";
 }
 
-export function FavoriteButton({ item, className, label, variant = "favorite" }: FavoriteButtonProps & { id?: string }) {
+export function FavoriteButton({ id, item, className, label, variant = "favorite" }: FavoriteButtonProps & { id?: string }) {
   const { isFavorite, isLoading, toggleFavorite } = useFavorites();
   const [isMutating, setIsMutating] = React.useState(false);
   const active = isFavorite(item.type, item.targetId);
@@ -48,7 +48,7 @@ export function FavoriteButton({ item, className, label, variant = "favorite" }:
       : "إضافة إلى المفضلة";
 
   return (
-    <button id="features-favorites-presentation-favoritebutton-button-1-0as0mw"
+    <button id={id}
       type="button"
       aria-label={ariaLabel}
       onClick={(event) => void handleClick(event)}
@@ -70,7 +70,7 @@ export function FavoriteButton({ item, className, label, variant = "favorite" }:
       ) : (
         <Heart className={cn("h-5 w-5", active && "fill-current")} />
       )}
-      {label ? <span id="features-favorites-presentation-favoritebutton-text-2-soqmaz">{label}</span> : null}
+      {label ? <span id={id ? `${id}-label-5t2n8c` : undefined}>{label}</span> : null}
     </button>
   );
 }

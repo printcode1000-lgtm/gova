@@ -77,8 +77,8 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run deploy:all` | `Tooling`, `Web` | 1 |  | 0 |
 | `npm run deploy:push` | `Tooling`, `Web` | 1 |  | 0 |
 | `npm run deploy:push:fast` | `Tooling`, `Web` | 1 |  | 0 |
-| `npm run dev` | `Development`, `Tooling` | 1 |  | 0 |
-| `npm run dev:checked` | `Development`, `Tooling` | 5 |  | 0 |
+| `npm run dev` | `Development`, `Tooling` | 1 |  | 1 |
+| `npm run dev:checked` | `Development`, `Tooling` | 5 |  | 1 |
 | `npm run dev:distributed` | `Tooling` | 1 |  | 0 |
 | `npm run dev:distributed:smoke` | `Tooling` | 1 |  | 0 |
 | `npm run dev:simulation` | `Tooling` | 1 |  | 0 |

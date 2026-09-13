@@ -14,13 +14,27 @@ import {
 export function ProductComponentFrame({ id,
   title,
   children,
+  showTitle = true,
+  compactPadding = false,
 }: {
   title: string;
   children: React.ReactNode;
+  showTitle?: boolean;
+  compactPadding?: boolean;
 } & { id?: string }) {
   return (
-    <section id={id} className="rounded-2xl border bg-card p-4 shadow-sm sm:p-5">
-      <h3 className="mb-4 text-lg font-bold">{title}</h3>
+    <section
+      id={id}
+      className={`rounded-2xl border bg-card shadow-sm ${compactPadding ? "overflow-hidden p-0" : "p-4 sm:p-5"}`}
+    >
+      {showTitle ? (
+        <h3
+          id={id ? `${id}-title-8q1w5e` : undefined}
+          className="mb-4 text-lg font-bold"
+        >
+          {title}
+        </h3>
+      ) : null}
       {children}
     </section>
   );
@@ -33,6 +47,11 @@ export function ProductField({ id,
   onChange,
   type = "text",
   multiline = false,
+  centered = false,
+  blueLabel = false,
+  hideLabel = false,
+  nowrapLabel = false,
+  nowrapValue = false,
 }: {
   label: string;
   value: string;
@@ -40,6 +59,11 @@ export function ProductField({ id,
   onChange: (value: string) => void;
   type?: React.HTMLInputTypeAttribute | "boolean";
   multiline?: boolean;
+  centered?: boolean;
+  blueLabel?: boolean;
+  hideLabel?: boolean;
+  nowrapLabel?: boolean;
+  nowrapValue?: boolean;
 } & { id?: string }) {
   const { t, locale } = useTranslation();
 
@@ -47,18 +71,40 @@ export function ProductField({ id,
     if (type === "boolean") {
       const boolValue = value === "true";
       return (
-        <div id={id} className="rounded-xl bg-muted/40 px-3 py-2.5">
-          <p className="text-xs text-muted-foreground">{label}</p>
-          <p className="mt-1 font-medium">
+        <div id={id} className={`rounded-xl bg-muted/40 px-3 py-2.5 ${centered ? "text-center" : ""}`}>
+          {!hideLabel ? (
+            <p
+              id={id ? `${id}-boolean-label-3m7c1p` : undefined}
+              className={`text-xs ${nowrapLabel ? "whitespace-nowrap" : ""} ${blueLabel ? "text-blue-600 dark:text-blue-400" : "text-muted-foreground"}`}
+            >
+              {label}
+            </p>
+          ) : null}
+          <p
+            id={id ? `${id}-boolean-value-6h2v9k` : undefined}
+            className={`mt-1 font-medium ${nowrapValue ? "whitespace-nowrap" : ""}`}
+          >
             {boolValue ? t("product.boolean.yes") : t("product.boolean.no")}
           </p>
         </div>
       );
     }
     return (
-      <div id={id} className="rounded-xl bg-muted/40 px-3 py-2.5">
-        <p className="text-xs text-muted-foreground">{label}</p>
-        <p className="mt-1 whitespace-pre-wrap break-words font-medium">{value || "—"}</p>
+      <div id={id} className={`rounded-xl bg-muted/40 px-3 py-2.5 ${centered ? "text-center" : ""}`}>
+        {!hideLabel ? (
+          <p
+            id={id ? `${id}-label-4n8x2d` : undefined}
+            className={`text-xs ${nowrapLabel ? "whitespace-nowrap" : ""} ${blueLabel ? "text-blue-600 dark:text-blue-400" : "text-muted-foreground"}`}
+          >
+            {label}
+          </p>
+        ) : null}
+        <p
+          id={id ? `${id}-value-7b1r5m` : undefined}
+          className={`mt-1 font-medium ${nowrapValue ? "whitespace-nowrap" : "whitespace-pre-wrap break-words"}`}
+        >
+          {value || "—"}
+        </p>
       </div>
     );
   }
@@ -66,7 +112,9 @@ export function ProductField({ id,
   if (type === "boolean") {
     return (
       <label id={id} className="space-y-1.5 text-sm font-medium">
-        <span>{label}</span>
+        {!hideLabel ? (
+          <span id={id ? `${id}-edit-label-2f6p9c` : undefined} className={nowrapLabel ? "whitespace-nowrap" : undefined}>{label}</span>
+        ) : null}
         <Select
           value={value || "false"}
           onValueChange={(val) => onChange(val)}
@@ -91,15 +139,17 @@ export function ProductField({ id,
     "asol-control asol-field-surface w-full border border-input px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring";
   return (
     <label id={id} className="space-y-1.5 text-sm font-medium">
-      <span>{label}</span>
+      {!hideLabel ? <span className={nowrapLabel ? "whitespace-nowrap" : undefined}>{label}</span> : null}
       {multiline ? (
         <textarea
+          id={id ? `${id}-textarea-5k1d8v` : undefined}
           value={value}
           onChange={(event) => onChange(event.target.value)}
           className={`${className} min-h-24 py-3`}
         />
       ) : (
         <input
+          id={id ? `${id}-input-9c3m6q` : undefined}
           type={type}
           value={value}
           onChange={(event) => onChange(event.target.value)}

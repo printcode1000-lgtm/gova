@@ -252,14 +252,25 @@ export function ProductReviews({ id,
         }
         onRate={() => openReview(result?.currentUserReview ?? null)}
       />
-      <section ref={sectionRef} className="min-w-0 space-y-4">
-        <div className="flex min-w-0 flex-wrap items-center justify-between gap-2">
-          <h3 className="flex min-w-0 items-center gap-2 break-words text-xl font-bold">
+      <section
+        id={id ? `${id}-list-section-8k2r5v` : undefined}
+        ref={sectionRef}
+        className="min-w-0 space-y-4"
+      >
+        <div
+          id={id ? `${id}-list-header-1m7c4q` : undefined}
+          className="flex min-w-0 flex-wrap items-center justify-between gap-2"
+        >
+          <h3
+            id={id ? `${id}-list-title-6v3p9d` : undefined}
+            className="flex min-w-0 items-center gap-2 break-words text-xl font-bold"
+          >
             <MessageSquare className="h-5 w-5" />
             تقييمات العملاء
           </h3>
           {result?.hasMore ? (
             <button
+              id={id ? `${id}-show-all-button-4h8n2s` : undefined}
               type="button"
               onClick={() => load(result.reviews.length, true)}
               className="flex max-w-full items-center gap-1 break-words text-sm font-semibold text-primary"
@@ -269,34 +280,43 @@ export function ProductReviews({ id,
             </button>
           ) : null}
         </div>
-        <div className="grid min-w-0 gap-5 rounded-2xl border bg-card p-5 md:grid-cols-2">
-          <div className="min-w-0 border-b pb-5 text-center md:border-b-0 md:border-l md:pb-0">
-            <strong className="text-5xl">{average.toFixed(1)}</strong>
-            <Stars value={average} size="text-2xl" />
-            <p className="mt-2 break-words text-sm text-muted-foreground">
+        <div
+          id={id ? `${id}-aggregate-card-7q1m5c` : undefined}
+          className="grid min-w-0 gap-5 rounded-2xl border bg-card p-5 md:grid-cols-2"
+        >
+          <div
+            id={id ? `${id}-aggregate-score-3c8v2k` : undefined}
+            className="min-w-0 border-b pb-5 text-center md:border-b-0 md:border-l md:pb-0"
+          >
+            <strong id={id ? `${id}-aggregate-average-9n4r1h` : undefined} className="text-5xl">{average.toFixed(1)}</strong>
+            <Stars id={id ? `${id}-aggregate-stars-5p2d8m` : undefined} value={average} size="text-2xl" />
+            <p id={id ? `${id}-aggregate-count-2k6w9f` : undefined} className="mt-2 break-words text-sm text-muted-foreground">
               بناءً على {total} تقييم
             </p>
           </div>
-          <div className="min-w-0 space-y-2">
+          <div id={id ? `${id}-distribution-4m1x7q` : undefined} className="min-w-0 space-y-2">
             {(result?.distribution ?? []).map((item) => (
               <div
+                id={id ? `${id}-distribution-${item.rating}-row` : undefined}
                 key={item.rating}
                 className="grid min-w-0 grid-cols-[52px_1fr_32px] items-center gap-2 text-sm"
               >
-                <span>{item.rating} نجوم</span>
-                <div className="h-2 overflow-hidden rounded-full bg-muted">
+                <span id={id ? `${id}-distribution-${item.rating}-label` : undefined}>{item.rating} نجوم</span>
+                <div id={id ? `${id}-distribution-${item.rating}-track` : undefined} className="h-2 overflow-hidden rounded-full bg-muted">
                   <div
+                    id={id ? `${id}-distribution-${item.rating}-fill` : undefined}
                     className="h-full bg-amber-500"
                     style={{ width: `${item.percentage}%` }}
                   />
                 </div>
-                <span>{item.count}</span>
+                <span id={id ? `${id}-distribution-${item.rating}-count` : undefined}>{item.count}</span>
               </div>
             ))}
           </div>
         </div>
-        <div className="flex justify-end">
+        <div id={id ? `${id}-sort-container-8d3p6n` : undefined} className="flex justify-end">
           <select
+            id={id ? `${id}-sort-select-1h5v9c` : undefined}
             value={sort}
             onChange={(event) => setSort(event.target.value as ReviewSort)}
             className="asol-control asol-field-surface border border-input px-3"
@@ -307,15 +327,16 @@ export function ProductReviews({ id,
           </select>
         </div>
         {loading && !result ? (
-          <p className="py-8 text-center">جارٍ التحميل…</p>
+          <p id={id ? `${id}-loading-4c7m2r` : undefined} className="py-8 text-center">جارٍ التحميل…</p>
         ) : result?.reviews.length === 0 ? (
-          <p className="rounded-2xl border bg-card p-8 text-center text-muted-foreground">
+          <p id={id ? `${id}-empty-7n2k5w` : undefined} className="rounded-2xl border bg-card p-8 text-center text-muted-foreground">
             لا توجد مراجعات بعد.
           </p>
         ) : (
-          <div className="min-w-0 space-y-3">
+          <div id={id ? `${id}-reviews-list-9r4c1m` : undefined} className="min-w-0 space-y-3">
             {result?.reviews.map((review) => (
               <article
+                id={id ? `${id}-review-${review.id}` : undefined}
                 key={review.id}
                 className="min-w-0 rounded-2xl border bg-card p-4"
               >
@@ -439,6 +460,7 @@ export function ProductReviews({ id,
         )}
         {result?.hasMore ? (
           <button
+            id={id ? `${id}-load-more-button-6k1p8v` : undefined}
             type="button"
             disabled={loading}
             onClick={() => load(result.reviews.length, true)}

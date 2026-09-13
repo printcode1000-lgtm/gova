@@ -57,6 +57,7 @@ const collector = read("src/features/system-logs/application/SystemLogCollector.
 const floatingButton = read("src/features/system-logs/application/SuperAdminErrorFloatingButton.tsx");
 const errorBoundary = read("src/features/system-logs/application/SystemLogErrorBoundary.tsx");
 const simulationHook = read("src/shared/ui/use-simulation-active.ts");
+const globalStyles = read("src/app/globals.css");
 
 assert.equal(listRoute.includes("assertSuperAdminRequest(request)"), true);
 assert.equal(listRoute.includes('searchParams.get("uid")'), false);
@@ -98,5 +99,14 @@ assert.equal(
 );
 assert.equal(errorBoundary.includes("isDevelopment && simulationActive"), true);
 assert.equal(simulationHook.includes("SIMULATION_ACTIVE_ATTRIBUTE"), true);
+assert.equal(
+  floatingButton.includes("SIMULATION_VISIBLE_CHROME_ATTRIBUTE"),
+  true,
+);
+assert.equal(
+  globalStyles.includes("data-asol-simulation-visible-chrome"),
+  true,
+);
+
 
 console.log("System log security tests passed.");

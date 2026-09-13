@@ -166,6 +166,7 @@ export function ProductImageGallery({ id, images }: { images: StoredImage[] } & 
   return (
     <div id={id} className="w-full">
       <div
+        id={id ? `${id}-stage-3r7m1k` : undefined}
         className="relative aspect-square overflow-hidden rounded-2xl bg-muted sm:aspect-[4/3]"
         style={{ touchAction: "none" }}
         onPointerDown={pointerDown}
@@ -175,12 +176,14 @@ export function ProductImageGallery({ id, images }: { images: StoredImage[] } & 
         onPointerLeave={clearGesture}
       >
         <div
+          id={id ? `${id}-viewport-6p2c9h` : undefined}
           className={`relative h-full w-full transition-[opacity,transform] duration-300 ${loaded.has(active.url) ? "opacity-100" : "opacity-0"}`}
           style={{
             transform: `translate3d(${offset.x}px, ${offset.y}px, 0) scale(${scale})`,
           }}
         >
           <Image
+            id={id ? `${id}-active-image-8v4n2q` : undefined}
             src={active.url}
             alt=""
             fill
@@ -196,11 +199,18 @@ export function ProductImageGallery({ id, images }: { images: StoredImage[] } & 
       </div>
       {validImages.length > 1 ? (
         <div
+          id={id ? `${id}-thumbnails-1d5k8r` : undefined}
           className="mt-3 flex justify-center gap-2 overflow-x-auto pb-1"
           style={{ touchAction: "pan-x" }}
         >
-          {validImages.map((image, index) => (
+          {validImages.map((image, index) => {
+            const imageToken = image.imageKey.replace(/[^a-zA-Z0-9_-]+/g, "-");
+            const thumbnailId = id
+              ? `${id}-thumbnail-${imageToken || "image"}`
+              : undefined;
+            return (
             <button
+              id={thumbnailId}
               key={image.imageKey}
               type="button"
               aria-label={`الصورة ${index + 1}`}
@@ -211,6 +221,7 @@ export function ProductImageGallery({ id, images }: { images: StoredImage[] } & 
               className={`relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border-2 sm:h-20 sm:w-20 ${activeIndex === index ? "border-primary" : "border-transparent"}`}
             >
               <Image
+                id={thumbnailId ? `${thumbnailId}-image` : undefined}
                 src={image.url}
                 alt=""
                 fill
@@ -222,7 +233,8 @@ export function ProductImageGallery({ id, images }: { images: StoredImage[] } & 
                 className="object-cover"
               />
             </button>
-          ))}
+            );
+          })}
         </div>
       ) : null}
     </div>

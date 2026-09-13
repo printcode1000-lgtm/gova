@@ -8,6 +8,7 @@ import type { ProductDetails } from "@asol/product-core";
 import { addCartItem } from "../application/cart-store";
 
 interface ProductAddToCartButtonProps {
+  className?: string;
   productId: string;
   sellerId: string;
   product: ProductDetails;
@@ -20,6 +21,8 @@ function numberValue(value: string) {
 }
 
 export function ProductAddToCartButton({
+  id,
+  className,
   productId,
   sellerId,
   product,
@@ -59,12 +62,12 @@ export function ProductAddToCartButton({
   };
 
   return (
-    <button id="features-cart-presentation-productaddtocartbutton-button-1-cw7net"
+    <button id={id}
       type="button"
       aria-label="إضافة إلى السلة"
       onClick={() => void handleAdd()}
       disabled={!canAdd || isAdding}
-      className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 font-semibold text-on-primary transition disabled:opacity-60"
+      className={`inline-flex items-center gap-2 rounded-xl border border-input !bg-card !p-0 font-semibold text-foreground transition disabled:opacity-60 ${className ?? ""}`}
     >
       <ShoppingCart className="h-4 w-4" />
       {added ? "تمت الإضافة" : isAdding ? "جارٍ الإضافة" : "إضافة إلى السلة"}

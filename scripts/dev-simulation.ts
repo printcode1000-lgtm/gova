@@ -23,7 +23,10 @@ import {
 const LOOPBACK = "127.0.0.1";
 const LISTEN_HOST = LOOPBACK;
 const proxySecret = randomBytes(32).toString("base64url");
-const NORMAL_PORT = 3001;
+const NORMAL_PORT = Number(process.env.GOVA_DEV_PORT ?? "3001");
+if (!Number.isInteger(NORMAL_PORT) || NORMAL_PORT < 1 || NORMAL_PORT > 65535) {
+  throw new Error(`Invalid GOVA_DEV_PORT: ${process.env.GOVA_DEV_PORT ?? ""}`);
+}
 const RUNTIME_METADATA_FILE = join(
   tmpdir(),
   "gova-live-simulation-runtime.json",

@@ -91,8 +91,8 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run deploy:all` | `npx tsx scripts/deploy-all.ts` |
 | `npm run deploy:push` | `npx tsx scripts/deploy-push.ts --vercel-target=all` |
 | `npm run deploy:push:fast` | `npx tsx scripts/deploy-push.ts --fast --vercel-target=all` |
-| `npm run dev` | `npx tsx scripts/dev-simulation.ts` |
-| `npm run dev:checked` | `npm run server:stop && npm run branding:generate && npm run app:init && npm run catalog:validate && npx tsx scripts/dev-simulation.ts` |
+| `npm run dev` | `cross-env GOVA_DEV_PORT=<redacted> npx tsx scripts/dev-simulation.ts` |
+| `npm run dev:checked` | `npm run server:stop && npm run branding:generate && npm run app:init && npm run catalog:validate && cross-env GOVA_DEV_PORT=<redacted> npx tsx scripts/dev-simulation.ts` |
 | `npm run dev:distributed` | `npx tsx scripts/dev-distributed.ts` |
 | `npm run dev:distributed:smoke` | `npx tsx scripts/dev-distributed.ts --smoke` |
 | `npm run dev:simulation` | `npx tsx scripts/dev-simulation.ts` |

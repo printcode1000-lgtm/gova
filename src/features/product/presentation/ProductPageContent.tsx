@@ -140,8 +140,13 @@ export function ProductPageContent({ id,
           imageUrl: details.images.find((image) => image.url)?.url,
         }}
         trigger={
-          <Button type="button" variant="outline" className="gap-2">
-            <Share2 className="h-4 w-4" />
+          <Button
+            id={id ? `${id}-share-action-button-4f8m2q` : undefined}
+            type="button"
+            variant="outline"
+            className="!h-auto !min-h-0 !w-max !min-w-max max-w-none shrink-0 flex-col justify-center gap-0.5 overflow-visible rounded-xl !border-0 !bg-card !p-[6px] whitespace-nowrap leading-tight text-xs font-medium !text-sky-500 shadow-sm"
+          >
+            <Share2 className="h-8 w-8 text-sky-500" />
             {locale === "ar" ? "مشاركة المنتج" : "Share product"}
           </Button>
         }
@@ -149,11 +154,12 @@ export function ProductPageContent({ id,
     ) : null;
   const profileAction =
     mode === "view" && product?.uid ? (
-      <Button asChild variant="outline" className="gap-2">
+      <Button asChild variant="outline" className="!h-auto !min-h-0 !w-max !min-w-max max-w-none shrink-0 flex-col justify-center gap-0.5 overflow-visible rounded-xl !border-0 !bg-card !p-[6px] whitespace-nowrap leading-tight text-center text-xs font-medium !text-violet-500 shadow-sm">
         <Link
+          id={id ? `${id}-profile-action-link-7c1n5v` : undefined}
           href={`/profile?mode=preview&uid=${encodeURIComponent(product.uid)}`}
         >
-          <UserCircle className="h-4 w-4" />
+          <UserCircle className="h-8 w-8 text-violet-500" />
           {locale === "ar" ? "بروفايل صاحب المنتج" : "Owner profile"}
         </Link>
       </Button>
@@ -161,9 +167,10 @@ export function ProductPageContent({ id,
   const favoriteAction =
     mode === "view" && product ? (
       <FavoriteButton
+        id={id ? `${id}-favorite-action-button-2r6k9h` : undefined}
         item={favoriteFromProductCard(createProductCardViewModel(product))}
-        label={locale === "ar" ? "المفضلة" : "Favorite"}
-        className="h-10 w-auto gap-2 rounded-xl px-4"
+        label={locale === "ar" ? "إضافة إلى المفضلة" : "Add to favorites"}
+        className="!h-auto !min-h-0 !w-max !min-w-max max-w-none shrink-0 flex-col justify-center gap-0.5 overflow-visible rounded-xl !border-0 !bg-card !p-[6px] whitespace-nowrap leading-tight text-center text-xs font-medium !text-rose-500 shadow-sm [&>svg]:h-8 [&>svg]:w-8 [&>svg]:text-rose-500 [&>span]:max-w-none [&>span]:whitespace-nowrap [&>span]:text-rose-500 !text-rose-500"
       />
     ) : null;
 
@@ -219,13 +226,14 @@ export function ProductPageContent({ id,
   };
   const contactAction = mode === "view" && product?.uid ? (
     <Button
+      id={id ? `${id}-contact-action-button-9p3d6w` : undefined}
       type="button"
       variant="outline"
-      className="gap-2"
+      className="!h-auto !min-h-0 !w-max !min-w-max max-w-none shrink-0 flex-col justify-center gap-0.5 overflow-visible rounded-xl !border-0 !bg-card !p-[6px] whitespace-nowrap leading-tight text-center text-xs font-medium !text-emerald-500 shadow-sm"
       disabled={openingConversation}
       onClick={() => void openSellerConversation()}
     >
-      <MessageCircle className="h-4 w-4" />
+      <MessageCircle className="h-8 w-8 text-emerald-500" />
       {openingConversation
         ? locale === "ar"
           ? "جار فتح المحادثة..."
@@ -456,6 +464,7 @@ export function ProductPageContent({ id,
   return (
     <main id={id} className="mx-auto w-full max-w-5xl space-y-5 px-4 py-6">
       <ProductComponentsRenderer
+        id={id ? `${id}-components-renderer-6v2q8m` : undefined}
         mode={mode}
         components={style?.components ?? createDefaultProductStyleComponents()}
         product={details}

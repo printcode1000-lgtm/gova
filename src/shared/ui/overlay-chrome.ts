@@ -2,6 +2,8 @@ export const OVERLAY_CHROME_ATTRIBUTE = "data-asol-overlay-chrome";
 export const INSPECTOR_CONTROL_ATTRIBUTE = "data-asol-ui-inspector-control";
 export const INSPECTOR_ACTIVE_ATTRIBUTE = "data-asol-ui-inspector-active";
 export const SIMULATION_ACTIVE_ATTRIBUTE = "data-asol-simulation-active";
+export const SIMULATION_VISIBLE_CHROME_ATTRIBUTE =
+  "data-asol-simulation-visible-chrome";
 
 type ClosestLike = {
   getAttribute?: (name: string) => string | null;

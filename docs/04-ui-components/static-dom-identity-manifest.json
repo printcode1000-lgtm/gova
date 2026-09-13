@@ -4,6 +4,14 @@
   "entries": [
     {
       "id": "${id}",
+      "source": "packages/favorites-core/src/presentation/FavoriteButton.tsx",
+      "line": 51,
+      "element": "button",
+      "semanticName": "explicit-prop-root",
+      "kind": "explicit-prop"
+    },
+    {
+      "id": "${id}",
       "source": "packages/product-card-core/src/presentation/ProductCard.tsx",
       "line": 99,
       "element": "article",
@@ -103,6 +111,14 @@
       "source": "src/features/auth/presentation/PhoneVerification.tsx",
       "line": 252,
       "element": "div",
+      "semanticName": "explicit-prop-root",
+      "kind": "explicit-prop"
+    },
+    {
+      "id": "${id}",
+      "source": "src/features/cart/presentation/ProductAddToCartButton.tsx",
+      "line": 65,
+      "element": "button",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
     },
@@ -517,7 +533,7 @@
     {
       "id": "${id}",
       "source": "src/features/product/presentation/ProductPageContent.tsx",
-      "line": 424,
+      "line": 432,
       "element": "div",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -525,7 +541,7 @@
     {
       "id": "${id}",
       "source": "src/features/product/presentation/ProductPageContent.tsx",
-      "line": 431,
+      "line": 439,
       "element": "p",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -533,7 +549,7 @@
     {
       "id": "${id}",
       "source": "src/features/product/presentation/ProductPageContent.tsx",
-      "line": 438,
+      "line": 446,
       "element": "div",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -541,7 +557,7 @@
     {
       "id": "${id}",
       "source": "src/features/product/presentation/ProductPageContent.tsx",
-      "line": 451,
+      "line": 459,
       "element": "p",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -549,7 +565,7 @@
     {
       "id": "${id}",
       "source": "src/features/product/presentation/ProductPageContent.tsx",
-      "line": 457,
+      "line": 465,
       "element": "main",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -6155,14 +6171,6 @@
       "kind": "literal"
     },
     {
-      "id": "features-cart-presentation-productaddtocartbutton-button-1-cw7net",
-      "source": "src/features/cart/presentation/ProductAddToCartButton.tsx",
-      "line": 62,
-      "element": "button",
-      "semanticName": "cart-presentation-productaddtocartbutton-button-1",
-      "kind": "literal"
-    },
-    {
       "id": "features-catalog-studio-presentation-catalogstudiopage-aside-141-hpuckx",
       "source": "src/features/catalog-studio/presentation/CatalogStudioPage.tsx",
       "line": 844,
@@ -8157,7 +8165,7 @@
     {
       "id": "features-dev-tools-presentation-simulationruntimecontroller-div-2-sim101",
       "source": "src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
-      "line": 163,
+      "line": 190,
       "element": "div",
       "semanticName": "dev-tools-presentation-simulationruntimecontroller-div-2",
       "kind": "literal"
@@ -8165,7 +8173,7 @@
     {
       "id": "features-dev-tools-presentation-simulationruntimecontroller-div-3-sim102",
       "source": "src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
-      "line": 164,
+      "line": 194,
       "element": "div",
       "semanticName": "dev-tools-presentation-simulationruntimecontroller-div-3",
       "kind": "literal"
@@ -8173,7 +8181,7 @@
     {
       "id": "features-dev-tools-presentation-simulationruntimecontroller-div-4-sim103",
       "source": "src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
-      "line": 183,
+      "line": 218,
       "element": "div",
       "semanticName": "dev-tools-presentation-simulationruntimecontroller-div-4",
       "kind": "literal"
@@ -8181,7 +8189,7 @@
     {
       "id": "features-dev-tools-presentation-simulationruntimecontroller-label-6-sim105",
       "source": "src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
-      "line": 188,
+      "line": 230,
       "element": "label",
       "semanticName": "dev-tools-presentation-simulationruntimecontroller-label-6",
       "kind": "literal"
@@ -8189,7 +8197,7 @@
     {
       "id": "features-dev-tools-presentation-simulationruntimecontroller-text-5-sim104",
       "source": "src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
-      "line": 184,
+      "line": 222,
       "element": "span",
       "semanticName": "dev-tools-presentation-simulationruntimecontroller-text-5",
       "kind": "literal"
@@ -8197,25 +8205,9 @@
     {
       "id": "features-dev-tools-presentation-simulationruntimecontroller-text-7-sim106",
       "source": "src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
-      "line": 190,
+      "line": 235,
       "element": "span",
       "semanticName": "dev-tools-presentation-simulationruntimecontroller-text-7",
-      "kind": "literal"
-    },
-    {
-      "id": "features-favorites-presentation-favoritebutton-button-1-0as0mw",
-      "source": "packages/favorites-core/src/presentation/FavoriteButton.tsx",
-      "line": 51,
-      "element": "button",
-      "semanticName": "favorites-presentation-favoritebutton-button-1",
-      "kind": "literal"
-    },
-    {
-      "id": "features-favorites-presentation-favoritebutton-text-2-soqmaz",
-      "source": "packages/favorites-core/src/presentation/FavoriteButton.tsx",
-      "line": 73,
-      "element": "span",
-      "semanticName": "favorites-presentation-favoritebutton-text-2",
       "kind": "literal"
     },
     {
@@ -10317,7 +10309,7 @@
     {
       "id": "features-product-presentation-productpagecontent-div-10-5wcqum",
       "source": "src/features/product/presentation/ProductPageContent.tsx",
-      "line": 483,
+      "line": 492,
       "element": "div",
       "semanticName": "product-presentation-productpagecontent-div-10",
       "kind": "literal"
@@ -10325,7 +10317,7 @@
     {
       "id": "features-product-presentation-productpagecontent-div-8-zatlbb",
       "source": "src/features/product/presentation/ProductPageContent.tsx",
-      "line": 479,
+      "line": 488,
       "element": "div",
       "semanticName": "product-presentation-productpagecontent-div-8",
       "kind": "literal"
@@ -10333,7 +10325,7 @@
     {
       "id": "features-product-presentation-productpagecontent-heading-9-5dynra",
       "source": "src/features/product/presentation/ProductPageContent.tsx",
-      "line": 480,
+      "line": 489,
       "element": "h3",
       "semanticName": "product-presentation-productpagecontent-heading-9",
       "kind": "literal"
@@ -10341,7 +10333,7 @@
     {
       "id": "features-product-presentation-productpagecontent-text-4-hvmpoo",
       "source": "src/features/product/presentation/ProductPageContent.tsx",
-      "line": 439,
+      "line": 447,
       "element": "p",
       "semanticName": "product-presentation-productpagecontent-text-4",
       "kind": "literal"
@@ -10349,7 +10341,7 @@
     {
       "id": "features-product-presentation-productpagecontent-text-7-9m8xym",
       "source": "src/features/product/presentation/ProductPageContent.tsx",
-      "line": 474,
+      "line": 483,
       "element": "p",
       "semanticName": "product-presentation-productpagecontent-text-7",
       "kind": "literal"
@@ -17229,7 +17221,7 @@
     {
       "id": "features-super-admin-presentation-superadminuiattributeinspector-button-2-kal5qx",
       "source": "src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx",
-      "line": 156,
+      "line": 192,
       "element": "button",
       "semanticName": "super-admin-presentation-superadminuiattributeinspector-button-2",
       "kind": "literal"
@@ -17237,7 +17229,7 @@
     {
       "id": "features-super-admin-presentation-superadminuiattributeinspector-pre-1-9xaqvo",
       "source": "src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx",
-      "line": 152,
+      "line": 184,
       "element": "pre",
       "semanticName": "super-admin-presentation-superadminuiattributeinspector-pre-1",
       "kind": "literal"
@@ -17589,7 +17581,7 @@
     {
       "id": "features-system-logs-application-superadminerrorfloatingbutton-button-13-wkc8pf",
       "source": "src/features/system-logs/application/SuperAdminErrorFloatingButton.tsx",
-      "line": 231,
+      "line": 251,
       "element": "button",
       "semanticName": "system-logs-application-superadminerrorfloatingbutton-button-13",
       "kind": "literal"
@@ -17597,7 +17589,7 @@
     {
       "id": "features-system-logs-application-superadminerrorfloatingbutton-button-17-gdfc5m",
       "source": "src/features/system-logs/application/SuperAdminErrorFloatingButton.tsx",
-      "line": 246,
+      "line": 266,
       "element": "button",
       "semanticName": "system-logs-application-superadminerrorfloatingbutton-button-17",
       "kind": "literal"
@@ -17605,7 +17597,7 @@
     {
       "id": "features-system-logs-application-superadminerrorfloatingbutton-button-2-kbzlqo",
       "source": "src/features/system-logs/application/SuperAdminErrorFloatingButton.tsx",
-      "line": 184,
+      "line": 192,
       "element": "button",
       "semanticName": "system-logs-application-superadminerrorfloatingbutton-button-2",
       "kind": "literal"
@@ -17613,7 +17605,7 @@
     {
       "id": "features-system-logs-application-superadminerrorfloatingbutton-button-6-wc77mn",
       "source": "src/features/system-logs/application/SuperAdminErrorFloatingButton.tsx",
-      "line": 214,
+      "line": 228,
       "element": "button",
       "semanticName": "system-logs-application-superadminerrorfloatingbutton-button-6",
       "kind": "literal"
@@ -17621,7 +17613,7 @@
     {
       "id": "features-system-logs-application-superadminerrorfloatingbutton-div-5-zyud1f",
       "source": "src/features/system-logs/application/SuperAdminErrorFloatingButton.tsx",
-      "line": 204,
+      "line": 215,
       "element": "div",
       "semanticName": "system-logs-application-superadminerrorfloatingbutton-div-5",
       "kind": "literal"
@@ -17629,7 +17621,7 @@
     {
       "id": "features-system-logs-application-superadminerrorfloatingbutton-text-10-qorkd6",
       "source": "src/features/system-logs/application/SuperAdminErrorFloatingButton.tsx",
-      "line": 227,
+      "line": 247,
       "element": "span",
       "semanticName": "system-logs-application-superadminerrorfloatingbutton-text-10",
       "kind": "literal"
@@ -17637,7 +17629,7 @@
     {
       "id": "features-system-logs-application-superadminerrorfloatingbutton-text-12-x3fnfo",
       "source": "src/features/system-logs/application/SuperAdminErrorFloatingButton.tsx",
-      "line": 230,
+      "line": 250,
       "element": "span",
       "semanticName": "system-logs-application-superadminerrorfloatingbutton-text-12",
       "kind": "literal"
@@ -17645,7 +17637,7 @@
     {
       "id": "features-system-logs-application-superadminerrorfloatingbutton-text-16-wk6aq7",
       "source": "src/features/system-logs/application/SuperAdminErrorFloatingButton.tsx",
-      "line": 245,
+      "line": 265,
       "element": "span",
       "semanticName": "system-logs-application-superadminerrorfloatingbutton-text-16",
       "kind": "literal"
@@ -17653,7 +17645,7 @@
     {
       "id": "features-system-logs-application-superadminerrorfloatingbutton-text-3-ashfqo",
       "source": "src/features/system-logs/application/SuperAdminErrorFloatingButton.tsx",
-      "line": 196,
+      "line": 207,
       "element": "span",
       "semanticName": "system-logs-application-superadminerrorfloatingbutton-text-3",
       "kind": "literal"
@@ -17661,7 +17653,7 @@
     {
       "id": "features-system-logs-application-superadminerrorfloatingbutton-text-7-1k5jx6",
       "source": "src/features/system-logs/application/SuperAdminErrorFloatingButton.tsx",
-      "line": 223,
+      "line": 243,
       "element": "span",
       "semanticName": "system-logs-application-superadminerrorfloatingbutton-text-7",
       "kind": "literal"
@@ -17669,7 +17661,7 @@
     {
       "id": "features-system-logs-application-superadminerrorfloatingbutton-text-9-jdcrgg",
       "source": "src/features/system-logs/application/SuperAdminErrorFloatingButton.tsx",
-      "line": 225,
+      "line": 245,
       "element": "span",
       "semanticName": "system-logs-application-superadminerrorfloatingbutton-text-9",
       "kind": "literal"
@@ -17677,7 +17669,7 @@
     {
       "id": "features-system-logs-application-systemlogerrorboundary-button-4-nublwv",
       "source": "src/features/system-logs/application/SystemLogErrorBoundary.tsx",
-      "line": 46,
+      "line": 48,
       "element": "button",
       "semanticName": "system-logs-application-systemlogerrorboundary-button-4",
       "kind": "literal"
@@ -17685,7 +17677,7 @@
     {
       "id": "features-system-logs-application-systemlogerrorboundary-heading-2-ouotdg",
       "source": "src/features/system-logs/application/SystemLogErrorBoundary.tsx",
-      "line": 42,
+      "line": 44,
       "element": "h1",
       "semanticName": "system-logs-application-systemlogerrorboundary-heading-2",
       "kind": "literal"
@@ -17693,7 +17685,7 @@
     {
       "id": "features-system-logs-application-systemlogerrorboundary-main-1-gfdjro",
       "source": "src/features/system-logs/application/SystemLogErrorBoundary.tsx",
-      "line": 41,
+      "line": 43,
       "element": "main",
       "semanticName": "system-logs-application-systemlogerrorboundary-main-1",
       "kind": "literal"
@@ -17701,7 +17693,7 @@
     {
       "id": "features-system-logs-application-systemlogerrorboundary-text-3-bojs3p",
       "source": "src/features/system-logs/application/SystemLogErrorBoundary.tsx",
-      "line": 43,
+      "line": 45,
       "element": "p",
       "semanticName": "system-logs-application-systemlogerrorboundary-text-3",
       "kind": "literal"
@@ -19912,6 +19904,14 @@
       "line": 50,
       "element": "label",
       "semanticName": "label-5",
+      "kind": "scoped-template"
+    },
+    {
+      "id": "id ? `${id}-label-5t2n8c` : undefined",
+      "source": "packages/favorites-core/src/presentation/FavoriteButton.tsx",
+      "line": 73,
+      "element": "span",
+      "semanticName": "label",
       "kind": "scoped-template"
     },
     {
