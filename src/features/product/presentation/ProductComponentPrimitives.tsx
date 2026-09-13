@@ -52,6 +52,7 @@ export function ProductField({ id,
   hideLabel = false,
   nowrapLabel = false,
   nowrapValue = false,
+  cardSurface = false,
 }: {
   label: string;
   value: string;
@@ -64,6 +65,7 @@ export function ProductField({ id,
   hideLabel?: boolean;
   nowrapLabel?: boolean;
   nowrapValue?: boolean;
+  cardSurface?: boolean;
 } & { id?: string }) {
   const { t, locale } = useTranslation();
 
@@ -71,7 +73,7 @@ export function ProductField({ id,
     if (type === "boolean") {
       const boolValue = value === "true";
       return (
-        <div id={id} className={`rounded-xl bg-muted/40 px-3 py-2.5 ${centered ? "text-center" : ""}`}>
+        <div id={id} className={`rounded-xl px-3 py-2.5 ${cardSurface ? "flex min-h-[66px] flex-col items-center justify-center border border-border bg-card text-center shadow-sm" : "bg-muted/40"} ${centered ? "text-center" : ""}`}>
           {!hideLabel ? (
             <p
               id={id ? `${id}-boolean-label-3m7c1p` : undefined}
@@ -90,7 +92,7 @@ export function ProductField({ id,
       );
     }
     return (
-      <div id={id} className={`rounded-xl bg-muted/40 px-3 py-2.5 ${centered ? "text-center" : ""}`}>
+      <div id={id} className={`rounded-xl px-3 py-2.5 ${cardSurface ? "flex min-h-[66px] flex-col items-center justify-center border border-border bg-card text-center shadow-sm" : "bg-muted/40"} ${centered ? "text-center" : ""}`}>
         {!hideLabel ? (
           <p
             id={id ? `${id}-label-4n8x2d` : undefined}

@@ -144,9 +144,9 @@ export function ProductPageContent({ id,
             id={id ? `${id}-share-action-button-4f8m2q` : undefined}
             type="button"
             variant="outline"
-            className="!h-auto !min-h-0 !w-max !min-w-max max-w-none shrink-0 flex-col justify-center gap-0.5 overflow-visible rounded-xl !border-0 !bg-card !p-[6px] whitespace-nowrap leading-tight text-xs font-medium !text-sky-500 shadow-sm"
+            className="!h-auto !min-h-0 !w-max !min-w-max max-w-none shrink-0 flex-col justify-center gap-0.5 overflow-visible rounded-xl !border-0 !bg-sky-500 !p-[6px] whitespace-nowrap leading-tight text-xs font-medium !text-white shadow-lg [&>svg]:!text-white"
           >
-            <Share2 className="h-8 w-8 text-sky-500" />
+            <Share2 className="h-8 w-8 !text-white" />
             {locale === "ar" ? "مشاركة المنتج" : "Share product"}
           </Button>
         }
@@ -154,12 +154,12 @@ export function ProductPageContent({ id,
     ) : null;
   const profileAction =
     mode === "view" && product?.uid ? (
-      <Button asChild variant="outline" className="!h-auto !min-h-0 !w-max !min-w-max max-w-none shrink-0 flex-col justify-center gap-0.5 overflow-visible rounded-xl !border-0 !bg-card !p-[6px] whitespace-nowrap leading-tight text-center text-xs font-medium !text-violet-500 shadow-sm">
+      <Button asChild variant="outline" className="!h-auto !min-h-0 !w-max !min-w-max max-w-none shrink-0 flex-col justify-center gap-0.5 overflow-visible rounded-xl !border-0 !bg-violet-500 !p-[6px] whitespace-nowrap leading-tight text-center text-xs font-medium !text-white shadow-lg [&>svg]:!text-white">
         <Link
           id={id ? `${id}-profile-action-link-7c1n5v` : undefined}
           href={`/profile?mode=preview&uid=${encodeURIComponent(product.uid)}`}
         >
-          <UserCircle className="h-8 w-8 text-violet-500" />
+          <UserCircle className="h-8 w-8 !text-white" />
           {locale === "ar" ? "بروفايل صاحب المنتج" : "Owner profile"}
         </Link>
       </Button>
@@ -170,7 +170,7 @@ export function ProductPageContent({ id,
         id={id ? `${id}-favorite-action-button-2r6k9h` : undefined}
         item={favoriteFromProductCard(createProductCardViewModel(product))}
         label={locale === "ar" ? "إضافة إلى المفضلة" : "Add to favorites"}
-        className="!h-auto !min-h-0 !w-max !min-w-max max-w-none shrink-0 flex-col justify-center gap-0.5 overflow-visible rounded-xl !border-0 !bg-card !p-[6px] whitespace-nowrap leading-tight text-center text-xs font-medium !text-rose-500 shadow-sm [&>svg]:h-8 [&>svg]:w-8 [&>svg]:text-rose-500 [&>span]:max-w-none [&>span]:whitespace-nowrap [&>span]:text-rose-500 !text-rose-500"
+        className="!h-auto !min-h-0 !w-max !min-w-max max-w-none shrink-0 flex-col justify-center gap-0.5 overflow-visible rounded-xl !border-0 !bg-rose-500 !p-[6px] whitespace-nowrap leading-tight text-center text-xs font-medium !text-white shadow-lg [&>svg]:h-8 [&>svg]:w-8 [&>svg]:!text-white [&>span]:max-w-none [&>span]:whitespace-nowrap [&>span]:!text-white"
       />
     ) : null;
 
@@ -229,11 +229,11 @@ export function ProductPageContent({ id,
       id={id ? `${id}-contact-action-button-9p3d6w` : undefined}
       type="button"
       variant="outline"
-      className="!h-auto !min-h-0 !w-max !min-w-max max-w-none shrink-0 flex-col justify-center gap-0.5 overflow-visible rounded-xl !border-0 !bg-card !p-[6px] whitespace-nowrap leading-tight text-center text-xs font-medium !text-emerald-500 shadow-sm"
+      className="!h-auto !min-h-0 !w-max !min-w-max max-w-none shrink-0 flex-col justify-center gap-0.5 overflow-visible rounded-xl !border-0 !bg-emerald-500 !p-[6px] whitespace-nowrap leading-tight text-center text-xs font-medium !text-white shadow-lg [&>svg]:!text-white"
       disabled={openingConversation}
       onClick={() => void openSellerConversation()}
     >
-      <MessageCircle className="h-8 w-8 text-emerald-500" />
+      <MessageCircle className="h-8 w-8 !text-white" />
       {openingConversation
         ? locale === "ar"
           ? "جار فتح المحادثة..."

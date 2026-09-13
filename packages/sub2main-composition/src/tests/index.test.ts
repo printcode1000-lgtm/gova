@@ -2,6 +2,7 @@ import { readFileSync } from 'fs';
 import path from 'path';
 import { SUB2MAIN_DECLARATION } from '@asol/account-declarations/sub2main';
 import { assertSub2mainEnv, createSub2mainRuntime } from '../index';
+import { getReviewerAvatarPort } from '@/features/product/ports/reviewer-avatar.port';
 
 function assert(condition: boolean, message: string): void {
   if (!condition) throw new Error(`Assertion failed: ${message}`);
@@ -27,6 +28,17 @@ function runTests(): void {
   assert(runtime.storage.writeAccess === true, 'storage task allows writes');
   assert(!('crypto' in runtime), 'sub2main exposes no crypto task');
   console.log('  ✔ createSub2mainRuntime factory and task shape verified.');
+
+  assert(
+    typeof getReviewerAvatarPort().getAvatarUrl === 'function',
+    'sub2main composition registers the product-review avatar port',
+  );
+  assert(
+    compositionSource.includes('registerReviewerAvatarPort({') &&
+      compositionSource.includes('profileService.getStoreImages(uid)'),
+    'reviewer avatar registration is wired to the profile service at the composition root',
+  );
+  console.log('  ✔ Product-review avatar port is registered for isolated review writes.');
 
   let threw = false;
   try {

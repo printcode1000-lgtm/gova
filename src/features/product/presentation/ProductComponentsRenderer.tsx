@@ -306,7 +306,7 @@ export function ProductComponentsRenderer({ id,
                   sellerId={ownerUid}
                   product={product}
                   mainCategoryId={mainCategoryId}
-                  className="!h-auto !min-h-0 !w-max !min-w-max max-w-none shrink-0 flex-col justify-center gap-0.5 overflow-visible rounded-xl !border-0 !bg-card !p-[6px] whitespace-nowrap leading-tight text-center text-xs font-medium !text-amber-500 shadow-sm [&>svg]:h-8 [&>svg]:w-8 [&>svg]:text-amber-500"
+                  className="!h-auto !min-h-0 !w-max !min-w-max max-w-none shrink-0 flex-col justify-center gap-0.5 overflow-visible rounded-xl !border-0 !bg-amber-500 !p-[6px] whitespace-nowrap leading-tight text-center text-xs font-medium !text-white shadow-lg [&>svg]:h-8 [&>svg]:w-8 [&>svg]:!text-white"
                 />
               ),
             });
@@ -401,14 +401,14 @@ export function ProductComponentsRenderer({ id,
             id={sectionId}
             key={key}
             title={PRODUCT_COMPONENT_TITLES[key] ?? key}
-            showTitle={key !== "price" && key !== "mainData"}
+            showTitle={key !== "price" && key !== "mainData" && key !== "specifications"}
           >
             <div
               id={id ? `${id}-${key}-fields-grid-6c2v8n` : undefined}
               className={
                 key === "price"
                   ? "mx-auto grid w-full max-w-2xl grid-flow-col auto-cols-fr justify-center gap-3"
-                  : key === "mainData"
+                  : key === "mainData" || key === "specifications"
                     ? "mx-auto grid w-full max-w-2xl grid-flow-col auto-cols-max justify-center gap-3 overflow-x-auto"
                     : "grid gap-3 sm:grid-cols-2"
               }
@@ -422,10 +422,11 @@ export function ProductComponentsRenderer({ id,
                   mode={mode}
                   type={kind}
                   multiline={kind === "textarea"}
-                  centered={key === "price" || key === "mainData"}
-                  blueLabel={key === "price" || key === "mainData"}
+                  centered={key === "price" || key === "mainData" || key === "specifications"}
+                  blueLabel={key === "price" || key === "mainData" || key === "specifications"}
                   nowrapLabel={key === "mainData"}
                   nowrapValue={key === "mainData"}
+                  cardSurface={key === "specifications"}
                   onChange={(value) =>
                     onProductChange(
                       writeValue(product, key, fieldKey, value, kind),

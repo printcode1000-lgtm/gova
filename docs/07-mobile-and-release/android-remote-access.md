@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document is the complete operating reference for the physical OPPO Android device used with Gova. It explains how the device is reached, viewed, controlled, recovered, and kept reachable when its Wi-Fi IP changes.
+This document is the complete operating reference for the physical OPPO Android device used with Gova. It explains how the device is reached, viewed, controlled, recovered, and kept reachable across Wi-Fi and mobile-data network changes.
 
 The installed stack is:
 
@@ -71,11 +71,12 @@ The following local helpers were created:
 | Command | Purpose |
 |---|---|
 | `oppo-tail-ip` | Finds the OPPO peer in `tailscale status --json` and returns its current Tailscale IP. |
-| `oppo-adb-connect` | Connects ADB to the discovered Tailscale IP on TCP `5555` and returns the resulting ADB serial. |
+| `oppo-adb-connect` | Connects ADB to the discovered Tailscale IP on TCP `5555`, restores reverse mappings for ports `3001..3011`, and returns the resulting ADB serial. If TCP `5555` was lost and USB is attached, it restores TCP mode automatically. |
 | `oppo-remote` | Runs `oppo-adb-connect`, then starts scrcpy against that exact serial. |
 | `oppo-screen` | Starts scrcpy through the configured MagicDNS endpoint. |
-| `oppo-adb-keepalive` | Periodically reconnects ADB to the current Tailscale IP. |
-All five helpers live under:
+| `oppo-adb-keepalive` | Re-runs the resilient ADB connection helper every 15 seconds so transient network loss and reverse-map loss recover automatically. |
+| `oppo-dev-url` | Prints the Desktop MagicDNS development URL on port `3001`; this is the ADB-independent fallback for a phone using mobile data. |
+All six helpers live under:
 
 ```text
 /home/hesham/.local/bin/
@@ -213,27 +214,46 @@ The private Tailscale address and MagicDNS name are operational values and are i
 
 Changing router/Wi-Fi IP addresses should therefore not break the normal `oppo-remote` path as long as both Linux and Android remain connected to the same authorized tailnet.
 
+## Development Server Access on Mobile Data
+
+The phone does not need Android Wireless debugging or Wi-Fi merely to open the Gova development server. Two private paths are maintained:
+
+1. **ADB reverse path:** `http://127.0.0.1:3001` on the phone. `oppo-adb-connect` automatically restores reverse mappings for `3001` through `3011`.
+2. **Tailscale direct fallback:** run `oppo-dev-url` on the Desktop and open the returned `http://<desktop-magicdns>:3001` URL on the phone. This route is independent of ADB and works over mobile data as long as Tailscale is connected.
+
+The Desktop keeps a tailnet-only Tailscale Serve mapping from port `3001` to `127.0.0.1:3001`. No public listener or router forwarding is required. The direct fallback is therefore the recovery route when ADB is temporarily unavailable.
+
+A healthy phone-side check through ADB is:
+
+```bash
+SERIAL="$(oppo-adb-connect)"
+adb -s "$SERIAL" shell 'curl -sS -o /dev/null -w "%{http_code}\n" http://127.0.0.1:3001/'
+```
+
+Expected result: `200`.
+
 ## Automatic ADB Reconnection
 
-A user-level systemd unit was created at:
+The enabled user-level recovery unit is:
 
 ```text
-/home/hesham/.config/systemd/user/oppo-adb-connect.service
+/home/hesham/.config/systemd/user/oppo-adb-keepalive.service
 ```
-The unit runs `/home/hesham/.local/bin/oppo-adb-connect`, restarts automatically, and waits five seconds between restarts. Its purpose is to keep re-establishing the ADB transport after transient network changes.
+
+It runs `/home/hesham/.local/bin/oppo-adb-keepalive`, which calls the resilient `oppo-adb-connect` helper every 15 seconds. A successful cycle verifies ADB over the phone's current Tailscale IPv4 address and re-applies all reverse mappings from `3001` through `3011`. If TCP `5555` is unavailable but the phone is attached by authorized USB, the helper automatically runs `adb tcpip 5555` and returns to the Tailscale path.
 
 From a normal logged-in Linux desktop session, inspect it with:
 
 ```bash
-systemctl --user status oppo-adb-connect.service
-journalctl --user -u oppo-adb-connect.service -n 100 --no-pager
+systemctl --user status oppo-adb-keepalive.service
+journalctl --user -u oppo-adb-keepalive.service -n 100 --no-pager
 ```
 
-Enable/restart it when required with:
+The unit is enabled under `default.target`. Enable/restart it when required with:
 
 ```bash
-systemctl --user enable --now oppo-adb-connect.service
-systemctl --user restart oppo-adb-connect.service
+systemctl --user enable --now oppo-adb-keepalive.service
+systemctl --user restart oppo-adb-keepalive.service
 ```
 
 A Remote Desktop Commander shell may not inherit the graphical user's systemd bus. `Failed to connect to bus: No medium found` from that shell does not by itself prove that the user service is disabled.
@@ -247,45 +267,29 @@ Android's **Disable ADB authorization timeout** developer option was enabled so 
 The current durable developer transport is ADB TCP `5555` over Tailscale. This is private tailnet access, not a public TCP endpoint.
 ## Recovery After Phone Reboot or Lost ADB TCP
 
-A full Android reboot can reset the ADB TCP `5555` state even when Tailscale and RustDesk start again correctly.
+A full Android reboot can reset the phone's ADB TCP `5555` listener. This is an Android limitation; Tailscale can still be healthy while ADB TCP has been reset.
 
-Recovery sequence:
+For a phone that is using **mobile data**, the preferred recovery does not require Wi-Fi or Android Wireless debugging:
 
-1. Unlock the phone.
-2. Open **Developer options -> Wireless debugging** and enable it.
-3. Read the **IP address & Port** shown on the main Wireless debugging page. This is the connection endpoint.
-4. From Linux, connect to that endpoint:
-
-```bash
-adb connect <phone-lan-ip>:<wireless-debugging-connect-port>
-```
-
-5. Verify that `adb devices -l` shows the endpoint as `device`.
-6. Switch the authorized ADB daemon back to TCP `5555`:
-
-```bash
-adb -s <phone-lan-ip>:<wireless-debugging-connect-port> tcpip 5555
-```
-
-7. Return to the normal Tailscale path:
+1. Unlock the phone and connect it to the Desktop by USB once.
+2. Keep normal USB debugging enabled and authorize this Desktop if Android asks.
+3. Run:
 
 ```bash
 oppo-adb-connect
-oppo-remote
 ```
 
-Do not confuse the main Wireless debugging connection port with the temporary pairing port.
-If the Linux ADB key is no longer paired, use **Pair device with pairing code** on Android. That dialog shows a separate temporary pairing endpoint and code.
+The helper detects the authorized USB transport, runs `adb tcpip 5555`, discovers the phone through Tailscale, reconnects `ADB <tailscale-ip>:5555`, and restores reverse ports `3001..3011`. The enabled keepalive service then maintains that state after the cable is removed.
 
-Pair first:
+If the cable is unavailable after a reboot, development-server access still works through the ADB-independent Tailscale route:
 
 ```bash
-adb pair <phone-lan-ip>:<pairing-port>
+oppo-dev-url
 ```
 
-Enter the current pairing code when prompted. Then use the **main Wireless debugging** page's connection port with `adb connect`. The pairing port and connection port are different and can both change.
+Open the returned URL on the phone. This keeps development usable over mobile data even before ADB TCP has been restored.
 
-Never brute-force a pairing code or bypass Android authorization.
+Wireless debugging remains an optional alternative only when Android allows it on the current Wi-Fi network. Do not depend on it for the mobile-data workflow. If the Linux ADB key itself is no longer authorized, Android's normal authorization/pairing prompt must be completed; never bypass or brute-force that security boundary.
 
 ## Control Through Remote Desktop Commander
 
@@ -308,12 +312,13 @@ Remote Desktop Commander is not installed on the phone and does not directly spe
 |---|---|
 | This operating guide | `docs/07-mobile-and-release/android-remote-access.md` |
 | Project-local RustDesk password key | `/home/hesham/gova/.env.local` -> `GOVA_ANDROID_RUSTDESK_PASSWORD` |
-| ADB reconnect systemd unit | `/home/hesham/.config/systemd/user/oppo-adb-connect.service` |
+| ADB reconnect systemd unit | `/home/hesham/.config/systemd/user/oppo-adb-keepalive.service` |
 | Dynamic Tailscale discovery | `/home/hesham/.local/bin/oppo-tail-ip` |
 | ADB connection helper | `/home/hesham/.local/bin/oppo-adb-connect` |
 | Primary screen-control helper | `/home/hesham/.local/bin/oppo-remote` |
 | Alternate screen helper | `/home/hesham/.local/bin/oppo-screen` |
 | ADB keepalive loop | `/home/hesham/.local/bin/oppo-adb-keepalive` |
+| Mobile-data development URL helper | `/home/hesham/.local/bin/oppo-dev-url` |
 | ADB executable | `/usr/lib/android-sdk/platform-tools/adb` |
 | scrcpy executable | `/home/hesham/.local/bin/scrcpy` |
 | Tailscale Android package | `com.tailscale.ipn` |
@@ -337,7 +342,7 @@ Remote Desktop Commander is not installed on the phone and does not directly spe
 
 - **Wi-Fi IP changed:** use `oppo-remote`; dynamic Tailscale discovery should hide the change.
 - **ADB shows `offline`:** disconnect the stale serial, reconnect with `oppo-adb-connect`, and verify `device` state.
-- **ADB `5555` disappeared after reboot:** restore Wireless debugging access, run `adb tcpip 5555`, then return to `oppo-adb-connect`.
+- **ADB `5555` disappeared after reboot:** connect authorized USB once and run `oppo-adb-connect`; it restores TCP `5555` and reverse ports automatically. Until then, use `oppo-dev-url` for development-server access over Tailscale/mobile data.
 - **Tailscale not reachable:** verify the Android VPN is connected and the Linux workstation is on the authorized tailnet.
 - **RustDesk shows video but cannot control:** verify RustDesk Input in Android Accessibility.
 - **RustDesk service stopped:** open RustDesk and start screen sharing; Android may require renewed screen-capture consent.
@@ -349,7 +354,11 @@ Remote Desktop Commander is not installed on the phone and does not directly spe
 
 At the most recent verification:
 
-- ADB showed the OPPO phone in `device` state over the Tailscale path.
+- ADB showed the OPPO phone in `device` state on TCP `5555` over the Tailscale path.
+- Mobile-data-only verification succeeded with Android Wi-Fi disabled, mobile data enabled, and Tailscale carrying the ADB path.
+- A forced ADB network disconnect recovered automatically through the enabled keepalive loop, including all reverse mappings for `3001..3011`.
+- A phone-side request to `http://127.0.0.1:3001` returned HTTP `200` after recovery.
+- The tailnet-only Desktop port `3001` fallback returned HTTP `200` independently of ADB.
 - Tailscale and RustDesk packages were installed.
 - RustDesk main service was present in Android service state.
 - RustDesk display-over-other-apps permission was allowed.

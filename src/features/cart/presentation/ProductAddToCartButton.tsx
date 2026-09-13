@@ -67,7 +67,7 @@ export function ProductAddToCartButton({
       aria-label="إضافة إلى السلة"
       onClick={() => void handleAdd()}
       disabled={!canAdd || isAdding}
-      className={`inline-flex items-center gap-2 rounded-xl border border-input !bg-card !p-0 font-semibold text-foreground transition disabled:opacity-60 ${className ?? ""}`}
+      className={`inline-flex items-center gap-2 rounded-xl border border-input bg-card !p-0 font-semibold text-foreground transition disabled:opacity-60 ${className ?? ""}`}
     >
       <ShoppingCart className="h-4 w-4" />
       {added ? "تمت الإضافة" : isAdding ? "جارٍ الإضافة" : "إضافة إلى السلة"}

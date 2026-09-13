@@ -4,6 +4,7 @@ import { categoryService } from '@/features/categories';
 import { pharmacyProfileCatalogService } from '@/features/pharmacy-profile-catalog/server/services/pharmacy-profile-catalog.service.server';
 import { productService } from '@/features/product/server/services/product-service.server';
 import { productReviewService } from '@/features/product/server/services/product-review-service.server';
+import { registerReviewerAvatarPort } from '@/features/product/ports/reviewer-avatar.port';
 import { profileReviewService } from '@/features/profile/server/services/profile-review-service.server';
 import { profileService } from '@/features/profile/server/services/profile-service.bootstrap.server';
 import { imageStorageService } from '@/features/storage/server/services/image-storage-service.bootstrap.server';
@@ -92,6 +93,15 @@ export function assertSub2mainEnv(env: NodeJS.ProcessEnv = process.env): void {
 registerDataCoreRuntimeConfigPorts();
 // This account reads profile rows, so it also needs the specialty-column catalog.
 registerDataCoreSpecialtyCatalogPort();
+// Product-review creation enriches the reviewer with their profile avatar. The
+// isolated sub2main deployment does not run application instrumentation, so it
+// must register this application seam explicitly at its composition root.
+registerReviewerAvatarPort({
+  getAvatarUrl: async (uid) => {
+    const images = await profileService.getStoreImages(uid);
+    return images.avatarUrl;
+  },
+});
 
 export function createSub2mainRuntime(_config?: Sub2mainRuntimeConfig): Sub2mainRuntime {
   return {
