@@ -23,7 +23,10 @@ import {
   type FeaturedMarqueeConfig,
 } from "@/features/advertisements/ui";
 import { FollowButton } from "@/features/follow/ui";
-import { HeroSlider, type HeroSliderConfig } from "@/features/advertisements/ui";
+import {
+  HeroSlider,
+  type HeroSliderConfig,
+} from "@/features/advertisements/ui";
 import {
   TrendingRibbon,
   type TrendingRibbonConfig,
@@ -41,10 +44,7 @@ import type { StoreDetailsData } from "@/features/profile/domain/store-details.e
 import type { StoreImagesData } from "@/features/profile/domain/store-images.entity";
 import { usePageSnapshot, useSnapshotState } from "@/features/page-snapshot";
 import { specialtyChatClient } from "@/features/specialty-chat";
-import {
-  buildProfileShareUrl,
-  ShareMenu,
-} from "@/features/sharing";
+import { buildProfileShareUrl, ShareMenu } from "@/features/sharing";
 import { useTranslation } from "@/shared/i18n";
 import { ProfileProductsPreview } from "./ProfileProductsPreview";
 import { ProfileFulfillmentPreviewCard } from "./ProfilePreviewInformation";
@@ -74,7 +74,6 @@ interface ProfilePreviewContentProps {
     featured: boolean;
   };
 }
-
 
 const PROFILE_ACTION_TILE_CLASS = `${ACTION_TILE_CLASS} w-full border-input sm:w-auto`;
 export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
@@ -118,15 +117,18 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
       storeDetails.storeName || t("profilePreview.providerFallback");
     try {
       const requestId = `req_${crypto.randomUUID().replace(/-/g, "")}`;
-      const result = await specialtyChatClient.startProfileConversation(session, {
-        requestId,
-        sellerUid: previewUid,
-        storeName,
-        message:
-          locale === "ar"
-            ? `أرغب في التواصل مع ${storeName}`
-            : `I would like to contact ${storeName}`,
-      });
+      const result = await specialtyChatClient.startProfileConversation(
+        session,
+        {
+          requestId,
+          sellerUid: previewUid,
+          storeName,
+          message:
+            locale === "ar"
+              ? `أرغب في التواصل مع ${storeName}`
+              : `I would like to contact ${storeName}`,
+        },
+      );
       router.push(
         `/notifications/chat?conversationId=${encodeURIComponent(result.conversationKey)}`,
       );
@@ -156,28 +158,51 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
   }, [previewUid, ready, restoreSnapshot]);
 
   return (
-    <div id='features-profile-presentation-profilepreviewcontent-div-1-y7l5yo'
+    <div
+      id="features-profile-presentation-profilepreviewcontent-div-1-y7l5yo"
       data-snapshot-id="profile-preview-root"
       className="mx-auto w-full max-w-6xl min-w-0 space-y-5 overflow-x-clip px-0 sm:space-y-6 sm:px-4"
     >
-      {props.providerAccountEnabled ? <>
-      <div id='features-profile-presentation-profilepreviewcontent-div-2-pblfex' className="min-w-0">
+      <div
+        id="features-profile-presentation-profilepreviewcontent-div-2-pblfex"
+        className="min-w-0"
+      >
         {loading.images ? (
-          <div id='features-profile-presentation-profilepreviewcontent-div-3-qlnbzd' className="py-8 text-center text-sm text-on-surface-variant">
+          <div
+            id="features-profile-presentation-profilepreviewcontent-div-3-qlnbzd"
+            className="py-8 text-center text-sm text-on-surface-variant"
+          >
             {t("profilePreview.loading")}
           </div>
-        ) : (
-          <div id='features-profile-presentation-profilepreviewcontent-div-4-nc10mc' className="mb-0 -mt-4">
-            <HeroSlider id='features-profile-presentation-profilepreviewcontent-heroslider-5-ftci78' mode="view" config={props.heroConfig} />
+        ) : props.providerAccountEnabled ? (
+          <div
+            id="features-profile-presentation-profilepreviewcontent-div-4-nc10mc"
+            className="mb-0 -mt-4"
+          >
+            <HeroSlider
+              id="features-profile-presentation-profilepreviewcontent-heroslider-5-ftci78"
+              mode="view"
+              config={props.heroConfig}
+            />
           </div>
-        )}
+        ) : null}
 
         {!loading.details ? (
-          <section id='features-profile-presentation-profilepreviewcontent-section-6-bhu6tg' className="mx-2 mt-3 min-w-0 border-b border-outline-variant/60 pb-4 sm:mx-0 sm:pb-5 sm:mt-4">
-            <div id='features-profile-presentation-profilepreviewcontent-div-7-ebuhdr' className="flex min-w-0 items-start gap-3 sm:gap-4">
+          <section
+            id="features-profile-presentation-profilepreviewcontent-section-6-bhu6tg"
+            className="mx-2 mt-3 min-w-0 border-b border-outline-variant/60 pb-4 sm:mx-0 sm:pb-5 sm:mt-4"
+          >
+            <div
+              id="features-profile-presentation-profilepreviewcontent-div-7-ebuhdr"
+              className="flex min-w-0 items-start gap-3 sm:gap-4"
+            >
               {storeImages.avatarUrl ? (
-                <div id='features-profile-presentation-profilepreviewcontent-div-8-rkyqvc' className="relative z-10 -mt-8 h-20 w-20 flex-shrink-0 overflow-hidden rounded-full shadow-lg sm:-mt-10 sm:h-28 sm:w-28">
-                  <Image id='features-profile-presentation-profilepreviewcontent-image-9-bbkil1'
+                <div
+                  id="features-profile-presentation-profilepreviewcontent-div-8-rkyqvc"
+                  className="relative z-10 -mt-8 h-20 w-20 flex-shrink-0 overflow-hidden rounded-full shadow-lg sm:-mt-10 sm:h-28 sm:w-28"
+                >
+                  <Image
+                    id="features-profile-presentation-profilepreviewcontent-image-9-bbkil1"
                     src={storeImages.avatarUrl}
                     alt="Avatar"
                     width={112}
@@ -187,9 +212,15 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                 </div>
               ) : null}
 
-              <div id='features-profile-presentation-profilepreviewcontent-div-10-ezedca' className="min-w-0 flex-1">
+              <div
+                id="features-profile-presentation-profilepreviewcontent-div-10-ezedca"
+                className="min-w-0 flex-1"
+              >
                 {previewUid ? (
-                  <div id='features-profile-presentation-profilepreviewcontent-div-11-ufnwc9' className="grid min-w-0 grid-cols-2 items-center gap-2 min-[360px]:grid-cols-3 sm:flex sm:flex-wrap">
+                  <div
+                    id="features-profile-presentation-profilepreviewcontent-div-11-ufnwc9"
+                    className="grid min-w-0 grid-cols-2 items-center gap-2 min-[360px]:grid-cols-3 sm:flex sm:flex-wrap"
+                  >
                     <FollowButton
                       className="w-full sm:w-auto"
                       targetType="store"
@@ -203,7 +234,8 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                         t("profilePreview.providerFallback")
                       }
                     />
-                    <ShareMenu id='features-profile-presentation-profilepreviewcontent-sharemenu-12-ia5o4h'
+                    <ShareMenu
+                      id="features-profile-presentation-profilepreviewcontent-sharemenu-12-ia5o4h"
                       locale={locale}
                       content={{
                         kind: "profile",
@@ -217,25 +249,31 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                         imageUrl: storeImages.avatarUrl || storeImages.coverUrl,
                       }}
                       trigger={
-                        <Button id='features-profile-presentation-profilepreviewcontent-button-13-gxsbrx'
+                        <Button
+                          id="features-profile-presentation-profilepreviewcontent-button-13-gxsbrx"
                           type="button"
                           variant="outline"
                           className={PROFILE_ACTION_TILE_CLASS}
                           style={ACTION_TILE_STYLE}
                           aria-label={t("profilePreview.shareAria")}
                         >
-                          <FontAwesomeIcon id='features-profile-presentation-profilepreviewcontent-fontawesomeicon-14-qgddng'
+                          <FontAwesomeIcon
+                            id="features-profile-presentation-profilepreviewcontent-fontawesomeicon-14-qgddng"
                             icon={faShareNodes}
                             className="h-5 w-5"
                           />
-                          <span id='features-profile-presentation-profilepreviewcontent-text-15-ni1wzh' className={ACTION_TILE_LABEL_CLASS}>
+                          <span
+                            id="features-profile-presentation-profilepreviewcontent-text-15-ni1wzh"
+                            className={ACTION_TILE_LABEL_CLASS}
+                          >
                             {t("profilePreview.share")}
                           </span>
                         </Button>
                       }
                     />
                     {!props.isOwner ? (
-                      <Button id='features-profile-presentation-profilepreviewcontent-button-16-xvq7n6'
+                      <Button
+                        id="features-profile-presentation-profilepreviewcontent-button-16-xvq7n6"
                         type="button"
                         variant="outline"
                         className={PROFILE_ACTION_TILE_CLASS}
@@ -248,8 +286,15 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                         disabled={openingConversation}
                         onClick={() => void openProfileConversation()}
                       >
-                        <FontAwesomeIcon id='features-profile-presentation-profilepreviewcontent-fontawesomeicon-17-a2y5jx' icon={faComments} className="h-5 w-5" />
-                        <span id='features-profile-presentation-profilepreviewcontent-text-18-z7gcoh' className={ACTION_TILE_LABEL_CLASS}>
+                        <FontAwesomeIcon
+                          id="features-profile-presentation-profilepreviewcontent-fontawesomeicon-17-a2y5jx"
+                          icon={faComments}
+                          className="h-5 w-5"
+                        />
+                        <span
+                          id="features-profile-presentation-profilepreviewcontent-text-18-z7gcoh"
+                          className={ACTION_TILE_LABEL_CLASS}
+                        >
                           {openingConversation
                             ? locale === "ar"
                               ? "جارٍ الفتح"
@@ -263,7 +308,8 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                     {storeDetails.profileShowcase?.customRequestEnabled &&
                     session?.uid &&
                     (!props.isOwner || props.isSuperAdmin) ? (
-                      <Button id='features-profile-presentation-profilepreviewcontent-button-19-upj9jr'
+                      <Button
+                        id="features-profile-presentation-profilepreviewcontent-button-19-upj9jr"
                         type="button"
                         variant="outline"
                         className={PROFILE_ACTION_TILE_CLASS}
@@ -275,11 +321,15 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                           )
                         }
                       >
-                        <FontAwesomeIcon id='features-profile-presentation-profilepreviewcontent-fontawesomeicon-20-eakagh'
+                        <FontAwesomeIcon
+                          id="features-profile-presentation-profilepreviewcontent-fontawesomeicon-20-eakagh"
                           icon={faPaperPlane}
                           className="h-5 w-5"
                         />
-                        <span id='features-profile-presentation-profilepreviewcontent-text-21-t1anpc' className={ACTION_TILE_LABEL_CLASS}>
+                        <span
+                          id="features-profile-presentation-profilepreviewcontent-text-21-t1anpc"
+                          className={ACTION_TILE_LABEL_CLASS}
+                        >
                           {t("profilePreview.customRequest")}
                         </span>
                       </Button>
@@ -287,21 +337,34 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                   </div>
                 ) : null}
                 {conversationError ? (
-                  <p id='features-profile-presentation-profilepreviewcontent-text-22-uyjhsl' className="mt-2 text-xs font-medium text-error" role="alert">
+                  <p
+                    id="features-profile-presentation-profilepreviewcontent-text-22-uyjhsl"
+                    className="mt-2 text-xs font-medium text-error"
+                    role="alert"
+                  >
                     {conversationError}
                   </p>
                 ) : null}
               </div>
             </div>
 
-            <div id='features-profile-presentation-profilepreviewcontent-div-23-ul5e8f' className="mt-3 min-w-0">
+            <div
+              id="features-profile-presentation-profilepreviewcontent-div-23-ul5e8f"
+              className="mt-3 min-w-0"
+            >
               {storeDetails.storeName ? (
-                <h1 id='features-profile-presentation-profilepreviewcontent-heading-24-tkbmhl' className="break-words text-lg font-bold leading-7 text-on-surface sm:text-2xl">
+                <h1
+                  id="features-profile-presentation-profilepreviewcontent-heading-24-tkbmhl"
+                  className="break-words text-lg font-bold leading-7 text-on-surface sm:text-2xl"
+                >
                   {storeDetails.storeName}
                 </h1>
               ) : null}
               {storeDetails.storeDescription ? (
-                <p id='features-profile-presentation-profilepreviewcontent-text-25-x4epg4' className="mt-1 line-clamp-2 break-words text-xs leading-5 text-on-surface-variant sm:text-sm sm:leading-6">
+                <p
+                  id="features-profile-presentation-profilepreviewcontent-text-25-x4epg4"
+                  className="mt-1 line-clamp-2 break-words text-xs leading-5 text-on-surface-variant sm:text-sm sm:leading-6"
+                >
                   {storeDetails.storeDescription}
                 </p>
               ) : null}
@@ -311,13 +374,27 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
       </div>
 
       {!loading.contacts && contacts ? (
-        <section id='features-profile-presentation-profilepreviewcontent-section-26-xy5imy' className="mx-2 min-w-0 rounded-3xl border border-outline-variant/70 bg-surface p-4 shadow-sm sm:mx-0 sm:p-5">
-          <div id='features-profile-presentation-profilepreviewcontent-div-27-7jodgq' className="min-w-0">
-            <h2 id='features-profile-presentation-profilepreviewcontent-heading-28-flolln' className="mb-3 flex min-w-0 items-center gap-2 break-words text-sm font-bold">
-              <FontAwesomeIcon id='features-profile-presentation-profilepreviewcontent-fontawesomeicon-29-x1gf7d' icon={faShareNodes} className="text-primary" />
+        <section
+          id="features-profile-presentation-profilepreviewcontent-section-26-xy5imy"
+          className="mx-2 min-w-0 rounded-3xl border border-outline-variant/70 bg-surface p-4 shadow-sm sm:mx-0 sm:p-5"
+        >
+          <div
+            id="features-profile-presentation-profilepreviewcontent-div-27-7jodgq"
+            className="min-w-0"
+          >
+            <h2
+              id="features-profile-presentation-profilepreviewcontent-heading-28-flolln"
+              className="mb-3 flex min-w-0 items-center gap-2 break-words text-sm font-bold"
+            >
+              <FontAwesomeIcon
+                id="features-profile-presentation-profilepreviewcontent-fontawesomeicon-29-x1gf7d"
+                icon={faShareNodes}
+                className="text-primary"
+              />
               {locale === "ar" ? "تواصل عبر" : t("profilePreview.quickContact")}
             </h2>
-            <ContactActionBar id='features-profile-presentation-profilepreviewcontent-contactactionbar-30-0tzr1u'
+            <ContactActionBar
+              id="features-profile-presentation-profilepreviewcontent-contactactionbar-30-0tzr1u"
               data={contacts}
               compact
               className="border-0 bg-transparent p-0 shadow-none"
@@ -326,25 +403,43 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
         </section>
       ) : null}
 
-      {previewUid ? (
+      {props.providerAccountEnabled && previewUid ? (
         <SellerDiscountsPreview sellerUid={previewUid} locale={locale} />
       ) : null}
 
-      {!loading.featured && props.hasFeaturedProducts ? (
-        <section id='features-profile-presentation-profilepreviewcontent-section-31-haoenz' className="mx-2 min-w-0 overflow-hidden sm:mx-0">
-          <FeaturedMarquee id='features-profile-presentation-profilepreviewcontent-featuredmarquee-32-3g5ndp' config={props.featuredConfig} />
+      {props.providerAccountEnabled &&
+      !loading.featured &&
+      props.hasFeaturedProducts ? (
+        <section
+          id="features-profile-presentation-profilepreviewcontent-section-31-haoenz"
+          className="mx-2 min-w-0 overflow-hidden sm:mx-0"
+        >
+          <FeaturedMarquee
+            id="features-profile-presentation-profilepreviewcontent-featuredmarquee-32-3g5ndp"
+            config={props.featuredConfig}
+          />
         </section>
       ) : null}
 
-      {props.trendingConfig.items.length > 0 ? (
-        <section id='features-profile-presentation-profilepreviewcontent-section-33-uyif6z' className="mx-2 min-w-0 overflow-hidden rounded-2xl border border-error/20 shadow-sm sm:mx-0">
-          <TrendingRibbon id='features-profile-presentation-profilepreviewcontent-trendingribbon-34-qipdn7' config={props.trendingConfig} />
+      {props.providerAccountEnabled && props.trendingConfig.items.length > 0 ? (
+        <section
+          id="features-profile-presentation-profilepreviewcontent-section-33-uyif6z"
+          className="mx-2 min-w-0 overflow-hidden rounded-2xl border border-error/20 shadow-sm sm:mx-0"
+        >
+          <TrendingRibbon
+            id="features-profile-presentation-profilepreviewcontent-trendingribbon-34-qipdn7"
+            config={props.trendingConfig}
+          />
         </section>
       ) : null}
 
-      {previewUid ? (
-        <section id='features-profile-presentation-profilepreviewcontent-section-35-fgx3l5' className="mx-2 min-w-0 rounded-3xl border border-outline-variant/70 bg-surface p-3 shadow-sm sm:mx-0 sm:p-6">
-          <ProfilePreviewSectionHeading id='features-profile-presentation-profilepreviewcontent-profilepreviewsectionheading-36-waaq0o'
+      {props.providerAccountEnabled && previewUid ? (
+        <section
+          id="features-profile-presentation-profilepreviewcontent-section-35-fgx3l5"
+          className="mx-2 min-w-0 rounded-3xl border border-outline-variant/70 bg-surface p-3 shadow-sm sm:mx-0 sm:p-6"
+        >
+          <ProfilePreviewSectionHeading
+            id="features-profile-presentation-profilepreviewcontent-profilepreviewsectionheading-36-waaq0o"
             icon={faBoxOpen}
             title={t("profilePreview.products")}
             hint={t("profilePreview.productsHint")}
@@ -353,20 +448,31 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
         </section>
       ) : null}
 
-      {!loading.details && !loading.fulfillment ? (
-        <section id='features-profile-presentation-profilepreviewcontent-section-37-u2hb3h' className="mx-2 grid min-w-0 items-stretch gap-5 sm:mx-0 lg:grid-cols-2">
-          <div id='features-profile-presentation-profilepreviewcontent-div-38-wu1dyg' className="min-w-0 overflow-hidden rounded-3xl border border-outline-variant/70 bg-surface p-4 shadow-sm sm:p-6 lg:h-full">
-            <ProfilePreviewSectionHeading id='features-profile-presentation-profilepreviewcontent-profilepreviewsectionheading-39-6zjuvv'
+      {props.providerAccountEnabled &&
+      !loading.details &&
+      !loading.fulfillment ? (
+        <section
+          id="features-profile-presentation-profilepreviewcontent-section-37-u2hb3h"
+          className="mx-2 grid min-w-0 items-stretch gap-5 sm:mx-0 lg:grid-cols-2"
+        >
+          <div
+            id="features-profile-presentation-profilepreviewcontent-div-38-wu1dyg"
+            className="min-w-0 overflow-hidden rounded-3xl border border-outline-variant/70 bg-surface p-4 shadow-sm sm:p-6 lg:h-full"
+          >
+            <ProfilePreviewSectionHeading
+              id="features-profile-presentation-profilepreviewcontent-profilepreviewsectionheading-39-6zjuvv"
               icon={faClock}
               title={t("profilePreview.workingHours")}
               hint={t("profilePreview.workingHoursHint")}
             />
-            <WorkingHoursCard id='features-profile-presentation-profilepreviewcontent-workinghourscard-40-bkboas'
+            <WorkingHoursCard
+              id="features-profile-presentation-profilepreviewcontent-workinghourscard-40-bkboas"
               mode="preview"
               locale={locale}
               value={storeDetails.workingHours}
             />
-            <WorkingHoursNoteCard id='features-profile-presentation-profilepreviewcontent-workinghoursnotecard-41-i6haqf'
+            <WorkingHoursNoteCard
+              id="features-profile-presentation-profilepreviewcontent-workinghoursnotecard-41-i6haqf"
               mode="preview"
               locale={locale}
               note={storeDetails.workingHours.note}
@@ -379,7 +485,9 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
         </section>
       ) : null}
 
-      {!loading.details && storeDetails.storeStory ? (
+      {props.providerAccountEnabled &&
+      !loading.details &&
+      storeDetails.storeStory ? (
         <ProfileStorySection
           story={storeDetails.storeStory}
           expanded={storyExpanded}
@@ -389,14 +497,21 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
         />
       ) : null}
 
-      {!loading.details && storeDetails.ratingSettings?.enabled ? (
-        <section id='features-profile-presentation-profilepreviewcontent-section-42-psuya6' className="mx-2 min-w-0 rounded-3xl border border-outline-variant/70 bg-surface p-4 pb-10 shadow-sm sm:mx-0 sm:p-7 sm:pb-10">
-          <ProfilePreviewSectionHeading id='features-profile-presentation-profilepreviewcontent-profilepreviewsectionheading-43-9mt0je'
+      {props.providerAccountEnabled &&
+      !loading.details &&
+      storeDetails.ratingSettings?.enabled ? (
+        <section
+          id="features-profile-presentation-profilepreviewcontent-section-42-psuya6"
+          className="mx-2 min-w-0 rounded-3xl border border-outline-variant/70 bg-surface p-4 pb-10 shadow-sm sm:mx-0 sm:p-7 sm:pb-10"
+        >
+          <ProfilePreviewSectionHeading
+            id="features-profile-presentation-profilepreviewcontent-profilepreviewsectionheading-43-9mt0je"
             icon={faComments}
             title={t("profilePreview.reviews")}
             hint={t("profilePreview.reviewsHint")}
           />
-          <ProductReviews id='features-profile-presentation-profilepreviewcontent-productreviews-44-1s0c26'
+          <ProductReviews
+            id="features-profile-presentation-profilepreviewcontent-productreviews-44-1s0c26"
             type="profile"
             targetUid={previewUid}
             ownerUid={previewUid}
@@ -409,7 +524,6 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
           />
         </section>
       ) : null}
-      </> : null}
     </div>
   );
 }
