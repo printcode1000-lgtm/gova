@@ -168,11 +168,11 @@ export function ProductImageGallery({ id, images }: { images: StoredImage[] } & 
       <div
         id={id ? `${id}-stage-3r7m1k` : undefined}
         className="relative aspect-square overflow-hidden rounded-2xl bg-muted sm:aspect-[4/3]"
-        style={{ touchAction: "none" }}
+        style={{ touchAction: "pan-y" }}
         onPointerDown={pointerDown}
         onPointerMove={pointerMove}
         onPointerUp={pointerEnd}
-        onPointerCancel={pointerEnd}
+        onPointerCancel={clearGesture}
         onPointerLeave={clearGesture}
       >
         <div
@@ -201,7 +201,7 @@ export function ProductImageGallery({ id, images }: { images: StoredImage[] } & 
         <div
           id={id ? `${id}-thumbnails-1d5k8r` : undefined}
           className="mt-3 flex justify-center gap-2 overflow-x-auto pb-1"
-          style={{ touchAction: "pan-x" }}
+          style={{ touchAction: "pan-x pan-y" }}
         >
           {validImages.map((image, index) => {
             const imageToken = image.imageKey.replace(/[^a-zA-Z0-9_-]+/g, "-");

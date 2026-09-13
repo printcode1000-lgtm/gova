@@ -136,7 +136,12 @@ const {
   });
 
 React.useEffect(() => {
-  if (!showEditCard || providerAccountEnabled || activeTab === "registration") return;
+  if (
+    !showEditCard ||
+    providerAccountEnabled ||
+    activeTab === "registration" ||
+    activeTab === "contact"
+  ) return;
   selectSection("registration");
 }, [activeTab, providerAccountEnabled, selectSection, showEditCard]);
 

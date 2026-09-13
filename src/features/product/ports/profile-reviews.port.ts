@@ -27,6 +27,7 @@ export interface ProfileReviewsPort {
   helpful(reviewId: string, uid: string): Promise<unknown>;
   reply(reviewId: string, uid: string, text: string): Promise<unknown>;
   deleteReply(reviewId: string, uid: string): Promise<unknown>;
+  getReviewerAlias(uid: string): Promise<string>;
 }
 
 let profileReviewsPort: ProfileReviewsPort | null = null;

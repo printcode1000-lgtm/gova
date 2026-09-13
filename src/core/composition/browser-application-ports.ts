@@ -41,6 +41,7 @@ export function registerBrowserApplicationPorts(): void {
     helpful: (reviewId, uid) => profileApiService.helpfulReview(reviewId, uid),
     reply: (reviewId, uid, text) => profileApiService.replyReview(reviewId, uid, text),
     deleteReply: (reviewId, uid) => profileApiService.deleteReplyReview(reviewId, uid),
+    getReviewerAlias: async (uid) => (await profileService.getStoreDetails(uid)).storeName.trim(),
   });
   registerProfileSpecialtiesPort({
     getSpecialties: (uid) => profileService.getSpecialties(uid),

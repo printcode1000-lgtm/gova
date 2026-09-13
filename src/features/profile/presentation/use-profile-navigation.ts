@@ -101,7 +101,6 @@ export function useProfileNavigation({
       }
 
       centerElementInScrollParent(panelRefs.current[section]);
-      centerElementInScrollParent(navButtonRefs.current[section]);
 
       // The scroll above is intentionally immediate. Keep the guard only long
       // enough for the resulting scroll event to drain; unlike the old
@@ -305,7 +304,6 @@ export function useProfileNavigation({
       if (closest !== currentActiveTab) {
         activeTabRef.current = closest;
         setActiveTab(closest);
-        centerElementInScrollParent(navButtonRefs.current[closest]);
       }
     });
   }, [setActiveTab, syncCarouselHeight]);

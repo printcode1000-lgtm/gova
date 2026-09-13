@@ -525,7 +525,7 @@
     {
       "id": "${id}",
       "source": "src/features/product/presentation/ProductComponentsRenderer.tsx",
-      "line": 94,
+      "line": 223,
       "element": "p",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -645,7 +645,7 @@
     {
       "id": "${id}",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceChrome.tsx",
-      "line": 39,
+      "line": 82,
       "element": "div",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -653,7 +653,7 @@
     {
       "id": "${id}",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceChrome.tsx",
-      "line": 134,
+      "line": 242,
       "element": "div",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -23541,15 +23541,23 @@
     {
       "id": "profile-presentation-profile-page-profileeditworkspacechrome-div-2-9oleon",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceChrome.tsx",
-      "line": 40,
+      "line": 86,
       "element": "div",
       "semanticName": "presentation-profile-page-profileeditworkspacechrome-div-2",
       "kind": "literal"
     },
     {
+      "id": "profile-presentation-profile-page-profileeditworkspacechrome-floor-glow-7m3k2p",
+      "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceChrome.tsx",
+      "line": 123,
+      "element": "div",
+      "semanticName": "presentation-profile-page-profileeditworkspacechrome-floor-glow",
+      "kind": "literal"
+    },
+    {
       "id": "profile-presentation-profile-page-profileeditworkspacechrome-text-4-cwzzju",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceChrome.tsx",
-      "line": 135,
+      "line": 243,
       "element": "p",
       "semanticName": "presentation-profile-page-profileeditworkspacechrome-text-4",
       "kind": "literal"

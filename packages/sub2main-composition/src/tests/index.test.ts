@@ -30,15 +30,17 @@ function runTests(): void {
   console.log('  ✔ createSub2mainRuntime factory and task shape verified.');
 
   assert(
-    typeof getReviewerAvatarPort().getAvatarUrl === 'function',
-    'sub2main composition registers the product-review avatar port',
+    typeof getReviewerAvatarPort().getAvatarUrl === 'function' &&
+      typeof getReviewerAvatarPort().getDisplayName === 'function',
+    'sub2main composition registers the product-review identity port',
   );
   assert(
     compositionSource.includes('registerReviewerAvatarPort({') &&
-      compositionSource.includes('profileService.getStoreImages(uid)'),
-    'reviewer avatar registration is wired to the profile service at the composition root',
+      compositionSource.includes('profileService.getStoreImages(uid)') &&
+      compositionSource.includes('profileService.getStoreDetails(uid)'),
+    'reviewer identity registration is wired to profile images and alias data at the composition root',
   );
-  console.log('  ✔ Product-review avatar port is registered for isolated review writes.');
+  console.log('  ✔ Product-review identity port is registered for isolated review writes.');
 
   let threw = false;
   try {

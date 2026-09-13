@@ -269,7 +269,12 @@ export function ProductComponentsRenderer({ id,
                 : config.type === "stars-comments";
 
           return (
-            <ProductComponentFrame id={sectionId} key={key} title={PRODUCT_COMPONENT_TITLES[key]}>
+            <ProductComponentFrame
+              id={sectionId}
+              key={key}
+              title={PRODUCT_COMPONENT_TITLES[key]}
+              showTitle={false}
+            >
               {mode === "view" ? (
                 <ProductReviews
                   id={id ? `${id}-reviews-3h7p2m` : undefined}

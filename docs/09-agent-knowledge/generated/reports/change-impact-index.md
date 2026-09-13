@@ -35,7 +35,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `page-snapshot` | feature | 1 | 0 | 5 | 0 | 2 | 5 |
 | `password-recovery` | feature | 2 | 1 | 4 | 0 | 2 | 9 |
 | `pharmacy-profile-catalog` | feature | 3 | 0 | 3 | 0 | 4 | 13 |
-| `product` | feature | 1 | 2 | 28 | 0 | 13 | 23 |
+| `product` | feature | 1 | 3 | 28 | 0 | 13 | 23 |
 | `product-search` | feature | 2 | 0 | 4 | 0 | 5 | 14 |
 | `profile` | feature | 1 | 5 | 36 | 0 | 12 | 33 |
 | `profile-products` | feature | 1 | 0 | 4 | 0 | 1 | 11 |

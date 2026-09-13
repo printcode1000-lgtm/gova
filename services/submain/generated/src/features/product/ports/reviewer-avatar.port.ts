@@ -1,5 +1,6 @@
 export interface ReviewerAvatarPort {
   getAvatarUrl(uid: string): Promise<string | null>;
+  getDisplayName(uid: string): Promise<string | null>;
 }
 
 let reviewerAvatarPort: ReviewerAvatarPort | null = null;

@@ -48511,17 +48511,6 @@
       ]
     },
     {
-      "id": "source:src/features/product/presentation/product-reviews/ProductReviewsSummary.tsx",
-      "kind": "source",
-      "name": "ProductReviewsSummary.tsx",
-      "path": "src/features/product/presentation/product-reviews/ProductReviewsSummary.tsx",
-      "tags": [
-        "src/features/product/presentation/product-reviews/productreviewssummary",
-        "src/features/product/presentation/product-reviews/productreviewssummary.tsx",
-        "tsx"
-      ]
-    },
-    {
       "id": "source:src/features/product/presentation/ProductComponentPrimitives.tsx",
       "kind": "source",
       "name": "ProductComponentPrimitives.tsx",
@@ -95432,12 +95421,6 @@
     },
     {
       "from": "domain:platform-features",
-      "to": "source:src/features/product/presentation/product-reviews/ProductReviewsSummary.tsx",
-      "kind": "documents",
-      "detail": "src/features/"
-    },
-    {
-      "from": "domain:platform-features",
       "to": "source:src/features/product/presentation/ProductComponentPrimitives.tsx",
       "kind": "documents",
       "detail": "src/features/"
@@ -98523,12 +98506,6 @@
     {
       "from": "domain:products-and-commerce",
       "to": "source:src/features/product/presentation/product-reviews/ProductReviews.review-formatting.tsx",
-      "kind": "documents",
-      "detail": "src/features/product/"
-    },
-    {
-      "from": "domain:products-and-commerce",
-      "to": "source:src/features/product/presentation/product-reviews/ProductReviewsSummary.tsx",
       "kind": "documents",
       "detail": "src/features/product/"
     },
@@ -104835,12 +104812,6 @@
     {
       "from": "domain:ui-components",
       "to": "source:src/features/product/presentation/product-reviews/ProductReviews.review-formatting.tsx",
-      "kind": "documents",
-      "detail": "src/features/"
-    },
-    {
-      "from": "domain:ui-components",
-      "to": "source:src/features/product/presentation/product-reviews/ProductReviewsSummary.tsx",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -172429,6 +172400,12 @@
     },
     {
       "from": "source:packages/sub2main-composition/src/index.ts",
+      "to": "source:src/features/product/server.ts",
+      "kind": "imports",
+      "detail": "@/features/product/server"
+    },
+    {
+      "from": "source:packages/sub2main-composition/src/index.ts",
       "to": "source:src/features/product/server/services/product-review-service.server.ts",
       "kind": "imports",
       "detail": "@/features/product/server/services/product-review-service.server"
@@ -212294,42 +212271,6 @@
       "detail": "@/features/product"
     },
     {
-      "from": "source:src/features/product/presentation/product-reviews/ProductReviewsSummary.tsx",
-      "to": "runtime:android",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/product/presentation/product-reviews/ProductReviewsSummary.tsx",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/product/presentation/product-reviews/ProductReviewsSummary.tsx",
-      "to": "runtime:ios",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/product/presentation/product-reviews/ProductReviewsSummary.tsx",
-      "to": "runtime:static-out",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/product/presentation/product-reviews/ProductReviewsSummary.tsx",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/product/presentation/product-reviews/ProductReviewsSummary.tsx",
-      "to": "feature:product",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "source:src/features/product/presentation/product-reviews/ProductReviewsSummary.tsx",
-      "to": "source:src/features/product/presentation/product-reviews/ProductReviews.review-formatting.tsx",
-      "kind": "imports",
-      "detail": "./ProductReviews.review-formatting"
-    },
-    {
       "from": "source:src/features/product/presentation/ProductComponentPrimitives.tsx",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -212982,12 +212923,6 @@
       "to": "source:src/features/product/presentation/product-reviews/ProductReviews.review-formatting.tsx",
       "kind": "imports",
       "detail": "./product-reviews/ProductReviews.review-formatting"
-    },
-    {
-      "from": "source:src/features/product/presentation/ProductReviews.tsx",
-      "to": "source:src/features/product/presentation/product-reviews/ProductReviewsSummary.tsx",
-      "kind": "imports",
-      "detail": "./product-reviews/ProductReviewsSummary"
     },
     {
       "from": "source:src/features/product/presentation/ProductReviews.tsx",
@@ -217893,6 +217828,12 @@
       "to": "external-dependency:@fortawesome/react-fontawesome",
       "kind": "imports",
       "detail": "@fortawesome/react-fontawesome"
+    },
+    {
+      "from": "source:src/features/profile/presentation/profile-page/ProfileEditWorkspaceChrome.tsx",
+      "to": "external-dependency:react",
+      "kind": "imports",
+      "detail": "react"
     },
     {
       "from": "source:src/features/profile/presentation/profile-page/ProfileEditWorkspaceChrome.tsx",
@@ -239912,6 +239853,17 @@
       "to": "source:packages/sub2main-composition/src/index.ts",
       "kind": "imports",
       "detail": "../index"
+    },
+    {
+      "from": "test:packages/sub2main-composition/src/tests/index.test.ts",
+      "to": "source:src/features/product/ports/reviewer-avatar.port.ts",
+      "kind": "imports",
+      "detail": "@/features/product/ports/reviewer-avatar.port"
+    },
+    {
+      "from": "test:packages/sub2main-composition/src/tests/index.test.ts",
+      "to": "feature:product",
+      "kind": "tests"
     },
     {
       "from": "test:packages/sub2main-composition/src/tests/index.test.ts",

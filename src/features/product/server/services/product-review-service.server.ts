@@ -88,8 +88,20 @@ export class ProductReviewService {
       throw new Error("reviewAlreadyExists");
     const user = await getUserByUidQuery.execute(input.uid);
     if (!user) throw new Error("userNotFound");
-    const name = user.email?.trim() || user.phone || user.uid;
-    const avatarUrl = await getReviewerAvatarPort()
+    const fallbackName = user.email?.trim() || user.phone || user.uid;
+    const reviewerPort = getReviewerAvatarPort();
+    const name = await reviewerPort
+      .getDisplayName(input.uid)
+      .then((displayName) => displayName?.trim() || fallbackName)
+      .catch((error) => {
+        void logServerSystemIssue({
+          error,
+          feature: "ProductReviews",
+          operation: "load-reviewer-display-name",
+        });
+        return fallbackName;
+      });
+    const avatarUrl = await reviewerPort
       .getAvatarUrl(input.uid)
       .catch((error) => {
         void logServerSystemIssue({

@@ -18,7 +18,6 @@ import {
   ProductReviewDialog,
   ProductReviewReplyDialog,
 } from "./product-reviews/ProductReviewDialogs";
-import { ProductReviewsSummary } from "./product-reviews/ProductReviewsSummary";
 
 export function ProductReviews({ id,
   productId,
@@ -47,6 +46,7 @@ export function ProductReviews({ id,
   const [editing, setEditing] = React.useState<ProductReview | null>(null);
   const [rating, setRating] = React.useState(0);
   const [comment, setComment] = React.useState("");
+  const [reviewIdentityMessage, setReviewIdentityMessage] = React.useState<string | null>(null);
   const [reviewsPath] = React.useState(() =>
     typeof window === "undefined"
       ? "/"
@@ -57,7 +57,33 @@ export function ProductReviews({ id,
   );
   const [replyText, setReplyText] = React.useState("");
   const sectionRef = React.useRef<HTMLElement>(null);
+  const [reviewerAlias, setReviewerAlias] = React.useState("");
+  const [reviewerAliasLoading, setReviewerAliasLoading] = React.useState(false);
   const isSeller = session?.uid === ownerUid;
+
+  React.useEffect(() => {
+    let cancelled = false;
+    if (!session?.uid) {
+      setReviewerAlias("");
+      setReviewerAliasLoading(false);
+      return;
+    }
+    setReviewerAliasLoading(true);
+    void getProfileReviewsPort()
+      .getReviewerAlias(session.uid)
+      .then((alias) => {
+        if (!cancelled) setReviewerAlias(alias.trim());
+      })
+      .catch(() => {
+        if (!cancelled) setReviewerAlias("");
+      })
+      .finally(() => {
+        if (!cancelled) setReviewerAliasLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [session?.uid]);
   const load = React.useCallback(
     async (offset = 0, append = false) => {
       const targetId = type === "product" ? productId : targetUid;
@@ -106,6 +132,15 @@ export function ProductReviews({ id,
     void load();
   }, [load]);
   const openReview = (review: ProductReview | null) => {
+    if (reviewerAliasLoading) {
+      setReviewIdentityMessage("جاري التحقق من الاسم المستعار...");
+      return;
+    }
+    if (!reviewerAlias) {
+      setReviewIdentityMessage("يجب إضافة اسم مستعار إلى ملفك الشخصي قبل إضافة تقييم أو تعليق.");
+      return;
+    }
+    setReviewIdentityMessage(null);
     setEditing(review);
     setRating(review?.rating ?? 0);
     setComment(review?.comment ?? "");
@@ -121,7 +156,10 @@ export function ProductReviews({ id,
   });
 
   const stageReviewSave = (nextRating: number, nextComment: string) => {
-    if (!session || nextRating < 1) {
+    if (!session || nextRating < 1 || !reviewerAlias) {
+      if (session && !reviewerAliasLoading && !reviewerAlias) {
+        setReviewIdentityMessage("يجب إضافة اسم مستعار إلى ملفك الشخصي قبل إضافة تقييم أو تعليق.");
+      }
       reviewOperations.unstage("review-save");
       return;
     }
@@ -242,16 +280,15 @@ export function ProductReviews({ id,
     total = result?.total ?? 0;
   return (
     <div id={id} className="min-w-0 space-y-5">
-      <ProductReviewsSummary
-        id={id ? `${id}-summary-a1b2c3` : "product-reviews-summary-a1b2c3"}
-        average={average}
-        total={total}
-        canRate={canRate}
-        onScrollToReviews={() =>
-          sectionRef.current?.scrollIntoView({ behavior: "smooth" })
-        }
-        onRate={() => openReview(result?.currentUserReview ?? null)}
-      />
+      {reviewIdentityMessage ? (
+        <p
+          id={id ? `${id}-review-identity-message-4n7p2k` : undefined}
+          role="status"
+          className="rounded-xl border border-primary/30 bg-primary/5 px-3 py-2 text-center text-sm font-medium text-primary"
+        >
+          {reviewIdentityMessage}
+        </p>
+      ) : null}
       <section
         id={id ? `${id}-list-section-8k2r5v` : undefined}
         ref={sectionRef}
@@ -268,17 +305,30 @@ export function ProductReviews({ id,
             <MessageSquare className="h-5 w-5" />
             تقييمات العملاء
           </h3>
-          {result?.hasMore ? (
-            <button
-              id={id ? `${id}-show-all-button-4h8n2s` : undefined}
-              type="button"
-              onClick={() => load(result.reviews.length, true)}
-              className="flex max-w-full items-center gap-1 break-words text-sm font-semibold text-primary"
-            >
-              عرض الكل
-              <ChevronLeft className="h-4 w-4" />
-            </button>
-          ) : null}
+          <div className="flex items-center gap-2">
+            {result?.hasMore ? (
+              <button
+                id={id ? `${id}-show-all-button-4h8n2s` : undefined}
+                type="button"
+                onClick={() => load(result.reviews.length, true)}
+                className="flex max-w-full items-center gap-1 break-words text-sm font-semibold text-primary"
+              >
+                عرض الكل
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+            ) : null}
+            {canRate ? (
+              <button
+                id={id ? `${id}-summary-a1b2c3-rate-button-9p4f1x` : undefined}
+                type="button"
+                aria-label="إرسال تقييم"
+                onClick={() => openReview(result?.currentUserReview ?? null)}
+                className="rounded-xl bg-primary px-4 py-2 font-semibold text-on-primary"
+              >
+                تقييم
+              </button>
+            ) : null}
+          </div>
         </div>
         <div
           id={id ? `${id}-aggregate-card-7q1m5c` : undefined}

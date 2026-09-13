@@ -51,6 +51,23 @@ assert.match(navigation, /writeStoredProfileEditTab/);
 assert.match(tabStorage, /ASOL_DB_STORES\.APP_SETTINGS/);
 assert.doesNotMatch(tabStorage, /localStorage|sessionStorage/);
 
+const workspaceChrome = source(
+  'src/features/profile/presentation/profile-page/ProfileEditWorkspaceChrome.tsx',
+);
+assert.match(workspaceChrome, /perspective: "820px"/);
+assert.match(
+  workspaceChrome,
+  /if \(!centered\) \{\s*setCenterIndex\(index\);\s*return;\s*\}\s*model\.selectSection\(section\)/,
+);
+assert.match(workspaceChrome, /const visibleSections: ProfileEditTab\[\] = model\.providerAccountEnabled\s*\? PROFILE_SECTIONS\s*:\s*\["registration", "contact"\]/);
+assert.match(workspaceChrome, /const activeIndex = visibleSections\.indexOf\(model\.activeTab\)/);
+
+const workspaceChromeAutoOpen = source(
+  'src/features/profile/presentation/profile-page/ProfileEditWorkspaceChrome.tsx',
+);
+assert.match(workspaceChromeAutoOpen, /window\.setTimeout\(\(\) => \{\s*model\.selectSection\(centeredSection\);\s*\}, 500\)/);
+assert.match(workspaceChromeAutoOpen, /return \(\) => window\.clearTimeout\(settleTimer\)/);
+
 const workspaceView = source(
   'src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx',
 );
@@ -125,22 +142,28 @@ assert.match(providerWorkspaceView, /profile\.storeIdentity\.activityTitle/);
 assert.match(providerWorkspaceChrome, /profile\.storeIdentity\.activityTitle/);
 assert.match(
   providerWorkspaceView,
-  /providerAccountEnabled \? \(\s*<ProfileEditTabsBar id='profile-presentation-profile-page-profileeditworkspaceview-profileedittabsbar-2-1zx3up'/,
+  /<ProfileEditTabsBar id='profile-presentation-profile-page-profileeditworkspaceview-profileedittabsbar-2-1zx3up' model=\{model\} \/>/,
 );
 assert.match(
   providerWorkspaceView,
   /className=\{providerAccountEnabled \? [^}]+ : "hidden"\}/,
-  "provider-only edit panels must be hidden while the current user is a personal account",
+  "provider-only edit panels must stay hidden while the current user is a personal account",
 );
 assert.match(
   providerWorkspaceView,
-  /aria-hidden=\{providerAccountEnabled && activeTab !== "registration"\}/,
+  /aria-hidden=\{activeTab !== "registration"\}/,
+);
+assert.match(
+  providerWorkspaceView,
+  /id=\{PROFILE_SECTION_IDS\.contact\}[\s\S]*?className="w-full max-w-full shrink-0 snap-center snap-always/,
+  "contact panel must stay available for personal accounts",
 );
 assert.match(
   providerWorkspaceView,
   /onProviderAccountEnabledChange=\{setProviderAccountEnabled\}/,
 );
 assert.match(model, /session\?\.providerAccountEnabled === true/);
+assert.match(model, /activeTab === "contact"/);
 assert.match(model, /selectSection\("registration"\)/);
 
 const storeDetailsHook = source('src/features/profile/presentation/hooks/use-store-details.ts');

@@ -4,7 +4,7 @@ import { categoryService } from '@/features/categories';
 import { pharmacyProfileCatalogService } from '@/features/pharmacy-profile-catalog/server/services/pharmacy-profile-catalog.service.server';
 import { productService } from '@/features/product/server/services/product-service.server';
 import { productReviewService } from '@/features/product/server/services/product-review-service.server';
-import { registerReviewerAvatarPort } from '@/features/product/ports/reviewer-avatar.port';
+import { registerReviewerAvatarPort } from '@/features/product/server';
 import { profileReviewService } from '@/features/profile/server/services/profile-review-service.server';
 import { profileService } from '@/features/profile/server/services/profile-service.bootstrap.server';
 import { imageStorageService } from '@/features/storage/server/services/image-storage-service.bootstrap.server';
@@ -100,6 +100,10 @@ registerReviewerAvatarPort({
   getAvatarUrl: async (uid) => {
     const images = await profileService.getStoreImages(uid);
     return images.avatarUrl;
+  },
+  getDisplayName: async (uid) => {
+    const details = await profileService.getStoreDetails(uid);
+    return details.storeName.trim() || null;
   },
 });
 

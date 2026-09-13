@@ -48511,17 +48511,6 @@
       ]
     },
     {
-      "id": "source:src/features/product/presentation/product-reviews/ProductReviewsSummary.tsx",
-      "kind": "source",
-      "name": "ProductReviewsSummary.tsx",
-      "path": "src/features/product/presentation/product-reviews/ProductReviewsSummary.tsx",
-      "tags": [
-        "src/features/product/presentation/product-reviews/productreviewssummary",
-        "src/features/product/presentation/product-reviews/productreviewssummary.tsx",
-        "tsx"
-      ]
-    },
-    {
       "id": "source:src/features/product/presentation/ProductComponentPrimitives.tsx",
       "kind": "source",
       "name": "ProductComponentPrimitives.tsx",

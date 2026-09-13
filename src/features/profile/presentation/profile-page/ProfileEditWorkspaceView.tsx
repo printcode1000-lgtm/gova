@@ -38,9 +38,7 @@ return (
           id='profile-presentation-profile-page-profileeditworkspaceview-div-1-kpbevk'
           className="mx-auto flex w-full max-w-4xl flex-col gap-3 pt-1 sm:gap-4 sm:pt-2"
         >
-          {providerAccountEnabled ? (
-            <ProfileEditTabsBar id='profile-presentation-profile-page-profileeditworkspaceview-profileedittabsbar-2-1zx3up' model={model} />
-          ) : null}
+          <ProfileEditTabsBar id='profile-presentation-profile-page-profileeditworkspaceview-profileedittabsbar-2-1zx3up' model={model} />
 
           {providerAccountEnabled ? (
             <ProfileEditSaveFeedback id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsavefeedback-3-nyaopz' model={model} />
@@ -54,8 +52,8 @@ return (
                   ref={carouselRef}
                   onScroll={handleCarouselScroll}
                   style={{
-                    ...(providerAccountEnabled && carouselHeight ? { height: carouselHeight } : null),
-                    transitionDuration: providerAccountEnabled && animateCarouselHeight ? "300ms" : "0ms",
+                    ...(carouselHeight ? { height: carouselHeight } : null),
+                    transitionDuration: animateCarouselHeight ? "300ms" : "0ms",
                   }}
                   className="flex snap-x snap-mandatory scroll-smooth items-start overflow-x-auto overflow-y-hidden overscroll-x-contain transition-[height] ease-out [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
                 >
@@ -65,8 +63,8 @@ return (
                     }}
                     id={PROFILE_SECTION_IDS.registration}
                     role="region"
-                    aria-hidden={providerAccountEnabled && activeTab !== "registration"}
-                    inert={providerAccountEnabled && activeTab !== "registration"}
+                    aria-hidden={activeTab !== "registration"}
+                    inert={activeTab !== "registration"}
                     className="w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
                     <ProfileEditSectionFrame id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-9-ynox7w'
@@ -172,7 +170,7 @@ return (
                     role="region"
                     aria-hidden={activeTab !== "contact"}
                     inert={activeTab !== "contact"}
-                    className={providerAccountEnabled ? "w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6" : "hidden"}
+                    className="w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
                     <ProfileEditSectionFrame id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-17-ucrnnq'
                       icon={faComments}
