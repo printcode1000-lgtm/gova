@@ -4,6 +4,7 @@ import * as React from "react";
 import Image from "@/shared/ui/local-first-image";
 import { ChevronLeft, MessageSquare } from "lucide-react";
 import { useSessionRuntime } from "@/shared/session-runtime";
+import { useTranslation } from "@/shared/i18n";
 import type {
   ProductReview,
   ProductReviewsResult,
@@ -39,6 +40,8 @@ export function ProductReviews({ id,
   type?: "product" | "profile";
 } & { id?: string }) {
   const { session, isLoggedIn } = useSessionRuntime();
+  const { locale } = useTranslation();
+  const ar = locale === "ar";
   const [result, setResult] = React.useState<ProductReviewsResult | null>(null);
   const [sort, setSort] = React.useState<ReviewSort>("newest");
   const [loading, setLoading] = React.useState(true);
@@ -133,11 +136,11 @@ export function ProductReviews({ id,
   }, [load]);
   const openReview = (review: ProductReview | null) => {
     if (reviewerAliasLoading) {
-      setReviewIdentityMessage("جاري التحقق من الاسم المستعار...");
+      setReviewIdentityMessage(ar ? "جاري التحقق من الاسم المستعار..." : "Checking your alias...");
       return;
     }
     if (!reviewerAlias) {
-      setReviewIdentityMessage("يجب إضافة اسم مستعار إلى ملفك الشخصي قبل إضافة تقييم أو تعليق.");
+      setReviewIdentityMessage(ar ? "يجب إضافة اسم مستعار إلى ملفك الشخصي قبل إضافة تقييم أو تعليق." : "Add an alias to your profile before submitting a rating or comment.");
       return;
     }
     setReviewIdentityMessage(null);
@@ -150,7 +153,7 @@ export function ProductReviews({ id,
 
   const reviewOperations = usePageSaveOperationScope({
     id: `product-reviews:${type}:${productId ?? targetUid ?? "unknown"}`,
-    label: type === "product" ? "تقييمات المنتج" : "تقييمات المتجر",
+    label: type === "product" ? (ar ? "تقييمات المنتج" : "Product reviews") : (ar ? "تقييمات المتجر" : "Profile reviews"),
     returnPath: reviewsPath,
     enabled: isLoggedIn,
   });
@@ -158,7 +161,7 @@ export function ProductReviews({ id,
   const stageReviewSave = (nextRating: number, nextComment: string) => {
     if (!session || nextRating < 1 || !reviewerAlias) {
       if (session && !reviewerAliasLoading && !reviewerAlias) {
-        setReviewIdentityMessage("يجب إضافة اسم مستعار إلى ملفك الشخصي قبل إضافة تقييم أو تعليق.");
+        setReviewIdentityMessage(ar ? "يجب إضافة اسم مستعار إلى ملفك الشخصي قبل إضافة تقييم أو تعليق." : "Add an alias to your profile before submitting a rating or comment.");
       }
       reviewOperations.unstage("review-save");
       return;
@@ -167,7 +170,7 @@ export function ProductReviews({ id,
     reviewOperations.stage({
       itemId: "review-save",
       kind: "save",
-      label: editedId ? "تعديل التقييم" : "إضافة تقييم",
+      label: editedId ? (ar ? "تعديل التقييم" : "Edit review") : (ar ? "إضافة تقييم" : "Add review"),
       execute: async () => {
         if (type === "product") {
           if (editedId)
@@ -221,7 +224,7 @@ export function ProductReviews({ id,
     reviewOperations.stage({
       itemId: `review-delete:${reviewId}`,
       kind: "delete",
-      label: "حذف التقييم",
+      label: ar ? "حذف التقييم" : "Delete review",
       execute: async () => {
         if (type === "product")
           await productReviewApiService.delete(reviewId, session.uid);
@@ -241,7 +244,7 @@ export function ProductReviews({ id,
     reviewOperations.stage({
       itemId: "reply-save",
       kind: "save",
-      label: "رد البائع",
+      label: ar ? "رد البائع" : "Seller reply",
       execute: async () => {
         if (type === "product")
           await productReviewApiService.reply(reviewId, session.uid, nextText);
@@ -259,7 +262,7 @@ export function ProductReviews({ id,
     reviewOperations.stage({
       itemId: `reply-delete:${reviewId}`,
       kind: "delete",
-      label: "حذف رد البائع",
+      label: ar ? "حذف رد البائع" : "Delete seller reply",
       execute: async () => {
         if (type === "product")
           await productReviewApiService.deleteReply(reviewId, session.uid);
@@ -303,7 +306,7 @@ export function ProductReviews({ id,
             className="flex min-w-0 items-center gap-2 break-words text-xl font-bold"
           >
             <MessageSquare className="h-5 w-5" />
-            تقييمات العملاء
+            {ar ? "تقييمات العملاء" : "Customer reviews"}
           </h3>
           <div className="flex items-center gap-2">
             {result?.hasMore ? (
@@ -313,7 +316,7 @@ export function ProductReviews({ id,
                 onClick={() => load(result.reviews.length, true)}
                 className="flex max-w-full items-center gap-1 break-words text-sm font-semibold text-primary"
               >
-                عرض الكل
+                {ar ? "عرض الكل" : "Show all"}
                 <ChevronLeft className="h-4 w-4" />
               </button>
             ) : null}
@@ -321,11 +324,11 @@ export function ProductReviews({ id,
               <button
                 id={id ? `${id}-summary-a1b2c3-rate-button-9p4f1x` : undefined}
                 type="button"
-                aria-label="إرسال تقييم"
+                aria-label={ar ? "إرسال تقييم" : "Submit a review"}
                 onClick={() => openReview(result?.currentUserReview ?? null)}
                 className="rounded-xl bg-primary px-4 py-2 font-semibold text-on-primary"
               >
-                تقييم
+                {ar ? "تقييم" : "Review"}
               </button>
             ) : null}
           </div>
@@ -341,7 +344,7 @@ export function ProductReviews({ id,
             <strong id={id ? `${id}-aggregate-average-9n4r1h` : undefined} className="text-5xl">{average.toFixed(1)}</strong>
             <Stars id={id ? `${id}-aggregate-stars-5p2d8m` : undefined} value={average} size="text-2xl" />
             <p id={id ? `${id}-aggregate-count-2k6w9f` : undefined} className="mt-2 break-words text-sm text-muted-foreground">
-              بناءً على {total} تقييم
+              {ar ? `بناءً على ${total} تقييم` : `Based on ${total} reviews`}
             </p>
           </div>
           <div id={id ? `${id}-distribution-4m1x7q` : undefined} className="min-w-0 space-y-2">
@@ -351,7 +354,7 @@ export function ProductReviews({ id,
                 key={item.rating}
                 className="grid min-w-0 grid-cols-[52px_1fr_32px] items-center gap-2 text-sm"
               >
-                <span id={id ? `${id}-distribution-${item.rating}-label` : undefined}>{item.rating} نجوم</span>
+                <span id={id ? `${id}-distribution-${item.rating}-label` : undefined}>{item.rating} {ar ? "نجوم" : "stars"}</span>
                 <div id={id ? `${id}-distribution-${item.rating}-track` : undefined} className="h-2 overflow-hidden rounded-full bg-muted">
                   <div
                     id={id ? `${id}-distribution-${item.rating}-fill` : undefined}
@@ -371,16 +374,16 @@ export function ProductReviews({ id,
             onChange={(event) => setSort(event.target.value as ReviewSort)}
             className="asol-control asol-field-surface border border-input px-3"
           >
-            <option value="newest">الأحدث أولًا</option>
-            <option value="highest">الأعلى تقييمًا</option>
-            <option value="lowest">الأدنى تقييمًا</option>
+            <option value="newest">{ar ? "الأحدث أولًا" : "Newest first"}</option>
+            <option value="highest">{ar ? "الأعلى تقييمًا" : "Highest rated"}</option>
+            <option value="lowest">{ar ? "الأدنى تقييمًا" : "Lowest rated"}</option>
           </select>
         </div>
         {loading && !result ? (
-          <p id={id ? `${id}-loading-4c7m2r` : undefined} className="py-8 text-center">جارٍ التحميل…</p>
+          <p id={id ? `${id}-loading-4c7m2r` : undefined} className="py-8 text-center">{ar ? "جارٍ التحميل…" : "Loading…"}</p>
         ) : result?.reviews.length === 0 ? (
           <p id={id ? `${id}-empty-7n2k5w` : undefined} className="rounded-2xl border bg-card p-8 text-center text-muted-foreground">
-            لا توجد مراجعات بعد.
+            {ar ? "لا توجد مراجعات بعد." : "No reviews yet."}
           </p>
         ) : (
           <div id={id ? `${id}-reviews-list-9r4c1m` : undefined} className="min-w-0 space-y-3">
@@ -411,14 +414,14 @@ export function ProductReviews({ id,
                       <strong className="min-w-0 break-words">{review.reviewerName}</strong>
                       {review.verifiedPurchase ? (
                         <span className="max-w-full break-words rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-700">
-                          Verified Purchase
+                          {ar ? "عملية شراء موثقة" : "Verified Purchase"}
                         </span>
                       ) : null}
                     </div>
                     <div className="flex min-w-0 flex-wrap items-center gap-2">
                       <Stars value={review.rating} />
                       <span className="text-xs text-muted-foreground">
-                        {relativeDate(review.createdAt)}
+                        {relativeDate(review.createdAt, locale)}
                       </span>
                     </div>
                     <p className="mt-1 break-words text-sm text-muted-foreground">
@@ -454,7 +457,7 @@ export function ProductReviews({ id,
                             : "text-muted-foreground"
                         }
                       >
-                        مفيد ({review.helpfulCount})
+                        {ar ? "مفيد" : "Helpful"} ({review.helpfulCount})
                       </button>
                       {session?.uid === review.uid ? (
                         <>
@@ -463,14 +466,14 @@ export function ProductReviews({ id,
                             onClick={() => openReview(review)}
                             className="text-primary"
                           >
-                            تعديل
+                            {ar ? "تعديل" : "Edit"}
                           </button>
                           <button
                             type="button"
                             onClick={() => stageReviewDelete(review.id)}
                             className="text-destructive"
                           >
-                            حذف
+                            {ar ? "حذف" : "Delete"}
                           </button>
                         </>
                       ) : null}
@@ -483,13 +486,13 @@ export function ProductReviews({ id,
                           }}
                           className="text-primary"
                         >
-                          {review.reply ? "تعديل الرد" : "إضافة رد"}
+                          {review.reply ? (ar ? "تعديل الرد" : "Edit reply") : (ar ? "إضافة رد" : "Add reply")}
                         </button>
                       ) : null}
                     </div>
                     {review.reply ? (
                       <div className="mt-3 min-w-0 rounded-xl bg-muted/50 p-3">
-                        <strong className="break-words text-sm">رد البائع</strong>
+                        <strong className="break-words text-sm">{ar ? "رد البائع" : "Seller reply"}</strong>
                         <p className="mt-1 whitespace-pre-wrap break-words">{review.reply.text}</p>
                         {isSeller ? (
                           <button
@@ -497,7 +500,7 @@ export function ProductReviews({ id,
                             onClick={() => stageReplyDelete(review.id)}
                             className="mt-2 text-sm text-destructive"
                           >
-                            حذف الرد
+                            {ar ? "حذف الرد" : "Delete reply"}
                           </button>
                         ) : null}
                       </div>
@@ -516,7 +519,7 @@ export function ProductReviews({ id,
             onClick={() => load(result.reviews.length, true)}
             className="w-full rounded-xl border px-4 py-3 font-semibold"
           >
-            {loading ? "جارٍ التحميل…" : "تحميل المزيد"}
+            {loading ? (ar ? "جارٍ التحميل…" : "Loading…") : (ar ? "تحميل المزيد" : "Load more")}
           </button>
         ) : null}
       </section>
@@ -527,6 +530,7 @@ export function ProductReviews({ id,
           commentsEnabled={commentsEnabled}
           editing={editing}
           rating={rating}
+          locale={locale}
           onClose={() => setModal(false)}
           onCommentChange={changeComment}
           onRatingChange={changeRating}
@@ -536,6 +540,7 @@ export function ProductReviews({ id,
         <ProductReviewReplyDialog
           id={id ? `${id}-reply-dialog-g7h8i9` : "product-reviews-reply-dialog-g7h8i9"}
           replyText={replyText}
+          locale={locale}
           onClose={() => setReplyReview(null)}
           onReplyTextChange={changeReplyText}
         />

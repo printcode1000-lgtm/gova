@@ -177,7 +177,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
         ) : props.providerAccountEnabled ? (
           <div
             id="features-profile-presentation-profilepreviewcontent-div-4-nc10mc"
-            className="mb-0 -mt-4"
+            className="mx-2 mb-0 mt-0 min-w-0 overflow-hidden sm:mx-0"
           >
             <HeroSlider
               id="features-profile-presentation-profilepreviewcontent-heroslider-5-ftci78"
@@ -190,7 +190,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
         {!loading.details ? (
           <section
             id="features-profile-presentation-profilepreviewcontent-section-6-bhu6tg"
-            className="mx-2 mt-3 min-w-0 border-b border-outline-variant/60 pb-4 sm:mx-0 sm:pb-5 sm:mt-4"
+            className={`mx-2 min-w-0 border-b border-outline-variant/60 pb-4 sm:mx-0 sm:pb-5 ${props.providerAccountEnabled ? "mt-3 sm:mt-4" : "mt-0"}`}
           >
             <div
               id="features-profile-presentation-profilepreviewcontent-div-7-ebuhdr"

@@ -9,7 +9,7 @@ import {
   categoryGridClassName,
   categoryTileClassName,
   categoryTileImageClassName,
-  categoryTileTitleClassName,
+  subcategoryTileTitleClassName,
 } from "@/features/categories/presentation/category-grid-styles";
 import { useTranslation } from "@/shared/i18n";
 import type { CategoryTree } from "@/features/categories";
@@ -82,7 +82,7 @@ export function CategorySubcategoriesPage({
     : "/images/mainCategories";
 
   return (
-    <div id='features-categories-presentation-categorysubcategoriespage-div-1-wrlhhz' className="space-y-5 px-4 py-5">
+    <div id='features-categories-presentation-categorysubcategoriespage-div-1-wrlhhz' className="space-y-[6px] px-4 py-5">
       <div id='features-categories-presentation-categorysubcategoriespage-div-2-qzxxsi' className="relative min-h-28 rounded-3xl bg-surface-bright space-y-3 p-4 overflow-hidden">
         {headerImage && (
           <Image id='features-categories-presentation-categorysubcategoriespage-image-3-uqog3l'
@@ -128,7 +128,7 @@ export function CategorySubcategoriesPage({
             : "No matching results"}
         </p>
       ) : (
-        <div id='features-categories-presentation-categorysubcategoriespage-div-11-q6871c' className="asol-section-tonal asol-section-tonal-primary-soft">
+        <div id='features-categories-presentation-categorysubcategoriespage-div-11-q6871c' className="asol-section-tonal asol-section-tonal-primary-soft !pt-0">
           <div id='features-categories-presentation-categorysubcategoriespage-div-12-xsjy6m' className={categoryGridClassName}>
             {filteredItems.map((item) => {
               const name = locale === "ar" ? item.nameAr : item.nameEn;
@@ -160,7 +160,7 @@ export function CategorySubcategoriesPage({
                       className="object-cover"
                     />
                   </div>
-                  <span className={categoryTileTitleClassName}>
+                  <span className={subcategoryTileTitleClassName}>
                     {name}
                   </span>
                 </button>

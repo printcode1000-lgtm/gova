@@ -1,4 +1,5 @@
 import { jsonContractResponse, readJsonContractBody } from '@asol/api-contract-core/server';
+import type { TransportKeyPolicy } from '@asol/api-contract-core';
 import {
   handleCorsPreflight,
   resolveCorsHeaders,
@@ -29,7 +30,12 @@ export interface ServiceHttp {
   /** JSON error body with this deployment's CORS headers and the mapped status. */
   errorResponse(request: Request, error: unknown, rules?: readonly ErrorStatusRule[]): Response;
   /** JSON success body with this deployment's CORS headers. */
-  jsonResponse(request: Request, data: unknown, status?: number): Response;
+  jsonResponse(
+    request: Request,
+    data: unknown,
+    status?: number,
+    transportPolicy?: TransportKeyPolicy,
+  ): Response;
   /** Parse and validate owned JSON request naming before the service sees it. */
   readJsonBody<T>(request: Request): Promise<T>;
 }
@@ -56,8 +62,12 @@ export function createServiceHttp(options: ServiceHttpOptions): ServiceHttp {
         { status: mapErrorStatus(message, rules), headers: resolveCorsHeaders(policy, request) },
       );
     },
-    jsonResponse(request, data, status = 200) {
-      return jsonContractResponse(data, { status, headers: resolveCorsHeaders(policy, request) });
+    jsonResponse(request, data, status = 200, transportPolicy = {}) {
+      return jsonContractResponse(
+        data,
+        { status, headers: resolveCorsHeaders(policy, request) },
+        transportPolicy,
+      );
     },
     async readJsonBody<T>(request: Request) {
       try {

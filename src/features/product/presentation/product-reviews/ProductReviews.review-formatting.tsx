@@ -40,12 +40,22 @@ export function Stars({ id, value, size = "text-lg", }: { value: number; size?: 
   );
 }
 
-export function relativeDate(value: string) {
+export function relativeDate(value: string, locale: "ar" | "en" = "ar") {
   const days = Math.max(
     0,
     Math.floor((Date.now() - new Date(value).getTime()) / 86400000),
   );
-  if (days === 0) return "اليوم";
-  if (days === 1) return "منذ يوم";
-  return `منذ ${days} أيام`;
+  if (locale === "en") {
+    if (days === 0) return "Today";
+    if (days === 1) return "1 day ago";
+    return `${days} days ago`;
+  }
+  if (locale === "ar") {
+    if (days === 0) return "اليوم";
+    if (days === 1) return "منذ يوم";
+    return `منذ ${days} أيام`;
+  }
+  if (days === 0) return "Today";
+  if (days === 1) return "1 day ago";
+  return `${days} days ago`;
 }

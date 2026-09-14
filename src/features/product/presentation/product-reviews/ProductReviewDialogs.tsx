@@ -9,6 +9,7 @@ export function ProductReviewDialog({ id,
   commentsEnabled,
   editing,
   rating,
+  locale,
   onClose,
   onCommentChange,
   onRatingChange,
@@ -17,10 +18,12 @@ export function ProductReviewDialog({ id,
   commentsEnabled: boolean;
   editing: ProductReview | null;
   rating: number;
+  locale: "ar" | "en";
   onClose: () => void;
   onCommentChange: (value: string) => void;
   onRatingChange: (value: number) => void;
 } & { id?: string }) {
+  const ar = locale === "ar";
   return (
     <div id={id} className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
       <div
@@ -29,7 +32,7 @@ export function ProductReviewDialog({ id,
         className="w-full max-w-md rounded-2xl bg-background p-5 shadow-xl"
       >
         <h3 className="text-xl font-bold">
-          {editing ? "تعديل التقييم" : "تقييم"}
+          {editing ? (ar ? "تعديل التقييم" : "Edit review") : (ar ? "تقييم" : "Review")}
         </h3>
         <div className="my-5 flex justify-center gap-1" dir="ltr">
           {[1, 2, 3, 4, 5].map((star) => (
@@ -48,7 +51,7 @@ export function ProductReviewDialog({ id,
             value={comment}
             onChange={(event) => onCommentChange(event.target.value)}
             className="asol-control asol-field-surface min-h-28 w-full border border-input p-3"
-            placeholder="اكتب مراجعتك"
+            placeholder={ar ? "اكتب مراجعتك" : "Write your review"}
           />
         ) : null}
         <div className="mt-4 flex gap-2">
@@ -57,7 +60,7 @@ export function ProductReviewDialog({ id,
             onClick={onClose}
             className="flex-1 rounded-xl border px-4 py-2"
           >
-            تم
+            {ar ? "تم" : "Done"}
           </button>
         </div>
       </div>
@@ -67,13 +70,16 @@ export function ProductReviewDialog({ id,
 
 export function ProductReviewReplyDialog({ id,
   replyText,
+  locale,
   onClose,
   onReplyTextChange,
 }: {
   replyText: string;
+  locale: "ar" | "en";
   onClose: () => void;
   onReplyTextChange: (value: string) => void;
 } & { id?: string }) {
+  const ar = locale === "ar";
   return (
     <div id={id} className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
       <div
@@ -81,7 +87,7 @@ export function ProductReviewReplyDialog({ id,
         aria-modal="true"
         className="w-full max-w-md rounded-2xl bg-background p-5"
       >
-        <h3 className="text-xl font-bold">رد البائع</h3>
+        <h3 className="text-xl font-bold">{ar ? "رد البائع" : "Seller reply"}</h3>
         <textarea
           value={replyText}
           onChange={(event) => onReplyTextChange(event.target.value)}
@@ -93,7 +99,7 @@ export function ProductReviewReplyDialog({ id,
             onClick={onClose}
             className="flex-1 rounded-xl border px-4 py-2"
           >
-            تم
+            {ar ? "تم" : "Done"}
           </button>
         </div>
       </div>

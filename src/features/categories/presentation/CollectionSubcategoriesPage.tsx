@@ -11,7 +11,7 @@ import {
   categoryGridClassName,
   categoryTileClassName,
   categoryTileImageClassName,
-  categoryTileTitleClassName,
+  subcategoryTileTitleClassName,
 } from "@/features/categories/presentation/category-grid-styles";
 
 interface CollectionSubcategoriesPageProps {
@@ -41,7 +41,7 @@ export function CollectionSubcategoriesPage({
     : items;
 
   return (
-    <div id='features-categories-presentation-collectionsubcategoriespage-div-1-8xxwoa' className="space-y-5 px-4 py-5">
+    <div id='features-categories-presentation-collectionsubcategoriespage-div-1-8xxwoa' className="space-y-[6px] px-4 py-5">
       <div id='features-categories-presentation-collectionsubcategoriespage-div-2-28nofy' className="relative min-h-28 rounded-3xl bg-surface-bright space-y-3 p-4 overflow-hidden">
         {heroImage && (
           <Image id='features-categories-presentation-collectionsubcategoriespage-image-3-ypgpm2'
@@ -81,7 +81,7 @@ export function CollectionSubcategoriesPage({
             : "No matching results"}
         </p>
       ) : (
-        <div id='features-categories-presentation-collectionsubcategoriespage-div-10-rn1d29' className="asol-section-tonal asol-section-tonal-primary">
+        <div id='features-categories-presentation-collectionsubcategoriespage-div-10-rn1d29' className="asol-section-tonal asol-section-tonal-primary !pt-0">
           <div id='features-categories-presentation-collectionsubcategoriespage-div-11-9twhdt' className={categoryGridClassName}>
           {filteredItems.map((item) => {
             const name = locale === "ar" ? item.nameAr : item.nameEn;
@@ -102,7 +102,7 @@ export function CollectionSubcategoriesPage({
                     className="object-cover transition-opacity"
                   />
                 </div>
-                <span key="label" className={categoryTileTitleClassName}>{name}</span>
+                <span key="label" className={subcategoryTileTitleClassName}>{name}</span>
               </Link>
             );
           })}

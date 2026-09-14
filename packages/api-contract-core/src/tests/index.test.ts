@@ -24,6 +24,20 @@ assert.doesNotThrow(() =>
     { allowedSnakeCaseKeys: ["provider_payload"], label: "provider protocol fixture" },
   ),
 );
+assert.doesNotThrow(() =>
+  assertCamelCaseJsonKeys(
+    { profiles: { usr_123_alpha: { storeName: "Alpha" } } },
+    { dynamicRecordPaths: ["$.profiles"], label: "dynamic profile map" },
+  ),
+);
+assert.throws(
+  () =>
+    assertCamelCaseJsonKeys(
+      { profiles: { usr_123_alpha: { store_name: "legacy" } } },
+      { dynamicRecordPaths: ["$.profiles"], label: "dynamic profile map" },
+    ),
+  (error: unknown) => error instanceof TransportKeyContractError && error.key === "store_name",
+);
 
 const storeContract = defineApiContract("store update", (value) => {
   assert.equal(typeof value, "object");

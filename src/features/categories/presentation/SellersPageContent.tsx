@@ -59,7 +59,7 @@ export function SellersPageContent({
 
   return (
     <div id='features-categories-presentation-sellerspagecontent-div-3-dbu2zj' className="container px-4 py-8">
-      <div id='features-categories-presentation-sellerspagecontent-div-4-khadrz' className="relative mb-6 min-h-28 overflow-hidden rounded-3xl bg-surface-bright p-4">
+      <div id='features-categories-presentation-sellerspagecontent-div-4-khadrz' className="relative mb-[6px] min-h-28 overflow-hidden rounded-3xl bg-surface-bright p-4">
         <Image id='features-categories-presentation-sellerspagecontent-image-5-vjpufe'
           src={subcategoryImage}
           alt={locale === "ar" ? `البائعون في ${subcategoryName}` : `Sellers in ${subcategoryName}`}

@@ -17,7 +17,11 @@ export async function GET(
     try {
       const { orderId } = await params;
       const { searchParams } = new URL(request.url);
-      return apiSuccess(await loadOrderDetailForActor(orderId, searchParams));
+      return apiSuccess(
+        await loadOrderDetailForActor(orderId, searchParams),
+        200,
+        { dynamicRecordPaths: ['$.profiles'] },
+      );
     } catch (error) {
       return mapOrderError(error);
     }

@@ -56,7 +56,7 @@ export function DoctorAppointmentSellersPageContent({
 
   return (
     <div id='features-categories-presentation-doctorappointmentsellerspagecontent-div-3-pqz25n' className="container px-4 py-8">
-      <div id='features-categories-presentation-doctorappointmentsellerspagecontent-div-4-duyzak' className="relative mb-6 min-h-28 overflow-hidden rounded-3xl bg-surface-bright p-4">
+      <div id='features-categories-presentation-doctorappointmentsellerspagecontent-div-4-duyzak' className="relative mb-[6px] min-h-28 overflow-hidden rounded-3xl bg-surface-bright p-4">
         <Image id='features-categories-presentation-doctorappointmentsellerspagecontent-image-5-w4ccxn'
           src={specialtyImage}
           alt={locale === "ar" ? `الأطباء في ${specialtyName}` : `Doctors in ${specialtyName}`}

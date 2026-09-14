@@ -9,3 +9,6 @@ export const categoryTileImageClassName =
 
 export const categoryTileTitleClassName =
   "flex min-h-5 w-full items-center justify-center truncate px-1 py-1 text-center text-[11px] font-semibold leading-3 text-blue-500";
+
+export const subcategoryTileTitleClassName =
+  "block min-h-5 w-fit max-w-full self-center truncate px-1 py-1 text-start text-[11px] font-semibold leading-3 text-blue-500";

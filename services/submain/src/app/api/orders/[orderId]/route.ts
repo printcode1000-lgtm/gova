@@ -23,7 +23,7 @@ export async function GET(
     const { orderId } = await params;
     const { searchParams } = new URL(request.url);
     const detail = await orders.loadDetail(orderId, searchParams);
-    return jsonResponse(request, detail, 200);
+    return jsonResponse(request, detail, 200, { dynamicRecordPaths: ['$.profiles'] });
   } catch (error) {
     return orderDetailErrorResponse(request, error);
   }
