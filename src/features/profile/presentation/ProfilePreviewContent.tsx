@@ -216,7 +216,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                 id="features-profile-presentation-profilepreviewcontent-div-10-ezedca"
                 className="min-w-0 flex-1"
               >
-                {previewUid ? (
+                {props.providerAccountEnabled && previewUid ? (
                   <div
                     id="features-profile-presentation-profilepreviewcontent-div-11-ufnwc9"
                     className="grid min-w-0 grid-cols-2 items-center gap-2 min-[360px]:grid-cols-3 sm:flex sm:flex-wrap"
@@ -360,7 +360,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                   {storeDetails.storeName}
                 </h1>
               ) : null}
-              {storeDetails.storeDescription ? (
+              {props.providerAccountEnabled && storeDetails.storeDescription ? (
                 <p
                   id="features-profile-presentation-profilepreviewcontent-text-25-x4epg4"
                   className="mt-1 line-clamp-2 break-words text-xs leading-5 text-on-surface-variant sm:text-sm sm:leading-6"

@@ -33360,6 +33360,17 @@
       ]
     },
     {
+      "id": "source:packages/map-core/src/MoveLocationBalloon.tsx",
+      "kind": "source",
+      "name": "MoveLocationBalloon.tsx",
+      "path": "packages/map-core/src/MoveLocationBalloon.tsx",
+      "tags": [
+        "packages/map-core/src/movelocationballoon",
+        "packages/map-core/src/movelocationballoon.tsx",
+        "tsx"
+      ]
+    },
+    {
       "id": "source:packages/map-core/src/native-platform-gps.ts",
       "kind": "source",
       "name": "native-platform-gps.ts",
@@ -80727,6 +80738,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/map-core/src/MoveLocationBalloon.tsx",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:packages/map-core/src/native-platform-gps.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -91060,6 +91077,12 @@
     {
       "from": "domain:platform-features",
       "to": "source:packages/map-core/src/index.ts",
+      "kind": "documents",
+      "detail": "packages/map-core/"
+    },
+    {
+      "from": "domain:platform-features",
+      "to": "source:packages/map-core/src/MoveLocationBalloon.tsx",
       "kind": "documents",
       "detail": "packages/map-core/"
     },
@@ -152019,6 +152042,12 @@
     },
     {
       "from": "source:packages/map-core/src/AsolMap.tsx",
+      "to": "source:packages/map-core/src/MoveLocationBalloon.tsx",
+      "kind": "imports",
+      "detail": "./MoveLocationBalloon"
+    },
+    {
+      "from": "source:packages/map-core/src/AsolMap.tsx",
       "to": "source:packages/map-core/src/native-platform-gps.ts",
       "kind": "imports",
       "detail": "./native-platform-gps"
@@ -152274,6 +152303,42 @@
       "to": "source:packages/map-core/src/types.ts",
       "kind": "imports",
       "detail": "./types"
+    },
+    {
+      "from": "source:packages/map-core/src/MoveLocationBalloon.tsx",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/map-core/src/MoveLocationBalloon.tsx",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/map-core/src/MoveLocationBalloon.tsx",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/map-core/src/MoveLocationBalloon.tsx",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/map-core/src/MoveLocationBalloon.tsx",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/map-core/src/MoveLocationBalloon.tsx",
+      "to": "package:@asol/map-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/map-core/src/MoveLocationBalloon.tsx",
+      "to": "external-dependency:lucide-react",
+      "kind": "imports",
+      "detail": "lucide-react"
     },
     {
       "from": "source:packages/map-core/src/native-platform-gps.ts",

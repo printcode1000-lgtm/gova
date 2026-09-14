@@ -33360,6 +33360,17 @@
       ]
     },
     {
+      "id": "source:packages/map-core/src/MoveLocationBalloon.tsx",
+      "kind": "source",
+      "name": "MoveLocationBalloon.tsx",
+      "path": "packages/map-core/src/MoveLocationBalloon.tsx",
+      "tags": [
+        "packages/map-core/src/movelocationballoon",
+        "packages/map-core/src/movelocationballoon.tsx",
+        "tsx"
+      ]
+    },
+    {
       "id": "source:packages/map-core/src/native-platform-gps.ts",
       "kind": "source",
       "name": "native-platform-gps.ts",

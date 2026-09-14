@@ -275,40 +275,62 @@ return (
                   )}
                 </div>
                 
-                <div id='profile-presentation-contact-info-additionalcontactview-div-29-tguhrl' className="space-y-4">
+                <div id='profile-presentation-contact-info-additionalcontactview-div-29-tguhrl' className="space-y-[6px] p-[6px]">
                   {localData.locations.map((loc, idx) => (
                     <div
                       key={loc.id}
-                      className="space-y-3 rounded-xl border p-4"
+                      id={`profile-presentation-contact-info-additionalcontactview-location-card-${loc.id}`}
+                      className="space-y-[6px] rounded-xl border p-[6px]"
                       style={{
                         backgroundColor: `${quickAddColor('location')}10`,
                         borderColor: `${quickAddColor('location')}44`,
                       }}
                     >
-                      <div className="flex items-center justify-between gap-3">
-                        <span className="flex items-center gap-2 text-xs font-semibold" style={{ color: quickAddColor('location') }}>
-                          <FontAwesomeIcon icon={quickAddIcon('location')} className="h-3.5 w-3.5" />
+                      <div
+                        id={`profile-presentation-contact-info-additionalcontactview-location-header-${loc.id}`}
+                        className="flex items-center justify-between gap-[6px]"
+                      >
+                        <span
+                          id={`profile-presentation-contact-info-additionalcontactview-location-title-${loc.id}`}
+                          className="flex items-center gap-[6px] text-xs font-semibold"
+                          style={{ color: quickAddColor('location') }}
+                        >
+                          <FontAwesomeIcon
+                            id={`profile-presentation-contact-info-additionalcontactview-location-title-icon-${loc.id}`}
+                            icon={quickAddIcon('location')}
+                            className="h-3.5 w-3.5"
+                          />
                           {locale === 'ar' ? `الموقع #${idx + 1}` : `Location #${idx + 1}`}
                         </span>
                         {!readOnly && (
                           <Button
+                            id={`profile-presentation-contact-info-additionalcontactview-location-remove-${loc.id}`}
                             variant="ghost"
                             size="icon"
                             onClick={() => requestRemoveEntry('location', loc.id)}
                             className="h-8 w-8 text-destructive"
                             aria-label={locale === 'ar' ? 'إزالة الموقع' : 'Remove location'}
                           >
-                            <X className="h-4 w-4" />
+                            <X
+                              id={`profile-presentation-contact-info-additionalcontactview-location-remove-icon-${loc.id}`}
+                              className="h-4 w-4"
+                            />
                           </Button>
                         )}
                       </div>
 
                       {!readOnly ? (
-                        <div className="space-y-2">
+                        <div
+                          id={`profile-presentation-contact-info-additionalcontactview-location-editor-${loc.id}`}
+                          className="space-y-[6px]"
+                        >
                           {openMapId === loc.id ? (
-                            <div className="space-y-2">
+                            <div
+                              id={`profile-presentation-contact-info-additionalcontactview-location-map-panel-${loc.id}`}
+                              className="space-y-[6px]"
+                            >
                               <AsolMap
-                                id={`map-${loc.id}`}
+                                id={`profile-presentation-contact-info-additionalcontactview-location-map-${loc.id}`}
                                 modes={['picker']}
                                 providers={{
                                   tile: tileProvider,
@@ -350,17 +372,25 @@ return (
                                   placeholder: locale === 'ar' ? 'اكتب وصف العنوان' : 'Describe this location',
                                   confirmLabel: locale === 'ar' ? 'تأكيد' : 'Confirm',
                                   cancelLabel: locale === 'ar' ? 'إلغاء' : 'Cancel',
+                                  editLabel: locale === 'ar' ? 'تعديل' : 'Edit',
+                                  movePromptText: locale === 'ar' ? 'هل تريد نقل الموقع إلى هذا المكان؟' : 'Move the location to this place?',
+                                  moveConfirmLabel: locale === 'ar' ? 'نعم' : 'Yes',
+                                  moveCancelLabel: locale === 'ar' ? 'لا' : 'No',
                                   value: loc.address || '',
                                 }}
-                                onTap={({ latitude: lat, longitude: lng }) =>
-                                  updateLocationEntry(loc.id, { latitude: lat, longitude: lng })
-                                }
-                                onGpsCompleted={({ latitude: lat, longitude: lng }) =>
-                                  updateLocationEntry(loc.id, { latitude: lat, longitude: lng })
-                                }
-                                onLocationCommitted={({ latitude: lat, longitude: lng, address }) =>
-                                  updateLocationEntry(loc.id, { latitude: lat, longitude: lng, address })
-                                }
+                                onTap={({ latitude: lat, longitude: lng }) => {
+                                  setMapMessage(loc.id, '');
+                                  updateLocationEntry(loc.id, { latitude: lat, longitude: lng });
+                                }}
+                                onGpsStarted={() => setMapMessage(loc.id, '')}
+                                onGpsCompleted={({ latitude: lat, longitude: lng }) => {
+                                  setMapMessage(loc.id, '');
+                                  updateLocationEntry(loc.id, { latitude: lat, longitude: lng });
+                                }}
+                                onLocationCommitted={({ latitude: lat, longitude: lng, address }) => {
+                                  setMapMessage(loc.id, '');
+                                  updateLocationEntry(loc.id, { latitude: lat, longitude: lng, address });
+                                }}
                                 onGpsError={(mapError) =>
                                   setMapMessage(
                                     loc.id,
@@ -392,13 +422,18 @@ return (
                                 onClose={() => setOpenMapId(null)}
                               />
                               {mapMessages[loc.id] && (
-                                <p className="text-xs font-medium text-primary mt-1" role="status">
+                                <p
+                                  id={`profile-presentation-contact-info-additionalcontactview-location-map-message-${loc.id}`}
+                                  className="text-xs font-medium text-primary mt-1"
+                                  role="status"
+                                >
                                   {mapMessages[loc.id]}
                                 </p>
                               )}
                             </div>
                           ) : (
                             <button
+                              id={`profile-presentation-contact-info-additionalcontactview-location-map-open-${loc.id}`}
                               type="button"
                               onClick={() => setOpenMapId(loc.id)}
                               className="asol-control border border-input px-4 font-medium"
@@ -408,20 +443,35 @@ return (
                           )}
                         </div>
                       ) : (
-                        <div className="space-y-1">
-                          <div className="text-sm font-medium">{loc.address || (locale === 'ar' ? 'بدون عنوان' : 'No address')}</div>
+                        <div
+                          id={`profile-presentation-contact-info-additionalcontactview-location-readonly-${loc.id}`}
+                          className="space-y-[6px]"
+                        >
+                          <div
+                            id={`profile-presentation-contact-info-additionalcontactview-location-address-${loc.id}`}
+                            className="text-sm font-medium"
+                          >
+                            {loc.address || (locale === 'ar' ? 'بدون عنوان' : 'No address')}
+                          </div>
                           {loc.latitude && loc.longitude ? (
                             <a
+                              id={`profile-presentation-contact-info-additionalcontactview-location-map-link-${loc.id}`}
                               href={geoLocationUrl(loc.latitude, loc.longitude)}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 text-xs text-primary"
+                              className="inline-flex items-center gap-[6px] text-xs text-primary"
                             >
-                              <MapPin className="h-3 w-3" />
+                              <MapPin
+                                id={`profile-presentation-contact-info-additionalcontactview-location-map-link-icon-${loc.id}`}
+                                className="h-3 w-3"
+                              />
                               {locale === 'ar' ? 'فتح في الخرائط' : 'Open in maps'}
                             </a>
                           ) : (
-                            <span className="text-xs text-muted-foreground">
+                            <span
+                              id={`profile-presentation-contact-info-additionalcontactview-location-no-coordinates-${loc.id}`}
+                              className="text-xs text-muted-foreground"
+                            >
                               {locale === 'ar' ? 'لم يتم تحديد موقع جغرافي' : 'No coordinates selected'}
                             </span>
                           )}

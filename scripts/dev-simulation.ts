@@ -283,7 +283,9 @@ async function waitForBackend(timeoutMs = 60_000): Promise<void> {
         },
       );
       if (response.ok) return;
-    } catch {}
+    } catch (error) {
+      console.error("[simulation] Backend readiness probe failed", error);
+    }
     await new Promise((resolve) => setTimeout(resolve, 500));
   }
   throw new Error(
@@ -311,7 +313,11 @@ type RuntimeMetadata = {
 function removeRuntimeMetadata(): void {
   try {
     unlinkSync(RUNTIME_METADATA_FILE);
-  } catch {}
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
+      console.error("[simulation] Failed to remove runtime metadata", error);
+    }
+  }
 }
 
 function processGroupExists(groupPid: number): boolean {
@@ -360,14 +366,18 @@ async function cleanupStaleRuntime(): Promise<void> {
     let cmdline = "";
     try {
       cmdline = readFileSync(`/proc/${stale.nextGroupPid}/cmdline`, "utf8");
-    } catch {}
+    } catch (error) {
+      console.error("[simulation] Failed to inspect stale process command line", error);
+    }
     if (
       cmdline.includes("next") &&
       cmdline.includes(String(SIMULATION_BACKEND_PORT))
     ) {
       try {
         process.kill(-stale.nextGroupPid, "SIGTERM");
-      } catch {}
+      } catch (error) {
+        console.error("[simulation] Failed to terminate stale simulation process group", error);
+      }
       const deadline = Date.now() + 3_000;
       while (Date.now() < deadline && processGroupExists(stale.nextGroupPid)) {
         await new Promise((resolve) => setTimeout(resolve, 100));
@@ -375,7 +385,9 @@ async function cleanupStaleRuntime(): Promise<void> {
       if (processGroupExists(stale.nextGroupPid)) {
         try {
           process.kill(-stale.nextGroupPid, "SIGKILL");
-        } catch {}
+        } catch (error) {
+          console.error("[simulation] Failed to kill stale simulation process group", error);
+        }
       }
     }
   }
@@ -404,7 +416,9 @@ function signalNextProcess(signal: NodeJS.Signals): void {
   } catch {
     try {
       nextProcess.kill(signal);
-    } catch {}
+    } catch (error) {
+      console.error("[simulation] Failed to signal Next.js process", error);
+    }
   }
 }
 

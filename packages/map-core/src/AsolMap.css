@@ -32,14 +32,21 @@
 /* Address balloon — the package's only input surface. It is anchored to the pin so
    the label and the coordinates are visibly one thing; a field beside the map could
    describe a point the user has since moved. */
-.asol-map__address-popup .maplibregl-popup-content { padding: 0; border-radius: .875rem; background: transparent; box-shadow: none; }
-.asol-map__address-popup .maplibregl-popup-tip { border-top-color: var(--color-surface-container-lowest, #fff); border-bottom-color: var(--color-surface-container-lowest, #fff); }
+.asol-map__address-popup.maplibregl-popup-anchor-bottom .maplibregl-popup-tip,
+.asol-map__move-confirm-popup.maplibregl-popup-anchor-bottom .maplibregl-popup-tip { border-top-color: var(--color-surface-container-lowest, #fff); }
+.asol-map__address-popup .maplibregl-popup-content,
+.asol-map__move-confirm-popup .maplibregl-popup-content { padding: 0; border-radius: .875rem; background: transparent; box-shadow: none; }
+.asol-map__move-confirm { display: flex; width: 14rem; max-width: 68vw; flex-direction: column; gap: .5rem; padding: .75rem; border: 1px solid var(--color-outline-variant, #dadce0); border-radius: .875rem; background: var(--color-surface-container-lowest, #fff); box-shadow: 0 8px 24px rgba(0, 0, 0, .18); color: var(--color-on-surface, #202124); }
+.asol-map__move-confirm-message { display: flex; align-items: flex-start; gap: .5rem; font-size: .8125rem; font-weight: 600; line-height: 1.3rem; }
+.asol-map__move-confirm-message svg { width: 1rem; height: 1rem; flex: 0 0 auto; margin-top: .125rem; color: var(--color-primary, #1a73e8); }
+.asol-map__move-confirm-actions { display: flex; gap: .375rem; }
 .asol-map__popup--address { min-width: 0; }
 .asol-map__address { display: flex; width: 15rem; max-width: 70vw; flex-direction: column; gap: .5rem; padding: .75rem; border: 1px solid var(--color-outline-variant, #dadce0); border-radius: .875rem; background: var(--color-surface-container-lowest, #fff); box-shadow: 0 8px 24px rgba(0, 0, 0, .18); color: var(--color-on-surface, #202124); }
 .asol-map__address-title { display: flex; align-items: center; gap: .375rem; margin: 0; font-size: .75rem; font-weight: 700; }
 .asol-map__address-title svg { width: .875rem; height: .875rem; color: var(--color-primary, #1a73e8); }
 .asol-map__address-input { width: 100%; min-height: 2.25rem; padding: .375rem .625rem; border: 1px solid var(--color-outline-variant, #dadce0); border-radius: .625rem; background: var(--color-surface, #fff); color: inherit; font-size: .8125rem; }
 .asol-map__address-input:focus-visible { border-color: var(--color-primary, #1a73e8); outline: 2px solid color-mix(in srgb, var(--color-primary, #1a73e8) 35%, transparent); outline-offset: 1px; }
+.asol-map__address-value { margin: 0; padding: .5rem .625rem; border: 1px solid var(--color-outline-variant, #dadce0); border-radius: .625rem; background: var(--color-surface, #fff); color: inherit; font-size: .8125rem; line-height: 1.35rem; overflow-wrap: anywhere; }
 .asol-map__address-actions { display: flex; gap: .375rem; }
 .asol-map__address-button { display: inline-flex; min-height: 2.125rem; flex: 1 1 0; align-items: center; justify-content: center; gap: .25rem; border: 1px solid transparent; border-radius: .625rem; font-size: .75rem; font-weight: 600; touch-action: manipulation; }
 .asol-map__address-button svg { width: .875rem; height: .875rem; }

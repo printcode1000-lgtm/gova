@@ -645,7 +645,7 @@
     {
       "id": "${id}",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceChrome.tsx",
-      "line": 82,
+      "line": 96,
       "element": "div",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -653,7 +653,7 @@
     {
       "id": "${id}",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceChrome.tsx",
-      "line": 242,
+      "line": 259,
       "element": "div",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -989,7 +989,7 @@
     {
       "id": "${PROFILE_SECTION_IDS.contact}",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 167,
+      "line": 165,
       "element": "div",
       "semanticName": "constant-reference",
       "kind": "constant-reference"
@@ -997,7 +997,7 @@
     {
       "id": "${PROFILE_SECTION_IDS.discounts}",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 237,
+      "line": 235,
       "element": "div",
       "semanticName": "constant-reference",
       "kind": "constant-reference"
@@ -1005,7 +1005,7 @@
     {
       "id": "${PROFILE_SECTION_IDS.fulfillment}",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 214,
+      "line": 212,
       "element": "div",
       "semanticName": "constant-reference",
       "kind": "constant-reference"
@@ -1013,7 +1013,7 @@
     {
       "id": "${PROFILE_SECTION_IDS.products}",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 139,
+      "line": 137,
       "element": "div",
       "semanticName": "constant-reference",
       "kind": "constant-reference"
@@ -1021,7 +1021,7 @@
     {
       "id": "${PROFILE_SECTION_IDS.registration}",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 62,
+      "line": 60,
       "element": "div",
       "semanticName": "constant-reference",
       "kind": "constant-reference"
@@ -1029,7 +1029,7 @@
     {
       "id": "${PROFILE_SECTION_IDS.specialties}",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 87,
+      "line": 85,
       "element": "div",
       "semanticName": "constant-reference",
       "kind": "constant-reference"
@@ -1037,7 +1037,7 @@
     {
       "id": "${PROFILE_SECTION_IDS.store}",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 112,
+      "line": 110,
       "element": "div",
       "semanticName": "constant-reference",
       "kind": "constant-reference"
@@ -1045,7 +1045,7 @@
     {
       "id": "${PROFILE_SECTION_IDS.workingHours}",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 191,
+      "line": 189,
       "element": "div",
       "semanticName": "constant-reference",
       "kind": "constant-reference"
@@ -1053,7 +1053,7 @@
     {
       "id": "${props.id}",
       "source": "packages/map-core/src/AsolMap.tsx",
-      "line": 584,
+      "line": 673,
       "element": "section",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -9867,6 +9867,46 @@
       "kind": "literal"
     },
     {
+      "id": "features-page-save-presentation-pagesaveheaderbutton-div-attention-cue-7-r4k2mx",
+      "source": "src/features/page-save/presentation/PageSaveHeaderButton.tsx",
+      "line": 256,
+      "element": "div",
+      "semanticName": "page-save-presentation-pagesaveheaderbutton-div-attention-cue-7",
+      "kind": "literal"
+    },
+    {
+      "id": "features-page-save-presentation-pagesaveheaderbutton-span-attention-target-11-p3w6zs",
+      "source": "src/features/page-save/presentation/PageSaveHeaderButton.tsx",
+      "line": 266,
+      "element": "span",
+      "semanticName": "page-save-presentation-pagesaveheaderbutton-span-attention-target-11",
+      "kind": "literal"
+    },
+    {
+      "id": "features-page-save-presentation-pagesaveheaderbutton-span-attention-trail-one-9-k5m1pc",
+      "source": "src/features/page-save/presentation/PageSaveHeaderButton.tsx",
+      "line": 264,
+      "element": "span",
+      "semanticName": "page-save-presentation-pagesaveheaderbutton-span-attention-trail-one-9",
+      "kind": "literal"
+    },
+    {
+      "id": "features-page-save-presentation-pagesaveheaderbutton-span-attention-trail-two-10-h8r4yd",
+      "source": "src/features/page-save/presentation/PageSaveHeaderButton.tsx",
+      "line": 265,
+      "element": "span",
+      "semanticName": "page-save-presentation-pagesaveheaderbutton-span-attention-trail-two-10",
+      "kind": "literal"
+    },
+    {
+      "id": "features-page-save-presentation-pagesaveheaderbutton-span-attention-wash-8-v2q7na",
+      "source": "src/features/page-save/presentation/PageSaveHeaderButton.tsx",
+      "line": 263,
+      "element": "span",
+      "semanticName": "page-save-presentation-pagesaveheaderbutton-span-attention-wash-8",
+      "kind": "literal"
+    },
+    {
       "id": "features-password-recovery-presentation-passwordrecoverypagecontent-button-26-cuvrwx",
       "source": "src/features/password-recovery/presentation/PasswordRecoveryPageContent.tsx",
       "line": 90,
@@ -10965,7 +11005,7 @@
     {
       "id": "features-profile-presentation-profilepreviewcontent-div-1-y7l5yo",
       "source": "src/features/profile/presentation/ProfilePreviewContent.tsx",
-      "line": 158,
+      "line": 161,
       "element": "div",
       "semanticName": "profile-presentation-profilepreviewcontent-div-1",
       "kind": "literal"
@@ -10973,7 +11013,7 @@
     {
       "id": "features-profile-presentation-profilepreviewcontent-div-10-ezedca",
       "source": "src/features/profile/presentation/ProfilePreviewContent.tsx",
-      "line": 188,
+      "line": 215,
       "element": "div",
       "semanticName": "profile-presentation-profilepreviewcontent-div-10",
       "kind": "literal"
@@ -10981,7 +11021,7 @@
     {
       "id": "features-profile-presentation-profilepreviewcontent-div-11-ufnwc9",
       "source": "src/features/profile/presentation/ProfilePreviewContent.tsx",
-      "line": 190,
+      "line": 220,
       "element": "div",
       "semanticName": "profile-presentation-profilepreviewcontent-div-11",
       "kind": "literal"
@@ -10989,7 +11029,7 @@
     {
       "id": "features-profile-presentation-profilepreviewcontent-div-2-pblfex",
       "source": "src/features/profile/presentation/ProfilePreviewContent.tsx",
-      "line": 162,
+      "line": 166,
       "element": "div",
       "semanticName": "profile-presentation-profilepreviewcontent-div-2",
       "kind": "literal"
@@ -10997,7 +11037,7 @@
     {
       "id": "features-profile-presentation-profilepreviewcontent-div-23-ul5e8f",
       "source": "src/features/profile/presentation/ProfilePreviewContent.tsx",
-      "line": 295,
+      "line": 351,
       "element": "div",
       "semanticName": "profile-presentation-profilepreviewcontent-div-23",
       "kind": "literal"
@@ -11005,7 +11045,7 @@
     {
       "id": "features-profile-presentation-profilepreviewcontent-div-27-7jodgq",
       "source": "src/features/profile/presentation/ProfilePreviewContent.tsx",
-      "line": 313,
+      "line": 381,
       "element": "div",
       "semanticName": "profile-presentation-profilepreviewcontent-div-27",
       "kind": "literal"
@@ -11013,7 +11053,7 @@
     {
       "id": "features-profile-presentation-profilepreviewcontent-div-3-qlnbzd",
       "source": "src/features/profile/presentation/ProfilePreviewContent.tsx",
-      "line": 164,
+      "line": 171,
       "element": "div",
       "semanticName": "profile-presentation-profilepreviewcontent-div-3",
       "kind": "literal"
@@ -11021,7 +11061,7 @@
     {
       "id": "features-profile-presentation-profilepreviewcontent-div-38-wu1dyg",
       "source": "src/features/profile/presentation/ProfilePreviewContent.tsx",
-      "line": 356,
+      "line": 458,
       "element": "div",
       "semanticName": "profile-presentation-profilepreviewcontent-div-38",
       "kind": "literal"
@@ -11029,7 +11069,7 @@
     {
       "id": "features-profile-presentation-profilepreviewcontent-div-4-nc10mc",
       "source": "src/features/profile/presentation/ProfilePreviewContent.tsx",
-      "line": 168,
+      "line": 178,
       "element": "div",
       "semanticName": "profile-presentation-profilepreviewcontent-div-4",
       "kind": "literal"
@@ -11037,7 +11077,7 @@
     {
       "id": "features-profile-presentation-profilepreviewcontent-div-7-ebuhdr",
       "source": "src/features/profile/presentation/ProfilePreviewContent.tsx",
-      "line": 175,
+      "line": 195,
       "element": "div",
       "semanticName": "profile-presentation-profilepreviewcontent-div-7",
       "kind": "literal"
@@ -11045,7 +11085,7 @@
     {
       "id": "features-profile-presentation-profilepreviewcontent-div-8-rkyqvc",
       "source": "src/features/profile/presentation/ProfilePreviewContent.tsx",
-      "line": 177,
+      "line": 200,
       "element": "div",
       "semanticName": "profile-presentation-profilepreviewcontent-div-8",
       "kind": "literal"
@@ -11053,7 +11093,7 @@
     {
       "id": "features-profile-presentation-profilepreviewcontent-heading-24-tkbmhl",
       "source": "src/features/profile/presentation/ProfilePreviewContent.tsx",
-      "line": 297,
+      "line": 356,
       "element": "h1",
       "semanticName": "profile-presentation-profilepreviewcontent-heading-24",
       "kind": "literal"
@@ -11061,7 +11101,7 @@
     {
       "id": "features-profile-presentation-profilepreviewcontent-heading-28-flolln",
       "source": "src/features/profile/presentation/ProfilePreviewContent.tsx",
-      "line": 314,
+      "line": 385,
       "element": "h2",
       "semanticName": "profile-presentation-profilepreviewcontent-heading-28",
       "kind": "literal"
@@ -11069,7 +11109,7 @@
     {
       "id": "features-profile-presentation-profilepreviewcontent-section-26-xy5imy",
       "source": "src/features/profile/presentation/ProfilePreviewContent.tsx",
-      "line": 312,
+      "line": 377,
       "element": "section",
       "semanticName": "profile-presentation-profilepreviewcontent-section-26",
       "kind": "literal"
@@ -11077,7 +11117,7 @@
     {
       "id": "features-profile-presentation-profilepreviewcontent-section-31-haoenz",
       "source": "src/features/profile/presentation/ProfilePreviewContent.tsx",
-      "line": 332,
+      "line": 413,
       "element": "section",
       "semanticName": "profile-presentation-profilepreviewcontent-section-31",
       "kind": "literal"
@@ -11085,7 +11125,7 @@
     {
       "id": "features-profile-presentation-profilepreviewcontent-section-33-uyif6z",
       "source": "src/features/profile/presentation/ProfilePreviewContent.tsx",
-      "line": 338,
+      "line": 425,
       "element": "section",
       "semanticName": "profile-presentation-profilepreviewcontent-section-33",
       "kind": "literal"
@@ -11093,7 +11133,7 @@
     {
       "id": "features-profile-presentation-profilepreviewcontent-section-35-fgx3l5",
       "source": "src/features/profile/presentation/ProfilePreviewContent.tsx",
-      "line": 344,
+      "line": 437,
       "element": "section",
       "semanticName": "profile-presentation-profilepreviewcontent-section-35",
       "kind": "literal"
@@ -11101,7 +11141,7 @@
     {
       "id": "features-profile-presentation-profilepreviewcontent-section-37-u2hb3h",
       "source": "src/features/profile/presentation/ProfilePreviewContent.tsx",
-      "line": 355,
+      "line": 454,
       "element": "section",
       "semanticName": "profile-presentation-profilepreviewcontent-section-37",
       "kind": "literal"
@@ -11109,7 +11149,7 @@
     {
       "id": "features-profile-presentation-profilepreviewcontent-section-42-psuya6",
       "source": "src/features/profile/presentation/ProfilePreviewContent.tsx",
-      "line": 391,
+      "line": 503,
       "element": "section",
       "semanticName": "profile-presentation-profilepreviewcontent-section-42",
       "kind": "literal"
@@ -11117,7 +11157,7 @@
     {
       "id": "features-profile-presentation-profilepreviewcontent-section-6-bhu6tg",
       "source": "src/features/profile/presentation/ProfilePreviewContent.tsx",
-      "line": 174,
+      "line": 191,
       "element": "section",
       "semanticName": "profile-presentation-profilepreviewcontent-section-6",
       "kind": "literal"
@@ -11125,7 +11165,7 @@
     {
       "id": "features-profile-presentation-profilepreviewcontent-text-15-ni1wzh",
       "source": "src/features/profile/presentation/ProfilePreviewContent.tsx",
-      "line": 229,
+      "line": 265,
       "element": "span",
       "semanticName": "profile-presentation-profilepreviewcontent-text-15",
       "kind": "literal"
@@ -11133,7 +11173,7 @@
     {
       "id": "features-profile-presentation-profilepreviewcontent-text-18-z7gcoh",
       "source": "src/features/profile/presentation/ProfilePreviewContent.tsx",
-      "line": 250,
+      "line": 294,
       "element": "span",
       "semanticName": "profile-presentation-profilepreviewcontent-text-18",
       "kind": "literal"
@@ -11141,7 +11181,7 @@
     {
       "id": "features-profile-presentation-profilepreviewcontent-text-21-t1anpc",
       "source": "src/features/profile/presentation/ProfilePreviewContent.tsx",
-      "line": 280,
+      "line": 329,
       "element": "span",
       "semanticName": "profile-presentation-profilepreviewcontent-text-21",
       "kind": "literal"
@@ -11149,7 +11189,7 @@
     {
       "id": "features-profile-presentation-profilepreviewcontent-text-22-uyjhsl",
       "source": "src/features/profile/presentation/ProfilePreviewContent.tsx",
-      "line": 288,
+      "line": 340,
       "element": "p",
       "semanticName": "profile-presentation-profilepreviewcontent-text-22",
       "kind": "literal"
@@ -11157,7 +11197,7 @@
     {
       "id": "features-profile-presentation-profilepreviewcontent-text-25-x4epg4",
       "source": "src/features/profile/presentation/ProfilePreviewContent.tsx",
-      "line": 302,
+      "line": 364,
       "element": "p",
       "semanticName": "profile-presentation-profilepreviewcontent-text-25",
       "kind": "literal"
@@ -19925,7 +19965,7 @@
     {
       "id": "id ? `${id}-page-save-button` : undefined",
       "source": "src/features/page-save/presentation/PageSaveHeaderButton.tsx",
-      "line": 42,
+      "line": 44,
       "element": "button",
       "semanticName": "page-save",
       "kind": "scoped-template"
@@ -20109,7 +20149,7 @@
     {
       "id": "id ? `${id}-text-2-utoq2c` : undefined",
       "source": "src/features/page-save/presentation/PageSaveHeaderButton.tsx",
-      "line": 59,
+      "line": 62,
       "element": "span",
       "semanticName": "text-2",
       "kind": "scoped-template"
@@ -20157,7 +20197,7 @@
     {
       "id": "id ? `${id}-text-3-dznzfg` : undefined",
       "source": "src/features/page-save/presentation/PageSaveHeaderButton.tsx",
-      "line": 64,
+      "line": 67,
       "element": "span",
       "semanticName": "text-3",
       "kind": "scoped-template"
@@ -22299,9 +22339,17 @@
       "kind": "literal"
     },
     {
+      "id": "pkg-map-core-src-addressballoon-address-display-10-q7m4rx",
+      "source": "packages/map-core/src/AddressBalloon.tsx",
+      "line": 71,
+      "element": "p",
+      "semanticName": "map-core-src-addressballoon-address-display-10",
+      "kind": "literal"
+    },
+    {
       "id": "pkg-map-core-src-addressballoon-button-6-kpqkv9",
       "source": "packages/map-core/src/AddressBalloon.tsx",
-      "line": 67,
+      "line": 77,
       "element": "button",
       "semanticName": "map-core-src-addressballoon-button-6",
       "kind": "literal"
@@ -22309,7 +22357,7 @@
     {
       "id": "pkg-map-core-src-addressballoon-button-8-bafj0y",
       "source": "packages/map-core/src/AddressBalloon.tsx",
-      "line": 75,
+      "line": 86,
       "element": "button",
       "semanticName": "map-core-src-addressballoon-button-8",
       "kind": "literal"
@@ -22317,15 +22365,31 @@
     {
       "id": "pkg-map-core-src-addressballoon-div-5-kfjgas",
       "source": "packages/map-core/src/AddressBalloon.tsx",
-      "line": 66,
+      "line": 76,
       "element": "div",
       "semanticName": "map-core-src-addressballoon-div-5",
       "kind": "literal"
     },
     {
+      "id": "pkg-map-core-src-addressballoon-edit-button-11-p5d8nk",
+      "source": "packages/map-core/src/AddressBalloon.tsx",
+      "line": 95,
+      "element": "button",
+      "semanticName": "map-core-src-addressballoon-edit-button-11",
+      "kind": "literal"
+    },
+    {
+      "id": "pkg-map-core-src-addressballoon-edit-label-12-v3c6jw",
+      "source": "packages/map-core/src/AddressBalloon.tsx",
+      "line": 101,
+      "element": "span",
+      "semanticName": "map-core-src-addressballoon-edit-label-12",
+      "kind": "literal"
+    },
+    {
       "id": "pkg-map-core-src-addressballoon-form-1-lzw74h",
       "source": "packages/map-core/src/AddressBalloon.tsx",
-      "line": 42,
+      "line": 43,
       "element": "form",
       "semanticName": "map-core-src-addressballoon-form-1",
       "kind": "literal"
@@ -22333,7 +22397,7 @@
     {
       "id": "pkg-map-core-src-addressballoon-input-4-1er4rl",
       "source": "packages/map-core/src/AddressBalloon.tsx",
-      "line": 54,
+      "line": 59,
       "element": "input",
       "semanticName": "map-core-src-addressballoon-input-4",
       "kind": "literal"
@@ -22341,7 +22405,7 @@
     {
       "id": "pkg-map-core-src-addressballoon-text-2-xzm2m7",
       "source": "packages/map-core/src/AddressBalloon.tsx",
-      "line": 49,
+      "line": 53,
       "element": "p",
       "semanticName": "map-core-src-addressballoon-text-2",
       "kind": "literal"
@@ -22349,7 +22413,7 @@
     {
       "id": "pkg-map-core-src-addressballoon-text-3-lur0ma",
       "source": "packages/map-core/src/AddressBalloon.tsx",
-      "line": 51,
+      "line": 55,
       "element": "span",
       "semanticName": "map-core-src-addressballoon-text-3",
       "kind": "literal"
@@ -22357,7 +22421,7 @@
     {
       "id": "pkg-map-core-src-addressballoon-text-7-3cdvfp",
       "source": "packages/map-core/src/AddressBalloon.tsx",
-      "line": 73,
+      "line": 83,
       "element": "span",
       "semanticName": "map-core-src-addressballoon-text-7",
       "kind": "literal"
@@ -22365,7 +22429,7 @@
     {
       "id": "pkg-map-core-src-addressballoon-text-9-8c8kel",
       "source": "packages/map-core/src/AddressBalloon.tsx",
-      "line": 81,
+      "line": 92,
       "element": "span",
       "semanticName": "map-core-src-addressballoon-text-9",
       "kind": "literal"
@@ -22373,7 +22437,7 @@
     {
       "id": "pkg-map-core-src-asolmap-button-8-xxmxno",
       "source": "packages/map-core/src/AsolMap.tsx",
-      "line": 617,
+      "line": 706,
       "element": "button",
       "semanticName": "map-core-src-asolmap-button-8",
       "kind": "literal"
@@ -22381,7 +22445,7 @@
     {
       "id": "pkg-map-core-src-asolmap-div-2-00kf82",
       "source": "packages/map-core/src/AsolMap.tsx",
-      "line": 591,
+      "line": 680,
       "element": "div",
       "semanticName": "map-core-src-asolmap-div-2",
       "kind": "literal"
@@ -22389,7 +22453,7 @@
     {
       "id": "pkg-map-core-src-asolmap-div-3-qpv1kp",
       "source": "packages/map-core/src/AsolMap.tsx",
-      "line": 609,
+      "line": 698,
       "element": "div",
       "semanticName": "map-core-src-asolmap-div-3",
       "kind": "literal"
@@ -22397,7 +22461,7 @@
     {
       "id": "pkg-map-core-src-asolmap-div-6-khhe95",
       "source": "packages/map-core/src/AsolMap.tsx",
-      "line": 615,
+      "line": 704,
       "element": "div",
       "semanticName": "map-core-src-asolmap-div-6",
       "kind": "literal"
@@ -22405,7 +22469,7 @@
     {
       "id": "pkg-map-core-src-asolmap-text-4-j9ljtg",
       "source": "packages/map-core/src/AsolMap.tsx",
-      "line": 610,
+      "line": 699,
       "element": "span",
       "semanticName": "map-core-src-asolmap-text-4",
       "kind": "literal"
@@ -22413,7 +22477,7 @@
     {
       "id": "pkg-map-core-src-asolmap-text-5-dibyfb",
       "source": "packages/map-core/src/AsolMap.tsx",
-      "line": 611,
+      "line": 700,
       "element": "span",
       "semanticName": "map-core-src-asolmap-text-5",
       "kind": "literal"
@@ -22421,7 +22485,7 @@
     {
       "id": "pkg-map-core-src-asolmap-text-7-fpll15",
       "source": "packages/map-core/src/AsolMap.tsx",
-      "line": 616,
+      "line": 705,
       "element": "p",
       "semanticName": "map-core-src-asolmap-text-7",
       "kind": "literal"
@@ -22432,6 +22496,70 @@
       "line": 35,
       "element": "div",
       "semanticName": "map-core-src-asolmapcontrols-div-1",
+      "kind": "literal"
+    },
+    {
+      "id": "pkg-map-core-src-movelocationballoon-button-6-t3y8kr",
+      "source": "packages/map-core/src/MoveLocationBalloon.tsx",
+      "line": 36,
+      "element": "button",
+      "semanticName": "map-core-src-movelocationballoon-button-6",
+      "kind": "literal"
+    },
+    {
+      "id": "pkg-map-core-src-movelocationballoon-button-9-m5r1zb",
+      "source": "packages/map-core/src/MoveLocationBalloon.tsx",
+      "line": 45,
+      "element": "button",
+      "semanticName": "map-core-src-movelocationballoon-button-9",
+      "kind": "literal"
+    },
+    {
+      "id": "pkg-map-core-src-movelocationballoon-div-1-r7m2qa",
+      "source": "packages/map-core/src/MoveLocationBalloon.tsx",
+      "line": 21,
+      "element": "div",
+      "semanticName": "map-core-src-movelocationballoon-div-1",
+      "kind": "literal"
+    },
+    {
+      "id": "pkg-map-core-src-movelocationballoon-div-2-f5k8wc",
+      "source": "packages/map-core/src/MoveLocationBalloon.tsx",
+      "line": 31,
+      "element": "div",
+      "semanticName": "map-core-src-movelocationballoon-div-2",
+      "kind": "literal"
+    },
+    {
+      "id": "pkg-map-core-src-movelocationballoon-div-5-h4c7mx",
+      "source": "packages/map-core/src/MoveLocationBalloon.tsx",
+      "line": 35,
+      "element": "div",
+      "semanticName": "map-core-src-movelocationballoon-div-5",
+      "kind": "literal"
+    },
+    {
+      "id": "pkg-map-core-src-movelocationballoon-span-11-c4v7ht",
+      "source": "packages/map-core/src/MoveLocationBalloon.tsx",
+      "line": 52,
+      "element": "span",
+      "semanticName": "map-core-src-movelocationballoon-span-11",
+      "kind": "literal"
+    },
+    {
+      "id": "pkg-map-core-src-movelocationballoon-span-4-b6q1pe",
+      "source": "packages/map-core/src/MoveLocationBalloon.tsx",
+      "line": 33,
+      "element": "span",
+      "semanticName": "map-core-src-movelocationballoon-span-4",
+      "kind": "literal"
+    },
+    {
+      "id": "pkg-map-core-src-movelocationballoon-span-8-w2n6cg",
+      "source": "packages/map-core/src/MoveLocationBalloon.tsx",
+      "line": 43,
+      "element": "span",
+      "semanticName": "map-core-src-movelocationballoon-span-8",
       "kind": "literal"
     },
     {
@@ -23541,7 +23669,7 @@
     {
       "id": "profile-presentation-profile-page-profileeditworkspacechrome-div-2-9oleon",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceChrome.tsx",
-      "line": 86,
+      "line": 100,
       "element": "div",
       "semanticName": "presentation-profile-page-profileeditworkspacechrome-div-2",
       "kind": "literal"
@@ -23549,7 +23677,7 @@
     {
       "id": "profile-presentation-profile-page-profileeditworkspacechrome-floor-glow-7m3k2p",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceChrome.tsx",
-      "line": 123,
+      "line": 137,
       "element": "div",
       "semanticName": "presentation-profile-page-profileeditworkspacechrome-floor-glow",
       "kind": "literal"
@@ -23557,7 +23685,7 @@
     {
       "id": "profile-presentation-profile-page-profileeditworkspacechrome-text-4-cwzzju",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceChrome.tsx",
-      "line": 243,
+      "line": 260,
       "element": "p",
       "semanticName": "presentation-profile-page-profileeditworkspacechrome-text-4",
       "kind": "literal"
@@ -23573,7 +23701,7 @@
     {
       "id": "profile-presentation-profile-page-profileeditworkspaceview-div-24-pqrdwg",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 266,
+      "line": 264,
       "element": "div",
       "semanticName": "presentation-profile-page-profileeditworkspaceview-div-24",
       "kind": "literal"
@@ -23581,7 +23709,7 @@
     {
       "id": "profile-presentation-profile-page-profileeditworkspaceview-div-6-ojpfuv",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 51,
+      "line": 49,
       "element": "div",
       "semanticName": "presentation-profile-page-profileeditworkspaceview-div-6",
       "kind": "literal"
@@ -23589,7 +23717,7 @@
     {
       "id": "profile-presentation-profile-page-profileeditworkspaceview-div-7-qnevwy",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 52,
+      "line": 50,
       "element": "div",
       "semanticName": "presentation-profile-page-profileeditworkspaceview-div-7",
       "kind": "literal"
@@ -23597,7 +23725,7 @@
     {
       "id": "profile-presentation-profile-page-profilepagecontent-model-div-1-xnrreg",
       "source": "src/features/profile/presentation/profile-page/ProfilePageContent.model.tsx",
-      "line": 358,
+      "line": 363,
       "element": "div",
       "semanticName": "presentation-profile-page-profilepagecontent-model-div-1",
       "kind": "literal"
@@ -23605,7 +23733,7 @@
     {
       "id": "profile-presentation-profile-page-profilepagecontent-model-div-2-p1k9bs",
       "source": "src/features/profile/presentation/profile-page/ProfilePageContent.model.tsx",
-      "line": 362,
+      "line": 367,
       "element": "div",
       "semanticName": "presentation-profile-page-profilepagecontent-model-div-2",
       "kind": "literal"
@@ -23613,7 +23741,7 @@
     {
       "id": "profile-presentation-profile-page-profilepagecontent-model-text-3-w9cnkl",
       "source": "src/features/profile/presentation/profile-page/ProfilePageContent.model.tsx",
-      "line": 363,
+      "line": 368,
       "element": "p",
       "semanticName": "presentation-profile-page-profilepagecontent-model-text-3",
       "kind": "literal"

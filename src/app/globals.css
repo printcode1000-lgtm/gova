@@ -574,3 +574,68 @@ html[data-asol-simulation-active="true"]
   text-align: left;
   unicode-bidi: isolate;
 }
+
+@keyframes asol-page-save-attention-wash {
+  0% { opacity: 0; }
+  18% { opacity: 1; }
+  72% { opacity: 0.42; }
+  100% { opacity: 0; }
+}
+
+@keyframes asol-page-save-attention-trail {
+  0% {
+    opacity: 0;
+    transform: translate(calc(50vw - var(--page-save-cue-x)), calc(58vh - var(--page-save-cue-y))) scale(0.5);
+  }
+  16% { opacity: 0.9; }
+  78% { opacity: 0.72; }
+  100% { opacity: 0; transform: translate(0, 0) scale(1.15); }
+}
+
+@keyframes asol-page-save-attention-target {
+  0%, 55% { opacity: 0; transform: translate(-50%, -50%) scale(0.35); }
+  70% { opacity: 0.9; }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(2.7); }
+}
+
+.asol-page-save-attention-cue__wash {
+  animation: asol-page-save-attention-wash 1.35s ease-out both;
+  background: radial-gradient(circle at 50% 58%, color-mix(in srgb, var(--color-primary) 16%, transparent), transparent 42%);
+}
+
+.asol-page-save-attention-cue__trail {
+  left: calc(var(--page-save-cue-x) - 0.4rem);
+  top: calc(var(--page-save-cue-y) - 0.4rem);
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--color-primary) 82%, white 18%);
+  box-shadow: 0 0 0.9rem color-mix(in srgb, var(--color-primary) 70%, transparent), 0 0 2.2rem color-mix(in srgb, var(--color-primary) 38%, transparent);
+  animation: asol-page-save-attention-trail 1.05s cubic-bezier(0.2, 0.72, 0.22, 1) both;
+  will-change: opacity, transform;
+}
+
+.asol-page-save-attention-cue__trail--two {
+  animation-delay: 110ms;
+  transform-origin: center;
+}
+
+.asol-page-save-attention-cue__target {
+  left: var(--page-save-cue-x);
+  top: var(--page-save-cue-y);
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 2px solid color-mix(in srgb, var(--color-primary) 72%, transparent);
+  border-radius: 9999px;
+  box-shadow: 0 0 1rem color-mix(in srgb, var(--color-primary) 48%, transparent);
+  animation: asol-page-save-attention-target 1.35s ease-out both;
+  will-change: opacity, transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .asol-page-save-attention-cue__wash,
+  .asol-page-save-attention-cue__trail,
+  .asol-page-save-attention-cue__target {
+    animation-duration: 1ms;
+  }
+}

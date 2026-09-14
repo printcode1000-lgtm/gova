@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, Save } from "lucide-react";
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type Ref } from "react";
 
 import { LoadingSpinner } from "@/shared/ui/LoadingSpinner";
 import {
@@ -24,6 +24,7 @@ interface PageSaveHeaderControlProps {
   successFlash: boolean;
   ariaLabel: string;
   onOpen: () => void;
+  buttonRef?: Ref<HTMLButtonElement>;
 }
 
 /**
@@ -37,9 +38,11 @@ function PageSaveHeaderControl({ id,
   successFlash,
   ariaLabel,
   onOpen,
+  buttonRef,
 }: PageSaveHeaderControlProps & { id?: string }) {
   return (
     <button
+      ref={buttonRef}
       type="button"
       id={id ? `${id}-page-save-button` : undefined}
       onClick={onOpen}
@@ -99,7 +102,10 @@ export function PageSaveHeaderButton() {
     getPageSaveSnapshot,
   );
   const [successFlash, setSuccessFlash] = useState(false);
+  const [attentionCue, setAttentionCue] = useState<{ x: number; y: number; cycle: number } | null>(null);
   const wasSavingRef = useRef(false);
+  const wasSaveIconVisibleRef = useRef(false);
+  const saveButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (snapshot.isSaving || snapshot.phase === "saving") {
@@ -153,6 +159,41 @@ export function PageSaveHeaderButton() {
     isSaving ||
     successFlash;
 
+  const saveIconVisible =
+    (snapshot.isDirty ||
+      snapshot.hasPersistedPending ||
+      snapshot.interrupted.length > 0) &&
+    !isSaving &&
+    !successFlash;
+
+  useEffect(() => {
+    if (!saveIconVisible) {
+      wasSaveIconVisibleRef.current = false;
+      return undefined;
+    }
+
+    if (wasSaveIconVisibleRef.current) return undefined;
+    wasSaveIconVisibleRef.current = true;
+
+    const frame = window.requestAnimationFrame(() => {
+      const rect = saveButtonRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      setAttentionCue((current) => ({
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2,
+        cycle: (current?.cycle ?? 0) + 1,
+      }));
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [saveIconVisible]);
+
+  useEffect(() => {
+    if (!attentionCue) return undefined;
+    const timer = window.setTimeout(() => setAttentionCue(null), 1500);
+    return () => window.clearTimeout(timer);
+  }, [attentionCue]);
+
   const handleOpen = useCallback(() => {
     if (isSaving || successFlash) return;
     openPageSaveDialog();
@@ -175,6 +216,7 @@ export function PageSaveHeaderButton() {
     successFlash,
     ariaLabel,
     onOpen: handleOpen,
+    buttonRef: saveButtonRef,
   } as const;
 
   const registrationId = snapshot.registrationId ?? null;
@@ -201,8 +243,29 @@ export function PageSaveHeaderButton() {
       />
     );
 
+  const attentionCueStyle = attentionCue
+    ? ({
+        "--page-save-cue-x": `${attentionCue.x}px`,
+        "--page-save-cue-y": `${attentionCue.y}px`,
+      } as CSSProperties)
+    : undefined;
+
   return (
     <>
+      {attentionCue ? (
+        <div
+          key={attentionCue.cycle}
+          id="features-page-save-presentation-pagesaveheaderbutton-div-attention-cue-7-r4k2mx"
+          className="asol-page-save-attention-cue pointer-events-none fixed inset-0 z-[89] overflow-hidden"
+          style={attentionCueStyle}
+          aria-hidden="true"
+        >
+          <span id="features-page-save-presentation-pagesaveheaderbutton-span-attention-wash-8-v2q7na" className="asol-page-save-attention-cue__wash absolute inset-0" />
+          <span id="features-page-save-presentation-pagesaveheaderbutton-span-attention-trail-one-9-k5m1pc" className="asol-page-save-attention-cue__trail asol-page-save-attention-cue__trail--one absolute" />
+          <span id="features-page-save-presentation-pagesaveheaderbutton-span-attention-trail-two-10-h8r4yd" className="asol-page-save-attention-cue__trail asol-page-save-attention-cue__trail--two absolute" />
+          <span id="features-page-save-presentation-pagesaveheaderbutton-span-attention-target-11-p3w6zs" className="asol-page-save-attention-cue__target absolute" />
+        </div>
+      ) : null}
       {control}
       <PageSaveDialog />
     </>

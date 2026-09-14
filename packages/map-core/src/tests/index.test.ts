@@ -168,6 +168,10 @@ function runAddressContractTest() {
 
   const balloon = readFileSync(path.join(packageRoot, "src", "AddressBalloon.tsx"), "utf8");
   assert.ok(balloon.includes("onConfirm"));
+  assert.ok(balloon.includes("setIsEditing(true)"));
+  const map = readFileSync(path.join(packageRoot, "src", "AsolMap.tsx"), "utf8");
+  assert.ok(map.includes("openMoveConfirmation"));
+  assert.ok(map.includes("movePromptText"));
   console.log("✅ map-core address contract test passed");
 }
 

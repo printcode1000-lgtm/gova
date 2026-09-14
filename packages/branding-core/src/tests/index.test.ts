@@ -290,8 +290,8 @@ async function main(): Promise<void> {
   };
   assert.equal(
     rootPackage.scripts.dev,
-    "next dev --turbo --port 3001",
-    "the fast dev command must stay unchanged",
+    "cross-env GOVA_DEV_PORT=3001 npx tsx scripts/dev-simulation.ts",
+    "the canonical dev command must keep the simulation runtime wrapper",
   );
   assert.equal(
     rootPackage.scripts["branding:generate"],

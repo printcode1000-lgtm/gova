@@ -186,6 +186,10 @@ export function ProductPropertySpecs({ id,
                     placeholder: "اكتب وصف العنوان",
                     confirmLabel: "تأكيد",
                     cancelLabel: "إلغاء",
+                    editLabel: "تعديل",
+                    movePromptText: "هل تريد نقل الموقع إلى هذا المكان؟",
+                    moveConfirmLabel: "نعم",
+                    moveCancelLabel: "لا",
                     value: specs.address ?? "",
                   }}
                   onLocationCommitted={({ latitude: nextLatitude, longitude: nextLongitude, address }) =>

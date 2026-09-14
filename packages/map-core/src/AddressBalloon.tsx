@@ -1,6 +1,6 @@
 'use client';
 
-import { Check, MapPin, X } from 'lucide-react';
+import { Check, MapPin, Pencil, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 import type { AddressPromptConfig } from './types';
@@ -21,13 +21,14 @@ interface Props {
  */
 export function AddressBalloon({ config, onConfirm, onDismiss }: Props) {
   const [value, setValue] = useState(config.value ?? '');
+  const [isEditing, setIsEditing] = useState(!(config.value?.trim()));
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    // A balloon that opens without focus costs the user an extra tap on a phone.
+    if (!isEditing) return undefined;
     const frame = requestAnimationFrame(() => inputRef.current?.focus());
     return () => cancelAnimationFrame(frame);
-  }, []);
+  }, [isEditing]);
 
   const requireValue = config.requireValue ?? true;
   const trimmed = value.trim();
@@ -41,6 +42,9 @@ export function AddressBalloon({ config, onConfirm, onDismiss }: Props) {
   return (
     <form id="pkg-map-core-src-addressballoon-form-1-lzw74h"
       className="asol-map__address"
+      onClick={(event) => event.stopPropagation()}
+      onPointerDown={(event) => event.stopPropagation()}
+      onTouchStart={(event) => event.stopPropagation()}
       onSubmit={(event) => {
         event.preventDefault();
         confirm();
@@ -51,17 +55,23 @@ export function AddressBalloon({ config, onConfirm, onDismiss }: Props) {
         <span id="pkg-map-core-src-addressballoon-text-3-lur0ma">{config.title ?? 'Address'}</span>
       </p>
 
-      <input id="pkg-map-core-src-addressballoon-input-4-1er4rl"
-        ref={inputRef}
-        className="asol-map__address-input"
-        type="text"
-        value={value}
-        placeholder={config.placeholder ?? 'Describe this location'}
-        onChange={(event) => setValue(event.target.value)}
-        onKeyDown={(event) => {
-          if (event.key === 'Escape') onDismiss();
-        }}
-      />
+      {isEditing ? (
+        <input id="pkg-map-core-src-addressballoon-input-4-1er4rl"
+          ref={inputRef}
+          className="asol-map__address-input"
+          type="text"
+          value={value}
+          placeholder={config.placeholder ?? 'Describe this location'}
+          onChange={(event) => setValue(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === 'Escape') onDismiss();
+          }}
+        />
+      ) : (
+        <p id="pkg-map-core-src-addressballoon-address-display-10-q7m4rx" className="asol-map__address-value">
+          {trimmed}
+        </p>
+      )}
 
       <div id="pkg-map-core-src-addressballoon-div-5-kfjgas" className="asol-map__address-actions">
         <button id="pkg-map-core-src-addressballoon-button-6-kpqkv9"
@@ -72,14 +82,25 @@ export function AddressBalloon({ config, onConfirm, onDismiss }: Props) {
           <X aria-hidden="true" />
           <span id="pkg-map-core-src-addressballoon-text-7-3cdvfp">{config.cancelLabel ?? 'Cancel'}</span>
         </button>
-        <button id="pkg-map-core-src-addressballoon-button-8-bafj0y"
-          type="submit"
-          className="asol-map__address-button asol-map__address-button--primary"
-          disabled={!canConfirm}
-        >
-          <Check aria-hidden="true" />
-          <span id="pkg-map-core-src-addressballoon-text-9-8c8kel">{config.confirmLabel ?? 'Confirm'}</span>
-        </button>
+        {isEditing ? (
+          <button id="pkg-map-core-src-addressballoon-button-8-bafj0y"
+            type="submit"
+            className="asol-map__address-button asol-map__address-button--primary"
+            disabled={!canConfirm}
+          >
+            <Check aria-hidden="true" />
+            <span id="pkg-map-core-src-addressballoon-text-9-8c8kel">{config.confirmLabel ?? 'Confirm'}</span>
+          </button>
+        ) : (
+          <button id="pkg-map-core-src-addressballoon-edit-button-11-p5d8nk"
+            type="button"
+            className="asol-map__address-button asol-map__address-button--primary"
+            onClick={() => setIsEditing(true)}
+          >
+            <Pencil aria-hidden="true" />
+            <span id="pkg-map-core-src-addressballoon-edit-label-12-v3c6jw">{config.editLabel ?? 'Edit'}</span>
+          </button>
+        )}
       </div>
     </form>
   );

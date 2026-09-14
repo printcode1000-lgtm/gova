@@ -19,6 +19,7 @@ import {
 } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { AddressBalloon } from "./AddressBalloon";
+import { MoveLocationBalloon } from "./MoveLocationBalloon";
 import { AsolMapControls } from "./AsolMapControls";
 import { circleToPolygon, collection, markerAt } from "./geometry";
 import { createNativePlatformGpsProvider } from "./native-platform-gps";
@@ -59,6 +60,7 @@ export const AsolMap = forwardRef<AsolMapHandle, AsolMapProps>(
     const stopGpsRef = useRef<(() => void) | null>(null);
     const popupRef = useRef<{ popup: Popup; root?: Root } | null>(null);
     const addressRef = useRef<{ popup: Popup; root: Root } | null>(null);
+    const moveConfirmRef = useRef<{ popup: Popup; root: Root } | null>(null);
     const pressRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const polygonDraftRef = useRef<[number, number][]>([]);
     const circleCenterRef = useRef<Coordinates | null>(null);
@@ -89,6 +91,14 @@ export const AsolMap = forwardRef<AsolMapHandle, AsolMapProps>(
       queueMicrotask(() => current.root.unmount());
     }, []);
 
+    const closeMoveConfirmation = useCallback(() => {
+      const current = moveConfirmRef.current;
+      if (!current) return;
+      moveConfirmRef.current = null;
+      current.popup.remove();
+      queueMicrotask(() => current.root.unmount());
+    }, []);
+
     /**
      * Opens the address balloon on a point. This is the package's entire input
      * surface for naming a location: the field lives on the pin instead of beside
@@ -105,10 +115,14 @@ export const AsolMap = forwardRef<AsolMapHandle, AsolMapProps>(
 
         const element = document.createElement("div");
         element.className = "asol-map__popup asol-map__popup--address";
+        for (const eventName of ["click", "dblclick", "pointerdown", "mousedown", "touchstart"]) {
+          element.addEventListener(eventName, (event) => event.stopPropagation());
+        }
         const popup = new Popup({
           closeButton: false,
           closeOnClick: false,
-          offset: 14,
+          anchor: "bottom",
+          offset: 8,
           maxWidth: "17rem",
           className: "asol-map__address-popup",
         })
@@ -131,6 +145,73 @@ export const AsolMap = forwardRef<AsolMapHandle, AsolMapProps>(
         );
       },
       [closeAddressBalloon],
+    );
+
+    const openMoveConfirmation = useCallback(
+      (coordinates: Coordinates, marker: AsolMapMarker) => {
+        const map = mapRef.current;
+        const config = propsRef.current.addressPrompt;
+        if (!map || !config?.enabled) return;
+
+        closeMoveConfirmation();
+        closeAddressBalloon();
+
+        const element = document.createElement("div");
+        element.className = "asol-map__popup asol-map__popup--move-confirm";
+        for (const eventName of ["click", "dblclick", "pointerdown", "mousedown", "touchstart"]) {
+          element.addEventListener(eventName, (event) => event.stopPropagation());
+        }
+        const popup = new Popup({
+          closeButton: false,
+          closeOnClick: false,
+          anchor: "bottom",
+          offset: 8,
+          maxWidth: "16rem",
+          className: "asol-map__move-confirm-popup",
+        })
+          .setLngLat([coordinates.longitude, coordinates.latitude])
+          .setDOMContent(element)
+          .addTo(map);
+
+        const root = createRoot(element);
+        moveConfirmRef.current = { popup, root };
+        const existingAddress =
+          typeof marker.properties.address === "string"
+            ? marker.properties.address
+            : marker.properties.title;
+
+        root.render(
+          <MoveLocationBalloon
+            message={config.movePromptText ?? "Move the location to this place?"}
+            confirmLabel={config.moveConfirmLabel ?? "Yes"}
+            cancelLabel={config.moveCancelLabel ?? "No"}
+            onDismiss={() => {
+              closeMoveConfirmation();
+              const [longitude, latitude] = marker.geometry.coordinates as [number, number];
+              openAddressBalloon({ latitude, longitude }, existingAddress);
+            }}
+            onConfirm={() => {
+              closeMoveConfirmation();
+              const movedMarker: AsolMapMarker = {
+                ...marker,
+                geometry: {
+                  ...marker.geometry,
+                  coordinates: [coordinates.longitude, coordinates.latitude],
+                },
+              };
+              propsRef.current.onTap?.(coordinates);
+              propsRef.current.onMarkerSelected?.(movedMarker);
+              propsRef.current.onMarkersChanged?.(
+                (propsRef.current.markers ?? []).map((item) =>
+                  item.properties.id === marker.properties.id ? movedMarker : item,
+                ),
+              );
+              openAddressBalloon(coordinates, existingAddress);
+            }}
+          />,
+        );
+      },
+      [closeAddressBalloon, closeMoveConfirmation, openAddressBalloon],
     );
 
     const startGps = useCallback(async () => {
@@ -279,6 +360,13 @@ export const AsolMap = forwardRef<AsolMapHandle, AsolMapProps>(
             return;
           }
           const coordinates = point(event);
+          const pickerMarker = propsRef.current.modes?.includes("picker")
+            ? (propsRef.current.markers ?? [])[0] ?? null
+            : null;
+          if (pickerMarker && propsRef.current.addressPrompt?.enabled) {
+            openMoveConfirmation(coordinates, pickerMarker);
+            return;
+          }
           propsRef.current.onTap?.(coordinates);
           if (propsRef.current.modes?.includes("polygonEditor")) {
             polygonDraftRef.current.push([
@@ -368,19 +456,20 @@ export const AsolMap = forwardRef<AsolMapHandle, AsolMapProps>(
       } catch (cause) {
         emitError(error("initialization", cause, false));
       }
-    }, [emitError, openAddressBalloon]);
+    }, [emitError, openAddressBalloon, openMoveConfirmation]);
 
     useEffect(() => {
       void initialize();
       return () => {
         stopGpsRef.current?.();
         closeAddressBalloon();
+        closeMoveConfirmation();
         popupRef.current?.root?.unmount();
         popupRef.current?.popup.remove();
         mapRef.current?.remove();
         mapRef.current = null;
       };
-    }, [closeAddressBalloon, initialize]);
+    }, [closeAddressBalloon, closeMoveConfirmation, initialize]);
 
     /*
      * Data updates used to be gated on `map.isStyleLoaded()`, which is false

@@ -137,7 +137,9 @@ export function SimulationRuntimeController() {
       void checkpointSimulationPath(
         currentRoute(),
         session.sessionToken!,
-      ).catch(() => undefined);
+      ).catch((error) => {
+        console.error("[simulation] Failed to checkpoint simulation path", error);
+      });
     }, 180);
     return () => window.clearTimeout(timer);
   }, [pathname, session, state]);

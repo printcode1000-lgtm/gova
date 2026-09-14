@@ -40,6 +40,11 @@ export interface AddressPromptConfig {
   placeholder?: string;
   confirmLabel?: string;
   cancelLabel?: string;
+  /** Label for entering edit mode when an existing address is displayed. */
+  editLabel?: string;
+  movePromptText?: string;
+  moveConfirmLabel?: string;
+  moveCancelLabel?: string;
   /** Pre-fills the field when reopening the balloon on an existing point. */
   value?: string;
   /** Confirm stays disabled while the field is empty. Defaults to true. */
