@@ -6425,6 +6425,7 @@
         "@asol/signed-token-core",
         "@asol/simulation-core",
         "@asol/simulation-core/server",
+        "@asol/spatial-carousel-core",
         "@asol/storage-core",
         "@asol/storage-core/profiles-config",
         "@asol/storage-core/server",
@@ -6508,6 +6509,7 @@
         "packages/service-runtime-core/",
         "packages/signed-token-core/",
         "packages/simulation-core/",
+        "packages/spatial-carousel-core/",
         "packages/storage-core/",
         "packages/storage-image-manager-core/",
         "packages/sub2main-composition/",
@@ -6593,6 +6595,7 @@
         "@asol/service-runtime-core",
         "@asol/signed-token-core",
         "@asol/simulation-core",
+        "@asol/spatial-carousel-core",
         "@asol/storage-core",
         "@asol/storage-image-manager-core",
         "@asol/storage-image-manager-core/image-cache",
@@ -6745,6 +6748,7 @@
         "@asol/service-runtime-core",
         "@asol/signed-token-core",
         "@asol/simulation-core",
+        "@asol/spatial-carousel-core",
         "@asol/storage-core",
         "@asol/storage-image-manager-core",
         "@asol/sub2main-composition",
@@ -6816,6 +6820,7 @@
         "packages/service-runtime-core/",
         "packages/signed-token-core/",
         "packages/simulation-core/",
+        "packages/spatial-carousel-core/",
         "packages/storage-core/",
         "packages/storage-image-manager-core/",
         "packages/sub2main-composition/",
@@ -23901,6 +23906,28 @@
       ]
     },
     {
+      "id": "package:@asol/spatial-carousel-core",
+      "kind": "package",
+      "name": "@asol/spatial-carousel-core",
+      "path": "packages/spatial-carousel-core",
+      "summary": "Reusable responsive circular 3D carousel interaction and presentation; Layer: capability; Public exports: .",
+      "tags": [
+        ".",
+        "3d",
+        "@asol/spatial-carousel-core",
+        "and",
+        "capability",
+        "carousel",
+        "circular",
+        "interaction",
+        "packages/spatial-carousel-core",
+        "presentation",
+        "responsive",
+        "reusable",
+        "reusable responsive circular 3d carousel interaction and presentation"
+      ]
+    },
+    {
       "id": "package:@asol/storage-core",
       "kind": "package",
       "name": "@asol/storage-core",
@@ -37687,6 +37714,17 @@
       "tags": [
         "packages/simulation-core/src/server",
         "packages/simulation-core/src/server.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/spatial-carousel-core/src/index.ts",
+      "kind": "source",
+      "name": "index.ts",
+      "path": "packages/spatial-carousel-core/src/index.ts",
+      "tags": [
+        "packages/spatial-carousel-core/src/index",
+        "packages/spatial-carousel-core/src/index.ts",
         "ts"
       ]
     },
@@ -54103,6 +54141,18 @@
       ]
     },
     {
+      "id": "test:packages/spatial-carousel-core/src/tests/index.test.ts",
+      "kind": "test",
+      "name": "index.test.ts",
+      "path": "packages/spatial-carousel-core/src/tests/index.test.ts",
+      "tags": [
+        "packages/spatial-carousel-core/src/tests/index",
+        "packages/spatial-carousel-core/src/tests/index.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/storage-core/src/tests/contract/no-paired-functions.test.ts",
       "kind": "test",
       "name": "no-paired-functions.test.ts",
@@ -65565,6 +65615,18 @@
     },
     {
       "from": "document:docs/01-architecture/08-reference/capability-map.md",
+      "to": "package:@asol/spatial-carousel-core",
+      "kind": "references",
+      "detail": "@asol/spatial-carousel-core"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/capability-map.md",
+      "to": "package:@asol/spatial-carousel-core",
+      "kind": "references",
+      "detail": "packages/spatial-carousel-core/"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/capability-map.md",
       "to": "package:@asol/storage-core",
       "kind": "references",
       "detail": "@asol/storage-core"
@@ -66107,6 +66169,12 @@
       "to": "package:@asol/simulation-core",
       "kind": "references",
       "detail": "@asol/simulation-core"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/dependency-map.md",
+      "to": "package:@asol/spatial-carousel-core",
+      "kind": "references",
+      "detail": "@asol/spatial-carousel-core"
     },
     {
       "from": "document:docs/01-architecture/08-reference/dependency-map.md",
@@ -66698,6 +66766,18 @@
       "to": "package:@asol/simulation-core",
       "kind": "references",
       "detail": "packages/simulation-core/"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/package-catalog.md",
+      "to": "package:@asol/spatial-carousel-core",
+      "kind": "references",
+      "detail": "@asol/spatial-carousel-core"
+    },
+    {
+      "from": "document:docs/01-architecture/08-reference/package-catalog.md",
+      "to": "package:@asol/spatial-carousel-core",
+      "kind": "references",
+      "detail": "packages/spatial-carousel-core/"
     },
     {
       "from": "document:docs/01-architecture/08-reference/package-catalog.md",
@@ -78074,6 +78154,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "package:@asol/spatial-carousel-core",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "package:@asol/storage-core",
       "kind": "documents",
       "detail": "packages/"
@@ -83048,6 +83134,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "source:packages/spatial-carousel-core/src/index.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "source:packages/storage-core/scripts/sync-cors.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -84339,6 +84431,12 @@
     {
       "from": "domain:architecture",
       "to": "test:packages/simulation-core/src/tests/index.test.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "test:packages/spatial-carousel-core/src/tests/index.test.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -107665,6 +107763,11 @@
       "kind": "imports"
     },
     {
+      "from": "feature:notifications",
+      "to": "package:@asol/spatial-carousel-core",
+      "kind": "imports"
+    },
+    {
       "from": "feature:onboarding",
       "to": "external-dependency:lucide-react",
       "kind": "imports"
@@ -108387,6 +108490,11 @@
     {
       "from": "feature:profile",
       "to": "package:@asol/seller-card-core",
+      "kind": "imports"
+    },
+    {
+      "from": "feature:profile",
+      "to": "package:@asol/spatial-carousel-core",
       "kind": "imports"
     },
     {
@@ -109890,6 +109998,11 @@
     {
       "from": "package:@asol/service-runtime-core",
       "to": "package:@asol/cors",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/spatial-carousel-core",
+      "to": "external-dependency:react",
       "kind": "imports"
     },
     {
@@ -128337,6 +128450,12 @@
     {
       "from": "route:/notifications:page",
       "to": "package:@asol/signed-token-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/notifications:page",
+      "to": "package:@asol/spatial-carousel-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -170054,6 +170173,42 @@
       "detail": "./index"
     },
     {
+      "from": "source:packages/spatial-carousel-core/src/index.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/spatial-carousel-core/src/index.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/spatial-carousel-core/src/index.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/spatial-carousel-core/src/index.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/spatial-carousel-core/src/index.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/spatial-carousel-core/src/index.ts",
+      "to": "package:@asol/spatial-carousel-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/spatial-carousel-core/src/index.ts",
+      "to": "external-dependency:react",
+      "kind": "imports",
+      "detail": "react"
+    },
+    {
       "from": "source:packages/storage-core/scripts/sync-cors.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -201758,12 +201913,6 @@
       "detail": "../notifications-page-model"
     },
     {
-      "from": "source:src/features/notifications/presentation/hooks/use-notifications-filter.ts",
-      "to": "source:src/shared/ui/snap-strip-scroll.ts",
-      "kind": "imports",
-      "detail": "@/shared/ui/snap-strip-scroll"
-    },
-    {
       "from": "source:src/features/notifications/presentation/hooks/use-notifications.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -202236,6 +202385,12 @@
       "to": "package:@asol/notifications-core",
       "kind": "imports",
       "detail": "@asol/notifications-core"
+    },
+    {
+      "from": "source:src/features/notifications/presentation/NotificationsPageContent.tsx",
+      "to": "package:@asol/spatial-carousel-core",
+      "kind": "imports",
+      "detail": "@asol/spatial-carousel-core"
     },
     {
       "from": "source:src/features/notifications/presentation/NotificationsPageContent.tsx",
@@ -215699,12 +215854,6 @@
       "detail": "react"
     },
     {
-      "from": "source:src/features/profile/presentation/contact-info/ContactEntryCard.tsx",
-      "to": "source:src/shared/ui/button.tsx",
-      "kind": "imports",
-      "detail": "@/shared/ui/button"
-    },
-    {
       "from": "source:src/features/profile/presentation/contact-info/ContactInfoCard.contact-types.tsx",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -215769,6 +215918,12 @@
       "to": "package:@asol/map-core",
       "kind": "imports",
       "detail": "@asol/map-core"
+    },
+    {
+      "from": "source:src/features/profile/presentation/contact-info/ContactInfoCard.contact-types.tsx",
+      "to": "package:@asol/spatial-carousel-core",
+      "kind": "imports",
+      "detail": "@asol/spatial-carousel-core"
     },
     {
       "from": "source:src/features/profile/presentation/contact-info/ContactInfoCard.contact-types.tsx",
@@ -217896,9 +218051,9 @@
     },
     {
       "from": "source:src/features/profile/presentation/profile-page/ProfileEditWorkspaceChrome.tsx",
-      "to": "external-dependency:react",
+      "to": "package:@asol/spatial-carousel-core",
       "kind": "imports",
-      "detail": "react"
+      "detail": "@asol/spatial-carousel-core"
     },
     {
       "from": "source:src/features/profile/presentation/profile-page/ProfileEditWorkspaceChrome.tsx",
@@ -217959,6 +218114,12 @@
       "to": "external-dependency:react",
       "kind": "imports",
       "detail": "react"
+    },
+    {
+      "from": "source:src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
+      "to": "package:@asol/spatial-carousel-core",
+      "kind": "imports",
+      "detail": "@asol/spatial-carousel-core"
     },
     {
       "from": "source:src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
@@ -238672,6 +238833,47 @@
     {
       "from": "test:packages/simulation-core/src/tests/index.test.ts",
       "to": "package:@asol/simulation-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:packages/spatial-carousel-core/src/tests/index.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/spatial-carousel-core/src/tests/index.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/spatial-carousel-core/src/tests/index.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/spatial-carousel-core/src/tests/index.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/spatial-carousel-core/src/tests/index.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/spatial-carousel-core/src/tests/index.test.ts",
+      "to": "package:@asol/spatial-carousel-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:packages/spatial-carousel-core/src/tests/index.test.ts",
+      "to": "source:packages/spatial-carousel-core/src/index.ts",
+      "kind": "imports",
+      "detail": "../index"
+    },
+    {
+      "from": "test:packages/spatial-carousel-core/src/tests/index.test.ts",
+      "to": "package:@asol/spatial-carousel-core",
       "kind": "tests"
     },
     {

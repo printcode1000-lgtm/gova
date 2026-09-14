@@ -359,6 +359,14 @@ export const CAPABILITY_PACKAGES: readonly CapabilityPackage[] = [
     mayImportApp: false,
   },
   {
+    folder: 'spatial-carousel-core',
+    name: '@asol/spatial-carousel-core',
+    owns: 'Reusable responsive circular 3D carousel interaction and presentation',
+    layer: 'capability',
+    vendorModules: [],
+    mayImportApp: false,
+  },
+  {
     folder: 'secrets-core',
     name: '@asol/secrets-core',
     owns: 'Secrets archive backup and restore',

@@ -39,12 +39,26 @@ export function AddressBalloon({ config, onConfirm, onDismiss }: Props) {
     onConfirm(trimmed);
   };
 
+  const stopMapInteraction = (event: { stopPropagation: () => void }) => {
+    event.stopPropagation();
+  };
+
+  const enterEditMode = (event: { preventDefault: () => void; stopPropagation: () => void }) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setIsEditing(true);
+  };
+
   return (
     <form id="pkg-map-core-src-addressballoon-form-1-lzw74h"
       className="asol-map__address"
-      onClick={(event) => event.stopPropagation()}
-      onPointerDown={(event) => event.stopPropagation()}
-      onTouchStart={(event) => event.stopPropagation()}
+      onClick={stopMapInteraction}
+      onPointerDown={stopMapInteraction}
+      onPointerUp={stopMapInteraction}
+      onMouseDown={stopMapInteraction}
+      onMouseUp={stopMapInteraction}
+      onTouchStart={stopMapInteraction}
+      onTouchEnd={stopMapInteraction}
       onSubmit={(event) => {
         event.preventDefault();
         confirm();
@@ -95,7 +109,11 @@ export function AddressBalloon({ config, onConfirm, onDismiss }: Props) {
           <button id="pkg-map-core-src-addressballoon-edit-button-11-p5d8nk"
             type="button"
             className="asol-map__address-button asol-map__address-button--primary"
-            onClick={() => setIsEditing(true)}
+            onPointerDown={stopMapInteraction}
+            onPointerUp={stopMapInteraction}
+            onTouchStart={stopMapInteraction}
+            onTouchEnd={stopMapInteraction}
+            onClick={enterEditMode}
           >
             <Pencil aria-hidden="true" />
             <span id="pkg-map-core-src-addressballoon-edit-label-12-v3c6jw">{config.editLabel ?? 'Edit'}</span>

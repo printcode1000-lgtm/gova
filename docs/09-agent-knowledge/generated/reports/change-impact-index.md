@@ -27,7 +27,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `location` | feature | 1 | 0 | 3 | 0 | 2 | 0 |
 | `navigation` | feature | 1 | 0 | 0 | 0 | 0 | 4 |
 | `network` | feature | 1 | 1 | 0 | 0 | 0 | 3 |
-| `notifications` | feature | 3 | 32 | 44 | 0 | 10 | 13 |
+| `notifications` | feature | 3 | 32 | 44 | 0 | 10 | 14 |
 | `onboarding` | feature | 1 | 0 | 0 | 0 | 1 | 9 |
 | `orders` | feature | 1 | 1 | 9 | 0 | 1 | 13 |
 | `ota` | feature | 9 | 0 | 5 | 0 | 0 | 7 |
@@ -37,7 +37,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `pharmacy-profile-catalog` | feature | 3 | 0 | 3 | 0 | 4 | 13 |
 | `product` | feature | 1 | 3 | 28 | 0 | 13 | 23 |
 | `product-search` | feature | 2 | 0 | 4 | 0 | 5 | 14 |
-| `profile` | feature | 1 | 5 | 36 | 0 | 12 | 33 |
+| `profile` | feature | 1 | 5 | 36 | 0 | 12 | 34 |
 | `profile-products` | feature | 1 | 0 | 4 | 0 | 1 | 11 |
 | `profile-working-hours` | feature | 2 | 0 | 4 | 0 | 1 | 3 |
 | `qr-code` | feature | 1 | 1 | 0 | 0 | 1 | 2 |
@@ -92,6 +92,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/service-runtime-core` | package | 9 | 2 | 0 | 0 | 27 | 2 |
 | `@asol/signed-token-core` | package | 7 | 1 | 89 | 0 | 8 | 0 |
 | `@asol/simulation-core` | package | 4 | 1 | 4 | 0 | 14 | 0 |
+| `@asol/spatial-carousel-core` | package | 3 | 1 | 1 | 0 | 6 | 1 |
 | `@asol/storage-core` | package | 34 | 22 | 122 | 0 | 53 | 5 |
 | `@asol/storage-image-manager-core` | package | 10 | 2 | 20 | 0 | 18 | 8 |
 | `@asol/sub2main-composition` | package | 7 | 1 | 0 | 0 | 9 | 7 |

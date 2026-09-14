@@ -3,8 +3,6 @@
 import * as React from "react";
 import { useRouter } from "next/navigation";
 
-import { centerElementInScrollParent } from "@/shared/ui/snap-strip-scroll";
-
 import {
   readStoredNotificationsFilter,
   writeStoredNotificationsFilter,
@@ -16,10 +14,6 @@ import {
 
 interface UseNotificationsFilterReturn {
   filter: NotificationFilter;
-  tabsScrollRef: React.RefObject<HTMLDivElement | null>;
-  filterButtonRefs: React.RefObject<
-    Partial<Record<NotificationFilter, HTMLButtonElement | null>>
-  >;
   selectFilter: (nextFilter: NotificationFilter) => void;
 }
 
@@ -37,10 +31,6 @@ export function useNotificationsFilter(
   // The notifications feature may not depend on the page-snapshot feature, so
   // restoration is carried entirely by the key-stable storage record below.
   const [filter, setFilter] = React.useState<NotificationFilter>("all");
-  const tabsScrollRef = React.useRef<HTMLDivElement>(null);
-  const filterButtonRefs = React.useRef<
-    Partial<Record<NotificationFilter, HTMLButtonElement | null>>
-  >({});
   const filterRef = React.useRef<NotificationFilter>(filter);
   filterRef.current = filter;
   const requestedFilterRef = React.useRef<string | null>(null);
@@ -81,20 +71,11 @@ export function useNotificationsFilter(
     void writeStoredNotificationsFilter(userId, filter);
   }, [filter, userId]);
 
-  // The selected tab carries the wave animation, so it must stay on screen
-  // after a restore, a locale change, or a selection near the strip edges.
-  React.useEffect(() => {
-    const frame = requestAnimationFrame(() => {
-      centerElementInScrollParent(filterButtonRefs.current[filter] ?? null);
-    });
-    return () => cancelAnimationFrame(frame);
-  }, [filter]);
 
   const selectFilter = React.useCallback(
     (nextFilter: NotificationFilter) => {
       filterRef.current = nextFilter;
       setFilter(nextFilter);
-      centerElementInScrollParent(filterButtonRefs.current[nextFilter] ?? null);
       const params = new URLSearchParams(window.location.search);
       params.set("filter", nextFilter);
       params.delete("focus");
@@ -104,5 +85,5 @@ export function useNotificationsFilter(
     [router, setFilter],
   );
 
-  return { filter, tabsScrollRef, filterButtonRefs, selectFilter };
+  return { filter, selectFilter };
 }

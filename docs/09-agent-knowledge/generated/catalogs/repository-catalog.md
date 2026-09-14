@@ -17,13 +17,13 @@
 | environment-key | 241 |
 | external-dependency | 107 |
 | feature | 43 |
-| package | 47 |
+| package | 48 |
 | route | 154 |
 | runtime | 7 |
 | script | 156 |
 | service | 7 |
-| source | 2151 |
-| test | 256 |
+| source | 2152 |
+| test | 257 |
 
 ## Domains
 
@@ -84,6 +84,7 @@
 | @asol/service-runtime-core | `packages/service-runtime-core` | Shared service runtime helpers; Layer: capability; Public exports: . |
 | @asol/signed-token-core | `packages/signed-token-core` | Signed token create/verify; Layer: capability; Public exports: . |
 | @asol/simulation-core | `packages/simulation-core` | Development-only live simulation actor topology and runtime state; Layer: capability; Public exports: ., ./server |
+| @asol/spatial-carousel-core | `packages/spatial-carousel-core` | Reusable responsive circular 3D carousel interaction and presentation; Layer: capability; Public exports: . |
 | @asol/storage-core | `packages/storage-core` | Object storage (R2/S3) access; Layer: capability; Public exports: ., ./profiles-config, ./server |
 | @asol/storage-image-manager-core | `packages/storage-image-manager-core` | Image manager UI and client lifecycle over storage ports; Layer: capability; Public exports: ., ./client-lifecycle, ./image-cache, ./services |
 | @asol/sub2main-composition | `packages/sub2main-composition` | Composition root for the sub2main account; Layer: composition; Public exports: . |

@@ -40,6 +40,21 @@ import {
 } from "./notifications-page-model";
 import { useNotificationsFilter } from "./hooks/use-notifications-filter";
 import { NotificationsEmptyState } from "./NotificationsEmptyState";
+import {
+  SPATIAL_CAROUSEL_FLOOR_GLOW_CLASSNAME,
+  SPATIAL_CAROUSEL_ICON_WRAP_CLASSNAME,
+  SPATIAL_CAROUSEL_ITEM_CLASSNAME,
+  SPATIAL_CAROUSEL_LABEL_CLASSNAME,
+  SPATIAL_CAROUSEL_SHELL_CLASSNAME,
+  SPATIAL_CAROUSEL_VIEWPORT_CLASSNAME,
+  SPATIAL_CAROUSEL_VIEWPORT_STYLE,
+  getSpatialCarouselIconStyle,
+  getSpatialCarouselIconWrapStyle,
+  getSpatialCarouselItemPresentation,
+  getSpatialCarouselLabelStyle,
+  shouldShowSpatialCarouselLabel,
+  useSpatialCarousel,
+} from "@asol/spatial-carousel-core";
 
 export function NotificationsPageContent() {
   const router = useRouter();
@@ -68,8 +83,22 @@ export function NotificationsPageContent() {
     markManyRead,
     dismiss,
   } = useNotifications();
-  const { filter, tabsScrollRef, filterButtonRefs, selectFilter } =
-    useNotificationsFilter(uid);
+  const { filter, selectFilter } = useNotificationsFilter(uid);
+  const selectedFilterIndex = Math.max(0, availableFilters.findIndex((item) => item.id === filter));
+  const {
+    centerIndex: filterCenterIndex,
+    setCenterIndex: setFilterCenterIndex,
+    moveCenter: moveFilterCenter,
+    draggedRef: filterDraggedRef,
+    pointerHandlers: filterPointerHandlers,
+  } = useSpatialCarousel({
+    itemCount: availableFilters.length,
+    selectedIndex: selectedFilterIndex,
+    onSettledIndex: (index) => {
+      const centeredFilter = availableFilters[index];
+      if (centeredFilter && centeredFilter.id !== filter) selectFilter(centeredFilter.id);
+    },
+  });
   const [focusId, setFocusId] = React.useState("");
 
   React.useEffect(() => {
@@ -143,88 +172,98 @@ export function NotificationsPageContent() {
         </div>
       </header>
 
-      {/*
-        Same navigation treatment as the profile edit workspace
-        (`ProfileEditWorkspaceView`): one coloured square per tab inside a
-        tonal, horizontally snapping strip, with the active tab pulsing behind
-        its icon.
-      */}
-      <nav id='features-notifications-presentation-notificationspagecontent-nav-14-3jear9'
-        className="mb-5 w-full max-w-full overflow-hidden rounded-2xl border border-outline-variant/40 bg-surface-container-low/85 shadow-sm backdrop-blur-xl"
+      <nav
+        id='features-notifications-presentation-notificationspagecontent-nav-14-3jear9'
+        className={`mb-5 ${SPATIAL_CAROUSEL_SHELL_CLASSNAME}`}
         aria-label={copy.title}
       >
-        {/*
-          The strip position is derived from the selected tab, so it is
-          deliberately not captured for generic snapshot scroll restoration.
-        */}
-        <div id='features-notifications-presentation-notificationspagecontent-div-15-iyp3eo'
-          ref={tabsScrollRef}
-          data-snapshot-id="notifications-filter-tabs-scroll"
-          className="flex snap-x snap-mandatory items-stretch gap-1.5 overflow-x-auto overscroll-x-contain px-2 py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        <div
+          id='features-notifications-presentation-notificationspagecontent-div-15-iyp3eo'
+          role="group"
+          tabIndex={0}
+          aria-label={copy.title}
+          {...filterPointerHandlers}
+          onKeyDown={(event) => {
+            if (event.key === "ArrowLeft") {
+              event.preventDefault();
+              moveFilterCenter(locale === "ar" ? 1 : -1);
+            } else if (event.key === "ArrowRight") {
+              event.preventDefault();
+              moveFilterCenter(locale === "ar" ? -1 : 1);
+            } else if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              const centeredFilter = availableFilters[filterCenterIndex];
+              if (centeredFilter) selectFilter(centeredFilter.id);
+            }
+          }}
+          className={SPATIAL_CAROUSEL_VIEWPORT_CLASSNAME}
+          style={SPATIAL_CAROUSEL_VIEWPORT_STYLE}
         >
-          {availableFilters.map((item) => {
+          <div
+            id="features-notifications-presentation-notificationspagecontent-filter-floor-glow-7k3p2n"
+            aria-hidden="true"
+            className={SPATIAL_CAROUSEL_FLOOR_GLOW_CLASSNAME}
+          />
+          {availableFilters.map((item, index) => {
             const Icon = filterIcon(item.id);
             const color = FILTER_COLORS[item.id];
             const active = filter === item.id;
+            const presentation = getSpatialCarouselItemPresentation(
+              index,
+              filterCenterIndex,
+              availableFilters.length,
+              color,
+            );
+            const { centered } = presentation;
             return (
-              <button key={item.id}
-                ref={(node) => {
-                  filterButtonRefs.current[item.id] = node;
-                }}
+              <button
+                key={item.id}
                 type="button"
-                onClick={() => selectFilter(item.id)}
+                onClick={(event) => {
+                  if (filterDraggedRef.current) {
+                    event.preventDefault();
+                    return;
+                  }
+                  if (!centered) {
+                    setFilterCenterIndex(index);
+                    return;
+                  }
+                  selectFilter(item.id);
+                }}
                 aria-pressed={active}
                 aria-current={active ? "true" : undefined}
-                className="group relative flex h-16 w-16 shrink-0 snap-center snap-always flex-col items-center justify-center gap-0 rounded-xl border text-center shadow-sm transition-all duration-200 active:scale-95"
-                style={{
-                  paddingInline: "0.0625rem",
-                  paddingBlock: "0.0625rem",
-                  background: active
-                    ? `linear-gradient(135deg, ${color}26, ${color}10)`
-                    : `linear-gradient(135deg, ${color}14, ${color}06)`,
-                  borderColor: active ? `${color}AA` : `${color}55`,
-                }}
+                aria-label={`${item.label}${centered ? "" : locale === "ar" ? "، انقل إلى المنتصف" : ", move to center"}`}
+                className={SPATIAL_CAROUSEL_ITEM_CLASSNAME}
+                style={presentation.style}
               >
-                <span className="relative flex h-9 w-9 shrink-0 items-center justify-center">
-                  {active ? (
-                    <>
-                      <span
-                        className="asol-profile-tab-wave pointer-events-none absolute inset-0 rounded-full"
-                        style={{
-                          color: `${color}80`,
-                          borderColor: `${color}B8`,
-                          backgroundColor: `${color}20`,
-                        }}
-                      />
-                      <span
-                        className="asol-profile-tab-wave asol-profile-tab-wave--delayed pointer-events-none absolute inset-0 rounded-full"
-                        style={{
-                          color: `${color}66`,
-                          borderColor: `${color}9E`,
-                          backgroundColor: `${color}18`,
-                        }}
-                      />
-                    </>
+                <span
+                  id={`features-notifications-presentation-notificationspagecontent-filter-icon-wrap-${item.id}`}
+                  className={SPATIAL_CAROUSEL_ICON_WRAP_CLASSNAME}
+                  style={getSpatialCarouselIconWrapStyle(centered)}
+                >
+                  {centered ? (
+                    <span
+                      id={`features-notifications-presentation-notificationspagecontent-filter-glow-${item.id}`}
+                      aria-hidden="true"
+                      className="pointer-events-none absolute inset-0 rounded-full blur-md"
+                      style={{ backgroundColor: `${color}2A` }}
+                    />
                   ) : null}
                   <Icon
                     aria-hidden="true"
                     className="relative z-10 shrink-0 transition-transform duration-300"
-                    style={{
-                      color,
-                      width: "2rem",
-                      height: "2rem",
-                      filter: active
-                        ? `drop-shadow(0 0 0.35rem ${color}55)`
-                        : undefined,
-                    }}
+                    style={getSpatialCarouselIconStyle(color, centered)}
                   />
                 </span>
-                <span
-                  className="line-clamp-2 block w-full text-center font-semibold tracking-tight text-on-surface-variant"
-                  style={{ fontSize: "0.5rem", lineHeight: "0.6rem" }}
-                >
-                  {item.label}
-                </span>
+                {shouldShowSpatialCarouselLabel(centered) ? (
+                  <span
+                    id={`features-notifications-presentation-notificationspagecontent-filter-label-${item.id}`}
+                    className={SPATIAL_CAROUSEL_LABEL_CLASSNAME}
+                    style={getSpatialCarouselLabelStyle(color, centered)}
+                  >
+                    {item.label}
+                  </span>
+                ) : null}
               </button>
             );
           })}

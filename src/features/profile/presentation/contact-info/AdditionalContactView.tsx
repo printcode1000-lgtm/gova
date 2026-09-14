@@ -17,7 +17,7 @@ import { AsolMap, markerAt, createOpenStreetMapProvider, createNativePlatformGps
 import type { LocationEntry } from '@/features/profile/domain/profile-contacts.entity';
 import { getContactVisualColor, getContactVisualIcon } from "../contact-visual-style";
 import { shareLocationUrl } from "@/features/sharing/ui";
-import { SOCIAL_PLATFORMS, PHONE_TYPES, SocialLink, PhoneLink, ContactInfoData, ContactInfoCardProps, tileProvider, gpsProvider, normalizeContactInfoData, quickAddColor, quickAddIcon, ContactQuickAddGrid } from "./ContactInfoCard.contact-types";
+import { SOCIAL_PLATFORMS, PHONE_TYPES, SocialLink, PhoneLink, ContactInfoData, ContactInfoCardProps, tileProvider, gpsProvider, normalizeContactInfoData, quickAddColor, quickAddIcon, ContactQuickAddGrid, ContactKindPopover } from "./ContactInfoCard.contact-types";
 import type { ContactInfoCardModel } from "./ContactInfoCard.model";
 import { geoLocationUrl, googleMapsSearchUrl } from "./contact-location-links";
 import { ContactSectionHeader } from "./ContactSectionHeader";
@@ -35,10 +35,11 @@ return (
               icon={Share2}
               title={t('onboarding.contactInfo.additionalContact')}
               description={t('onboarding.contactInfo.additionalContactHint')}
+              badgeCount={quickAddItems.reduce((total, item) => total + item.count, 0)}
             />
           </div>
 
-          <div id='profile-presentation-contact-info-additionalcontactview-div-3-7krzwb' className="space-y-4">
+          <div id='profile-presentation-contact-info-additionalcontactview-div-3-7krzwb' className="space-y-[6px]">
             {!readOnly && (
               <ContactQuickAddGrid id='profile-presentation-contact-info-additionalcontactview-contactquickaddgrid-4-bnprce'
                 items={quickAddItems}
@@ -47,6 +48,10 @@ return (
                 title={locale === 'ar' ? 'أضف وسيلة تواصل بسرعة' : 'Quick add contact method'}
               />
             )}
+            <ContactKindPopover
+              id="profile-presentation-contact-info-additionalcontactview-active-kind-popover-5-p7k4vm"
+              activeKindId={activeKindId}
+            >
             {/* Additional Phones */}
             {PHONE_TYPES.map((type) => {
               if (type !== activeKindId) return null;
@@ -78,6 +83,7 @@ return (
                   <div className="space-y-2">
                     {typePhones.map((phone, index) => (
                       <ContactEntryCard
+                        embedded
                         key={phone.id}
                         color={quickAddColor(type)}
                         icon={quickAddIcon(type)}
@@ -125,6 +131,7 @@ return (
                 <div id='profile-presentation-contact-info-additionalcontactview-div-12-tnwnmv' className="space-y-2">
                   {localData.emails.filter((e) => e.id !== 'primary').map((emailLink, index) => (
                     <ContactEntryCard
+                        embedded
                       key={emailLink.id}
                       color={quickAddColor('email')}
                       icon={quickAddIcon('email')}
@@ -182,6 +189,7 @@ return (
                       <div className="space-y-2">
                         {platformLinks.map((link, index) => (
                           <ContactEntryCard
+                        embedded
                             key={link.id}
                             color={quickAddColor(platform)}
                             icon={quickAddIcon(platform)}
@@ -232,6 +240,7 @@ return (
                 <div id='profile-presentation-contact-info-additionalcontactview-div-21-anwwbg' className="space-y-2">
                   {localData.websites.map((site, index) => (
                     <ContactEntryCard
+                        embedded
                       key={site.id}
                       color={quickAddColor('website')}
                       icon={quickAddIcon('website')}
@@ -280,42 +289,43 @@ return (
                     <div
                       key={loc.id}
                       id={`profile-presentation-contact-info-additionalcontactview-location-card-${loc.id}`}
-                      className="space-y-[6px] rounded-xl border p-[6px]"
-                      style={{
-                        backgroundColor: `${quickAddColor('location')}10`,
-                        borderColor: `${quickAddColor('location')}44`,
-                      }}
+                      className="space-y-[6px] p-[6px] [&+&]:border-t [&+&]:border-outline-variant/40"
                     >
                       <div
                         id={`profile-presentation-contact-info-additionalcontactview-location-header-${loc.id}`}
-                        className="flex items-center justify-between gap-[6px]"
+                        className="flex h-6 items-center justify-between gap-[6px] px-[6px] py-0"
                       >
                         <span
                           id={`profile-presentation-contact-info-additionalcontactview-location-title-${loc.id}`}
-                          className="flex items-center gap-[6px] text-xs font-semibold"
+                          className="flex min-w-0 flex-1 items-center gap-[6px] text-xs font-semibold leading-[1.35]"
                           style={{ color: quickAddColor('location') }}
                         >
                           <FontAwesomeIcon
                             id={`profile-presentation-contact-info-additionalcontactview-location-title-icon-${loc.id}`}
                             icon={quickAddIcon('location')}
-                            className="h-3.5 w-3.5"
+                            className="h-3.5 w-3.5 shrink-0"
                           />
-                          {locale === 'ar' ? `الموقع #${idx + 1}` : `Location #${idx + 1}`}
+                          <span
+                            id={`profile-presentation-contact-info-additionalcontactview-location-title-text-${loc.id}`}
+                            className="min-w-0 flex-1 truncate align-middle"
+                            aria-label={loc.address || undefined}
+                          >
+                            {loc.address || (locale === 'ar' ? `الموقع #${idx + 1}` : `Location #${idx + 1}`)}
+                          </span>
                         </span>
                         {!readOnly && (
-                          <Button
+                          <button
                             id={`profile-presentation-contact-info-additionalcontactview-location-remove-${loc.id}`}
-                            variant="ghost"
-                            size="icon"
+                            type="button"
                             onClick={() => requestRemoveEntry('location', loc.id)}
-                            className="h-8 w-8 text-destructive"
+                            className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-red-600 bg-transparent p-0 text-red-600 active:text-red-700"
                             aria-label={locale === 'ar' ? 'إزالة الموقع' : 'Remove location'}
                           >
                             <X
                               id={`profile-presentation-contact-info-additionalcontactview-location-remove-icon-${loc.id}`}
-                              className="h-4 w-4"
+                              className="h-3.5 w-3.5"
                             />
-                          </Button>
+                          </button>
                         )}
                       </div>
 
@@ -482,6 +492,7 @@ return (
                 </div>
               </div>
             )}
+            </ContactKindPopover>
           </div>
 
           <ConfirmDialog id='profile-presentation-contact-info-additionalcontactview-confirmdialog-30-k2cl7g'

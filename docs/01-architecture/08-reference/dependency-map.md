@@ -311,6 +311,10 @@ ALLOWED_TO_IMPORT → `@asol/cors`
 
 `@asol/simulation-core` has no production `@asol/*` imports.
 
+### @asol/spatial-carousel-core
+
+`@asol/spatial-carousel-core` has no production `@asol/*` imports.
+
 ### @asol/storage-core
 
 `@asol/storage-core`
@@ -363,5 +367,5 @@ ALLOWED_TO_IMPORT → `@asol/account-declarations`
 
 | Metric | Value |
 |---|---|
-| Packages | 47 |
+| Packages | 48 |
 | Import edges | 58 |

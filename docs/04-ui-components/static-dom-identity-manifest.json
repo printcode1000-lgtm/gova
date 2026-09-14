@@ -629,7 +629,15 @@
     {
       "id": "${id}",
       "source": "src/features/profile/presentation/contact-info/ContactInfoCard.contact-types.tsx",
-      "line": 151,
+      "line": 161,
+      "element": "div",
+      "semanticName": "explicit-prop-root",
+      "kind": "explicit-prop"
+    },
+    {
+      "id": "${id}",
+      "source": "src/features/profile/presentation/contact-info/ContactInfoCard.contact-types.tsx",
+      "line": 218,
       "element": "div",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -637,7 +645,7 @@
     {
       "id": "${id}",
       "source": "src/features/profile/presentation/contact-info/ContactSectionHeader.tsx",
-      "line": 15,
+      "line": 17,
       "element": "div",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -645,7 +653,7 @@
     {
       "id": "${id}",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceChrome.tsx",
-      "line": 96,
+      "line": 74,
       "element": "div",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -653,7 +661,7 @@
     {
       "id": "${id}",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceChrome.tsx",
-      "line": 259,
+      "line": 185,
       "element": "div",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -661,7 +669,7 @@
     {
       "id": "${id}",
       "source": "src/features/profile/presentation/profile-page/ProfilePageContent.profile-tabs.tsx",
-      "line": 59,
+      "line": 61,
       "element": "section",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -989,7 +997,7 @@
     {
       "id": "${PROFILE_SECTION_IDS.contact}",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 165,
+      "line": 181,
       "element": "div",
       "semanticName": "constant-reference",
       "kind": "constant-reference"
@@ -997,7 +1005,7 @@
     {
       "id": "${PROFILE_SECTION_IDS.discounts}",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 235,
+      "line": 251,
       "element": "div",
       "semanticName": "constant-reference",
       "kind": "constant-reference"
@@ -1005,7 +1013,7 @@
     {
       "id": "${PROFILE_SECTION_IDS.fulfillment}",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 212,
+      "line": 228,
       "element": "div",
       "semanticName": "constant-reference",
       "kind": "constant-reference"
@@ -1013,7 +1021,7 @@
     {
       "id": "${PROFILE_SECTION_IDS.products}",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 137,
+      "line": 153,
       "element": "div",
       "semanticName": "constant-reference",
       "kind": "constant-reference"
@@ -1021,7 +1029,7 @@
     {
       "id": "${PROFILE_SECTION_IDS.registration}",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 60,
+      "line": 76,
       "element": "div",
       "semanticName": "constant-reference",
       "kind": "constant-reference"
@@ -1029,7 +1037,7 @@
     {
       "id": "${PROFILE_SECTION_IDS.specialties}",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 85,
+      "line": 101,
       "element": "div",
       "semanticName": "constant-reference",
       "kind": "constant-reference"
@@ -1037,7 +1045,7 @@
     {
       "id": "${PROFILE_SECTION_IDS.store}",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 110,
+      "line": 126,
       "element": "div",
       "semanticName": "constant-reference",
       "kind": "constant-reference"
@@ -1045,7 +1053,7 @@
     {
       "id": "${PROFILE_SECTION_IDS.workingHours}",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 189,
+      "line": 205,
       "element": "div",
       "semanticName": "constant-reference",
       "kind": "constant-reference"
@@ -8165,7 +8173,7 @@
     {
       "id": "features-dev-tools-presentation-simulationruntimecontroller-div-2-sim101",
       "source": "src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
-      "line": 190,
+      "line": 192,
       "element": "div",
       "semanticName": "dev-tools-presentation-simulationruntimecontroller-div-2",
       "kind": "literal"
@@ -8173,7 +8181,7 @@
     {
       "id": "features-dev-tools-presentation-simulationruntimecontroller-div-3-sim102",
       "source": "src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
-      "line": 194,
+      "line": 196,
       "element": "div",
       "semanticName": "dev-tools-presentation-simulationruntimecontroller-div-3",
       "kind": "literal"
@@ -8181,7 +8189,7 @@
     {
       "id": "features-dev-tools-presentation-simulationruntimecontroller-div-4-sim103",
       "source": "src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
-      "line": 218,
+      "line": 220,
       "element": "div",
       "semanticName": "dev-tools-presentation-simulationruntimecontroller-div-4",
       "kind": "literal"
@@ -8189,7 +8197,7 @@
     {
       "id": "features-dev-tools-presentation-simulationruntimecontroller-label-6-sim105",
       "source": "src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
-      "line": 230,
+      "line": 232,
       "element": "label",
       "semanticName": "dev-tools-presentation-simulationruntimecontroller-label-6",
       "kind": "literal"
@@ -8197,7 +8205,7 @@
     {
       "id": "features-dev-tools-presentation-simulationruntimecontroller-text-5-sim104",
       "source": "src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
-      "line": 222,
+      "line": 224,
       "element": "span",
       "semanticName": "dev-tools-presentation-simulationruntimecontroller-text-5",
       "kind": "literal"
@@ -8205,7 +8213,7 @@
     {
       "id": "features-dev-tools-presentation-simulationruntimecontroller-text-7-sim106",
       "source": "src/features/dev-tools/presentation/SimulationRuntimeController.tsx",
-      "line": 235,
+      "line": 237,
       "element": "span",
       "semanticName": "dev-tools-presentation-simulationruntimecontroller-text-7",
       "kind": "literal"
@@ -9117,7 +9125,7 @@
     {
       "id": "features-notifications-presentation-notificationspagecontent-div-10-6kvwyx",
       "source": "src/features/notifications/presentation/NotificationsPageContent.tsx",
-      "line": 135,
+      "line": 164,
       "element": "div",
       "semanticName": "notifications-presentation-notificationspagecontent-div-10",
       "kind": "literal"
@@ -9125,15 +9133,23 @@
     {
       "id": "features-notifications-presentation-notificationspagecontent-div-15-iyp3eo",
       "source": "src/features/notifications/presentation/NotificationsPageContent.tsx",
-      "line": 160,
+      "line": 180,
       "element": "div",
       "semanticName": "notifications-presentation-notificationspagecontent-div-15",
       "kind": "literal"
     },
     {
+      "id": "features-notifications-presentation-notificationspagecontent-filter-floor-glow-7k3p2n",
+      "source": "src/features/notifications/presentation/NotificationsPageContent.tsx",
+      "line": 202,
+      "element": "div",
+      "semanticName": "notifications-presentation-notificationspagecontent-filter-floor-glow",
+      "kind": "literal"
+    },
+    {
       "id": "features-notifications-presentation-notificationspagecontent-header-9-ciqucb",
       "source": "src/features/notifications/presentation/NotificationsPageContent.tsx",
-      "line": 134,
+      "line": 163,
       "element": "header",
       "semanticName": "notifications-presentation-notificationspagecontent-header-9",
       "kind": "literal"
@@ -9141,7 +9157,7 @@
     {
       "id": "features-notifications-presentation-notificationspagecontent-heading-11-7x7l3i",
       "source": "src/features/notifications/presentation/NotificationsPageContent.tsx",
-      "line": 136,
+      "line": 165,
       "element": "h1",
       "semanticName": "notifications-presentation-notificationspagecontent-heading-11",
       "kind": "literal"
@@ -9149,7 +9165,7 @@
     {
       "id": "features-notifications-presentation-notificationspagecontent-heading-5-z00450",
       "source": "src/features/notifications/presentation/NotificationsPageContent.tsx",
-      "line": 123,
+      "line": 152,
       "element": "h1",
       "semanticName": "notifications-presentation-notificationspagecontent-heading-5",
       "kind": "literal"
@@ -9157,7 +9173,7 @@
     {
       "id": "features-notifications-presentation-notificationspagecontent-main-1-h8mg64",
       "source": "src/features/notifications/presentation/NotificationsPageContent.tsx",
-      "line": 113,
+      "line": 142,
       "element": "main",
       "semanticName": "notifications-presentation-notificationspagecontent-main-1",
       "kind": "literal"
@@ -9165,7 +9181,7 @@
     {
       "id": "features-notifications-presentation-notificationspagecontent-main-3-tnddrr",
       "source": "src/features/notifications/presentation/NotificationsPageContent.tsx",
-      "line": 121,
+      "line": 150,
       "element": "main",
       "semanticName": "notifications-presentation-notificationspagecontent-main-3",
       "kind": "literal"
@@ -9173,7 +9189,7 @@
     {
       "id": "features-notifications-presentation-notificationspagecontent-main-8-ecgjji",
       "source": "src/features/notifications/presentation/NotificationsPageContent.tsx",
-      "line": 133,
+      "line": 162,
       "element": "main",
       "semanticName": "notifications-presentation-notificationspagecontent-main-8",
       "kind": "literal"
@@ -9181,7 +9197,7 @@
     {
       "id": "features-notifications-presentation-notificationspagecontent-nav-14-3jear9",
       "source": "src/features/notifications/presentation/NotificationsPageContent.tsx",
-      "line": 152,
+      "line": 175,
       "element": "nav",
       "semanticName": "notifications-presentation-notificationspagecontent-nav-14",
       "kind": "literal"
@@ -9189,7 +9205,7 @@
     {
       "id": "features-notifications-presentation-notificationspagecontent-section-16-pkzm0e",
       "source": "src/features/notifications/presentation/NotificationsPageContent.tsx",
-      "line": 239,
+      "line": 278,
       "element": "section",
       "semanticName": "notifications-presentation-notificationspagecontent-section-16",
       "kind": "literal"
@@ -9197,7 +9213,7 @@
     {
       "id": "features-notifications-presentation-notificationspagecontent-section-17-ehpolf",
       "source": "src/features/notifications/presentation/NotificationsPageContent.tsx",
-      "line": 276,
+      "line": 315,
       "element": "section",
       "semanticName": "notifications-presentation-notificationspagecontent-section-17",
       "kind": "literal"
@@ -9205,7 +9221,7 @@
     {
       "id": "features-notifications-presentation-notificationspagecontent-text-13-hymxqr",
       "source": "src/features/notifications/presentation/NotificationsPageContent.tsx",
-      "line": 140,
+      "line": 169,
       "element": "p",
       "semanticName": "notifications-presentation-notificationspagecontent-text-13",
       "kind": "literal"
@@ -9213,7 +9229,7 @@
     {
       "id": "features-notifications-presentation-notificationspagecontent-text-6-ruzzeg",
       "source": "src/features/notifications/presentation/NotificationsPageContent.tsx",
-      "line": 124,
+      "line": 153,
       "element": "p",
       "semanticName": "notifications-presentation-notificationspagecontent-text-6",
       "kind": "literal"
@@ -19219,6 +19235,14 @@
       "kind": "literal"
     },
     {
+      "id": "id ? `${id}-arrow-2-q7m4vk` : undefined",
+      "source": "src/features/profile/presentation/contact-info/ContactInfoCard.contact-types.tsx",
+      "line": 166,
+      "element": "span",
+      "semanticName": "arrow-2",
+      "kind": "scoped-template"
+    },
+    {
       "id": "id ? `${id}-button-2-o1wgsz` : undefined",
       "source": "src/shared/layouts/app-sidebar/AppSidebarSuperAdminSection.tsx",
       "line": 93,
@@ -19392,6 +19416,14 @@
       "line": 94,
       "element": "code",
       "semanticName": "code-6",
+      "kind": "scoped-template"
+    },
+    {
+      "id": "id ? `${id}-content-3-r8n5wp` : undefined",
+      "source": "src/features/profile/presentation/contact-info/ContactInfoCard.contact-types.tsx",
+      "line": 172,
+      "element": "div",
+      "semanticName": "content-3",
       "kind": "scoped-template"
     },
     {
@@ -22341,7 +22373,7 @@
     {
       "id": "pkg-map-core-src-addressballoon-address-display-10-q7m4rx",
       "source": "packages/map-core/src/AddressBalloon.tsx",
-      "line": 71,
+      "line": 85,
       "element": "p",
       "semanticName": "map-core-src-addressballoon-address-display-10",
       "kind": "literal"
@@ -22349,7 +22381,7 @@
     {
       "id": "pkg-map-core-src-addressballoon-button-6-kpqkv9",
       "source": "packages/map-core/src/AddressBalloon.tsx",
-      "line": 77,
+      "line": 91,
       "element": "button",
       "semanticName": "map-core-src-addressballoon-button-6",
       "kind": "literal"
@@ -22357,7 +22389,7 @@
     {
       "id": "pkg-map-core-src-addressballoon-button-8-bafj0y",
       "source": "packages/map-core/src/AddressBalloon.tsx",
-      "line": 86,
+      "line": 100,
       "element": "button",
       "semanticName": "map-core-src-addressballoon-button-8",
       "kind": "literal"
@@ -22365,7 +22397,7 @@
     {
       "id": "pkg-map-core-src-addressballoon-div-5-kfjgas",
       "source": "packages/map-core/src/AddressBalloon.tsx",
-      "line": 76,
+      "line": 90,
       "element": "div",
       "semanticName": "map-core-src-addressballoon-div-5",
       "kind": "literal"
@@ -22373,7 +22405,7 @@
     {
       "id": "pkg-map-core-src-addressballoon-edit-button-11-p5d8nk",
       "source": "packages/map-core/src/AddressBalloon.tsx",
-      "line": 95,
+      "line": 109,
       "element": "button",
       "semanticName": "map-core-src-addressballoon-edit-button-11",
       "kind": "literal"
@@ -22381,7 +22413,7 @@
     {
       "id": "pkg-map-core-src-addressballoon-edit-label-12-v3c6jw",
       "source": "packages/map-core/src/AddressBalloon.tsx",
-      "line": 101,
+      "line": 119,
       "element": "span",
       "semanticName": "map-core-src-addressballoon-edit-label-12",
       "kind": "literal"
@@ -22389,7 +22421,7 @@
     {
       "id": "pkg-map-core-src-addressballoon-form-1-lzw74h",
       "source": "packages/map-core/src/AddressBalloon.tsx",
-      "line": 43,
+      "line": 53,
       "element": "form",
       "semanticName": "map-core-src-addressballoon-form-1",
       "kind": "literal"
@@ -22397,7 +22429,7 @@
     {
       "id": "pkg-map-core-src-addressballoon-input-4-1er4rl",
       "source": "packages/map-core/src/AddressBalloon.tsx",
-      "line": 59,
+      "line": 73,
       "element": "input",
       "semanticName": "map-core-src-addressballoon-input-4",
       "kind": "literal"
@@ -22405,7 +22437,7 @@
     {
       "id": "pkg-map-core-src-addressballoon-text-2-xzm2m7",
       "source": "packages/map-core/src/AddressBalloon.tsx",
-      "line": 53,
+      "line": 67,
       "element": "p",
       "semanticName": "map-core-src-addressballoon-text-2",
       "kind": "literal"
@@ -22413,7 +22445,7 @@
     {
       "id": "pkg-map-core-src-addressballoon-text-3-lur0ma",
       "source": "packages/map-core/src/AddressBalloon.tsx",
-      "line": 55,
+      "line": 69,
       "element": "span",
       "semanticName": "map-core-src-addressballoon-text-3",
       "kind": "literal"
@@ -22421,7 +22453,7 @@
     {
       "id": "pkg-map-core-src-addressballoon-text-7-3cdvfp",
       "source": "packages/map-core/src/AddressBalloon.tsx",
-      "line": 83,
+      "line": 97,
       "element": "span",
       "semanticName": "map-core-src-addressballoon-text-7",
       "kind": "literal"
@@ -22429,7 +22461,7 @@
     {
       "id": "pkg-map-core-src-addressballoon-text-9-8c8kel",
       "source": "packages/map-core/src/AddressBalloon.tsx",
-      "line": 92,
+      "line": 106,
       "element": "span",
       "semanticName": "map-core-src-addressballoon-text-9",
       "kind": "literal"
@@ -23221,7 +23253,7 @@
     {
       "id": "profile-presentation-contact-info-additionalcontactview-div-12-tnwnmv",
       "source": "src/features/profile/presentation/contact-info/AdditionalContactView.tsx",
-      "line": 125,
+      "line": 131,
       "element": "div",
       "semanticName": "presentation-contact-info-additionalcontactview-div-12",
       "kind": "literal"
@@ -23229,7 +23261,7 @@
     {
       "id": "profile-presentation-contact-info-additionalcontactview-div-13-rrkm9p",
       "source": "src/features/profile/presentation/contact-info/AdditionalContactView.tsx",
-      "line": 154,
+      "line": 161,
       "element": "div",
       "semanticName": "presentation-contact-info-additionalcontactview-div-13",
       "kind": "literal"
@@ -23237,7 +23269,7 @@
     {
       "id": "profile-presentation-contact-info-additionalcontactview-div-14-obwoqh",
       "source": "src/features/profile/presentation/contact-info/AdditionalContactView.tsx",
-      "line": 215,
+      "line": 223,
       "element": "div",
       "semanticName": "presentation-contact-info-additionalcontactview-div-14",
       "kind": "literal"
@@ -23245,7 +23277,7 @@
     {
       "id": "profile-presentation-contact-info-additionalcontactview-div-15-1jvmrn",
       "source": "src/features/profile/presentation/contact-info/AdditionalContactView.tsx",
-      "line": 216,
+      "line": 224,
       "element": "div",
       "semanticName": "presentation-contact-info-additionalcontactview-div-15",
       "kind": "literal"
@@ -23253,7 +23285,7 @@
     {
       "id": "profile-presentation-contact-info-additionalcontactview-div-21-anwwbg",
       "source": "src/features/profile/presentation/contact-info/AdditionalContactView.tsx",
-      "line": 232,
+      "line": 240,
       "element": "div",
       "semanticName": "presentation-contact-info-additionalcontactview-div-21",
       "kind": "literal"
@@ -23261,7 +23293,7 @@
     {
       "id": "profile-presentation-contact-info-additionalcontactview-div-22-89wwue",
       "source": "src/features/profile/presentation/contact-info/AdditionalContactView.tsx",
-      "line": 259,
+      "line": 268,
       "element": "div",
       "semanticName": "presentation-contact-info-additionalcontactview-div-22",
       "kind": "literal"
@@ -23269,7 +23301,7 @@
     {
       "id": "profile-presentation-contact-info-additionalcontactview-div-23-vhxirl",
       "source": "src/features/profile/presentation/contact-info/AdditionalContactView.tsx",
-      "line": 260,
+      "line": 269,
       "element": "div",
       "semanticName": "presentation-contact-info-additionalcontactview-div-23",
       "kind": "literal"
@@ -23277,7 +23309,7 @@
     {
       "id": "profile-presentation-contact-info-additionalcontactview-div-29-tguhrl",
       "source": "src/features/profile/presentation/contact-info/AdditionalContactView.tsx",
-      "line": 278,
+      "line": 287,
       "element": "div",
       "semanticName": "presentation-contact-info-additionalcontactview-div-29",
       "kind": "literal"
@@ -23285,7 +23317,7 @@
     {
       "id": "profile-presentation-contact-info-additionalcontactview-div-3-7krzwb",
       "source": "src/features/profile/presentation/contact-info/AdditionalContactView.tsx",
-      "line": 41,
+      "line": 42,
       "element": "div",
       "semanticName": "presentation-contact-info-additionalcontactview-div-3",
       "kind": "literal"
@@ -23293,7 +23325,7 @@
     {
       "id": "profile-presentation-contact-info-additionalcontactview-div-5-m5hyln",
       "source": "src/features/profile/presentation/contact-info/AdditionalContactView.tsx",
-      "line": 108,
+      "line": 114,
       "element": "div",
       "semanticName": "presentation-contact-info-additionalcontactview-div-5",
       "kind": "literal"
@@ -23301,7 +23333,7 @@
     {
       "id": "profile-presentation-contact-info-additionalcontactview-div-6-k6jqjb",
       "source": "src/features/profile/presentation/contact-info/AdditionalContactView.tsx",
-      "line": 109,
+      "line": 115,
       "element": "div",
       "semanticName": "presentation-contact-info-additionalcontactview-div-6",
       "kind": "literal"
@@ -23309,7 +23341,7 @@
     {
       "id": "profile-presentation-contact-info-additionalcontactview-text-16-oykrtb",
       "source": "src/features/profile/presentation/contact-info/AdditionalContactView.tsx",
-      "line": 217,
+      "line": 225,
       "element": "span",
       "semanticName": "presentation-contact-info-additionalcontactview-text-16",
       "kind": "literal"
@@ -23317,7 +23349,7 @@
     {
       "id": "profile-presentation-contact-info-additionalcontactview-text-18-lqstnb",
       "source": "src/features/profile/presentation/contact-info/AdditionalContactView.tsx",
-      "line": 219,
+      "line": 227,
       "element": "span",
       "semanticName": "presentation-contact-info-additionalcontactview-text-18",
       "kind": "literal"
@@ -23325,7 +23357,7 @@
     {
       "id": "profile-presentation-contact-info-additionalcontactview-text-24-kzh2lv",
       "source": "src/features/profile/presentation/contact-info/AdditionalContactView.tsx",
-      "line": 261,
+      "line": 270,
       "element": "span",
       "semanticName": "presentation-contact-info-additionalcontactview-text-24",
       "kind": "literal"
@@ -23333,7 +23365,7 @@
     {
       "id": "profile-presentation-contact-info-additionalcontactview-text-26-ikhfra",
       "source": "src/features/profile/presentation/contact-info/AdditionalContactView.tsx",
-      "line": 263,
+      "line": 272,
       "element": "span",
       "semanticName": "presentation-contact-info-additionalcontactview-text-26",
       "kind": "literal"
@@ -23341,7 +23373,7 @@
     {
       "id": "profile-presentation-contact-info-additionalcontactview-text-7-ws8fta",
       "source": "src/features/profile/presentation/contact-info/AdditionalContactView.tsx",
-      "line": 110,
+      "line": 116,
       "element": "span",
       "semanticName": "presentation-contact-info-additionalcontactview-text-7",
       "kind": "literal"
@@ -23349,47 +23381,31 @@
     {
       "id": "profile-presentation-contact-info-additionalcontactview-text-9-a4uab1",
       "source": "src/features/profile/presentation/contact-info/AdditionalContactView.tsx",
-      "line": 112,
+      "line": 118,
       "element": "span",
       "semanticName": "presentation-contact-info-additionalcontactview-text-9",
       "kind": "literal"
     },
     {
-      "id": "profile-presentation-contact-info-contactinfocard-contact-types-div-2-kxhmuy",
-      "source": "src/features/profile/presentation/contact-info/ContactInfoCard.contact-types.tsx",
-      "line": 152,
-      "element": "div",
-      "semanticName": "presentation-contact-info-contactinfocard-contact-types-div-2",
-      "kind": "literal"
-    },
-    {
       "id": "profile-presentation-contact-info-contactinfocard-contact-types-div-6-9bqz7t",
       "source": "src/features/profile/presentation/contact-info/ContactInfoCard.contact-types.tsx",
-      "line": 166,
+      "line": 224,
       "element": "div",
       "semanticName": "presentation-contact-info-contactinfocard-contact-types-div-6",
       "kind": "literal"
     },
     {
-      "id": "profile-presentation-contact-info-contactinfocard-contact-types-text-3-uwo8es",
+      "id": "profile-presentation-contact-info-contactinfocard-contact-types-floor-glow-7w2q9m",
       "source": "src/features/profile/presentation/contact-info/ContactInfoCard.contact-types.tsx",
-      "line": 153,
-      "element": "p",
-      "semanticName": "presentation-contact-info-contactinfocard-contact-types-text-3",
-      "kind": "literal"
-    },
-    {
-      "id": "profile-presentation-contact-info-contactinfocard-contact-types-text-4-rqvo1w",
-      "source": "src/features/profile/presentation/contact-info/ContactInfoCard.contact-types.tsx",
-      "line": 154,
-      "element": "span",
-      "semanticName": "presentation-contact-info-contactinfocard-contact-types-text-4",
+      "line": 244,
+      "element": "div",
+      "semanticName": "presentation-contact-info-contactinfocard-contact-types-floor-glow",
       "kind": "literal"
     },
     {
       "id": "profile-presentation-contact-info-contactinfocard-contact-types-text-5-0w3lfb",
-      "source": "src/features/profile/presentation/contact-info/ContactInfoCard.contact-types.tsx",
-      "line": 160,
+      "source": "src/features/profile/presentation/contact-info/ContactSectionHeader.tsx",
+      "line": 22,
       "element": "span",
       "semanticName": "presentation-contact-info-contactinfocard-contact-types-text-5",
       "kind": "literal"
@@ -23397,7 +23413,7 @@
     {
       "id": "profile-presentation-contact-info-contactsectionheader-heading-2-5icmhi",
       "source": "src/features/profile/presentation/contact-info/ContactSectionHeader.tsx",
-      "line": 16,
+      "line": 18,
       "element": "h2",
       "semanticName": "presentation-contact-info-contactsectionheader-heading-2",
       "kind": "literal"
@@ -23405,7 +23421,7 @@
     {
       "id": "profile-presentation-contact-info-contactsectionheader-text-3-dpqkop",
       "source": "src/features/profile/presentation/contact-info/ContactSectionHeader.tsx",
-      "line": 20,
+      "line": 27,
       "element": "p",
       "semanticName": "presentation-contact-info-contactsectionheader-text-3",
       "kind": "literal"
@@ -23485,7 +23501,7 @@
     {
       "id": "profile-presentation-contact-info-primarycontactview-div-41-9t507i",
       "source": "src/features/profile/presentation/contact-info/PrimaryContactView.tsx",
-      "line": 209,
+      "line": 214,
       "element": "div",
       "semanticName": "presentation-contact-info-primarycontactview-div-41",
       "kind": "literal"
@@ -23493,7 +23509,7 @@
     {
       "id": "profile-presentation-contact-info-primarycontactview-div-42-ryhjzr",
       "source": "src/features/profile/presentation/contact-info/PrimaryContactView.tsx",
-      "line": 210,
+      "line": 215,
       "element": "div",
       "semanticName": "presentation-contact-info-primarycontactview-div-42",
       "kind": "literal"
@@ -23501,7 +23517,7 @@
     {
       "id": "profile-presentation-contact-info-primarycontactview-div-48-42abzs",
       "source": "src/features/profile/presentation/contact-info/PrimaryContactView.tsx",
-      "line": 226,
+      "line": 231,
       "element": "div",
       "semanticName": "presentation-contact-info-primarycontactview-div-48",
       "kind": "literal"
@@ -23509,7 +23525,7 @@
     {
       "id": "profile-presentation-contact-info-primarycontactview-div-49-tz1cz4",
       "source": "src/features/profile/presentation/contact-info/PrimaryContactView.tsx",
-      "line": 255,
+      "line": 261,
       "element": "div",
       "semanticName": "presentation-contact-info-primarycontactview-div-49",
       "kind": "literal"
@@ -23517,7 +23533,7 @@
     {
       "id": "profile-presentation-contact-info-primarycontactview-div-50-hlmppt",
       "source": "src/features/profile/presentation/contact-info/PrimaryContactView.tsx",
-      "line": 316,
+      "line": 323,
       "element": "div",
       "semanticName": "presentation-contact-info-primarycontactview-div-50",
       "kind": "literal"
@@ -23525,7 +23541,7 @@
     {
       "id": "profile-presentation-contact-info-primarycontactview-div-51-1zxsxs",
       "source": "src/features/profile/presentation/contact-info/PrimaryContactView.tsx",
-      "line": 317,
+      "line": 324,
       "element": "div",
       "semanticName": "presentation-contact-info-primarycontactview-div-51",
       "kind": "literal"
@@ -23533,7 +23549,7 @@
     {
       "id": "profile-presentation-contact-info-primarycontactview-div-57-cwhdvv",
       "source": "src/features/profile/presentation/contact-info/PrimaryContactView.tsx",
-      "line": 333,
+      "line": 340,
       "element": "div",
       "semanticName": "presentation-contact-info-primarycontactview-div-57",
       "kind": "literal"
@@ -23541,7 +23557,7 @@
     {
       "id": "profile-presentation-contact-info-primarycontactview-text-43-rkdzrw",
       "source": "src/features/profile/presentation/contact-info/PrimaryContactView.tsx",
-      "line": 211,
+      "line": 216,
       "element": "span",
       "semanticName": "presentation-contact-info-primarycontactview-text-43",
       "kind": "literal"
@@ -23549,7 +23565,7 @@
     {
       "id": "profile-presentation-contact-info-primarycontactview-text-45-wbeehn",
       "source": "src/features/profile/presentation/contact-info/PrimaryContactView.tsx",
-      "line": 213,
+      "line": 218,
       "element": "span",
       "semanticName": "presentation-contact-info-primarycontactview-text-45",
       "kind": "literal"
@@ -23557,7 +23573,7 @@
     {
       "id": "profile-presentation-contact-info-primarycontactview-text-52-robhny",
       "source": "src/features/profile/presentation/contact-info/PrimaryContactView.tsx",
-      "line": 318,
+      "line": 325,
       "element": "span",
       "semanticName": "presentation-contact-info-primarycontactview-text-52",
       "kind": "literal"
@@ -23565,7 +23581,7 @@
     {
       "id": "profile-presentation-contact-info-primarycontactview-text-54-ozwrzk",
       "source": "src/features/profile/presentation/contact-info/PrimaryContactView.tsx",
-      "line": 320,
+      "line": 327,
       "element": "span",
       "semanticName": "presentation-contact-info-primarycontactview-text-54",
       "kind": "literal"
@@ -23669,7 +23685,7 @@
     {
       "id": "profile-presentation-profile-page-profileeditworkspacechrome-div-2-9oleon",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceChrome.tsx",
-      "line": 100,
+      "line": 78,
       "element": "div",
       "semanticName": "presentation-profile-page-profileeditworkspacechrome-div-2",
       "kind": "literal"
@@ -23677,7 +23693,7 @@
     {
       "id": "profile-presentation-profile-page-profileeditworkspacechrome-floor-glow-7m3k2p",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceChrome.tsx",
-      "line": 137,
+      "line": 102,
       "element": "div",
       "semanticName": "presentation-profile-page-profileeditworkspacechrome-floor-glow",
       "kind": "literal"
@@ -23685,7 +23701,7 @@
     {
       "id": "profile-presentation-profile-page-profileeditworkspacechrome-text-4-cwzzju",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceChrome.tsx",
-      "line": 260,
+      "line": 186,
       "element": "p",
       "semanticName": "presentation-profile-page-profileeditworkspacechrome-text-4",
       "kind": "literal"
@@ -23693,7 +23709,7 @@
     {
       "id": "profile-presentation-profile-page-profileeditworkspaceview-div-1-kpbevk",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 37,
+      "line": 43,
       "element": "div",
       "semanticName": "presentation-profile-page-profileeditworkspaceview-div-1",
       "kind": "literal"
@@ -23701,7 +23717,7 @@
     {
       "id": "profile-presentation-profile-page-profileeditworkspaceview-div-24-pqrdwg",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 264,
+      "line": 280,
       "element": "div",
       "semanticName": "presentation-profile-page-profileeditworkspaceview-div-24",
       "kind": "literal"
@@ -23709,7 +23725,7 @@
     {
       "id": "profile-presentation-profile-page-profileeditworkspaceview-div-6-ojpfuv",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 49,
+      "line": 65,
       "element": "div",
       "semanticName": "presentation-profile-page-profileeditworkspaceview-div-6",
       "kind": "literal"
@@ -23717,9 +23733,17 @@
     {
       "id": "profile-presentation-profile-page-profileeditworkspaceview-div-7-qnevwy",
       "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
-      "line": 50,
+      "line": 66,
       "element": "div",
       "semanticName": "presentation-profile-page-profileeditworkspaceview-div-7",
+      "kind": "literal"
+    },
+    {
+      "id": "profile-presentation-profile-page-profileeditworkspaceview-popover-arrow-8-v4m2qs",
+      "source": "src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx",
+      "line": 58,
+      "element": "span",
+      "semanticName": "presentation-profile-page-profileeditworkspaceview-popover-arrow-8",
       "kind": "literal"
     },
     {
@@ -23749,7 +23773,7 @@
     {
       "id": "profile-presentation-profile-page-profilepagecontent-profile-tabs-div-2-w0prjy",
       "source": "src/features/profile/presentation/profile-page/ProfilePageContent.profile-tabs.tsx",
-      "line": 64,
+      "line": 66,
       "element": "div",
       "semanticName": "presentation-profile-page-profilepagecontent-profile-tabs-div-2",
       "kind": "literal"
@@ -23757,7 +23781,7 @@
     {
       "id": "profile-presentation-profile-page-profilepagecontent-profile-tabs-div-3-wquhgt",
       "source": "src/features/profile/presentation/profile-page/ProfilePageContent.profile-tabs.tsx",
-      "line": 68,
+      "line": 70,
       "element": "div",
       "semanticName": "presentation-profile-page-profilepagecontent-profile-tabs-div-3",
       "kind": "literal"
@@ -23765,7 +23789,7 @@
     {
       "id": "profile-presentation-profile-page-profilepagecontent-profile-tabs-div-5-4z29ec",
       "source": "src/features/profile/presentation/profile-page/ProfilePageContent.profile-tabs.tsx",
-      "line": 75,
+      "line": 77,
       "element": "div",
       "semanticName": "presentation-profile-page-profilepagecontent-profile-tabs-div-5",
       "kind": "literal"
@@ -23773,7 +23797,7 @@
     {
       "id": "profile-presentation-profile-page-profilepagecontent-profile-tabs-div-7-fwcra7",
       "source": "src/features/profile/presentation/profile-page/ProfilePageContent.profile-tabs.tsx",
-      "line": 83,
+      "line": 85,
       "element": "div",
       "semanticName": "presentation-profile-page-profilepagecontent-profile-tabs-div-7",
       "kind": "literal"
@@ -23781,7 +23805,7 @@
     {
       "id": "profile-presentation-profile-page-profilepagecontent-profile-tabs-heading-6-xzrwn4",
       "source": "src/features/profile/presentation/profile-page/ProfilePageContent.profile-tabs.tsx",
-      "line": 76,
+      "line": 78,
       "element": "h2",
       "semanticName": "presentation-profile-page-profilepagecontent-profile-tabs-heading-6",
       "kind": "literal"
@@ -23789,7 +23813,7 @@
     {
       "id": "profile-presentation-profile-page-profilepagecontent-profile-tabs-text-4-vksbhq",
       "source": "src/features/profile/presentation/profile-page/ProfilePageContent.profile-tabs.tsx",
-      "line": 69,
+      "line": 71,
       "element": "span",
       "semanticName": "presentation-profile-page-profilepagecontent-profile-tabs-text-4",
       "kind": "literal"

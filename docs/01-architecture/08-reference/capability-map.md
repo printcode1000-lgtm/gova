@@ -11,7 +11,7 @@ Machine-readable capability ownership reference. Each capability has exactly one
 
 ## Scope
 
-All 47 sealed `@asol/*` packages. Application-layer orchestration lives under `src/features/*` — see [application-feature-catalog.md](./application-feature-catalog.md).
+All 48 sealed `@asol/*` packages. Application-layer orchestration lives under `src/features/*` — see [application-feature-catalog.md](./application-feature-catalog.md).
 
 ## Source of Truth
 
@@ -650,6 +650,24 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 
 ---
 
+## Reusable responsive circular 3D carousel interaction and presentation
+
+| Field | Value |
+|---|---|
+| **Capability** | Reusable responsive circular 3D carousel interaction and presentation |
+| **Owner Package** | `@asol/spatial-carousel-core` |
+| **Architectural Layer** | capability |
+| **Public Gateway** | `@asol/spatial-carousel-core` |
+| **Allowed Consumers** | Application via declared doors; composition packages wire ports |
+| **Composition Root** | `N/A` (capability must not import `@/`) |
+| **Infrastructure Owner** | none (pure logic or ports) |
+| **Status** | CLOSED (sealed package with registry entry) |
+| **Canonical Documents** | [package-catalog.md](./package-catalog.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+
+**Source Map:** `packages/spatial-carousel-core/` · registry: `packages/architecture-core/src/registry/capability-registry.ts`
+
+---
+
 ## Secrets archive backup and restore
 
 | Field | Value |
@@ -870,9 +888,9 @@ This Markdown file is **generated** and verified by `architecture:check`. Do not
 
 | Metric | Value |
 |---|---|
-| Sealed packages | 47 |
+| Sealed packages | 48 |
 | Layer `bridge` | 1 |
-| Layer `capability` | 37 |
+| Layer `capability` | 38 |
 | Layer `composition` | 7 |
 | Layer `declarations` | 1 |
 | Layer `enforcement` | 1 |

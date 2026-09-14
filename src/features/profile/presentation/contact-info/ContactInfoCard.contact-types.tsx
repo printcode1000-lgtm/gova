@@ -3,6 +3,25 @@
 import * as React from 'react';
 import { Plus, X, Phone, MessageCircle, Mail, Globe, Share2, ChevronDown, Lock, Smartphone, MapPin } from 'lucide-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  SPATIAL_CAROUSEL_FLOOR_GLOW_CLASSNAME,
+  SPATIAL_CAROUSEL_ICON_WRAP_CLASSNAME,
+  SPATIAL_CAROUSEL_ITEM_CLASSNAME,
+  SPATIAL_CAROUSEL_LABEL_CLASSNAME,
+  SPATIAL_CAROUSEL_POPOVER_ARROW_CLASSNAME,
+  SPATIAL_CAROUSEL_POPOVER_CLASSNAME,
+  SPATIAL_CAROUSEL_SHELL_CLASSNAME,
+  SPATIAL_CAROUSEL_VIEWPORT_CLASSNAME,
+  SPATIAL_CAROUSEL_VIEWPORT_STYLE,
+  getSpatialCarouselIconStyle,
+  getSpatialCarouselIconWrapStyle,
+  getSpatialCarouselItemPresentation,
+  getSpatialCarouselLabelStyle,
+  getSpatialCarouselPopoverArrowStyle,
+  getSpatialCarouselPopoverStyle,
+  shouldShowSpatialCarouselLabel,
+  useSpatialCarousel,
+} from '@asol/spatial-carousel-core';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faEnvelope, faGlobe, faLocationDot, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from '@/shared/i18n';
@@ -126,6 +145,40 @@ export function quickAddIcon(id: string): IconDefinition {
   return getContactVisualIcon(id);
 }
 
+export function ContactKindPopover({
+  id,
+  activeKindId,
+  children,
+}: {
+  id?: string;
+  activeKindId: string | null;
+  children: React.ReactNode;
+}) {
+  if (!activeKindId) return null;
+  const color = quickAddColor(activeKindId);
+
+  return (
+    <div
+      id={id}
+      className={SPATIAL_CAROUSEL_POPOVER_CLASSNAME}
+      style={getSpatialCarouselPopoverStyle(color)}
+    >
+      <span
+        id={id ? `${id}-arrow-2-q7m4vk` : undefined}
+        aria-hidden="true"
+        className={SPATIAL_CAROUSEL_POPOVER_ARROW_CLASSNAME}
+        style={getSpatialCarouselPopoverArrowStyle(color)}
+      />
+      <div
+        id={id ? `${id}-content-3-r8n5wp` : undefined}
+        className="relative z-10 space-y-[6px]"
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
+
 /**
  * The quick-add strip.
  *
@@ -145,55 +198,114 @@ export function ContactQuickAddGrid({ id,
   onSelect: (id: string) => void;
   title: string;
 } & { id?: string }) {
-  const addedCount = items.reduce((total, item) => total + item.count, 0);
+  const selectedIndex = Math.max(0, items.findIndex((item) => item.id === selectedId));
+  const {
+    centerIndex,
+    setCenterIndex,
+    moveCenter,
+    draggedRef,
+    pointerHandlers,
+  } = useSpatialCarousel({
+    itemCount: items.length,
+    selectedIndex,
+    onSettledIndex: (index) => {
+      const centeredItem = items[index];
+      if (centeredItem && centeredItem.id !== selectedId) onSelect(centeredItem.id);
+    },
+  });
 
   return (
-    <div id={id} className="rounded-2xl border border-outline-variant/60 bg-surface-container-low p-3 sm:p-4">
-      <div id="profile-presentation-contact-info-contactinfocard-contact-types-div-2-kxhmuy" className="mb-3 flex items-center justify-between gap-3">
-        <p id="profile-presentation-contact-info-contactinfocard-contact-types-text-3-uwo8es" className="flex items-center gap-2 text-sm font-bold text-on-surface">
-          <span id="profile-presentation-contact-info-contactinfocard-contact-types-text-4-rqvo1w" className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary/10 text-primary">
-            <FontAwesomeIcon icon={faPlus} className="h-4 w-4" />
-          </span>
-          {title}
-        </p>
-        {addedCount > 0 ? (
-          <span id="profile-presentation-contact-info-contactinfocard-contact-types-text-5-0w3lfb" className="rounded-full bg-primary/10 px-2 py-1 text-[11px] font-semibold text-primary">
-            {addedCount}
-          </span>
-        ) : null}
-      </div>
+    <div
+      id={id}
+      role="group"
+      aria-label={title}
+      className={SPATIAL_CAROUSEL_SHELL_CLASSNAME}
+    >
+      <div
+        id="profile-presentation-contact-info-contactinfocard-contact-types-div-6-9bqz7t"
+        tabIndex={0}
+        {...pointerHandlers}
+        onKeyDown={(event) => {
+          if (event.key === 'ArrowLeft') {
+            event.preventDefault();
+            moveCenter(-1);
+          } else if (event.key === 'ArrowRight') {
+            event.preventDefault();
+            moveCenter(1);
+          } else if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            const centeredItem = items[centerIndex];
+            if (centeredItem) onSelect(centeredItem.id);
+          }
+        }}
+        className={SPATIAL_CAROUSEL_VIEWPORT_CLASSNAME}
+        style={SPATIAL_CAROUSEL_VIEWPORT_STYLE}
+      >
+        <div
+          id="profile-presentation-contact-info-contactinfocard-contact-types-floor-glow-7w2q9m"
+          aria-hidden="true"
+          className={SPATIAL_CAROUSEL_FLOOR_GLOW_CLASSNAME}
+        />
+        {items.map((item, index) => {
+          const color = getContactVisualColor(item.id);
+          const presentation = getSpatialCarouselItemPresentation(
+            index,
+            centerIndex,
+            items.length,
+            color,
+          );
+          const { centered } = presentation;
 
-      <div id="profile-presentation-contact-info-contactinfocard-contact-types-div-6-9bqz7t" className="flex snap-x snap-mandatory gap-1 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {items.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            aria-pressed={item.id === selectedId}
-            onClick={() => onSelect(item.id)}
-            aria-label={item.label}
-            className={`group relative flex min-h-14 w-[4.25rem] shrink-0 snap-start flex-col items-center justify-center gap-0.5 rounded-lg px-0 py-0.5 text-center shadow-sm transition-all active:scale-95 sm:w-[4.25rem] ${
-              item.id === selectedId
-                ? "border-2 border-primary bg-primary/20"
-                : `border border-primary/40 bg-primary/5 ${item.count > 0 ? "border-primary/70" : ""}`
-            }`}
-          >
-            {item.count > 0 ? (
-              <span className="absolute end-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-black text-on-primary shadow-sm">
-                {item.count}
-              </span>
-            ) : null}
-            <FontAwesomeIcon
-              icon={item.icon}
-              className="h-11 w-11 transition-transform"
-              style={{ color: getContactVisualColor(item.id) }}
-            />
-            <span
-              className="line-clamp-2 w-[4.5rem] origin-top scale-[0.75] text-center text-[10px] font-semibold leading-[11px] tracking-tight text-muted-foreground"
+          return (
+            <button
+              key={item.id}
+              type="button"
+              aria-pressed={item.id === selectedId}
+              onClick={(event) => {
+                if (draggedRef.current) {
+                  event.preventDefault();
+                  return;
+                }
+                if (!centered) {
+                  setCenterIndex(index);
+                  return;
+                }
+                onSelect(item.id);
+              }}
+              aria-label={item.label}
+              className={SPATIAL_CAROUSEL_ITEM_CLASSNAME}
+              style={presentation.style}
             >
-              {item.label}
-            </span>
-          </button>
-        ))}
+              {item.count > 0 ? (
+                <span className="absolute end-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-black text-on-primary shadow-sm">
+                  {item.count}
+                </span>
+              ) : null}
+              <span className={SPATIAL_CAROUSEL_ICON_WRAP_CLASSNAME} style={getSpatialCarouselIconWrapStyle(centered)}>
+                {centered ? (
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-0 rounded-full blur-md"
+                    style={{ backgroundColor: `${color}2A` }}
+                  />
+                ) : null}
+                <FontAwesomeIcon
+                  icon={item.icon}
+                  className="relative z-10 shrink-0 transition-transform duration-300"
+                  style={getSpatialCarouselIconStyle(color, centered)}
+                />
+              </span>
+              {shouldShowSpatialCarouselLabel(centered) ? (
+                <span
+                  className={SPATIAL_CAROUSEL_LABEL_CLASSNAME}
+                  style={getSpatialCarouselLabelStyle(color, centered)}
+                >
+                  {item.label}
+                </span>
+              ) : null}
+            </button>
+          );
+        })}
       </div>
     </div>
   );

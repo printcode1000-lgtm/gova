@@ -115,7 +115,7 @@ export const AsolMap = forwardRef<AsolMapHandle, AsolMapProps>(
 
         const element = document.createElement("div");
         element.className = "asol-map__popup asol-map__popup--address";
-        for (const eventName of ["click", "dblclick", "pointerdown", "mousedown", "touchstart"]) {
+        for (const eventName of ["click", "dblclick", "pointerdown", "pointerup", "mousedown", "mouseup", "touchstart", "touchend"]) {
           element.addEventListener(eventName, (event) => event.stopPropagation());
         }
         const popup = new Popup({
@@ -158,7 +158,7 @@ export const AsolMap = forwardRef<AsolMapHandle, AsolMapProps>(
 
         const element = document.createElement("div");
         element.className = "asol-map__popup asol-map__popup--move-confirm";
-        for (const eventName of ["click", "dblclick", "pointerdown", "mousedown", "touchstart"]) {
+        for (const eventName of ["click", "dblclick", "pointerdown", "pointerup", "mousedown", "mouseup", "touchstart", "touchend"]) {
           element.addEventListener(eventName, (event) => event.stopPropagation());
         }
         const popup = new Popup({

@@ -11,7 +11,7 @@ Canonical inventory of every sealed `@asol/*` package in `packages/`.
 
 ## Scope
 
-Covers all 47 sealed packages under `packages/`. Does not cover `services/*/generated/` mirrors.
+Covers all 48 sealed packages under `packages/`. Does not cover `services/*/generated/` mirrors.
 
 ## Source of Truth
 
@@ -510,6 +510,20 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Test Gate** | `npm run test:seller-card-core` |
 | **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
+### @asol/spatial-carousel-core
+
+| Field | Value |
+|---|---|
+| **Package** | `@asol/spatial-carousel-core` |
+| **Folder** | `packages/spatial-carousel-core/` |
+| **Purpose** | Reusable responsive circular 3D carousel interaction and presentation |
+| **Architectural Layer** | capability |
+| **Public Exports** | `.` |
+| **Infrastructure Privileges** | none |
+| **May Import App (`@/`)** | no |
+| **Test Gate** | `npm run architecture:check` |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+
 ### @asol/secrets-core
 
 | Field | Value |
@@ -682,4 +696,4 @@ This Markdown file is **generated** and verified by `architecture:check`.
 
 | Metric | Value |
 |---|---|
-| Packages | 47 |
+| Packages | 48 |

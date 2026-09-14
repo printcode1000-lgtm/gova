@@ -46,6 +46,7 @@ export function ProfileEditSectionFrame({ id,
   title,
   color,
   hideHeader = false,
+  embedded = false,
 }: {
   children: React.ReactNode;
   icon: IconDefinition;
@@ -54,16 +55,17 @@ export function ProfileEditSectionFrame({ id,
   locale: string;
   color: string;
   hideHeader?: boolean;
+  embedded?: boolean;
 } & { id?: string }) {
   return (
     <section id={id}
-      className="rounded-3xl border bg-surface/90 p-3 shadow-lg shadow-primary/5 sm:p-4"
-      style={{ borderColor: `${color}44` }}
+      className={embedded ? "p-0" : "rounded-3xl border bg-surface/90 p-3 shadow-lg shadow-primary/5 sm:p-4"}
+      style={embedded ? undefined : { borderColor: `${color}44` }}
     >
       {!hideHeader ? (
         <div id="profile-presentation-profile-page-profilepagecontent-profile-tabs-div-2-w0prjy"
-          className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl px-3 py-3"
-          style={{ backgroundColor: `${color}10` }}
+          className={embedded ? "mb-3 flex flex-wrap items-center justify-between gap-3 px-1 py-2" : "mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl px-3 py-3"}
+          style={embedded ? undefined : { backgroundColor: `${color}10` }}
         >
           <div id="profile-presentation-profile-page-profilepagecontent-profile-tabs-div-3-wquhgt" className="flex min-w-0 items-center gap-3">
             <span id="profile-presentation-profile-page-profilepagecontent-profile-tabs-text-4-vksbhq"

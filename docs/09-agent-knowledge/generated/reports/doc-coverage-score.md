@@ -7,7 +7,7 @@
 
 Runtime coverage is inherited from each owner's owned source/test/script nodes, not only direct owner edges.
 
-Owners scored: **97**
+Owners scored: **98**
 Average coverage: **82%**
 Weak owners (<70%): **9**
 
@@ -76,6 +76,7 @@ Weak owners (<70%): **9**
 | `packages/seller-card-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/service-mirror-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/service-runtime-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
+| `packages/spatial-carousel-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/storage-image-manager-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/sub2main-composition` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/submain-composition` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |

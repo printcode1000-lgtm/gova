@@ -15,7 +15,6 @@ const storage = source(
 const page = source(
   'src/features/notifications/presentation/NotificationsPageContent.tsx',
 );
-const snapStripScroll = source('src/shared/ui/snap-strip-scroll.ts');
 
 // The selected filter must survive leaving and re-entering the page without a
 // `?filter=` query. The notifications feature may not depend on the
@@ -31,12 +30,12 @@ assert.match(storage, /asolDbSet/);
 assert.match(hook, /requestedFilterRef/);
 assert.match(hook, /restoredRef/);
 
-// The selected tab carries the wave animation, so it is always centered in the
-// strip, using the shared absolute-selection helper.
-assert.match(hook, /centerElementInScrollParent/);
-assert.match(snapStripScroll, /parent\.style\.scrollSnapType = "none"/);
-assert.match(snapStripScroll, /parent\.style\.scrollBehavior = "auto"/);
-assert.match(page, /filterButtonRefs\.current\[item\.id\] = node/);
+// The notifications filter strip uses the shared 3D spatial carousel.
+assert.doesNotMatch(hook, /centerElementInScrollParent/);
+assert.match(page, /useSpatialCarousel/);
+assert.match(page, /SPATIAL_CAROUSEL_VIEWPORT_CLASSNAME/);
+assert.match(page, /getSpatialCarouselItemPresentation/);
+assert.match(page, /onSettledIndex/);
 
 // The strip position is derived from the selected tab, so it must not be
 // captured for generic element-scroll restoration.

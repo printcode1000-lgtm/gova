@@ -10,6 +10,12 @@ import { StoreIdentityCard } from "@/features/profile/presentation/StoreIdentity
 import { WorkingHoursProfileCard } from "@/features/profile/presentation/WorkingHoursProfileCard";
 import { Card,CardContent } from "@/shared/ui/card";
 import {
+  SPATIAL_CAROUSEL_POPOVER_ARROW_CLASSNAME,
+  SPATIAL_CAROUSEL_POPOVER_CLASSNAME,
+  getSpatialCarouselPopoverArrowStyle,
+  getSpatialCarouselPopoverStyle,
+} from "@asol/spatial-carousel-core";
+import {
 SellerDiscountsManager
 } from "@/features/seller-discounts/ui";
 import {
@@ -44,7 +50,17 @@ return (
             <ProfileEditSaveFeedback id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsavefeedback-3-nyaopz' model={model} />
           ) : null}
 
-          <Card id='profile-presentation-profile-page-profileeditworkspaceview-card-4-chftbq' className="order-3 w-full max-w-full overflow-hidden rounded-3xl border border-outline-variant/50 bg-surface/95 shadow-xl shadow-primary/5">
+          <Card
+            id='profile-presentation-profile-page-profileeditworkspaceview-card-4-chftbq'
+            className={`order-3 w-full max-w-full overflow-visible ${SPATIAL_CAROUSEL_POPOVER_CLASSNAME}`}
+            style={getSpatialCarouselPopoverStyle(PROFILE_EDIT_TAB_COLORS[activeTab])}
+          >
+            <span
+              id="profile-presentation-profile-page-profileeditworkspaceview-popover-arrow-8-v4m2qs"
+              aria-hidden="true"
+              className={SPATIAL_CAROUSEL_POPOVER_ARROW_CLASSNAME}
+              style={getSpatialCarouselPopoverArrowStyle(PROFILE_EDIT_TAB_COLORS[activeTab])}
+            />
             <CardContent id='profile-presentation-profile-page-profileeditworkspaceview-cardcontent-5-spvk2b' className="p-0">
               <div id='profile-presentation-profile-page-profileeditworkspaceview-div-6-ojpfuv' className="relative">
                 <div id='profile-presentation-profile-page-profileeditworkspaceview-div-7-qnevwy'
@@ -67,7 +83,7 @@ return (
                     inert={activeTab !== "registration"}
                     className="w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
-                    <ProfileEditSectionFrame id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-9-ynox7w'
+                    <ProfileEditSectionFrame embedded id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-9-ynox7w'
                       icon={faUserCircle}
                       title={locale === "ar" ? "بيانات التسجيل الأساسية" : t("profile.registration.mainData")}
                       status={sectionStatuses.registration}
@@ -92,7 +108,7 @@ return (
                     inert={activeTab !== "specialties"}
                     className={providerAccountEnabled ? "w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6" : "hidden"}
                   >
-                    <ProfileEditSectionFrame id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-11-zfl6bg'
+                    <ProfileEditSectionFrame embedded id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-11-zfl6bg'
                       icon={faStar}
                       title={t("profile.specialties.select")}
                       status={sectionStatuses.specialties}
@@ -117,7 +133,7 @@ return (
                     inert={activeTab !== "store"}
                     className={providerAccountEnabled ? "w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6" : "hidden"}
                   >
-                    <ProfileEditSectionFrame id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-13-krapbq'
+                    <ProfileEditSectionFrame embedded id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-13-krapbq'
                       icon={faBuilding}
                       title={locale === "ar" ? "بيانات البروفيل" : t("profile.storeIdentity.activityTitle")}
                       status={sectionStatuses.store}
@@ -144,7 +160,7 @@ return (
                     inert={activeTab !== "products"}
                     className={providerAccountEnabled ? "w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6" : "hidden"}
                   >
-                    <ProfileEditSectionFrame id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-15-piput6'
+                    <ProfileEditSectionFrame embedded id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-15-piput6'
                       icon={faTags}
                       title={t("onboarding.storeIdentity.products")}
                       status={sectionStatuses.products}
@@ -172,7 +188,7 @@ return (
                     inert={activeTab !== "contact"}
                     className="w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
-                    <ProfileEditSectionFrame id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-17-ucrnnq'
+                    <ProfileEditSectionFrame embedded id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-17-ucrnnq'
                       icon={faComments}
                       title={t("onboarding.contactInfo.additionalContact")}
                       status={sectionStatuses.contact}
@@ -196,7 +212,7 @@ return (
                     inert={activeTab !== "workingHours"}
                     className={providerAccountEnabled ? "w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6" : "hidden"}
                   >
-                    <ProfileEditSectionFrame id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-19-kxfrnb'
+                    <ProfileEditSectionFrame embedded id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-19-kxfrnb'
                       icon={faClock}
                       title={locale === "ar" ? "مواعيد العمل" : "Working hours"}
                       status={sectionStatuses.workingHours}
@@ -219,7 +235,7 @@ return (
                     inert={activeTab !== "fulfillment"}
                     className={providerAccountEnabled ? "w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6" : "hidden"}
                   >
-                    <ProfileEditSectionFrame id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-21-fo6s6g'
+                    <ProfileEditSectionFrame embedded id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-21-fo6s6g'
                       icon={faTruckFast}
                       title={locale === "ar" ? "الشحن والإرجاع" : "Shipping"}
                       status={sectionStatuses.fulfillment}
@@ -242,7 +258,7 @@ return (
                     inert={activeTab !== "discounts"}
                     className={providerAccountEnabled ? "w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6" : "hidden"}
                   >
-                    <ProfileEditSectionFrame id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-23-gpqagb'
+                    <ProfileEditSectionFrame embedded id='profile-presentation-profile-page-profileeditworkspaceview-profileeditsectionframe-23-gpqagb'
                       icon={faPercent}
                       title={locale === "ar" ? "العروض والخصومات" : "Offers"}
                       status={sectionStatuses.discounts}

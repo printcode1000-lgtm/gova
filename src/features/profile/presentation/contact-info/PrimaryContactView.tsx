@@ -17,7 +17,7 @@ import { AsolMap, markerAt, createOpenStreetMapProvider, createNativePlatformGps
 import type { LocationEntry } from '@/features/profile/domain/profile-contacts.entity';
 import { getContactVisualColor, getContactVisualIcon } from "../contact-visual-style";
 import { shareLocationUrl } from "@/features/sharing/ui";
-import { SOCIAL_PLATFORMS, PHONE_TYPES, SocialLink, PhoneLink, ContactInfoData, ContactInfoCardProps, tileProvider, gpsProvider, normalizeContactInfoData, quickAddColor, quickAddIcon, ContactQuickAddGrid } from "./ContactInfoCard.contact-types";
+import { SOCIAL_PLATFORMS, PHONE_TYPES, SocialLink, PhoneLink, ContactInfoData, ContactInfoCardProps, tileProvider, gpsProvider, normalizeContactInfoData, quickAddColor, quickAddIcon, ContactQuickAddGrid, ContactKindPopover } from "./ContactInfoCard.contact-types";
 import type { ContactInfoCardModel } from "./ContactInfoCard.model";
 import { ContactSectionHeader } from "./ContactSectionHeader";
 import { ContactEntryCard } from "./ContactEntryCard";
@@ -127,7 +127,7 @@ return (
             </Card>
 
             {/* Additional Contact Section */}
-            <Card id='profile-presentation-contact-info-primarycontactview-card-32-3nff19'>
+            <Card id='profile-presentation-contact-info-primarycontactview-card-32-3nff19' className="border-0 bg-transparent shadow-none">
               <CardHeader id='profile-presentation-contact-info-primarycontactview-cardheader-33-lpvhim'>
                 <div id='profile-presentation-contact-info-primarycontactview-div-34-y8fhxb' className="flex items-center justify-between">
                   <div id='profile-presentation-contact-info-primarycontactview-div-35-qz5ik7'>
@@ -139,7 +139,7 @@ return (
                   </div>
                 </div>
               </CardHeader>
-              <CardContent id='profile-presentation-contact-info-primarycontactview-cardcontent-39-7kfnt8' className="space-y-3 sm:space-y-4">
+              <CardContent id='profile-presentation-contact-info-primarycontactview-cardcontent-39-7kfnt8' className="space-y-[6px]">
                 {!readOnly && (
                   <ContactQuickAddGrid id='profile-presentation-contact-info-primarycontactview-contactquickaddgrid-40-1c00yf'
                     items={quickAddItems}
@@ -148,6 +148,10 @@ return (
                     title={locale === 'ar' ? 'أضف وسيلة تواصل بسرعة' : 'Quick add contact method'}
                   />
                 )}
+                <ContactKindPopover
+                  id="profile-presentation-contact-info-primarycontactview-active-kind-popover-59-c8r2wn"
+                  activeKindId={activeKindId}
+                >
             {/* Additional Phones */}
             {PHONE_TYPES.map((type) => {
               if (type !== activeKindId) return null;
@@ -179,6 +183,7 @@ return (
                   <div className="space-y-2">
                     {typePhones.map((phone, index) => (
                       <ContactEntryCard
+                        embedded
                         key={phone.id}
                         color={quickAddColor(type)}
                         icon={quickAddIcon(type)}
@@ -226,6 +231,7 @@ return (
                 <div id='profile-presentation-contact-info-primarycontactview-div-48-42abzs' className="space-y-2">
                   {localData.emails.filter((e) => e.id !== 'primary').map((emailLink, index) => (
                     <ContactEntryCard
+                        embedded
                       key={emailLink.id}
                       color={quickAddColor('email')}
                       icon={quickAddIcon('email')}
@@ -283,6 +289,7 @@ return (
                       <div className="space-y-2">
                         {platformLinks.map((link, index) => (
                           <ContactEntryCard
+                        embedded
                             key={link.id}
                             color={quickAddColor(platform)}
                             icon={quickAddIcon(platform)}
@@ -333,6 +340,7 @@ return (
                 <div id='profile-presentation-contact-info-primarycontactview-div-57-cwhdvv' className="space-y-2">
                   {localData.websites.map((site, index) => (
                     <ContactEntryCard
+                        embedded
                       key={site.id}
                       color={quickAddColor('website')}
                       icon={quickAddIcon('website')}
@@ -354,6 +362,7 @@ return (
                 </div>
               </div>
             )}
+                </ContactKindPopover>
           </CardContent>
         </Card>
           </CardContent>

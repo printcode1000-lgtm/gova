@@ -302,6 +302,9 @@
       "@asol/seller-card-core/ui": [
         "./packages/seller-card-core/src/ui.ts"
       ],
+      "@asol/spatial-carousel-core": [
+        "./packages/spatial-carousel-core/src/index.ts"
+      ],
       "@asol/secrets-core": [
         "./packages/secrets-core/src/index.ts"
       ],

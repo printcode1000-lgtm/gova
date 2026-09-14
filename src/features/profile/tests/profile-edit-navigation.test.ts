@@ -54,19 +54,19 @@ assert.doesNotMatch(tabStorage, /localStorage|sessionStorage/);
 const workspaceChrome = source(
   'src/features/profile/presentation/profile-page/ProfileEditWorkspaceChrome.tsx',
 );
-assert.match(workspaceChrome, /perspective: "820px"/);
+const spatialCarousel = source('packages/spatial-carousel-core/src/index.ts');
+assert.match(workspaceChrome, /@asol\/spatial-carousel-core/);
+assert.match(spatialCarousel, /perspective: "820px"/);
+assert.match(spatialCarousel, /SPATIAL_CAROUSEL_SETTLE_DELAY_MS = 1000/);
 assert.match(
   workspaceChrome,
   /if \(!centered\) \{\s*setCenterIndex\(index\);\s*return;\s*\}\s*model\.selectSection\(section\)/,
 );
 assert.match(workspaceChrome, /const visibleSections: ProfileEditTab\[\] = model\.providerAccountEnabled\s*\? PROFILE_SECTIONS\s*:\s*\["registration", "contact"\]/);
-assert.match(workspaceChrome, /const activeIndex = visibleSections\.indexOf\(model\.activeTab\)/);
-
-const workspaceChromeAutoOpen = source(
-  'src/features/profile/presentation/profile-page/ProfileEditWorkspaceChrome.tsx',
-);
-assert.match(workspaceChromeAutoOpen, /window\.setTimeout\(\(\) => \{\s*model\.selectSection\(centeredSection\);\s*\}, 500\)/);
-assert.match(workspaceChromeAutoOpen, /return \(\) => window\.clearTimeout\(settleTimer\)/);
+assert.match(workspaceChrome, /const selectedIndex = Math\.max\(0, visibleSections\.indexOf\(model\.activeTab\)\)/);
+assert.match(spatialCarousel, /window\.setTimeout\(\(\) => \{/);
+assert.match(spatialCarousel, /settleDelayMs/);
+assert.match(spatialCarousel, /return \(\) => window\.clearTimeout\(settleTimer\)/);
 
 const workspaceView = source(
   'src/features/profile/presentation/profile-page/ProfileEditWorkspaceView.tsx',
