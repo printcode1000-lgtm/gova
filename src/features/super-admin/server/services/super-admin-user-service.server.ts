@@ -3,11 +3,14 @@ import 'server-only';
 import '@/features/auth/server';
 import { createSignedSessionToken } from '@asol/auth-core/server';
 import { persistentSystemLogService } from "@/features/system-logs/server";
+import { registerDataCoreRuntimeConfigPorts } from "@/features/data/server";
 import { accountDeletionService } from "@/features/auth/server";
 import {
   superAdminUserSearchRepository,
   type SuperAdminUserSearchFilters,
 } from "@asol/data-core/super-admin";
+
+registerDataCoreRuntimeConfigPorts();
 
 export class SuperAdminUserService {
   search(filters: SuperAdminUserSearchFilters) {
@@ -45,18 +48,22 @@ export class SuperAdminUserService {
   async deleteUser(input: { adminUid: string; targetUid: string }) {
     const result = await accountDeletionService.deleteBySuperAdmin(input.targetUid);
 
-    await persistentSystemLogService.add({
-      level: "warning",
-      source: "server",
-      consoleMethod: "server.warn",
-      message: `Super admin deleted user account: ${input.adminUid} -> ${input.targetUid}`,
-      page: "/super-admin/users",
-      platform: "server",
-      feature: "SuperAdminUsers",
-      operation: "deleteUser",
-      routeName: "/api/super-admin/users/delete",
-      requestMethod: "POST",
-    });
+    try {
+      await persistentSystemLogService.add({
+        level: "warning",
+        source: "server",
+        consoleMethod: "server.warn",
+        message: `Super admin deleted user account: ${input.adminUid} -> ${input.targetUid}`,
+        page: "/super-admin/users",
+        platform: "server",
+        feature: "SuperAdminUsers",
+        operation: "deleteUser",
+        routeName: "/api/super-admin/users/delete",
+        requestMethod: "POST",
+      });
+    } catch (error) {
+      console.error("[SuperAdminUsers] Account deletion completed but audit logging failed", error);
+    }
 
     return result;
   }

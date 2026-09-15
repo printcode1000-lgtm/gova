@@ -96,7 +96,6 @@ export const ALLOWED_PROCESS_ENV_FILES = new Set([
 export const ALLOWED_FETCH_FILES = new Set([
   "src/core/api/asol-http-transport.ts",
   "packages/account-bridge/src/notifications.ts",
-  "src/features/release-commands/server/services/production-deploy-notification-delivery.server.ts",
 ]);
 
 /**

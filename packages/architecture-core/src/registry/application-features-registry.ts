@@ -425,7 +425,7 @@ export const APPLICATION_FEATURES: readonly ApplicationFeature[] = [
       "@asol/release-core",
       "@asol/vercel-deploy-core",
     ],
-    ["auth", "google-play-console"],
+    ["google-play-console"],
     FULL,
   ),
   feature(
@@ -491,6 +491,7 @@ export const APPLICATION_FEATURES: readonly ApplicationFeature[] = [
     [
       "advertisements",
       "auth",
+      "data",
       "notifications",
       "page-save",
       "product",

@@ -291,8 +291,8 @@ export function DeveloperCategorySelector() {
   const controlsDisabled = !isStyleLoaded;
 
   return (
-    <main id='features-dev-tools-presentation-developercategoryselector-main-1-dhrw2e' className="mx-auto w-full px-4 py-8 sm:px-6" data-voice-input="off">
-      <section id='features-dev-tools-presentation-developercategoryselector-section-2-gxdgo2' className="rounded-3xl border bg-card p-5 shadow-sm sm:p-8">
+    <main id='features-dev-tools-presentation-developercategoryselector-main-1-dhrw2e' className="mx-auto w-full min-w-0 px-3 py-6 sm:px-6 sm:py-8" data-voice-input="off">
+      <section id='features-dev-tools-presentation-developercategoryselector-section-2-gxdgo2' className="min-w-0 overflow-hidden rounded-3xl border bg-card p-3 shadow-sm sm:p-8">
         <p id='features-dev-tools-presentation-developercategoryselector-text-3-xeqisv' className="mb-2 w-full text-xs font-semibold uppercase tracking-wider text-primary">
           Developer only
         </p>
@@ -310,14 +310,14 @@ export function DeveloperCategorySelector() {
             تعذر تحميل بيانات التصنيفات.
           </p>
         ) : (
-          <div id='features-dev-tools-presentation-developercategoryselector-div-9-bzfhmp' className="mt-8 grid gap-6 sm:grid-cols-2">
-            <div id='features-dev-tools-presentation-developercategoryselector-div-10-uvdv0s' className="space-y-2">
+          <div id='features-dev-tools-presentation-developercategoryselector-div-9-bzfhmp' className="mt-6 grid min-w-0 gap-4 sm:mt-8 sm:grid-cols-2 sm:gap-6">
+            <div id='features-dev-tools-presentation-developercategoryselector-div-10-uvdv0s' className="min-w-0 space-y-2">
               <label id='features-dev-tools-presentation-developercategoryselector-label-11-anyp3b' className="text-sm font-semibold">التصنيف الرئيسي</label>
               <Select
                 value={mainCategoryId}
                 onValueChange={handleMainCategoryChange}
               >
-                <SelectTrigger id='features-dev-tools-presentation-developercategoryselector-selecttrigger-12-chabjk'>
+                <SelectTrigger id='features-dev-tools-presentation-developercategoryselector-selecttrigger-12-chabjk' className="min-w-0 [&>span]:truncate">
                   <SelectValue placeholder="اختر تصنيفًا رئيسيًا" />
                 </SelectTrigger>
                 <SelectContent id='features-dev-tools-presentation-developercategoryselector-selectcontent-13-4asow2'>
@@ -333,14 +333,14 @@ export function DeveloperCategorySelector() {
               </Select>
             </div>
 
-            <div id='features-dev-tools-presentation-developercategoryselector-div-14-msg5o5' className="space-y-2">
+            <div id='features-dev-tools-presentation-developercategoryselector-div-14-msg5o5' className="min-w-0 space-y-2">
               <label id='features-dev-tools-presentation-developercategoryselector-label-15-ajgzhk' className="text-sm font-semibold">التصنيف الفرعي</label>
               <Select
                 value={subcategoryId}
                 onValueChange={handleSubcategoryChange}
                 disabled={!mainCategoryId || subcategoryOptions.length === 0}
               >
-                <SelectTrigger id='features-dev-tools-presentation-developercategoryselector-selecttrigger-16-glzjxb'>
+                <SelectTrigger id='features-dev-tools-presentation-developercategoryselector-selecttrigger-16-glzjxb' className="min-w-0 [&>span]:truncate">
                   <SelectValue
                     placeholder={
                       mainCategoryId && subcategoryOptions.length === 0
@@ -362,14 +362,14 @@ export function DeveloperCategorySelector() {
               </Select>
             </div>
 
-            <details id="features-dev-tools-presentation-developercategoryselector-details-18-y2hyik" className="group sm:col-span-2">
-              <summary id='features-dev-tools-presentation-developercategoryselector-summary-19-tipguj' className="flex list-none items-center justify-between rounded-xl border bg-muted/40 px-4 py-3 font-semibold transition-colors">
+            <details id="features-dev-tools-presentation-developercategoryselector-details-18-y2hyik" className="group min-w-0 sm:col-span-2">
+              <summary id='features-dev-tools-presentation-developercategoryselector-summary-19-tipguj' className="flex min-w-0 list-none items-center justify-between gap-2 rounded-xl border bg-muted/40 px-3 py-3 font-semibold transition-colors sm:px-4">
                 <span id='features-dev-tools-presentation-developercategoryselector-text-20-wazwlq'>معلومات العناصر المختارة</span>
                 <span id='features-dev-tools-presentation-developercategoryselector-text-21-zvpj9i' className="text-lg text-muted-foreground transition-transform group-open:rotate-180">
                   ^
                 </span>
               </summary>
-              <div id='features-dev-tools-presentation-developercategoryselector-div-22-xgw4j6' className="mt-3 grid gap-4 lg:grid-cols-2">
+              <div id='features-dev-tools-presentation-developercategoryselector-div-22-xgw4j6' className="mt-3 grid min-w-0 gap-4 lg:grid-cols-2">
                 <SelectedRecordDetails id='features-dev-tools-presentation-developercategoryselector-selectedrecorddetails-23-vd1qmk'
                   title="بيانات التصنيف الرئيسي"
                   record={selectedMainDetails}
@@ -382,8 +382,8 @@ export function DeveloperCategorySelector() {
             </details>
 
             {mainCategoryId && subcategoryId ? (
-              <div id='features-dev-tools-presentation-developercategoryselector-div-25-jwu6yj' className="space-y-6 sm:col-span-2">
-                <div id='features-dev-tools-presentation-developercategoryselector-div-26-jrguki' className="rounded-xl border bg-muted/20 p-4">
+              <div id='features-dev-tools-presentation-developercategoryselector-div-25-jwu6yj' className="min-w-0 space-y-6 sm:col-span-2">
+                <div id='features-dev-tools-presentation-developercategoryselector-div-26-jrguki' className="min-w-0 rounded-xl border bg-muted/20 p-3 sm:p-4">
                   <div id='features-dev-tools-presentation-developercategoryselector-div-27-xlmjfd' className="flex flex-wrap items-center justify-between gap-2">
                     <h2 id='features-dev-tools-presentation-developercategoryselector-heading-28-l7ir6v' className="font-bold">إعدادات المكونات</h2>
                     <span id='features-dev-tools-presentation-developercategoryselector-text-29-omwipk' className="text-xs text-muted-foreground">
@@ -391,7 +391,7 @@ export function DeveloperCategorySelector() {
                       {styleStatus === "error" && "تعذر تحميل الإعدادات"}
                     </span>
                   </div>
-                  <div id='features-dev-tools-presentation-developercategoryselector-div-30-l54o3g' className="mt-4 grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
+                  <div id='features-dev-tools-presentation-developercategoryselector-div-30-l54o3g' className="mt-4 grid min-w-0 gap-4 lg:grid-cols-2 xl:grid-cols-3">
                     <ProductImagesStyleEditor
                       value={components.images}
                       disabled={controlsDisabled}
@@ -455,10 +455,10 @@ export function DeveloperCategorySelector() {
                   </div>
                 </div>
 
-                <div id='features-dev-tools-presentation-developercategoryselector-div-31-ouodp5' className="rounded-xl border p-4">
+                <div id='features-dev-tools-presentation-developercategoryselector-div-31-ouodp5' className="min-w-0 rounded-xl border p-3 sm:p-4">
                   <div id='features-dev-tools-presentation-developercategoryselector-div-32-gvehv0' className="flex flex-wrap items-center justify-between gap-3">
                     <h2 id='features-dev-tools-presentation-developercategoryselector-heading-33-an71is' className="font-bold">معاينة المنتج</h2>
-                    <div id='features-dev-tools-presentation-developercategoryselector-div-34-yrxlmc' className="grid grid-cols-3 gap-2">
+                    <div id='features-dev-tools-presentation-developercategoryselector-div-34-yrxlmc' className="grid w-full min-w-0 grid-cols-3 gap-2 sm:w-auto">
                       {(
                         [
                           ["view", "عرض"],
@@ -470,7 +470,7 @@ export function DeveloperCategorySelector() {
                           key={mode}
                           type="button"
                           onClick={() => setPreviewMode(mode)}
-                          className={`rounded-xl border px-4 py-2.5 text-sm font-semibold transition-colors ${
+                          className={`min-w-0 rounded-xl border px-2 py-2.5 text-sm font-semibold transition-colors sm:px-4 ${
                             previewMode === mode
                               ? "border-primary bg-primary text-on-primary"
                               : "bg-background"
@@ -484,7 +484,7 @@ export function DeveloperCategorySelector() {
 
                   <div id='features-dev-tools-presentation-developercategoryselector-div-35-qggmva'
                     key={`${mainCategoryId}-${subcategoryId}-${previewMode}`}
-                    className="mt-5 space-y-4 rounded-xl bg-muted/20 p-3 sm:p-5"
+                    className="mt-5 min-w-0 space-y-4 overflow-hidden rounded-xl bg-muted/20 p-2 sm:p-5"
                   >
                     {/* Omit productId so the non-persisted preview never queries the reviews API. */}
                     <ProductComponentsRenderer id='features-dev-tools-presentation-developercategoryselector-productcomponentsrenderer-36-syyeoc'

@@ -298,6 +298,9 @@ ALLOWED_TO_IMPORT → `@asol/storage-image-manager-core/image-cache`
 ### @asol/service-runtime-core
 
 `@asol/service-runtime-core`
+ALLOWED_TO_IMPORT → `@asol/api-contract-core`
+
+`@asol/service-runtime-core`
 ALLOWED_TO_IMPORT → `@asol/api-contract-core/server`
 
 `@asol/service-runtime-core`
@@ -368,4 +371,4 @@ ALLOWED_TO_IMPORT → `@asol/account-declarations`
 | Metric | Value |
 |---|---|
 | Packages | 48 |
-| Import edges | 58 |
+| Import edges | 59 |

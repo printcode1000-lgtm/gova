@@ -43,6 +43,10 @@ export async function uploadPageSaveImageUploadHandles(
   return true;
 }
 
+export function clearPageSaveImageUploadHandles(): void {
+  handles.clear();
+}
+
 export function resetPageSaveImageUploadHandlesForTests(): void {
   handles.clear();
 }

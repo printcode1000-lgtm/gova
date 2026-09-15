@@ -2,7 +2,6 @@ import Link from "next/link";
 import {
   ChevronDown,
   Megaphone,
-  Rocket,
   ScrollText,
   ShieldCheck,
   Sliders,
@@ -145,7 +144,6 @@ export function AppSidebarSuperAdminSection({ id,
           >
             <SuperAdminLink id='shared-layouts-app-sidebar-appsidebarsuperadminsection-superadminlink-21-rhcexx' href="/super-admin/logs" icon={<ScrollText id='shared-layouts-app-sidebar-appsidebarsuperadminsection-scrolltext-22-fqhqrr' className={sidebarSmallIconClass} />} label="سجل أحداث النظام" className={itemClass} onClose={onClose} />
             <SuperAdminLink id='shared-layouts-app-sidebar-appsidebarsuperadminsection-superadminlink-23-qkrf53' href="/super-admin/users" icon={<Users id='shared-layouts-app-sidebar-appsidebarsuperadminsection-users-24-pxsp4d' className={sidebarSmallIconClass} />} label="إدارة حسابات المستخدمين" className={itemClass} onClose={onClose} />
-            <SuperAdminLink id='shared-layouts-app-sidebar-appsidebarsuperadminsection-superadminlink-25-ynaysy' href="/super-admin/production-deploy" icon={<Rocket id='shared-layouts-app-sidebar-appsidebarsuperadminsection-rocket-26-epfdyj' className={sidebarSmallIconClass} />} label="النشر إلى الإنتاج" className={itemClass} onClose={onClose} />
           </SuperAdminGroup>
         </div>
       )}

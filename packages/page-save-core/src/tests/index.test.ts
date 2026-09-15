@@ -4,6 +4,9 @@ import path from "node:path";
 import pkg from "../../package.json" with { type: "json" };
 
 import {
+  clearAllPageSaveOperations,
+  clearPageSavePersistence,
+  clearPageSaveRegistry,
   closePageSaveDialog,
   configurePageSaveCore,
   executePageSave,
@@ -685,6 +688,77 @@ async function testStagedOperationsAreNeverPersisted() {
   );
 }
 
+async function testLogoutClearRemovesAllPageSaveState() {
+  resetPageSaveRegistryForTests();
+  resetPageSavePersistenceForTests();
+  resetPageSaveOperationsForTests();
+  const storage = createMemoryStorage();
+  configurePageSaveCore({ storage });
+
+  const now = new Date().toISOString();
+  storage.store.set("profile-edit", {
+    schemaVersion: 1,
+    id: "profile-edit",
+    pageLabel: "Profile",
+    returnPath: "/profile?mode=edit",
+    items: [{ id: "registration", label: "Registration", operation: "save", isDirty: true, canSave: true, selected: true }],
+    updatedAt: now,
+  });
+  storage.journal.set("profile-edit:registration", {
+    schemaVersion: 1,
+    operationId: "profile-edit:registration",
+    idempotencyKey: "logout-clear-test",
+    scopeId: "profile-edit",
+    itemId: "registration",
+    kind: "save",
+    label: "Registration",
+    returnPath: "/profile?mode=edit",
+    status: "pending",
+    attempts: 0,
+    startedAt: now,
+    updatedAt: now,
+  });
+
+  stagePageSaveOperation({
+    scopeId: "profile-edit",
+    itemId: "avatar-upload",
+    kind: "upload",
+    label: "Avatar",
+    execute: async () => true,
+  });
+  registerPageSave({
+    id: "profile-edit",
+    label: "Profile",
+    returnPath: "/profile?mode=edit",
+    items: [{ id: "registration", label: "Registration", isDirty: true, canSave: true }],
+    isSaving: false,
+    canSave: true,
+    handle: { save: async () => true },
+  });
+  assert.equal(getPageSaveSnapshot().isDirty, true);
+
+  clearPageSaveRegistry();
+  clearAllPageSaveOperations();
+  await clearPageSavePersistence();
+
+  assert.deepEqual(getPageSaveSnapshot(), {
+    phase: "idle",
+    isDirty: false,
+    isSaving: false,
+    canSave: false,
+    label: null,
+    registrationId: null,
+    hasPersistedPending: false,
+    dialogOpen: false,
+    dialog: null,
+    lastResult: null,
+    interrupted: [],
+  });
+  assert.equal(listPageSaveOperations("profile-edit").length, 0);
+  assert.equal(storage.store.size, 0);
+  assert.equal(storage.journal.size, 0);
+}
+
 async function main() {
   await testRegistryLifecycle();
   await testPrepareForSaveGate();
@@ -699,6 +773,7 @@ async function main() {
   await testStagedOperationsRunThroughRegistry();
   await testRestagingTheSameOperationShowsTheIcon();
   await testStagedOperationsAreNeverPersisted();
+  await testLogoutClearRemovesAllPageSaveState();
   await testDropPageSaveItemsKeepsOtherPendingWork();
   testPackageSeal();
   console.log("page-save-core tests passed.");

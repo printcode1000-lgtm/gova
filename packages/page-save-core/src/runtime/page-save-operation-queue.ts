@@ -48,6 +48,14 @@ export function clearPageSaveOperations(scopeId: string): string[] {
   return itemIds;
 }
 
+/** Clears every staged page-save operation while keeping active subscribers alive. */
+export function clearAllPageSaveOperations(): void {
+  if (operations.size === 0 && itemsCache.size === 0) return;
+  operations.clear();
+  itemsCache.clear();
+  emit();
+}
+
 export function listPageSaveOperations(scopeId: string): PageSaveStagedOperation[] {
   return [...(operations.get(scopeId)?.values() ?? [])];
 }

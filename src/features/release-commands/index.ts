@@ -5,5 +5,4 @@
 /* BEGIN GENERATED FEATURE DOOR EXPORTS */
 /** Auto-maintained sealed-door re-exports. Do not edit by hand. */
 export * from './application/services/build-job-api-service';
-export * from './application/services/production-deploy-api-service';
 /* END GENERATED FEATURE DOOR EXPORTS */

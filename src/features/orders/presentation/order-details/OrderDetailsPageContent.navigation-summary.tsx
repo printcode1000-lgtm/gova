@@ -3,10 +3,8 @@
 import type { OrderDto } from "@asol/orders-core";
 import * as React from "react";
 import Image from "@/shared/ui/local-first-image";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
-  ArrowRight,
   CheckCircle2,
   CircleDollarSign,
   ExternalLink,
@@ -100,18 +98,6 @@ export const text = {
 
 export function isPendingSellerResponse(status: unknown) {
   return ["new", "waiting_for_seller_response"].includes(String(status));
-}
-
-export function BackToOrders({ id }: { id?: string }) {
-  return (
-    <Link id={id}
-      href="/orders"
-      className="inline-flex items-center gap-2 text-sm text-primary"
-    >
-      <ArrowRight className="h-4 w-4" />
-      {text.back}
-    </Link>
-  );
 }
 
 export function OrderSummary({ id,

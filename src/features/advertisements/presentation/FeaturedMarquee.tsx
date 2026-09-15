@@ -176,7 +176,7 @@ export function FeaturedMarquee({ id, config }: FeaturedMarqueeProps & { id?: st
           <span id="features-advertisements-presentation-featuredmarquee-icon-shine-5c81a4" className="inline-flex h-5 w-5 shrink-0">
             <Sparkles className="w-5 h-5 text-tertiary animate-pulse-subtle" aria-hidden />
           </span>
-          المتميزة
+          {t(sectionTitle || "home.featured.title")}
         </h3>
         <div id="features-advertisements-presentation-featuredmarquee-div-4-2sshlr" className="title-line-contact text-tertiary" style={{ background: "linear-gradient(90deg, currentColor 0, color-mix(in srgb, currentColor 40%, transparent) 50%, transparent 100%)", opacity: 0.6 }}></div>
       </div>

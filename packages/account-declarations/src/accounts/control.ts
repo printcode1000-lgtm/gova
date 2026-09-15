@@ -59,7 +59,6 @@ export const CONTROL_DECLARATION = {
   requiredEnv: CONTROL_RUNTIME_REQUIRED_ENV_KEYS,
   optionalEnv: CONTROL_RUNTIME_OPTIONAL_ENV_KEYS,
   mirrorEntryPoints: [
-    'features/release-commands/server/services/production-deploy-service.server.ts',
     'core/config/control-env.ts',
   ],
   runtimeAssets: [],

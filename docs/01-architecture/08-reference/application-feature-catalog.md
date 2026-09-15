@@ -458,7 +458,7 @@ src/
 | **Public Doors** | `@/features/release-commands` · `@/features/release-commands/ui` · `@/features/release-commands/server` |
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | `@asol/notifications-core`, `@asol/release-core`, `@asol/vercel-deploy-core` |
-| **Permitted Feature Dependencies** | `auth`, `google-play-console` |
+| **Permitted Feature Dependencies** | `google-play-console` |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### seller-discounts
@@ -549,7 +549,7 @@ src/
 | **Public Doors** | `@/features/super-admin` · `@/features/super-admin/ui` · `@/features/super-admin/server` |
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | _(none)_ |
-| **Permitted Feature Dependencies** | `advertisements`, `auth`, `notifications`, `page-save`, `product`, `storage`, `system-logs` |
+| **Permitted Feature Dependencies** | `advertisements`, `auth`, `data`, `notifications`, `page-save`, `product`, `storage`, `system-logs` |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### system-logs

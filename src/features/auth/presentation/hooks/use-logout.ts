@@ -7,6 +7,7 @@ import { sessionService } from '../../application/services/session-service';
 import { authMonitorMeta } from './auth-monitor-meta';
 import { clearImageUploadClientState } from '@/features/storage';
 import { notifications } from '@/features/notifications';
+import { clearPageSaveClientState } from '@/features/page-save';
 
 /** Clears session in IndexedDB and updates in-memory session state. */
 export function useLogout() {
@@ -15,6 +16,7 @@ export function useLogout() {
 
   return useMutation({
     mutationFn: async () => {
+      await clearPageSaveClientState();
       await clearImageUploadClientState();
       if (session?.uid) {
         try {

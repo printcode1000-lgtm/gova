@@ -1,4 +1,5 @@
 import { jsonContract, readJsonContractBody } from '@asol/api-contract-core/server';
+import type { TransportKeyPolicy } from '@asol/api-contract-core';
 import { NextResponse } from 'next/server';
 import { isDevelopment } from '@/core/config';
 import { DEV_TRACE_HEADER } from '@asol/observability-core/dev-trace';
@@ -21,8 +22,14 @@ function attachDevTraceHeaders(response: NextResponse): NextResponse {
   return response;
 }
 
-export function apiSuccess<T>(data: T, status = 200): NextResponse {
-  return attachDevTraceHeaders(NextResponse.json(jsonContract(data), { status }));
+export function apiSuccess<T>(
+  data: T,
+  status = 200,
+  transportPolicy: TransportKeyPolicy = {},
+): NextResponse {
+  return attachDevTraceHeaders(
+    NextResponse.json(jsonContract(data, transportPolicy), { status }),
+  );
 }
 
 export function apiError(

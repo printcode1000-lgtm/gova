@@ -5,7 +5,7 @@
 
 # Write Surface Map
 
-Detected write-like surfaces: **367**
+Detected write-like surfaces: **366**
 Unproven gateway paths: **145**
 
 | Source | Owner | Operations | Gateway | Proven | Route | Runtimes | Risk |
@@ -116,7 +116,7 @@ Unproven gateway paths: **145**
 | `packages/page-save-core/src/runtime/page-save-persistence.ts` | `@asol/page-save-core` | delete, save | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/page-save-core/src/runtime/page-save-registry.ts` | `@asol/page-save-core` | delete, patch, save, update, upload | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/page-save-core/src/tests/header-visibility.test.ts` | `@asol/page-save-core` | delete, save | `unproven` | NO | `` | android, development, ios, static-out, web | high |
-| `packages/page-save-core/src/tests/index.test.ts` | `@asol/page-save-core` | delete, save | `unproven` | NO | `` | android, development, ios, static-out, web | high |
+| `packages/page-save-core/src/tests/index.test.ts` | `@asol/page-save-core` | delete, save, upload | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/page-save-core/src/tests/journal-recovery.test.ts` | `@asol/page-save-core` | delete, save, upload | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/page-save-core/src/tests/resilience.test.ts` | `@asol/page-save-core` | delete, save, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/page-snapshot-core/src/domain/page-snapshot.types.ts` | `@asol/page-snapshot-core` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |
@@ -202,7 +202,7 @@ Unproven gateway paths: **145**
 | `src/features/auth/ports/auth-service.interface.ts` | `auth` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/auth/presentation/AccountDeletionPageContent.tsx` | `auth` | delete, save | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/features/auth/presentation/hooks/use-login.ts` | `auth` | mutate, update | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
-| `src/features/auth/presentation/hooks/use-logout.ts` | `auth` | delete | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
+| `src/features/auth/presentation/hooks/use-logout.ts` | `auth` | delete, save | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/auth/presentation/hooks/use-profile-registration.ts` | `auth` | save, update | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/auth/presentation/hooks/use-register.ts` | `auth` | create, insert, mutate | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/auth/presentation/SessionProvider.tsx` | `auth` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
@@ -273,7 +273,7 @@ Unproven gateway paths: **145**
 | `src/features/orders/server/services/order-shipping-bootstrap.server.ts` | `orders` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/features/ota/server.ts` | `ota` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/features/ota/server/admin.ts` | `ota` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
-| `src/features/page-save/application/page-save-core-bootstrap.ts` | `page-save` | save | `@asol/page-save-core, @asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
+| `src/features/page-save/application/page-save-core-bootstrap.ts` | `page-save` | save, upload | `@asol/page-save-core, @asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/page-save/application/utils/page-save-image-items.ts` | `page-save` | delete, save, upload | `@asol/page-save-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/page-save/application/utils/page-save-operation-description.ts` | `page-save` | delete, save, upload | `@asol/page-save-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/page-save/infrastructure/runtime/page-save-image-upload-registry.ts` | `page-save` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |
@@ -347,7 +347,6 @@ Unproven gateway paths: **145**
 | `src/features/profile/server/services/profile-service.bootstrap.server.ts` | `profile` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/features/profile/server/services/profile-service.server.ts` | `profile` | write-like | `@asol/data-core, @asol/storage-core` | yes | `` | development, web | medium |
 | `src/features/profile/tests/profiles-service-module-contract.test.ts` | `profile` | delete, patch, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
-| `src/features/release-commands/server/services/production-deploy-service.server.ts` | `release-commands` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/features/release-commands/tests/release-commands.test.ts` | `release-commands` | patch, publish, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/features/seller-discounts/domain/seller-discount.entity.ts` | `seller-discounts` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/seller-discounts/presentation/SellerDiscountsManager.tsx` | `seller-discounts` | save | `unproven` | NO | `` | android, development, ios, static-out, web | high |

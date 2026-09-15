@@ -32,6 +32,7 @@ export {
 } from "./runtime/page-save-journal";
 export {
   buildPageSaveOperationItems,
+  clearAllPageSaveOperations,
   clearPageSaveOperations,
   hasPageSaveOperation,
   listPageSaveOperations,
@@ -42,6 +43,7 @@ export {
   unstagePageSaveOperation,
 } from "./runtime/page-save-operation-queue";
 export {
+  clearPageSavePersistence,
   configurePageSaveCore,
   deletePageSavePendingRecord,
   loadPageSavePendingRecords,
@@ -51,6 +53,7 @@ export {
 export {
   acknowledgePageSaveInterruption,
   acknowledgePageSaveResult,
+  clearPageSaveRegistry,
   closePageSaveDialog,
   consumePageSaveExecuteAfterNavigation,
   dropPageSaveItems,

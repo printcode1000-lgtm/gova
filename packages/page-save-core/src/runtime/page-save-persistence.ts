@@ -144,6 +144,32 @@ export async function loadPageSavePendingRecords(): Promise<
   return runPageSaveStorageOperation(() => requireStorage().listPending());
 }
 
+/** Clears all durable and fallback page-save state for the signed-out user. */
+export async function clearPageSavePersistence(): Promise<void> {
+  await flushPendingMutations();
+  await flushPageSaveJournalMutations();
+
+  const storage = requireStorage();
+  const [pending, journal] = await Promise.all([
+    runPageSaveStorageOperation(() => storage.listPending()),
+    runPageSaveStorageOperation(() => storage.listJournalEntries()),
+  ]);
+
+  await Promise.all([
+    ...pending.map((record) =>
+      runPageSaveStorageOperation(() => storage.deletePending(record.id)),
+    ),
+    ...journal.map((entry) =>
+      runPageSaveStorageOperation(() =>
+        storage.deleteJournalEntry(entry.operationId),
+      ),
+    ),
+  ]);
+
+  memoryPending.clear();
+  memoryJournal.clear();
+}
+
 export function resetPageSavePersistenceForTests(): void {
   runtimeConfig = null;
   memoryPending.clear();

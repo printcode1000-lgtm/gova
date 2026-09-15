@@ -8,11 +8,15 @@ import {
   asolDbSet,
 } from '@asol/data-core/browser';
 import {
+  clearAllPageSaveOperations,
+  clearPageSavePersistence,
+  clearPageSaveRegistry,
   configurePageSaveCore,
   hydratePageSavePendingFromStorage,
   hydratePageSaveRecoveryFromStorage,
   type PageSaveJournalEntry,
 } from '@asol/page-save-core';
+import { clearPageSaveImageUploadHandles } from '../infrastructure/runtime/page-save-image-upload-registry';
 
 let registered = false;
 
@@ -53,3 +57,12 @@ export function registerPageSaveCorePorts(): void {
 }
 
 export { hydratePageSavePendingFromStorage, hydratePageSaveRecoveryFromStorage };
+
+/** Clears every page-save trace owned by the current signed-in user. */
+export async function clearPageSaveClientState(): Promise<void> {
+  // Hide the header affordance immediately, then remove staged and durable work.
+  clearPageSaveRegistry();
+  clearAllPageSaveOperations();
+  clearPageSaveImageUploadHandles();
+  await clearPageSavePersistence();
+}

@@ -13003,75 +13003,6 @@
       ]
     },
     {
-      "id": "document:docs/06-super-admin-and-operations/super-admin-production-deploy.md",
-      "kind": "document",
-      "name": "Super Admin Production Deploy",
-      "path": "docs/06-super-admin-and-operations/super-admin-production-deploy.md",
-      "summary": "GitHub pushes do not start production deployments. The machine-only production deploy endpoint is reserved for authenticated explicit release requests; no Vercel, repository, archive, email, or notification secret is stored in GitHub.",
-      "tags": [
-        "@asol/vercel-deploy-core/github-push-identity",
-        "admin",
-        "archive",
-        "authenticated",
-        "deploy",
-        "deployments",
-        "do",
-        "docs/06-super-admin-and-operations/super-admin-production-deploy",
-        "docs/06-super-admin-and-operations/super-admin-production-deploy.md",
-        "email",
-        "endpoint",
-        "explicit",
-        "for",
-        "github",
-        "github pushes do not start production deployments. the machine-only production deploy endpoint is reserved for authenticated explicit release requests; no vercel, repository, archive, email, or notification secret is stored in github.",
-        "in",
-        "is",
-        "machine-only",
-        "md",
-        "mjs",
-        "no",
-        "not",
-        "notification",
-        "or",
-        "packages/vercel-deploy-core/src/remote-deploy-contracts",
-        "packages/vercel-deploy-core/src/remote-deploy-contracts.ts",
-        "packages/vercel-deploy-core/src/remote-deploy-sandbox",
-        "packages/vercel-deploy-core/src/remote-deploy-sandbox.ts",
-        "production",
-        "pushes",
-        "release",
-        "repository",
-        "requests",
-        "reserved",
-        "scripts/deploy-push",
-        "scripts/deploy-push.ts",
-        "scripts/github-ci-policy",
-        "scripts/github-ci-policy.ts",
-        "scripts/push-production-deploy-env",
-        "scripts/push-production-deploy-env.ts",
-        "scripts/run-remote-deploy-all",
-        "scripts/run-remote-deploy-all.mjs",
-        "secret",
-        "server",
-        "src/features/release-commands/domain/production-deploy-report",
-        "src/features/release-commands/domain/production-deploy-report.ts",
-        "src/features/release-commands/presentation/productiondeploypage",
-        "src/features/release-commands/presentation/productiondeploypage.tsx",
-        "src/features/release-commands/server/services/production-deploy-email",
-        "src/features/release-commands/server/services/production-deploy-email.server.ts",
-        "src/features/release-commands/server/services/production-deploy-service",
-        "src/features/release-commands/server/services/production-deploy-service.server.ts",
-        "start",
-        "stored",
-        "super",
-        "super admin production deploy",
-        "the",
-        "ts",
-        "tsx",
-        "vercel"
-      ]
-    },
-    {
       "id": "document:docs/06-super-admin-and-operations/super-admin-user-impersonation.md",
       "kind": "document",
       "name": "Super Admin User Impersonation",
@@ -25698,38 +25629,6 @@
       ]
     },
     {
-      "id": "route:/api/super-admin/production-deploy:handler",
-      "kind": "route",
-      "name": "/api/super-admin/production-deploy",
-      "path": "src/app/api/super-admin/production-deploy/route.ts",
-      "summary": "App Router request handler",
-      "tags": [
-        "/api/super-admin/production-deploy",
-        "api",
-        "handler",
-        "handler api",
-        "src/app/api/super-admin/production-deploy/route",
-        "src/app/api/super-admin/production-deploy/route.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "route:/api/super-admin/production-deploy/callback:handler",
-      "kind": "route",
-      "name": "/api/super-admin/production-deploy/callback",
-      "path": "src/app/api/super-admin/production-deploy/callback/route.ts",
-      "summary": "App Router request handler",
-      "tags": [
-        "/api/super-admin/production-deploy/callback",
-        "api",
-        "handler",
-        "handler api",
-        "src/app/api/super-admin/production-deploy/callback/route",
-        "src/app/api/super-admin/production-deploy/callback/route.ts",
-        "ts"
-      ]
-    },
-    {
       "id": "route:/api/super-admin/users/delete:handler",
       "kind": "route",
       "name": "/api/super-admin/users/delete",
@@ -26471,20 +26370,6 @@
         "page",
         "src/app/super-admin/ota-releases/page",
         "src/app/super-admin/ota-releases/page.tsx",
-        "tsx"
-      ]
-    },
-    {
-      "id": "route:/super-admin/production-deploy:page",
-      "kind": "route",
-      "name": "/super-admin/production-deploy",
-      "path": "src/app/super-admin/production-deploy/page.tsx",
-      "summary": "App Router page",
-      "tags": [
-        "/super-admin/production-deploy",
-        "page",
-        "src/app/super-admin/production-deploy/page",
-        "src/app/super-admin/production-deploy/page.tsx",
         "tsx"
       ]
     },
@@ -39025,28 +38910,6 @@
       ]
     },
     {
-      "id": "source:services/control/src/app/api/super-admin/production-deploy/callback/route.ts",
-      "kind": "source",
-      "name": "route.ts",
-      "path": "services/control/src/app/api/super-admin/production-deploy/callback/route.ts",
-      "tags": [
-        "services/control/src/app/api/super-admin/production-deploy/callback/route",
-        "services/control/src/app/api/super-admin/production-deploy/callback/route.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:services/control/src/app/api/super-admin/production-deploy/route.ts",
-      "kind": "source",
-      "name": "route.ts",
-      "path": "services/control/src/app/api/super-admin/production-deploy/route.ts",
-      "tags": [
-        "services/control/src/app/api/super-admin/production-deploy/route",
-        "services/control/src/app/api/super-admin/production-deploy/route.ts",
-        "ts"
-      ]
-    },
-    {
       "id": "source:services/control/src/app/api/super-admin/users/delete/route.ts",
       "kind": "source",
       "name": "route.ts",
@@ -41473,28 +41336,6 @@
       ]
     },
     {
-      "id": "source:src/app/api/super-admin/production-deploy/callback/route.ts",
-      "kind": "source",
-      "name": "route.ts",
-      "path": "src/app/api/super-admin/production-deploy/callback/route.ts",
-      "tags": [
-        "src/app/api/super-admin/production-deploy/callback/route",
-        "src/app/api/super-admin/production-deploy/callback/route.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:src/app/api/super-admin/production-deploy/route.ts",
-      "kind": "source",
-      "name": "route.ts",
-      "path": "src/app/api/super-admin/production-deploy/route.ts",
-      "tags": [
-        "src/app/api/super-admin/production-deploy/route",
-        "src/app/api/super-admin/production-deploy/route.ts",
-        "ts"
-      ]
-    },
-    {
       "id": "source:src/app/api/super-admin/users/delete/route.ts",
       "kind": "source",
       "name": "route.ts",
@@ -42198,17 +42039,6 @@
       "tags": [
         "src/app/super-admin/ota-releases/page",
         "src/app/super-admin/ota-releases/page.tsx",
-        "tsx"
-      ]
-    },
-    {
-      "id": "source:src/app/super-admin/production-deploy/page.tsx",
-      "kind": "source",
-      "name": "page.tsx",
-      "path": "src/app/super-admin/production-deploy/page.tsx",
-      "tags": [
-        "src/app/super-admin/production-deploy/page",
-        "src/app/super-admin/production-deploy/page.tsx",
         "tsx"
       ]
     },
@@ -49990,39 +49820,6 @@
       ]
     },
     {
-      "id": "source:src/features/release-commands/application/services/production-deploy-api-service.ts",
-      "kind": "source",
-      "name": "production-deploy-api-service.ts",
-      "path": "src/features/release-commands/application/services/production-deploy-api-service.ts",
-      "tags": [
-        "src/features/release-commands/application/services/production-deploy-api-service",
-        "src/features/release-commands/application/services/production-deploy-api-service.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:src/features/release-commands/domain/production-deploy-report.ts",
-      "kind": "source",
-      "name": "production-deploy-report.ts",
-      "path": "src/features/release-commands/domain/production-deploy-report.ts",
-      "tags": [
-        "src/features/release-commands/domain/production-deploy-report",
-        "src/features/release-commands/domain/production-deploy-report.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:src/features/release-commands/domain/production-deploy-timing.ts",
-      "kind": "source",
-      "name": "production-deploy-timing.ts",
-      "path": "src/features/release-commands/domain/production-deploy-timing.ts",
-      "tags": [
-        "src/features/release-commands/domain/production-deploy-timing",
-        "src/features/release-commands/domain/production-deploy-timing.ts",
-        "ts"
-      ]
-    },
-    {
       "id": "source:src/features/release-commands/index.ts",
       "kind": "source",
       "name": "index.ts",
@@ -50041,28 +49838,6 @@
       "tags": [
         "src/features/release-commands/presentation/hooks/use-build-jobs",
         "src/features/release-commands/presentation/hooks/use-build-jobs.tsx",
-        "tsx"
-      ]
-    },
-    {
-      "id": "source:src/features/release-commands/presentation/hooks/use-production-deploy.tsx",
-      "kind": "source",
-      "name": "use-production-deploy.tsx",
-      "path": "src/features/release-commands/presentation/hooks/use-production-deploy.tsx",
-      "tags": [
-        "src/features/release-commands/presentation/hooks/use-production-deploy",
-        "src/features/release-commands/presentation/hooks/use-production-deploy.tsx",
-        "tsx"
-      ]
-    },
-    {
-      "id": "source:src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "kind": "source",
-      "name": "ProductionDeployPage.tsx",
-      "path": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "tags": [
-        "src/features/release-commands/presentation/productiondeploypage",
-        "src/features/release-commands/presentation/productiondeploypage.tsx",
         "tsx"
       ]
     },
@@ -50086,42 +49861,6 @@
         "server",
         "src/features/release-commands/server/services/build-job-runner",
         "src/features/release-commands/server/services/build-job-runner.server.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:src/features/release-commands/server/services/production-deploy-email.server.ts",
-      "kind": "source",
-      "name": "production-deploy-email.server.ts",
-      "path": "src/features/release-commands/server/services/production-deploy-email.server.ts",
-      "tags": [
-        "server",
-        "src/features/release-commands/server/services/production-deploy-email",
-        "src/features/release-commands/server/services/production-deploy-email.server.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:src/features/release-commands/server/services/production-deploy-notification-delivery.server.ts",
-      "kind": "source",
-      "name": "production-deploy-notification-delivery.server.ts",
-      "path": "src/features/release-commands/server/services/production-deploy-notification-delivery.server.ts",
-      "tags": [
-        "server",
-        "src/features/release-commands/server/services/production-deploy-notification-delivery",
-        "src/features/release-commands/server/services/production-deploy-notification-delivery.server.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:src/features/release-commands/server/services/production-deploy-service.server.ts",
-      "kind": "source",
-      "name": "production-deploy-service.server.ts",
-      "path": "src/features/release-commands/server/services/production-deploy-service.server.ts",
-      "tags": [
-        "server",
-        "src/features/release-commands/server/services/production-deploy-service",
-        "src/features/release-commands/server/services/production-deploy-service.server.ts",
         "ts"
       ]
     },
@@ -55565,18 +55304,6 @@
       ]
     },
     {
-      "id": "test:src/features/release-commands/tests/production-deploy-callback.test.ts",
-      "kind": "test",
-      "name": "production-deploy-callback.test.ts",
-      "path": "src/features/release-commands/tests/production-deploy-callback.test.ts",
-      "tags": [
-        "src/features/release-commands/tests/production-deploy-callback",
-        "src/features/release-commands/tests/production-deploy-callback.test.ts",
-        "test",
-        "ts"
-      ]
-    },
-    {
       "id": "test:src/features/release-commands/tests/release-commands.test.ts",
       "kind": "test",
       "name": "release-commands.test.ts",
@@ -59470,11 +59197,6 @@
       "from": "command:test:registration-success-flow",
       "to": "runtime:tooling",
       "kind": "targets-runtime"
-    },
-    {
-      "from": "command:test:release-commands",
-      "to": "test:src/features/release-commands/tests/production-deploy-callback.test.ts",
-      "kind": "invokes"
     },
     {
       "from": "command:test:release-commands",
@@ -73382,77 +73104,6 @@
       "to": "source:src/core/api/expected-business-error-codes.ts",
       "kind": "references",
       "detail": "src/core/api/expected-business-error-codes.ts"
-    },
-    {
-      "from": "document:docs/06-super-admin-and-operations/super-admin-production-deploy.md",
-      "to": "domain:super-admin-and-operations",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "document:docs/06-super-admin-and-operations/super-admin-production-deploy.md",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "references",
-      "detail": "@asol/vercel-deploy-core/github-push-identity"
-    },
-    {
-      "from": "document:docs/06-super-admin-and-operations/super-admin-production-deploy.md",
-      "to": "script:scripts/deploy-push.ts",
-      "kind": "references",
-      "detail": "scripts/deploy-push.ts"
-    },
-    {
-      "from": "document:docs/06-super-admin-and-operations/super-admin-production-deploy.md",
-      "to": "script:scripts/github-ci-policy.ts",
-      "kind": "references",
-      "detail": "scripts/github-ci-policy.ts"
-    },
-    {
-      "from": "document:docs/06-super-admin-and-operations/super-admin-production-deploy.md",
-      "to": "script:scripts/push-production-deploy-env.ts",
-      "kind": "references",
-      "detail": "scripts/push-production-deploy-env.ts"
-    },
-    {
-      "from": "document:docs/06-super-admin-and-operations/super-admin-production-deploy.md",
-      "to": "script:scripts/run-remote-deploy-all.mjs",
-      "kind": "references",
-      "detail": "scripts/run-remote-deploy-all.mjs"
-    },
-    {
-      "from": "document:docs/06-super-admin-and-operations/super-admin-production-deploy.md",
-      "to": "source:packages/vercel-deploy-core/src/remote-deploy-contracts.ts",
-      "kind": "references",
-      "detail": "packages/vercel-deploy-core/src/remote-deploy-contracts.ts"
-    },
-    {
-      "from": "document:docs/06-super-admin-and-operations/super-admin-production-deploy.md",
-      "to": "source:packages/vercel-deploy-core/src/remote-deploy-sandbox.ts",
-      "kind": "references",
-      "detail": "packages/vercel-deploy-core/src/remote-deploy-sandbox.ts"
-    },
-    {
-      "from": "document:docs/06-super-admin-and-operations/super-admin-production-deploy.md",
-      "to": "source:src/features/release-commands/domain/production-deploy-report.ts",
-      "kind": "references",
-      "detail": "src/features/release-commands/domain/production-deploy-report.ts"
-    },
-    {
-      "from": "document:docs/06-super-admin-and-operations/super-admin-production-deploy.md",
-      "to": "source:src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "kind": "references",
-      "detail": "src/features/release-commands/presentation/ProductionDeployPage.tsx"
-    },
-    {
-      "from": "document:docs/06-super-admin-and-operations/super-admin-production-deploy.md",
-      "to": "source:src/features/release-commands/server/services/production-deploy-email.server.ts",
-      "kind": "references",
-      "detail": "src/features/release-commands/server/services/production-deploy-email.server.ts"
-    },
-    {
-      "from": "document:docs/06-super-admin-and-operations/super-admin-production-deploy.md",
-      "to": "source:src/features/release-commands/server/services/production-deploy-service.server.ts",
-      "kind": "references",
-      "detail": "src/features/release-commands/server/services/production-deploy-service.server.ts"
     },
     {
       "from": "document:docs/06-super-admin-and-operations/super-admin-user-impersonation.md",
@@ -89494,18 +89145,6 @@
     },
     {
       "from": "domain:mobile-and-release",
-      "to": "source:services/control/src/app/api/super-admin/production-deploy/callback/route.ts",
-      "kind": "documents",
-      "detail": "services/"
-    },
-    {
-      "from": "domain:mobile-and-release",
-      "to": "source:services/control/src/app/api/super-admin/production-deploy/route.ts",
-      "kind": "documents",
-      "detail": "services/"
-    },
-    {
-      "from": "domain:mobile-and-release",
       "to": "source:services/control/src/app/api/super-admin/users/delete/route.ts",
       "kind": "documents",
       "detail": "services/"
@@ -96304,24 +95943,6 @@
     },
     {
       "from": "domain:platform-features",
-      "to": "source:src/features/release-commands/application/services/production-deploy-api-service.ts",
-      "kind": "documents",
-      "detail": "src/features/"
-    },
-    {
-      "from": "domain:platform-features",
-      "to": "source:src/features/release-commands/domain/production-deploy-report.ts",
-      "kind": "documents",
-      "detail": "src/features/"
-    },
-    {
-      "from": "domain:platform-features",
-      "to": "source:src/features/release-commands/domain/production-deploy-timing.ts",
-      "kind": "documents",
-      "detail": "src/features/"
-    },
-    {
-      "from": "domain:platform-features",
       "to": "source:src/features/release-commands/index.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -96334,18 +95955,6 @@
     },
     {
       "from": "domain:platform-features",
-      "to": "source:src/features/release-commands/presentation/hooks/use-production-deploy.tsx",
-      "kind": "documents",
-      "detail": "src/features/"
-    },
-    {
-      "from": "domain:platform-features",
-      "to": "source:src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "kind": "documents",
-      "detail": "src/features/"
-    },
-    {
-      "from": "domain:platform-features",
       "to": "source:src/features/release-commands/server.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -96353,24 +95962,6 @@
     {
       "from": "domain:platform-features",
       "to": "source:src/features/release-commands/server/services/build-job-runner.server.ts",
-      "kind": "documents",
-      "detail": "src/features/"
-    },
-    {
-      "from": "domain:platform-features",
-      "to": "source:src/features/release-commands/server/services/production-deploy-email.server.ts",
-      "kind": "documents",
-      "detail": "src/features/"
-    },
-    {
-      "from": "domain:platform-features",
-      "to": "source:src/features/release-commands/server/services/production-deploy-notification-delivery.server.ts",
-      "kind": "documents",
-      "detail": "src/features/"
-    },
-    {
-      "from": "domain:platform-features",
-      "to": "source:src/features/release-commands/server/services/production-deploy-service.server.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -97679,12 +97270,6 @@
     {
       "from": "domain:platform-features",
       "to": "test:src/features/release-commands/tests/console-command-parity.test.ts",
-      "kind": "documents",
-      "detail": "src/features/"
-    },
-    {
-      "from": "domain:platform-features",
-      "to": "test:src/features/release-commands/tests/production-deploy-callback.test.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -100414,18 +99999,6 @@
     },
     {
       "from": "domain:ui-components",
-      "to": "route:/api/super-admin/production-deploy:handler",
-      "kind": "documents",
-      "detail": "src/app/"
-    },
-    {
-      "from": "domain:ui-components",
-      "to": "route:/api/super-admin/production-deploy/callback:handler",
-      "kind": "documents",
-      "detail": "src/app/"
-    },
-    {
-      "from": "domain:ui-components",
       "to": "route:/api/super-admin/users/delete:handler",
       "kind": "documents",
       "detail": "src/app/"
@@ -100727,12 +100300,6 @@
     {
       "from": "domain:ui-components",
       "to": "route:/super-admin/ota-releases:page",
-      "kind": "documents",
-      "detail": "src/app/"
-    },
-    {
-      "from": "domain:ui-components",
-      "to": "route:/super-admin/production-deploy:page",
       "kind": "documents",
       "detail": "src/app/"
     },
@@ -101410,18 +100977,6 @@
     },
     {
       "from": "domain:ui-components",
-      "to": "source:src/app/api/super-admin/production-deploy/callback/route.ts",
-      "kind": "documents",
-      "detail": "src/app/"
-    },
-    {
-      "from": "domain:ui-components",
-      "to": "source:src/app/api/super-admin/production-deploy/route.ts",
-      "kind": "documents",
-      "detail": "src/app/"
-    },
-    {
-      "from": "domain:ui-components",
       "to": "source:src/app/api/super-admin/users/delete/route.ts",
       "kind": "documents",
       "detail": "src/app/"
@@ -101795,12 +101350,6 @@
     {
       "from": "domain:ui-components",
       "to": "source:src/app/super-admin/ota-releases/page.tsx",
-      "kind": "documents",
-      "detail": "src/app/"
-    },
-    {
-      "from": "domain:ui-components",
-      "to": "source:src/app/super-admin/production-deploy/page.tsx",
       "kind": "documents",
       "detail": "src/app/"
     },
@@ -105700,24 +105249,6 @@
     },
     {
       "from": "domain:ui-components",
-      "to": "source:src/features/release-commands/application/services/production-deploy-api-service.ts",
-      "kind": "documents",
-      "detail": "src/features/"
-    },
-    {
-      "from": "domain:ui-components",
-      "to": "source:src/features/release-commands/domain/production-deploy-report.ts",
-      "kind": "documents",
-      "detail": "src/features/"
-    },
-    {
-      "from": "domain:ui-components",
-      "to": "source:src/features/release-commands/domain/production-deploy-timing.ts",
-      "kind": "documents",
-      "detail": "src/features/"
-    },
-    {
-      "from": "domain:ui-components",
       "to": "source:src/features/release-commands/index.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -105730,18 +105261,6 @@
     },
     {
       "from": "domain:ui-components",
-      "to": "source:src/features/release-commands/presentation/hooks/use-production-deploy.tsx",
-      "kind": "documents",
-      "detail": "src/features/"
-    },
-    {
-      "from": "domain:ui-components",
-      "to": "source:src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "kind": "documents",
-      "detail": "src/features/"
-    },
-    {
-      "from": "domain:ui-components",
       "to": "source:src/features/release-commands/server.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -105749,24 +105268,6 @@
     {
       "from": "domain:ui-components",
       "to": "source:src/features/release-commands/server/services/build-job-runner.server.ts",
-      "kind": "documents",
-      "detail": "src/features/"
-    },
-    {
-      "from": "domain:ui-components",
-      "to": "source:src/features/release-commands/server/services/production-deploy-email.server.ts",
-      "kind": "documents",
-      "detail": "src/features/"
-    },
-    {
-      "from": "domain:ui-components",
-      "to": "source:src/features/release-commands/server/services/production-deploy-notification-delivery.server.ts",
-      "kind": "documents",
-      "detail": "src/features/"
-    },
-    {
-      "from": "domain:ui-components",
-      "to": "source:src/features/release-commands/server/services/production-deploy-service.server.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -106973,12 +106474,6 @@
     {
       "from": "domain:ui-components",
       "to": "test:src/features/release-commands/tests/console-command-parity.test.ts",
-      "kind": "documents",
-      "detail": "src/features/"
-    },
-    {
-      "from": "domain:ui-components",
-      "to": "test:src/features/release-commands/tests/production-deploy-callback.test.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -108524,21 +108019,6 @@
     },
     {
       "from": "feature:release-commands",
-      "to": "external-dependency:lucide-react",
-      "kind": "imports"
-    },
-    {
-      "from": "feature:release-commands",
-      "to": "external-dependency:next",
-      "kind": "imports"
-    },
-    {
-      "from": "feature:release-commands",
-      "to": "external-dependency:nodemailer",
-      "kind": "imports"
-    },
-    {
-      "from": "feature:release-commands",
       "to": "external-dependency:react",
       "kind": "imports"
     },
@@ -108549,22 +108029,7 @@
     },
     {
       "from": "feature:release-commands",
-      "to": "feature:auth",
-      "kind": "imports"
-    },
-    {
-      "from": "feature:release-commands",
       "to": "feature:google-play-console",
-      "kind": "imports"
-    },
-    {
-      "from": "feature:release-commands",
-      "to": "package:@asol/auth-core",
-      "kind": "imports"
-    },
-    {
-      "from": "feature:release-commands",
-      "to": "package:@asol/data-core",
       "kind": "imports"
     },
     {
@@ -108575,11 +108040,6 @@
     {
       "from": "feature:release-commands",
       "to": "package:@asol/native-core",
-      "kind": "imports"
-    },
-    {
-      "from": "feature:release-commands",
-      "to": "package:@asol/notifications-core",
       "kind": "imports"
     },
     {
@@ -108910,6 +108370,11 @@
     {
       "from": "feature:super-admin",
       "to": "feature:auth",
+      "kind": "imports"
+    },
+    {
+      "from": "feature:super-admin",
+      "to": "feature:data",
       "kind": "imports"
     },
     {
@@ -112495,6 +111960,12 @@
     },
     {
       "from": "route:/api/dev/catalog-studio:handler",
+      "to": "feature:data",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/catalog-studio:handler",
       "to": "feature:page-save",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -112649,6 +112120,12 @@
     {
       "from": "route:/api/dev/catalog-studio/images:handler",
       "to": "feature:catalog-studio",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/catalog-studio/images:handler",
+      "to": "feature:data",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -112937,6 +112414,12 @@
     {
       "from": "route:/api/dev/simulation/checkpoint:handler",
       "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/checkpoint:handler",
+      "to": "feature:data",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -113243,6 +112726,12 @@
     {
       "from": "route:/api/dev/simulation/state:handler",
       "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/dev/simulation/state:handler",
+      "to": "feature:data",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -115352,6 +114841,12 @@
     {
       "from": "route:/api/notifications/test/send:handler",
       "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/notifications/test/send:handler",
+      "to": "feature:data",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -121327,6 +120822,12 @@
     },
     {
       "from": "route:/api/super-admin/build-jobs:handler",
+      "to": "feature:data",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/build-jobs:handler",
       "to": "feature:google-play-console",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -121364,12 +120865,6 @@
     {
       "from": "route:/api/super-admin/build-jobs:handler",
       "to": "package:@asol/auth-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/build-jobs:handler",
-      "to": "package:@asol/branding-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -121510,6 +121005,12 @@
     },
     {
       "from": "route:/api/super-admin/build-jobs/[jobId]/artifacts:handler",
+      "to": "feature:data",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/build-jobs/[jobId]/artifacts:handler",
       "to": "feature:google-play-console",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -121534,12 +121035,6 @@
     },
     {
       "from": "route:/api/super-admin/build-jobs/[jobId]/artifacts:handler",
-      "to": "package:@asol/account-declarations",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/build-jobs/[jobId]/artifacts:handler",
       "to": "package:@asol/api-contract-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -121547,12 +121042,6 @@
     {
       "from": "route:/api/super-admin/build-jobs/[jobId]/artifacts:handler",
       "to": "package:@asol/auth-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/build-jobs/[jobId]/artifacts:handler",
-      "to": "package:@asol/branding-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -121681,6 +121170,12 @@
     },
     {
       "from": "route:/api/super-admin/build-jobs/[jobId]/artifacts/[name]:handler",
+      "to": "feature:data",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/build-jobs/[jobId]/artifacts/[name]:handler",
       "to": "feature:google-play-console",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -121718,12 +121213,6 @@
     {
       "from": "route:/api/super-admin/build-jobs/[jobId]/artifacts/[name]:handler",
       "to": "package:@asol/auth-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/build-jobs/[jobId]/artifacts/[name]:handler",
-      "to": "package:@asol/branding-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -121882,6 +121371,12 @@
     },
     {
       "from": "route:/api/super-admin/build-jobs/[jobId]/artifacts/[name]/analysis:handler",
+      "to": "feature:data",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/build-jobs/[jobId]/artifacts/[name]/analysis:handler",
       "to": "feature:google-play-console",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -121919,12 +121414,6 @@
     {
       "from": "route:/api/super-admin/build-jobs/[jobId]/artifacts/[name]/analysis:handler",
       "to": "package:@asol/auth-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/build-jobs/[jobId]/artifacts/[name]/analysis:handler",
-      "to": "package:@asol/branding-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -122083,6 +121572,12 @@
     },
     {
       "from": "route:/api/super-admin/build-jobs/[jobId]/cancel:handler",
+      "to": "feature:data",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/build-jobs/[jobId]/cancel:handler",
       "to": "feature:google-play-console",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -122107,12 +121602,6 @@
     },
     {
       "from": "route:/api/super-admin/build-jobs/[jobId]/cancel:handler",
-      "to": "package:@asol/account-declarations",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/build-jobs/[jobId]/cancel:handler",
       "to": "package:@asol/api-contract-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -122120,12 +121609,6 @@
     {
       "from": "route:/api/super-admin/build-jobs/[jobId]/cancel:handler",
       "to": "package:@asol/auth-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/build-jobs/[jobId]/cancel:handler",
-      "to": "package:@asol/branding-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -122254,6 +121737,12 @@
     },
     {
       "from": "route:/api/super-admin/build-jobs/[jobId]/log:handler",
+      "to": "feature:data",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/build-jobs/[jobId]/log:handler",
       "to": "feature:google-play-console",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -122278,12 +121767,6 @@
     },
     {
       "from": "route:/api/super-admin/build-jobs/[jobId]/log:handler",
-      "to": "package:@asol/account-declarations",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/build-jobs/[jobId]/log:handler",
       "to": "package:@asol/api-contract-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -122291,12 +121774,6 @@
     {
       "from": "route:/api/super-admin/build-jobs/[jobId]/log:handler",
       "to": "package:@asol/auth-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/build-jobs/[jobId]/log:handler",
-      "to": "package:@asol/branding-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -122420,6 +121897,12 @@
     {
       "from": "route:/api/super-admin/build-jobs/analysis:handler",
       "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/build-jobs/analysis:handler",
+      "to": "feature:data",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -122614,6 +122097,12 @@
     },
     {
       "from": "route:/api/super-admin/build-jobs/analysis/compare:handler",
+      "to": "feature:data",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/build-jobs/analysis/compare:handler",
       "to": "feature:google-play-console",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -122803,6 +122292,12 @@
     },
     {
       "from": "route:/api/super-admin/build-jobs/catalog:handler",
+      "to": "feature:data",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/build-jobs/catalog:handler",
       "to": "feature:google-play-console",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -122827,12 +122322,6 @@
     },
     {
       "from": "route:/api/super-admin/build-jobs/catalog:handler",
-      "to": "package:@asol/account-declarations",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/build-jobs/catalog:handler",
       "to": "package:@asol/api-contract-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -122840,12 +122329,6 @@
     {
       "from": "route:/api/super-admin/build-jobs/catalog:handler",
       "to": "package:@asol/auth-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/build-jobs/catalog:handler",
-      "to": "package:@asol/branding-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -122969,6 +122452,12 @@
     {
       "from": "route:/api/super-admin/google-play-console:handler",
       "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-console:handler",
+      "to": "feature:data",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -123151,6 +122640,12 @@
     },
     {
       "from": "route:/api/super-admin/google-play-store-assets:handler",
+      "to": "feature:data",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-store-assets:handler",
       "to": "feature:google-play-console",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -123323,6 +122818,12 @@
     {
       "from": "route:/api/super-admin/google-play-store-assets/backups:handler",
       "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-store-assets/backups:handler",
+      "to": "feature:data",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -123505,6 +123006,12 @@
     },
     {
       "from": "route:/api/super-admin/google-play-store-assets/backups/restore:handler",
+      "to": "feature:data",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-store-assets/backups/restore:handler",
       "to": "feature:google-play-console",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -123677,6 +123184,12 @@
     {
       "from": "route:/api/super-admin/google-play-store-assets/fastlane:handler",
       "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-store-assets/fastlane:handler",
+      "to": "feature:data",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -123859,6 +123372,12 @@
     },
     {
       "from": "route:/api/super-admin/google-play-store-assets/images/delete:handler",
+      "to": "feature:data",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-store-assets/images/delete:handler",
       "to": "feature:google-play-console",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -124031,6 +123550,12 @@
     {
       "from": "route:/api/super-admin/google-play-store-assets/images/upload:handler",
       "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-store-assets/images/upload:handler",
+      "to": "feature:data",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -124213,6 +123738,12 @@
     },
     {
       "from": "route:/api/super-admin/google-play-store-assets/listings/delete:handler",
+      "to": "feature:data",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-store-assets/listings/delete:handler",
       "to": "feature:google-play-console",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -124385,6 +123916,12 @@
     {
       "from": "route:/api/super-admin/google-play-store-assets/mapping/upload:handler",
       "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-store-assets/mapping/upload:handler",
+      "to": "feature:data",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -124567,6 +124104,12 @@
     },
     {
       "from": "route:/api/super-admin/google-play-store-assets/tracks:handler",
+      "to": "feature:data",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-store-assets/tracks:handler",
       "to": "feature:google-play-console",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -124739,6 +124282,12 @@
     {
       "from": "route:/api/super-admin/google-play-store-assets/tracks/promote:handler",
       "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/google-play-store-assets/tracks/promote:handler",
+      "to": "feature:data",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -124921,6 +124470,12 @@
     },
     {
       "from": "route:/api/super-admin/impersonate:handler",
+      "to": "feature:data",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/impersonate:handler",
       "to": "feature:super-admin",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -125029,336 +124584,6 @@
     },
     {
       "from": "route:/api/super-admin/impersonate:handler",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy:handler",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy:handler",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy:handler",
-      "to": "source:src/app/api/super-admin/production-deploy/route.ts",
-      "kind": "contains"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy:handler",
-      "to": "feature:auth",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy:handler",
-      "to": "feature:google-play-console",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy:handler",
-      "to": "feature:release-commands",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy:handler",
-      "to": "feature:super-admin",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy:handler",
-      "to": "feature:system-logs",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy:handler",
-      "to": "package:@asol/account-declarations",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy:handler",
-      "to": "package:@asol/api-contract-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy:handler",
-      "to": "package:@asol/auth-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy:handler",
-      "to": "package:@asol/branding-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy:handler",
-      "to": "package:@asol/data-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy:handler",
-      "to": "package:@asol/data-core",
-      "kind": "related-to",
-      "detail": "route write gateway"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy:handler",
-      "to": "package:@asol/env-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy:handler",
-      "to": "package:@asol/featured-marquee-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy:handler",
-      "to": "package:@asol/hero-slider-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy:handler",
-      "to": "package:@asol/notifications-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy:handler",
-      "to": "package:@asol/observability-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy:handler",
-      "to": "package:@asol/orders-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy:handler",
-      "to": "package:@asol/ota-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy:handler",
-      "to": "package:@asol/product-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy:handler",
-      "to": "package:@asol/release-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy:handler",
-      "to": "package:@asol/signed-token-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy:handler",
-      "to": "package:@asol/storage-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy:handler",
-      "to": "package:@asol/storage-core",
-      "kind": "related-to",
-      "detail": "route write gateway"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy:handler",
-      "to": "package:@asol/system-logs-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy:handler",
-      "to": "package:@asol/trending-ribbon-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy:handler",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/callback:handler",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/callback:handler",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/callback:handler",
-      "to": "source:src/app/api/super-admin/production-deploy/callback/route.ts",
-      "kind": "contains"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/callback:handler",
-      "to": "feature:google-play-console",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/callback:handler",
-      "to": "feature:release-commands",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/callback:handler",
-      "to": "feature:system-logs",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/callback:handler",
-      "to": "package:@asol/account-declarations",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/callback:handler",
-      "to": "package:@asol/api-contract-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/callback:handler",
-      "to": "package:@asol/auth-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/callback:handler",
-      "to": "package:@asol/branding-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/callback:handler",
-      "to": "package:@asol/data-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/callback:handler",
-      "to": "package:@asol/data-core",
-      "kind": "related-to",
-      "detail": "route write gateway"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/callback:handler",
-      "to": "package:@asol/env-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/callback:handler",
-      "to": "package:@asol/featured-marquee-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/callback:handler",
-      "to": "package:@asol/hero-slider-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/callback:handler",
-      "to": "package:@asol/notifications-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/callback:handler",
-      "to": "package:@asol/observability-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/callback:handler",
-      "to": "package:@asol/orders-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/callback:handler",
-      "to": "package:@asol/ota-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/callback:handler",
-      "to": "package:@asol/product-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/callback:handler",
-      "to": "package:@asol/release-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/callback:handler",
-      "to": "package:@asol/signed-token-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/callback:handler",
-      "to": "package:@asol/storage-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/callback:handler",
-      "to": "package:@asol/storage-core",
-      "kind": "related-to",
-      "detail": "route write gateway"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/callback:handler",
-      "to": "package:@asol/system-logs-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/callback:handler",
-      "to": "package:@asol/trending-ribbon-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/api/super-admin/production-deploy/callback:handler",
       "to": "package:@asol/vercel-deploy-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -125381,6 +124606,12 @@
     {
       "from": "route:/api/super-admin/users/delete:handler",
       "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/users/delete:handler",
+      "to": "feature:data",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -125521,6 +124752,12 @@
     },
     {
       "from": "route:/api/super-admin/users/search:handler",
+      "to": "feature:data",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/users/search:handler",
       "to": "feature:super-admin",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -125651,6 +124888,12 @@
     {
       "from": "route:/api/system-logs:handler",
       "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/system-logs:handler",
+      "to": "feature:data",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -126032,6 +125275,12 @@
     {
       "from": "route:/api/system-logs/summary:handler",
       "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/system-logs/summary:handler",
+      "to": "feature:data",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -131538,90 +130787,6 @@
       "kind": "contains"
     },
     {
-      "from": "route:/super-admin/production-deploy:page",
-      "to": "runtime:android",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "route:/super-admin/production-deploy:page",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "route:/super-admin/production-deploy:page",
-      "to": "runtime:ios",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "route:/super-admin/production-deploy:page",
-      "to": "runtime:static-out",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "route:/super-admin/production-deploy:page",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "route:/super-admin/production-deploy:page",
-      "to": "source:src/app/super-admin/production-deploy/page.tsx",
-      "kind": "contains"
-    },
-    {
-      "from": "route:/super-admin/production-deploy:page",
-      "to": "feature:auth",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/super-admin/production-deploy:page",
-      "to": "feature:release-commands",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/super-admin/production-deploy:page",
-      "to": "package:@asol/account-declarations",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/super-admin/production-deploy:page",
-      "to": "package:@asol/env-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/super-admin/production-deploy:page",
-      "to": "package:@asol/native-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/super-admin/production-deploy:page",
-      "to": "package:@asol/notifications-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/super-admin/production-deploy:page",
-      "to": "package:@asol/ota-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/super-admin/production-deploy:page",
-      "to": "package:@asol/release-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
-      "from": "route:/super-admin/production-deploy:page",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "related-to",
-      "detail": "route source dependency"
-    },
-    {
       "from": "route:/super-admin/trending-ribbon:page",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -135244,11 +134409,6 @@
     {
       "from": "service:control",
       "to": "feature:google-play-console",
-      "kind": "imports"
-    },
-    {
-      "from": "service:control",
-      "to": "feature:release-commands",
       "kind": "imports"
     },
     {
@@ -169951,6 +169111,12 @@
       "from": "source:packages/service-runtime-core/src/domain/service-http.ts",
       "to": "package:@asol/api-contract-core",
       "kind": "imports",
+      "detail": "@asol/api-contract-core"
+    },
+    {
+      "from": "source:packages/service-runtime-core/src/domain/service-http.ts",
+      "to": "package:@asol/api-contract-core",
+      "kind": "imports",
       "detail": "@asol/api-contract-core/server"
     },
     {
@@ -174469,62 +173635,6 @@
       "from": "source:services/control/src/app/api/super-admin/impersonate/route.ts",
       "to": "service:control",
       "kind": "belongs-to"
-    },
-    {
-      "from": "source:services/control/src/app/api/super-admin/production-deploy/callback/route.ts",
-      "to": "runtime:services",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:services/control/src/app/api/super-admin/production-deploy/callback/route.ts",
-      "to": "service:control",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "source:services/control/src/app/api/super-admin/production-deploy/callback/route.ts",
-      "to": "package:@asol/api-contract-core",
-      "kind": "imports",
-      "detail": "@asol/api-contract-core/server"
-    },
-    {
-      "from": "source:services/control/src/app/api/super-admin/production-deploy/callback/route.ts",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "imports",
-      "detail": "@asol/vercel-deploy-core/remote-deploy-contracts"
-    },
-    {
-      "from": "source:services/control/src/app/api/super-admin/production-deploy/callback/route.ts",
-      "to": "source:src/features/release-commands/server/services/production-deploy-service.server.ts",
-      "kind": "imports",
-      "detail": "@/features/release-commands/server/services/production-deploy-service.server"
-    },
-    {
-      "from": "source:services/control/src/app/api/super-admin/production-deploy/route.ts",
-      "to": "runtime:services",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:services/control/src/app/api/super-admin/production-deploy/route.ts",
-      "to": "service:control",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "source:services/control/src/app/api/super-admin/production-deploy/route.ts",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "imports",
-      "detail": "@asol/vercel-deploy-core/remote-deploy-contracts"
-    },
-    {
-      "from": "source:services/control/src/app/api/super-admin/production-deploy/route.ts",
-      "to": "source:src/core/config/control-env.ts",
-      "kind": "imports",
-      "detail": "@/core/config/control-env"
-    },
-    {
-      "from": "source:services/control/src/app/api/super-admin/production-deploy/route.ts",
-      "to": "source:src/features/release-commands/server/services/production-deploy-service.server.ts",
-      "kind": "imports",
-      "detail": "@/features/release-commands/server/services/production-deploy-service.server"
     },
     {
       "from": "source:services/control/src/app/api/super-admin/users/delete/route.ts",
@@ -180634,74 +179744,6 @@
       "detail": "@/features/super-admin/server"
     },
     {
-      "from": "source:src/app/api/super-admin/production-deploy/callback/route.ts",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/app/api/super-admin/production-deploy/callback/route.ts",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/app/api/super-admin/production-deploy/callback/route.ts",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "imports",
-      "detail": "@asol/vercel-deploy-core/remote-deploy-contracts"
-    },
-    {
-      "from": "source:src/app/api/super-admin/production-deploy/callback/route.ts",
-      "to": "source:src/core/api/api-response.ts",
-      "kind": "imports",
-      "detail": "@/core/api/api-response"
-    },
-    {
-      "from": "source:src/app/api/super-admin/production-deploy/callback/route.ts",
-      "to": "source:src/core/api/traced-route.ts",
-      "kind": "imports",
-      "detail": "@/core/api/traced-route"
-    },
-    {
-      "from": "source:src/app/api/super-admin/production-deploy/callback/route.ts",
-      "to": "source:src/features/release-commands/server.ts",
-      "kind": "imports",
-      "detail": "@/features/release-commands/server"
-    },
-    {
-      "from": "source:src/app/api/super-admin/production-deploy/route.ts",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/app/api/super-admin/production-deploy/route.ts",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/app/api/super-admin/production-deploy/route.ts",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "imports",
-      "detail": "@asol/vercel-deploy-core/remote-deploy-contracts"
-    },
-    {
-      "from": "source:src/app/api/super-admin/production-deploy/route.ts",
-      "to": "source:src/core/config/control-env.ts",
-      "kind": "imports",
-      "detail": "@/core/config/control-env"
-    },
-    {
-      "from": "source:src/app/api/super-admin/production-deploy/route.ts",
-      "to": "source:src/features/release-commands/server.ts",
-      "kind": "imports",
-      "detail": "@/features/release-commands/server"
-    },
-    {
-      "from": "source:src/app/api/super-admin/production-deploy/route.ts",
-      "to": "source:src/features/super-admin/server.ts",
-      "kind": "imports",
-      "detail": "@/features/super-admin/server"
-    },
-    {
       "from": "source:src/app/api/super-admin/users/delete/route.ts",
       "to": "runtime:development",
       "kind": "affects-runtime"
@@ -183279,37 +182321,6 @@
       "detail": "@/core/config/runtime-context.server"
     },
     {
-      "from": "source:src/app/super-admin/production-deploy/page.tsx",
-      "to": "runtime:android",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/app/super-admin/production-deploy/page.tsx",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/app/super-admin/production-deploy/page.tsx",
-      "to": "runtime:ios",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/app/super-admin/production-deploy/page.tsx",
-      "to": "runtime:static-out",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/app/super-admin/production-deploy/page.tsx",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/app/super-admin/production-deploy/page.tsx",
-      "to": "source:src/features/release-commands/ui.ts",
-      "kind": "imports",
-      "detail": "@/features/release-commands/ui"
-    },
-    {
       "from": "source:src/app/super-admin/trending-ribbon/page.tsx",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -183426,6 +182437,12 @@
       "to": "external-dependency:next",
       "kind": "imports",
       "detail": "next/server"
+    },
+    {
+      "from": "source:src/core/api/api-response.ts",
+      "to": "package:@asol/api-contract-core",
+      "kind": "imports",
+      "detail": "@asol/api-contract-core"
     },
     {
       "from": "source:src/core/api/api-response.ts",
@@ -188395,6 +187412,12 @@
       "to": "source:src/features/notifications/index.ts",
       "kind": "imports",
       "detail": "@/features/notifications"
+    },
+    {
+      "from": "source:src/features/auth/presentation/hooks/use-logout.ts",
+      "to": "source:src/features/page-save/index.ts",
+      "kind": "imports",
+      "detail": "@/features/page-save"
     },
     {
       "from": "source:src/features/auth/presentation/hooks/use-logout.ts",
@@ -206089,12 +205112,6 @@
       "from": "source:src/features/orders/presentation/order-details/OrderDetailsPageContent.navigation-summary.tsx",
       "to": "external-dependency:next",
       "kind": "imports",
-      "detail": "next/link"
-    },
-    {
-      "from": "source:src/features/orders/presentation/order-details/OrderDetailsPageContent.navigation-summary.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
       "detail": "next/navigation"
     },
     {
@@ -208160,6 +207177,12 @@
       "to": "package:@asol/page-save-core",
       "kind": "imports",
       "detail": "@asol/page-save-core"
+    },
+    {
+      "from": "source:src/features/page-save/application/page-save-core-bootstrap.ts",
+      "to": "source:src/features/page-save/infrastructure/runtime/page-save-image-upload-registry.ts",
+      "kind": "imports",
+      "detail": "../infrastructure/runtime/page-save-image-upload-registry"
     },
     {
       "from": "source:src/features/page-save/application/utils/page-save-image-items.ts",
@@ -213143,6 +212166,12 @@
       "to": "source:src/features/product/presentation/product-reviews/ProductReviews.review-formatting.tsx",
       "kind": "imports",
       "detail": "./product-reviews/ProductReviews.review-formatting"
+    },
+    {
+      "from": "source:src/features/product/presentation/ProductReviews.tsx",
+      "to": "source:src/shared/i18n/index.ts",
+      "kind": "imports",
+      "detail": "@/shared/i18n"
     },
     {
       "from": "source:src/features/product/presentation/ProductReviews.tsx",
@@ -220705,126 +219734,6 @@
       "detail": "@/core/api"
     },
     {
-      "from": "source:src/features/release-commands/application/services/production-deploy-api-service.ts",
-      "to": "runtime:android",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/release-commands/application/services/production-deploy-api-service.ts",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/release-commands/application/services/production-deploy-api-service.ts",
-      "to": "runtime:ios",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/release-commands/application/services/production-deploy-api-service.ts",
-      "to": "runtime:static-out",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/release-commands/application/services/production-deploy-api-service.ts",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/release-commands/application/services/production-deploy-api-service.ts",
-      "to": "feature:release-commands",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "source:src/features/release-commands/application/services/production-deploy-api-service.ts",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "imports",
-      "detail": "@asol/vercel-deploy-core/remote-deploy-contracts"
-    },
-    {
-      "from": "source:src/features/release-commands/application/services/production-deploy-api-service.ts",
-      "to": "source:src/core/api/index.ts",
-      "kind": "imports",
-      "detail": "@/core/api"
-    },
-    {
-      "from": "source:src/features/release-commands/domain/production-deploy-report.ts",
-      "to": "runtime:android",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/release-commands/domain/production-deploy-report.ts",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/release-commands/domain/production-deploy-report.ts",
-      "to": "runtime:ios",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/release-commands/domain/production-deploy-report.ts",
-      "to": "runtime:static-out",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/release-commands/domain/production-deploy-report.ts",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/release-commands/domain/production-deploy-report.ts",
-      "to": "feature:release-commands",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "source:src/features/release-commands/domain/production-deploy-report.ts",
-      "to": "package:@asol/notifications-core",
-      "kind": "imports",
-      "detail": "@asol/notifications-core"
-    },
-    {
-      "from": "source:src/features/release-commands/domain/production-deploy-report.ts",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "imports",
-      "detail": "@asol/vercel-deploy-core/remote-deploy-contracts"
-    },
-    {
-      "from": "source:src/features/release-commands/domain/production-deploy-timing.ts",
-      "to": "runtime:android",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/release-commands/domain/production-deploy-timing.ts",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/release-commands/domain/production-deploy-timing.ts",
-      "to": "runtime:ios",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/release-commands/domain/production-deploy-timing.ts",
-      "to": "runtime:static-out",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/release-commands/domain/production-deploy-timing.ts",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/release-commands/domain/production-deploy-timing.ts",
-      "to": "feature:release-commands",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "source:src/features/release-commands/domain/production-deploy-timing.ts",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "imports",
-      "detail": "@asol/vercel-deploy-core/remote-deploy-contracts"
-    },
-    {
       "from": "source:src/features/release-commands/index.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -220859,12 +219768,6 @@
       "to": "source:src/features/release-commands/application/services/build-job-api-service.ts",
       "kind": "imports",
       "detail": "./application/services/build-job-api-service"
-    },
-    {
-      "from": "source:src/features/release-commands/index.ts",
-      "to": "source:src/features/release-commands/application/services/production-deploy-api-service.ts",
-      "kind": "imports",
-      "detail": "./application/services/production-deploy-api-service"
     },
     {
       "from": "source:src/features/release-commands/presentation/hooks/use-build-jobs.tsx",
@@ -220915,168 +219818,6 @@
       "detail": "../../application/services/build-job-api-service"
     },
     {
-      "from": "source:src/features/release-commands/presentation/hooks/use-production-deploy.tsx",
-      "to": "runtime:android",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/release-commands/presentation/hooks/use-production-deploy.tsx",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/release-commands/presentation/hooks/use-production-deploy.tsx",
-      "to": "runtime:ios",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/release-commands/presentation/hooks/use-production-deploy.tsx",
-      "to": "runtime:static-out",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/release-commands/presentation/hooks/use-production-deploy.tsx",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/release-commands/presentation/hooks/use-production-deploy.tsx",
-      "to": "feature:release-commands",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "source:src/features/release-commands/presentation/hooks/use-production-deploy.tsx",
-      "to": "external-dependency:react",
-      "kind": "imports",
-      "detail": "react"
-    },
-    {
-      "from": "source:src/features/release-commands/presentation/hooks/use-production-deploy.tsx",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "imports",
-      "detail": "@asol/vercel-deploy-core/remote-deploy-contracts"
-    },
-    {
-      "from": "source:src/features/release-commands/presentation/hooks/use-production-deploy.tsx",
-      "to": "source:src/features/auth/ui.ts",
-      "kind": "imports",
-      "detail": "@/features/auth/ui"
-    },
-    {
-      "from": "source:src/features/release-commands/presentation/hooks/use-production-deploy.tsx",
-      "to": "source:src/features/release-commands/application/services/production-deploy-api-service.ts",
-      "kind": "imports",
-      "detail": "@/features/release-commands/application/services/production-deploy-api-service"
-    },
-    {
-      "from": "source:src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "to": "runtime:android",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "to": "runtime:ios",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "to": "runtime:static-out",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "to": "feature:release-commands",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "source:src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "to": "external-dependency:lucide-react",
-      "kind": "imports",
-      "detail": "lucide-react"
-    },
-    {
-      "from": "source:src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "to": "external-dependency:next",
-      "kind": "imports",
-      "detail": "next/navigation"
-    },
-    {
-      "from": "source:src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "to": "external-dependency:react",
-      "kind": "imports",
-      "detail": "react"
-    },
-    {
-      "from": "source:src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "to": "package:@asol/native-core",
-      "kind": "imports",
-      "detail": "@asol/native-core"
-    },
-    {
-      "from": "source:src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "to": "package:@asol/release-core",
-      "kind": "imports",
-      "detail": "@asol/release-core/console"
-    },
-    {
-      "from": "source:src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "imports",
-      "detail": "@asol/vercel-deploy-core/remote-deploy-contracts"
-    },
-    {
-      "from": "source:src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "to": "source:src/features/auth/index.ts",
-      "kind": "imports",
-      "detail": "@/features/auth"
-    },
-    {
-      "from": "source:src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "to": "source:src/features/auth/ui.ts",
-      "kind": "imports",
-      "detail": "@/features/auth/ui"
-    },
-    {
-      "from": "source:src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "to": "source:src/features/release-commands/domain/production-deploy-report.ts",
-      "kind": "imports",
-      "detail": "@/features/release-commands/domain/production-deploy-report"
-    },
-    {
-      "from": "source:src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "to": "source:src/features/release-commands/domain/production-deploy-timing.ts",
-      "kind": "imports",
-      "detail": "@/features/release-commands/domain/production-deploy-timing"
-    },
-    {
-      "from": "source:src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "to": "source:src/features/release-commands/presentation/hooks/use-production-deploy.tsx",
-      "kind": "imports",
-      "detail": "@/features/release-commands/presentation/hooks/use-production-deploy"
-    },
-    {
-      "from": "source:src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "to": "source:src/shared/ui/button.tsx",
-      "kind": "imports",
-      "detail": "@/shared/ui/button"
-    },
-    {
-      "from": "source:src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "to": "source:src/shared/ui/input.tsx",
-      "kind": "imports",
-      "detail": "@/shared/ui/input"
-    },
-    {
       "from": "source:src/features/release-commands/server.ts",
       "to": "runtime:development",
       "kind": "affects-runtime"
@@ -221096,12 +219837,6 @@
       "to": "source:src/features/release-commands/server/services/build-job-runner.server.ts",
       "kind": "imports",
       "detail": "./server/services/build-job-runner.server"
-    },
-    {
-      "from": "source:src/features/release-commands/server.ts",
-      "to": "source:src/features/release-commands/server/services/production-deploy-service.server.ts",
-      "kind": "imports",
-      "detail": "./server/services/production-deploy-service.server"
     },
     {
       "from": "source:src/features/release-commands/server/services/build-job-runner.server.ts",
@@ -221149,159 +219884,6 @@
       "detail": "@/features/google-play-console/server"
     },
     {
-      "from": "source:src/features/release-commands/server/services/production-deploy-email.server.ts",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/release-commands/server/services/production-deploy-email.server.ts",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/release-commands/server/services/production-deploy-email.server.ts",
-      "to": "feature:release-commands",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "source:src/features/release-commands/server/services/production-deploy-email.server.ts",
-      "to": "external-dependency:nodemailer",
-      "kind": "imports",
-      "detail": "nodemailer"
-    },
-    {
-      "from": "source:src/features/release-commands/server/services/production-deploy-email.server.ts",
-      "to": "external-dependency:server-only",
-      "kind": "imports",
-      "detail": "server-only"
-    },
-    {
-      "from": "source:src/features/release-commands/server/services/production-deploy-email.server.ts",
-      "to": "source:src/core/config/control-env.ts",
-      "kind": "imports",
-      "detail": "@/core/config/control-env"
-    },
-    {
-      "from": "source:src/features/release-commands/server/services/production-deploy-email.server.ts",
-      "to": "source:src/features/release-commands/domain/production-deploy-report.ts",
-      "kind": "imports",
-      "detail": "@/features/release-commands/domain/production-deploy-report"
-    },
-    {
-      "from": "source:src/features/release-commands/server/services/production-deploy-notification-delivery.server.ts",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/release-commands/server/services/production-deploy-notification-delivery.server.ts",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/release-commands/server/services/production-deploy-notification-delivery.server.ts",
-      "to": "feature:release-commands",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "source:src/features/release-commands/server/services/production-deploy-notification-delivery.server.ts",
-      "to": "external-dependency:server-only",
-      "kind": "imports",
-      "detail": "server-only"
-    },
-    {
-      "from": "source:src/features/release-commands/server/services/production-deploy-notification-delivery.server.ts",
-      "to": "source:src/core/config/control-env.ts",
-      "kind": "imports",
-      "detail": "@/core/config/control-env"
-    },
-    {
-      "from": "source:src/features/release-commands/server/services/production-deploy-service.server.ts",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/release-commands/server/services/production-deploy-service.server.ts",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:src/features/release-commands/server/services/production-deploy-service.server.ts",
-      "to": "feature:release-commands",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "source:src/features/release-commands/server/services/production-deploy-service.server.ts",
-      "to": "external-dependency:server-only",
-      "kind": "imports",
-      "detail": "server-only"
-    },
-    {
-      "from": "source:src/features/release-commands/server/services/production-deploy-service.server.ts",
-      "to": "package:@asol/auth-core",
-      "kind": "imports",
-      "detail": "@asol/auth-core"
-    },
-    {
-      "from": "source:src/features/release-commands/server/services/production-deploy-service.server.ts",
-      "to": "package:@asol/data-core",
-      "kind": "imports",
-      "detail": "@asol/data-core/control-release-state"
-    },
-    {
-      "from": "source:src/features/release-commands/server/services/production-deploy-service.server.ts",
-      "to": "package:@asol/notifications-core",
-      "kind": "imports",
-      "detail": "@asol/notifications-core/grant-collector"
-    },
-    {
-      "from": "source:src/features/release-commands/server/services/production-deploy-service.server.ts",
-      "to": "package:@asol/notifications-core",
-      "kind": "imports",
-      "detail": "@asol/notifications-core/grant-envelope"
-    },
-    {
-      "from": "source:src/features/release-commands/server/services/production-deploy-service.server.ts",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "imports",
-      "detail": "@asol/vercel-deploy-core"
-    },
-    {
-      "from": "source:src/features/release-commands/server/services/production-deploy-service.server.ts",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "imports",
-      "detail": "@asol/vercel-deploy-core/remote-deploy-contracts"
-    },
-    {
-      "from": "source:src/features/release-commands/server/services/production-deploy-service.server.ts",
-      "to": "package:@asol/vercel-deploy-core",
-      "kind": "imports",
-      "detail": "@asol/vercel-deploy-core/remote-deploy-sandbox"
-    },
-    {
-      "from": "source:src/features/release-commands/server/services/production-deploy-service.server.ts",
-      "to": "source:src/core/config/control-env.ts",
-      "kind": "imports",
-      "detail": "@/core/config/control-env"
-    },
-    {
-      "from": "source:src/features/release-commands/server/services/production-deploy-service.server.ts",
-      "to": "source:src/features/release-commands/domain/production-deploy-report.ts",
-      "kind": "imports",
-      "detail": "@/features/release-commands/domain/production-deploy-report"
-    },
-    {
-      "from": "source:src/features/release-commands/server/services/production-deploy-service.server.ts",
-      "to": "source:src/features/release-commands/server/services/production-deploy-email.server.ts",
-      "kind": "imports",
-      "detail": "@/features/release-commands/server/services/production-deploy-email.server"
-    },
-    {
-      "from": "source:src/features/release-commands/server/services/production-deploy-service.server.ts",
-      "to": "source:src/features/release-commands/server/services/production-deploy-notification-delivery.server.ts",
-      "kind": "imports",
-      "detail": "@/features/release-commands/server/services/production-deploy-notification-delivery.server"
-    },
-    {
       "from": "source:src/features/release-commands/ui.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -221336,18 +219918,6 @@
       "to": "source:src/features/release-commands/presentation/hooks/use-build-jobs.tsx",
       "kind": "imports",
       "detail": "./presentation/hooks/use-build-jobs"
-    },
-    {
-      "from": "source:src/features/release-commands/ui.ts",
-      "to": "source:src/features/release-commands/presentation/hooks/use-production-deploy.tsx",
-      "kind": "imports",
-      "detail": "./presentation/hooks/use-production-deploy"
-    },
-    {
-      "from": "source:src/features/release-commands/ui.ts",
-      "to": "source:src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "kind": "imports",
-      "detail": "./presentation/ProductionDeployPage"
     },
     {
       "from": "source:src/features/seller-discounts/application/services/seller-discount-api-service.ts",
@@ -227834,6 +226404,12 @@
       "to": "source:src/features/auth/server.ts",
       "kind": "imports",
       "detail": "@/features/auth/server"
+    },
+    {
+      "from": "source:src/features/super-admin/server/services/super-admin-user-service.server.ts",
+      "to": "source:src/features/data/server.ts",
+      "kind": "imports",
+      "detail": "@/features/data/server"
     },
     {
       "from": "source:src/features/super-admin/server/services/super-admin-user-service.server.ts",
@@ -243881,41 +242457,6 @@
       "kind": "tests"
     },
     {
-      "from": "test:src/features/release-commands/tests/production-deploy-callback.test.ts",
-      "to": "runtime:android",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "test:src/features/release-commands/tests/production-deploy-callback.test.ts",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "test:src/features/release-commands/tests/production-deploy-callback.test.ts",
-      "to": "runtime:ios",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "test:src/features/release-commands/tests/production-deploy-callback.test.ts",
-      "to": "runtime:static-out",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "test:src/features/release-commands/tests/production-deploy-callback.test.ts",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "test:src/features/release-commands/tests/production-deploy-callback.test.ts",
-      "to": "feature:release-commands",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "test:src/features/release-commands/tests/production-deploy-callback.test.ts",
-      "to": "feature:release-commands",
-      "kind": "tests"
-    },
-    {
       "from": "test:src/features/release-commands/tests/release-commands.test.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -244004,18 +242545,6 @@
       "to": "source:src/features/google-play-console/server.ts",
       "kind": "imports",
       "detail": "@/features/google-play-console/server"
-    },
-    {
-      "from": "test:src/features/release-commands/tests/release-commands.test.ts",
-      "to": "source:src/features/release-commands/domain/production-deploy-report.ts",
-      "kind": "imports",
-      "detail": "@/features/release-commands/domain/production-deploy-report"
-    },
-    {
-      "from": "test:src/features/release-commands/tests/release-commands.test.ts",
-      "to": "source:src/features/release-commands/domain/production-deploy-timing.ts",
-      "kind": "imports",
-      "detail": "@/features/release-commands/domain/production-deploy-timing"
     },
     {
       "from": "test:src/features/release-commands/tests/release-commands.test.ts",

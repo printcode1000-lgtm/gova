@@ -13003,75 +13003,6 @@
       ]
     },
     {
-      "id": "document:docs/06-super-admin-and-operations/super-admin-production-deploy.md",
-      "kind": "document",
-      "name": "Super Admin Production Deploy",
-      "path": "docs/06-super-admin-and-operations/super-admin-production-deploy.md",
-      "summary": "GitHub pushes do not start production deployments. The machine-only production deploy endpoint is reserved for authenticated explicit release requests; no Vercel, repository, archive, email, or notification secret is stored in GitHub.",
-      "tags": [
-        "@asol/vercel-deploy-core/github-push-identity",
-        "admin",
-        "archive",
-        "authenticated",
-        "deploy",
-        "deployments",
-        "do",
-        "docs/06-super-admin-and-operations/super-admin-production-deploy",
-        "docs/06-super-admin-and-operations/super-admin-production-deploy.md",
-        "email",
-        "endpoint",
-        "explicit",
-        "for",
-        "github",
-        "github pushes do not start production deployments. the machine-only production deploy endpoint is reserved for authenticated explicit release requests; no vercel, repository, archive, email, or notification secret is stored in github.",
-        "in",
-        "is",
-        "machine-only",
-        "md",
-        "mjs",
-        "no",
-        "not",
-        "notification",
-        "or",
-        "packages/vercel-deploy-core/src/remote-deploy-contracts",
-        "packages/vercel-deploy-core/src/remote-deploy-contracts.ts",
-        "packages/vercel-deploy-core/src/remote-deploy-sandbox",
-        "packages/vercel-deploy-core/src/remote-deploy-sandbox.ts",
-        "production",
-        "pushes",
-        "release",
-        "repository",
-        "requests",
-        "reserved",
-        "scripts/deploy-push",
-        "scripts/deploy-push.ts",
-        "scripts/github-ci-policy",
-        "scripts/github-ci-policy.ts",
-        "scripts/push-production-deploy-env",
-        "scripts/push-production-deploy-env.ts",
-        "scripts/run-remote-deploy-all",
-        "scripts/run-remote-deploy-all.mjs",
-        "secret",
-        "server",
-        "src/features/release-commands/domain/production-deploy-report",
-        "src/features/release-commands/domain/production-deploy-report.ts",
-        "src/features/release-commands/presentation/productiondeploypage",
-        "src/features/release-commands/presentation/productiondeploypage.tsx",
-        "src/features/release-commands/server/services/production-deploy-email",
-        "src/features/release-commands/server/services/production-deploy-email.server.ts",
-        "src/features/release-commands/server/services/production-deploy-service",
-        "src/features/release-commands/server/services/production-deploy-service.server.ts",
-        "start",
-        "stored",
-        "super",
-        "super admin production deploy",
-        "the",
-        "ts",
-        "tsx",
-        "vercel"
-      ]
-    },
-    {
       "id": "document:docs/06-super-admin-and-operations/super-admin-user-impersonation.md",
       "kind": "document",
       "name": "Super Admin User Impersonation",
@@ -25698,38 +25629,6 @@
       ]
     },
     {
-      "id": "route:/api/super-admin/production-deploy:handler",
-      "kind": "route",
-      "name": "/api/super-admin/production-deploy",
-      "path": "src/app/api/super-admin/production-deploy/route.ts",
-      "summary": "App Router request handler",
-      "tags": [
-        "/api/super-admin/production-deploy",
-        "api",
-        "handler",
-        "handler api",
-        "src/app/api/super-admin/production-deploy/route",
-        "src/app/api/super-admin/production-deploy/route.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "route:/api/super-admin/production-deploy/callback:handler",
-      "kind": "route",
-      "name": "/api/super-admin/production-deploy/callback",
-      "path": "src/app/api/super-admin/production-deploy/callback/route.ts",
-      "summary": "App Router request handler",
-      "tags": [
-        "/api/super-admin/production-deploy/callback",
-        "api",
-        "handler",
-        "handler api",
-        "src/app/api/super-admin/production-deploy/callback/route",
-        "src/app/api/super-admin/production-deploy/callback/route.ts",
-        "ts"
-      ]
-    },
-    {
       "id": "route:/api/super-admin/users/delete:handler",
       "kind": "route",
       "name": "/api/super-admin/users/delete",
@@ -26471,20 +26370,6 @@
         "page",
         "src/app/super-admin/ota-releases/page",
         "src/app/super-admin/ota-releases/page.tsx",
-        "tsx"
-      ]
-    },
-    {
-      "id": "route:/super-admin/production-deploy:page",
-      "kind": "route",
-      "name": "/super-admin/production-deploy",
-      "path": "src/app/super-admin/production-deploy/page.tsx",
-      "summary": "App Router page",
-      "tags": [
-        "/super-admin/production-deploy",
-        "page",
-        "src/app/super-admin/production-deploy/page",
-        "src/app/super-admin/production-deploy/page.tsx",
         "tsx"
       ]
     },
@@ -39025,28 +38910,6 @@
       ]
     },
     {
-      "id": "source:services/control/src/app/api/super-admin/production-deploy/callback/route.ts",
-      "kind": "source",
-      "name": "route.ts",
-      "path": "services/control/src/app/api/super-admin/production-deploy/callback/route.ts",
-      "tags": [
-        "services/control/src/app/api/super-admin/production-deploy/callback/route",
-        "services/control/src/app/api/super-admin/production-deploy/callback/route.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:services/control/src/app/api/super-admin/production-deploy/route.ts",
-      "kind": "source",
-      "name": "route.ts",
-      "path": "services/control/src/app/api/super-admin/production-deploy/route.ts",
-      "tags": [
-        "services/control/src/app/api/super-admin/production-deploy/route",
-        "services/control/src/app/api/super-admin/production-deploy/route.ts",
-        "ts"
-      ]
-    },
-    {
       "id": "source:services/control/src/app/api/super-admin/users/delete/route.ts",
       "kind": "source",
       "name": "route.ts",
@@ -41473,28 +41336,6 @@
       ]
     },
     {
-      "id": "source:src/app/api/super-admin/production-deploy/callback/route.ts",
-      "kind": "source",
-      "name": "route.ts",
-      "path": "src/app/api/super-admin/production-deploy/callback/route.ts",
-      "tags": [
-        "src/app/api/super-admin/production-deploy/callback/route",
-        "src/app/api/super-admin/production-deploy/callback/route.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:src/app/api/super-admin/production-deploy/route.ts",
-      "kind": "source",
-      "name": "route.ts",
-      "path": "src/app/api/super-admin/production-deploy/route.ts",
-      "tags": [
-        "src/app/api/super-admin/production-deploy/route",
-        "src/app/api/super-admin/production-deploy/route.ts",
-        "ts"
-      ]
-    },
-    {
       "id": "source:src/app/api/super-admin/users/delete/route.ts",
       "kind": "source",
       "name": "route.ts",
@@ -42198,17 +42039,6 @@
       "tags": [
         "src/app/super-admin/ota-releases/page",
         "src/app/super-admin/ota-releases/page.tsx",
-        "tsx"
-      ]
-    },
-    {
-      "id": "source:src/app/super-admin/production-deploy/page.tsx",
-      "kind": "source",
-      "name": "page.tsx",
-      "path": "src/app/super-admin/production-deploy/page.tsx",
-      "tags": [
-        "src/app/super-admin/production-deploy/page",
-        "src/app/super-admin/production-deploy/page.tsx",
         "tsx"
       ]
     },
@@ -49990,39 +49820,6 @@
       ]
     },
     {
-      "id": "source:src/features/release-commands/application/services/production-deploy-api-service.ts",
-      "kind": "source",
-      "name": "production-deploy-api-service.ts",
-      "path": "src/features/release-commands/application/services/production-deploy-api-service.ts",
-      "tags": [
-        "src/features/release-commands/application/services/production-deploy-api-service",
-        "src/features/release-commands/application/services/production-deploy-api-service.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:src/features/release-commands/domain/production-deploy-report.ts",
-      "kind": "source",
-      "name": "production-deploy-report.ts",
-      "path": "src/features/release-commands/domain/production-deploy-report.ts",
-      "tags": [
-        "src/features/release-commands/domain/production-deploy-report",
-        "src/features/release-commands/domain/production-deploy-report.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:src/features/release-commands/domain/production-deploy-timing.ts",
-      "kind": "source",
-      "name": "production-deploy-timing.ts",
-      "path": "src/features/release-commands/domain/production-deploy-timing.ts",
-      "tags": [
-        "src/features/release-commands/domain/production-deploy-timing",
-        "src/features/release-commands/domain/production-deploy-timing.ts",
-        "ts"
-      ]
-    },
-    {
       "id": "source:src/features/release-commands/index.ts",
       "kind": "source",
       "name": "index.ts",
@@ -50041,28 +49838,6 @@
       "tags": [
         "src/features/release-commands/presentation/hooks/use-build-jobs",
         "src/features/release-commands/presentation/hooks/use-build-jobs.tsx",
-        "tsx"
-      ]
-    },
-    {
-      "id": "source:src/features/release-commands/presentation/hooks/use-production-deploy.tsx",
-      "kind": "source",
-      "name": "use-production-deploy.tsx",
-      "path": "src/features/release-commands/presentation/hooks/use-production-deploy.tsx",
-      "tags": [
-        "src/features/release-commands/presentation/hooks/use-production-deploy",
-        "src/features/release-commands/presentation/hooks/use-production-deploy.tsx",
-        "tsx"
-      ]
-    },
-    {
-      "id": "source:src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "kind": "source",
-      "name": "ProductionDeployPage.tsx",
-      "path": "src/features/release-commands/presentation/ProductionDeployPage.tsx",
-      "tags": [
-        "src/features/release-commands/presentation/productiondeploypage",
-        "src/features/release-commands/presentation/productiondeploypage.tsx",
         "tsx"
       ]
     },
@@ -50086,42 +49861,6 @@
         "server",
         "src/features/release-commands/server/services/build-job-runner",
         "src/features/release-commands/server/services/build-job-runner.server.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:src/features/release-commands/server/services/production-deploy-email.server.ts",
-      "kind": "source",
-      "name": "production-deploy-email.server.ts",
-      "path": "src/features/release-commands/server/services/production-deploy-email.server.ts",
-      "tags": [
-        "server",
-        "src/features/release-commands/server/services/production-deploy-email",
-        "src/features/release-commands/server/services/production-deploy-email.server.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:src/features/release-commands/server/services/production-deploy-notification-delivery.server.ts",
-      "kind": "source",
-      "name": "production-deploy-notification-delivery.server.ts",
-      "path": "src/features/release-commands/server/services/production-deploy-notification-delivery.server.ts",
-      "tags": [
-        "server",
-        "src/features/release-commands/server/services/production-deploy-notification-delivery",
-        "src/features/release-commands/server/services/production-deploy-notification-delivery.server.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:src/features/release-commands/server/services/production-deploy-service.server.ts",
-      "kind": "source",
-      "name": "production-deploy-service.server.ts",
-      "path": "src/features/release-commands/server/services/production-deploy-service.server.ts",
-      "tags": [
-        "server",
-        "src/features/release-commands/server/services/production-deploy-service",
-        "src/features/release-commands/server/services/production-deploy-service.server.ts",
         "ts"
       ]
     },
@@ -55560,18 +55299,6 @@
       "tags": [
         "src/features/release-commands/tests/console-command-parity",
         "src/features/release-commands/tests/console-command-parity.test.ts",
-        "test",
-        "ts"
-      ]
-    },
-    {
-      "id": "test:src/features/release-commands/tests/production-deploy-callback.test.ts",
-      "kind": "test",
-      "name": "production-deploy-callback.test.ts",
-      "path": "src/features/release-commands/tests/production-deploy-callback.test.ts",
-      "tags": [
-        "src/features/release-commands/tests/production-deploy-callback",
-        "src/features/release-commands/tests/production-deploy-callback.test.ts",
         "test",
         "ts"
       ]

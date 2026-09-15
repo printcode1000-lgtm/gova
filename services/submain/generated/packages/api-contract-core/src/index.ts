@@ -9,6 +9,7 @@ export interface ApiContract<T> {
 export interface TransportKeyPolicy {
   readonly label?: string;
   readonly allowedSnakeCaseKeys?: readonly string[];
+  readonly dynamicRecordPaths?: readonly string[];
 }
 
 export class TransportKeyContractError extends Error {
@@ -40,6 +41,7 @@ export function assertCamelCaseJsonKeys(
   policy: TransportKeyPolicy = {},
 ): void {
   const allowed = new Set(policy.allowedSnakeCaseKeys ?? []);
+  const dynamicRecordPaths = new Set(policy.dynamicRecordPaths ?? []);
   const seen = new WeakSet<object>();
 
   const visit = (current: unknown, jsonPath: string): void => {
@@ -52,8 +54,9 @@ export function assertCamelCaseJsonKeys(
       return;
     }
 
+    const dynamicKeys = dynamicRecordPaths.has(jsonPath);
     for (const [key, child] of Object.entries(current)) {
-      if (key.includes("_") && !allowed.has(key)) {
+      if (!dynamicKeys && key.includes("_") && !allowed.has(key)) {
         throw new TransportKeyContractError(jsonPath, key, policy.label);
       }
       visit(child, `${jsonPath}.${key}`);

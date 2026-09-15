@@ -3,7 +3,7 @@ export function ordersPageCopy(locale: "ar" | "en") {
     ? {
         title: "الطلبات",
         login: "يجب تسجيل الدخول لعرض الطلبات المرتبطة بك.",
-        description: "أحدث الطلبات المرتبطة بحسابك بكل الأدوار.",
+        description: "أحدث الطلبات المرتبطة بحسابك.",
         admin: "تحكم السوبر أدمن",
         emptyTitle: "لا توجد طلبات",
         emptyDescription:
@@ -20,7 +20,7 @@ export function ordersPageCopy(locale: "ar" | "en") {
     : {
         title: "Orders",
         login: "Sign in to view orders associated with you.",
-        description: "Your latest orders across every role.",
+        description: "Your latest orders.",
         admin: "Super admin control",
         emptyTitle: "No orders",
         emptyDescription:

@@ -987,6 +987,24 @@ export async function executePageSave(): Promise<boolean> {
   }
 }
 
+/** Clears all user-owned runtime state while preserving subscriptions. */
+export function clearPageSaveRegistry(): void {
+  registrations.clear();
+  persistedRecords.clear();
+  activeRegistrationId = null;
+  dialogOpen = false;
+  hydrated = false;
+  hydrationPromise = null;
+  activeSaveExecutionId = null;
+  lastResult = null;
+  interrupted = [];
+  recoveryHydrated = false;
+  recoveryHydrationPromise = null;
+  heldCleanPasses.clear();
+  cachedSnapshot = IDLE_SNAPSHOT;
+  emit();
+}
+
 export function resetPageSaveRegistryForTests(): void {
   registrations.clear();
   persistedRecords.clear();

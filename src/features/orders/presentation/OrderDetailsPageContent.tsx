@@ -41,7 +41,7 @@ import {
 } from "./order-labels";
 import type { OrderDetails, OrderRole } from "./order-types";
 
-import { RunAction, text, BackToOrders, OrderSummary } from "./order-details/OrderDetailsPageContent.navigation-summary";
+import { RunAction, text, OrderSummary } from "./order-details/OrderDetailsPageContent.navigation-summary";
 import { useTranslation } from "@/shared/i18n";
 import { UnifiedDeliveryPlanPanel } from "./order-details/OrderDetailsPageContent.delivery-plan";
 import { SellerOrderCard } from "./order-details/OrderDetailsPageContent.seller-orders";
@@ -134,7 +134,6 @@ export function OrderDetailsPageContent({ id, orderId }: { orderId: string } & {
   if (!details) {
     return (
       <main id="features-orders-presentation-orderdetailspagecontent-main-5-utgtxy" className="mx-auto max-w-4xl px-4 py-10">
-        <BackToOrders />
         <p id="features-orders-presentation-orderdetailspagecontent-text-6-xum2ed" className="mt-6 rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
           {error || text.notFound}
         </p>
@@ -157,8 +156,7 @@ export function OrderDetailsPageContent({ id, orderId }: { orderId: string } & {
     <main id={id} className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
       <header id="features-orders-presentation-orderdetailspagecontent-header-8-rxzz11" className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
         <div id="features-orders-presentation-orderdetailspagecontent-div-9-hufad4">
-          <BackToOrders />
-          <h1 id="features-orders-presentation-orderdetailspagecontent-heading-10-giiyco" className="mt-3 text-2xl font-bold">
+            <h1 id="features-orders-presentation-orderdetailspagecontent-heading-10-giiyco" className="mt-3 text-2xl font-bold">
             {text.order} {String(order.orderNumber ?? order.id)}
           </h1>
           <p id="features-orders-presentation-orderdetailspagecontent-text-11-0emeve" className="mt-1 text-sm text-muted-foreground">

@@ -20,7 +20,7 @@ is listed as `gova/dev` and answered wherever the request lands.
 
 | Account | Vercel project | Origin variable | Owned pairs | Shipped | Unshipped |
 | --- | --- | --- | ---: | ---: | ---: |
-| `control` | `asol-control` | `NEXT_PUBLIC_ASOL_CONTROL_URL` | 36 | 36 | 0 |
+| `control` | `asol-control` | `NEXT_PUBLIC_ASOL_CONTROL_URL` | 33 | 33 | 0 |
 | `gova/dev` | — | — | 12 | 12 | 0 |
 | `notifications` | `asol-notifications` | `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | 5 | 1 | 4 |
 | `orders` | `asol-orders` | `NEXT_PUBLIC_ASOL_ORDERS_URL` | 1 | 1 | 0 |
@@ -59,9 +59,6 @@ is listed as `gova/dev` and answered wherever the request lands.
 | `POST` | `/api/super-admin/google-play-store-assets/tracks` | shipped |
 | `POST` | `/api/super-admin/google-play-store-assets/tracks/promote` | shipped |
 | `POST` | `/api/super-admin/impersonate` | shipped |
-| `GET` | `/api/super-admin/production-deploy` | shipped |
-| `POST` | `/api/super-admin/production-deploy` | shipped |
-| `POST` | `/api/super-admin/production-deploy/callback` | shipped |
 | `POST` | `/api/super-admin/users/delete` | shipped |
 | `GET` | `/api/super-admin/users/search` | shipped |
 | `DELETE` | `/api/system-logs` | shipped |

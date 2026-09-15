@@ -16,14 +16,14 @@ export function SelectedRecordDetails({ id,
   record: DetailRecord | null;
 } & { id?: string }) {
   return (
-    <div id={id} className="overflow-hidden rounded-xl border bg-background/70">
+    <div id={id} className="min-w-0 overflow-hidden rounded-xl border bg-background/70">
       <h3 id={id ? `${id}-heading-2-pdndo4` : undefined} className="border-b px-4 py-3 text-sm font-bold">{title}</h3>
       {record ? (
-        <dl id={id ? `${id}-dl-3-khcttz` : undefined} className="divide-y text-sm">
+        <dl id={id ? `${id}-dl-3-khcttz` : undefined} className="min-w-0 divide-y text-sm">
           {Object.entries(record).map(([key, value]) => (
             <div
               key={key}
-              className="grid gap-1 px-4 py-3 sm:grid-cols-[minmax(130px,0.4fr)_1fr] sm:gap-4"
+              className="grid min-w-0 gap-1 px-3 py-3 sm:grid-cols-[minmax(130px,0.4fr)_minmax(0,1fr)] sm:gap-4 sm:px-4"
             >
               <dt
                 className="font-mono text-xs font-semibold text-primary"
