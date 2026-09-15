@@ -90,60 +90,80 @@ export class AccountDeletionRepository {
 
   async anonymizeOrders(uid: string): Promise<void> {
     const db = createMarketplaceOrdersDb();
-    const anon = `deleted_${createHash("sha256").update(uid).digest("hex").slice(0, 24)}`;
-    const ownedProducts = await productsDataSource.execute("SELECT id FROM products WHERE uid = ?", [uid]);
-    await db.transaction(async (tx) => {
-      const replacements: [string, string][] = [
-        ["orders", "buyer_id"],
-        ["seller_orders", "seller_id"],
-        ["seller_orders", "service_provider_id"],
-        ["order_items", "seller_id"],
-        ["custom_request_items", "seller_id"],
-        ["custom_request_items", "service_provider_id"],
-        ["custom_request_images", "uploaded_by"],
-        ["shipments", "carrier_id"],
-        ["shipment_items", "seller_id"],
-        ["shipment_items", "service_provider_id"],
-        ["payments", "buyer_id"],
-        ["cancellations", "cancelled_by"],
-        ["return_requests", "buyer_id"],
-        ["return_requests", "carrier_id"],
-        ["replacement_requests", "buyer_id"],
-        ["disputes", "opened_by"],
-        ["dispute_messages", "sender_id"],
-        ["audit_trail", "performed_by"],
-        ["shipping_quotes", "seller_id"],
-        ["shipping_quotes", "service_provider_id"],
-        ["shipping_quotes", "buyer_id"],
-        ["shipping_quotes", "proposed_by"],
-        ["delivery_plans", "buyer_id"],
-        ["delivery_plan_stops", "seller_id"],
-        ["delivery_plan_stops", "original_carrier_id"],
-        ["delivery_plan_candidates", "provider_id"],
-        ["delivery_plan_candidate_stops", "provider_id"],
-        ["delivery_plan_quotes", "provider_id"],
-      ];
-      for (const [table, column] of replacements) {
-        await tx.execute(`UPDATE ${table} SET ${column} = ? WHERE ${column} = ?`, [anon, uid]);
+    const orderIds = new Set<string>();
+    const collect = async (sql: string, params: unknown[]) => {
+      for (const row of await db.execute(sql, params)) {
+        if (typeof row.order_id === "string" && row.order_id) orderIds.add(row.order_id);
       }
-      await tx.execute(
-        "UPDATE orders SET delivery_address_snapshot_json = '{}', notes = NULL WHERE buyer_id = ?",
-        [anon],
-      );
-      await tx.execute("UPDATE payments SET transaction_data_json = NULL WHERE buyer_id = ?", [anon]);
-      await tx.execute(
-        "UPDATE custom_request_images SET image_url = '', image_key = ?, file_name = NULL, image_description = NULL WHERE uploaded_by = ?",
-        [`removed-${anon}`, anon],
-      );
-      for (const row of ownedProducts) {
-        if (typeof row.id === "string") {
-          await tx.execute("UPDATE order_items SET product_id = ? WHERE product_id = ?", [
-            `removed-${anon}`,
-            row.id,
-          ]);
-        }
-      }
-    });
+    };
+
+    // Account deletion owns the whole order whenever this uid appears as any
+    // participant. This deliberately includes indirect delivery-plan roles.
+    await collect("SELECT id AS order_id FROM orders WHERE buyer_id = ?", [uid]);
+    await collect("SELECT order_id FROM seller_orders WHERE seller_id = ? OR service_provider_id = ?", [uid, uid]);
+    await collect("SELECT order_id FROM order_items WHERE seller_id = ?", [uid]);
+    await collect("SELECT order_id FROM custom_request_items WHERE seller_id = ? OR service_provider_id = ?", [uid, uid]);
+    await collect("SELECT order_id FROM custom_request_images WHERE uploaded_by = ?", [uid]);
+    await collect("SELECT order_id FROM shipments WHERE carrier_id = ?", [uid]);
+    await collect("SELECT order_id FROM shipment_items WHERE seller_id = ? OR service_provider_id = ?", [uid, uid]);
+    await collect("SELECT order_id FROM payments WHERE buyer_id = ?", [uid]);
+    await collect("SELECT order_id FROM cancellations WHERE cancelled_by = ?", [uid]);
+    await collect("SELECT order_id FROM return_requests WHERE buyer_id = ? OR carrier_id = ?", [uid, uid]);
+    await collect("SELECT order_id FROM replacement_requests WHERE buyer_id = ?", [uid]);
+    await collect("SELECT order_id FROM disputes WHERE opened_by = ?", [uid]);
+    const sentDisputeIds = (await db.execute("SELECT dispute_id FROM dispute_messages WHERE sender_id = ?", [uid]))
+      .map((row) => row.dispute_id)
+      .filter((id): id is string => typeof id === "string" && id.length > 0);
+    for (const disputeId of sentDisputeIds) {
+      await collect("SELECT order_id FROM disputes WHERE id = ?", [disputeId]);
+    }
+    await collect("SELECT order_id FROM audit_trail WHERE performed_by = ?", [uid]);
+    await collect("SELECT order_id FROM shipping_quotes WHERE seller_id = ? OR service_provider_id = ? OR buyer_id = ? OR proposed_by = ?", [uid, uid, uid, uid]);
+    await collect("SELECT order_id FROM delivery_plans WHERE buyer_id = ?", [uid]);
+    await collect("SELECT order_id FROM delivery_plan_stops WHERE seller_id = ? OR original_carrier_id = ?", [uid, uid]);
+    const providerPlanIds = new Set<string>();
+    for (const row of await db.execute("SELECT plan_id FROM delivery_plan_candidates WHERE provider_id = ?", [uid])) {
+      if (typeof row.plan_id === "string") providerPlanIds.add(row.plan_id);
+    }
+    for (const row of await db.execute("SELECT plan_id FROM delivery_plan_candidate_stops WHERE provider_id = ?", [uid])) {
+      if (typeof row.plan_id === "string") providerPlanIds.add(row.plan_id);
+    }
+    for (const planId of providerPlanIds) {
+      await collect("SELECT order_id FROM delivery_plans WHERE id = ?", [planId]);
+    }
+    await collect("SELECT order_id FROM delivery_plan_quotes WHERE provider_id = ?", [uid]);
+
+    // Every order-domain shard stores order_id on its owned aggregate rows.
+    // Deleting leaves no order, item, shipment, payment, after-sales, dispute,
+    // quote, delivery-plan or audit residue mentioning an affected order.
+    for (const orderId of orderIds) {
+      await db.execute("DELETE FROM dispute_messages WHERE dispute_id IN (SELECT id FROM disputes WHERE order_id = ?)", [orderId]);
+      await db.execute("DELETE FROM disputes WHERE order_id = ?", [orderId]);
+      await db.execute("DELETE FROM audit_trail WHERE order_id = ?", [orderId]);
+      await db.execute("DELETE FROM cancellation_items WHERE cancellation_id IN (SELECT id FROM cancellations WHERE order_id = ?)", [orderId]);
+      await db.execute("DELETE FROM return_request_items WHERE return_request_id IN (SELECT id FROM return_requests WHERE order_id = ?)", [orderId]);
+      await db.execute("DELETE FROM replacement_request_items WHERE replacement_request_id IN (SELECT id FROM replacement_requests WHERE order_id = ?)", [orderId]);
+      await db.execute("DELETE FROM cancellations WHERE order_id = ?", [orderId]);
+      await db.execute("DELETE FROM return_requests WHERE order_id = ?", [orderId]);
+      await db.execute("DELETE FROM replacement_requests WHERE order_id = ?", [orderId]);
+      await db.execute("DELETE FROM refunds WHERE order_id = ?", [orderId]);
+      await db.execute("DELETE FROM payments WHERE order_id = ?", [orderId]);
+      await db.execute("DELETE FROM delivery_plan_quote_stops WHERE plan_id IN (SELECT id FROM delivery_plans WHERE order_id = ?)", [orderId]);
+      await db.execute("DELETE FROM delivery_plan_shipments WHERE plan_id IN (SELECT id FROM delivery_plans WHERE order_id = ?)", [orderId]);
+      await db.execute("DELETE FROM delivery_plan_candidate_stops WHERE plan_id IN (SELECT id FROM delivery_plans WHERE order_id = ?)", [orderId]);
+      await db.execute("DELETE FROM delivery_plan_candidates WHERE plan_id IN (SELECT id FROM delivery_plans WHERE order_id = ?)", [orderId]);
+      await db.execute("DELETE FROM delivery_plan_quotes WHERE order_id = ?", [orderId]);
+      await db.execute("DELETE FROM delivery_plan_stops WHERE order_id = ?", [orderId]);
+      await db.execute("DELETE FROM delivery_plans WHERE order_id = ?", [orderId]);
+      await db.execute("DELETE FROM shipping_quotes WHERE order_id = ?", [orderId]);
+      await db.execute("DELETE FROM shipment_items WHERE order_id = ?", [orderId]);
+      await db.execute("DELETE FROM shipments WHERE order_id = ?", [orderId]);
+      await db.execute("DELETE FROM custom_request_images WHERE order_id = ?", [orderId]);
+      await db.execute("DELETE FROM custom_request_items WHERE order_id = ?", [orderId]);
+      await db.execute("DELETE FROM order_items WHERE order_id = ?", [orderId]);
+      await db.execute("DELETE FROM seller_orders WHERE order_id = ?", [orderId]);
+      await db.execute("DELETE FROM orders WHERE id = ?", [orderId]);
+    }
   }
 
   async deleteProducts(uid: string): Promise<void> {

@@ -32,7 +32,7 @@ file-level change list, verification evidence, and remaining external Vercel lim
 1. capture rollback baseline   gova, control, and the six workloads
 2. deploy the six workloads    notifications, products, orders, profiles, submain, sub2main
 3. deploy control              its own mandatory step, same SHA, never a seventh workload
-4. publish exact-SHA readiness POST to control's production-deploy callback
+4. publish exact-SHA readiness with signed `POST /api/release-readiness` on control
 5. deploy main                 explicitly deploy gova for that SHA and wait for READY
    on any failure              re-promote the captured baseline automatically
 ```

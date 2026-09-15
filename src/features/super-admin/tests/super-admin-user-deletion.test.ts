@@ -20,6 +20,13 @@ assert.match(usersPage, /\/api\/super-admin\/users\/delete/);
 assert.match(deleteRoute, /runSuperAdminJsonRoute/);
 assert.match(deleteRoute, /deleteUser/);
 assert.match(userService, /deleteUser/);
+const deletionRepositorySource = source("packages/data-core/src/domains/account-deletion/repositories/account-deletion-repository.server.ts");
+assert.match(deletionRepositorySource, /SELECT id AS order_id FROM orders WHERE buyer_id = \?/);
+assert.match(deletionRepositorySource, /SELECT order_id FROM seller_orders WHERE seller_id = \? OR service_provider_id = \?/);
+assert.match(deletionRepositorySource, /SELECT order_id FROM shipments WHERE carrier_id = \?/);
+assert.match(deletionRepositorySource, /DELETE FROM orders WHERE id = \?/);
+assert.doesNotMatch(deletionRepositorySource, /UPDATE orders SET delivery_address_snapshot_json/);
+
 assert.match(userService, /accountDeletionService\.deleteBySuperAdmin/);
 assert.match(userService, /persistentSystemLogService\.add/);
 

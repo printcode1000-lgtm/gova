@@ -515,7 +515,7 @@ preflight → publish → control → notifications → products → orders → 
 | `publish` | `secrets:backup`, deployment commit, `git push origin main` |
 | `control` | One CLI deploy of `asol-control` at the same SHA — its own mandatory step, never one of the six workloads |
 | `notifications` … `sub2main` | One CLI service deploy each (six accounts) |
-| `readiness` | Publish exact-SHA release readiness to control's production-deploy callback |
+| `readiness` | Publish exact-SHA release readiness through control's signed `POST /api/release-readiness` boundary |
 | `main` | Explicitly deploy `gova` (`main:deploy`) and wait for `READY`, confirm production serves this build (`release:check`), then `smoke:deployed` against the eight origins |
 
 There is no per-phase npm script. Phases are selected on `deploy:all` itself:

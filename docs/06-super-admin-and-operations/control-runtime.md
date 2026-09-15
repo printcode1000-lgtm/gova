@@ -37,9 +37,17 @@ deploy, user administration and impersonation, the System Logs family including
 its authenticated SSE stream, and OTA administration.
 
 Control also serves two operational routes that belong to no business owner:
-`/api/health` and `/api/release-readiness/[revision]`.
+`/api/health`, signed `POST /api/release-readiness`, and public-read
+`GET /api/release-readiness/[revision]`.
 
 ## The release readiness barrier
+
+`POST /api/release-readiness` is the machine-only write boundary. It requires the
+deployment callback bearer secret and applies only a supplied release-state mutation.
+`scripts/release-readiness-publish.ts` is the release pipeline client for that exact
+route. `test:control` contract-checks both sides together so deleting or renaming the
+write route without updating the publisher fails before deployment instead of becoming
+a late production `404`.
 
 `GET /api/release-readiness/<40-character SHA>` answers exactly one of
 `pending`, `ready`, or `failed`, and nothing else.
@@ -157,3 +165,7 @@ never a false positive: a project that can deploy another account is not isolate
 from it.
 
 No value is ever read or printed.
+
+### Super Admin account deletion order invariant
+
+Deleting an account from `/super-admin/users` deletes the complete marketplace order aggregate for every order in which that UID appears as buyer, seller, service provider, carrier, dispute participant, audit actor, quote participant, delivery-plan provider, or custom-request uploader. Order-domain rows are deleted child-first across their Turso shards; they are not anonymized and retained. The account-deletion registry and query-schema contract tests must change with this participant coverage.

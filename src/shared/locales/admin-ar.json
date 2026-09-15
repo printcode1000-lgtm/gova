@@ -554,6 +554,8 @@
   "releaseConsole.tracks.status.inProgress": "طرح مرحلي",
   "releaseConsole.tracks.update": "تحديث إصدار المسار",
   "releaseConsole.tracks.versionCode": "رمز الإصدار",
+  "errors.api.unexpected": "حدث خطأ غير متوقع. حاول مرة أخرى.",
+  "errors.api.internalServerError": "حدث خطأ داخلي في الخادم. حاول مرة أخرى.",
   "sidebar.catalogStudio": "استوديو الكتالوج",
   "sidebar.featuredMarquee": "الشريط المميز",
   "sidebar.heroSlider": "شريط العرض الرئيسي",

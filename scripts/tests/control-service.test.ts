@@ -39,7 +39,7 @@ assert.ok(routes.length > 25, `only ${routes.length} control routes found; the s
 // Every business route here must resolve to `control` in the canonical registry.
 // A route that lands in this deployment but belongs to another owner is a route
 // two runtimes answer, and the client bridge only ever calls one of them.
-const OPERATIONAL = new Set(['/api/health', '/api/release-readiness/[revision]']);
+const OPERATIONAL = new Set(['/api/health', '/api/release-readiness', '/api/release-readiness/[revision]']);
 for (const file of routes) {
   const pathname = pathnameOf(file);
   if (OPERATIONAL.has(pathname)) continue;
@@ -77,6 +77,24 @@ assert.deepEqual(missing, [], `control-owned routes missing from services/contro
 const barrier = readFileSync(
   path.join(API, 'release-readiness', '[revision]', 'route.ts'),
   'utf8',
+);
+const readinessWriter = readFileSync(path.join(API, 'release-readiness', 'route.ts'), 'utf8');
+assert.match(readinessWriter, /export\s+async\s+function\s+POST\b/, 'control must ship the signed release-readiness write endpoint');
+assert.match(
+  readinessWriter,
+  /applyControlReleaseReadinessMutation\(/,
+  'the release-readiness POST must apply the durable exact-SHA mutation',
+);
+const readinessPublisher = readFileSync(path.join(ROOT, 'scripts', 'release-readiness-publish.ts'), 'utf8');
+assert.match(
+  readinessPublisher,
+  /controlReleaseOrigin\(\)\}\/api\/release-readiness/,
+  'the release publisher must target the control write endpoint that the service actually ships',
+);
+assert.doesNotMatch(
+  readinessPublisher,
+  /production-deploy\/callback/,
+  'release readiness must not regress to the removed production-deploy callback',
 );
 assert.match(barrier, /\^\[0-9a-f\]\{40\}\$/, 'the barrier must require a full 40-character SHA');
 assert.doesNotMatch(
