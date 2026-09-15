@@ -1,7 +1,7 @@
 import 'server-only';
 
 import { controlReleaseStateStore } from '@asol/data-core/control-release-state';
-import { releaseReadinessStatusFromStore } from '@asol/vercel-deploy-core';
+import { applyReleaseStateMutation, releaseReadinessStatusFromStore, type ReleaseStateMutation } from '@asol/vercel-deploy-core';
 
 export type ReleaseReadinessStatus = 'pending' | 'ready' | 'failed';
 
@@ -21,4 +21,9 @@ const store = controlReleaseStateStore;
  */
 export async function releaseReadinessFor(revision: string): Promise<ReleaseReadinessStatus> {
   return releaseReadinessStatusFromStore(store, revision);
+}
+
+/** Signed release-worker write boundary for exact-SHA readiness. */
+export async function applyControlReleaseReadinessMutation(mutation: ReleaseStateMutation): Promise<void> {
+  await applyReleaseStateMutation(store, mutation);
 }

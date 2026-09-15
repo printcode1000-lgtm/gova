@@ -59,7 +59,7 @@ export async function publishReleaseReadiness(input: {
 
   const now = new Date().toISOString();
   const response = await fetch(
-    `${controlReleaseOrigin()}/api/super-admin/production-deploy/callback`,
+    `${controlReleaseOrigin()}/api/release-readiness`,
     {
       method: "POST",
       headers: {
@@ -138,7 +138,7 @@ export async function retractReleaseReadiness(input: {
   try {
     const now = new Date().toISOString();
     const response = await fetch(
-      `${controlReleaseOrigin()}/api/super-admin/production-deploy/callback`,
+      `${controlReleaseOrigin()}/api/release-readiness`,
       {
         method: "POST",
         headers: {
