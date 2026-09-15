@@ -146,6 +146,24 @@ function runTests(): void {
   }
   console.log('  ✔ Control declares the bounded profile-core + product credentials used by Super Admin user search.');
 
+  const controlDeletionKeys = [
+    'PROFILE_MEDIA_DATABASE_URL',
+    'PROFILE_MEDIA_DATABASE_AUTH_TOKEN',
+    'TURSO_NOTIFICATIONS_DATABASE_URL',
+    'TURSO_NOTIFICATIONS_AUTH_TOKEN',
+    'ORDERS_CORE_DATABASE_URL',
+    'ORDERS_CORE_DATABASE_AUTH_TOKEN',
+    'ORDERS_DISPUTES_AUDIT_DATABASE_URL',
+    'ORDERS_DISPUTES_AUDIT_DATABASE_AUTH_TOKEN',
+  ];
+  for (const key of controlDeletionKeys) {
+    assert(
+      (CONTROL_DECLARATION.requiredEnv as readonly string[]).includes(key),
+      `control: Super Admin account deletion requires ${key}`,
+    );
+  }
+  console.log('  ✔ Control declares representative profile, notification, and order-shard credentials required by account deletion.');
+
   // ---------------------------------------------------------------- no cross-account knowledge
   // Rule 0 at the data layer: a declaration may name only its own account.
   //
@@ -156,6 +174,10 @@ function runTests(): void {
   // credential for it — the notifications runtime stays the delivery owner — so
   // the rule below still catches a real notifications secret landing here.
   const CROSS_ACCOUNT_ORIGIN_ALLOWLIST = new Set(['ASOL_NOTIFICATIONS_URL']);
+  // Control is the owner of the destructive Super Admin account-deletion use case.
+  // Its canonical repository spans profile, notification and order shards, so those
+  // data-plane credentials are an explicit bounded exception. Deploy tokens remain isolated.
+  const CONTROL_ACCOUNT_DELETION_FOREIGN_KEYS = new Set(CONTROL_DECLARATION.requiredEnv);
   const isolatedServiceNames = ['notifications', 'products', 'orders', 'profiles'] as const;
   for (const declaration of Object.values(ACCOUNT_DECLARATIONS)) {
     if (declaration.name === 'gova' || declaration.name === 'submain' || declaration.name === 'sub2main') continue;
@@ -163,7 +185,10 @@ function runTests(): void {
       .filter((key) => !CROSS_ACCOUNT_ORIGIN_ALLOWLIST.has(key));
     for (const other of isolatedServiceNames) {
       if (other === declaration.name) continue;
-      const foreign = keys.filter((key) => key.includes(other.toUpperCase()));
+      const foreign = keys.filter((key) =>
+        key.includes(other.toUpperCase()) &&
+        !(declaration.name === 'control' && CONTROL_ACCOUNT_DELETION_FOREIGN_KEYS.has(key as never)),
+      );
       assert(
         foreign.length === 0,
         `${declaration.name} holds ${other} credentials: ${foreign.join(', ')}`,
@@ -174,7 +199,7 @@ function runTests(): void {
       );
     }
   }
-  console.log('  ✔ No declaration references another account.');
+  console.log('  ✔ Cross-account credentials remain isolated except the explicit control-owned account-deletion data plane.');
 
   // ---------------------------------------------------------------- gova is an explicit root deployment
   assert(GOVA_DECLARATION.serviceDir === undefined, 'gova has no serviceDir: it is the whole repo');

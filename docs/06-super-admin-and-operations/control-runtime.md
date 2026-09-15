@@ -166,6 +166,10 @@ from it.
 
 No value is ever read or printed.
 
+### Super Admin account deletion runtime credentials
+
+`/api/super-admin/users/delete` executes the canonical account-deletion repository inside the control runtime. Therefore control must receive every Turso shard credential touched by `collect_images`, order deletion, profile cleanup, notification cleanup, and the R2 profiles used by image cleanup. The deployment declaration is the source of truth for these credentials; `deploy:push` must sync them before control becomes READY. A missing shard credential is a deployment-contract failure and must not be deferred to request time.
+
 ### Super Admin account deletion order invariant
 
 Deleting an account from `/super-admin/users` deletes the complete marketplace order aggregate for every order in which that UID appears as buyer, seller, service provider, carrier, dispute participant, audit actor, quote participant, delivery-plan provider, or custom-request uploader. Order-domain rows are deleted child-first across their Turso shards; they are not anonymized and retained. The account-deletion registry and query-schema contract tests must change with this participant coverage.
