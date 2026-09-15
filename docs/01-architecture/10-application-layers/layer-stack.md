@@ -40,14 +40,14 @@ Configuration layer (src/core/config) — env reads only; crosses via injection
 
 | Layer | May import | Must never import |
 |---|---|---|
-| UI | Hooks, presentation components, browser-safe `@asol/*` | Repository, DB, Drizzle, server services |
-| Hooks | Client services | Repository, database, Drizzle |
+| UI | Hooks, presentation components, browser-safe `@asol/*` | Repository, DB, query builder, server services |
+| Hooks | Client services | Repository, database, query builder |
 | Client services | AsolApiClient | `fetch` directly, SQL, repository |
 | AsolApiClient | HTTP transport module | Direct DB |
 | Business API | Server service bootstrap | Repository direct, client services |
-| Server services | Query/command | Repository direct, Drizzle, DB client |
-| Query/command | Repository interfaces | DB client, Drizzle |
-| Repository | Database client, Drizzle in allowed zones | UI, hooks, client code |
+| Server services | Query/command | Repository direct, query builder, DB client |
+| Query/command | Repository interfaces | DB client, query builder |
+| Repository | Database client, query builder in allowed zones | UI, hooks, client code |
 | Database client | Drivers (inside data-core) | Application layers above |
 
 ## Hard bans
@@ -56,7 +56,6 @@ Configuration layer (src/core/config) — env reads only; crosses via injection
 |---|---|
 | `fetch()`, axios, XHR | `asol-http-transport.ts` |
 | Raw SQL | Repository, database client, provisioning |
-| `drizzle-orm` | Repository, `packages/data-core/src/core/database/**` |
 | `@libsql/client` | Database client, provisioning |
 | `process.env` | `src/core/config/*` |
 | Secrets in client bundles | Forbidden |

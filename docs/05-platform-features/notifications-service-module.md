@@ -29,11 +29,11 @@ leaves the machine.
 services/notifications/
 ├── package.json          # its own dependencies, installed remotely
 ├── package-lock.json
-├── next.config.ts        # turbopack root + better-sqlite3 alias
+├── next.config.ts        # turbopack root + embedded local database driver alias
 ├── tsconfig.json         # "@/*" resolves to ./generated/src/*
 ├── .vercelignore         # forces generated/ into the upload
 ├── stubs/
-│   └── better-sqlite3.js
+│   └── embedded local database driver.js
 ├── src/app/
 │   ├── layout.tsx
 │   └── api/
@@ -126,9 +126,9 @@ If the test reports a stale mirror:
 npx tsx scripts/sync-service-sources.ts notifications
 ```
 
-## The `better-sqlite3` stub
+## The `embedded local database driver` stub
 
-The shared data-access code keeps a local-SQLite branch for main-app
+The shared data-access code keeps a local-local database branch for main-app
 development. This deployment always runs against Turso, so the driver is
 unreachable here, and bundling the real native module would force a native build
 for code that cannot run.
@@ -139,9 +139,9 @@ routing mistake surfaces immediately instead of silently reading an empty file.
 ### The stub is not the guarantee — the composition root is
 
 This section used to claim `getServerDatabaseBackend()` could never return
-`sqlite` here. That was false, and the service smoke gate proved it: the backend
+`local database` here. That was false, and the service smoke gate proved it: the backend
 is resolved from the runtime context, and a data source of `local` selects
-sqlite in any deployment that asks. During a real `deploy:all` the profiles
+local database in any deployment that asks. During a real `deploy:all` the profiles
 account did exactly that, loaded a driver it does not ship, and answered 500 on
 every route reaching data — with a stub message naming a different account.
 
@@ -153,7 +153,7 @@ runtime, so the registrar takes no options and there is no stub to alias:
 registerDataCoreRuntimeConfigPorts();
 ```
 
-`npm run architecture:check` fails on any `better-sqlite3` reference outside an
+`npm run architecture:check` fails on any `embedded local database driver` reference outside an
 isolated test, so no configuration value can reach a driver this account does not
 ship. See `docs/08-troubleshooting/problems/every-server-route-500-unregistered-port.md`.
 
@@ -214,5 +214,4 @@ after any change to the grant format.
 |---|---|
 | The service never receives users, product, or shard credentials | It resolves no identities; the main app sends it a uid list that is already authorised. |
 | The service holds the Firebase and APNs credentials, the main app does not | Fan-out is the only thing that needs them. |
-| `services/` is excluded from the root `tsconfig.json` | The mirror resolves `drizzle-orm` from the service's own `node_modules`; type identity would clash if both graphs were checked together. |
 | `architecture:check` does not scan `services/` | It enforces the main app's layering. The service's boundary is enforced by its own contract test instead. |

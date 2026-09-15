@@ -5,6 +5,8 @@ import {
   type TransportKeyPolicy,
 } from "./index";
 
+export type { TransportKeyPolicy } from "./index";
+
 /** Validate an owned response immediately before serialization. */
 export function jsonContract<T>(data: T, policy: TransportKeyPolicy = {}): T {
   assertCamelCaseJsonKeys(data, { ...policy, label: policy.label ?? "owned JSON response" });

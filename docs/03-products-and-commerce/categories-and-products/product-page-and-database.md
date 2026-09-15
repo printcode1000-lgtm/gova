@@ -78,7 +78,7 @@ The server persists the values through `ProductRepository`, which writes the exp
 
 The products tab requests owner products by `mainCategoryId` and `subcategoryId` from the active products database:
 
-- SQLite in development
+- Turso in development
 - Turso in production
 
 The product card displays:

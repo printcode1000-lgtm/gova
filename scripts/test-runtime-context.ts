@@ -28,7 +28,7 @@ assert.equal(
  *
  * The runtime context used to carry a `dataSource` that Development resolved to
  * `local`, and every backend decision in the repository hung off it: a
- * filesystem SQLite database for server data, a filesystem provider for image
+ * filesystem database for server data, a filesystem provider for image
  * objects. That made `npm run dev` the one environment where a data-path bug
  * could not reproduce. The field is gone, and so is the environment variable
  * that set it — a string check here is what stops either from being reintroduced

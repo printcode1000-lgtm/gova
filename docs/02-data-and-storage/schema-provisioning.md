@@ -45,8 +45,8 @@ and no `.db` file anywhere.
 
 Two other representations exist and are **not** the SSOT:
 
-- Drizzle `sqliteTable(...)` declarations are the application's data mapping.
-  Turso speaks the SQLite dialect, so these stay exactly as they are.
+- query builder `TursoTable(...)` declarations are the application's data mapping.
+  Turso speaks the embedded local database dialect, so these stay exactly as they are.
 - Historical migrations under `.../migrations/` are history. They contain
   dropped, renamed and intermediate tables, so replaying or concatenating them
   does not describe the schema the databases have now.
@@ -69,7 +69,7 @@ describes; it never destroys or reseeds.
 A difference additive DDL cannot repair — a changed primary key, foreign key,
 CHECK constraint, uniqueness, default, type or nullability on a table that
 already exists — is reported as a **migration requirement** and fails the run.
-SQLite can only fix those by rebuilding the table and moving its rows, which is a
+The database engine can only fix those by rebuilding the table and moving its rows, which is a
 migration a person writes and reviews.
 
 Extra objects Turso has and the manifests do not are warnings, not drops. Exact
@@ -108,14 +108,12 @@ cloud database. Applying DDL belongs to the `deploy:all` release preflight.
 
 ## Migration pipeline (users)
 
-1. `drizzle.config.ts` → `packages/data-core/src/core/database/schema.ts`
+1. `query builder.config.ts` → `packages/data-core/src/core/database/schema.ts`
 2. Output: `packages/data-core/src/core/database/migrations/`
-3. Generate: `npm run db:drizzle -- generate`
 4. Update the matching desired-schema manifest, then apply with
    `db:schema:sync:release`
 
-The three root Drizzle config files export plain configuration objects and do
-not import `drizzle-kit`. The `db:drizzle` runner installs CLI `0.31.10` without
+The three root query builder config files export plain configuration objects and do
 saving it or changing the lockfile, executes the requested command, and always
 prunes the temporary tool afterward. This keeps the schema CLI out of the
 application dependency graph and allows the normal TypeScript check and full

@@ -5,7 +5,7 @@
 
 export type OperationType = 'SELECT' | 'INSERT' | 'UPDATE' | 'DELETE' | 'UNKNOWN';
 export type OperationStatus = 'pending' | 'success' | 'error';
-export type DbDriver = 'SQLite-Dev' | 'Turso-Production';
+export type DbDriver = 'Turso-Cloud' | 'Turso-Cloud';
 export type CacheSource = 'Memory' | 'IndexedDB' | 'Database' | 'HTTP';
 export type RefetchReason = 'stale' | 'windowFocus' | 'manual' | 'invalidation' | 'mount' | 'unknown';
 export type LayerName = 'ui' | 'hook' | 'service' | 'asol-api' | 'query' | 'repository' | 'database' | 'cache';

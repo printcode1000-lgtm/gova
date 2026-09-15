@@ -10,7 +10,7 @@ The database still lists `imageKey` values for the slides.
 
 Two failures stacked:
 
-1. **Autosave race:** a save could run before React flushed new `imageKey` values, then delete previously stored keys from storage while the next save wrote those keys back to SQLite/Turso without the files.
+1. **Autosave race:** a save could run before React flushed new `imageKey` values, then delete previously stored keys from storage while the next save wrote those keys back to Turso without the files.
 2. **Environment-specific URLs in the database:** persisting dev-only `/sync_data/...` URLs alongside `imageKey` breaks refresh and any non-local runtime (production, static export, Android OTA) that must resolve R2 URLs from `imageKey` only.
 
 ## Fix

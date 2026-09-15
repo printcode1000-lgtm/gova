@@ -211,7 +211,7 @@ async function main() {
 
   // Lifecycle scripts stay off: Vercel Sandboxes intentionally ship no `make`,
   // and nothing in the release closure needs a compiled native module. The
-  // sandbox used to install and then load-test a local SQLite driver here,
+  // sandbox used to install and then load-test a native local database module here,
   // which was only ever needed because Development ran against a filesystem
   // database; the release runtime reaches Turso over HTTP.
   let outcome = await runStep("npm", ["ci", "--ignore-scripts", "--no-audit", "--no-fund"]);

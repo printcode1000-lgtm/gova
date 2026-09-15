@@ -49,7 +49,7 @@ export async function trackAsolDbOp<T>(
     service: ctx?.service ?? 'AsolDB',
     queryOrCommand: `${op.toUpperCase()} ${storeName}/${key}`,
     repository: ctx?.repository ?? 'unknown',
-    dbDriver: 'SQLite-Dev',
+    dbDriver: 'Turso-Cloud',
     table: storeName,
     entity: ctx?.entity ?? storeName,
     operationType: inferOpType(op),

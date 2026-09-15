@@ -18,7 +18,7 @@ Application UI/Hooks
   → Query/Command (operations)
   → Repository (@asol/data-core domain doors)
   → Database Client (`packages/data-core/src/core/database/`, package-internal — no door exposes it)
-  → FINAL_SIDE_EFFECT (Turso / SQLite)
+  → FINAL_SIDE_EFFECT (Turso)
 
 Capability packages
   → Other @asol/* declared doors only

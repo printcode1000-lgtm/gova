@@ -8,7 +8,7 @@
 5. **Enforcement (`architecture-core`, 1 pkg)**: Static AST analysis, registry schemas, `architecture:check` runner.
 
 ## Mandatory Gateways
-- **Database Access**: `@asol/data-core` (exclusive owner of `better-sqlite3`, `@libsql/client`, `drizzle-orm`).
+- **Database Access**: `@asol/data-core` (exclusive owner of `local database driver`, `@libsql/client`, `legacy query-builder package`).
 - **Object Storage (R2/S3)**: `@asol/storage-core` (exclusive owner of `@aws-sdk/client-s3`).
 - **Capacitor / Native**: `@asol/native-core` (exclusive owner of `@capacitor/*`, `@capawesome/*`, `@capgo/*`).
 - **Page Writes**: `@asol/page-save-core` (single-door gateway for user page edits).

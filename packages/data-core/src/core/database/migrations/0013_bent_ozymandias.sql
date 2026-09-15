@@ -1,1 +1,0 @@
-ALTER TABLE `users` ADD `provider_account_enabled` integer DEFAULT false NOT NULL;

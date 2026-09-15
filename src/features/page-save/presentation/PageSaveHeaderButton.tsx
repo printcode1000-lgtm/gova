@@ -80,8 +80,8 @@ function PageSaveHeaderControl({ id,
       ) : isSaving ? (
         <LoadingSpinner
           id={id ? `${id}-loading-spinner-5a87bc` : undefined}
-          size="sm"
-          className="relative z-10"
+          size="md"
+          className="relative z-10 h-[calc(100%-4px)] w-[calc(100%-4px)] [&>div]:h-full [&>div]:w-full"
         />
       ) : (
         <Save

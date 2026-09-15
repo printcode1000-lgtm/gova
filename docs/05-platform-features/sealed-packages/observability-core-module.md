@@ -16,7 +16,7 @@ concern lived on both sides of a seal.
 | `.` | `@asol/observability-core` | Browser application runtime | Monitor store, API/DB monitors, query observer, `registerMonitorTelemetry`, dev-trace vocabulary |
 | `./dev-trace` | `@asol/observability-core/dev-trace` | Anything | The trace header name and its parser — **nothing else** |
 | `./api-monitor` | `@asol/observability-core/api-monitor` | Browser + server / React Server | Load-safe HTTP tracking seam; server requests bypass browser monitor loading, development browsers lazy-load it |
-| `./server` | `@asol/observability-core/server` | Server only | `runWithDevTrace`, `traceServerLayer`, the drizzle logger, `registerServerMonitorTelemetry` |
+| `./server` | `@asol/observability-core/server` | Server only | `runWithDevTrace`, `traceServerLayer`, the query builder logger, `registerServerMonitorTelemetry` |
 
 ### Why four doors
 

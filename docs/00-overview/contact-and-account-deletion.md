@@ -120,7 +120,7 @@ were superseded by `profile_images` and do not exist on the live
 - `npm run test:account-deletion-schema` parses every repository `SELECT`, opens
   the desired-schema manifest that owns each table, and fails when a referenced
   table or column does not exist. Absent optional shards are reported and
-  skipped rather than causing `SQLITE_CANTOPEN`.
+  skipped rather than causing `database-open failure`.
 - When adding migrations that store per-user data, update the registry in the same change.
 
 ### API Response Fields

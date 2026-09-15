@@ -1,9 +1,6 @@
 import { advertisementsDataSource } from "../../../core";
 import "server-only";
 
-import { eq } from "drizzle-orm";
-
-import { featuredMarquee } from "../../../core/database/advertisements/advertisements.schema";
 import type { IDatabaseClient } from "../../../core/database/database-client.interface";
 import {
   DEFAULT_FEATURED_MARQUEE_CONFIG,
@@ -56,27 +53,21 @@ export class FeaturedMarqueeRepository {
       updatedAt: new Date().toISOString(),
       updatedBy: actorUid,
     };
-    if (await this.getRow()) {
-      await this.database.db
-        .update(featuredMarquee)
-        .set(values)
-        .where(eq(featuredMarquee.id, FEATURED_MARQUEE_ID));
-    } else {
-      await this.database.db.insert(featuredMarquee).values({
-        id: FEATURED_MARQUEE_ID,
-        ...values,
-      });
-    }
+    await this.database.execute(
+      `INSERT INTO featured_marquee (id, product_ids_json, version, check_interval_minutes, updated_at, updated_by)
+       VALUES (?, ?, ?, ?, ?, ?)
+       ON CONFLICT(id) DO UPDATE SET product_ids_json = excluded.product_ids_json, version = excluded.version, check_interval_minutes = excluded.check_interval_minutes, updated_at = excluded.updated_at, updated_by = excluded.updated_by`,
+      [FEATURED_MARQUEE_ID, values.productIdsJson, values.version, values.checkIntervalMinutes, values.updatedAt, values.updatedBy],
+    );
     return this.get();
   }
 
-  private async getRow() {
-    const rows = await this.database.db
-      .select()
-      .from(featuredMarquee)
-      .where(eq(featuredMarquee.id, FEATURED_MARQUEE_ID))
-      .limit(1);
-    return rows[0] ?? null;
+  private async getRow(): Promise<{ productIdsJson: string; version: number; checkIntervalMinutes: number; updatedAt: string; updatedBy: string | null } | null> {
+    const rows = await this.database.execute(
+      `SELECT product_ids_json AS productIdsJson, version, check_interval_minutes AS checkIntervalMinutes, updated_at AS updatedAt, updated_by AS updatedBy FROM featured_marquee WHERE id = ? LIMIT 1`,
+      [FEATURED_MARQUEE_ID],
+    );
+    return (rows[0] as any) ?? null;
   }
 }
 

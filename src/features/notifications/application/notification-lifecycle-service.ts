@@ -64,6 +64,12 @@ export class NotificationLifecycleService {
     await notificationBadgeService.refresh(uid);
     emitNotificationChanged(uid);
   }
+
+  async clearAll(uid: string): Promise<void> {
+    await asolNotificationRepository.clear(uid);
+    await notificationBadgeService.refresh(uid);
+    emitNotificationChanged(uid);
+  }
 }
 
 export const notificationLifecycleService = new NotificationLifecycleService();

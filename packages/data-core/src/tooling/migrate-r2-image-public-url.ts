@@ -3,7 +3,7 @@
  * copying each object across on the way.
  *
  * Turso only. It used to run the same rewrite twice — once against a local
- * SQLite copy of each database and once against the cloud — which meant the
+ * local copy of each database and once against the cloud — which meant the
  * local pass could report success on rows no user would ever read. There is one
  * copy of this data now, so there is one pass.
  */
@@ -146,7 +146,7 @@ function credentialsFor(prefix: string): { url: string; authToken: string } | nu
 
 async function tursoTableExists(client: Client, table: string): Promise<boolean> {
   const result = await tursoExecuteWithTimeout(client, {
-    sql: "SELECT 1 ok FROM sqlite_master WHERE type='table' AND name=? LIMIT 1",
+    sql: "SELECT 1 ok FROM pragma_table_list WHERE type='table' AND name=? LIMIT 1",
     args: [table],
   });
   return result.rows.length > 0;

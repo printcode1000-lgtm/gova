@@ -1,5 +1,8 @@
-import { jsonContractResponse, readJsonContractBody } from '@asol/api-contract-core/server';
-import type { TransportKeyPolicy } from '@asol/api-contract-core';
+import {
+  jsonContractResponse,
+  readJsonContractBody,
+  type TransportKeyPolicy,
+} from '@asol/api-contract-core/server';
 import {
   handleCorsPreflight,
   resolveCorsHeaders,

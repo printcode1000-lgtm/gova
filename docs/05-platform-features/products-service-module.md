@@ -12,10 +12,10 @@ machine.
 ```text
 services/products/
 ├── package.json          # its own dependencies, installed remotely
-├── next.config.ts        # turbopack root + better-sqlite3 alias
+├── next.config.ts        # turbopack root + embedded local database driver alias
 ├── tsconfig.json         # "@/*" resolves to ./generated/src/*
 ├── .vercelignore         # forces generated/ into the upload
-├── stubs/better-sqlite3.js
+├── stubs/embedded local database driver.js
 ├── src/
 │   ├── app/lib/http.ts   # CORS + error mapping, no logging/tracing graph
 │   └── app/api/
@@ -127,4 +127,3 @@ curl "https://asol-products.vercel.app/api/search/fields?mainCategoryId=1&subcat
 | Reads only | Writes touch the profiles database, which this account cannot reach. |
 | No `/api/search/sellers` | It reads profile shards, not products. |
 | The bridge redirects `GET` only, in the browser only | A redirected write, or a server-side redirect, would make the two accounts depend on each other. |
-| `services/` is excluded from the root `tsconfig.json` | The mirror resolves `drizzle-orm` from the service's own `node_modules`; type identity would clash if both graphs were checked together. |

@@ -17,7 +17,7 @@ export function isRetrySafeTursoRead(sql: string): boolean {
   const normalized = sql.trim();
   if (/^(?:SELECT|PRAGMA)\b/i.test(normalized)) return true;
   if (!/^WITH\b/i.test(normalized)) return false;
-  // SQLite accepts WITH before mutations too. Retry only CTEs with no
+  // The cloud SQL dialect accepts WITH before mutations too. Retry only CTEs with no
   // mutating statement anywhere; a false negative costs resilience, while a
   // false positive could apply a write twice after a lost response.
   return !/\b(?:INSERT|UPDATE|DELETE|REPLACE|CREATE|ALTER|DROP)\b/i.test(normalized);

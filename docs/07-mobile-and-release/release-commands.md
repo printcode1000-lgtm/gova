@@ -255,7 +255,7 @@ as Vercel's project root. It marks the upload with `ASOL_GOVA_UPLOAD_VIEW=1`, so
 `build:vercel` builds the already-uploaded root and writes `.next` there.
 
 The view replaces the application backend `instrumentation.ts` with an empty
-frontend entrypoint and skips the application's global Drizzle trace inclusion.
+frontend entrypoint and skips the application's global query builder trace inclusion.
 Next traces conditional imports, so both protections are required to prevent
 database drivers from reaching a frontend artifact that has no database
 capability. Its `vercel.json` sets `outputDirectory` to `.next`.

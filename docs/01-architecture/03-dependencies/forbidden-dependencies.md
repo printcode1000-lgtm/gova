@@ -25,8 +25,7 @@ Import and dependency anti-patterns across `src/`, `packages/`, `scripts/`, and 
 
 | Forbidden import | Owner only |
 |---|---|
-| `@libsql/client`, `drizzle-orm`, `@libsql/*`, `drizzle-orm/*` | `@asol/data-core` |
-| `better-sqlite3` | nothing outside an isolated test — it is a devDependency with no production, build, provisioning or tooling importer |
+| `embedded local database driver` | nothing outside an isolated test — it is a devDependency with no production, build, provisioning or tooling importer |
 | `@capacitor/*`, `@capawesome/*`, `@capgo/*`, `@capacitor-mlkit/*` | `@asol/native-core` |
 | Direct `fetch` in client services | Use `asol-http-transport.ts` |
 | `localStorage`, `indexedDB` globals | Use `@asol/data-core/browser` adapters |
@@ -37,7 +36,7 @@ ESLint messages cite the owning package. Scan: `checkVendorOwnershipContract`.
 
 | Layer | Forbidden imports |
 |---|---|
-| UI / Hooks | Repository, Drizzle, `@libsql/*`, server services |
+| UI / Hooks | Repository, query builder, `@libsql/*`, server services |
 | Client components | `server-only` modules |
 | Client services | Raw `fetch`, SQL, repository |
 | Business API routes | Direct repository, operations layer skip |
@@ -63,7 +62,7 @@ ESLint blocks imports from consolidated legacy locations:
 
 | Bypass attempt | Mandatory gateway |
 |---|---|
-| Direct SQL or Drizzle outside data-core | `@asol/data-core` |
+| Direct SQL or query builder outside data-core | `@asol/data-core` |
 | Direct S3/R2 SDK outside storage-core | `@asol/storage-core` |
 | Direct Capacitor outside native-core | `@asol/native-core` |
 | Page UI writing persistence outside page-save | `@asol/page-save-core` |

@@ -37,12 +37,12 @@ async function main() {
   console.log("Provisioning Turso profile/orders shards...");
   await provisionDatabaseShards();
 
-  console.log("Running schema synchronization (SQLite to Turso, schema only)...");
+  console.log("Running schema synchronization (desired schema to Turso, schema only)...");
   const reports = await runAllSchemaSyncs({ removeExtraObjects: true });
 
   console.log("Turso provisioning and schema sync completed.");
   for (const [label, report] of Object.entries(reports)) {
-    console.log(`   [${label}] SQLite version : ${report.desiredSchemaVersion}`);
+    console.log(`   [${label}] Desired schema version : ${report.desiredSchemaVersion}`);
     console.log(`   [${label}] Turso after    : ${report.tursoSchemaVersionAfter}`);
     console.log(`   [${label}] DDL operations : ${report.operations.length}`);
   }

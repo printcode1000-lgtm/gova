@@ -18,15 +18,11 @@
  */
 
 export interface DatabaseQueryDescriptor {
-  /** Driver label, e.g. `Turso-Production` or `SQLite-Dev`. */
+  /** Driver label, e.g. `Turso-Cloud`. */
   readonly driver: string;
   readonly sql: string;
   readonly params: readonly unknown[];
   readonly table: string;
-}
-
-export interface QueryLogger {
-  logQuery(query: string, params: unknown[]): void;
 }
 
 export interface DataCoreTelemetryPort {
@@ -47,8 +43,6 @@ export interface DataCoreTelemetryPort {
     operation: string,
     action: () => Promise<T>,
   ): Promise<T>;
-  /** Drizzle's optional logger. `undefined` means "attach none". */
-  createQueryLogger(): QueryLogger | undefined;
 }
 
 const NO_TELEMETRY: DataCoreTelemetryPort = {
@@ -56,7 +50,6 @@ const NO_TELEMETRY: DataCoreTelemetryPort = {
   traceDatabaseQuery: (_descriptor, action) => action(),
   traceServerLayer: (_layer, _name, action) => action(),
   traceBrowserDatabaseOperation: (_store, _key, _operation, action) => action(),
-  createQueryLogger: () => undefined,
 };
 
 let telemetry: DataCoreTelemetryPort = NO_TELEMETRY;
@@ -96,8 +89,4 @@ export function traceBrowserDatabaseOperation<T>(
   action: () => Promise<T>,
 ): Promise<T> {
   return telemetry.traceBrowserDatabaseOperation(store, key, operation, action);
-}
-
-export function createDrizzleDevLogger(): QueryLogger | undefined {
-  return telemetry.createQueryLogger();
 }

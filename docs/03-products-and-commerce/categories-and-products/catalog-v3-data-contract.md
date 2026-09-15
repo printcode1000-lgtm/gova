@@ -7,7 +7,7 @@ relationships, the fixed pharmacy catalog and vehicle options. It is designed fo
 runtime loading and the development-only Catalog Studio visual editor.
 
 The root is `public/catagory`. The legacy spelling is retained only as a public compatibility
-boundary. No SQLite database or database-to-JSON exporter owns these files.
+boundary. No local database or database-to-JSON exporter owns these files.
 
 ## Layout
 

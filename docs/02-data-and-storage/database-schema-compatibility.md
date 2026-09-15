@@ -44,7 +44,7 @@ reporting success over a drifted cloud schema.
 
 A difference additive DDL **cannot** repair — a changed primary key, foreign key,
 CHECK constraint, uniqueness, default, type or nullability on an existing table —
-is reported as a migration requirement and fails the run. SQLite can only fix
+is reported as a migration requirement and fails the run. The database engine can only fix
 those by rebuilding the table and moving its rows, which is a migration a person
 writes and reviews.
 

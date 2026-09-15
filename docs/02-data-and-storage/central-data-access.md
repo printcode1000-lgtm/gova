@@ -85,8 +85,8 @@ router. The adapter resolves each table to its declared order shard.
 ### One backend, every runtime
 
 There is no backend to select. `resolveServerDatabaseBackend` used to answer
-`sqlite` whenever the runtime called itself development, so `npm run dev` served
-application data from files under `public/sync_data/sync_sqlite` while every
+`local database` whenever the runtime called itself development, so `npm run dev` served
+application data from files under `public/sync_data/legacy local database mirror` while every
 deployed runtime served it from Turso. Development was therefore the one
 environment in which a data-path bug could not reproduce.
 
@@ -108,7 +108,7 @@ configured credentials represent.
 - UI, hooks, and client services cannot import server data-access entry points.
 - Server services consume `@asol/data-core/<domain>` or a typed query or
   command. They do not import database adapters.
-- Only `packages/data-core/src` may import Drizzle or
+- Only `packages/data-core/src` may import query builder or
   `@libsql/client` — and `src/core/database/`, where those live, has **no door
   at all**, so the seal enforces it rather than a path pattern.
 - Only `packages/data-core/src` may contain production SQL.
@@ -163,3 +163,7 @@ fulfillment, reviews, auth user/profile, product reviews, follow, seller discoun
 catalog overrides, product-search request/result types, and profile working hours) are owned under
 each domain's browser-safe `./<domain>/entities` door. Application feature entity files re-export
 from those doors.
+
+## Cloud-only database implementation
+
+Server persistence uses Turso through the libSQL client and repository-owned parameterized SQL. The repository contains no embedded/local SQL database driver and no ORM/query-builder runtime. Desired-schema manifests are the schema authority; provisioning synchronizes those manifests directly with the matching Turso databases. Development and production therefore exercise the same cloud database path.

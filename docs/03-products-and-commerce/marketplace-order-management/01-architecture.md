@@ -26,7 +26,7 @@ Order
 ## Layer responsibilities
 
 - `domain`: enums, entity contracts, shared types, and the minor-unit money value object.
-- `db`: environment configuration, SQLite/Turso adapters, schema inventory, migration, and test adapter.
+- `db`: environment configuration, Turso adapters, schema inventory, migration, and test adapter.
 - `repositories`: CRUD access for every aggregate table and protected order-status updates.
 - `services`: transactional business operations and lifecycle orchestration.
 - `validators`: attachment, money, item-reference, eligibility, expiry, and ownership guards.

@@ -315,7 +315,7 @@ function runProvisioningPurityTest() {
     const content = readFileSync(file, 'utf8');
     const relative = path.relative(ROOT, file);
     assert.ok(
-      !content.includes('better-sqlite3'),
+      !content.includes('local database driver'),
       `${relative} imports a local database driver; provisioning must compute its schema from source.`,
     );
     assert.ok(
@@ -328,7 +328,7 @@ function runProvisioningPurityTest() {
     path.join(toolingDir, 'provision-database-shards.ts'),
     'utf8',
   );
-  for (const forbidden of ['DROP TABLE', 'DELETE FROM', 'INSERT OR REPLACE', 'better-sqlite3']) {
+  for (const forbidden of ['DROP TABLE', 'DELETE FROM', 'INSERT OR REPLACE', 'local database driver']) {
     assert.ok(
       !provisionShards.includes(forbidden),
       `Shard provisioning contains "${forbidden}". Provisioning creates and describes; it never destroys or reseeds.`,

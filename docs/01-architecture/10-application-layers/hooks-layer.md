@@ -23,7 +23,7 @@ Hooks under `src/features/**/hooks/`, feature hooks, and colocated `use*.ts` fil
 ## Must never import
 
 - Repository or operations layer
-- Database client, Drizzle, drivers
+- Database client, query builder, drivers
 - Server services
 - `server-only` modules
 

@@ -87,7 +87,7 @@ const [config, setConfig] = useState<HeroSliderConfig>(initialConfig);
 <HeroSlider mode="admin-edit" config={config} onChange={setConfig} />;
 ```
 
-The super-admin page has one "Save" button next to the check interval inputs. Edits and local image previews stay in the admin session until Save runs: pending uploads are flushed to storage, the configuration is written to SQLite/Turso, the Home cache is invalidated, and subscribers refresh. Home does not reflect draft edits before Save.
+The super-admin page has one "Save" button next to the check interval inputs. Edits and local image previews stay in the admin session until Save runs: pending uploads are flushed to storage, the configuration is written to Turso, the Home cache is invalidated, and subscribers refresh. Home does not reflect draft edits before Save.
 
 ### `images-edit`
 
@@ -341,7 +341,7 @@ Saving rejects managed slide URLs without `imageKey`. Removed keys are deleted o
 
 Development uses the same R2 public URLs as every other runtime. The project-wide image policy disables the Next.js Image Optimizer everywhere, so slide URLs are requested directly and never pass through `/_next/image`.
 
-Removing an image in the editor only changes the local form. On Save, the server first commits the new configuration to SQLite or Turso. Only after that succeeds does it delete removed managed image keys from local storage or R2. A failed database save never deletes a referenced image, and there is no delayed cleanup queue.
+Removing an image in the editor only changes the local form. On Save, the server first commits the new configuration to embedded local database or Turso. Only after that succeeds does it delete removed managed image keys from local storage or R2. A failed database save never deletes a referenced image, and there is no delayed cleanup queue.
 
 ## Profile slider architecture
 

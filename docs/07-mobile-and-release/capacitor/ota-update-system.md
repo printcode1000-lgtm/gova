@@ -967,7 +967,6 @@ the classifier and stops before building or uploading anything.
 After adding or changing approval tables, apply/synchronize the schema before deploying the API:
 
 ```powershell
-npm run db:drizzle -- migrate
 npm run db:schema:sync
 ```
 

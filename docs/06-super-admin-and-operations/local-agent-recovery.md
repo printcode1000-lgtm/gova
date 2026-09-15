@@ -23,7 +23,7 @@ gova-agent recovery restore /path/to/gova-agent-recovery.tar.gz /empty/restore-r
 Every archive contains a manifest and SHA-256 checksum map plus the following operational state:
 
 1. A Git bundle created from all local refs. This preserves `integration`, every local-only `agent/<agent>/<task>` branch, their commits, and the committed Local Agent source even if GitHub is unavailable.
-2. A consistent SQLite snapshot created with SQLite's backup API. The WAL-backed live database is never copied as a loose file while writes are active. The snapshot preserves agents, tasks, commands, locks, messages, handoffs, checkpoints/events, and other committed runtime rows.
+2. A consistent runtime database snapshot created with embedded local database's backup API. The WAL-backed live database is never copied as a loose file while writes are active. The snapshot preserves agents, tasks, commands, locks, messages, handoffs, checkpoints/events, and other committed runtime rows.
 3. Every registered Git worktree's path, HEAD, branch, detached state, Git status, staged binary patch, unstaged binary patch, and safe untracked files. This preserves work that has not reached a commit yet.
 4. A required-source inventory for the files needed to reinstall and validate the runtime:
    - `.github/workflows/local-agent-bootstrap.yml`
@@ -64,7 +64,7 @@ Safe untracked worktree files are copied. Untracked paths with credential-like n
 
 - verifies SHA-256 for every archived payload file;
 - confirms the exact `integration` commit exists in `repository.bundle`;
-- runs SQLite `PRAGMA integrity_check` on the runtime snapshot;
+- runs embedded local database `PRAGMA integrity_check` on the runtime snapshot;
 - verifies the required runtime tables exist;
 - verifies the manifest format and reports the number of captured worktrees and required source files.
 
@@ -76,7 +76,7 @@ A bundle that fails verification must not be used for recovery.
 
 1. verifies the archive first;
 2. clones the Git bundle into `<target>/repo` and pins that checkout to the captured `integration` SHA;
-3. restores the SQLite snapshot to `<target>/runtime/runtime.sqlite3`;
+3. restores the runtime database snapshot to `<target>/runtime/runtime state database`;
 4. rebuilds captured worktrees under `<target>/worktrees/`;
 5. reapplies staged changes to the index, reapplies unstaged changes to the working tree, and restores safe untracked files;
 6. writes `<target>/RECOVERY.json` with exact follow-up actions.
@@ -89,7 +89,7 @@ After an isolated restore has been inspected:
 
 1. stop the live `gova-agent-gateway.service` before replacing a live runtime database;
 2. place the chosen recovered repository at the intended canonical location;
-3. place the verified recovered SQLite database at the intended runtime location;
+3. place the verified recovered local database at the intended runtime location;
 4. run `tools/local-agent/install.sh` from the recovered `integration` checkout;
 5. let the installer create a fresh gateway auth key when necessary;
 6. run `gova-agent health`, `gova-agent diagnostics`, and `gova-agent-monitor --once`;

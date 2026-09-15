@@ -77,7 +77,7 @@ export function classifyContextRisk(input: {
   if (writeEvidence) reasons.push('data write / persistence gateway evidence');
 
   const storageish = [...seeds, ...owners].some((node) =>
-    /storage|database|turso|drizzle|schema|repository/i.test(`${node.name} ${node.path || ''}`),
+    /storage|database|turso|query builder|schema|repository/i.test(`${node.name} ${node.path || ''}`),
   );
   if (storageish) reasons.push('storage/database access evidence');
 

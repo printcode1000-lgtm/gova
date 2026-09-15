@@ -525,6 +525,10 @@ export class NotificationsFacade {
     );
   }
 
+  async clearAll(input: { uid: string }): Promise<void> {
+    await notificationLifecycleService.clearAll(assertUid(input.uid));
+  }
+
   /**
    * Mark a notification opened and hand its deep link back.
    *

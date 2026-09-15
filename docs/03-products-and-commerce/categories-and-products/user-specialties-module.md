@@ -41,7 +41,7 @@ The module follows the project's standard layered architecture:
                               ↓
 ┌─────────────────────────────────────────────────────────────┐
 │                    Database Layer                             │
-│  user_specialties table (Drizzle ORM)                        │
+│  user_specialties table (query builder ORM)                        │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -49,7 +49,7 @@ The module follows the project's standard layered architecture:
 
 ### Database Schema
 - **Location**: `packages/data-core/src/core/database/profile/user-specialties.schema.ts`
-- **Description**: Drizzle ORM schema definition for the `user_specialties` table
+- **Description**: query builder ORM schema definition for the `user_specialties` table
 - **Columns**: Boolean columns for each specialty (e.g., `womens_clothing_1`, `hijab_fashion_13`, etc.)
 
 ### Repository Layer

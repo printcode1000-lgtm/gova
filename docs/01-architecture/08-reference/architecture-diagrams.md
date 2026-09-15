@@ -75,7 +75,7 @@ flowchart TB
 │ DB Client   │  @asol/data-core
 └──────┬──────┘
        ▼
-   SQLite / Turso
+   Turso
 ```
 
 Detail: [layer-stack.md](../10-application-layers/layer-stack.md).
@@ -105,7 +105,7 @@ Client bootstrap
 
 ```text
                     ┌──────────────────┐
-   Application ────►│  @asol/data-core │────► Turso / SQLite
+   Application ────►│  @asol/data-core │────► Turso
                     └──────────────────┘
                     ┌────────────────────┐
    Application ────►│ @asol/storage-core │────► R2 / S3

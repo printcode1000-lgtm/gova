@@ -15,7 +15,6 @@ Derived list: `OWNED_VENDOR_MODULES` in `packages/architecture-core/src/registry
 | Vendor module | Owner package | Capability |
 |---|---|---|
 | `@libsql/client` | `@asol/data-core` | Turso remote |
-| `drizzle-orm`, `drizzle-orm/libsql` | `@asol/data-core` | Query layer |
 | `@aws-sdk/client-s3` | `@asol/storage-core`, `@asol/ota-core` | Product media vs OTA artifacts (dual ownership, distinct jobs) |
 | `@aws-sdk/s3-request-presigner` | `@asol/storage-core` | Presigned URLs |
 | `@capacitor/cli`, `@capacitor/core`, all `@capacitor/*` plugins listed in registry | `@asol/native-core` | Native shell |

@@ -17,7 +17,7 @@ whether the current runtime is a developer's machine**, so developer-only toolin
 can refuse to run on Vercel, during a static export, or in a production build.
 
 Located at `packages/dev-core/`, it owns no data. It used to also own the local
-development *data* contract — path segments under `public/sync_data/`, SQLite
+development *data* contract — path segments under `public/sync_data/`, embedded local database
 filename constants, shard file naming, and the public URL a locally stored image
 was served from. None of that exists any more: server application data is Turso
 and image objects are Cloudflare R2 in every runtime, Development included.

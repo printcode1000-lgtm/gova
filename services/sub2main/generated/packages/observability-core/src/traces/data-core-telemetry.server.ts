@@ -10,15 +10,12 @@ import 'server-only';
  */
 import { registerDataCoreTelemetry } from '@asol/data-core/telemetry';
 
-import { createDrizzleDevLogger } from '../traces/drizzle-dev-logger';
 import { traceServerLayer } from '../traces/trace-server-layer';
 import type { DevTraceLayer } from '../traces/dev-trace-types';
-import { isObservabilityEnabled } from '../ports';
 
 export function registerServerMonitorTelemetry(): void {
   registerDataCoreTelemetry({
     traceServerLayer: (layer, name, action) =>
       traceServerLayer(layer as DevTraceLayer, name, action),
-    createQueryLogger: () => (isObservabilityEnabled() ? createDrizzleDevLogger() : undefined),
   });
 }

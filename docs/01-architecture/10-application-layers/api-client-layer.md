@@ -22,7 +22,7 @@ Central HTTP client module(s) — all network I/O from browser client services f
 
 ## Must never import
 
-- Repository, Drizzle, drivers
+- Repository, query builder, drivers
 - Server services
 - Secrets or server env vars
 

@@ -17,7 +17,7 @@ Runtime context detection and isolation policies. Deployment targets: [docs/07-m
 
 | Context | Detection | DB | R2 write | Capacitor | Push send |
 |---|---|---|---|---|---|
-| Next dev/server | Node server | SQLite/Turso via data-core | Yes (server) | No | Yes (server) |
+| Next dev/server | Node server | Turso via data-core | Yes (server) | No | Yes (server) |
 | Vercel serverless | Node | Turso | Yes | No | Yes |
 | Browser (hosted) | Client bundle | IndexedDB via data-core/browser | Presign read | No | Register only |
 | Static export / OTA | `output: 'export'` | No direct DB | Via remote API | Via native-core | Native path |

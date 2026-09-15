@@ -1,1 +1,0 @@
-ALTER TABLE `user_notification_tokens` ADD `specialty_requests_enabled` integer DEFAULT true NOT NULL;

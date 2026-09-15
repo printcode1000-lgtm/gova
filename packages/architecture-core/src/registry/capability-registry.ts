@@ -125,8 +125,6 @@ export const CAPABILITY_PACKAGES: readonly CapabilityPackage[] = [
     layer: 'capability',
     vendorModules: [
       '@libsql/client',
-      'drizzle-orm',
-      'drizzle-orm/libsql',
     ],
     mayImportApp: false,
   },

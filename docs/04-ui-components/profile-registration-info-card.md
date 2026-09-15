@@ -23,4 +23,4 @@ Before the change-password control, the card renders a collapsed-by-default acti
 
 ## Ownership Boundary
 
-Account mode is authenticated user state, not store metadata. The auth/users domain owns SQLite/Turso persistence and session hydration. The profile presentation layer only edits the typed registration field and derives visibility from the controlled draft value.
+Account mode is authenticated user state, not store metadata. The auth/users domain owns Turso persistence and session hydration. The profile presentation layer only edits the typed registration field and derives visibility from the controlled draft value.

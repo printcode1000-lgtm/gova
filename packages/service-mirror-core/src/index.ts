@@ -345,8 +345,8 @@ const NODE_BUILTINS = new Set(builtinModules);
  * or `serverExternalPackages`.
  *
  * A package listed there is resolved, just not through `package.json`, so requiring it as a
- * declared dependency would be wrong. The standing case used to be `better-sqlite3`: the shared
- * data-access code carried a local-SQLite branch for main-app development, and every service
+ * declared dependency would be wrong. The standing case used to be a native local database driver: the shared
+ * data-access code carried a local-database branch for main-app development, and every service
  * aliased the driver to a throwing stub because that branch was unreachable in a Turso-only
  * deployment. The branch is gone, so the stubs are too — a driver nothing imports needs no alias.
  */

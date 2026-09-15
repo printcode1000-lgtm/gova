@@ -2,7 +2,7 @@
 
 ## Multi-Database Sharding Architecture
 
-The repository employs a multi-database sharding strategy powered by **Drizzle ORM** with dual-driver support (`better-sqlite3` for local development and `@libsql/client` for Turso cloud production).
+The repository employs a multi-database sharding strategy powered by **query builder ORM** with dual-driver support (`local database driver` for local development and `@libsql/client` for Turso cloud production).
 
 ```text
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -30,7 +30,7 @@ The repository employs a multi-database sharding strategy powered by **Drizzle O
 
 ## Inode-Aware SQLite Connection Caching (`CachedSqliteConnection`)
 
-In local development with `better-sqlite3`, connections are wrapped with `CachedSqliteConnection` (`packages/data-core/src/core/database/cached-sqlite-connection.ts`).
+In local development with `local database driver`, connections are wrapped with `CachedSqliteConnection` (`packages/data-core/src/core/database/cached-sqlite-connection.ts`).
 
 - **Problem solved**: Rebuilding a local database (`db:create:*`, cloud restore, or shard split) unlinks the SQLite file and places a new inode at the same path. An unmanaged cached handle remains bound to the unlinked inode, causing stale reads and failing all subsequent writes with `SQLITE_READONLY: attempt to write a readonly database` until the Next.js dev server restarts.
 - **Solution**: `readSqliteFileIdentity(databasePath)` reads the OS filesystem device/inode pair (`${stats.dev}:${stats.ino}`). When a rebuild changes the inode, `CachedSqliteConnection` automatically closes the orphaned handle and establishes a clean connection on the next query with zero downtime.

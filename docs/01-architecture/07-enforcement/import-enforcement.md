@@ -25,8 +25,7 @@ Catalog ESLint and architecture-scan import rules agents encounter daily.
 ### Database — owner `@asol/data-core`
 
 ```javascript
-{ name: 'better-sqlite3', message: 'Database drivers belong to @asol/data-core only.' }
-{ group: ['@libsql/*', 'drizzle-orm/*'], ... }
+{ name: 'embedded local database driver', message: 'Database drivers belong to @asol/data-core only.' }
 { group: ['@asol/data-core/src/**', '**/packages/data-core/**'], ... }
 ```
 

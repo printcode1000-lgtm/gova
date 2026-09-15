@@ -418,7 +418,7 @@ export function SuperAdminCloudAccountsContent() {
         <span id='features-super-admin-presentation-superadmincloudaccountscontent-text-110-bt9gnh' dir="ltr">asol-notifications</span> · 3 جداول —{" "}
         <span id='features-super-admin-presentation-superadmincloudaccountscontent-text-111-yhzm0d' dir="ltr">user_notification_tokens</span>،{" "}
         <span id='features-super-admin-presentation-superadmincloudaccountscontent-text-112-swywto' dir="ltr">user_notification_preferences</span>، بالإضافة إلى
-        سجلات drizzle الداخلية.
+        سجلات query builder الداخلية.
       </Note>
 
       <SubTitle id='features-super-admin-presentation-superadmincloudaccountscontent-subtitle-113-kvkbxu'>hesham103 — المنتجات</SubTitle>

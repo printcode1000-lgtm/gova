@@ -12,7 +12,7 @@ See sections below. Architectural relationships defer to [docs/01-architecture/R
 
 | Layer | How to test |
 |-------|-------------|
-| Repository | Mock `IDatabaseClient` or in-memory Drizzle |
+| Repository | Mock `IDatabaseClient` or in-memory query builder |
 | Server Service | Mock `IUserRepository` / `IProfileRepository` |
 | Business API | Integration tests against route handlers + test DB |
 | Client Service | Mock `asolApi` methods |

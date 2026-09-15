@@ -4,9 +4,8 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
   },
-  serverExternalPackages: ['@libsql/client', 'drizzle-orm'],
+  serverExternalPackages: ['@libsql/client'],
   outputFileTracingIncludes: {
-    '/*': ['./node_modules/drizzle-orm/libsql/**/*'],
   },
 };
 

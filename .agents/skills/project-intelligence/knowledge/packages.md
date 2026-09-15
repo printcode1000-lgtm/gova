@@ -14,7 +14,7 @@ The repository manages **42 sealed packages** under `packages/`, categorized acr
 | `@asol/backup-core` | Backup orchestration and snapshot serialization over storage ports | `none` | `.`, `./orchestrator` |
 | `@asol/branding-core` | App icons, splash screens, and generated branding assets | `sharp` | `.`, `./cli` |
 | `@asol/catalog-core` | Category hierarchy, catalog schema validation, and item attributes | `none` | `.`, `./schema`, `./validation` |
-| `@asol/data-core` | Multi-database sharding, Turso/SQLite connections, and domain repositories | `better-sqlite3`, `@libsql/client`, `drizzle-orm`, `drizzle-orm/*` | `.`, `./database`, `./domains/*` (33 doors) |
+| `@asol/data-core` | Multi-database sharding, Turso/SQLite connections, and domain repositories | `local database driver`, `@libsql/client`, `legacy query-builder package`, `legacy query-builder package/*` | `.`, `./database`, `./domains/*` (33 doors) |
 | `@asol/data-health-core` | Schema consistency checks, orphan cleanup, and database health metrics | `none` | `.`, `./policy`, `./checker` |
 | `@asol/dev-core` | Developer-only tooling surfaces, test utilities, and debug helpers | `none` | `.`, `./tools` |
 | `@asol/env-core` | Validated environment variable access and redaction rules | `none` | `.`, `./schema` |

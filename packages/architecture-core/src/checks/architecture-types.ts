@@ -1,7 +1,7 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'fs';
 import { join, relative } from 'path';
 import {
-  ALLOWED_DRIZZLE_ORM_FILES_PATTERN,
+  ALLOWED_QUERY_BUILDER_FILES_PATTERN,
   ALLOWED_DB_DRIVER_FILES_PATTERN,
   ALLOWED_FETCH_FILES,
   ALLOWED_PROCESS_ENV_FILES,

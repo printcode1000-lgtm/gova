@@ -49,7 +49,7 @@ of anything the repository ever contained.
 - **Cross-file checks** (IDs, assets, specialty mappings, pharmacy/vehicle relations, JSON Schema
   freshness) always run inside the package.
 - **`expectedDatabaseColumns`** is optional. When provided, the validator asserts a bijection between
-  `specialty-columns.json` mappings and Drizzle `user_specialties` columns. The app script
+  `specialty-columns.json` mappings and query builder `user_specialties` columns. The app script
   `scripts/validate-catalog.ts` reads the schema file and passes the column set — keeping DB schema
   ownership in `data-access` while validation logic stays sealed.
 

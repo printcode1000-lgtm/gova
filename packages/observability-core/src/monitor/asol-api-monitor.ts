@@ -57,7 +57,7 @@ export async function trackAsolApiRequest<T>(
     service: ctx?.service ?? 'AsolApiClient',
     queryOrCommand: ctx?.queryOrCommand ?? `${method} ${route}`,
     repository: ctx?.repository ?? 'unknown',
-    dbDriver: isObservabilityEnabled() ? 'SQLite-Dev' : 'Turso-Production',
+    dbDriver: isObservabilityEnabled() ? 'Turso-Cloud' : 'Turso-Cloud',
     table: ctx?.table ?? '',
     entity: ctx?.entity ?? '',
     operationType,

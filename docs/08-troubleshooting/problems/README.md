@@ -17,14 +17,13 @@ A log of project problems and their solutions for recurrence and environment set
 | 12 | Every server route returns 500: a port registered in module scope, and services that never registered it | [every-server-route-500-unregistered-port.md](./every-server-route-500-unregistered-port.md) |
 | 13 | `architecture:check` false positive on Windows: valid `page-save-read` markers ignored (CRLF) | [page-save-read-marker-crlf-windows.md](./page-save-read-marker-crlf-windows.md) |
 | 14 | Incomplete npm workspaces: `Cannot find module '@asol/…'` | [incomplete-npm-workspaces-asol-modules.md](./incomplete-npm-workspaces-asol-modules.md) |
-| 15 | `npm ci` wrongly rebuilds `better-sqlite3@13` on Windows | [npm-ci-better-sqlite3-python-windows.md](./npm-ci-better-sqlite3-python-windows.md) |
+| 15 | `npm ci` wrongly rebuilds `embedded local database driver@13` on Windows | [npm-ci-embedded local database driver-python-windows.md](./npm-ci-embedded local database driver-python-windows.md) |
 | 16 | `architecture:check` false positive on Windows: generated architecture docs differ only by CRLF | [architecture-docs-drift-crlf-windows.md](./architecture-docs-drift-crlf-windows.md) |
 | 17 | Generated build/test gate fails on Windows with `spawnSync npm.cmd EINVAL` | [generated-gate-npm-cmd-einval-windows.md](./generated-gate-npm-cmd-einval-windows.md) |
 | 18 | `.vercelignore` contract falsely treats wildcarded directory descendants as included | [vercelignore-contract-wildcard-directory-descendants.md](./vercelignore-contract-wildcard-directory-descendants.md) |
 | 19 | Favorites local-storage contract reads a stale pre-refactor file path | [favorites-storage-contract-stale-path.md](./favorites-storage-contract-stale-path.md) |
 | 20 | Follow notification test imports server composition from the public notifications door | [follow-notification-test-wrong-notifications-door.md](./follow-notification-test-wrong-notifications-door.md) |
 | 21 | Blank splash screen: Capacitor `WebView` duplicate registration | [capacitor-webview-duplicate-registration.md](./capacitor-webview-duplicate-registration.md) |
-| 22 | Every SQLite-backed product reads back empty (`PRAGMA` executed with `run()`) | [sqlite-pragma-run-empty-product.md](./sqlite-pragma-run-empty-product.md) |
 | 23 | A route's owner does not ship it: `307` then `404` (sign-in down while every gate was green) | [owned-route-not-shipped.md](./owned-route-not-shipped.md) |
 | 24 | A push to `main` produces no Vercel deployment (intermittent, cause on Vercel's side; the failure is safe) | [main-push-without-vercel-deployment.md](./main-push-without-vercel-deployment.md) |
 | 25 | `Unable to reach the server` while the server is up: a preflight answered `204` with no CORS headers | [preflight-answered-without-cors-headers.md](./preflight-answered-without-cors-headers.md) |

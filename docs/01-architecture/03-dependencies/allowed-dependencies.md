@@ -43,7 +43,6 @@ Application wiring modules (`src/features/**/*-ports.ts`, `src/core/composition/
 
 | Module | Owner package(s) |
 |---|---|
-| `drizzle-orm`, `@libsql/client` | `@asol/data-core` |
 | `@aws-sdk/client-s3`, `@aws-sdk/s3-request-presigner` | `@asol/storage-core` |
 | `@aws-sdk/client-s3` (OTA artifacts) | `@asol/ota-core` |
 | `@capacitor/*`, `@capawesome/*`, `@capgo/*`, `@capacitor-mlkit/*` | `@asol/native-core` |
@@ -64,7 +63,7 @@ Full list: `OWNED_VENDOR_MODULES` in `capability-registry.ts`.
 | Business API bootstrap | Server service factories |
 | Server services | Query/command layer |
 | Query/command | Repository interfaces |
-| Repository | `@asol/data-core` database client, Drizzle types in allowed zones |
+| Repository | `@asol/data-core` database client, query builder types in allowed zones |
 
 ## Source Map
 

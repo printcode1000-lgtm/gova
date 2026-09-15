@@ -1,6 +1,6 @@
 import type { AccountDeletionStepId } from '@asol/auth-core';
 
-export const ACCOUNT_DELETION_REGISTRY_VERSION = 1;
+export const ACCOUNT_DELETION_REGISTRY_VERSION = 2;
 
 export type AccountDeletionDatabase =
   | 'users'
@@ -12,6 +12,7 @@ export type AccountDeletionDatabase =
 export type DeletionTableAction =
   | 'delete_rows'
   | 'anonymize_columns'
+  | 'delete_related_orders'
   | 'nullify_reference'
   | 'cascade_on_parent_delete';
 
@@ -218,147 +219,23 @@ export const ACCOUNT_DELETION_TABLE_REGISTRY: DeletionTableRegistryEntry[] = [
     parentTable: 'user_profiles',
   },
 
-  // orders — anonymize shared records
-  {
-    database: 'orders',
-    table: 'orders',
-    action: 'anonymize_columns',
-    step: 'anonymize_orders',
-    columns: ['buyer_id', 'delivery_address_snapshot_json', 'notes'],
-  },
-  {
-    database: 'orders',
-    table: 'seller_orders',
-    action: 'anonymize_columns',
-    step: 'anonymize_orders',
-    columns: ['seller_id', 'service_provider_id'],
-  },
-  {
-    database: 'orders',
-    table: 'order_items',
-    action: 'anonymize_columns',
-    step: 'anonymize_orders',
-    columns: ['seller_id', 'product_id'],
-  },
-  {
-    database: 'orders',
-    table: 'custom_request_items',
-    action: 'anonymize_columns',
-    step: 'anonymize_orders',
-    columns: ['seller_id', 'service_provider_id'],
-  },
-  {
-    database: 'orders',
-    table: 'custom_request_images',
-    action: 'anonymize_columns',
-    step: 'anonymize_orders',
-    columns: ['uploaded_by', 'image_url', 'image_key', 'file_name', 'image_description'],
-  },
-  {
-    database: 'orders',
-    table: 'shipments',
-    action: 'anonymize_columns',
-    step: 'anonymize_orders',
-    columns: ['carrier_id'],
-  },
-  {
-    database: 'orders',
-    table: 'shipment_items',
-    action: 'anonymize_columns',
-    step: 'anonymize_orders',
-    columns: ['seller_id', 'service_provider_id'],
-  },
-  {
-    database: 'orders',
-    table: 'payments',
-    action: 'anonymize_columns',
-    step: 'anonymize_orders',
-    columns: ['buyer_id', 'transaction_data_json'],
-  },
-  {
-    database: 'orders',
-    table: 'cancellations',
-    action: 'anonymize_columns',
-    step: 'anonymize_orders',
-    columns: ['cancelled_by'],
-  },
-  {
-    database: 'orders',
-    table: 'return_requests',
-    action: 'anonymize_columns',
-    step: 'anonymize_orders',
-    columns: ['buyer_id', 'carrier_id'],
-  },
-  {
-    database: 'orders',
-    table: 'replacement_requests',
-    action: 'anonymize_columns',
-    step: 'anonymize_orders',
-    columns: ['buyer_id'],
-  },
-  {
-    database: 'orders',
-    table: 'disputes',
-    action: 'anonymize_columns',
-    step: 'anonymize_orders',
-    columns: ['opened_by'],
-  },
-  {
-    database: 'orders',
-    table: 'dispute_messages',
-    action: 'anonymize_columns',
-    step: 'anonymize_orders',
-    columns: ['sender_id'],
-  },
-  {
-    database: 'orders',
-    table: 'audit_trail',
-    action: 'anonymize_columns',
-    step: 'anonymize_orders',
-    columns: ['performed_by'],
-  },
-  {
-    database: 'orders',
-    table: 'shipping_quotes',
-    action: 'anonymize_columns',
-    step: 'anonymize_orders',
-    columns: ['seller_id', 'service_provider_id', 'buyer_id', 'proposed_by'],
-  },
-  {
-    database: 'orders',
-    table: 'delivery_plans',
-    action: 'anonymize_columns',
-    step: 'anonymize_orders',
-    columns: ['buyer_id'],
-  },
-  {
-    database: 'orders',
-    table: 'delivery_plan_stops',
-    action: 'anonymize_columns',
-    step: 'anonymize_orders',
-    columns: ['seller_id', 'original_carrier_id'],
-  },
-  {
-    database: 'orders',
-    table: 'delivery_plan_candidates',
-    action: 'anonymize_columns',
-    step: 'anonymize_orders',
-    columns: ['provider_id'],
-  },
-  {
-    database: 'orders',
-    table: 'delivery_plan_candidate_stops',
-    action: 'anonymize_columns',
-    step: 'anonymize_orders',
-    columns: ['provider_id'],
-  },
-  {
-    database: 'orders',
-    table: 'delivery_plan_quotes',
-    action: 'anonymize_columns',
-    step: 'anonymize_orders',
-    columns: ['provider_id'],
-  },
+  // orders — delete the complete aggregate if the uid is any participant.
+  // Child tables are removed before their parent rows across the order shards.
+  ...[
+    'orders', 'seller_orders', 'order_items', 'custom_request_items',
+    'custom_request_images', 'shipments', 'shipment_items', 'payments', 'refunds',
+    'cancellations', 'cancellation_items', 'return_requests', 'return_request_items',
+    'replacement_requests', 'replacement_request_items', 'disputes', 'dispute_messages',
+    'audit_trail', 'shipping_quotes', 'delivery_plans', 'delivery_plan_stops',
+    'delivery_plan_candidates', 'delivery_plan_candidate_stops', 'delivery_plan_quotes',
+    'delivery_plan_quote_stops', 'delivery_plan_shipments',
+  ].map((table) => ({
+    database: 'orders' as const,
+    table,
+    action: 'delete_related_orders' as const,
+    step: 'anonymize_orders' as const,
+    notes: 'Delete the full order aggregate when the deleted uid participates anywhere in that order.',
+  })),
 
   // users / notifications
   {

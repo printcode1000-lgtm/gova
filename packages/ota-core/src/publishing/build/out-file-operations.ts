@@ -52,8 +52,8 @@ export function prepareTempBuildDir(): void {
     "postcss.config.mjs",
     "components.json",
     "capacitor.config.ts",
-    "drizzle.config.ts",
-    "drizzle.profile.config.ts",
+    "query builder.config.ts",
+    "query builder.profile.config.ts",
     "tsconfig.json",
   ];
 

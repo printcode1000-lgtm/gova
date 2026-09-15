@@ -12,7 +12,6 @@ Default-deny applies to package registration, vendor SDK usage, application laye
 
 | Action | Default | Becomes allowed when |
 |---|---|---|
-| Import `drizzle-orm` from `src/` | **Denied** | Never — use `@asol/data-core` |
 | Create `packages/new-thing/` | **Denied** at scan | Added to `CAPABILITY_PACKAGES` |
 | Create `src/features/new-thing/` | **Denied** at scan | Added to `APPLICATION_FEATURES` with doors |
 | Recreate `src/modules/` or other forbidden roots | **Denied** at scan | Never — use `src/features/` or `src/shared/` |

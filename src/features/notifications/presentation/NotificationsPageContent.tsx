@@ -12,13 +12,26 @@ import {
   ExternalLink,
   Loader2,
   MessageCircle,
+  Trash2,
 } from "lucide-react";
 import { cn } from "@/shared/utils";
+import {
+  buildPageSaveOperationItems,
+  clearPageSaveOperations,
+  dropPageSaveItems,
+  hasPageSaveOperation,
+  registerPageSave,
+  runPageSaveOperations,
+  stagePageSaveOperation,
+  subscribePageSaveOperations,
+  updatePageSaveRegistration,
+} from "@asol/page-save-core";
 import {
   NotificationCategories,
   NotificationPriorities,
 } from "@asol/notifications-core";
 import type { NotificationEntity } from "@asol/notifications-core";
+import { reportSystemIssue } from "@asol/system-logs-core";
 import { useNotifications } from "./hooks/use-notifications";
 import { useTranslation } from "@/shared/i18n";
 import {
@@ -67,6 +80,9 @@ export function NotificationsPageContent() {
           signIn: "تسجيل الدخول",
           emptyTitle: "لا توجد عناصر في هذا التبويب",
           emptyText: "ستظهر العناصر هنا عند وصولها.",
+          clearAll: "مسح كل الإشعارات",
+          clearAllItem: "مسح جميع الإشعارات",
+          pageLabel: "الإشعارات",
         }
       : {
           title: "Notifications",
@@ -74,6 +90,9 @@ export function NotificationsPageContent() {
           signIn: "Sign in",
           emptyTitle: "Nothing in this tab",
           emptyText: "Items will appear here when they arrive.",
+          clearAll: "Clear all notifications",
+          clearAllItem: "Clear all notifications",
+          pageLabel: "Notifications",
         };
   const availableFilters = React.useMemo(() => filters(locale), [locale]);
   const {
@@ -82,7 +101,17 @@ export function NotificationsPageContent() {
     isLoading,
     markManyRead,
     dismiss,
+    clearAll,
   } = useNotifications();
+  const pageSaveScopeId = "notifications";
+  const pageSaveItems = React.useSyncExternalStore(
+    subscribePageSaveOperations,
+    () => buildPageSaveOperationItems(pageSaveScopeId),
+    () => [],
+  );
+  const [isPageSaveRunning, setIsPageSaveRunning] = React.useState(false);
+  const clearAllItemId = "notifications-clear-all";
+  const clearAllStaged = hasPageSaveOperation(pageSaveScopeId, clearAllItemId);
   const { filter, selectFilter } = useNotificationsFilter(uid);
   const selectedFilterIndex = Math.max(0, availableFilters.findIndex((item) => item.id === filter));
   const {
@@ -104,6 +133,70 @@ export function NotificationsPageContent() {
   React.useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     setFocusId(params.get("focus") ?? "");
+  }, []);
+
+  const stageClearAll = React.useCallback(() => {
+    if (notifications.length === 0 || clearAllStaged) return;
+    stagePageSaveOperation({
+      scopeId: pageSaveScopeId,
+      itemId: clearAllItemId,
+      kind: "delete",
+      label: copy.clearAllItem,
+      description: locale === "ar"
+        ? "سيتم حذف جميع الإشعارات نهائياً"
+        : "All notifications will be permanently deleted",
+      execute: async () => {
+        await clearAll();
+      },
+    });
+  }, [clearAll, clearAllStaged, copy.clearAllItem, locale, notifications.length]);
+
+  React.useEffect(() => {
+    if (!uid) return undefined;
+    const cleanup = registerPageSave({
+      id: pageSaveScopeId,
+      label: copy.pageLabel,
+      returnPath: "/notifications",
+      items: pageSaveItems,
+      isSaving: isPageSaveRunning,
+      canSave: pageSaveItems.length > 0,
+      handle: {
+        save: async (selectedItemIds) => {
+          setIsPageSaveRunning(true);
+          try {
+            return await runPageSaveOperations(pageSaveScopeId, selectedItemIds);
+          } finally {
+            setIsPageSaveRunning(false);
+          }
+        },
+      },
+    });
+    return cleanup;
+  }, [copy.pageLabel, isPageSaveRunning, pageSaveItems, uid]);
+
+  React.useEffect(() => {
+    if (!uid) return;
+    updatePageSaveRegistration(pageSaveScopeId, {
+      label: copy.pageLabel,
+      returnPath: "/notifications",
+      items: pageSaveItems,
+      isSaving: isPageSaveRunning,
+      canSave: pageSaveItems.length > 0,
+    });
+  }, [copy.pageLabel, isPageSaveRunning, pageSaveItems, uid]);
+
+  React.useEffect(() => () => {
+    void dropPageSaveItems(
+      pageSaveScopeId,
+      clearPageSaveOperations(pageSaveScopeId),
+    ).catch((error: unknown) => {
+      reportSystemIssue({
+        level: "error",
+        feature: "Notifications",
+        operation: "drop-page-save-items-on-unmount",
+        error,
+      });
+    });
   }, []);
 
   const filteredNotifications = React.useMemo(() => {
@@ -166,9 +259,22 @@ export function NotificationsPageContent() {
             <Bell id='features-notifications-presentation-notificationspagecontent-bell-12-bvdbuk' className="h-6 w-6 text-primary" aria-hidden="true" />
             {copy.title}
           </h1>
-          <p id='features-notifications-presentation-notificationspagecontent-text-13-hymxqr' className="mt-1 text-sm text-on-surface-variant">
-            {filterSummary(filter, filteredNotifications.length, locale)}
-          </p>
+          <div id="features-notifications-presentation-notificationspagecontent-summary-actions-13a-k4m8pz" className="mt-1 flex flex-wrap items-center gap-2">
+            <p id='features-notifications-presentation-notificationspagecontent-text-13-hymxqr' className="text-sm text-on-surface-variant">
+              {filterSummary(filter, filteredNotifications.length, locale)}
+            </p>
+            <button
+              id="features-notifications-presentation-notificationspagecontent-clear-all-button-13b-v7q2mx"
+              type="button"
+              onClick={stageClearAll}
+              disabled={notifications.length === 0 || clearAllStaged}
+              className="inline-flex items-center gap-1 rounded-lg border border-error/35 px-2 py-1 text-xs font-semibold text-error transition-opacity disabled:cursor-not-allowed disabled:opacity-45"
+              aria-label={copy.clearAll}
+            >
+              <Trash2 id="features-notifications-presentation-notificationspagecontent-clear-all-icon-13c-p9r5kn" className="h-3.5 w-3.5" aria-hidden="true" />
+              {copy.clearAll}
+            </button>
+          </div>
         </div>
       </header>
 

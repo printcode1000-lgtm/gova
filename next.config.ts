@@ -56,16 +56,13 @@ const nextConfig: NextConfig = {
   },
 
   // Node.js-only packages. Prevent Next.js from bundling them — let Node require()
-  // them at runtime. `drizzle-orm` stays external; Turso adapters import through
-  // `drizzle-libsql.server.ts` so Next file tracing ships `drizzle-orm/libsql`.
   // The gova upload has no database capability, and adding these files to every
   // frontend route would make its minimal artifact carry a backend driver.
   ...(isGovaUploadView
     ? {}
     : {
-        serverExternalPackages: ['@libsql/client', 'drizzle-orm'],
+        serverExternalPackages: ['@libsql/client'],
         outputFileTracingIncludes: {
-          '/*': ['./node_modules/drizzle-orm/libsql/**/*'],
         },
       }),
 

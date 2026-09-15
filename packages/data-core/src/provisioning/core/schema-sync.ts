@@ -29,11 +29,11 @@ import type { SchemaSyncReport } from './types';
  *
  * Two sources. Tables owned by a *different* logical database are ignored
  * because several labels historically shared one Turso database and a leftover
- * copy is not this label's business. `__drizzle_migrations` is drizzle-kit's own
+ * copy is not this label's business. `__legacy_schema_migrations` is legacy migration tool's own
  * journal: tooling bookkeeping, created and owned by the migrator, never
  * application schema.
  */
-const TOOLING_OWNED_TABLES = new Set(['__drizzle_migrations']);
+const TOOLING_OWNED_TABLES = new Set(['__legacy_schema_migrations']);
 
 export function ignoredExtraTablesFor(databaseLabel: LogicalDatabaseLabel): Set<string> {
   const own = new Set(Object.keys(DESIRED_SCHEMAS[databaseLabel]?.tables ?? {}));
@@ -259,7 +259,7 @@ export async function runSchemaSync(options: RunSchemaSyncOptions = {}): Promise
       `Schema ${options.verifyOnly ? 'verification' : 'sync'} for ${databaseLabel} found ` +
         `${migrationsRequired.length} difference(s) additive DDL cannot repair:\n` +
         migrationsRequired.map((entry) => `  - ${entry.kind}: ${entry.description}`).join('\n') +
-        `\nSQLite cannot alter a key, constraint or default in place. Write an explicit ` +
+        `\nThe Turso SQL dialect cannot alter a key, constraint or default in place. Write an explicit ` +
         `migration that rebuilds the table and moves its rows; provisioning will not guess one.`,
     );
   }

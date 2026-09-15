@@ -5,7 +5,7 @@
 
 # Dead Docs Report
 
-Findings: **71**
+Findings: **84**
 
 | Kind | Source | Reference | Detail |
 |---|---|---|---|
@@ -38,14 +38,26 @@ Findings: **71**
 | `missing-file` | `docs/02-data-and-storage/central-data-access.md` | `src/tooling` | documentation mentions a missing repository path |
 | `missing-file` | `docs/02-data-and-storage/current-databases.md` | `packages/data-core/src/core/database/...` | documentation mentions a missing repository path |
 | `missing-file` | `docs/02-data-and-storage/image-storage/image-storage-system.md` | `packages/storage-core/src/server/storage/` | documentation mentions a missing repository path |
+| `missing-file` | `docs/02-data-and-storage/product-data-model.md` | `packages/data-core/src/core/database/product/migrations` | documentation mentions a missing repository path |
+| `missing-file` | `docs/02-data-and-storage/product-data-model.md` | `packages/data-core/src/core/database/product/product.schema.ts` | documentation mentions a missing repository path |
+| `missing-file` | `docs/02-data-and-storage/schema-provisioning.md` | `packages/data-core/src/core/database/migrations/` | documentation mentions a missing repository path |
+| `missing-file` | `docs/02-data-and-storage/schema-provisioning.md` | `packages/data-core/src/core/database/schema.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/03-products-and-commerce/categories-and-products/category-module-architecture.md` | `src/data` | documentation mentions a missing repository path |
+| `missing-file` | `docs/03-products-and-commerce/categories-and-products/user-specialties-module.md` | `packages/data-core/src/core/database/profile/user-specialties.schema.ts` | documentation mentions a missing repository path |
+| `missing-file` | `docs/03-products-and-commerce/seller-discounts-system.md` | `packages/data-core/src/core/database/profile/migrations/0012_seller_discounts.sql` | documentation mentions a missing repository path |
+| `missing-file` | `docs/03-products-and-commerce/seller-discounts-system.md` | `packages/data-core/src/core/database/profile/migrations/0017_seller_discount_coupon_unique.sql` | documentation mentions a missing repository path |
 | `missing-file` | `docs/04-ui-components/guides/hero-slider-guide.md` | `src/features/home/presentation/home-hero-slider.json` | documentation mentions a missing repository path |
+| `missing-file` | `docs/04-ui-components/guides/pharmacy-profile-catalog.md` | `packages/data-core/src/core/database/product/migrations/0002_pharmacy_profile_catalog.sql` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/auth-core-module.md` | `packages/auth-core/src/...` | documentation mentions a missing repository path |
+| `missing-file` | `docs/05-platform-features/auth-core-module.md` | `packages/data-core/src/core/database/migrations/0012_phone_e164.sql` | documentation mentions a missing repository path |
+| `missing-file` | `docs/05-platform-features/auth-core-module.md` | `packages/data-core/src/core/database/profile/migrations/0014_phone_e164_search_keys.sql` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/auth-core-module.md` | `src/features/account-deletion/` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/auth-core-module.md` | `src/features/auth/services/signed-session-token.server.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/auth-core-module.md` | `src/features/auth/utils/password-hash.server.ts` | documentation mentions a missing repository path |
+| `missing-file` | `docs/05-platform-features/follow-system.md` | `packages/data-core/src/core/database/profile/migrations/0009_follows.sql` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/i18n-system.md` | `src/shared/locales/xx.json` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/notification-bridge-module.md` | `src/features/notification-bridge/` | documentation mentions a missing repository path |
+| `missing-file` | `docs/05-platform-features/password-recovery-system.md` | `packages/data-core/src/core/database/migrations/0004_breezy_cammi.sql` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/sealed-packages/catalog-core-module.md` | `src/features/catalog-data/` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/sealed-packages/catalog-core-module.md` | `src/features/catalog-data/contracts/catalog-v3.contract.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/sealed-packages/catalog-core-module.md` | `src/features/catalog-data/types/catalog-v3.types.ts` | documentation mentions a missing repository path |
@@ -72,7 +84,6 @@ Findings: **71**
 | `missing-file` | `docs/05-platform-features/service-bridge-module.md` | `src/features/service-bridge/` | documentation mentions a missing repository path |
 | `missing-file` | `docs/07-mobile-and-release/release-and-secrets.md` | `scripts/lib/` | documentation mentions a missing repository path |
 | `missing-file` | `docs/08-troubleshooting/problems/page-save-read-marker-crlf-windows.md` | `src/features/data-health/presentation/use-data-health-page.ts` | documentation mentions a missing repository path |
-| `missing-file` | `docs/08-troubleshooting/problems/sqlite-pragma-run-empty-product.md` | `packages/data-core/src/core/database/sqlite-statement-execution.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/09-agent-knowledge/local-agent-runtime.md` | `scripts/local-agent-watch.ts` | documentation mentions a missing repository path |
 | `missing-package` | `docs/01-architecture/04-composition/dependency-wiring.md` | `@asol/my-feature-core` | documentation mentions unknown package @asol/my-feature-core |
 | `missing-package` | `docs/01-architecture/09-decisions/ADR-0002-capability-consolidation-follow-up.md` | `@asol/backup-core` | documentation mentions unknown package @asol/backup-core |
@@ -80,3 +91,5 @@ Findings: **71**
 | `missing-package` | `docs/05-platform-features/sealed-packages/data-core-module.md` | `@asol/backup-core` | documentation mentions unknown package @asol/backup-core |
 | `missing-package` | `docs/05-platform-features/sealed-packages/data-core-module.md` | `@asol/data-health-core` | documentation mentions unknown package @asol/data-health-core |
 | `missing-package` | `docs/09-agent-knowledge/local-agent-runtime.md` | `@asol/local-agent-core` | documentation mentions unknown package @asol/local-agent-core |
+| `stale-link` | `docs/08-troubleshooting/problems/incomplete-npm-workspaces-asol-modules.md` | `docs/08-troubleshooting/problems/npm-ci-embedded local database driver-python-windows.md` | broken internal markdown link from docs/08-troubleshooting/problems/incomplete-npm-workspaces-asol-modules.md |
+| `stale-link` | `docs/08-troubleshooting/problems/README.md` | `docs/08-troubleshooting/problems/npm-ci-embedded local database driver-python-windows.md` | broken internal markdown link from docs/08-troubleshooting/problems/README.md |

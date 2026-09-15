@@ -21,9 +21,8 @@ const nextConfig: NextConfig = {
   // here the way it is in the notifications service: the System Logs adapter
   // reaches the same profile-shard client the application uses, and stubbing a
   // branch this deployment can take would fail at runtime rather than at build.
-  serverExternalPackages: ['@libsql/client', 'drizzle-orm'],
+  serverExternalPackages: ['@libsql/client'],
   outputFileTracingIncludes: {
-    '/*': ['./node_modules/drizzle-orm/libsql/**/*'],
   },
 };
 

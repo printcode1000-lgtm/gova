@@ -4,11 +4,10 @@
  * Generated once from the verified schema of the database this repository was
  * already running against, then owned here by hand. It is the provisioning
  * SSOT: schema sync compares *this* with a live Turso read-back, and no local
- * SQLite file, migration replay, or embedded database engine takes part.
+ * No local database file, migration replay, or embedded database engine takes part.
  *
- * Drizzle `sqliteTable(...)` declarations remain the application data mapping
- * and historical migrations remain history; a static parity test keeps the
- * three from drifting apart.
+ * Runtime repositories use parameterized libSQL statements; this manifest is the
+ * schema authority and static contract tests keep repository assumptions aligned.
  *
  * Operational state the platform owns about itself: the persistent system log
  * and the control release marker. Both used to be created lazily by the

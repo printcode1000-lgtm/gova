@@ -125,7 +125,7 @@ seller_discount_usages
 Core migration: `packages/data-core/src/core/database/profile/migrations/0012_seller_discounts.sql`.
 Coupon uniqueness migration: `packages/data-core/src/core/database/profile/migrations/0017_seller_discount_coupon_unique.sql`.
 Desired schema: `packages/data-core/src/provisioning/desired-schema/profile-promotions.ts`.
-Drizzle schema: `packages/data-core/src/core/database/profile/profile.schema.ts`.
+query builder schema: `packages/data-core/src/core/database/profile/profile.schema.ts`.
 
 Non-empty coupon codes are normalized to uppercase and are unique on
 `(seller_uid, coupon_code)`. Application validation rejects duplicates before a

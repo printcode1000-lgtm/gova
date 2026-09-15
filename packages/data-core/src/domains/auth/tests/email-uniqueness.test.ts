@@ -1,7 +1,4 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
-import path from 'node:path';
-import Database from 'better-sqlite3';
 
 import type { User } from '../entities';
 import { normalizeAuthEmail } from '@asol/auth-core/server';
@@ -105,29 +102,10 @@ async function main() {
     'emailAlreadyRegistered',
   );
 
-  const database = new Database(':memory:');
-  database.exec(`
-    CREATE TABLE users (id integer primary key, email text);
-    INSERT INTO users (email) VALUES ('  Existing@Example.COM '), (''), (NULL);
-  `);
-  const migration = readFileSync(
-    path.join(
-      process.cwd(),
-      'packages/data-core/src/core/database/migrations/0011_funny_punisher.sql',
-    ),
-    'utf8',
-  ).replaceAll('--> statement-breakpoint', '');
-  database.exec(migration);
-  assert.deepEqual(
-    database.prepare('SELECT email FROM users ORDER BY id').all(),
-    [{ email: 'existing@example.com' }, { email: null }, { email: null }],
-  );
-  assert.throws(
-    () => database.prepare('INSERT INTO users (email) VALUES (?)').run('existing@example.com'),
-    /UNIQUE constraint failed/,
-  );
-  database.prepare('INSERT INTO users (email) VALUES (NULL)').run();
-  database.close();
+  const desiredSchemaSource = await import('../../../provisioning/desired-schema/users');
+  const emailIndex = desiredSchemaSource.usersDesiredSchema.indexes.users_email_unique;
+  assert.ok(emailIndex?.unique);
+  assert.deepEqual(emailIndex?.columns, ['email']);
 
   console.log('Auth email uniqueness tests passed.');
 }

@@ -14,7 +14,7 @@ runSchemaSync()
       console.log(`Schema sync skipped: ${report.skipReason}`);
       return;
     }
-    console.log('Turso schema synchronized from SQLite (schema only, no data).');
+    console.log('Turso schema synchronized from desired schema (schema only, no data).');
     console.log(`Operations: ${report.operations.length}, Duration: ${report.durationMs}ms`);
   })
   .catch((error) => {

@@ -9,5 +9,4 @@
  */
 export * from './traces/server-trace';
 export * from './traces/trace-server-layer';
-export * from './traces/drizzle-dev-logger';
 export { registerServerMonitorTelemetry } from './traces/data-core-telemetry.server';

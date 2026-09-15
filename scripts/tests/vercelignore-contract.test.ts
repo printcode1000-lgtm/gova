@@ -126,7 +126,7 @@ for (const required of mustStayPaths) {
 
 assert.match(ignore, /^\/android\/\s*$/m, ".vercelignore must exclude the root Capacitor android shell.");
 assert.match(ignore, /^\/ios\/\s*$/m, ".vercelignore must exclude only the root Capacitor ios shell.");
-assert.match(ignore, /public\/sync_data\//, ".vercelignore must exclude local SQLite mirrors.");
+assert.match(ignore, /public\/sync_data\//, ".vercelignore must exclude local database mirrors.");
 assert.equal(
   vercelConfig.installCommand,
   "npm ci",

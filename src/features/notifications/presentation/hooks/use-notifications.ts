@@ -73,6 +73,11 @@ export function useNotifications() {
       await notificationsFacade.dismiss({ uid, notificationId });
       await refresh();
     },
+    clearAll: async () => {
+      if (!uid) return;
+      await notificationsFacade.clearAll({ uid });
+      await refresh();
+    },
   };
 }
 

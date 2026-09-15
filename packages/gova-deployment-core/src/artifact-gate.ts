@@ -32,8 +32,8 @@ const FORBIDDEN_TRACE_PACKAGES = [
   '@asol/release-core',
   '@asol/vercel-deploy-core',
   '@libsql/client',
-  'better-sqlite3',
-  'drizzle-orm',
+  'local database driver',
+  'legacy query-builder package',
   '@aws-sdk/client-s3',
   'nodemailer',
 ] as const;

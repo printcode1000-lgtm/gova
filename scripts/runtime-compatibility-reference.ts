@@ -42,7 +42,6 @@ export interface RuntimeCompatibilityReference {
     androidTargetSdk: number;
     firebaseMessaging: string;
     vercelCli: string;
-    drizzleKit: string;
     fastlane: string;
     gemLockDigest: string;
   };
@@ -189,7 +188,6 @@ export function collectRuntimeCompatibilityReference(
     path.join(root, "packages", "vercel-deploy-core", "src", "index.ts"),
     "utf8",
   );
-  const drizzleSource = readFileSync(path.join(root, "scripts", "run-drizzle-kit.ts"), "utf8");
   const gemLock = readFileSync(path.join(root, "Gemfile.lock"), "utf8");
 
   return {
@@ -219,7 +217,6 @@ export function collectRuntimeCompatibilityReference(
       androidTargetSdk: requireNumber(androidVariables, /targetSdkVersion\s*=\s*(\d+)/, "Android target SDK"),
       firebaseMessaging: requireMatch(androidVariables, /firebaseMessagingVersion\s*=\s*'([\d.]+)'/, "Firebase Messaging"),
       vercelCli: uniqueVersion(vercelSource, /PINNED_VERCEL_CLI = '([\d.]+)'/g, "Vercel CLI"),
-      drizzleKit: uniqueVersion(drizzleSource, /drizzle-kit@([\d.]+)/g, "Drizzle Kit"),
       fastlane: requireMatch(gemLock, /^\s{4}fastlane \(([^)]+)\)$/m, "Fastlane"),
       gemLockDigest: digestText(gemLock),
     },

@@ -129,14 +129,14 @@ New service account touches declarations, composition, service folder, sync grap
 
 Rule:
 : No production, build, provisioning or tooling source may import
-  `better-sqlite3`. An isolated test may, using `:memory:` or a temporary
+  `embedded local database driver`. An isolated test may, using `:memory:` or a temporary
   directory.
 
 Reason:
 : Every account composition root used to have to pin itself with
   `registerDataCoreRuntimeConfigPorts({ forceRemoteDataSource: true })`, because
   the backend was resolved from the runtime context and a data source of `local`
-  selected a filesystem SQLite database in any deployment that asked — while the
+  selected a filesystem local database in any deployment that asked — while the
   accounts aliased the driver to a throwing stub because they could not run it.
 
 Failure prevented:
@@ -151,7 +151,7 @@ Current implementation:
   Turso/libSQL in every runtime, `registerDataCoreRuntimeConfigPorts()` takes no
   options, and the service stubs were deleted with the branch they hid.
   `checkIsolatedDeploymentBackendContract` now fails `npm run architecture:check`
-  on any `better-sqlite3` reference outside a test, and still fails when a
+  on any `embedded local database driver` reference outside a test, and still fails when a
   deployed account does not register its ports or nothing imports its
   composition root.
 

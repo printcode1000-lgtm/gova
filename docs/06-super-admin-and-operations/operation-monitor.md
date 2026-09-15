@@ -19,7 +19,7 @@ Available when `NODE_ENV === 'development'`. End-to-end visibility across client
 | TanStack Query | Yes | `query-observer.ts` + hook `meta` | hook, cache |
 | AsolApiClient → API | Yes | `asol-api-monitor.ts` | asol-api |
 | Server trace | Yes | `X-Asol-Dev-Trace` header | service, query, database |
-| Drizzle SQL (dev) | Yes | `drizzle-dev-logger.ts` | database |
+| query builder SQL (dev) | Yes | `query builder-dev-logger.ts` | database |
 | AsolDB IndexedDB | Yes | `asol-db-monitor.ts` | cache |
 | Query persister | Yes | Instrumented IDB ops | cache |
 | `getPublicJson` | Yes | HTTP layer | cache |
@@ -36,7 +36,7 @@ Business API responses may include a base64url JSON array of server events:
 Business API (runTracedBusinessRoute)
   → ServerService (traceServerLayer)
   → Query/Command (traceServerLayer)
-  → Drizzle (drizzle-dev-logger)
+  → query builder (query builder-dev-logger)
 ```
 
 `AsolApiClient` merges server events into the monitor store via `parentId` linking to the HTTP record.
@@ -47,7 +47,7 @@ Business API (runTracedBusinessRoute)
 |------|------|
 | `server-trace.ts` | AsyncLocalStorage collector |
 | `trace-server-layer.ts` | Service/command/query spans |
-| `drizzle-dev-logger.ts` | SQL in trace |
+| `query builder-dev-logger.ts` | SQL in trace |
 | `emit-server-trace.ts` | Client parser |
 | `asol-api-monitor.ts` | HTTP + header ingestion |
 | `asol-db-monitor.ts` | IndexedDB ops |
@@ -98,7 +98,7 @@ meta: authMonitorMeta('useLogin', 'LoginPageContent', 'Login', 'UPDATE'),
 
 ## Legacy note
 
-Auth uses Drizzle directly; server SQL visibility comes from **`drizzle-dev-logger`** in the trace header, not `AbstractDatabaseClient._trackedExecute()`.
+Auth uses query builder directly; server SQL visibility comes from **`query builder-dev-logger`** in the trace header, not `AbstractDatabaseClient._trackedExecute()`.
 
 ## Schema sync panel
 

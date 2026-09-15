@@ -140,9 +140,9 @@ Persistent logs are stored in the `system-ops` Turso database, table
 correlation columns — is declared in the `system-ops` desired-schema manifest and
 applied by provisioning. The repository is data-only: it used to create the
 table, add its own columns and build its own indexes on every call, which made it
-a second schema authority alongside provisioning. The Drizzle schema and
+a second schema authority alongside provisioning. The query builder schema and
 `0013_system_logs.sql` mirror those columns, and the offline schema-parity test
-prevents the manifest, the Drizzle declaration and the migration history from
+prevents the manifest, the query builder declaration and the migration history from
 silently diverging. Correlation columns are:
 
 - `correlation_id`

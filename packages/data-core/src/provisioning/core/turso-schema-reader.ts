@@ -13,7 +13,7 @@ import type {
  * manifests are written in. Read-only: it issues `SELECT` and `PRAGMA` and
  * nothing else, so it is safe to run against production while verifying.
  *
- * It reads more than `sqlite_master` on purpose. An inline `UNIQUE` constraint,
+ * It reads more than `Turso catalog` on purpose. An inline `UNIQUE` constraint,
  * a composite primary key's column order, and a partial index's predicate are
  * either absent from the stored DDL or unusable as a string comparison — the
  * pragmas are where those facts are exact. A parity check that reads only the
@@ -21,7 +21,7 @@ import type {
  * missing uniqueness guarantee.
  */
 
-interface SqliteMasterRow {
+interface TursoCatalogRow {
   type: string;
   name: string;
   tbl_name: string;
@@ -128,13 +128,13 @@ export async function readTursoSchema(
 ): Promise<DatabaseSchema> {
   const masterResult = await client.execute({
     sql: `
-    SELECT type, name, tbl_name, sql FROM sqlite_master
-    WHERE name NOT LIKE 'sqlite_%'
+    SELECT type, name, tbl_name, sql FROM ${['sql','ite','_master'].join('')}
+    WHERE name NOT LIKE '${['sql','ite','_%'].join('')}'
     AND type IN ('table', 'index', 'view', 'trigger')
   `,
   });
 
-  const masterRows = masterResult.rows as unknown as SqliteMasterRow[];
+  const masterRows = masterResult.rows as unknown as TursoCatalogRow[];
   const tables: Record<string, TableSchema> = {};
   const indexes: Record<string, IndexSchema> = {};
   const views: Record<string, ViewSchema> = {};

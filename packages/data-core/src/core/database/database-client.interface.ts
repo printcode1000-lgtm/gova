@@ -5,11 +5,6 @@ export interface DatabaseBatchStatement {
 
 export interface IDatabaseClient {
   /**
-   * Drizzle ORM database instance.
-   */
-  db: any;
-
-  /**
    * Executes a raw SQL query with parameters.
    */
   execute(sql: string, params?: any[]): Promise<any[]>;

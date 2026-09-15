@@ -10,7 +10,7 @@ import { checkVendorOwnershipContract } from "./vendor-ownership-contract";
  *
  * The runner walks `src`, `packages`, `scripts` and `services`. Everything else
  * in the repository was an architectural safe zone — a file placed in a new
- * top-level directory imported `better-sqlite3` and no check said a word, while
+ * top-level directory imported `local database driver` and no check said a word, while
  * the same import under `src/` was rejected three ways. A boundary a developer
  * escapes by choosing a different folder name is not a boundary.
  *

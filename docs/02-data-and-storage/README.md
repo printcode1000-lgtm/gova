@@ -14,7 +14,7 @@ Operational and behavioral documentation for persistence, database access, schem
 
 ## Mandatory Owners and Gateways
 
-Database/Turso/SQLite access belongs to `@asol/data-core`. Object storage belongs to `@asol/storage-core`; higher-level image lifecycle belongs to its declared capability packages/ports. Page-originated writes also obey `@asol/page-save-core` when the page-save contract applies.
+Database/Turso/embedded local database access belongs to `@asol/data-core`. Object storage belongs to `@asol/storage-core`; higher-level image lifecycle belongs to its declared capability packages/ports. Page-originated writes also obey `@asol/page-save-core` when the page-save contract applies.
 
 Never bypass these owners from UI, routes, scripts, or services. Confirm the current ownership in `docs/01-architecture/08-reference/capability-map.md`.
 

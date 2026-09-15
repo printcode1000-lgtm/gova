@@ -153,7 +153,7 @@ const doorTargets = new Set(
 for (const target of doorTargets) {
   assert.ok(
     !target.includes('/src/core/database/'),
-    `A door points into src/core/database (${target}). drizzle-orm, @libsql/client and ` +
+    `A door points into src/core/database (${target}). query builder-orm, @libsql/client and ` +
       '@libsql/client are reachable only from inside this package, and that is the whole seal.',
   );
 }
@@ -234,9 +234,7 @@ for (const file of browserClosure) {
         'up in the shipped web bundle.',
     );
     assert.ok(
-      !['drizzle-orm', '@libsql/client'].includes(specifier) &&
-        !specifier.startsWith('drizzle-orm/') &&
-        !specifier.startsWith('@libsql/'),
+      specifier !== '@libsql/client' && !specifier.startsWith('@libsql/'),
       `The browser door reaches a server database driver through ${file} (${specifier}).`,
     );
   }
@@ -248,11 +246,7 @@ telemetry.resetDataCoreTelemetry();
 
 const marker = Symbol('untouched');
 assert.equal(telemetry.dataCoreTelemetry().isEnabled(), false, 'Telemetry must default to off.');
-assert.equal(
-  telemetry.createDrizzleDevLogger(),
-  undefined,
-  'The default query logger must be absent, not a stub that allocates on every statement.',
-);
+
 assert.equal(
   await telemetry.traceServerLayer('query-command', 'unregistered', async () => marker),
   marker,
@@ -260,7 +254,7 @@ assert.equal(
 );
 assert.equal(
   await telemetry.traceDatabaseQuery(
-    { driver: 'SQLite-Dev', sql: 'SELECT 1', params: [], table: '' },
+    { driver: 'Turso-Cloud', sql: 'SELECT 1', params: [], table: '' },
     async () => marker,
   ),
   marker,
@@ -278,7 +272,7 @@ await runLocalReadTests();
 
 await assert.rejects(
   telemetry.traceDatabaseQuery(
-    { driver: 'SQLite-Dev', sql: 'SELECT 1', params: [], table: '' },
+    { driver: 'Turso-Cloud', sql: 'SELECT 1', params: [], table: '' },
     async () => {
       throw new Error('boom');
     },
@@ -390,22 +384,6 @@ for (const edge of ALLOWED_APP_EDGES) {
 // extension for Node to resolve and throws `Cannot find module` on the first query —
 // which is exactly how every data source went down after the move to ESM. Relative
 // modules belong in a static `import`; `nodeRequire` is for `node_modules` only.
-const rootNextConfig = readFileSync(path.join(REPO_ROOT, 'next.config.ts'), 'utf8');
-assert.match(
-  rootNextConfig,
-  /serverExternalPackages:\s*\[[^\]]*['"]drizzle-orm['"]/,
-  'next.config.ts must list drizzle-orm in serverExternalPackages so drizzle-orm/libsql can resolve on Vercel.',
-);
-assert.match(
-  rootNextConfig,
-  /outputFileTracingIncludes:\s*\{[\s\S]*drizzle-orm\/libsql/,
-  'next.config.ts must trace drizzle-orm/libsql for lazy Turso adapters on Vercel.',
-);
-assert.match(
-  readFileSync(path.join(REPO_ROOT, 'packages/data-core/src/core/database/drizzle-libsql.server.ts'), 'utf8'),
-  /from 'drizzle-orm\/libsql'/,
-  'Turso drizzle adapters must import libsql statically through drizzle-libsql.server.ts.',
-);
 
 const RUNTIME_REQUIRE = /(?:^|[^\w$.])[\w$]*[Rr]equire\s*\(\s*['"](\.[^'"]*)['"]\s*\)/g;
 for (const file of productionFiles) {

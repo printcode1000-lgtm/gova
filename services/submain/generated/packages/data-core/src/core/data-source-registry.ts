@@ -60,9 +60,6 @@ export const dataSources = new DataSourceRegistry();
 
 function lazyDataSource(name: ServerDataSourceName): IDatabaseClient {
   return {
-    get db() {
-      return dataSources.get(name).db;
-    },
     execute: (sql, params) => dataSources.get(name).execute(sql, params),
     batch: (statements: DatabaseBatchStatement[]) => {
       const source = dataSources.get(name);

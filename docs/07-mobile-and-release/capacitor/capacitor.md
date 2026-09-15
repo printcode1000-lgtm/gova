@@ -1,6 +1,6 @@
 # Capacitor Platform
 
-ASOL uses **Capacitor as a native runtime shell only** — Android and iOS load the same static web app produced by Next.js. Capacitor does **not** contain business logic, database drivers, ORM code, or SQLite/Turso clients.
+ASOL uses **Capacitor as a native runtime shell only** — Android and iOS load the same static web app produced by Next.js. Capacitor does **not** contain business logic, database drivers, ORM code, or Turso clients.
 
 For the full data-flow architecture (AsolApiClient, Business APIs, Repository), see [data-layers/README.md](../../01-architecture/10-application-layers/README.md).
 
@@ -28,7 +28,7 @@ android/  ·  ios/       ← native shells
 | `capacitor.config.ts`                    | App id, webDir, live-reload server URL      |
 | `android/` · `ios/`                      | Generated native projects (commit to repo)  |
 
-**Not in Capacitor:** Repository, Drizzle, SQLite, Turso, SQL, database plugins.
+**Not in Capacitor:** Repository, query builder, embedded local database, Turso, SQL, database plugins.
 
 ---
 
@@ -281,7 +281,7 @@ Capacitor integration must **not**:
 
 - Add imports of `@capacitor/*` outside `packages/native-core/src/adapters/`; every other import is rejected by the
   **Native Core Contract** check in `npm run architecture:check`
-- Add SQLite, Drizzle, Turso, or SQL in the mobile shell
+- Add embedded local database, query builder, Turso, or SQL in the mobile shell
 - Change Architecture Contract exceptions
 - Hardcode API URLs inside `src/` (use build-time env only)
 

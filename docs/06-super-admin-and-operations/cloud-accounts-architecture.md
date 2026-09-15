@@ -207,7 +207,7 @@ shards or workload write credentials.
 ### hesham102 — notifications
 
 `asol-notifications` · 3 tables — `user_notification_tokens`,
-`user_notification_preferences`, plus drizzle bookkeeping.
+`user_notification_preferences`, plus query builder bookkeeping.
 
 ### hesham103 — products
 

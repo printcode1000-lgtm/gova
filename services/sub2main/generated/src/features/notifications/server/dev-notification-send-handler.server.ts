@@ -15,14 +15,14 @@ import {
  * Local-development fan-out for Web Push.
  *
  * Production web still posts grants to the notifications service. In
- * `next dev` the main app reads device tokens from SQLite, so pointing the
+ * `next dev` the main app reads device tokens from the cloud notifications store, so pointing the
  * bridge at the remote service would never find registrations made on
  * localhost. This handler is the same send path the service runs, but only
  * while the development runtime is in force.
  *
  * The gate is `isDevRuntime()` rather than a bare environment read — the
  * Configuration layer owns those, and this is the same predicate that makes
- * the notifications database resolve to local SQLite. Tying both to one value
+ * the notifications database resolve to the cloud notifications store. Tying both to one value
  * is what keeps the route fanning out against the store the runtime actually
  * chose: a development `NODE_ENV` alone is also true of a Vercel build, where
  * tokens come from Turso and this route must stay a 404.

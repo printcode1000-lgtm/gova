@@ -25,7 +25,7 @@ React/Next UI. Touch policy: [docs/04-ui-components/touch-interaction-policy.md]
 
 - Repository modules
 - `@asol/data-core/<domain>` server doors
-- Drizzle, SQL drivers
+- query builder, SQL drivers
 - Server services or `server-only` modules
 - Raw `fetch`
 

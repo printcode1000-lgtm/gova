@@ -38,7 +38,7 @@ import {
  *
  * It takes no options. An isolated account used to have to pin itself to a
  * remote data source, because a runtime that called itself development would
- * otherwise select a local SQLite backend the account does not ship — a pin that
+ * otherwise select a local database backend the account does not ship — a pin that
  * only existed because there were two backends to choose between. There is one
  * now, so every deployment registers the same thing and there is nothing left
  * for an account to override.

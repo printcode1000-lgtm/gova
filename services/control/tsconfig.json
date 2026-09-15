@@ -225,6 +225,9 @@
       "@asol/observability-core/server": [
         "./generated/packages/observability-core/src/server.ts"
       ],
+      "@asol/orders-core": [
+        "./generated/packages/orders-core/src/index.ts"
+      ],
       "@asol/ota-core": [
         "./generated/packages/ota-core/src/index.ts"
       ],

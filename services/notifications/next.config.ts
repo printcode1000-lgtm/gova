@@ -18,9 +18,8 @@ const nextConfig: NextConfig = {
 
   // Node.js-only package: let Node require() it at runtime instead of bundling
   // it, exactly as the main app does.
-  serverExternalPackages: ['@libsql/client', 'drizzle-orm'],
+  serverExternalPackages: ['@libsql/client'],
   outputFileTracingIncludes: {
-    '/*': ['./node_modules/drizzle-orm/libsql/**/*'],
   },
 };
 

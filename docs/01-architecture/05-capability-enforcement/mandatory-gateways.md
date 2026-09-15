@@ -12,7 +12,7 @@ Gateway capabilities with explicit scan and/or ESLint enforcement. Ownership det
 
 ### `@asol/data-core` — Database
 
-**Owns:** Drizzle ORM, `@libsql/client`, sharding, domain repositories, browser IndexedDB adapter.
+**Owns:** query builder ORM, `@libsql/client`, sharding, domain repositories, browser IndexedDB adapter.
 
 **33 export doors** including `./browser`, `./provisioning`, `./tooling`, and per-domain slices.
 
@@ -64,7 +64,7 @@ Gateway capabilities with explicit scan and/or ESLint enforcement. Ownership det
 
 | Need | Use | Never |
 |---|---|---|
-| SQL / Drizzle / Turso | `@asol/data-core/<domain>` | Direct driver import |
+| SQL / query builder / Turso | `@asol/data-core/<domain>` | Direct driver import |
 | Upload / presign R2 | `@asol/storage-core` | `@aws-sdk/client-s3` in app |
 | Camera, GPS, push token native | `@asol/native-core` | `@capacitor/*` in app |
 | Save from page UI | `@asol/page-save-core` | Direct repository from component |

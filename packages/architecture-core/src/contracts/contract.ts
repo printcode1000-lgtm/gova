@@ -101,11 +101,11 @@ export const ALLOWED_FETCH_FILES = new Set([
 /**
  * Database code lives in one sealed package. These three lists used to point at
  * `src/features/data-access/`, where a folder path was the only thing standing between an
- * app file and `drizzle-orm`. They now point inside `@asol/data-core`, and the folder they
+ * app file and `legacy query-builder package`. They now point inside `@asol/data-core`, and the folder they
  * name — `src/core/` — has no entry in that package's `exports` map, so the seal, not a
  * regular expression, is what keeps the ORM out of the rest of the repository.
  */
-export const ALLOWED_DRIZZLE_ORM_FILES_PATTERN = [
+export const ALLOWED_QUERY_BUILDER_FILES_PATTERN = [
   /^packages\/data-core\/src\//,
 ];
 
@@ -144,7 +144,7 @@ export const RAW_SQL_PATTERNS = [
 ];
 
 export const DIRECT_DATABASE_CALL_PATTERNS = [
-  /\b(?:db|database|sqlite|turso|client|connection|drizzleDb)\s*\.\s*(?:execute|prepare|exec|run|all|transaction)\s*\(/,
+  /\b(?:db|database|sqlite|turso|client|connection|query builderDb)\s*\.\s*(?:execute|prepare|exec|run|all|transaction)\s*\(/,
 ];
 
 export function normalizePath(filePath: string): string {
@@ -297,9 +297,9 @@ export function importTargetLayer(
 
   if (importPath === "server-only" || importPath.startsWith("server-only/"))
     return "forbidden-package";
-  if (importPath === "drizzle-orm" || importPath.startsWith("drizzle-orm/"))
+  if (importPath === "legacy query-builder package" || importPath.startsWith("legacy query-builder package/"))
     return "forbidden-package";
-  if (importPath === "better-sqlite3") return "forbidden-package";
+  if (importPath === "local database driver") return "forbidden-package";
   if (importPath === "@libsql/client" || importPath.startsWith("@libsql/"))
     return "forbidden-package";
   if (importPath === "axios") return "forbidden-package";

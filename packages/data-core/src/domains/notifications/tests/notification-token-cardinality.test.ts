@@ -1,46 +1,34 @@
 import assert from "node:assert/strict";
 
-import Database from "better-sqlite3";
-import { drizzle } from "drizzle-orm/better-sqlite3";
+import { createClient } from "@libsql/client";
 
 import type { IDatabaseClient } from "../../../core/database/database-client.interface";
 import { UserNotificationTokenRepository } from "../repositories/user-notification-token-repository";
 
-const sqlite = new Database(":memory:");
-sqlite.exec(`
-  CREATE TABLE user_notification_tokens (
-    id TEXT PRIMARY KEY NOT NULL,
-    uid TEXT NOT NULL,
-    platform TEXT NOT NULL,
-    provider TEXT NOT NULL,
-    device_id TEXT NOT NULL,
-    token TEXT NOT NULL,
-    locale TEXT DEFAULT 'ar' NOT NULL,
-    enabled INTEGER DEFAULT 1 NOT NULL,
-    last_seen_at TEXT,
-    created_at TEXT,
-    updated_at TEXT,
-    deleted_at TEXT
-  );
-  CREATE UNIQUE INDEX user_notification_tokens_uid_platform_unique
-    ON user_notification_tokens(uid, platform);
-  CREATE UNIQUE INDEX user_notification_tokens_token_unique
-    ON user_notification_tokens(token);
-  CREATE TABLE user_notification_preferences (
-    uid TEXT PRIMARY KEY NOT NULL,
-    specialty_requests_enabled INTEGER DEFAULT 1 NOT NULL,
-    product_conversations_enabled INTEGER DEFAULT 1 NOT NULL,
-    updated_at TEXT NOT NULL
-  );
-`);
-
+const client = createClient({ url: "file::memory:" });
 const database = {
-  db: drizzle(sqlite),
   execute: async (sql: string, params: unknown[] = []) => {
-    sqlite.prepare(sql).run(...params);
-    return [];
+    const result = await client.execute({ sql, args: params as any[] });
+    return result.rows as unknown as Record<string, unknown>[];
   },
 } as IDatabaseClient;
+
+async function prepareDatabase(): Promise<void> {
+  await client.executeMultiple(`
+  CREATE TABLE user_notification_tokens (
+    id TEXT PRIMARY KEY NOT NULL, uid TEXT NOT NULL, platform TEXT NOT NULL, provider TEXT NOT NULL,
+    device_id TEXT NOT NULL, token TEXT NOT NULL, locale TEXT DEFAULT 'ar' NOT NULL, enabled INTEGER DEFAULT 1 NOT NULL,
+    last_seen_at TEXT, created_at TEXT, updated_at TEXT, deleted_at TEXT
+  );
+  CREATE UNIQUE INDEX user_notification_tokens_uid_platform_unique ON user_notification_tokens(uid, platform);
+  CREATE UNIQUE INDEX user_notification_tokens_token_unique ON user_notification_tokens(token);
+  CREATE TABLE user_notification_preferences (
+    uid TEXT PRIMARY KEY NOT NULL, specialty_requests_enabled INTEGER DEFAULT 1 NOT NULL,
+    product_conversations_enabled INTEGER DEFAULT 1 NOT NULL, push_enabled INTEGER DEFAULT 1 NOT NULL, updated_at TEXT NOT NULL
+  );
+  `);
+}
+
 const repository = new UserNotificationTokenRepository(database);
 
 const base = {
@@ -54,6 +42,7 @@ const base = {
 };
 
 async function main(): Promise<void> {
+  await prepareDatabase();
   try {
     await repository.upsert(base);
     await repository.upsert({
@@ -128,12 +117,10 @@ async function main(): Promise<void> {
       1,
     );
 
-    const duplicateGroups = sqlite
-      .prepare(
-        "SELECT COUNT(*) count FROM (SELECT uid, platform FROM user_notification_tokens GROUP BY uid, platform HAVING COUNT(*) > 1)",
-      )
-      .get() as { count: number };
-    assert.equal(duplicateGroups.count, 0);
+    const duplicateResult = await client.execute(
+      "SELECT COUNT(*) count FROM (SELECT uid, platform FROM user_notification_tokens GROUP BY uid, platform HAVING COUNT(*) > 1)",
+    );
+    assert.equal(Number(duplicateResult.rows[0]?.count ?? 0), 0);
 
     assert.deepEqual(await repository.chatPreferences(base.uid), {
       specialtyRequestsEnabled: true,
@@ -162,7 +149,7 @@ async function main(): Promise<void> {
       "specialty request changes must not overwrite product chat preference",
     );
   } finally {
-    sqlite.close();
+    client.close();
   }
 
   console.log("Notification token cardinality tests passed.");

@@ -11,7 +11,7 @@ npm run dev:checked            # slower startup with generation + catalog valida
 npm run dev:distributed        # all eight runtimes on 3001-3008, no gova fallback
 npm run dev:distributed:smoke  # start all eight, prove route ownership, exit
 npm run server:stop            # frees port 3001 only, not the distributed ports
-npm run db:create:sqlite
+npm run db:provision:turso
 npm run db:create:profile
 
 # Build & Test Packages
@@ -54,8 +54,6 @@ gova-agent locks
 gova-agent lock-recover
 
 # Schema & database
-npm run db:drizzle -- generate
-npm run db:drizzle -- generate --config drizzle.profile.config.ts
 npm run db:schema:verify       # read-only Turso comparison; retries transient transport failures only
 npm run db:schema:sync
 npm run db:schema:sync:release   # required credentials; used by deploy:all preflight
@@ -89,7 +87,6 @@ npm run r2:sync:cors
 
 ```bash
 # 1. Edit packages/data-core/src/core/database/schema.ts
-npm run db:drizzle -- generate
 npm run dev                    # migrations on first API call
 npm run build                  # read-only schema verification; never applies DDL
 git push
@@ -176,7 +173,7 @@ sequenceDiagram
     ClientService->>AsolApiClient: POST /api/...
     AsolApiClient->>BusinessAPI: JSON
     BusinessAPI->>ServerService: execute
-    ServerService->>Repository: Drizzle
+    ServerService->>Repository: query builder
     Repository->>DatabaseClient: query
     DatabaseClient-->>Hook: JSON response
     Hook->>AsolDB: optional cache/session

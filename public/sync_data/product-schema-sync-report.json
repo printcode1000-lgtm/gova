@@ -1,6 +1,6 @@
 {
-  "executedAt": "2026-09-15T06:02:45.132Z",
-  "durationMs": 12528,
+  "executedAt": "2026-09-15T11:58:37.639Z",
+  "durationMs": 12309,
   "desiredSchemaVersion": "a685422b6751fe82",
   "tursoSchemaVersionBefore": "129b94e99f1be007",
   "tursoSchemaVersionAfter": "129b94e99f1be007",
@@ -14,6 +14,8 @@
   "sqlExecuted": [],
   "residualOperations": [],
   "errors": [],
-  "warnings": [],
+  "warnings": [
+    "Table \"__drizzle_migrations\" exists on Turso but not in the desired schema. Not dropped automatically."
+  ],
   "skipped": false
 }

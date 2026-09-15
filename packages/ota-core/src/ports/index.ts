@@ -10,7 +10,7 @@
  *
  * - `@asol/data-core/browser` and `@asol/data-core/ota` —
  *   the central data-access module is where database code is required to live; the
- *   drizzle contract (`ALLOWED_DRIZZLE_ORM_FILES_PATTERN`) forbids moving it here, and
+ *   query builder contract (`ALLOWED_QUERY_BUILDER_FILES_PATTERN`) forbids moving it here, and
  *   `orders-composition` depends on the same layer.
  *
  * Former `@/core/api`, `@/core/config/public-env`, `@/core/config/app-version`, and

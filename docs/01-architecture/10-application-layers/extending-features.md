@@ -22,7 +22,6 @@ with declared doors before it has architectural authority. Run
 ## Server
 
 1. **Domain** — `src/features/product/domain/product.entity.ts`
-2. **Schema** — table in `packages/data-core/src/core/database/` (or dedicated `.db`), `npm run db:drizzle -- generate`
 3. **Repository** — `packages/data-core/src/domains/product/repositories/` (server-only)
 4. **Operations** — `commands/`, `queries/`, `instances.ts`
 5. **Server Service** — `product-service.server.ts` + `product-service.bootstrap.server.ts`
@@ -43,7 +42,7 @@ Cross-feature imports MUST use declared Public API doors only (`@/features/produ
 
 ## New database?
 
-If the feature needs its own SQLite/Turso pair:
+If the feature needs its own Turso pair:
 
 - Dedicated `*DbClient`, env vars, schema sync — see [current-databases.md](../../02-data-and-storage/current-databases.md)
 

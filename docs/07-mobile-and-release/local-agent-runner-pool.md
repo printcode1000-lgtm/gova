@@ -22,7 +22,7 @@ A normal local task creates no Gateway runtime rows, no `agent/*` branch, and no
 
 - Canonical/default working clone: `/home/hesham/gova`.
 - Optional managed worktree root: `/home/hesham/gova-agents/`.
-- Optional Gateway runtime state: `/home/hesham/.local/share/gova-agent-runtime/runtime.sqlite3`.
+- Optional Gateway runtime state: `/home/hesham/.local/share/gova-agent-runtime/runtime state database`.
 - Gateway authentication material: `/home/hesham/.config/gova-agent/auth`.
 - Installed optional Gateway code: `/home/hesham/.local/lib/gova-agent/`.
 

@@ -13,7 +13,7 @@ GitHub contains exactly two recognized remote branches: `main` and `integration`
 - Default working checkout: `/home/hesham/gova`
 - Optional managed worktree root: `/home/hesham/gova-agents/` (created/used only when explicitly requested)
 - Optional Gateway runtime state: `/home/hesham/.local/share/gova-agent-runtime`
-- Optional Gateway database: `runtime.sqlite3` using SQLite WAL
+- Optional Gateway database: `runtime state database` using runtime database WAL
 - Optional local client: `/home/hesham/.local/bin/gova-agent`
 - Read-only local monitor: `/home/hesham/.local/bin/gova-agent-monitor`
 
@@ -121,7 +121,7 @@ AGENT_ID=cloud-001 TASK_ID=notifications-copy TASK_GOAL="Fix notification copy" 
 
 The monitor combines these read-only sources:
 
-- runtime SQLite for agents, tasks, commands, locks, messages, handoffs, and events;
+- runtime embedded local database for agents, tasks, commands, locks, messages, handoffs, and events;
 - the local gateway `/health` endpoint plus read-only `systemctl is-active`;
 - GitHub Actions API state for self-hosted runners, active/queued workflow runs, and active/queued jobs;
 - local `Runner.Listener` / `Runner.Worker` process discovery so runner activity remains visible even when the GitHub runner API is unavailable;
@@ -133,7 +133,7 @@ The desktop launcher opens the monitor as a multi-window workspace:
 1. **Dashboard** — combined health and currently active agents/jobs.
 2. **Agents** — local/cloud agents, tasks, branches, command activity, locks, and per-agent detail windows.
 3. **GitHub Runner / Actions** — self-hosted runner status, runner processes, active/queued workflow jobs, branch, SHA, and assigned runner.
-4. **Gateway / Runtime** — gateway health, service scope/status, SQLite counts, locks, and recent events.
+4. **Gateway / Runtime** — gateway health, service scope/status, runtime database counts, locks, and recent events.
 5. **Git / Worktrees** — canonical checkout, `origin/main`, `origin/integration`, every local worktree, branch, HEAD, and modified-file count.
 6. **Logs** — recent agent commands plus the latest available GitHub Runner diagnostic log.
 
@@ -239,14 +239,14 @@ gova-agent recovery verify /path/to/gova-agent-recovery.tar.gz
 gova-agent recovery restore /path/to/gova-agent-recovery.tar.gz /empty/restore-root
 ```
 
-The archive preserves the complete committed Local Agent source, all local refs and local-only agent commits, a consistent SQLite backup, and recoverable staged/unstaged/safe-untracked worktree state. Credentials are intentionally excluded and regenerated or reconnected after recovery. The exact archive contract, exclusions, verification procedure, and isolated restore sequence are defined in `docs/06-super-admin-and-operations/local-agent-recovery.md`.
+The archive preserves the complete committed Local Agent source, all local refs and local-only agent commits, a consistent runtime database backup, and recoverable staged/unstaged/safe-untracked worktree state. Credentials are intentionally excluded and regenerated or reconnected after recovery. The exact archive contract, exclusions, verification procedure, and isolated restore sequence are defined in `docs/06-super-admin-and-operations/local-agent-recovery.md`.
 
 ## Optional managed-mode failure recovery
 
 These cases apply only to explicitly selected Gateway-managed execution.
 
 - Agent/client disconnect: command continues and logs remain queryable.
-- Gateway crash: systemd restarts it; SQLite/task state remains.
+- Gateway crash: systemd restarts it; runtime database/task state remains.
 - Stale lock: lease recovery removes it.
 - Integration conflict: cherry-pick is aborted and the integration worktree is reset cleanly to `origin/integration`; the task records the conflict.
 - Uncommitted agent worktree: removal refuses unless explicitly forced; disaster-recovery archives preserve its staged, unstaged, and safe untracked state.

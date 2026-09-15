@@ -3,7 +3,7 @@
 ## 1. Single Responsibility Principle (SRP)
 
 - **One clear job per file**: Every file must have one primary reason to change.
-- **Separation of concerns**: Never combine React UI components, API handlers, Drizzle ORM queries, and formatting helpers in a single file.
+- **Separation of concerns**: Never combine React UI components, API handlers, query builder ORM queries, and formatting helpers in a single file.
 - **Standard feature subdirectory vocabulary**:
   - `domain/`: Business entities, policies, calculation engines, domain types.
   - `application/`: Application services, use cases, state management.

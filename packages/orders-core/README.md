@@ -19,7 +19,7 @@ buyer may return to the original separate-delivery arrangements.
 
 ## Database
 
-Development and production run on the marketplace order shards declared in `packages/data-core/src/core/database/database-shards.ts`. `npm run db:ensure` regenerates the local SQLite shards from the source schema/data, and `npm run db:schema:sync` syncs each shard to its matching Turso database. Credentials use the shard key pattern `<SHARD>_DATABASE_URL` and `<SHARD>_DATABASE_AUTH_TOKEN`; the legacy single `marketplace-orders` runtime database is no longer used.
+Development and production run on the marketplace order shards declared in `packages/data-core/src/core/database/database-shards.ts`. `npm run db:schema:sync` synchronizes each repository-owned desired-schema manifest directly with its matching Turso database; development and production use those same cloud shards. Credentials use the shard key pattern `<SHARD>_DATABASE_URL` and `<SHARD>_DATABASE_AUTH_TOKEN`; the legacy single `marketplace-orders` runtime database is no longer used.
 
 ## Status, pricing, audit, and access
 

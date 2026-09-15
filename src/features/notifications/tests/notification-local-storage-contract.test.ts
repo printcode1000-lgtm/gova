@@ -3,7 +3,11 @@ import { readFileSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
-const schema = readFileSync(path.join(root, "packages/data-core/src/core/database/schema.ts"), "utf8");
+const desiredSchemaDir = path.join(root, "packages/data-core/src/provisioning/desired-schema");
+const desiredSchema = readdirSync(desiredSchemaDir)
+  .filter((name) => name.endsWith(".ts") && name !== "registry.ts")
+  .map((name) => readFileSync(path.join(desiredSchemaDir, name), "utf8"))
+  .join("\n");
 const localRepository = readFileSync(
   path.join(root, "src/features/notifications/infrastructure/asol-notification-repository.ts"),
   "utf8",
@@ -22,9 +26,9 @@ function filesBelow(directory: string): string[] {
 }
 
 assert.doesNotMatch(
-  schema,
-  /sqliteTable\(\s*["'](?:notifications|notification_messages|notification_inbox|specialty_chat_messages|specialty_chat_threads)["']/,
-  "Notification content must not have a server SQLite/Turso table.",
+  desiredSchema,
+  /["'](?:notifications|notification_messages|notification_inbox|specialty_chat_messages|specialty_chat_threads)["']\s*:/,
+  "Notification content must not have a server Turso table.",
 );
 assert.match(localRepository, /ASOL_DB_STORES\.NOTIFICATIONS/);
 assert.match(localRepository, /asolDbSet\(/);

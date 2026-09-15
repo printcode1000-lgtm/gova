@@ -138,7 +138,7 @@ After compilation, `collectManifestFiles()` inventories final `out/` files:
 
 After route generation, the build runs `auditCapacitorDefaultBundle`. It rejects
 an output that does not start in Arabic/RTL/light mode or that contains `.env.local` or the forbidden legacy `.env`,
-Firebase configuration, SQLite, or `sync_data` artifacts. This audit is shared
+Firebase configuration, embedded local database, or `sync_data` artifacts. This audit is shared
 by manual static builds, local Capacitor builds, `ota:publish`, and
 `cap:build`.
 

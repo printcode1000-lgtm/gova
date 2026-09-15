@@ -865,8 +865,8 @@ export default function MonitorPage() {
               onChange={(e) => setFilter({ dbDriver: e.target.value })}
             >
               <option id="app-dev-monitor-page-option-71-t5qnxz" value="">كل المحركات</option>
-              <option id="app-dev-monitor-page-option-72-iumqzt" value="SQLite-Dev">SQLite للتطوير</option>
-              <option id="app-dev-monitor-page-option-73-8hi1nq" value="Turso-Production">Turso للإنتاج</option>
+              <option id="app-dev-monitor-page-option-72-iumqzt" value="Turso-Cloud">Turso Cloud</option>
+              <option id="app-dev-monitor-page-option-73-8hi1nq" value="Turso-Cloud">Turso للإنتاج</option>
             </select>
           </div>
 
@@ -1501,7 +1501,7 @@ export default function MonitorPage() {
                 <span id='app-dev-monitor-page-text-252-tpfrvm' className="info-value">{activeOp.repository}</span>
 
                 <span id='app-dev-monitor-page-text-253-pv3kdy' className="info-label">محرك قاعدة البيانات:</span>
-                <span id='app-dev-monitor-page-text-254-zulvet' className="info-value" style={{ color: activeOp.dbDriver === 'Turso-Production' ? '#ef4444' : '#22c55e' }}>
+                <span id='app-dev-monitor-page-text-254-zulvet' className="info-value" style={{ color: activeOp.dbDriver === 'Turso-Cloud' ? '#ef4444' : '#22c55e' }}>
                   {activeOp.dbDriver}
                 </span>
 

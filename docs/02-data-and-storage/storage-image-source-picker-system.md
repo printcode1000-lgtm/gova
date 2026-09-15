@@ -162,7 +162,7 @@ dependency behind any entry that reappears.
 `StorageImageManager` remains a UI component. It must not:
 
 - Call `fetch` directly.
-- Import repositories, database clients, Drizzle, SQLite, Turso, or R2 providers.
+- Import repositories, database clients, query builder, embedded local database, Turso, or R2 providers.
 - Save image keys to feature databases itself.
 - Know feature-specific table names or API routes.
 

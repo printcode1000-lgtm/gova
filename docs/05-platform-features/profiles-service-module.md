@@ -12,10 +12,10 @@ machine.
 ```text
 services/profiles/
 ├── package.json          # its own dependencies, installed remotely
-├── next.config.ts        # turbopack root + better-sqlite3 alias
+├── next.config.ts        # turbopack root + embedded local database driver alias
 ├── tsconfig.json         # "@/*" resolves to ./generated/src/*
 ├── .vercelignore         # forces generated/ into the upload
-├── stubs/better-sqlite3.js
+├── stubs/embedded local database driver.js
 ├── src/
 │   ├── app/lib/http.ts   # CORS + error mapping, no logging/tracing graph
 │   └── app/api/

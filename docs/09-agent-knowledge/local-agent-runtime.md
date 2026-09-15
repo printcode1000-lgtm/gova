@@ -19,7 +19,7 @@ The sections dated 2026-09-02 and 2026-09-03 below are retained as historical mi
 
 - GitHub has exactly two remote branches: `main` and `integration`. Agent task branches are local-only Git worktrees.
 - Historical state at that checkpoint: normal agent commands used the persistent `gova-agent-gateway` service. This is no longer the default after the 2026-09-04 policy above.
-- Runtime state is SQLite WAL under `/home/hesham/.local/share/gova-agent-runtime/`.
+- Runtime state is runtime database WAL under `/home/hesham/.local/share/gova-agent-runtime/`.
 - Agent worktrees live under `/home/hesham/gova-agents/`; the shared integration worktree is `/home/hesham/gova-agents/integration`.
 - Historical state at that checkpoint: new task worktrees started from `origin/integration`. Current default local work does not create a task worktree.
 - Historical state at that checkpoint: the only Local Runner GitHub workflow was `local-agent-bootstrap.yml`. The manual `local-agent-project.yml` projection workflow was added later for the cloud Mode-B path described in the current policy above.
@@ -76,7 +76,7 @@ A synchronization operation must stop instead of resetting a worktree when `git 
 
 `gova-agent-monitor` is the single supported local monitor. Installation replaces the legacy `@asol/local-agent-core` desktop launcher in place and terminates any stale `scripts/local-agent-watch.ts` process.
 
-The monitor is intentionally read-only. It reads the persistent SQLite WAL database and command output files directly and therefore never registers itself, updates heartbeats, takes locks, or dispatches GitHub Actions jobs.
+The monitor is intentionally read-only. It reads the persistent runtime database WAL database and command output files directly and therefore never registers itself, updates heartbeats, takes locks, or dispatches GitHub Actions jobs.
 
 The main window lists every known agent and derives its visible type as local or cloud. Local agents are the default; agent IDs using the `cloud-` or `remote-` convention are shown as cloud agents when no explicit profile metadata exists. The window refreshes automatically and supports:
 

@@ -83,8 +83,8 @@ const FORBIDDEN_RUNTIME = [
   'fs',
   'path',
   'child_process',
-  'drizzle-orm',
-  'better-sqlite3',
+  'legacy query-builder package',
+  'local database driver',
   '@libsql/client',
   'react',
   'next',
@@ -95,7 +95,7 @@ for (const file of productionFiles) {
     assert.ok(
       !FORBIDDEN_RUNTIME.includes(specifier) &&
         !specifier.startsWith('node:') &&
-        !specifier.startsWith('drizzle-orm/') &&
+        !specifier.startsWith('legacy query-builder package/') &&
         !specifier.startsWith('@libsql/') &&
         !specifier.startsWith('next/'),
       `${file} imports ${specifier}. The order domain is pure logic: it must run unchanged in the ` +

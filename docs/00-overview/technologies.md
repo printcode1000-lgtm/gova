@@ -36,7 +36,6 @@ package, service, lock graph, or tool version cannot pass without that review.
 | React / React DOM | `19.2.8` | UI runtime |
 | TypeScript | `5.9.3` | Checked compiler line; TypeScript 7 is intentionally not adopted until the complete toolchain is verified against it |
 | Vercel CLI | `59.0.0`, exact direct dependency | Service deployment only; scripts resolve the reviewed local binary from `node_modules` rather than a mutable global/latest CLI |
-| Drizzle Kit | `0.31.10`, ephemeral | Schema tooling through `npm run db:drizzle` |
 | Java | JDK `21 LTS` | Android Gradle toolchain |
 
 | Gradle | wrapper `9.4.1` | Android builds; no global Gradle installation |
@@ -126,11 +125,10 @@ silently remain on an older framework release.
 | `@tanstack/react-query` | `5.102.3` |
 | `@tanstack/react-query-persist-client` | `5.102.3` |
 | `@types/web-push` | `3.6.4` |
-| `better-sqlite3` | `13.0.3` |
+| `embedded local database driver` | `13.0.3` |
 | `class-variance-authority` | `0.7.1` |
 | `clsx` | `2.1.1` |
 | `dotenv` | `17.4.2` |
-| `drizzle-orm` | `0.45.2` |
 | `fflate` | `0.8.3` |
 | `focus-trap-react` | `12.0.3` |
 | `google-auth-library` | `11.0.2` |
@@ -156,7 +154,7 @@ silently remain on an older framework release.
 | Package | Exact verified version |
 |---|---:|
 | `@tailwindcss/postcss` | `4.3.3` |
-| `@types/better-sqlite3` | `9.6.0` |
+| `@types/embedded local database driver` | `9.6.0` |
 | `@types/geojson` | `7946.0.16` |
 | `@types/node` | `24.13.3` |
 | `@types/nodemailer` | `8.0.1` |
@@ -178,14 +176,14 @@ silently remain on an older framework release.
 1. Install Node 24 LTS, npm 11.19.0, and Git.
 2. Run `npm run dependencies:install`. On Windows this uses `npm ci
    --ignore-scripts` because npm currently invokes `node-gyp` for
-   `better-sqlite3@13` even though the package ships a compatible prebuilt
-   binary. The wrapper then executes SQLite through the owning data package and
+   `embedded local database driver@13` even though the package ships a compatible prebuilt
+   binary. The wrapper then executes embedded local database through the owning data package and
    the `esbuild` and `unrs-resolver` tool binaries, and requires `npm ls --all`
    to pass. On other
    platforms it uses ordinary `npm ci`. See
-   `docs/08-troubleshooting/problems/npm-ci-better-sqlite3-python-windows.md`.
+   `docs/08-troubleshooting/problems/npm-ci-embedded local database driver-python-windows.md`.
 3. The approved install scripts remain pinned in `allowScripts` for
-   `better-sqlite3`, `esbuild`, and `unrs-resolver`. After install,
+   `embedded local database driver`, `esbuild`, and `unrs-resolver`. After install,
    `node_modules/@asol/*` must cover every `packages/*` workspace — see
    `docs/08-troubleshooting/problems/incomplete-npm-workspaces-asol-modules.md`.
 4. Run `npm run doctor:environment` and follow only the actions for the intended

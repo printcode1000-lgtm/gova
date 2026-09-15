@@ -55,7 +55,8 @@ export class AccountDeletionService {
     let images = [] as Awaited<ReturnType<AccountDeletionRepositoryPort['collectImages']>>;
 
     for (const step of ACCOUNT_DELETION_STEP_ORDER) {
-      switch (step) {
+      try {
+        switch (step) {
         case 'collect_images':
           images = await this.repository.collectImages(uid);
           stepsCompleted.push(step);
@@ -91,10 +92,14 @@ export class AccountDeletionService {
             imagesFailed: cleanup.failed,
           };
         }
-        default: {
-          const exhaustive: never = step;
-          throw new Error(`Unsupported account deletion step: ${exhaustive}`);
+          default: {
+            const exhaustive: never = step;
+            throw new Error(`Unsupported account deletion step: ${exhaustive}`);
+          }
         }
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        throw new Error(`accountDeletionStepFailed:${step}:${message}`, { cause: error });
       }
     }
 

@@ -11,7 +11,6 @@ export abstract class AbstractDatabaseClient implements IDatabaseClient {
     assertServerDataAccessRuntime();
   }
 
-  abstract get db(): any;
   abstract rawExecute(sql: string, params?: any[]): Promise<any[]>;
 
   async execute(sql: string, params?: any[]): Promise<any[]> {
@@ -26,7 +25,7 @@ export abstract class AbstractDatabaseClient implements IDatabaseClient {
    * is also the production path.
    */
   protected async _trackedExecute(sql: string, params: any[] = []): Promise<any[]> {
-    const driver = this.constructor.name.includes('Turso') ? 'Turso-Production' : 'SQLite-Dev';
+    const driver = this.constructor.name.includes('Turso') ? 'Turso-Cloud' : 'Turso-Cloud';
     return traceDatabaseQuery(
       { driver, sql, params, table: extractTable(sql) },
       () => this.rawExecute(sql, params),

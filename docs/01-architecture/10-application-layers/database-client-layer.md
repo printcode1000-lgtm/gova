@@ -17,7 +17,6 @@ Inside `@asol/data-core` only (`packages/data-core/src/core/database/**`, provis
 
 ## May import
 
-- `@libsql/client`, `drizzle-orm` (registered vendor owner)
 - Provisioning config from `@asol/data-core/provisioning`
 - Runtime policy modules
 

@@ -92,4 +92,4 @@ Receipt pushes never appear as cards and do not intentionally contribute to the 
 
 ## Schema source of truth
 
-The notifications database is still pre-release and has a single squashed baseline migration. `0000_notifications_init.sql` creates the final token and preference tables directly. Device tokens contain delivery registration only; chat preferences never duplicate onto token rows. SQLite is the schema source used by the cloud schema synchronizer, so local and Turso deployments expose the same two preference columns.
+The notifications database is still pre-release and has a single squashed baseline migration. `0000_notifications_init.sql` creates the final token and preference tables directly. Device tokens contain delivery registration only; chat preferences never duplicate onto token rows. embedded local database is the schema source used by the cloud schema synchronizer, so local and Turso deployments expose the same two preference columns.

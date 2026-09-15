@@ -790,20 +790,6 @@
       ]
     },
     {
-      "id": "command:db:drizzle",
-      "kind": "command",
-      "name": "npm run db:drizzle",
-      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
-      "tags": [
-        "db",
-        "db:drizzle",
-        "drizzle",
-        "npm",
-        "npm run db:drizzle",
-        "run"
-      ]
-    },
-    {
       "id": "command:db:drop:factory-reset",
       "kind": "command",
       "name": "npm run db:drop:factory-reset",
@@ -4430,8 +4416,6 @@
         "docs/00-overview/technologies.md",
         "docs/08-troubleshooting/problems/incomplete-npm-workspaces-asol-modules",
         "docs/08-troubleshooting/problems/incomplete-npm-workspaces-asol-modules.md",
-        "docs/08-troubleshooting/problems/npm-ci-better-sqlite3-python-windows",
-        "docs/08-troubleshooting/problems/npm-ci-better-sqlite3-python-windows.md",
         "environment",
         "every",
         "human-readable",
@@ -5482,7 +5466,6 @@
       "path": "docs/01-architecture/05-capability-enforcement/default-deny-model.md",
       "summary": "Explain the repository default-deny stance: new code, packages, directories, and vendor imports have **no** infrastructure authority until explicitly registered and enforced.",
       "tags": [
-        "@asol/data-core",
         "@asol/native-core",
         "@asol/page-save-core",
         "and",
@@ -7380,7 +7363,6 @@
         "operational",
         "packages/architecture-core/src/registry/application-features-registry",
         "packages/architecture-core/src/registry/application-features-registry.ts",
-        "packages/data-core/src/core/database/",
         "packages/data-core/src/domains/product/repositories/",
         "path",
         "preserved",
@@ -7575,11 +7557,12 @@
       "kind": "document",
       "name": "Repository Layer",
       "path": "docs/01-architecture/10-application-layers/repository-layer.md",
-      "summary": "Persistence interface between operations layer and database client — owns SQL/Drizzle usage for domain rows.",
+      "summary": "Persistence interface between operations layer and database client — owns SQL/query builder usage for domain rows.",
       "tags": [
         "@asol/data-core",
         "and",
         "between",
+        "builder",
         "client",
         "database",
         "docs/01-architecture/10-application-layers/repository-layer",
@@ -7593,11 +7576,11 @@
         "owns",
         "packages/data-core/src/domains/",
         "persistence",
-        "persistence interface between operations layer and database client — owns sql/drizzle usage for domain rows.",
+        "persistence interface between operations layer and database client — owns sql/query builder usage for domain rows.",
         "repository",
         "repository layer",
         "rows",
-        "sql/drizzle",
+        "sql/query",
         "usage"
       ]
     },
@@ -11054,6 +11037,7 @@
       "summary": "`@asol/page-save-core` is the **only** place ASOL performs a user-triggered save, upload, or delete.",
       "tags": [
         "@asol/data-core",
+        "@asol/data-core/marketplace-orders",
         "@asol/page-save-core",
         "@asol/storage-image-manager-core",
         "`@asol/page-save-core` is the **only** place asol performs a user-triggered save, upload, or delete.",
@@ -12555,6 +12539,8 @@
         "release",
         "run",
         "runtime",
+        "scripts/release-readiness-publish",
+        "scripts/release-readiness-publish.ts",
         "scripts/tests/control-service",
         "scripts/tests/control-service.test.ts",
         "services/control/generated/",
@@ -13288,7 +13274,7 @@
       "kind": "document",
       "name": "Capacitor Platform",
       "path": "docs/07-mobile-and-release/capacitor/capacitor.md",
-      "summary": "ASOL uses **Capacitor as a native runtime shell only** — Android and iOS load the same static web app produced by Next.js. Capacitor does **not** contain business logic, database drivers, ORM code, or SQLite/Turso clients.",
+      "summary": "ASOL uses **Capacitor as a native runtime shell only** — Android and iOS load the same static web app produced by Next.js. Capacitor does **not** contain business logic, database drivers, ORM code, or Turso clients.",
       "tags": [
         "@asol/native-core",
         "and",
@@ -13298,7 +13284,7 @@
         "app",
         "as",
         "asol",
-        "asol uses **capacitor as a native runtime shell only** — android and ios load the same static web app produced by next.js. capacitor does **not** contain business logic, database drivers, orm code, or sqlite/turso clients.",
+        "asol uses **capacitor as a native runtime shell only** — android and ios load the same static web app produced by next.js. capacitor does **not** contain business logic, database drivers, orm code, or turso clients.",
         "business",
         "by",
         "capacitor",
@@ -13335,10 +13321,10 @@
         "scripts/cap-build",
         "scripts/cap-build.ts",
         "shell",
-        "sqlite/turso",
         "static",
         "the",
         "ts",
+        "turso",
         "uses",
         "web"
       ]
@@ -15321,35 +15307,6 @@
       ]
     },
     {
-      "id": "document:docs/08-troubleshooting/problems/npm-ci-better-sqlite3-python-windows.md",
-      "kind": "document",
-      "name": "`npm ci` wrongly rebuilds `better-sqlite3@13` on Windows",
-      "path": "docs/08-troubleshooting/problems/npm-ci-better-sqlite3-python-windows.md",
-      "summary": "`npm ci` (or a fresh `npm install`) ends with:",
-      "tags": [
-        "@asol/data-core/tooling",
-        "`npm ci` (or a fresh `npm install`) ends with:",
-        "`npm ci` wrongly rebuilds `better-sqlite3@13` on windows",
-        "better-sqlite3@13",
-        "ci",
-        "docs/00-overview/technologies",
-        "docs/00-overview/technologies.md",
-        "docs/08-troubleshooting/problems/npm-ci-better-sqlite3-python-windows",
-        "docs/08-troubleshooting/problems/npm-ci-better-sqlite3-python-windows.md",
-        "ends",
-        "fresh",
-        "install",
-        "md",
-        "npm",
-        "on",
-        "or",
-        "rebuilds",
-        "windows",
-        "with",
-        "wrongly"
-      ]
-    },
-    {
       "id": "document:docs/08-troubleshooting/problems/ota-publish-static-export-failures.md",
       "kind": "document",
       "name": "OTA publish and static export failures",
@@ -15790,67 +15747,6 @@
         "throws",
         "tsx",
         "turbopack"
-      ]
-    },
-    {
-      "id": "document:docs/08-troubleshooting/problems/sqlite-pragma-run-empty-product.md",
-      "kind": "document",
-      "name": "Every SQLite-backed product reads back empty (`PRAGMA` executed with `run()`)",
-      "path": "docs/08-troubleshooting/problems/sqlite-pragma-run-empty-product.md",
-      "summary": "Historical. At the time, Development selected a filesystem SQLite backend (`dataSource: \"local\"`); it now reads the same Turso product database as every other runtime, so this failure mode no longer exists. `GET /api/products?id=<existing id>` answers **200** with a fully blank `",
-      "tags": [
-        "/api/products",
-        "200",
-        "answers",
-        "as",
-        "at",
-        "back",
-        "backend",
-        "blank",
-        "database",
-        "datasource",
-        "development",
-        "docs/08-troubleshooting/problems/sqlite-pragma-run-empty-product",
-        "docs/08-troubleshooting/problems/sqlite-pragma-run-empty-product.md",
-        "empty",
-        "every",
-        "every sqlite-backed product reads back empty (`pragma` executed with `run()`)",
-        "executed",
-        "existing",
-        "exists",
-        "failure",
-        "filesystem",
-        "fully",
-        "get",
-        "historical",
-        "historical. at the time, development selected a filesystem sqlite backend (`datasource: \"local\"`); it now reads the same turso product database as every other runtime, so this failure mode no longer exists. `get /api/products?id=<existing id>` answers **200** with a fully blank `",
-        "id",
-        "it",
-        "local",
-        "longer",
-        "md",
-        "mode",
-        "no",
-        "now",
-        "other",
-        "packages/data-core/src/core/database/sqlite-statement-execution",
-        "packages/data-core/src/core/database/sqlite-statement-execution.ts",
-        "pragma",
-        "product",
-        "reads",
-        "run",
-        "runtime",
-        "same",
-        "selected",
-        "so",
-        "sqlite",
-        "sqlite-backed",
-        "the",
-        "this",
-        "time",
-        "ts",
-        "turso",
-        "with"
       ]
     },
     {
@@ -21640,21 +21536,6 @@
       ]
     },
     {
-      "id": "external-dependency:@types/better-sqlite3",
-      "kind": "external-dependency",
-      "name": "@types/better-sqlite3",
-      "summary": "Declared dependency range observed: 9.6.0",
-      "tags": [
-        "9.6.0",
-        "@types/better-sqlite3",
-        "dependency",
-        "external",
-        "external dependency npm package",
-        "npm",
-        "package"
-      ]
-    },
-    {
       "id": "external-dependency:@types/geojson",
       "kind": "external-dependency",
       "name": "@types/geojson",
@@ -21887,20 +21768,6 @@
       ]
     },
     {
-      "id": "external-dependency:better-sqlite3",
-      "kind": "external-dependency",
-      "name": "better-sqlite3",
-      "summary": "External package imported by repository source",
-      "tags": [
-        "better-sqlite3",
-        "dependency",
-        "external",
-        "external dependency npm package",
-        "npm",
-        "package"
-      ]
-    },
-    {
       "id": "external-dependency:class-variance-authority",
       "kind": "external-dependency",
       "name": "class-variance-authority",
@@ -21952,20 +21819,6 @@
       "tags": [
         "dependency",
         "dotenv",
-        "external",
-        "external dependency npm package",
-        "npm",
-        "package"
-      ]
-    },
-    {
-      "id": "external-dependency:drizzle-orm",
-      "kind": "external-dependency",
-      "name": "drizzle-orm",
-      "summary": "External package imported by repository source",
-      "tags": [
-        "dependency",
-        "drizzle-orm",
         "external",
         "external dependency npm package",
         "npm",
@@ -23158,8 +23011,6 @@
         "database",
         "database access, sharding, and domain repositories",
         "domain",
-        "drizzle-orm",
-        "drizzle-orm/libsql",
         "packages/data-core",
         "repositories",
         "sharding"
@@ -25629,6 +25480,22 @@
       ]
     },
     {
+      "id": "route:/api/super-admin/orders/clear:handler",
+      "kind": "route",
+      "name": "/api/super-admin/orders/clear",
+      "path": "src/app/api/super-admin/orders/clear/route.ts",
+      "summary": "App Router request handler",
+      "tags": [
+        "/api/super-admin/orders/clear",
+        "api",
+        "handler",
+        "handler api",
+        "src/app/api/super-admin/orders/clear/route",
+        "src/app/api/super-admin/orders/clear/route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "route:/api/super-admin/users/delete:handler",
       "kind": "route",
       "name": "/api/super-admin/users/delete",
@@ -27886,17 +27753,6 @@
       "tags": [
         "scripts/route-ownership-coverage",
         "scripts/route-ownership-coverage.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "script:scripts/run-drizzle-kit.ts",
-      "kind": "script",
-      "name": "run-drizzle-kit.ts",
-      "path": "scripts/run-drizzle-kit.ts",
-      "tags": [
-        "scripts/run-drizzle-kit",
-        "scripts/run-drizzle-kit.ts",
         "ts"
       ]
     },
@@ -30346,18 +30202,6 @@
       ]
     },
     {
-      "id": "source:packages/data-core/src/core/database/advertisements/advertisements.schema.ts",
-      "kind": "source",
-      "name": "advertisements.schema.ts",
-      "path": "packages/data-core/src/core/database/advertisements/advertisements.schema.ts",
-      "tags": [
-        "packages/data-core/src/core/database/advertisements/advertisements",
-        "packages/data-core/src/core/database/advertisements/advertisements.schema.ts",
-        "schema",
-        "ts"
-      ]
-    },
-    {
       "id": "source:packages/data-core/src/core/database/database-client.interface.ts",
       "kind": "source",
       "name": "database-client.interface.ts",
@@ -30377,18 +30221,6 @@
       "tags": [
         "packages/data-core/src/core/database/database-shards",
         "packages/data-core/src/core/database/database-shards.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/data-core/src/core/database/drizzle-libsql.server.ts",
-      "kind": "source",
-      "name": "drizzle-libsql.server.ts",
-      "path": "packages/data-core/src/core/database/drizzle-libsql.server.ts",
-      "tags": [
-        "packages/data-core/src/core/database/drizzle-libsql",
-        "packages/data-core/src/core/database/drizzle-libsql.server.ts",
-        "server",
         "ts"
       ]
     },
@@ -30415,18 +30247,6 @@
       ]
     },
     {
-      "id": "source:packages/data-core/src/core/database/notifications/notifications.schema.ts",
-      "kind": "source",
-      "name": "notifications.schema.ts",
-      "path": "packages/data-core/src/core/database/notifications/notifications.schema.ts",
-      "tags": [
-        "packages/data-core/src/core/database/notifications/notifications",
-        "packages/data-core/src/core/database/notifications/notifications.schema.ts",
-        "schema",
-        "ts"
-      ]
-    },
-    {
       "id": "source:packages/data-core/src/core/database/product-turso-db-client.ts",
       "kind": "source",
       "name": "product-turso-db-client.ts",
@@ -30434,18 +30254,6 @@
       "tags": [
         "packages/data-core/src/core/database/product-turso-db-client",
         "packages/data-core/src/core/database/product-turso-db-client.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/data-core/src/core/database/product/product.schema.ts",
-      "kind": "source",
-      "name": "product.schema.ts",
-      "path": "packages/data-core/src/core/database/product/product.schema.ts",
-      "tags": [
-        "packages/data-core/src/core/database/product/product",
-        "packages/data-core/src/core/database/product/product.schema.ts",
-        "schema",
         "ts"
       ]
     },
@@ -30469,29 +30277,6 @@
         "packages/data-core/src/core/database/profile/profile",
         "packages/data-core/src/core/database/profile/profile.schema.ts",
         "schema",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/data-core/src/core/database/profile/user-specialties.schema.ts",
-      "kind": "source",
-      "name": "user-specialties.schema.ts",
-      "path": "packages/data-core/src/core/database/profile/user-specialties.schema.ts",
-      "tags": [
-        "packages/data-core/src/core/database/profile/user-specialties",
-        "packages/data-core/src/core/database/profile/user-specialties.schema.ts",
-        "schema",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:packages/data-core/src/core/database/schema.ts",
-      "kind": "source",
-      "name": "schema.ts",
-      "path": "packages/data-core/src/core/database/schema.ts",
-      "tags": [
-        "packages/data-core/src/core/database/schema",
-        "packages/data-core/src/core/database/schema.ts",
         "ts"
       ]
     },
@@ -30933,6 +30718,19 @@
       "tags": [
         "packages/data-core/src/domains/marketplace-orders/application/service-result-boundary",
         "packages/data-core/src/domains/marketplace-orders/application/service-result-boundary.server.ts",
+        "server",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/domains/marketplace-orders/commands/delete-all-orders.command.server.ts",
+      "kind": "source",
+      "name": "delete-all-orders.command.server.ts",
+      "path": "packages/data-core/src/domains/marketplace-orders/commands/delete-all-orders.command.server.ts",
+      "tags": [
+        "command",
+        "packages/data-core/src/domains/marketplace-orders/commands/delete-all-orders",
+        "packages/data-core/src/domains/marketplace-orders/commands/delete-all-orders.command.server.ts",
         "server",
         "ts"
       ]
@@ -35709,17 +35507,6 @@
       ]
     },
     {
-      "id": "source:packages/observability-core/src/traces/drizzle-dev-logger.ts",
-      "kind": "source",
-      "name": "drizzle-dev-logger.ts",
-      "path": "packages/observability-core/src/traces/drizzle-dev-logger.ts",
-      "tags": [
-        "packages/observability-core/src/traces/drizzle-dev-logger",
-        "packages/observability-core/src/traces/drizzle-dev-logger.ts",
-        "ts"
-      ]
-    },
-    {
       "id": "source:packages/observability-core/src/traces/emit-server-trace.ts",
       "kind": "source",
       "name": "emit-server-trace.ts",
@@ -38665,6 +38452,17 @@
       ]
     },
     {
+      "id": "source:services/control/src/app/api/release-readiness/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/release-readiness/route.ts",
+      "tags": [
+        "services/control/src/app/api/release-readiness/route",
+        "services/control/src/app/api/release-readiness/route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:services/control/src/app/api/super-admin/build-jobs/[jobId]/artifacts/[name]/analysis/route.ts",
       "kind": "source",
       "name": "route.ts",
@@ -38906,6 +38704,17 @@
       "tags": [
         "services/control/src/app/api/super-admin/impersonate/route",
         "services/control/src/app/api/super-admin/impersonate/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/control/src/app/api/super-admin/orders/clear/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/control/src/app/api/super-admin/orders/clear/route.ts",
+      "tags": [
+        "services/control/src/app/api/super-admin/orders/clear/route",
+        "services/control/src/app/api/super-admin/orders/clear/route.ts",
         "ts"
       ]
     },
@@ -41332,6 +41141,17 @@
       "tags": [
         "src/app/api/super-admin/impersonate/route",
         "src/app/api/super-admin/impersonate/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/app/api/super-admin/orders/clear/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "src/app/api/super-admin/orders/clear/route.ts",
+      "tags": [
+        "src/app/api/super-admin/orders/clear/route",
+        "src/app/api/super-admin/orders/clear/route.ts",
         "ts"
       ]
     },
@@ -52765,6 +52585,18 @@
       ]
     },
     {
+      "id": "test:packages/data-core/src/domains/marketplace-orders/tests/delete-all-orders.test.ts",
+      "kind": "test",
+      "name": "delete-all-orders.test.ts",
+      "path": "packages/data-core/src/domains/marketplace-orders/tests/delete-all-orders.test.ts",
+      "tags": [
+        "packages/data-core/src/domains/marketplace-orders/tests/delete-all-orders",
+        "packages/data-core/src/domains/marketplace-orders/tests/delete-all-orders.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/data-core/src/domains/marketplace-orders/tests/delivery-rejection.test.ts",
       "kind": "test",
       "name": "delivery-rejection.test.ts",
@@ -55172,6 +55004,18 @@
       ]
     },
     {
+      "id": "test:src/features/orders/tests/super-admin-clear-all-orders.test.ts",
+      "kind": "test",
+      "name": "super-admin-clear-all-orders.test.ts",
+      "path": "src/features/orders/tests/super-admin-clear-all-orders.test.ts",
+      "tags": [
+        "src/features/orders/tests/super-admin-clear-all-orders",
+        "src/features/orders/tests/super-admin-clear-all-orders.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:src/features/page-save/tests/page-save-ownership.test.ts",
       "kind": "test",
       "name": "page-save-ownership.test.ts",
@@ -56345,16 +56189,6 @@
     },
     {
       "from": "command:data-access:sync-public",
-      "to": "runtime:tooling",
-      "kind": "targets-runtime"
-    },
-    {
-      "from": "command:db:drizzle",
-      "to": "script:scripts/run-drizzle-kit.ts",
-      "kind": "invokes"
-    },
-    {
-      "from": "command:db:drizzle",
       "to": "runtime:tooling",
       "kind": "targets-runtime"
     },
@@ -58665,6 +58499,11 @@
     },
     {
       "from": "command:test:marketplace-orders",
+      "to": "test:packages/data-core/src/domains/marketplace-orders/tests/delete-all-orders.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:marketplace-orders",
       "to": "test:packages/data-core/src/domains/marketplace-orders/tests/delivery-rejection.test.ts",
       "kind": "invokes"
     },
@@ -60665,12 +60504,6 @@
     },
     {
       "from": "config:package.json",
-      "to": "external-dependency:@types/better-sqlite3",
-      "kind": "declares-dependency",
-      "detail": "devDependencies:9.6.0"
-    },
-    {
-      "from": "config:package.json",
       "to": "external-dependency:@types/geojson",
       "kind": "declares-dependency",
       "detail": "devDependencies:^7946.0.16"
@@ -60725,12 +60558,6 @@
     },
     {
       "from": "config:package.json",
-      "to": "external-dependency:better-sqlite3",
-      "kind": "declares-dependency",
-      "detail": "devDependencies:^13.0.3"
-    },
-    {
-      "from": "config:package.json",
       "to": "external-dependency:class-variance-authority",
       "kind": "declares-dependency",
       "detail": "dependencies:^0.7.1"
@@ -60752,12 +60579,6 @@
       "to": "external-dependency:dotenv",
       "kind": "declares-dependency",
       "detail": "dependencies:^17.4.2"
-    },
-    {
-      "from": "config:package.json",
-      "to": "external-dependency:drizzle-orm",
-      "kind": "declares-dependency",
-      "detail": "dependencies:^0.45.2"
     },
     {
       "from": "config:package.json",
@@ -61034,12 +60855,6 @@
     },
     {
       "from": "document:docs/00-overview/technologies.md",
-      "to": "document:docs/08-troubleshooting/problems/npm-ci-better-sqlite3-python-windows.md",
-      "kind": "references",
-      "detail": "docs/08-troubleshooting/problems/npm-ci-better-sqlite3-python-windows.md"
-    },
-    {
-      "from": "document:docs/00-overview/technologies.md",
       "to": "script:scripts/runtime-compatibility-policy.ts",
       "kind": "references",
       "detail": "scripts/runtime-compatibility-policy.ts"
@@ -61204,7 +61019,7 @@
     },
     {
       "from": "document:docs/01-architecture/01-principles/dependency-direction.md",
-      "to": "source:packages/data-core/src/core/database/schema.ts",
+      "to": "source:packages/data-core/src/core/database/environment.ts",
       "kind": "references",
       "detail": "packages/data-core/src/core/database/"
     },
@@ -62934,12 +62749,6 @@
       "to": "feature:ota",
       "kind": "references",
       "detail": "src/features/"
-    },
-    {
-      "from": "document:docs/01-architecture/05-capability-enforcement/default-deny-model.md",
-      "to": "package:@asol/data-core",
-      "kind": "references",
-      "detail": "@asol/data-core"
     },
     {
       "from": "document:docs/01-architecture/05-capability-enforcement/default-deny-model.md",
@@ -67335,7 +67144,7 @@
     },
     {
       "from": "document:docs/01-architecture/10-application-layers/database-client-layer.md",
-      "to": "source:packages/data-core/src/core/database/schema.ts",
+      "to": "source:packages/data-core/src/core/database/environment.ts",
       "kind": "references",
       "detail": "packages/data-core/src/core/database/"
     },
@@ -67373,12 +67182,6 @@
       "to": "source:packages/architecture-core/src/registry/application-features-registry.ts",
       "kind": "references",
       "detail": "packages/architecture-core/src/registry/application-features-registry.ts"
-    },
-    {
-      "from": "document:docs/01-architecture/10-application-layers/extending-features.md",
-      "to": "source:packages/data-core/src/core/database/schema.ts",
-      "kind": "references",
-      "detail": "packages/data-core/src/core/database/"
     },
     {
       "from": "document:docs/01-architecture/10-application-layers/extending-features.md",
@@ -68601,15 +68404,15 @@
     },
     {
       "from": "document:docs/02-data-and-storage/product-data-model.md",
-      "to": "package:@asol/product-core",
+      "to": "package:@asol/data-core",
       "kind": "references",
-      "detail": "@asol/product-core"
+      "detail": "packages/data-core/src/core/database/product/product.schema.ts"
     },
     {
       "from": "document:docs/02-data-and-storage/product-data-model.md",
-      "to": "source:packages/data-core/src/core/database/product/product.schema.ts",
+      "to": "package:@asol/product-core",
       "kind": "references",
-      "detail": "packages/data-core/src/core/database/product/product.schema.ts"
+      "detail": "@asol/product-core"
     },
     {
       "from": "document:docs/02-data-and-storage/profile-system.md",
@@ -68748,7 +68551,7 @@
     },
     {
       "from": "document:docs/02-data-and-storage/schema-provisioning.md",
-      "to": "source:packages/data-core/src/core/database/schema.ts",
+      "to": "package:@asol/data-core",
       "kind": "references",
       "detail": "packages/data-core/src/core/database/schema.ts"
     },
@@ -68885,7 +68688,7 @@
     },
     {
       "from": "document:docs/03-products-and-commerce/categories-and-products/user-specialties-module.md",
-      "to": "source:packages/data-core/src/core/database/profile/user-specialties.schema.ts",
+      "to": "package:@asol/data-core",
       "kind": "references",
       "detail": "packages/data-core/src/core/database/profile/user-specialties.schema.ts"
     },
@@ -70926,6 +70729,12 @@
     },
     {
       "from": "document:docs/05-platform-features/page-save-system.md",
+      "to": "package:@asol/data-core",
+      "kind": "references",
+      "detail": "@asol/data-core/marketplace-orders"
+    },
+    {
+      "from": "document:docs/05-platform-features/page-save-system.md",
       "to": "package:@asol/page-save-core",
       "kind": "references",
       "detail": "@asol/page-save-core"
@@ -72778,6 +72587,12 @@
       "to": "package:@asol/vercel-deploy-core",
       "kind": "references",
       "detail": "@asol/vercel-deploy-core/release-rollback"
+    },
+    {
+      "from": "document:docs/06-super-admin-and-operations/control-runtime.md",
+      "to": "script:scripts/release-readiness-publish.ts",
+      "kind": "references",
+      "detail": "scripts/release-readiness-publish.ts"
     },
     {
       "from": "document:docs/06-super-admin-and-operations/control-runtime.md",
@@ -75208,12 +75023,6 @@
       "detail": "docs/07-mobile-and-release/capacitor/branding-core-module.md"
     },
     {
-      "from": "document:docs/08-troubleshooting/problems/incomplete-npm-workspaces-asol-modules.md",
-      "to": "document:docs/08-troubleshooting/problems/npm-ci-better-sqlite3-python-windows.md",
-      "kind": "references",
-      "detail": "./npm-ci-better-sqlite3-python-windows.md"
-    },
-    {
       "from": "document:docs/08-troubleshooting/problems/invalid-java-home-windows.md",
       "to": "domain:troubleshooting",
       "kind": "belongs-to"
@@ -75251,29 +75060,6 @@
       "to": "test:src/features/notifications/tests/notification-account-surface.test.ts",
       "kind": "references",
       "detail": "src/features/notifications/tests/notification-account-surface.test.ts"
-    },
-    {
-      "from": "document:docs/08-troubleshooting/problems/npm-ci-better-sqlite3-python-windows.md",
-      "to": "domain:troubleshooting",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "document:docs/08-troubleshooting/problems/npm-ci-better-sqlite3-python-windows.md",
-      "to": "document:docs/00-overview/technologies.md",
-      "kind": "references",
-      "detail": "docs/00-overview/technologies.md"
-    },
-    {
-      "from": "document:docs/08-troubleshooting/problems/npm-ci-better-sqlite3-python-windows.md",
-      "to": "document:docs/08-troubleshooting/problems/incomplete-npm-workspaces-asol-modules.md",
-      "kind": "references",
-      "detail": "./incomplete-npm-workspaces-asol-modules.md"
-    },
-    {
-      "from": "document:docs/08-troubleshooting/problems/npm-ci-better-sqlite3-python-windows.md",
-      "to": "package:@asol/data-core",
-      "kind": "references",
-      "detail": "@asol/data-core/tooling"
     },
     {
       "from": "document:docs/08-troubleshooting/problems/ota-publish-static-export-failures.md",
@@ -75634,12 +75420,6 @@
     },
     {
       "from": "document:docs/08-troubleshooting/problems/README.md",
-      "to": "document:docs/08-troubleshooting/problems/npm-ci-better-sqlite3-python-windows.md",
-      "kind": "references",
-      "detail": "./npm-ci-better-sqlite3-python-windows.md"
-    },
-    {
-      "from": "document:docs/08-troubleshooting/problems/README.md",
       "to": "document:docs/08-troubleshooting/problems/ota-publish-static-export-failures.md",
       "kind": "references",
       "detail": "./ota-publish-static-export-failures.md"
@@ -75688,12 +75468,6 @@
     },
     {
       "from": "document:docs/08-troubleshooting/problems/README.md",
-      "to": "document:docs/08-troubleshooting/problems/sqlite-pragma-run-empty-product.md",
-      "kind": "references",
-      "detail": "./sqlite-pragma-run-empty-product.md"
-    },
-    {
-      "from": "document:docs/08-troubleshooting/problems/README.md",
       "to": "document:docs/08-troubleshooting/problems/static-mobile-push-pem-audit-false-positive.md",
       "kind": "references",
       "detail": "./static-mobile-push-pem-audit-false-positive.md"
@@ -75731,17 +75505,6 @@
       "to": "source:src/features/splash/presentation/TopMarquee.tsx",
       "kind": "references",
       "detail": "src/features/splash/presentation/TopMarquee.tsx"
-    },
-    {
-      "from": "document:docs/08-troubleshooting/problems/sqlite-pragma-run-empty-product.md",
-      "to": "domain:troubleshooting",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "document:docs/08-troubleshooting/problems/sqlite-pragma-run-empty-product.md",
-      "to": "package:@asol/data-core",
-      "kind": "references",
-      "detail": "packages/data-core/src/core/database/sqlite-statement-execution.ts"
     },
     {
       "from": "document:docs/08-troubleshooting/problems/static-mobile-push-pem-audit-false-positive.md",
@@ -78939,12 +78702,6 @@
     },
     {
       "from": "domain:architecture",
-      "to": "source:packages/data-core/src/core/database/advertisements/advertisements.schema.ts",
-      "kind": "documents",
-      "detail": "packages/"
-    },
-    {
-      "from": "domain:architecture",
       "to": "source:packages/data-core/src/core/database/database-client.interface.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -78952,12 +78709,6 @@
     {
       "from": "domain:architecture",
       "to": "source:packages/data-core/src/core/database/database-shards.ts",
-      "kind": "documents",
-      "detail": "packages/"
-    },
-    {
-      "from": "domain:architecture",
-      "to": "source:packages/data-core/src/core/database/drizzle-libsql.server.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -78975,19 +78726,7 @@
     },
     {
       "from": "domain:architecture",
-      "to": "source:packages/data-core/src/core/database/notifications/notifications.schema.ts",
-      "kind": "documents",
-      "detail": "packages/"
-    },
-    {
-      "from": "domain:architecture",
       "to": "source:packages/data-core/src/core/database/product-turso-db-client.ts",
-      "kind": "documents",
-      "detail": "packages/"
-    },
-    {
-      "from": "domain:architecture",
-      "to": "source:packages/data-core/src/core/database/product/product.schema.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -79000,18 +78739,6 @@
     {
       "from": "domain:architecture",
       "to": "source:packages/data-core/src/core/database/profile/profile.schema.ts",
-      "kind": "documents",
-      "detail": "packages/"
-    },
-    {
-      "from": "domain:architecture",
-      "to": "source:packages/data-core/src/core/database/profile/user-specialties.schema.ts",
-      "kind": "documents",
-      "detail": "packages/"
-    },
-    {
-      "from": "domain:architecture",
-      "to": "source:packages/data-core/src/core/database/schema.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -79240,6 +78967,12 @@
     {
       "from": "domain:architecture",
       "to": "source:packages/data-core/src/domains/marketplace-orders/application/service-result-boundary.server.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/data-core/src/domains/marketplace-orders/commands/delete-all-orders.command.server.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -81759,12 +81492,6 @@
     },
     {
       "from": "domain:architecture",
-      "to": "source:packages/observability-core/src/traces/drizzle-dev-logger.ts",
-      "kind": "documents",
-      "detail": "packages/"
-    },
-    {
-      "from": "domain:architecture",
       "to": "source:packages/observability-core/src/traces/emit-server-trace.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -83529,6 +83256,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "test:packages/data-core/src/domains/marketplace-orders/tests/delete-all-orders.test.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "test:packages/data-core/src/domains/marketplace-orders/tests/delivery-rejection.test.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -84417,12 +84150,6 @@
     },
     {
       "from": "domain:data-and-storage",
-      "to": "source:packages/data-core/src/core/database/advertisements/advertisements.schema.ts",
-      "kind": "documents",
-      "detail": "packages/data-core/"
-    },
-    {
-      "from": "domain:data-and-storage",
       "to": "source:packages/data-core/src/core/database/database-client.interface.ts",
       "kind": "documents",
       "detail": "packages/data-core/"
@@ -84430,12 +84157,6 @@
     {
       "from": "domain:data-and-storage",
       "to": "source:packages/data-core/src/core/database/database-shards.ts",
-      "kind": "documents",
-      "detail": "packages/data-core/"
-    },
-    {
-      "from": "domain:data-and-storage",
-      "to": "source:packages/data-core/src/core/database/drizzle-libsql.server.ts",
       "kind": "documents",
       "detail": "packages/data-core/"
     },
@@ -84453,19 +84174,7 @@
     },
     {
       "from": "domain:data-and-storage",
-      "to": "source:packages/data-core/src/core/database/notifications/notifications.schema.ts",
-      "kind": "documents",
-      "detail": "packages/data-core/"
-    },
-    {
-      "from": "domain:data-and-storage",
       "to": "source:packages/data-core/src/core/database/product-turso-db-client.ts",
-      "kind": "documents",
-      "detail": "packages/data-core/"
-    },
-    {
-      "from": "domain:data-and-storage",
-      "to": "source:packages/data-core/src/core/database/product/product.schema.ts",
       "kind": "documents",
       "detail": "packages/data-core/"
     },
@@ -84478,18 +84187,6 @@
     {
       "from": "domain:data-and-storage",
       "to": "source:packages/data-core/src/core/database/profile/profile.schema.ts",
-      "kind": "documents",
-      "detail": "packages/data-core/"
-    },
-    {
-      "from": "domain:data-and-storage",
-      "to": "source:packages/data-core/src/core/database/profile/user-specialties.schema.ts",
-      "kind": "documents",
-      "detail": "packages/data-core/"
-    },
-    {
-      "from": "domain:data-and-storage",
-      "to": "source:packages/data-core/src/core/database/schema.ts",
       "kind": "documents",
       "detail": "packages/data-core/"
     },
@@ -84718,6 +84415,12 @@
     {
       "from": "domain:data-and-storage",
       "to": "source:packages/data-core/src/domains/marketplace-orders/application/service-result-boundary.server.ts",
+      "kind": "documents",
+      "detail": "packages/data-core/"
+    },
+    {
+      "from": "domain:data-and-storage",
+      "to": "source:packages/data-core/src/domains/marketplace-orders/commands/delete-all-orders.command.server.ts",
       "kind": "documents",
       "detail": "packages/data-core/"
     },
@@ -86055,6 +85758,12 @@
     },
     {
       "from": "domain:data-and-storage",
+      "to": "test:packages/data-core/src/domains/marketplace-orders/tests/delete-all-orders.test.ts",
+      "kind": "documents",
+      "detail": "packages/data-core/"
+    },
+    {
+      "from": "domain:data-and-storage",
       "to": "test:packages/data-core/src/domains/marketplace-orders/tests/delivery-rejection.test.ts",
       "kind": "documents",
       "detail": "packages/data-core/"
@@ -87034,12 +86743,6 @@
     {
       "from": "domain:mobile-and-release",
       "to": "script:scripts/route-ownership-coverage.ts",
-      "kind": "documents",
-      "detail": "scripts/"
-    },
-    {
-      "from": "domain:mobile-and-release",
-      "to": "script:scripts/run-drizzle-kit.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -89019,6 +88722,12 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "source:services/control/src/app/api/release-readiness/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "source:services/control/src/app/api/super-admin/build-jobs/[jobId]/artifacts/[name]/analysis/route.ts",
       "kind": "documents",
       "detail": "services/"
@@ -89140,6 +88849,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "source:services/control/src/app/api/super-admin/impersonate/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/control/src/app/api/super-admin/orders/clear/route.ts",
       "kind": "documents",
       "detail": "services/"
     },
@@ -97209,6 +96924,12 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "test:src/features/orders/tests/super-admin-clear-all-orders.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "test:src/features/page-save/tests/page-save-ownership.test.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -98517,6 +98238,12 @@
     },
     {
       "from": "domain:products-and-commerce",
+      "to": "test:src/features/orders/tests/super-admin-clear-all-orders.test.ts",
+      "kind": "documents",
+      "detail": "src/features/orders/"
+    },
+    {
+      "from": "domain:products-and-commerce",
       "to": "test:src/features/product/tests/pharmacy-product-lookup-port-registry.test.ts",
       "kind": "documents",
       "detail": "src/features/product/"
@@ -98632,12 +98359,6 @@
     {
       "from": "domain:super-admin-and-operations",
       "to": "source:packages/observability-core/src/traces/dev-trace-types.ts",
-      "kind": "documents",
-      "detail": "packages/observability-core/"
-    },
-    {
-      "from": "domain:super-admin-and-operations",
-      "to": "source:packages/observability-core/src/traces/drizzle-dev-logger.ts",
       "kind": "documents",
       "detail": "packages/observability-core/"
     },
@@ -99999,6 +99720,12 @@
     },
     {
       "from": "domain:ui-components",
+      "to": "route:/api/super-admin/orders/clear:handler",
+      "kind": "documents",
+      "detail": "src/app/"
+    },
+    {
+      "from": "domain:ui-components",
       "to": "route:/api/super-admin/users/delete:handler",
       "kind": "documents",
       "detail": "src/app/"
@@ -100972,6 +100699,12 @@
     {
       "from": "domain:ui-components",
       "to": "source:src/app/api/super-admin/impersonate/route.ts",
+      "kind": "documents",
+      "detail": "src/app/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "source:src/app/api/super-admin/orders/clear/route.ts",
       "kind": "documents",
       "detail": "src/app/"
     },
@@ -106413,6 +106146,12 @@
     },
     {
       "from": "domain:ui-components",
+      "to": "test:src/features/orders/tests/super-admin-clear-all-orders.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
       "to": "test:src/features/page-save/tests/page-save-ownership.test.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -107259,7 +106998,17 @@
     },
     {
       "from": "feature:notifications",
+      "to": "package:@asol/page-save-core",
+      "kind": "imports"
+    },
+    {
+      "from": "feature:notifications",
       "to": "package:@asol/spatial-carousel-core",
+      "kind": "imports"
+    },
+    {
+      "from": "feature:notifications",
+      "to": "package:@asol/system-logs-core",
       "kind": "imports"
     },
     {
@@ -107340,6 +107089,11 @@
     {
       "from": "feature:orders",
       "to": "feature:notifications",
+      "kind": "imports"
+    },
+    {
+      "from": "feature:orders",
+      "to": "feature:page-save",
       "kind": "imports"
     },
     {
@@ -108652,17 +108406,7 @@
     },
     {
       "from": "package:@asol/data-core",
-      "to": "external-dependency:better-sqlite3",
-      "kind": "imports"
-    },
-    {
-      "from": "package:@asol/data-core",
       "to": "external-dependency:dotenv",
-      "kind": "imports"
-    },
-    {
-      "from": "package:@asol/data-core",
-      "to": "external-dependency:drizzle-orm",
       "kind": "imports"
     },
     {
@@ -124589,6 +124333,165 @@
       "detail": "route source dependency"
     },
     {
+      "from": "route:/api/super-admin/orders/clear:handler",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "route:/api/super-admin/orders/clear:handler",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "route:/api/super-admin/orders/clear:handler",
+      "to": "source:src/app/api/super-admin/orders/clear/route.ts",
+      "kind": "contains"
+    },
+    {
+      "from": "route:/api/super-admin/orders/clear:handler",
+      "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/orders/clear:handler",
+      "to": "feature:data",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/orders/clear:handler",
+      "to": "feature:super-admin",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/orders/clear:handler",
+      "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/orders/clear:handler",
+      "to": "package:@asol/account-declarations",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/orders/clear:handler",
+      "to": "package:@asol/api-contract-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/orders/clear:handler",
+      "to": "package:@asol/auth-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/orders/clear:handler",
+      "to": "package:@asol/branding-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/orders/clear:handler",
+      "to": "package:@asol/cors",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/orders/clear:handler",
+      "to": "package:@asol/data-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/orders/clear:handler",
+      "to": "package:@asol/data-core",
+      "kind": "related-to",
+      "detail": "route write gateway"
+    },
+    {
+      "from": "route:/api/super-admin/orders/clear:handler",
+      "to": "package:@asol/env-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/orders/clear:handler",
+      "to": "package:@asol/featured-marquee-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/orders/clear:handler",
+      "to": "package:@asol/hero-slider-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/orders/clear:handler",
+      "to": "package:@asol/notifications-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/orders/clear:handler",
+      "to": "package:@asol/observability-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/orders/clear:handler",
+      "to": "package:@asol/orders-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/orders/clear:handler",
+      "to": "package:@asol/product-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/orders/clear:handler",
+      "to": "package:@asol/signed-token-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/orders/clear:handler",
+      "to": "package:@asol/storage-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/orders/clear:handler",
+      "to": "package:@asol/storage-core",
+      "kind": "related-to",
+      "detail": "route write gateway"
+    },
+    {
+      "from": "route:/api/super-admin/orders/clear:handler",
+      "to": "package:@asol/system-logs-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/orders/clear:handler",
+      "to": "package:@asol/trending-ribbon-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/super-admin/orders/clear:handler",
+      "to": "package:@asol/vercel-deploy-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
       "from": "route:/api/super-admin/users/delete:handler",
       "to": "runtime:development",
       "kind": "affects-runtime"
@@ -127698,6 +127601,18 @@
     },
     {
       "from": "route:/notifications:page",
+      "to": "package:@asol/page-save-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/notifications:page",
+      "to": "package:@asol/page-save-core",
+      "kind": "related-to",
+      "detail": "route write gateway"
+    },
+    {
+      "from": "route:/notifications:page",
       "to": "package:@asol/signed-token-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -127705,6 +127620,12 @@
     {
       "from": "route:/notifications:page",
       "to": "package:@asol/spatial-carousel-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/notifications:page",
+      "to": "package:@asol/system-logs-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -127854,6 +127775,12 @@
     },
     {
       "from": "route:/orders:page",
+      "to": "feature:page-save",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders:page",
       "to": "feature:profile",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -127956,6 +127883,12 @@
     },
     {
       "from": "route:/orders/[orderId]:page",
+      "to": "feature:page-save",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/[orderId]:page",
       "to": "feature:profile",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -128053,6 +127986,12 @@
     {
       "from": "route:/orders/details:page",
       "to": "feature:orders",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/orders/details:page",
+      "to": "feature:page-save",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -133685,11 +133624,6 @@
       "kind": "affects-runtime"
     },
     {
-      "from": "script:scripts/run-drizzle-kit.ts",
-      "to": "runtime:tooling",
-      "kind": "affects-runtime"
-    },
-    {
       "from": "script:scripts/run-generated-gate.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
@@ -134207,6 +134141,12 @@
       "to": "package:@asol/catalog-core",
       "kind": "imports",
       "detail": "@asol/catalog-core/server"
+    },
+    {
+      "from": "script:scripts/validate-catalog.ts",
+      "to": "package:@asol/data-core",
+      "kind": "imports",
+      "detail": "@asol/data-core/provisioning"
     },
     {
       "from": "script:scripts/validate-categories.ts",
@@ -140529,12 +140469,6 @@
     },
     {
       "from": "source:packages/data-core/src/control-ota.ts",
-      "to": "external-dependency:drizzle-orm",
-      "kind": "imports",
-      "detail": "drizzle-orm/libsql"
-    },
-    {
-      "from": "source:packages/data-core/src/control-ota.ts",
       "to": "external-dependency:server-only",
       "kind": "imports",
       "detail": "server-only"
@@ -140787,65 +140721,11 @@
     },
     {
       "from": "source:packages/data-core/src/core/database/advertisements-turso-db-client.ts",
-      "to": "source:packages/data-core/src/core/database/drizzle-libsql.server.ts",
-      "kind": "imports",
-      "detail": "./drizzle-libsql.server"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/advertisements-turso-db-client.ts",
       "to": "source:packages/data-core/src/core/turso/advertisements-turso-client.ts",
       "kind": "imports",
       "detail": "../turso/advertisements-turso-client"
     },
     {
-      "from": "source:packages/data-core/src/core/database/advertisements-turso-db-client.ts",
-      "to": "source:packages/data-core/src/ports/runtime-config.ts",
-      "kind": "imports",
-      "detail": "../../ports/runtime-config"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/advertisements-turso-db-client.ts",
-      "to": "source:packages/data-core/src/ports/telemetry.ts",
-      "kind": "imports",
-      "detail": "../../ports/telemetry"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/advertisements/advertisements.schema.ts",
-      "to": "runtime:android",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/advertisements/advertisements.schema.ts",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/advertisements/advertisements.schema.ts",
-      "to": "runtime:ios",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/advertisements/advertisements.schema.ts",
-      "to": "runtime:static-out",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/advertisements/advertisements.schema.ts",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/advertisements/advertisements.schema.ts",
-      "to": "package:@asol/data-core",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/advertisements/advertisements.schema.ts",
-      "to": "external-dependency:drizzle-orm",
-      "kind": "imports",
-      "detail": "drizzle-orm/sqlite-core"
-    },
-    {
       "from": "source:packages/data-core/src/core/database/database-client.interface.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -140904,33 +140784,6 @@
       "from": "source:packages/data-core/src/core/database/database-shards.ts",
       "to": "package:@asol/data-core",
       "kind": "belongs-to"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/drizzle-libsql.server.ts",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/drizzle-libsql.server.ts",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/drizzle-libsql.server.ts",
-      "to": "package:@asol/data-core",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/drizzle-libsql.server.ts",
-      "to": "external-dependency:drizzle-orm",
-      "kind": "imports",
-      "detail": "drizzle-orm/libsql"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/drizzle-libsql.server.ts",
-      "to": "external-dependency:server-only",
-      "kind": "imports",
-      "detail": "server-only"
     },
     {
       "from": "source:packages/data-core/src/core/database/environment.ts",
@@ -141003,63 +140856,9 @@
     },
     {
       "from": "source:packages/data-core/src/core/database/notifications-turso-db-client.ts",
-      "to": "source:packages/data-core/src/core/database/drizzle-libsql.server.ts",
-      "kind": "imports",
-      "detail": "./drizzle-libsql.server"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/notifications-turso-db-client.ts",
       "to": "source:packages/data-core/src/core/turso/notifications-turso-client.ts",
       "kind": "imports",
       "detail": "../turso/notifications-turso-client"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/notifications-turso-db-client.ts",
-      "to": "source:packages/data-core/src/ports/runtime-config.ts",
-      "kind": "imports",
-      "detail": "../../ports/runtime-config"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/notifications-turso-db-client.ts",
-      "to": "source:packages/data-core/src/ports/telemetry.ts",
-      "kind": "imports",
-      "detail": "../../ports/telemetry"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/notifications/notifications.schema.ts",
-      "to": "runtime:android",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/notifications/notifications.schema.ts",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/notifications/notifications.schema.ts",
-      "to": "runtime:ios",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/notifications/notifications.schema.ts",
-      "to": "runtime:static-out",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/notifications/notifications.schema.ts",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/notifications/notifications.schema.ts",
-      "to": "package:@asol/data-core",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/notifications/notifications.schema.ts",
-      "to": "external-dependency:drizzle-orm",
-      "kind": "imports",
-      "detail": "drizzle-orm/sqlite-core"
     },
     {
       "from": "source:packages/data-core/src/core/database/product-turso-db-client.ts",
@@ -141090,12 +140889,6 @@
     },
     {
       "from": "source:packages/data-core/src/core/database/product-turso-db-client.ts",
-      "to": "source:packages/data-core/src/core/database/drizzle-libsql.server.ts",
-      "kind": "imports",
-      "detail": "./drizzle-libsql.server"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/product-turso-db-client.ts",
       "to": "source:packages/data-core/src/core/node-require.ts",
       "kind": "imports",
       "detail": "../node-require"
@@ -141105,42 +140898,6 @@
       "to": "source:packages/data-core/src/ports/runtime-config.ts",
       "kind": "imports",
       "detail": "../../ports/runtime-config"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/product/product.schema.ts",
-      "to": "runtime:android",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/product/product.schema.ts",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/product/product.schema.ts",
-      "to": "runtime:ios",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/product/product.schema.ts",
-      "to": "runtime:static-out",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/product/product.schema.ts",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/product/product.schema.ts",
-      "to": "package:@asol/data-core",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/product/product.schema.ts",
-      "to": "external-dependency:drizzle-orm",
-      "kind": "imports",
-      "detail": "drizzle-orm/sqlite-core"
     },
     {
       "from": "source:packages/data-core/src/core/database/profile-sharded-db-client.ts",
@@ -141210,96 +140967,6 @@
       "from": "source:packages/data-core/src/core/database/profile/profile.schema.ts",
       "to": "package:@asol/data-core",
       "kind": "belongs-to"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/profile/profile.schema.ts",
-      "to": "external-dependency:drizzle-orm",
-      "kind": "imports",
-      "detail": "drizzle-orm"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/profile/profile.schema.ts",
-      "to": "external-dependency:drizzle-orm",
-      "kind": "imports",
-      "detail": "drizzle-orm/sqlite-core"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/profile/user-specialties.schema.ts",
-      "to": "runtime:android",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/profile/user-specialties.schema.ts",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/profile/user-specialties.schema.ts",
-      "to": "runtime:ios",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/profile/user-specialties.schema.ts",
-      "to": "runtime:static-out",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/profile/user-specialties.schema.ts",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/profile/user-specialties.schema.ts",
-      "to": "package:@asol/data-core",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/profile/user-specialties.schema.ts",
-      "to": "external-dependency:drizzle-orm",
-      "kind": "imports",
-      "detail": "drizzle-orm/sqlite-core"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/profile/user-specialties.schema.ts",
-      "to": "source:packages/data-core/src/core/database/profile/profile.schema.ts",
-      "kind": "imports",
-      "detail": "./profile.schema"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/schema.ts",
-      "to": "runtime:android",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/schema.ts",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/schema.ts",
-      "to": "runtime:ios",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/schema.ts",
-      "to": "runtime:static-out",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/schema.ts",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/schema.ts",
-      "to": "package:@asol/data-core",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/schema.ts",
-      "to": "external-dependency:drizzle-orm",
-      "kind": "imports",
-      "detail": "drizzle-orm/sqlite-core"
     },
     {
       "from": "source:packages/data-core/src/core/database/sharded-raw-database-client.ts",
@@ -141381,27 +141048,9 @@
     },
     {
       "from": "source:packages/data-core/src/core/database/turso-db-client.ts",
-      "to": "source:packages/data-core/src/core/database/drizzle-libsql.server.ts",
-      "kind": "imports",
-      "detail": "./drizzle-libsql.server"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/turso-db-client.ts",
       "to": "source:packages/data-core/src/core/turso/users-turso-client.ts",
       "kind": "imports",
       "detail": "../turso/users-turso-client"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/turso-db-client.ts",
-      "to": "source:packages/data-core/src/ports/runtime-config.ts",
-      "kind": "imports",
-      "detail": "../../ports/runtime-config"
-    },
-    {
-      "from": "source:packages/data-core/src/core/database/turso-db-client.ts",
-      "to": "source:packages/data-core/src/ports/telemetry.ts",
-      "kind": "imports",
-      "detail": "../../ports/telemetry"
     },
     {
       "from": "source:packages/data-core/src/core/database/turso-read-retry.ts",
@@ -141804,12 +141453,6 @@
     },
     {
       "from": "source:packages/data-core/src/domains/advertisements/repositories/featured-marquee.repository.ts",
-      "to": "external-dependency:drizzle-orm",
-      "kind": "imports",
-      "detail": "drizzle-orm"
-    },
-    {
-      "from": "source:packages/data-core/src/domains/advertisements/repositories/featured-marquee.repository.ts",
       "to": "external-dependency:server-only",
       "kind": "imports",
       "detail": "server-only"
@@ -141819,12 +141462,6 @@
       "to": "package:@asol/featured-marquee-core",
       "kind": "imports",
       "detail": "@asol/featured-marquee-core"
-    },
-    {
-      "from": "source:packages/data-core/src/domains/advertisements/repositories/featured-marquee.repository.ts",
-      "to": "source:packages/data-core/src/core/database/advertisements/advertisements.schema.ts",
-      "kind": "imports",
-      "detail": "../../../core/database/advertisements/advertisements.schema"
     },
     {
       "from": "source:packages/data-core/src/domains/advertisements/repositories/featured-marquee.repository.ts",
@@ -141852,12 +141489,6 @@
       "from": "source:packages/data-core/src/domains/advertisements/repositories/home-hero-slider.repository.ts",
       "to": "package:@asol/data-core",
       "kind": "belongs-to"
-    },
-    {
-      "from": "source:packages/data-core/src/domains/advertisements/repositories/home-hero-slider.repository.ts",
-      "to": "external-dependency:drizzle-orm",
-      "kind": "imports",
-      "detail": "drizzle-orm"
     },
     {
       "from": "source:packages/data-core/src/domains/advertisements/repositories/home-hero-slider.repository.ts",
@@ -141873,12 +141504,6 @@
     },
     {
       "from": "source:packages/data-core/src/domains/advertisements/repositories/home-hero-slider.repository.ts",
-      "to": "source:packages/data-core/src/core/database/advertisements/advertisements.schema.ts",
-      "kind": "imports",
-      "detail": "../../../core/database/advertisements/advertisements.schema"
-    },
-    {
-      "from": "source:packages/data-core/src/domains/advertisements/repositories/home-hero-slider.repository.ts",
       "to": "source:packages/data-core/src/core/database/database-client.interface.ts",
       "kind": "imports",
       "detail": "../../../core/database/database-client.interface"
@@ -141906,12 +141531,6 @@
     },
     {
       "from": "source:packages/data-core/src/domains/advertisements/repositories/trending-ribbon.repository.ts",
-      "to": "external-dependency:drizzle-orm",
-      "kind": "imports",
-      "detail": "drizzle-orm"
-    },
-    {
-      "from": "source:packages/data-core/src/domains/advertisements/repositories/trending-ribbon.repository.ts",
       "to": "external-dependency:server-only",
       "kind": "imports",
       "detail": "server-only"
@@ -141921,12 +141540,6 @@
       "to": "package:@asol/trending-ribbon-core",
       "kind": "imports",
       "detail": "@asol/trending-ribbon-core"
-    },
-    {
-      "from": "source:packages/data-core/src/domains/advertisements/repositories/trending-ribbon.repository.ts",
-      "to": "source:packages/data-core/src/core/database/advertisements/advertisements.schema.ts",
-      "kind": "imports",
-      "detail": "../../../core/database/advertisements/advertisements.schema"
     },
     {
       "from": "source:packages/data-core/src/domains/advertisements/repositories/trending-ribbon.repository.ts",
@@ -142560,12 +142173,6 @@
     },
     {
       "from": "source:packages/data-core/src/domains/auth/repositories/user-repository.ts",
-      "to": "external-dependency:drizzle-orm",
-      "kind": "imports",
-      "detail": "drizzle-orm"
-    },
-    {
-      "from": "source:packages/data-core/src/domains/auth/repositories/user-repository.ts",
       "to": "external-dependency:server-only",
       "kind": "imports",
       "detail": "server-only"
@@ -142581,12 +142188,6 @@
       "to": "source:packages/data-core/src/core/database/database-client.interface.ts",
       "kind": "imports",
       "detail": "../../../core/database/database-client.interface"
-    },
-    {
-      "from": "source:packages/data-core/src/domains/auth/repositories/user-repository.ts",
-      "to": "source:packages/data-core/src/core/database/schema.ts",
-      "kind": "imports",
-      "detail": "../../../core/database/schema"
     },
     {
       "from": "source:packages/data-core/src/domains/auth/repositories/user-repository.ts",
@@ -142644,12 +142245,6 @@
     },
     {
       "from": "source:packages/data-core/src/domains/feature-flags/repositories/feature-flag-repository.ts",
-      "to": "external-dependency:drizzle-orm",
-      "kind": "imports",
-      "detail": "drizzle-orm"
-    },
-    {
-      "from": "source:packages/data-core/src/domains/feature-flags/repositories/feature-flag-repository.ts",
       "to": "external-dependency:server-only",
       "kind": "imports",
       "detail": "server-only"
@@ -142659,12 +142254,6 @@
       "to": "source:packages/data-core/src/core/database/database-client.interface.ts",
       "kind": "imports",
       "detail": "../../../core/database/database-client.interface"
-    },
-    {
-      "from": "source:packages/data-core/src/domains/feature-flags/repositories/feature-flag-repository.ts",
-      "to": "source:packages/data-core/src/core/database/schema.ts",
-      "kind": "imports",
-      "detail": "../../../core/database/schema"
     },
     {
       "from": "source:packages/data-core/src/domains/feature-flags/repositories/feature-flag-repository.ts",
@@ -142881,6 +142470,39 @@
       "to": "source:packages/data-core/src/domains/marketplace-orders/repositories/order-transport-mappers.ts",
       "kind": "imports",
       "detail": "../repositories/order-transport-mappers"
+    },
+    {
+      "from": "source:packages/data-core/src/domains/marketplace-orders/commands/delete-all-orders.command.server.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/domains/marketplace-orders/commands/delete-all-orders.command.server.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/data-core/src/domains/marketplace-orders/commands/delete-all-orders.command.server.ts",
+      "to": "package:@asol/data-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/data-core/src/domains/marketplace-orders/commands/delete-all-orders.command.server.ts",
+      "to": "external-dependency:server-only",
+      "kind": "imports",
+      "detail": "server-only"
+    },
+    {
+      "from": "source:packages/data-core/src/domains/marketplace-orders/commands/delete-all-orders.command.server.ts",
+      "to": "source:packages/data-core/src/domains/marketplace-orders/db/client.ts",
+      "kind": "imports",
+      "detail": "../db/client"
+    },
+    {
+      "from": "source:packages/data-core/src/domains/marketplace-orders/commands/delete-all-orders.command.server.ts",
+      "to": "source:packages/data-core/src/domains/marketplace-orders/ports/marketplace-order-store.ts",
+      "kind": "imports",
+      "detail": "../ports/marketplace-order-store"
     },
     {
       "from": "source:packages/data-core/src/domains/marketplace-orders/commands/marketplace-order-service-parts/marketplace-order-service.part-01.ts",
@@ -144045,6 +143667,12 @@
     },
     {
       "from": "source:packages/data-core/src/domains/marketplace-orders/index.server.ts",
+      "to": "source:packages/data-core/src/domains/marketplace-orders/commands/delete-all-orders.command.server.ts",
+      "kind": "imports",
+      "detail": "./commands/delete-all-orders.command.server"
+    },
+    {
+      "from": "source:packages/data-core/src/domains/marketplace-orders/index.server.ts",
       "to": "source:packages/data-core/src/domains/marketplace-orders/commands/marketplace-order-service.ts",
       "kind": "imports",
       "detail": "./commands/marketplace-order-service"
@@ -144555,12 +144183,6 @@
     },
     {
       "from": "source:packages/data-core/src/domains/notifications/repositories/broadcast-recipient-repository.ts",
-      "to": "external-dependency:drizzle-orm",
-      "kind": "imports",
-      "detail": "drizzle-orm"
-    },
-    {
-      "from": "source:packages/data-core/src/domains/notifications/repositories/broadcast-recipient-repository.ts",
       "to": "external-dependency:server-only",
       "kind": "imports",
       "detail": "server-only"
@@ -144576,18 +144198,6 @@
       "to": "source:packages/data-core/src/core/database/database-client.interface.ts",
       "kind": "imports",
       "detail": "../../../core/database/database-client.interface"
-    },
-    {
-      "from": "source:packages/data-core/src/domains/notifications/repositories/broadcast-recipient-repository.ts",
-      "to": "source:packages/data-core/src/core/database/notifications/notifications.schema.ts",
-      "kind": "imports",
-      "detail": "../../../core/database/notifications/notifications.schema"
-    },
-    {
-      "from": "source:packages/data-core/src/domains/notifications/repositories/broadcast-recipient-repository.ts",
-      "to": "source:packages/data-core/src/core/database/schema.ts",
-      "kind": "imports",
-      "detail": "../../../core/database/schema"
     },
     {
       "from": "source:packages/data-core/src/domains/notifications/repositories/broadcast-recipient-repository.ts",
@@ -144612,12 +144222,6 @@
     },
     {
       "from": "source:packages/data-core/src/domains/notifications/repositories/user-notification-token-repository.ts",
-      "to": "external-dependency:drizzle-orm",
-      "kind": "imports",
-      "detail": "drizzle-orm"
-    },
-    {
-      "from": "source:packages/data-core/src/domains/notifications/repositories/user-notification-token-repository.ts",
       "to": "external-dependency:server-only",
       "kind": "imports",
       "detail": "server-only"
@@ -144633,12 +144237,6 @@
       "to": "source:packages/data-core/src/core/database/database-client.interface.ts",
       "kind": "imports",
       "detail": "../../../core/database/database-client.interface"
-    },
-    {
-      "from": "source:packages/data-core/src/domains/notifications/repositories/user-notification-token-repository.ts",
-      "to": "source:packages/data-core/src/core/database/notifications/notifications.schema.ts",
-      "kind": "imports",
-      "detail": "../../../core/database/notifications/notifications.schema"
     },
     {
       "from": "source:packages/data-core/src/domains/notifications/repositories/user-notification-token-repository.ts",
@@ -144756,12 +144354,6 @@
     },
     {
       "from": "source:packages/data-core/src/domains/ota/repositories/ota-release-repository.ts",
-      "to": "external-dependency:drizzle-orm",
-      "kind": "imports",
-      "detail": "drizzle-orm"
-    },
-    {
-      "from": "source:packages/data-core/src/domains/ota/repositories/ota-release-repository.ts",
       "to": "external-dependency:server-only",
       "kind": "imports",
       "detail": "server-only"
@@ -144771,12 +144363,6 @@
       "to": "source:packages/data-core/src/core/database/database-client.interface.ts",
       "kind": "imports",
       "detail": "../../../core/database/database-client.interface"
-    },
-    {
-      "from": "source:packages/data-core/src/domains/ota/repositories/ota-release-repository.ts",
-      "to": "source:packages/data-core/src/core/database/schema.ts",
-      "kind": "imports",
-      "detail": "../../../core/database/schema"
     },
     {
       "from": "source:packages/data-core/src/domains/ota/repositories/ota-release-repository.ts",
@@ -144861,12 +144447,6 @@
     },
     {
       "from": "source:packages/data-core/src/domains/password-recovery/repositories/password-recovery-repository.ts",
-      "to": "external-dependency:drizzle-orm",
-      "kind": "imports",
-      "detail": "drizzle-orm"
-    },
-    {
-      "from": "source:packages/data-core/src/domains/password-recovery/repositories/password-recovery-repository.ts",
       "to": "external-dependency:server-only",
       "kind": "imports",
       "detail": "server-only"
@@ -144876,12 +144456,6 @@
       "to": "source:packages/data-core/src/core/database/database-client.interface.ts",
       "kind": "imports",
       "detail": "../../../core/database/database-client.interface"
-    },
-    {
-      "from": "source:packages/data-core/src/domains/password-recovery/repositories/password-recovery-repository.ts",
-      "to": "source:packages/data-core/src/core/database/schema.ts",
-      "kind": "imports",
-      "detail": "../../../core/database/schema"
     },
     {
       "from": "source:packages/data-core/src/domains/password-recovery/repositories/password-recovery-repository.ts",
@@ -161532,12 +161106,6 @@
     },
     {
       "from": "source:packages/observability-core/src/server.ts",
-      "to": "source:packages/observability-core/src/traces/drizzle-dev-logger.ts",
-      "kind": "imports",
-      "detail": "./traces/drizzle-dev-logger"
-    },
-    {
-      "from": "source:packages/observability-core/src/server.ts",
       "to": "source:packages/observability-core/src/traces/server-trace.ts",
       "kind": "imports",
       "detail": "./traces/server-trace"
@@ -161577,21 +161145,9 @@
     },
     {
       "from": "source:packages/observability-core/src/traces/data-core-telemetry.server.ts",
-      "to": "source:packages/observability-core/src/ports/index.ts",
-      "kind": "imports",
-      "detail": "../ports"
-    },
-    {
-      "from": "source:packages/observability-core/src/traces/data-core-telemetry.server.ts",
       "to": "source:packages/observability-core/src/traces/dev-trace-types.ts",
       "kind": "imports",
       "detail": "../traces/dev-trace-types"
-    },
-    {
-      "from": "source:packages/observability-core/src/traces/data-core-telemetry.server.ts",
-      "to": "source:packages/observability-core/src/traces/drizzle-dev-logger.ts",
-      "kind": "imports",
-      "detail": "../traces/drizzle-dev-logger"
     },
     {
       "from": "source:packages/observability-core/src/traces/data-core-telemetry.server.ts",
@@ -161634,39 +161190,6 @@
       "to": "source:packages/observability-core/src/monitor/types.ts",
       "kind": "imports",
       "detail": "../monitor/types"
-    },
-    {
-      "from": "source:packages/observability-core/src/traces/drizzle-dev-logger.ts",
-      "to": "runtime:development",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/observability-core/src/traces/drizzle-dev-logger.ts",
-      "to": "runtime:web",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:packages/observability-core/src/traces/drizzle-dev-logger.ts",
-      "to": "package:@asol/observability-core",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "source:packages/observability-core/src/traces/drizzle-dev-logger.ts",
-      "to": "external-dependency:server-only",
-      "kind": "imports",
-      "detail": "server-only"
-    },
-    {
-      "from": "source:packages/observability-core/src/traces/drizzle-dev-logger.ts",
-      "to": "source:packages/observability-core/src/monitor/types.ts",
-      "kind": "imports",
-      "detail": "../monitor/types"
-    },
-    {
-      "from": "source:packages/observability-core/src/traces/drizzle-dev-logger.ts",
-      "to": "source:packages/observability-core/src/traces/server-trace.ts",
-      "kind": "imports",
-      "detail": "./server-trace"
     },
     {
       "from": "source:packages/observability-core/src/traces/emit-server-trace.ts",
@@ -169111,12 +168634,6 @@
       "from": "source:packages/service-runtime-core/src/domain/service-http.ts",
       "to": "package:@asol/api-contract-core",
       "kind": "imports",
-      "detail": "@asol/api-contract-core"
-    },
-    {
-      "from": "source:packages/service-runtime-core/src/domain/service-http.ts",
-      "to": "package:@asol/api-contract-core",
-      "kind": "imports",
       "detail": "@asol/api-contract-core/server"
     },
     {
@@ -173373,6 +172890,34 @@
       "detail": "@asol/api-contract-core/server"
     },
     {
+      "from": "source:services/control/src/app/api/release-readiness/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/control/src/app/api/release-readiness/route.ts",
+      "to": "service:control",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/control/src/app/api/release-readiness/route.ts",
+      "to": "package:@asol/api-contract-core",
+      "kind": "imports",
+      "detail": "@asol/api-contract-core/server"
+    },
+    {
+      "from": "source:services/control/src/app/api/release-readiness/route.ts",
+      "to": "package:@asol/vercel-deploy-core",
+      "kind": "imports",
+      "detail": "@asol/vercel-deploy-core/remote-deploy-contracts"
+    },
+    {
+      "from": "source:services/control/src/app/api/release-readiness/route.ts",
+      "to": "source:src/core/config/control-env.ts",
+      "kind": "imports",
+      "detail": "@/core/config/control-env"
+    },
+    {
       "from": "source:services/control/src/app/api/super-admin/build-jobs/[jobId]/artifacts/[name]/analysis/route.ts",
       "to": "runtime:services",
       "kind": "affects-runtime"
@@ -173635,6 +173180,22 @@
       "from": "source:services/control/src/app/api/super-admin/impersonate/route.ts",
       "to": "service:control",
       "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/control/src/app/api/super-admin/orders/clear/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/control/src/app/api/super-admin/orders/clear/route.ts",
+      "to": "service:control",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/control/src/app/api/super-admin/orders/clear/route.ts",
+      "to": "package:@asol/data-core",
+      "kind": "imports",
+      "detail": "@asol/data-core/marketplace-orders"
     },
     {
       "from": "source:services/control/src/app/api/super-admin/users/delete/route.ts",
@@ -179739,6 +179300,46 @@
     },
     {
       "from": "source:src/app/api/super-admin/impersonate/route.ts",
+      "to": "source:src/features/super-admin/server.ts",
+      "kind": "imports",
+      "detail": "@/features/super-admin/server"
+    },
+    {
+      "from": "source:src/app/api/super-admin/orders/clear/route.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/app/api/super-admin/orders/clear/route.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/app/api/super-admin/orders/clear/route.ts",
+      "to": "external-dependency:server-only",
+      "kind": "imports",
+      "detail": "server-only"
+    },
+    {
+      "from": "source:src/app/api/super-admin/orders/clear/route.ts",
+      "to": "package:@asol/data-core",
+      "kind": "imports",
+      "detail": "@asol/data-core/marketplace-orders"
+    },
+    {
+      "from": "source:src/app/api/super-admin/orders/clear/route.ts",
+      "to": "source:src/core/api/api-response.ts",
+      "kind": "imports",
+      "detail": "@/core/api/api-response"
+    },
+    {
+      "from": "source:src/app/api/super-admin/orders/clear/route.ts",
+      "to": "source:src/core/api/traced-route.ts",
+      "kind": "imports",
+      "detail": "@/core/api/traced-route"
+    },
+    {
+      "from": "source:src/app/api/super-admin/orders/clear/route.ts",
       "to": "source:src/features/super-admin/server.ts",
       "kind": "imports",
       "detail": "@/features/super-admin/server"
@@ -201411,9 +201012,21 @@
     },
     {
       "from": "source:src/features/notifications/presentation/NotificationsPageContent.tsx",
+      "to": "package:@asol/page-save-core",
+      "kind": "imports",
+      "detail": "@asol/page-save-core"
+    },
+    {
+      "from": "source:src/features/notifications/presentation/NotificationsPageContent.tsx",
       "to": "package:@asol/spatial-carousel-core",
       "kind": "imports",
       "detail": "@asol/spatial-carousel-core"
+    },
+    {
+      "from": "source:src/features/notifications/presentation/NotificationsPageContent.tsx",
+      "to": "package:@asol/system-logs-core",
+      "kind": "imports",
+      "detail": "@asol/system-logs-core"
     },
     {
       "from": "source:src/features/notifications/presentation/NotificationsPageContent.tsx",
@@ -206595,6 +206208,12 @@
       "to": "source:src/features/orders/presentation/orders-page-copy.ts",
       "kind": "imports",
       "detail": "./orders-page-copy"
+    },
+    {
+      "from": "source:src/features/orders/presentation/OrdersPageContent.tsx",
+      "to": "source:src/features/page-save/ui.ts",
+      "kind": "imports",
+      "detail": "@/features/page-save/ui"
     },
     {
       "from": "source:src/features/orders/presentation/OrdersPageContent.tsx",
@@ -232798,12 +232417,6 @@
     },
     {
       "from": "test:packages/data-core/src/domains/auth/tests/email-uniqueness.test.ts",
-      "to": "external-dependency:better-sqlite3",
-      "kind": "imports",
-      "detail": "better-sqlite3"
-    },
-    {
-      "from": "test:packages/data-core/src/domains/auth/tests/email-uniqueness.test.ts",
       "to": "package:@asol/auth-core",
       "kind": "imports",
       "detail": "@asol/auth-core/server"
@@ -232834,8 +232447,9 @@
     },
     {
       "from": "test:packages/data-core/src/domains/auth/tests/email-uniqueness.test.ts",
-      "to": "external-dependency:better-sqlite3",
-      "kind": "tests"
+      "to": "source:packages/data-core/src/provisioning/desired-schema/users.ts",
+      "kind": "imports",
+      "detail": "../../../provisioning/desired-schema/users"
     },
     {
       "from": "test:packages/data-core/src/domains/auth/tests/email-uniqueness.test.ts",
@@ -232844,6 +232458,59 @@
     },
     {
       "from": "test:packages/data-core/src/domains/auth/tests/email-uniqueness.test.ts",
+      "to": "package:@asol/data-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:packages/data-core/src/domains/marketplace-orders/tests/delete-all-orders.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/data-core/src/domains/marketplace-orders/tests/delete-all-orders.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/data-core/src/domains/marketplace-orders/tests/delete-all-orders.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/data-core/src/domains/marketplace-orders/tests/delete-all-orders.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/data-core/src/domains/marketplace-orders/tests/delete-all-orders.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/data-core/src/domains/marketplace-orders/tests/delete-all-orders.test.ts",
+      "to": "package:@asol/data-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:packages/data-core/src/domains/marketplace-orders/tests/delete-all-orders.test.ts",
+      "to": "source:packages/data-core/src/domains/marketplace-orders/commands/delete-all-orders.command.server.ts",
+      "kind": "imports",
+      "detail": "../commands/delete-all-orders.command.server"
+    },
+    {
+      "from": "test:packages/data-core/src/domains/marketplace-orders/tests/delete-all-orders.test.ts",
+      "to": "source:packages/data-core/src/domains/marketplace-orders/commands/marketplace-order-service.ts",
+      "kind": "imports",
+      "detail": "../commands/marketplace-order-service"
+    },
+    {
+      "from": "test:packages/data-core/src/domains/marketplace-orders/tests/delete-all-orders.test.ts",
+      "to": "test:packages/data-core/src/domains/marketplace-orders/tests/memory-marketplace-db.ts",
+      "kind": "imports",
+      "detail": "./memory-marketplace-db"
+    },
+    {
+      "from": "test:packages/data-core/src/domains/marketplace-orders/tests/delete-all-orders.test.ts",
       "to": "package:@asol/data-core",
       "kind": "tests"
     },
@@ -233037,9 +232704,9 @@
     },
     {
       "from": "test:packages/data-core/src/domains/marketplace-orders/tests/memory-marketplace-db.ts",
-      "to": "external-dependency:better-sqlite3",
+      "to": "external-dependency:@libsql/client",
       "kind": "imports",
-      "detail": "better-sqlite3"
+      "detail": "@libsql/client"
     },
     {
       "from": "test:packages/data-core/src/domains/marketplace-orders/tests/memory-marketplace-db.ts",
@@ -233049,7 +232716,7 @@
     },
     {
       "from": "test:packages/data-core/src/domains/marketplace-orders/tests/memory-marketplace-db.ts",
-      "to": "external-dependency:better-sqlite3",
+      "to": "external-dependency:@libsql/client",
       "kind": "tests"
     },
     {
@@ -233450,15 +233117,9 @@
     },
     {
       "from": "test:packages/data-core/src/domains/notifications/tests/notification-token-cardinality.test.ts",
-      "to": "external-dependency:better-sqlite3",
+      "to": "external-dependency:@libsql/client",
       "kind": "imports",
-      "detail": "better-sqlite3"
-    },
-    {
-      "from": "test:packages/data-core/src/domains/notifications/tests/notification-token-cardinality.test.ts",
-      "to": "external-dependency:drizzle-orm",
-      "kind": "imports",
-      "detail": "drizzle-orm/better-sqlite3"
+      "detail": "@libsql/client"
     },
     {
       "from": "test:packages/data-core/src/domains/notifications/tests/notification-token-cardinality.test.ts",
@@ -233474,12 +233135,7 @@
     },
     {
       "from": "test:packages/data-core/src/domains/notifications/tests/notification-token-cardinality.test.ts",
-      "to": "external-dependency:better-sqlite3",
-      "kind": "tests"
-    },
-    {
-      "from": "test:packages/data-core/src/domains/notifications/tests/notification-token-cardinality.test.ts",
-      "to": "external-dependency:drizzle-orm",
+      "to": "external-dependency:@libsql/client",
       "kind": "tests"
     },
     {
@@ -233613,9 +233269,9 @@
     },
     {
       "from": "test:packages/data-core/src/domains/system-logs/tests/persistent-system-log-repository.test.ts",
-      "to": "external-dependency:better-sqlite3",
+      "to": "external-dependency:@libsql/client",
       "kind": "imports",
-      "detail": "better-sqlite3"
+      "detail": "@libsql/client"
     },
     {
       "from": "test:packages/data-core/src/domains/system-logs/tests/persistent-system-log-repository.test.ts",
@@ -233637,7 +233293,7 @@
     },
     {
       "from": "test:packages/data-core/src/domains/system-logs/tests/persistent-system-log-repository.test.ts",
-      "to": "external-dependency:better-sqlite3",
+      "to": "external-dependency:@libsql/client",
       "kind": "tests"
     },
     {
@@ -242017,6 +241673,41 @@
     },
     {
       "from": "test:src/features/orders/tests/order-party-helpers.test.ts",
+      "to": "feature:orders",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/orders/tests/super-admin-clear-all-orders.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/orders/tests/super-admin-clear-all-orders.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/orders/tests/super-admin-clear-all-orders.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/orders/tests/super-admin-clear-all-orders.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/orders/tests/super-admin-clear-all-orders.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/orders/tests/super-admin-clear-all-orders.test.ts",
+      "to": "feature:orders",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:src/features/orders/tests/super-admin-clear-all-orders.test.ts",
       "to": "feature:orders",
       "kind": "tests"
     },

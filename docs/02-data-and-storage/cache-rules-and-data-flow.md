@@ -81,7 +81,7 @@ Remote image rendering is fail-closed. A cache miss may invoke only the register
 
 1. **Clients are platform-agnostic** — Web, static export, Capacitor use the same `AsolApiClient`.
 2. **No SQL from the client** — only Business APIs with JSON payloads.
-3. **Repository builds queries** — Drizzle only in Repository on the server.
+3. **Repository builds queries** — query builder only in Repository on the server.
 4. **One server database backend** — Turso/libSQL in every runtime, Development included. The Database Client routes to a shard, never to a backend.
 5. **Desired-schema manifests define schema** — Turso gets additive DDL only, never row data.
 6. **IndexedDB is a cache** — not the primary data store.

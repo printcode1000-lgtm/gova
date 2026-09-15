@@ -57,6 +57,7 @@ export const ASOL_API_ROUTES = {
   },
   orders: {
     root: "/api/orders",
+    superAdminClear: "/api/super-admin/orders/clear",
     fromCart: "/api/orders/from-cart",
     customRequestFromProfile: "/api/orders/custom-request-from-profile",
     byId: (orderId: string) => `/api/orders/${encodeURIComponent(orderId)}`,

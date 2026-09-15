@@ -19,9 +19,9 @@ Validation runs **before** data crosses layer boundaries where it matters most.
 
 ## Schema-derived validation
 
-Drizzle table definitions live inside `@asol/data-core`'s sealed `core/`
+query builder table definitions live inside `@asol/data-core`'s sealed `core/`
 internals. No package door exports them, so a schema cannot be derived from a
-table outside the package — `drizzle-zod` is not used anywhere in the
+table outside the package — `query builder-zod` is not used anywhere in the
 repository today.
 
 Write the Zod schema explicitly next to the layer that validates, and let

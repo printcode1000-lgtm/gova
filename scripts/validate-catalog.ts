@@ -5,18 +5,15 @@ import {
   resolveCatalogRoots,
   validateCatalogV3,
 } from '@asol/catalog-core/server';
+import { readDesiredSchema } from '@asol/data-core/provisioning';
 
 const root = process.cwd();
 const { publicRoot, catalogRoot } = resolveCatalogRoots(root);
 
-const schemaSource = fs.readFileSync(
-  path.join(root, 'packages/data-core/src/core/database/profile/user-specialties.schema.ts'),
-  'utf8',
-);
+const specialtyTable = readDesiredSchema('profile-core').tables.user_specialties;
+if (!specialtyTable) throw new Error('user_specialties desired schema is missing');
 const expectedDatabaseColumns = new Set(
-  [...schemaSource.matchAll(/^\s{2}[a-z0-9_]+: integer\("([a-z0-9_]+)"\)/gm)].map(
-    (match) => match[1],
-  ),
+  specialtyTable.columns.map((column) => column.name).filter((name) => name !== 'uid'),
 );
 
 const { errors, warnings, summary } = validateCatalogV3({

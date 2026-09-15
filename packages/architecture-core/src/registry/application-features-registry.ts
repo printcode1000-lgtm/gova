@@ -283,7 +283,7 @@ export const APPLICATION_FEATURES: readonly ApplicationFeature[] = [
     [".", "./ui", "./server"],
     WEB_MOBILE_SERVER,
     ["@asol/orders-core"],
-    ["auth", "cart", "notifications", "profile", "system-logs"],
+    ["auth", "cart", "notifications", "page-save", "profile", "system-logs"],
     FULL,
   ),
   feature(

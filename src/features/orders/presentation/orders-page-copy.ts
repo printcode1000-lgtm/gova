@@ -5,6 +5,9 @@ export function ordersPageCopy(locale: "ar" | "en") {
         login: "يجب تسجيل الدخول لعرض الطلبات المرتبطة بك.",
         description: "أحدث الطلبات المرتبطة بحسابك.",
         admin: "تحكم السوبر أدمن",
+        clearAll: "مسح كل الطلبات",
+        clearAllItem: "مسح جميع الطلبات",
+        pageLabel: "الطلبات",
         emptyTitle: "لا توجد طلبات",
         emptyDescription:
           "عند إنشاء طلب أو ارتباطك بطلب كبائع أو مقدم توصيل سيظهر هنا.",
@@ -22,6 +25,9 @@ export function ordersPageCopy(locale: "ar" | "en") {
         login: "Sign in to view orders associated with you.",
         description: "Your latest orders.",
         admin: "Super admin control",
+        clearAll: "Clear all orders",
+        clearAllItem: "Clear all orders",
+        pageLabel: "Orders",
         emptyTitle: "No orders",
         emptyDescription:
           "Orders you create or join as a seller or delivery provider will appear here.",

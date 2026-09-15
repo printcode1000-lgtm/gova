@@ -80,16 +80,16 @@ Application code (`src/`) strictly follows an unidirectional layer flow enforced
   Domain Repositories (Data Access)
       │
       ▼
-  Database Client (Drizzle ORM Engine & CachedSqliteConnection)
+  Database Client (query builder ORM Engine & CachedSqliteConnection)
       │
       ▼
-  Storage Engine (Turso LibSQL / Better-SQLite3)
+  Storage Engine (Turso LibSQL / local database driver)
 ```
 
 **Enforced Layer Rules**:
-- UI components MUST NOT directly import repositories, Drizzle ORM, or database clients.
+- UI components MUST NOT directly import repositories, query builder ORM, or database clients.
 - `fetch()` calls outside `AsolApiClient` are strictly prohibited in application code.
-- Raw SQL and Drizzle queries MUST live inside `@asol/data-core` domain repositories.
+- Raw SQL and query builder queries MUST live inside `@asol/data-core` domain repositories.
 
 ## Middleware, Proxy & Server Initialization
 

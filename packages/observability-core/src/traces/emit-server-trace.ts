@@ -49,7 +49,7 @@ export function emitServerTraceFromHeader(
       service: event.layer === 'server-service' ? event.name : ctx?.service ?? 'unknown',
       queryOrCommand: event.name,
       repository: event.layer === 'repository' ? event.name : ctx?.repository ?? 'unknown',
-      dbDriver: 'SQLite-Dev',
+      dbDriver: 'Turso-Cloud',
       table: event.table ?? '',
       entity: ctx?.entity ?? '',
       operationType: event.operationType ?? 'UNKNOWN',

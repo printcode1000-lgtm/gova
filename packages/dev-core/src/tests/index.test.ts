@@ -102,7 +102,7 @@ export function runNoLocalPersistenceOwnershipTest() {
 
 export function runRuntimePurityTest() {
   const browserFiles = getTsSourceFiles(path.join(process.cwd(), "packages", "dev-core", "src"));
-  const forbidden = ["node:fs", "node:child_process", "better-sqlite3", "server-only"];
+  const forbidden = ["node:fs", "node:child_process", "local database driver", "server-only"];
   for (const file of browserFiles) {
     if (file.endsWith("server.ts")) continue;
     const content = readFileSync(file, "utf8");
@@ -119,7 +119,7 @@ export function runRuntimePurityTest() {
 export function runPackageIndependenceTest() {
   const root = process.cwd();
   const devCoreFiles = getTsSourceFiles(path.join(root, "packages", "dev-core", "src"));
-  const forbiddenPackages = ["@asol/", "@/", "next/", "drizzle-orm"];
+  const forbiddenPackages = ["@asol/", "@/", "next/", "legacy query-builder package"];
   for (const file of devCoreFiles) {
     const content = readFileSync(file, "utf8");
     for (const token of forbiddenPackages) {

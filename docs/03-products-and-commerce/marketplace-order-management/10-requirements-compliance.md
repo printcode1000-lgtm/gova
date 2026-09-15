@@ -9,7 +9,7 @@
 | Independent shipments | `shipments.order_id` plus polymorphic `shipment_items`; no shipment-to-seller parent relationship |
 | Mixed and multi-seller shipments | Assignment services and multi-seller mixed shipment test |
 | Isolated module | `@asol/orders-core` owns the order vocabulary; `@asol/data-core/marketplace-orders` owns its persistence |
-| Development and production databases | SQLite and Turso adapters, environment config, shared migration |
+| Development and production databases | Turso cloud adapters, environment config, shared migration |
 
 ## Data and invariants
 
@@ -43,4 +43,4 @@ Every service named in the source requirements is implemented by `MarketplaceOrd
 
 ## Verification status
 
-The module passes TypeScript checking, Asol architecture validation, executable SQLite integration tests, the full project test command, and the Next.js production build. The module test emits the number of generated audit events as an additional assertion that important paths are recorded.
+The module passes TypeScript checking, Asol architecture validation, executable database contract tests, the full project test command, and the Next.js production build. The module test emits the number of generated audit events as an additional assertion that important paths are recorded.

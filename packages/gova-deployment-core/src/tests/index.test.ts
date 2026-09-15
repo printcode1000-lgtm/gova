@@ -234,7 +234,7 @@ function artifactRoot(): string {
   const root = artifactRoot();
   write(
     path.join(root, ".next/server/app/page.js.nft.json"),
-    '{"files":["../../node_modules/better-sqlite3/index.js"]}\n',
+    '{"files":["../../node_modules/local database driver/index.js"]}\n',
   );
   assert.throws(
     () => assertGovaArtifact(root),

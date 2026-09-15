@@ -42,7 +42,7 @@ These are **registered** dual owners, not bypasses:
 | GitHub Actions skips correctness checks | Docs validation and OIDC-only deployment dispatch exist; code correctness remains local. |
 | `eslint-disable no-restricted-imports` | Forbidden without ADR |
 | Test files import DB drivers | Scanned unless in approved data-core test paths |
-| One-off script needs Drizzle | Use `@asol/data-core/tooling` |
+| One-off script needs query builder | Use `@asol/data-core/tooling` |
 | Preview deployment skips architecture | Local `npm run build` / `deploy:all` preflight remain the architecture gates. Vercel hosted builds do not re-run them. GitHub does not require checks on `main`. |
 
 ## git push --no-verify

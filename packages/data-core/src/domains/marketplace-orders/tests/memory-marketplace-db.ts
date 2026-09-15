@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import Database from "better-sqlite3";
+import { createClient } from "@libsql/client";
 import type { MarketplaceDb } from "../ports/marketplace-order-store";
 
 /**
@@ -21,32 +21,24 @@ const migrationsDir = path.join(
 );
 
 export function createMemoryMarketplaceDb(): MarketplaceDb {
-  const sqlite = new Database(":memory:");
-  sqlite.pragma("foreign_keys = ON");
-  for (const file of fs
-    .readdirSync(migrationsDir)
-    .filter((name) => name.endsWith(".sql"))
-    .sort()) {
-    sqlite.exec(fs.readFileSync(path.join(migrationsDir, file), "utf8"));
-  }
+  const client = createClient({ url: "file::memory:" });
+  const ready = (async () => {
+    await client.execute("PRAGMA foreign_keys = ON");
+    for (const file of fs.readdirSync(migrationsDir).filter((name) => name.endsWith(".sql")).sort()) {
+      const sql = fs.readFileSync(path.join(migrationsDir, file), "utf8")
+        .replaceAll("--> statement-breakpoint", "\n");
+      await client.executeMultiple(sql);
+    }
+  })();
   const db: MarketplaceDb = {
     async execute(sql, args = []) {
-      const values = args.map((v) => (typeof v === "boolean" ? (v ? 1 : 0) : v));
-      const s = sqlite.prepare(sql);
-      return /^\s*(SELECT|WITH|PRAGMA)/i.test(sql)
-        ? (s.all(...values) as any)
-        : [{ changes: s.run(...values).changes }];
+      await ready;
+      const result = await client.execute({ sql, args: args as any[] });
+      return result.rows.map((row) => ({ ...row })) as Record<string, unknown>[];
     },
     async transaction(work) {
-      sqlite.exec("BEGIN");
-      try {
-        const result = await work(db);
-        sqlite.exec("COMMIT");
-        return result;
-      } catch (error) {
-        sqlite.exec("ROLLBACK");
-        throw error;
-      }
+      await ready;
+      return work(db);
     },
   };
   return db;

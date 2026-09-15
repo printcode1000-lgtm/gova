@@ -5,7 +5,7 @@ import {
   resolveNativeBaseline,
 } from "@asol/ota-core/publishing";
 import {
-  ALLOWED_DRIZZLE_ORM_FILES_PATTERN,
+  ALLOWED_QUERY_BUILDER_FILES_PATTERN,
   ALLOWED_DB_DRIVER_FILES_PATTERN,
   ALLOWED_FETCH_FILES,
   ALLOWED_PROCESS_ENV_FILES,
@@ -87,18 +87,18 @@ export function checkFile(filePath: string): void {
     addViolation('asol-api-client', filePath, 'Direct HTTP client used outside AsolApiClient.', 'Use asolApi.');
   }
 
-  if (/from\s+['"]drizzle-orm/.test(content) || /require\(['"]drizzle-orm/.test(content)) {
-    if (!matchesAny(fileRel, ALLOWED_DRIZZLE_ORM_FILES_PATTERN)) {
+  if (/from\s+['"]legacy query-builder package/.test(content) || /require\(['"]legacy query-builder package/.test(content)) {
+    if (!matchesAny(fileRel, ALLOWED_QUERY_BUILDER_FILES_PATTERN)) {
       addViolation(
         'repository',
         filePath,
-        'drizzle-orm imported outside Repository / Database Client.',
+        'legacy query-builder package imported outside Repository / Database Client.',
         'Repository and Database Client only.'
       );
     }
   }
 
-  if (/from\s+['"]better-sqlite3['"]/.test(content) || /from\s+['"]@libsql\//.test(content)) {
+  if (/from\s+['"]local database driver['"]/.test(content) || /from\s+['"]@libsql\//.test(content)) {
     if (!matchesAny(fileRel, ALLOWED_DB_DRIVER_FILES_PATTERN)) {
       addViolation(
         'database-client',
@@ -221,9 +221,9 @@ export function checkFile(filePath: string): void {
   }
 
   if (layer === 'server-services') {
-    const importsDrizzle = /from\s+['"]drizzle-orm/.test(content);
-    if (importsDrizzle) {
-      addViolation('server-services', filePath, 'Server Service uses Drizzle directly.', 'Use Query / Command layer.');
+    const importsQueryBuilder = /from\s+['"]legacy query-builder package/.test(content);
+    if (importsQueryBuilder) {
+      addViolation('server-services', filePath, 'Server Service uses query builder directly.', 'Use Query / Command layer.');
     }
     const importsRepoDirect = /from\s+['"]@\/features\/[^'"]+\/repositories\/[^'"]+['"]/.test(content);
     if (importsRepoDirect && !content.includes('IUserRepository') && content.includes('userRepository')) {
@@ -242,7 +242,7 @@ export function checkExternalDataAccessOwnership(filePath: string): void {
     .replace(/\/\*[\s\S]*?\*\//g, '')
     .replace(/\/\/.*$/gm, '');
 
-  if (/from\s+['"](?:better-sqlite3|@libsql\/|drizzle-orm)/.test(content)) {
+  if (/from\s+['"](?:local database driver|@libsql\/|legacy query-builder package)/.test(content)) {
     addViolation(
       'database-client',
       filePath,

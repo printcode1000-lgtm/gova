@@ -64,7 +64,7 @@ Payload: phone number, `resetToken`, new password, and password confirmation. Co
 
 ## Database
 
-A `password_recovery_challenges` table has been added to the user database, managed by Drizzle migration `0004`. The table includes challenge ID, phone hash, optional user ID, code hash, authorization token hash, timestamps, and attempt counts.
+A `password_recovery_challenges` table has been added to the user database, managed by query builder migration `0004`. The table includes challenge ID, phone hash, optional user ID, code hash, authorization token hash, timestamps, and attempt counts.
 
 The development environment runs migrations automatically; synchronize the Turso database using:
 

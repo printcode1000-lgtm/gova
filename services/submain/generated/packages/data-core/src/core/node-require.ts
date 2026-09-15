@@ -3,7 +3,7 @@ import { createRequire } from 'node:module';
 /**
  * A synchronous `require` for the driver layer.
  *
- * The database clients load `@libsql/client` and the drizzle adapters **lazily and
+ * The database clients load `@libsql/client` and the database adapters **lazily and
  * synchronously**, inside the branch that actually needs them, so a runtime that never reaches
  * a repository never pulls the driver into its bundle. `await import()` would work only by
  * making every constructor async and every caller await it, which is a change to the whole data

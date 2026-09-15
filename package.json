@@ -116,7 +116,7 @@
     "test:shipping-pricing": "npx tsx src/features/cart/tests/shipping-pricing.test.ts",
     "test:delivery-planner": "npx tsx src/features/cart/tests/multi-seller-delivery-planner.test.ts",
     "test:seller-discounts": "npx tsx src/features/seller-discounts/tests/seller-discount-engine.test.ts && cross-env NODE_OPTIONS=--conditions=react-server npx tsx packages/data-core/src/domains/seller-discounts/tests/seller-discount-repository.test.ts && npx tsx src/features/seller-discounts/tests/seller-discount-security-contract.test.ts",
-    "test:marketplace-orders": "npx tsx packages/data-core/src/domains/marketplace-orders/tests/storage-profile-integration.test.ts && npx tsx packages/data-core/src/domains/marketplace-orders/tests/schema-contract.test.ts && cross-env NODE_OPTIONS=--conditions=react-server npx tsx packages/data-core/src/domains/marketplace-orders/tests/list-for-user.test.ts && npx tsx packages/data-core/src/domains/marketplace-orders/tests/marketplace-orders.test.ts && npx tsx packages/data-core/src/domains/marketplace-orders/tests/delivery-rejection.test.ts && npx tsx packages/data-core/src/domains/marketplace-orders/tests/requirements-coverage.test.ts && npx tsx packages/data-core/src/domains/marketplace-orders/tests/security-and-invariants.test.ts && npx tsx packages/data-core/src/domains/marketplace-orders/tests/shipping-quotes.test.ts && npx tsx packages/data-core/src/domains/marketplace-orders/tests/unified-delivery-plan.test.ts && npx tsx packages/data-core/src/domains/marketplace-orders/tests/order-details-visibility.test.ts",
+    "test:marketplace-orders": "npx tsx packages/data-core/src/domains/marketplace-orders/tests/storage-profile-integration.test.ts && npx tsx packages/data-core/src/domains/marketplace-orders/tests/schema-contract.test.ts && cross-env NODE_OPTIONS=--conditions=react-server npx tsx packages/data-core/src/domains/marketplace-orders/tests/list-for-user.test.ts && npx tsx packages/data-core/src/domains/marketplace-orders/tests/marketplace-orders.test.ts && cross-env NODE_OPTIONS=--conditions=react-server npx tsx packages/data-core/src/domains/marketplace-orders/tests/delete-all-orders.test.ts && npx tsx packages/data-core/src/domains/marketplace-orders/tests/delivery-rejection.test.ts && npx tsx packages/data-core/src/domains/marketplace-orders/tests/requirements-coverage.test.ts && npx tsx packages/data-core/src/domains/marketplace-orders/tests/security-and-invariants.test.ts && npx tsx packages/data-core/src/domains/marketplace-orders/tests/shipping-quotes.test.ts && npx tsx packages/data-core/src/domains/marketplace-orders/tests/unified-delivery-plan.test.ts && npx tsx packages/data-core/src/domains/marketplace-orders/tests/order-details-visibility.test.ts",
     "verify:notifications": "npm run architecture:check && npm run test:notifications",
     "test:notifications": "npx tsx src/features/notifications/tests/notification-module-boundary.test.ts && npx tsx src/features/notifications/tests/integration/notification-flow.integration.test.ts && cross-env NODE_OPTIONS=--conditions=react-server npx tsx packages/data-core/src/domains/notifications/tests/notification-token-cardinality.test.ts && npx tsx src/features/notifications/tests/notification-builder.test.ts && npx tsx src/features/notifications/tests/notification-sound-contract.test.ts && npx tsx src/features/notifications/tests/android-notification-inbox-contract.test.ts && cross-env NODE_OPTIONS=--conditions=react-server npx tsx src/features/notifications/tests/notification-provider-registry.test.ts && npx tsx src/features/notifications/tests/push-token-kind.test.ts && npx tsx src/features/notifications/tests/notification-permission-prompt-policy.test.ts && npx tsx src/features/notifications/tests/notification-local-storage-contract.test.ts && npx tsx src/features/notifications/tests/notification-center-model.test.ts && npx tsx src/features/notifications/tests/notifications-filter-tabs.test.ts && npx tsx src/features/notifications/tests/notifications-service-module-contract.test.ts && npx tsx src/features/notifications/tests/dev-notification-bridge.test.ts && npx tsx packages/account-bridge/src/tests/notification-bridge.test.ts && npx tsx src/features/notifications/tests/notification-broadcast-delivery.test.ts && cross-env NODE_OPTIONS=--conditions=react-server ASOL_NOTIFICATION_GRANT_SECRET=grant-test-secret-0123456789abcdef NEXT_PUBLIC_SUPER_ADMIN_UID=super-admin-test NEXT_PUBLIC_SUPER_ADMIN_PHONE=+201000000000 npx tsx src/features/notifications/tests/notification-test-service.test.ts && cross-env NODE_OPTIONS=--conditions=react-server ASOL_NOTIFICATION_GRANT_SECRET=grant-test-secret-0123456789abcdef npx tsx src/features/notifications/tests/notification-grant.test.ts && cross-env NODE_OPTIONS=--conditions=react-server npx tsx src/features/notifications/tests/notification-locale-routing.test.ts && npx tsx src/features/notifications/tests/web-push-subscription-retry.test.ts && cross-env NODE_OPTIONS=--conditions=react-server npx tsx src/features/notifications/tests/web-push-provider.test.ts && cross-env NODE_OPTIONS=--conditions=react-server ASOL_SESSION_SIGNING_SECRET=audit-only-secret-0123456789abcdef npx tsx src/features/specialty-chat/tests/specialty-chat-signatures.test.ts && cross-env NODE_OPTIONS=--conditions=react-server npx tsx src/features/notifications/tests/mobile-push-crypto.test.ts && cross-env NODE_OPTIONS=--conditions=react-server npx tsx src/features/notifications/tests/mobile-push-unlock.service.test.ts && npx tsx src/features/notifications/tests/mobile-push-contract.test.ts && npx tsx src/features/notifications/tests/notification-channel-parity.test.ts && npx tsx src/features/notifications/tests/notification-account-surface.test.ts",
     "test:favorites-core": "npx tsx packages/favorites-core/src/tests/index.test.ts",
@@ -146,7 +146,6 @@
     "db:schema:verify": "cross-env ASOL_PROVISIONING=true npx tsx scripts/schema-sync.ts --verify",
     "db:schema:sync": "cross-env ASOL_PROVISIONING=true npx tsx scripts/schema-sync.ts",
     "db:schema:sync:release": "cross-env ASOL_PROVISIONING=true ASOL_SCHEMA_SYNC_REQUIRED=true npx tsx scripts/schema-sync.ts",
-    "db:drizzle": "npx tsx scripts/run-drizzle-kit.ts",
     "db:provision:turso": "cross-env ASOL_PROVISIONING=true npx tsx scripts/provision-turso.ts",
     "db:push:vercel-env": "npx tsx scripts/push-vercel-turso-env.ts",
     "gova:cors:push": "npx tsx scripts/push-gova-cors-origins.ts",
@@ -321,7 +320,6 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dotenv": "^17.4.2",
-    "drizzle-orm": "^0.45.2",
     "fflate": "^0.8.3",
     "focus-trap-react": "^12.0.3",
     "google-auth-library": "11.0.2",
@@ -347,8 +345,6 @@
   "devDependencies": {
     "@next/eslint-plugin-next": "16.3.2",
     "@tailwindcss/postcss": "^4.3.1",
-    "@types/better-sqlite3": "9.6.0",
-    "better-sqlite3": "^13.0.3",
     "@types/geojson": "^7946.0.16",
     "@types/node": "24.13.3",
     "@types/nodemailer": "^8.0.1",
@@ -371,7 +367,6 @@
     "uuid": "14.0.1"
   },
   "allowScripts": {
-    "better-sqlite3@13.0.3": true,
     "esbuild@0.28.2": true,
     "unrs-resolver@1.12.2": true
   }

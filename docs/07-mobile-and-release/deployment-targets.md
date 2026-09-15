@@ -285,7 +285,7 @@ restricts a run to named accounts while debugging one.
 #### Remove the choice, not just the wrong answer
 
 Every runtime is Turso-only, including `npm run dev`. Each isolated account used
-to alias `better-sqlite3` to a throwing stub and pin its runtime-config port with
+to alias `embedded local database driver` to a throwing stub and pin its runtime-config port with
 `forceRemoteDataSource: true`, because the environment could otherwise select a
 filesystem backend the account cannot load. The gate found this the first time it
 ran inside a real deploy: the profiles account answered 500 on every data route
@@ -293,7 +293,7 @@ because the environment said `local`.
 
 Pinning was the right fix for a choice that had to exist. The better fix was to
 stop the choice existing: the port takes no options now, the stubs are gone, and
-`npm run architecture:check` fails on any `better-sqlite3` reference outside an
+`npm run architecture:check` fails on any `embedded local database driver` reference outside an
 isolated test. A configuration value that cannot be set wrong is stronger than
 one every new account has to remember to pin.
 

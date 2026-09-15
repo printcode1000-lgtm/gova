@@ -155,7 +155,7 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Purpose** | Database access, sharding, and domain repositories |
 | **Architectural Layer** | capability |
 | **Public Exports** | `.` · `./account-deletion` · `./advertisements` · `./auth` · `./auth/entities` · `./browser` · `./composition` · `./control-ota` · `./control-release-state` · `./control-system-logs` · `./feature-flags` · `./follow` · `./follow/entities` · `./marketplace-orders` · `./notifications` · `./ota` · `./ota-runtime` · `./password-recovery` · `./pharmacy-profile-catalog` · `./pharmacy-profile-catalog/entities` · `./product` · `./product-search` · `./product-search-fields` · `./product-search/entities` · `./product/entities` · `./profile` · `./profile/entities` · `./provisioning` · `./runtime-config` · `./seller-discounts` · `./seller-discounts/entities` · `./super-admin` · `./system-logs` · `./telemetry` · `./tooling` |
-| **Infrastructure Privileges** | `@libsql/client`, `drizzle-orm`, `drizzle-orm/libsql` |
+| **Infrastructure Privileges** | `@libsql/client` |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:data-core` |
 | **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |

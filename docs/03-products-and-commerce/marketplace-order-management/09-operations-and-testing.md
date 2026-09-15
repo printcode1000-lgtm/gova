@@ -24,7 +24,7 @@ npm run architecture:check
 npm run build
 ```
 
-The executable suites use in-memory SQLite databases with the production migration. They verify the complete table/column/service/enum contract, real foreign keys, integer-money guards, checks, triggers, indexes, service transitions, calculated totals/statuses, location-quote permissions and revisions, unified/hybrid provider ranking and scope isolation, competing offers, buyer-approved exactly-once shipping totals, route repricing, processing/payment gates, grouped shipment creation, both duplicate-assignment paths, image rejection, cross-order isolation, role permissions, and audit creation.
+The executable suites use isolated database test doubles with the production migration. They verify the complete table/column/service/enum contract, real foreign keys, integer-money guards, checks, triggers, indexes, service transitions, calculated totals/statuses, location-quote permissions and revisions, unified/hybrid provider ranking and scope isolation, competing offers, buyer-approved exactly-once shipping totals, route repricing, processing/payment gates, grouped shipment creation, both duplicate-assignment paths, image rejection, cross-order isolation, role permissions, and audit creation.
 
 ## Operational diagnostics
 
@@ -36,3 +36,9 @@ or delivery price directly; use an audited domain operation and run
 recalculation.
 
 Back up the dedicated database according to the same recovery policy used for other Asol Turso databases. Audit history and financial records must be included in retention and recovery checks.
+
+## Super-admin clear-all orders
+
+The `/orders` page exposes `Clear all orders` only to the Super Admin. The button stages one `delete` operation in Page Save; it must never delete immediately. The header Page Save action executes `DELETE /api/super-admin/orders/clear`, and only a successful save empties the visible list. Discarding the staged operation leaves persistence unchanged.
+
+The server command `deleteAllMarketplaceOrders()` owns the destructive database work. It deletes child tables before parent tables across the marketplace order shards, ending with `seller_orders` and `orders`, so no order-owned items, fulfillment, delivery-plan, payment/refund, after-sales, dispute, or audit rows remain. `delete-all-orders.test.ts` creates a real order in the isolated test database, executes the command, and asserts every table in the deletion contract is empty.

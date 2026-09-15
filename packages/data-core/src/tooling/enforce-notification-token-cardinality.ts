@@ -62,7 +62,7 @@ async function cleanCloud(): Promise<{ before: Audit; after: Audit } | null> {
   const client = createClient({ url, authToken });
   try {
     const table = await client.execute(
-      "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'user_notification_tokens'",
+      "SELECT 1 FROM pragma_table_list WHERE type = 'table' AND name = 'user_notification_tokens'",
     );
     if (table.rows.length === 0) return null;
     const before = await auditCloud(client);

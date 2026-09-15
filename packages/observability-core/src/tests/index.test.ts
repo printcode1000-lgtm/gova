@@ -84,7 +84,7 @@ for (const file of browserReachable) {
   const text = readFileSync(path.join(ROOT, PACKAGE, 'src', file), 'utf8');
   assert.ok(!NODE_ONLY.test(text), `${file} is reachable from the browser door but imports a node builtin.`);
   assert.ok(
-    !/from\s+['"]\.\.\/traces\/(server-trace|trace-server-layer|drizzle-dev-logger|data-core-telemetry\.server)/.test(text),
+    !/from\s+['"]\.\.\/traces\/(server-trace|trace-server-layer|query builder-dev-logger|data-core-telemetry\.server)/.test(text),
     `${file} reaches a server-only trace module from the browser half.`,
   );
 }

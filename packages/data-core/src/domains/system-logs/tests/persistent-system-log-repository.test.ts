@@ -1,20 +1,18 @@
 import assert from "node:assert/strict";
-import Database from "better-sqlite3";
+import { createClient } from "@libsql/client";
 
 import { sanitizePersistentSystemLog } from "@asol/system-logs-core";
 import { SystemLogsRepository } from "../system-logs.repository.server";
 import { SYSTEM_LOG_ORIGIN_BACKFILL_SQL } from "../../../tooling/migrate-system-log-origin";
 
 class MemoryDatabasePort {
-  readonly db = new Database(":memory:");
+  readonly db = createClient({ url: "file::memory:" });
   readonly statements: string[] = [];
 
   async execute(sql: string, params: unknown[] = []) {
     this.statements.push(sql);
-    const statement = this.db.prepare(sql);
-    if (statement.reader) return statement.all(...params);
-    const result = statement.run(...params);
-    return result;
+    const result = await this.db.execute({ sql, args: params as any[] });
+    return result.rows;
   }
 }
 
@@ -22,7 +20,7 @@ async function main() {
   const database = new MemoryDatabasePort();
   const systemLogsRepository = new SystemLogsRepository(database);
 
-  database.db.exec(`
+  await database.db.executeMultiple(`
   CREATE TABLE system_logs (
     id text PRIMARY KEY NOT NULL,
     fingerprint text NOT NULL UNIQUE,
@@ -79,9 +77,9 @@ async function main() {
   // The backfill is an explicit, idempotent migration now, not something the
   // repository runs on every call. Applying it here keeps the classification it
   // produces under test, and pins the statement the migration actually issues.
-  database.db.exec(SYSTEM_LOG_ORIGIN_BACKFILL_SQL);
+  await database.db.execute(SYSTEM_LOG_ORIGIN_BACKFILL_SQL);
   const beforeSecondRun = await systemLogsRepository.list({ origin: "cloud", level: "error" });
-  database.db.exec(SYSTEM_LOG_ORIGIN_BACKFILL_SQL);
+  await database.db.execute(SYSTEM_LOG_ORIGIN_BACKFILL_SQL);
 
   const migrated = await systemLogsRepository.list({
     origin: "cloud",
@@ -123,38 +121,20 @@ async function main() {
 
   const recentTime = new Date().toISOString();
   const oldTime = new Date(Date.now() - 20 * 24 * 60 * 60 * 1_000).toISOString();
-  database.db
-    .prepare(
-      `INSERT INTO system_logs (
-        id, fingerprint, level, source, console_method, message, platform,
-        origin, trust_level, occurrences, first_occurred_at, last_occurred_at
-      ) VALUES (?, ?, ?, 'server', 'server.error', ?, 'server', 'cloud', 'trusted-server', ?, ?, ?)`,
-    )
-    .run(
-      "old-error",
-      "old-error-fingerprint",
-      "error",
-      "old error outside dashboard window",
-      10_000,
-      oldTime,
-      oldTime,
-    );
-  database.db
-    .prepare(
-      `INSERT INTO system_logs (
-        id, fingerprint, level, source, console_method, message, platform,
-        origin, trust_level, occurrences, first_occurred_at, last_occurred_at
-      ) VALUES (?, ?, ?, 'server', 'server.error', ?, 'server', 'cloud', 'trusted-server', ?, ?, ?)`,
-    )
-    .run(
-      "recent-warning",
-      "recent-warning-fingerprint",
-      "warning",
-      "recent warning",
-      4,
-      recentTime,
-      recentTime,
-    );
+  await database.execute(
+    `INSERT INTO system_logs (
+      id, fingerprint, level, source, console_method, message, platform,
+      origin, trust_level, occurrences, first_occurred_at, last_occurred_at
+    ) VALUES (?, ?, ?, 'server', 'server.error', ?, 'server', 'cloud', 'trusted-server', ?, ?, ?)`,
+    ["old-error", "old-error-fingerprint", "error", "old error outside dashboard window", 10_000, oldTime, oldTime],
+  );
+  await database.execute(
+    `INSERT INTO system_logs (
+      id, fingerprint, level, source, console_method, message, platform,
+      origin, trust_level, occurrences, first_occurred_at, last_occurred_at
+    ) VALUES (?, ?, ?, 'server', 'server.error', ?, 'server', 'cloud', 'trusted-server', ?, ?, ?)`,
+    ["recent-warning", "recent-warning-fingerprint", "warning", "recent warning", 4, recentTime, recentTime],
+  );
 
   database.statements.length = 0;
   const summary = await systemLogsRepository.summary();

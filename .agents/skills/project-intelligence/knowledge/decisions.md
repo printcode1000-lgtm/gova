@@ -28,7 +28,7 @@
 ## ADR-0004: Sealed Package Model & Single Capability Ownership
 
 - **Decision**: Monorepo packages in `packages/*` are strictly sealed with explicit `exports` maps and single capability ownership.
-- **Why**: Prevents deep-import spaghetti, untracked dependencies, and accidental leakage of vendor SDKs (e.g. Capacitor, Drizzle, AWS S3) into general application UI code.
+- **Why**: Prevents deep-import spaghetti, untracked dependencies, and accidental leakage of vendor SDKs (e.g. Capacitor, query builder, AWS S3) into general application UI code.
 - **Enforcement**: Four independent layers: `package.json` exports, ESLint import restrictions, static AST architecture scanner (`architecture:check`), and contract tests.
 
 ---

@@ -97,13 +97,13 @@ reason before rejecting. See `16-deployment-targets.md` § "What each account is
 asked, and why" for what each probe asks and why the obvious probe was wrong for
 two of the six accounts.
 
-## A third cause the gate found: the environment picked SQLite
+## A third cause the gate found: the environment picked embedded local database
 
 Once the gate ran inside a real `deploy:all`, the profiles account answered
 500 on every route reaching data:
 
 ```
-better-sqlite3 is not available in the notifications service:
+embedded local database driver is not available in the notifications service:
 this deployment is Turso-only.
 ```
 
@@ -114,17 +114,17 @@ copy-pasted and reported a different service than the one they ran in, which
 made a profiles failure read as a notifications problem. Each was made to name
 itself; the stubs were later deleted along with the branch they stood in for.
 
-**The real fault:** all six isolated accounts aliased `better-sqlite3` to a stub
-that threw — they never ran against local SQLite, and bundling the native
+**The real fault:** all six isolated accounts aliased `embedded local database driver` to a stub
+that threw — they never ran against local database, and bundling the native
 driver would force a native build for unreachable code. But they still let
 `resolveServerDatabaseBackend` decide from the environment, and a data source
-of `local` selects sqlite. The deployment then loaded a driver it does not
+of `local` selects local database. The deployment then loaded a driver it does not
 ship.
 
 On Vercel, one misconfigured variable reproduces this exactly: every data
 route down, health still green. Same shape as the original outage.
 
-**Fix at the time:** an account that cannot run SQLite must not ask. Each
+**Fix at the time:** an account that cannot run embedded local database must not ask. Each
 composition root stated its own invariant:
 
 ```ts
@@ -134,7 +134,7 @@ registerDataCoreRuntimeConfigPorts({ forceRemoteDataSource: true });
 **Fix since:** the branch is gone. Server application data is Turso/libSQL in
 every runtime, so there is no environment value that selects a driver and no stub
 to alias — the registrar takes no options and `npm run architecture:check` fails
-on any `better-sqlite3` reference outside an isolated test.
+on any `embedded local database driver` reference outside an isolated test.
 
 The general rule survives the specific fix, and gets sharper: when a deployment
 physically cannot serve one branch of a runtime choice, remove the choice. Pinning

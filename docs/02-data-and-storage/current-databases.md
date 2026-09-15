@@ -54,7 +54,7 @@ derives the owner of each of the 62 declared tables from the manifests and
 throws if two claim the same one, and the parity test cross-checks that against
 the shard routing map.
 
-`__drizzle_migrations` is not one of them. It is drizzle's own record of which
+`__query builder_migrations` is not one of them. It is query builder's own record of which
 migrations a database has applied, so each database that runs migrations keeps
 its own copy — four of them do. It holds no application data, is excluded from
 the manifests, and is ignored as a tooling-owned extra during schema sync.
@@ -309,7 +309,7 @@ Tables:
 - `user_notification_tokens`
 - `user_notification_preferences` (one account-level row containing independent specialty-request and product-conversation opt-ins; no conversation content)
 
-Device-token rows contain transport registration only. Chat preferences are not duplicated onto tokens. The notifications database uses one pre-release baseline migration and is synchronized to its isolated Turso database from the same final SQLite schema.
+Device-token rows contain transport registration only. Chat preferences are not duplicated onto tokens. The notifications database uses one pre-release baseline migration and is synchronized to its isolated Turso database from the same final Turso schema.
 
 The Web Push VAPID pair is not a table. Its public half is a constant in
 `packages/notifications-core/src/domain/web-push-config.ts` and its private half is

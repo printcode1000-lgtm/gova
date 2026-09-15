@@ -218,7 +218,7 @@ There is no Replace button after upload. The user removes the stored image and t
 
 The delete action is destructive storage deletion by default. The image remains visible until the provider confirms deletion, which removes the R2 object — in Development as in any other runtime. A failure keeps the image and opens a localized error dialog.
 
-Storage deletion and feature-database persistence are two sequential operations, not one distributed transaction. After provider deletion succeeds, `onChange` removes the key and the owning feature must persist that new value in SQLite/Turso. If that feature save fails, storage is already deleted and the database may temporarily retain a stale key; callers that persist asynchronously must expose/retry that failure. Product creation persists the final uploaded `imageKey` and URL in the product feature, which stores product image lists in `products.images_json` when the user presses Create Product.
+Storage deletion and feature-database persistence are two sequential operations, not one distributed transaction. After provider deletion succeeds, `onChange` removes the key and the owning feature must persist that new value in Turso. If that feature save fails, storage is already deleted and the database may temporarily retain a stale key; callers that persist asynchronously must expose/retry that failure. Product creation persists the final uploaded `imageKey` and URL in the product feature, which stores product image lists in `products.images_json` when the user presses Create Product.
 
 Feature owners must persist the resulting empty image reference from `onChange`. They must not optimistically remove the database reference before storage deletion succeeds.
 
@@ -304,7 +304,7 @@ The document contains a schema version and independent slot definitions:
 `StorageImageManager` must not:
 
 - Call `fetch` directly
-- Import repositories, database clients, Drizzle, SQLite, Turso, or R2 providers
+- Import repositories, database clients, query builder, embedded local database, Turso, or R2 providers
 - Save image keys to feature databases itself
 - Know feature-specific table names or API routes
 

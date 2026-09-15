@@ -2,7 +2,7 @@
 
 ## Database Architecture
 - **Multi-Database Sharding**: Backed by Turso (production cloud) and local SQLite (development/offline).
-- **ORM & Client**: Drizzle ORM configured strictly inside `@asol/data-core`.
+- **ORM & Client**: query builder ORM configured strictly inside `@asol/data-core`.
 - **Sharded Domains**:
   - `users`: Authentication, credentials, sessions, account status.
   - `products`: Product listings, catalog items, pricing, inventory.
@@ -11,7 +11,7 @@
   - `advertisements`: Hero slider, featured marquee, trending ribbon.
   - `system_logs`: Diagnostic, audit, security events.
   - `notifications`: Push tokens, inbox history, notification logs.
-- **SQL / Query Rules**: No raw SQL or Drizzle queries outside `@asol/data-core` repositories.
+- **SQL / Query Rules**: No raw SQL or query builder queries outside `@asol/data-core` repositories.
 
 ## Object & Media Storage
 - **Provider**: Cloudflare R2 / AWS S3 API via `@asol/storage-core`.

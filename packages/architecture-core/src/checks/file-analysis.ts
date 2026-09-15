@@ -5,7 +5,7 @@ import {
   resolveNativeBaseline,
 } from "@asol/ota-core/publishing";
 import {
-  ALLOWED_DRIZZLE_ORM_FILES_PATTERN,
+  ALLOWED_QUERY_BUILDER_FILES_PATTERN,
   ALLOWED_DB_DRIVER_FILES_PATTERN,
   ALLOWED_FETCH_FILES,
   ALLOWED_PROCESS_ENV_FILES,
@@ -140,12 +140,12 @@ export function printReport(): void {
     'Command Layer',
     'Repository Layer',
     'Database Client',
-    'SQLite Rules',
+    'Local Database Ban',
     'Turso Rules',
     'No SQL Outside Repository',
     'No fetch Outside AsolApiClient',
     'No Secrets In Client',
-    'No Drizzle Outside Repository',
+    'No query builder Outside Repository',
     'No Invalid Imports',
     'Configuration Layer',
     'Image Storage Contract',

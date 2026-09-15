@@ -41,14 +41,14 @@ The two counts must match. If they do not, the tree is incomplete.
 npm run dependencies:install
 ```
 
-   On Windows this avoids npm's erroneous `better-sqlite3@13` rebuild while
+   On Windows this avoids npm's erroneous `embedded local database driver@13` rebuild while
    still executing and validating the bundled binary. See
-   [npm-ci-better-sqlite3-python-windows.md](./npm-ci-better-sqlite3-python-windows.md).
+   [npm-ci-embedded local database driver-python-windows.md](./npm-ci-embedded local database driver-python-windows.md).
 2. Confirm every workspace is linked, then re-run the build:
 
 ```powershell
 (Get-ChildItem node_modules\@asol).Count   # must equal packages/* count
-node -e "require('better-sqlite3'); console.log('sqlite ok')"
+node -e "require('embedded local database driver'); console.log('local database ok')"
 npm run build
 ```
 

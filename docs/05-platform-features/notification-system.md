@@ -2,7 +2,7 @@
 
 > Specialty-based buyer/provider conversations are documented in [`specialty-notification-chat.md`](specialty-notification-chat.md). They use notifications as their sole transport and keep message content only in the local notification center.
 
-Notification bodies and notification-center rows have no SQLite/Turso table. Device tokens, push-provider credentials, and per-user delivery preferences are server metadata only; the permanent application copy of notification cards, lifecycle analytics, badges, receipts, and conversation messages is exclusively in AsolDB IndexedDB on the current client.
+Notification bodies and notification-center rows have no Turso table. Device tokens, push-provider credentials, and per-user delivery preferences are server metadata only; the permanent application copy of notification cards, lifecycle analytics, badges, receipts, and conversation messages is exclusively in AsolDB IndexedDB on the current client.
 
 > **The one on-device exception, and it is not cloud storage.** While
 > JavaScript and IndexedDB cannot run at all — the app backgrounded with its

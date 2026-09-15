@@ -1,7 +1,6 @@
 import 'server-only';
 
 import { createClient } from '@libsql/client';
-import { drizzle } from 'drizzle-orm/libsql';
 
 import { createOtaReleaseRepository } from './domains/ota/repositories/ota-release-repository';
 import type { IDatabaseClient } from './core/database/database-client.interface';
@@ -26,18 +25,14 @@ class ControlOtaDatabaseClient implements IDatabaseClient {
     return this.connection;
   }
 
-  get db() {
-    return drizzle(this.client);
-  }
-
   async execute(sql: string, params: unknown[] = []): Promise<Record<string, unknown>[]> {
     const result = await this.client.execute({ sql, args: params as any[] });
     return result.rows as Record<string, unknown>[];
   }
-  async insert(): Promise<never> { throw new Error('controlOtaDatabase: use drizzle'); }
-  async select(): Promise<never> { throw new Error('controlOtaDatabase: use drizzle'); }
-  async update(): Promise<never> { throw new Error('controlOtaDatabase: use drizzle'); }
-  async delete(): Promise<never> { throw new Error('controlOtaDatabase: use drizzle'); }
+  async insert(): Promise<never> { throw new Error('controlOtaDatabase: use execute'); }
+  async select(): Promise<never> { throw new Error('controlOtaDatabase: use execute'); }
+  async update(): Promise<never> { throw new Error('controlOtaDatabase: use execute'); }
+  async delete(): Promise<never> { throw new Error('controlOtaDatabase: use execute'); }
 }
 
 function required(key: string): string {

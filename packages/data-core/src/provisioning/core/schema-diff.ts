@@ -14,7 +14,7 @@ import type {
  * to apply: create a missing table, index, view or trigger, add a missing
  * column. `migrationsRequired` is everything additive DDL *cannot* repair —
  * a changed primary key, foreign key, CHECK constraint, uniqueness, default,
- * type or nullability on a table that already exists. SQLite can only fix those
+ * type or nullability on a table that already exists. The Turso SQL dialect can only fix those
  * by rebuilding the table and moving its rows, which is a migration a person
  * writes and reviews, never something a release step should improvise.
  *
@@ -49,9 +49,9 @@ function normalizeColumnType(type: string): string {
 /**
  * Compares two column defaults as values rather than as text.
  *
- * SQLite stores a default exactly as it was written, so the same value arrives
+ * Turso stores a default exactly as it was written, so the same value arrives
  * as `'client'` from one statement and `"client"` from another, and `0` from one
- * and `false` from a Drizzle-generated one. Ignoring defaults entirely — the
+ * and `false` from a schema-generated one. Ignoring defaults entirely — the
  * previous behaviour — hides a genuinely different default; comparing raw text
  * reports drift that does not exist. Normalizing quoting, case and the two
  * boolean spellings is the comparison that answers the actual question.
@@ -88,7 +88,7 @@ function compatibleType(desired: ColumnInfo, actual: ColumnInfo): boolean {
 
 function compatibleNotNull(desired: ColumnInfo, actual: ColumnInfo): boolean {
   if (desired.notNull === actual.notNull) return true;
-  // `INTEGER PRIMARY KEY` is the rowid alias: SQLite reports it as nullable even
+  // `INTEGER PRIMARY KEY` is the rowid alias: Turso reports it as nullable even
   // when it is declared NOT NULL, and it can never actually hold NULL.
   const left = normalizeColumnType(desired.type);
   const right = normalizeColumnType(actual.type);

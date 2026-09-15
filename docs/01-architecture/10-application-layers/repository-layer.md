@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Persistence interface between operations layer and database client — owns SQL/Drizzle usage for domain rows.
+Persistence interface between operations layer and database client — owns SQL/query builder usage for domain rows.
 
 ## Scope
 
@@ -11,12 +11,12 @@ Repositories under `packages/data-core/src/domains/**/` and application reposito
 ## Responsibilities
 
 - Translate domain operations to queries
-- Encapsulate Drizzle usage for domain tables
+- Encapsulate query builder usage for domain tables
 - No HTTP, UI, or business route concepts
 
 ## May import
 
-- `@asol/data-core` database client and Drizzle types in allowed zones
+- `@asol/data-core` database client and query builder types in allowed zones
 - Domain entity types
 - Other `@asol/*` doors when domain requires (through data-core composition)
 
@@ -46,5 +46,3 @@ Operational detail: [docs/02-data-and-storage/](../../02-data-and-storage/).
 Repository logic outside data-core requires strong justification and pinned edge budget.
 
 ## Invariants
-
-`drizzle-orm` imports only in repository and `packages/data-core/src/core/database/**`.

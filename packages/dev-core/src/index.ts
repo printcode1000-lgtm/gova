@@ -1,7 +1,7 @@
 /**
  * dev-core — the Development-runtime guard, and nothing else.
  *
- * This package used to own local persistence too: SQLite filenames, the
+ * This package used to own local persistence too: local database filenames, the
  * `public/sync_data` path segments, the shard-file naming rule, and the public
  * URL a locally stored image was served from. None of that exists any more —
  * server data is Turso and image objects are Cloudflare R2 in every runtime — so

@@ -78,12 +78,12 @@ module.exports = [
         'error',
         {
           paths: [
-            { name: 'better-sqlite3', message: 'Database drivers belong to @asol/data-core only.' },
+            { name: 'local database driver', message: 'Database drivers belong to @asol/data-core only.' },
             { name: '@libsql/client', message: 'Database drivers belong to @asol/data-core only.' },
-            { name: 'drizzle-orm', message: 'Database query APIs belong to @asol/data-core only.' },
+            { name: 'legacy query-builder package', message: 'Database query APIs belong to @asol/data-core only.' },
           ],
           patterns: [
-            { group: ['@libsql/*', 'drizzle-orm/*'], message: 'Database query APIs belong to @asol/data-core only.' },
+            { group: ['@libsql/*', 'legacy query-builder package/*'], message: 'Database query APIs belong to @asol/data-core only.' },
             {
               group: ['@asol/data-core/src/**', '@asol/data-core/src', '**/packages/data-core/**'],
               message:
@@ -266,7 +266,7 @@ module.exports = [
   // capability-registry.ts. The registry is the authority; this rule is the
   // editor-time echo of it, and the two must name the same owners — a rule that
   // fires inside the package that owns the SDK is not enforcement, it is a
-  // broken build. `data-core` owns the database drivers and drizzle,
+  // broken build. `data-core` owns the database drivers and query builder,
   // `notifications-core` owns web-push and firebase-admin.
   {
     files: ['src/**/*.{ts,tsx}', 'scripts/**/*.ts', 'services/**/*.{ts,tsx}', 'packages/**/*.{ts,tsx}'],
@@ -292,7 +292,7 @@ module.exports = [
               // below: as a pattern, `web-push` also matched the relative
               // import `../infrastructure/web-push/web-push-browser.service`,
               // flagging a module for importing its own adapter.
-              group: ['drizzle-orm/*', '@libsql/*'],
+              group: ['legacy query-builder package/*', '@libsql/*'],
               message:
                 'This vendor SDK is owned by a sealed package. Import through that package public door.',
             },
@@ -300,9 +300,9 @@ module.exports = [
           paths: [
             'web-push',
             'firebase-admin',
-            'better-sqlite3',
+            'local database driver',
             '@libsql/client',
-            'drizzle-orm',
+            'legacy query-builder package',
           ].map((name) => ({
             name,
             message:

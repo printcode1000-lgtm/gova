@@ -1,9 +1,6 @@
 import { advertisementsDataSource } from "../../../core";
 import "server-only";
 
-import { eq } from "drizzle-orm";
-
-import { heroSlider } from "../../../core/database/advertisements/advertisements.schema";
 import type { IDatabaseClient } from "../../../core/database/database-client.interface";
 import {
   DEFAULT_HOME_HERO_CONFIG,
@@ -56,27 +53,21 @@ export class HomeHeroSliderRepository {
       updatedAt: new Date().toISOString(),
       updatedBy: actorUid,
     };
-    if (await this.getRow()) {
-      await this.database.db
-        .update(heroSlider)
-        .set(values)
-        .where(eq(heroSlider.id, HOME_HERO_SLIDER_ID));
-    } else {
-      await this.database.db.insert(heroSlider).values({
-        id: HOME_HERO_SLIDER_ID,
-        ...values,
-      });
-    }
+    await this.database.execute(
+      `INSERT INTO hero_slider (id, config_json, version, check_interval_minutes, updated_at, updated_by)
+       VALUES (?, ?, ?, ?, ?, ?)
+       ON CONFLICT(id) DO UPDATE SET config_json = excluded.config_json, version = excluded.version, check_interval_minutes = excluded.check_interval_minutes, updated_at = excluded.updated_at, updated_by = excluded.updated_by`,
+      [HOME_HERO_SLIDER_ID, values.configJson, values.version, values.checkIntervalMinutes, values.updatedAt, values.updatedBy],
+    );
     return this.get();
   }
 
-  private async getRow() {
-    const rows = await this.database.db
-      .select()
-      .from(heroSlider)
-      .where(eq(heroSlider.id, HOME_HERO_SLIDER_ID))
-      .limit(1);
-    return rows[0] ?? null;
+  private async getRow(): Promise<{ configJson: string; version: number; checkIntervalMinutes: number; updatedAt: string; updatedBy: string | null } | null> {
+    const rows = await this.database.execute(
+      `SELECT config_json AS configJson, version, check_interval_minutes AS checkIntervalMinutes, updated_at AS updatedAt, updated_by AS updatedBy FROM hero_slider WHERE id = ? LIMIT 1`,
+      [HOME_HERO_SLIDER_ID],
+    );
+    return (rows[0] as any) ?? null;
   }
 }
 

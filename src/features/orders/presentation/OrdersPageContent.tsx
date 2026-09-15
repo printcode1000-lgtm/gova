@@ -2,12 +2,13 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { ClipboardList, Loader2, ShieldCheck } from "lucide-react";
+import { ClipboardList, Loader2, ShieldCheck, Trash2 } from "lucide-react";
 
 import { asolApi } from "@/core/api/asol-api-client";
 import { ASOL_API_ROUTES } from "@/core/api/asol-api-routes";
 import { useSession } from "@/features/auth/ui";
 import { isSuperAdmin } from "@/features/auth";
+import { usePageSaveOperationScope } from "@/features/page-save/ui";
 import { useTranslation } from "@/shared/i18n";
 import { useOrdersListAutoRefresh } from "./OrderNotificationsController";
 import {
@@ -33,6 +34,13 @@ export function OrdersPageContent() {
   const [loading, setLoading] = React.useState(false);
   const [loadingMore, setLoadingMore] = React.useState(false);
   const [error, setError] = React.useState("");
+  const clearAllOperations = usePageSaveOperationScope({
+    id: "orders-super-admin-clear-all",
+    label: copy.pageLabel,
+    returnPath: "/orders",
+    enabled: admin,
+  });
+  const clearAllStaged = clearAllOperations.isStaged("orders-clear-all");
   const itemsLengthRef = React.useRef(0);
   itemsLengthRef.current = items.length;
 
@@ -68,6 +76,32 @@ export function OrdersPageContent() {
 
   useOrdersListAutoRefresh(() => loadOrders(true), session?.uid);
 
+  const stageClearAllOrders = React.useCallback(() => {
+    if (!admin || !session?.sessionToken || clearAllStaged) return;
+    clearAllOperations.stage({
+      itemId: "orders-clear-all",
+      kind: "delete",
+      label: copy.clearAllItem,
+      description: locale === "ar"
+        ? "إجراء نهائي: سيتم حذف جميع الطلبات وكل البيانات التابعة لها."
+        : "Final action: all orders and their related data will be deleted.",
+      execute: async () => {
+        if (!session.sessionToken || !isSuperAdmin(session)) return false;
+        try {
+          await asolApi.delete(ASOL_API_ROUTES.orders.superAdminClear, {
+            headers: { "x-asol-session-token": session.sessionToken },
+          });
+          setItems([]);
+          setHasMore(false);
+          return true;
+        } catch (err) {
+          setError(formatApiError(err));
+          return false;
+        }
+      },
+    });
+  }, [admin, clearAllOperations, clearAllStaged, copy.clearAllItem, formatApiError, locale, session]);
+
   if (sessionLoading) {
     return (
       <main id='features-orders-presentation-orderspagecontent-main-1-wwtzdf' className="flex min-h-[50vh] items-center justify-center">
@@ -93,10 +127,22 @@ export function OrdersPageContent() {
           <p id='features-orders-presentation-orderspagecontent-text-10-biyyn9' className="mt-1 text-sm text-muted-foreground">{copy.description}</p>
         </div>
         {admin ? (
-          <span id='features-orders-presentation-orderspagecontent-text-11-m3wb29' className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
-            <ShieldCheck id='features-orders-presentation-orderspagecontent-shieldcheck-12-q6dv3s' className="h-4 w-4" />
-            {copy.admin}
-          </span>
+          <div id="features-orders-presentation-orderspagecontent-super-admin-actions-11a-v8m4kx" className="flex flex-col items-stretch gap-2">
+            <span id='features-orders-presentation-orderspagecontent-text-11-m3wb29' className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
+              <ShieldCheck id='features-orders-presentation-orderspagecontent-shieldcheck-12-q6dv3s' className="h-4 w-4" />
+              {copy.admin}
+            </span>
+            <button
+              id="features-orders-presentation-orderspagecontent-clear-all-button-12a-r7k2np"
+              type="button"
+              onClick={stageClearAllOrders}
+              disabled={clearAllStaged}
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-error/35 px-3 py-1.5 text-sm font-semibold text-error disabled:cursor-not-allowed disabled:opacity-45"
+            >
+              <Trash2 id="features-orders-presentation-orderspagecontent-clear-all-icon-12b-q5t9mv" className="h-4 w-4" aria-hidden="true" />
+              {copy.clearAll}
+            </button>
+          </div>
         ) : null}
       </div>
 

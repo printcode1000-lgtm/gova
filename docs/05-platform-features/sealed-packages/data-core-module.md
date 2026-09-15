@@ -46,13 +46,7 @@ single wildcard silently defeated the `native-core` seal once and must never rea
 
 ### `src/core/database/` has no door
 
-This is the part worth keeping. `drizzle-orm` and `@libsql/client` are
 imported only inside that folder, and **no entry in the `exports` map leads to it**. Turso
-adapters load through `drizzle-libsql.server.ts` (a static `drizzle-orm/libsql` import) so
-Next.js file tracing ships the adapter on Vercel; lazy `nodeRequire('drizzle-orm/libsql')`
-left production with `Cannot find module 'drizzle-orm/libsql/index.cjs'`. Every deployment
-must also list `drizzle-orm` in `serverExternalPackages` and include
-`node_modules/drizzle-orm/libsql/**/*` in `outputFileTracingIncludes`. Before the
 migration the same guarantee was three regular expressions in
 `packages/architecture-core/src/contracts/contract.ts` matching a folder path; a file that moved out of the folder
 lost the protection silently. Now the resolver enforces it: an import of a driver from anywhere
@@ -90,7 +84,7 @@ identifiers, and its memory sampling stay entirely on the application's side.
 
 **Every default is safe**, and the contract test asserts it rather than trusting it: with
 nothing registered, a query still runs, an IndexedDB read still runs, a server-layer call still
-returns its value, the drizzle logger is absent rather than a stub, and a failure still
+returns its value, the query builder logger is absent rather than a stub, and a failure still
 propagates. A forgotten registration costs trace lines in `/dev/monitor` — never a query, never
 a write.
 
@@ -136,7 +130,7 @@ already contains. Turso's schema is *derived* from them by `db:schema:sync:relea
 `deploy:all` runs in preflight before any build, push, or git write. Four things make a gap
 between the two impossible rather than unlikely, and each closes a different way it could open.
 
-The manifests replaced a local SQLite file per database. That arrangement made the schema source
+The manifests replaced a local database file per database. That arrangement made the schema source
 something a developer's machine held rather than something the repository stated: a fresh clone
 had none of it, so the offline half of this contract silently checked nothing on exactly the
 machine that ships the code.

@@ -75,7 +75,7 @@ turning into a main-app-to-service call.
 
 **One dataset in local development.** A `next dev` browser stays on the local
 Business API even when service origins exist in `.env.local`. The local API reads and
-writes the SQLite development databases; redirecting only its reads to a
+writes the embedded local database development databases; redirecting only its reads to a
 deployed service mixes local and cloud data and produces false `notFound`
 responses. Production web, static, and Capacitor builds are unaffected because
 they are production builds. This distinction must use the build mode, not a
@@ -101,7 +101,7 @@ of these routes, so an unconfigured bridge degrades to pre-split behaviour.
 
 Development builds deliberately behave like the empty-origin fallback even
 when these values are configured: all reads remain on the local API so they see
-the same SQLite records as writes.
+the same database records as writes.
 
 A static export or native shell has no same-origin fallback, so
 `scripts/build-static.ts` resolves both from `platform/capacitor.defaults.ts`,

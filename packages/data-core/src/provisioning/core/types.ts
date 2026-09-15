@@ -43,7 +43,7 @@ export interface TableConstraints {
   autoIncrement: boolean;
   /**
    * Column tuples made unique by a table constraint rather than a named index.
-   * SQLite backs these with an auto-index whose `sqlite_master.sql` is null, so
+   * Turso backs these with an internal auto-index whose catalog SQL is null, so
    * they are invisible to any check that reads only index DDL.
    */
   uniqueConstraints: string[][];
@@ -106,7 +106,7 @@ export interface SchemaDiffOperation {
 /**
  * A difference on an existing table that additive DDL cannot repair.
  *
- * SQLite cannot alter a primary key, a foreign key, a CHECK constraint or a
+ * The Turso SQL dialect cannot alter a primary key, a foreign key, a CHECK constraint or a
  * column default in place; repairing one means rebuilding the table and moving
  * its rows. That is a migration someone writes and reviews, so provisioning
  * reports it instead of attempting it — and never counts the table as in parity.

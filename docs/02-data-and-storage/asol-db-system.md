@@ -49,7 +49,7 @@ Stores user authentication session state.
 
 | Key | Value Type | Description |
 |-----|------------|-------------|
-| `current` | `UserSession \| null` | Authenticated session info: `{ uid, phone, email?, providerAccountEnabled, specialties, sessionToken? }`. `providerAccountEnabled` is a local session copy of the current user's persisted account mode; the authoritative value is `users.provider_account_enabled` in SQLite/Turso. The signed token is local-only and removed with the session. If a stored token's public payload names a different UID, bootstrap deletes that corrupted session; new session writes reject the same mismatch before persistence. |
+| `current` | `UserSession \| null` | Authenticated session info: `{ uid, phone, email?, providerAccountEnabled, specialties, sessionToken? }`. `providerAccountEnabled` is a local session copy of the current user's persisted account mode; the authoritative value is `users.provider_account_enabled` in Turso. The signed token is local-only and removed with the session. If a stored token's public payload names a different UID, bootstrap deletes that corrupted session; new session writes reject the same mismatch before persistence. |
 
 ### 3. `guestSessions`
 Manages guest browsing identifiers.
@@ -76,7 +76,7 @@ The notification module stores its local state in dedicated AsolDB stores. Templ
 | `notificationBadges` | Per-user unread badge count. |
 | `notificationAnalytics` | Local lifecycle analytics events such as sent, displayed, opened, clicked, dismissed, and failed. |
 
-Notification cards and specialty-chat message bodies have no SQLite/Turso table. Their sole application persistence is the `notifications` store in this IndexedDB database, including inside Capacitor WebViews.
+Notification cards and specialty-chat message bodies have no Turso table. Their sole application persistence is the `notifications` store in this IndexedDB database, including inside Capacitor WebViews.
 | `notificationOfflineQueue` | Local operations waiting for browser connectivity. |
 
 ### 7. `imageUploadDrafts`

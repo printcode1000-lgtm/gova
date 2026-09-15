@@ -56,7 +56,6 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run cors:verify:api-live` | `Tooling` | 1 |  | 0 |
 | `npm run cors:verify:live` | `Tooling` | 2 |  | 0 |
 | `npm run data-access:sync-public` | `Tooling` | 1 |  | 0 |
-| `npm run db:drizzle` | `Tooling` | 1 |  | 0 |
 | `npm run db:drop:factory-reset` | `Tooling` | 1 |  | 0 |
 | `npm run db:drop:factory-reset:cloud` | `Tooling` | 1 |  | 0 |
 | `npm run db:migrate:orders` | `Tooling` | 1 |  | 0 |
@@ -228,7 +227,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:installation-bootstrap` | `Tooling` | 1 |  | 0 |
 | `npm run test:local-agent-mode-c` | `Tooling` | 1 |  | 0 |
 | `npm run test:map-core` | `Tooling` | 1 |  | 0 |
-| `npm run test:marketplace-orders` | `Tooling` | 10 |  | 1 |
+| `npm run test:marketplace-orders` | `Tooling` | 11 |  | 1 |
 | `npm run test:mirror-status-parity` | `Tooling` | 1 |  | 0 |
 | `npm run test:native-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:notifications` | `Tooling` | 27 |  | 5 |

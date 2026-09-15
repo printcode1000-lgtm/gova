@@ -76,7 +76,7 @@ const settingsStateSource = readFileSync(
 const notificationSchemaSource = readFileSync(
   path.join(
     process.cwd(),
-    "packages/data-core/src/core/database/notifications/notifications.schema.ts",
+    "packages/data-core/src/provisioning/desired-schema/notifications.ts",
   ),
   "utf8",
 );
@@ -140,6 +140,6 @@ assert.match(
 );
 assert.match(settingsSource, /updateProductConversations/);
 assert.match(settingsStateSource, /updateProductConversations/);
-assert.match(notificationSchemaSource, /productConversationsEnabled/);
+assert.match(notificationSchemaSource, /product_conversations_enabled/);
 
 console.log("Specialty chat signature tests passed.");

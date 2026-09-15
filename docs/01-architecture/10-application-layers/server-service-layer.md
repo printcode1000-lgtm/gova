@@ -25,7 +25,7 @@ Server-side orchestration coordinating query/command operations and enforcing se
 
 - UI, hooks, client services
 - Repository concrete classes directly (bypass operations)
-- Drizzle schema construction outside allowed paths
+- query builder schema construction outside allowed paths
 - Client Components
 
 ## Package integration

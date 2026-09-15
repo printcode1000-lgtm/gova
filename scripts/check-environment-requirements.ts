@@ -92,7 +92,7 @@ function envConfigured(key: string): boolean {
 /**
  * Vercel Sandboxes preload unsupported optional artifacts into their shared
  * workspace. The remote release runner deliberately installs without lifecycle
- * scripts so it can use better-sqlite3's bundled binary; npm then reports those
+ * scripts so it can use native dependency binaries; npm then reports those
  * already-present optional artifacts as extraneous. They are not part of the
  * project graph, so retain every real npm problem and ignore only this narrow,
  * lockfile-proven sandbox condition.
@@ -287,7 +287,7 @@ function checkCommon(): void {
   add({
     scenario: "common",
     item: "Dependency install scripts",
-    // `better-sqlite3` is a devDependency now: a handful of isolated tests open
+    // The dependency set is cloud-only; isolated tests use the libSQL client to open
     // an in-memory database, and nothing in a production, build or provisioning
     // closure loads it. Its approval stays pinned so those tests can install it
     // where they run, but the production dependency doctor no longer requires it.

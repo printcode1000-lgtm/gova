@@ -302,7 +302,7 @@ src/
 | **Public Doors** | `@/features/orders` · `@/features/orders/ui` · `@/features/orders/server` |
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | `@asol/orders-core` |
-| **Permitted Feature Dependencies** | `auth`, `cart`, `notifications`, `profile`, `system-logs` |
+| **Permitted Feature Dependencies** | `auth`, `cart`, `notifications`, `page-save`, `profile`, `system-logs` |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### ota

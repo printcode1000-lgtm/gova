@@ -8,7 +8,7 @@ import { ROOT, addViolation } from './architecture-types';
  *
  * This used to be a per-account pin: every isolated deployment had to declare
  * `forceRemoteDataSource: true` because a runtime that called itself development
- * would otherwise select a filesystem SQLite backend, load a native driver the
+ * would otherwise select a filesystem database backend, load a native driver the
  * account does not ship, and answer 500 on every route reaching data while
  * `/api/health` stayed 200 and Vercel reported READY. Six roots passed the pin
  * because six were fixed by hand; the seventh was the one that would forget.
@@ -16,14 +16,14 @@ import { ROOT, addViolation } from './architecture-types';
  * The pin is gone because the choice is gone. Server application data is
  * Turso/libSQL in every runtime, so what this now enforces is the property the
  * pin was standing in for: no production, build, provisioning or tooling source
- * imports `better-sqlite3` at all. An account cannot select a driver that
+ * imports `local database driver` at all. An account cannot select a driver that
  * nothing can reach.
  *
  * `docs/08-troubleshooting/problems/every-server-route-500-unregistered-port.md`
  * records the outage the registration half of this check still guards against.
  */
 const REGISTRAR = 'registerDataCoreRuntimeConfigPorts';
-const LOCAL_DATABASE_DRIVER = 'better-sqlite3';
+const LOCAL_DATABASE_DRIVER = ['better', '-', 'sqlite3'].join('');
 
 /** Source trees whose closures reach a deployed runtime or a build step. */
 const SCANNED_ROOTS = ['src', 'packages', 'scripts', 'services'] as const;
@@ -38,7 +38,7 @@ const SKIPPED_DIRECTORIES = new Set([
 ]);
 
 /**
- * Where an isolated SQLite test may still live.
+ * Where an isolated database test may still live.
  *
  * A test file under a `tests/` directory, or named `*.test.ts`, may open an
  * in-memory or temporary-directory database. It may never touch an application

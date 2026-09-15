@@ -46,3 +46,11 @@ assert.match(hook, /React\.useState<NotificationFilter>/);
 assert.doesNotMatch(page, /useState<NotificationFilter>/);
 
 console.log('Notifications filter tab restoration tests passed.');
+
+// Clear-all must be staged through the sealed Page Saver core, never deleted on click.
+assert.match(page, /stagePageSaveOperation\(\{/);
+assert.match(page, /registerPageSave\(\{/);
+assert.match(page, /itemId:\s*clearAllItemId/);
+assert.match(page, /kind:\s*"delete"/);
+assert.match(page, /await clearAll\(\)/);
+assert.match(page, /onClick=\{stageClearAll\}/);

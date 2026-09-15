@@ -20,7 +20,7 @@ function isTestFile(fileRel: string): boolean {
  * are rejected.
  *
  * Tests may import an owned vendor only when the test file itself lives under
- * an owning package. A foreign package's tests constructing `better-sqlite3`
+ * an owning package. A foreign package's tests constructing `local database driver`
  * (or any other owned SDK) is a bypass of the same ownership rule.
  *
  * Root files listed in `ROOT_VENDOR_OWNED_FILES` are treated as belonging to

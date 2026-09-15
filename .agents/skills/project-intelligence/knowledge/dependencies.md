@@ -46,9 +46,9 @@ External third-party SDKs are strictly sealed behind owning capability packages.
 
 | Vendor SDK / Module | Exclusive Owner Package | Purpose |
 |---|---|---|
-| `better-sqlite3` | `@asol/data-core` | Local SQLite database driver |
+| `local database driver` | `@asol/data-core` | Local SQLite database driver |
 | `@libsql/client` | `@asol/data-core` | Cloud Turso libSQL database driver |
-| `drizzle-orm` / `drizzle-orm/*` | `@asol/data-core` | ORM query builder and schema engine |
+| `legacy query-builder package` / `legacy query-builder package/*` | `@asol/data-core` | ORM query builder and schema engine |
 | `@aws-sdk/client-s3` | `@asol/storage-core`, `@asol/ota-core` | Cloudflare R2 object storage & OTA bundle distribution |
 | `@aws-sdk/s3-request-presigner` | `@asol/storage-core` | Presigned URL generation for client direct uploads |
 | `@capacitor/*` (all 20+ plugins) | `@asol/native-core` | Mobile device APIs (camera, geolocation, storage, push, haptics) |
