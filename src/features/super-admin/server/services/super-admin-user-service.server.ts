@@ -46,7 +46,31 @@ export class SuperAdminUserService {
   }
 
   async deleteUser(input: { adminUid: string; targetUid: string }) {
-    const result = await accountDeletionService.deleteBySuperAdmin(input.targetUid);
+    let result: Awaited<ReturnType<typeof accountDeletionService.deleteBySuperAdmin>>;
+    try {
+      result = await accountDeletionService.deleteBySuperAdmin(input.targetUid);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      const stack = error instanceof Error ? error.stack ?? "" : "";
+      try {
+        await persistentSystemLogService.add({
+          level: "error",
+          source: "server",
+          consoleMethod: "server.error",
+          message: `Super admin user deletion failed: ${message}`,
+          stack,
+          page: "/super-admin/users",
+          platform: "server",
+          feature: "SuperAdminUsers",
+          operation: "deleteUser",
+          routeName: "/api/super-admin/users/delete",
+          requestMethod: "POST",
+        });
+      } catch (loggingError) {
+        console.error("[SuperAdminUsers] Failed to persist account deletion failure", loggingError);
+      }
+      throw error;
+    }
 
     try {
       await persistentSystemLogService.add({
