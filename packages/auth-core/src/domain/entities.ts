@@ -9,6 +9,7 @@ export interface UpdateProfileInput {
   uid: string;
   phone: string;
   email: string;
+  verificationProof?: string;
   providerAccountEnabled?: boolean;
   currentPassword?: string;
   newPassword?: string;
@@ -57,6 +58,7 @@ export interface RegistrationInput {
   password: string;
   email?: string;
   storeName?: string;
+  verificationProof?: string;
 }
 
 export interface LoginInput {

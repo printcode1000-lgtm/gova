@@ -8,6 +8,7 @@ export type RecoveryStep = 'phone' | 'code' | 'password' | 'success' | 'contactA
 export function usePasswordRecovery() {
   const [step, setStep] = useState<RecoveryStep>('phone');
   const [phone, setPhone] = useState('');
+  const [challengeId, setChallengeId] = useState('');
   const [maskedEmail, setMaskedEmail] = useState<string>();
   const [resetToken, setResetToken] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -30,15 +31,17 @@ export function usePasswordRecovery() {
     const result = await passwordRecoveryApiService.requestCode({ phone: normalized });
     setPhone(normalized);
     if (result.status === 'contactAdmin') {
+      setChallengeId('');
       setStep('contactAdmin');
       return;
     }
+    setChallengeId(result.challengeId ?? '');
     setMaskedEmail(result.status === 'sent' ? result.maskedEmail : undefined);
     setStep('code');
   });
 
   const verifyCode = (code: string) => run(async () => {
-    const result = await passwordRecoveryApiService.verifyCode({ phone, code });
+    const result = await passwordRecoveryApiService.verifyCode({ challengeId, phone, code });
     setResetToken(result.resetToken);
     setStep('password');
   });
@@ -56,6 +59,7 @@ export function usePasswordRecovery() {
   const startOver = () => {
     setStep('phone');
     setPhone('');
+    setChallengeId('');
     setMaskedEmail(undefined);
     setResetToken('');
     setError(undefined);

@@ -75,6 +75,15 @@ public class AsolPushMessagingService extends FirebaseMessagingService {
         Context context = getApplicationContext();
         long now = System.currentTimeMillis();
 
+        // The verification SMS gateway signal is a machine instruction, not user
+        // content: it gets no inbox record, no tray entry, and no web-layer
+        // forward. Handled before normalization so an inbox schema change can
+        // never take the gateway down with it.
+        if (AsolVerificationSmsDispatch.isDispatchSignal(remoteMessage.getData())) {
+            AsolVerificationSmsDispatch.enqueue(context, remoteMessage.getData());
+            return;
+        }
+
         AsolNotificationRecord record = null;
         try {
             Map<String, String> data = remoteMessage.getData();

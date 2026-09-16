@@ -149,7 +149,7 @@
     "tsx": "4.23.12",
     "typescript": "5.9.3"
   },
-  "packageLockDigest": "44e96e70a048b32d3b460f328479388cc417ea89d09c804b42ea7991c1f891bb",
+  "packageLockDigest": "cde026ae35e7ce2502abdc53d08fe8b63f4ad1e78aaf1635ebeb2ca825b37987",
   "workspacePackages": {
     "account-bridge": "@asol/account-bridge@0.1.0",
     "account-declarations": "@asol/account-declarations@0.1.0",
@@ -198,7 +198,8 @@
     "submain-composition": "@asol/submain-composition@0.1.0",
     "system-logs-core": "@asol/system-logs-core@0.1.0",
     "trending-ribbon-core": "@asol/trending-ribbon-core@0.1.0",
-    "vercel-deploy-core": "@asol/vercel-deploy-core@0.1.0"
+    "vercel-deploy-core": "@asol/vercel-deploy-core@0.1.0",
+    "verification-core": "@asol/verification-core@0.1.0"
   },
   "services": {
     "control": {
@@ -221,6 +222,7 @@
         "react": "19.2.8",
         "react-dom": "19.2.8",
         "server-only": "0.0.1",
+        "web-push": "3.6.7",
         "zod": "4.4.3"
       },
       "devDependencies": {
@@ -230,7 +232,7 @@
         "@types/react-dom": "19.2.5",
         "typescript": "5.9.3"
       },
-      "lockDigest": "7d63c9c9a4439c19752170fefeb4401ff3da330e09c662250770e9e23d0ef7ef"
+      "lockDigest": "bcd97380cc4f1e811e130f6c61cba23f1d8f07e6079fa15bdd51fd7db851b983"
     },
     "notifications": {
       "packageManager": "npm@11.19.0",

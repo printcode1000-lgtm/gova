@@ -2,20 +2,56 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { shouldBypassPhoneVerification } from '@/features/auth/domain/phone-verification-policy';
+const productionFiles = [
+  'src/features/auth/application/hooks/use-phone-verification.ts',
+  'src/features/auth/presentation/PhoneVerification.tsx',
+  'src/features/auth/presentation/hooks/use-register.ts',
+  'src/features/auth/presentation/hooks/use-profile-registration.ts',
+  'src/shared/app-init/build-app-init-script.ts',
+  'packages/auth-core/src/validation/auth-schemas.ts',
+  'packages/auth-core/src/server/auth-operations-service.ts',
+  // Generated but shipped: the browser executes these before the app boots, so a
+  // stale regeneration is a live legacy OTP transport, not a build artifact.
+  'public/asol-app-init.js',
+  'public/asol-theme-init.js',
+];
 
-assert.equal(shouldBypassPhoneVerification({ developmentBuild: true }), true, 'next dev must bypass phone OTP');
-assert.equal(shouldBypassPhoneVerification({ developmentBuild: false }), false, 'production and static bundles must never bypass phone OTP');
+const forbidden = [
+  /sendWhatsappVerificationCode/,
+  /wa_msg_template/,
+  /generatedOtp/,
+  /generateOtp/,
+  /wa\.me/,
+  /window\.open\([^)]*whatsapp/i,
+  /phoneVerified\s*:\s*z\.boolean/,
+];
+
+for (const file of productionFiles) {
+  const source = readFileSync(path.join(process.cwd(), file), 'utf8');
+  for (const pattern of forbidden) {
+    assert.doesNotMatch(source, pattern, `${file} reintroduces legacy client OTP verification: ${pattern}`);
+  }
+}
 
 const hookSource = readFileSync(
   path.join(process.cwd(), 'src/features/auth/application/hooks/use-phone-verification.ts'),
   'utf8',
 );
-const bypassBranch = hookSource.indexOf('if (bypassPhoneVerification)');
-const phoneLookup = hookSource.indexOf('authService.checkPhone(phone)');
-assert.ok(bypassBranch >= 0, 'the hook must contain an explicit development bypass');
-assert.ok(phoneLookup > bypassBranch, 'the development bypass must run before the phone lookup client service');
-assert.doesNotMatch(hookSource, /asolApi|ASOL_API_ROUTES/, 'hooks must not bypass the auth client service');
-assert.match(hookSource, /onDevelopmentVerified\?\.\(\)/, 'the bypass must complete verification without opening the OTP flow');
+assert.match(hookSource, /verificationApiService\.request/, 'phone verification must request a server challenge');
+assert.match(hookSource, /verificationApiService\.verify/, 'phone verification must verify through the server');
+assert.doesNotMatch(hookSource, /Math\.random\(\).*otp|random.*otp/i, 'the client must not generate OTP values');
 
-console.log('Phone verification policy tests passed.');
+const registrationSource = readFileSync(
+  path.join(process.cwd(), 'src/features/auth/server/services/auth-service.server.ts'),
+  'utf8',
+);
+assert.match(registrationSource, /verificationProofConsumer\.consume/, 'protected auth operations must consume verification proof server-side');
+assert.doesNotMatch(registrationSource, /phoneVerified/, 'auth server must not accept phoneVerified as authority');
+
+const resendRoute = readFileSync(
+  path.join(process.cwd(), 'src/app/api/verification/resend/route.ts'),
+  'utf8',
+);
+assert.match(resendRoute, /verificationService\.resend/, 'resend must rotate an existing challenge, not create a new one');
+
+console.log('Phone verification anti-regression guard passed.');

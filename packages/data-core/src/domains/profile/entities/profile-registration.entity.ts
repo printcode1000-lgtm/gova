@@ -5,5 +5,5 @@ export interface ProfileRegistrationSnapshot {
   currentPassword: string;
   newPassword: string;
   confirmPassword: string;
-  phoneVerified: boolean;
+  verificationProof?: string;
 }

@@ -89,6 +89,8 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `ASOL_SMOKE_PORT` | server/tooling | 1 | `scripts/check-production-smoke.ts` |
 | `ASOL_STATIC_PREVIEW_API_BASE_URL` | server/tooling | 1 | `packages/ota-core/scripts/serve-static.ts` |
 | `ASOL_TEST_DEPLOY_TOKEN` | server/tooling | 1 | `packages/release-core/src/tests/index.test.ts` |
+| `ASOL_VERIFICATION_SIGNING_SECRET` | server/tooling | 2 | `npm run test:verification-service`, `src/core/config/server-env/server-env.values.turso-env.ts` |
+| `ASOL_VERIFICATION_SMS_SIGNING_KEY_BASE64` | server/tooling | 1 | `src/core/config/server-env/server-env.values.turso-env.ts` |
 | `ASOL_WEB_BUNDLE_READY` | server/tooling | 1 | `scripts/build-android-signed.ts` |
 | `CAPACITOR_SERVER_URL` | server/tooling | 0 |  |
 | `CI` | server/tooling | 1 | `scripts/schema-sync.ts` |
@@ -170,7 +172,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `NEXT_PUBLIC_SUPER_ADMIN_UID` | client-visible | 2 | `npm run test:notifications`, `packages/auth-core/src/domain/super-admin.ts` |
 | `NEXT_RUNTIME` | server/tooling | 3 | `services/sub2main/src/instrumentation.ts`, `services/submain/src/instrumentation.ts`, `src/instrumentation.ts` |
 | `NODE_ENV` | server/tooling | 5 | `npm run test:release-commands`, `packages/observability-core/src/ports/index.ts`, `src/core/config/public-env.ts`, `src/core/config/runtime-context.server.ts`, `packages/storage-core/src/tests/integration/parameterized-store.test.ts` |
-| `NODE_OPTIONS` | server/tooling | 16 | `npm run test:account-deletion-schema`, `npm run test:auth-email-uniqueness`, `npm run test:catalog-studio`, `npm run test:follow`, `npm run test:marketplace-orders`, `npm run test:notifications-composition` |
+| `NODE_OPTIONS` | server/tooling | 17 | `npm run test:account-deletion-schema`, `npm run test:auth-email-uniqueness`, `npm run test:catalog-studio`, `npm run test:follow`, `npm run test:marketplace-orders`, `npm run test:notifications-composition` |
 | `OLD_R2_PUBLIC_URL` | server/tooling | 1 | `packages/data-core/src/tooling/migrate-r2-image-public-url.ts` |
 | `ORDERS_CORE_DATABASE_AUTH_TOKEN` | server/tooling | 0 |  |
 | `ORDERS_CORE_DATABASE_URL` | server/tooling | 1 | `services/submain/src/app/api/health/route.ts` |

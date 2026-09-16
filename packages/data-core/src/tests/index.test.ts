@@ -94,6 +94,7 @@ const EXPECTED_DOORS = [
   './control-system-logs',
   './control-release-state',
   './password-recovery',
+  './verification',
   './pharmacy-profile-catalog',
   './product',
   './product-search',
@@ -316,6 +317,9 @@ const DECLARED_PACKAGE_DOORS = new Set([
   '@asol/auth-core/server',
   '@asol/notifications-core',
   '@asol/ota-core',
+  // The verification challenge row stores the purpose/channel/state vocabulary the
+  // verification capability owns; persistence never redefines it.
+  '@asol/verification-core',
   '@asol/product-core',
   '@asol/product-core/server',
   '@asol/storage-core',

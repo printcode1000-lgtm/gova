@@ -45,6 +45,24 @@ export const KNOWN_BUSINESS_API_ERROR_CODES = [
   'passwordRecoveryWeakPassword',
   'passwordRecoveryPasswordMismatch',
   'passwordRecoveryInvalidToken',
+  // Unified verification. Every one of these is a client-actionable outcome, so it
+  // travels as a stable code rather than being sanitized into "unexpectedError".
+  // None of them says anything about the code, the destination, or the gateway
+  // device beyond whether the caller may try again.
+  'verificationPurposeInvalid',
+  'verificationRuntimeInvalid',
+  'verificationEmailRequired',
+  'verificationCodeInvalid',
+  'verificationRateLimited',
+  'verificationResendCooldown',
+  'verificationChallengeInvalid',
+  'verificationChallengeStateInvalid',
+  'verificationSmsGatewayUnavailable',
+  'verificationDispatchFailed',
+  'verificationDispatchUnavailable',
+  'verificationProofRequired',
+  'verificationProofInvalid',
+  'verificationProofExpired',
   'invalidContactMessage',
   'accountDeletionConfirmationInvalid',
   'specialtyChatMessageInvalid',

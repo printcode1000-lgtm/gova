@@ -70,6 +70,38 @@ export function getPasswordRecoveryConfig(): {
   return { gmailUser, gmailAppPassword, signingSecret };
 }
 
+export function getVerificationConfig(): {
+  signingSecret: string;
+  smsAuthorizationPrivateKeyPem: string | null;
+} {
+  const verificationSecret = process.env.ASOL_VERIFICATION_SIGNING_SECRET?.trim() ?? "";
+  return {
+    signingSecret:
+      verificationSecret.length >= 32 ? verificationSecret : getAsolSessionSigningSecret(),
+    smsAuthorizationPrivateKeyPem: verificationSmsAuthorizationPrivateKeyPem(),
+  };
+}
+
+/**
+ * The Ed25519 key that signs a verification SMS send authorization.
+ *
+ * Base64-encoded PKCS#8 PEM, because a multi-line PEM does not survive every
+ * environment-variable surface intact. Optional: while SMS Sender verifies
+ * nothing, an unset key must not stop the SMS gateway, so the authorization falls
+ * back to the shared-secret envelope. See
+ * `docs/05-platform-features/unified-verification-system.md`.
+ */
+function verificationSmsAuthorizationPrivateKeyPem(): string | null {
+  const encoded = process.env.ASOL_VERIFICATION_SMS_SIGNING_KEY_BASE64?.trim() ?? "";
+  if (!encoded) return null;
+  try {
+    const pem = Buffer.from(encoded, "base64").toString("utf8").trim();
+    return pem.includes("PRIVATE KEY") ? pem : null;
+  } catch {
+    return null;
+  }
+}
+
 export interface FirebaseAdminServiceAccountConfig {
   projectId: string;
   clientEmail: string;

@@ -450,6 +450,11 @@ function installFakes(): void {
         await fakePush.unregister();
         return { ok: true, value: undefined };
       },
+      // An Android registration also tells the native side where to redeem a
+      // verification SMS dispatch. Advisory, so the stub simply succeeds: a
+      // gateway failure must never affect push registration.
+      configureVerificationSmsGateway: async () => ({ ok: true, value: true }),
+      isVerificationSmsGatewayConfigured: async () => false,
       scheduleLocalNotification: async (schedule: any) => {
         await fakeLocal.schedule(schedule);
         return { ok: true, value: undefined };

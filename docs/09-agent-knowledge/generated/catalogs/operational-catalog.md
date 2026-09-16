@@ -299,6 +299,8 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:trending-ribbon-core` | `npx tsx packages/trending-ribbon-core/src/tests/index.test.ts` |
 | `npm run test:turso-read-retry` | `npx tsx packages/data-core/src/core/database/tests/turso-read-retry.test.ts` |
 | `npm run test:vercel-deploy-core` | `npx tsx packages/vercel-deploy-core/src/tests/index.test.ts && npx tsx packages/vercel-deploy-core/src/tests/release-rollback.test.ts && npx tsx packages/vercel-deploy-core/src/tests/deployment-retention.test.ts` |
+| `npm run test:verification-core` | `npx tsx packages/verification-core/src/tests/index.test.ts && npx tsx packages/verification-core/src/tests/sms-dispatch-parity.test.ts` |
+| `npm run test:verification-service` | `cross-env NODE_OPTIONS=<redacted> ASOL_VERIFICATION_SIGNING_SECRET=<redacted> npx tsx src/features/verification/tests/verification-service.test.ts` |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run validate-storage-profiles` | `npx tsx packages/storage-core/scripts/validate-storage-profiles.ts` |
 | `npm run validate:app-versions` | `npx tsx packages/ota-core/scripts/validate-app-versions.ts` |

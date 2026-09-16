@@ -7,8 +7,8 @@
 
 Runtime coverage is inherited from each owner's owned source/test/script nodes, not only direct owner edges.
 
-Owners scored: **98**
-Average coverage: **82%**
+Owners scored: **100**
+Average coverage: **83%**
 Weak owners (<70%): **9**
 
 | Owner | Kind | Owner | Docs | Tests | Runtime | Consumers | Dependencies | Cmd/Cfg/Env | Runtime tests | Score |
@@ -82,6 +82,7 @@ Weak owners (<70%): **9**
 | `packages/submain-composition` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/trending-ribbon-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/vercel-deploy-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
+| `packages/verification-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `services/submain` | service | yes | yes | yes | yes | NO | yes | yes | yes | 88% |
 | `src/features/advertisements` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/auth` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
@@ -101,6 +102,7 @@ Weak owners (<70%): **9**
 | `src/features/storage` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/super-admin` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/system-logs` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
+| `src/features/verification` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/auth-core` | package | yes | yes | yes | yes | yes | yes | yes | yes | 100% |
 | `packages/catalog-core` | package | yes | yes | yes | yes | yes | yes | yes | yes | 100% |
 | `packages/data-core` | package | yes | yes | yes | yes | yes | yes | yes | yes | 100% |

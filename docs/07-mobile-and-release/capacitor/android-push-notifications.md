@@ -436,6 +436,34 @@ Android **receipt** of those messages still uses the data-only contract below.
 - Limits concurrent HTTP v1 requests to 25 to protect the server and Firebase quota.
 - Never logs credentials or raw token values.
 
+## Verification SMS Gateway (Super Admin device only)
+
+The Super Admin's Android phone is the SMS gateway for Egyptian verification codes. It is the only device SMS Sender is installed on, and the only device a verification dispatch signal is ever addressed to.
+
+The signal arrives as an ordinary data-only FCM message, but is not an ordinary notification. `AsolPushMessagingService` checks for it **before** notification normalization and returns early: no inbox record, no tray entry, no web-layer forward. What follows runs without the WebView, so a dispatch completes while ASOL is backgrounded or was never opened in this process.
+
+| File | Responsibility |
+|---|---|
+| `AsolVerificationSmsDispatch` | Recognizes the event and enqueues unique WorkManager work keyed by the dispatch id (`KEEP`, so a duplicate push does not restart work that may already have sent). |
+| `AsolVerificationSmsWorker` | Claims the dispatch id, redeems the ticket, broadcasts to SMS Sender, reports status. |
+| `AsolVerificationApi` | The two HTTP calls — redeem and status — and the three outcomes a worker acts on: body, 4xx refusal, retriable failure. |
+| `AsolVerificationSmsGateway` | App-private storage: the API origin, and the persistent set of handled dispatch ids. |
+| `AsolVerificationSmsResultReceiver` / `AsolVerificationSmsStatusWorker` | Take SMS Sender's send result and report it as a dispatch status. |
+| `AsolVerificationSmsPlugin` | Lets the web layer hand the native side the API origin. |
+
+Manifest and build requirements:
+
+- `<package android:name="com.hesham.smssender" />` under `<queries>`. Without it, Android 11+ package visibility drops the explicit broadcast **silently** — the gateway simply stops working with no error anywhere.
+- `androidx.work:work-runtime`, pinned through `androidxWorkVersion` in `android/variables.gradle`.
+- ProGuard keeps for both workers, the receiver, and the plugin: WorkManager instantiates workers reflectively and R8 would otherwise strip or rename them in a release build.
+- ASOL never declares `SEND_SMS`. Sending is SMS Sender's permission and SMS Sender's decision.
+
+The API origin is not compiled into Java. `NativeCore.configureVerificationSmsGateway()` is called right after a successful Android push registration — the same moment the device becomes addressable as a push target — and persists the origin the application is actually calling. A deployment move therefore cannot leave the gateway redeeming against a stale host.
+
+Nothing sensitive is logged on this path: not the OTP, the SMS body, the destination number, the dispatch ticket, or the send authorization. Failures are logged as codes, and the dispatch-contract parity test enforces that.
+
+See [Unified Verification System](../../05-platform-features/unified-verification-system.md) for the server side and for what an authenticated SMS Sender build would add.
+
 ## Security Boundary
 
 - **Receive / register:** device-token APIs verify `uid` and `phone` against the
@@ -447,6 +475,11 @@ Android **receipt** of those messages still uses the data-only contract below.
   Admin key material re-encrypted in Preferences. Unlock and recipient-tokens
   use `credentials: 'omit'`; identity is the JSON body, not a session cookie.
 - Super-admin broadcast remains a server identity check and server delivery.
+- **Verification SMS dispatch:** the signal carries no OTP, number, or SMS body —
+  only opaque ids and a short-lived ticket that is useless without the redeem
+  endpoint. The recipient is fixed to the Super Admin's Android registration
+  inside the signed grant, and the code is generated at redemption, not at
+  request, so a ticket that is never redeemed never produces a code.
 - Specialty-chat APIs still require the signed session plus UID/phone checks.
 
 The project uses client-persisted sessions with a signed, expiring server token issued after password login. Device-token registration retains its existing UID/phone compatibility contract.

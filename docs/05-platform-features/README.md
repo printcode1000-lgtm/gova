@@ -23,6 +23,7 @@ Then consult `docs/01-architecture/08-reference/capability-map.md` for the ownin
 - [Page Save System](./page-save-system.md)
 - [Favorites System](./favorites-system.md) and [Follow System](./follow-system.md)
 - [Password Recovery System](./password-recovery-system.md)
+- [Unified Verification System](./unified-verification-system.md)
 
 ## Change Impact
 

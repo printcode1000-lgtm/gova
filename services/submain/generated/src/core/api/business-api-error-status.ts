@@ -63,6 +63,15 @@ const EXPLICIT_STATUSES: Readonly<Record<string, BusinessApiErrorStatus>> = {
   mobilePushCredentialBlobMissing: { code: 'mobilePushCredentialBlobMissing', status: 503, skipPersistence: true },
   mobilePushCredentialBlobInvalid: { code: 'mobilePushCredentialBlobInvalid', status: 400, skipPersistence: false },
   mobilePushCredentialBlobMismatch: { code: 'mobilePushCredentialBlobMismatch', status: 403, skipPersistence: false },
+  // Too many requests, not a bad one: the caller's input was fine and the only
+  // useful instruction is to wait.
+  verificationRateLimited: { code: 'verificationRateLimited', status: 429, skipPersistence: false },
+  verificationResendCooldown: { code: 'verificationResendCooldown', status: 429, skipPersistence: false },
+  // The Super Admin gateway phone has no usable Android registration, or the push
+  // could not be delivered. Retriable and not the caller's fault — and never a
+  // reason to route an Egyptian number to email instead.
+  verificationSmsGatewayUnavailable: { code: 'verificationSmsGatewayUnavailable', status: 503, skipPersistence: false },
+  verificationDispatchFailed: { code: 'verificationDispatchFailed', status: 503, skipPersistence: false },
 };
 
 const KNOWN_400 = new Set<string>(

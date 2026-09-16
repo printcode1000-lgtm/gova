@@ -63,6 +63,7 @@ export {
 
 export {
   createRegistrationSchema,
+  type RegistrationSchemaOptions,
   createLoginSchema,
   type RegistrationFormData,
   type LoginFormData,
@@ -71,6 +72,7 @@ export {
 
 export {
   createProfileSchema,
+  type ProfileSchemaOptions,
   toProfileFormData,
   isProfileFormDirty,
   type ProfileFormData,

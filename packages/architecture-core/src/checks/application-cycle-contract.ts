@@ -25,6 +25,7 @@ export const KNOWN_APPLICATION_CYCLE_BASELINE = [
     'feature:page-save',
     'feature:storage',
     'feature:system-logs',
+    'feature:verification',
     'shared:brand',
     'shared:i18n',
     'shared:preferences',

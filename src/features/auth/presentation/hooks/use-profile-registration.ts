@@ -6,9 +6,11 @@ import { useTranslation } from '@/shared/i18n';
 import {
   createProfileSchema,
   isProfileFormDirty,
+  isValidPhone,
   toProfileFormData,
   type ProfileFormData,
 } from '@asol/auth-core';
+import { VerificationChannels, verificationChannelForPhone } from '@asol/verification-core';
 import { useSession } from '@/features/auth/presentation/SessionProvider';
 import { authService } from '../../application/services/auth-service';
 import { sessionService } from '../../application/services/session-service';
@@ -31,6 +33,7 @@ export function useProfileRegistration() {
   const [form, setForm] = useState<ProfileFormData>(initialForm);
   const [baseline, setBaseline] = useState<ProfileFormData>(initialForm);
   const [phoneVerified, setPhoneVerified] = useState(true);
+  const [verificationProof, setVerificationProof] = useState('');
   const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof ProfileFormData, string>>>({});
 
   useEffect(() => {
@@ -38,16 +41,34 @@ export function useProfileRegistration() {
     setBaseline(initialForm);
     setFieldErrors({});
     setPhoneVerified(true);
+    setVerificationProof('');
   }, [initialForm]);
 
   const isDirty = isProfileFormDirty(form, baseline);
-  const schema = useMemo(() => createProfileSchema(t), [t]);
+  const schema = useMemo(
+    () =>
+      createProfileSchema(t, {
+        // A new non-Egyptian primary number is verified by email only, so the email
+        // becomes required the moment the number stops being Egyptian.
+        requiresEmail: (phone) =>
+          isValidPhone(phone) &&
+          verificationChannelForPhone(phone) === VerificationChannels.InternationalEmail,
+      }),
+    [t],
+  );
 
   const updateField = useCallback(<K extends keyof ProfileFormData>(key: K, value: ProfileFormData[K]) => {
     setForm((prev) => ({ ...prev, [key]: value }));
     setFieldErrors((prev) => ({ ...prev, [key]: undefined }));
-    if (key === 'phone') setPhoneVerified(value === baseline.phone);
-  }, [baseline.phone]);
+    if (key === 'phone') {
+      setPhoneVerified(value === baseline.phone);
+      setVerificationProof('');
+    }
+    if (key === 'email' && verificationProof) {
+      setPhoneVerified(false);
+      setVerificationProof('');
+    }
+  }, [baseline.phone, verificationProof]);
 
   const applySaved = useCallback(async (profile: UserProfile) => {
     const updatedSession = await sessionService.saveSession({
@@ -64,10 +85,11 @@ export function useProfileRegistration() {
     setBaseline(reset);
     setFieldErrors({});
     setPhoneVerified(true);
+    setVerificationProof('');
   }, [session?.specialties, session?.sessionToken, setSession]);
 
   const saveMutation = useMutation({
-    mutationFn: async (data: ProfileFormData) => {
+    mutationFn: async (data: ProfileRegistrationSnapshot) => {
       if (!uid) throw new Error('userNotFound');
       if (!session?.sessionToken) throw new Error('sessionTokenInvalid');
       return authService.updateProfile({
@@ -75,6 +97,7 @@ export function useProfileRegistration() {
         phone: data.phone,
         email: data.email ?? '',
         providerAccountEnabled: data.providerAccountEnabled,
+        verificationProof: data.verificationProof,
         currentPassword: data.newPassword ? data.currentPassword : undefined,
         newPassword: data.newPassword || undefined,
         sessionToken: session.sessionToken,
@@ -118,8 +141,8 @@ export function useProfileRegistration() {
       reportPreAuthFailure('validate-registration-profile-phone', new Error('phoneVerificationRequired'), {}, 'warn');
       return null;
     }
-    return { ...parsed.data, email: parsed.data.email ?? '', phoneVerified };
-  }, [baseline.phone, form, phoneVerified, schema, t]);
+    return { ...parsed.data, email: parsed.data.email ?? '', verificationProof };
+  }, [baseline.phone, form, phoneVerified, schema, t, verificationProof]);
 
   const saveAsync = async () => {
     const snapshot = prepareSnapshot();
@@ -130,10 +153,13 @@ export function useProfileRegistration() {
 
   return {
     form,
+    uid,
     updateField,
     fieldErrors,
     phoneVerified,
     setPhoneVerified,
+    verificationProof,
+    setVerificationProof,
     isDirty,
     isLoading: !session,
     isSaving: saveMutation.isPending,

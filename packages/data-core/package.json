@@ -78,6 +78,10 @@
       "types": "./src/domains/password-recovery/index.server.ts",
       "default": "./src/domains/password-recovery/index.server.ts"
     },
+    "./verification": {
+      "types": "./src/domains/verification/index.server.ts",
+      "default": "./src/domains/verification/index.server.ts"
+    },
     "./pharmacy-profile-catalog": {
       "types": "./src/domains/pharmacy-profile-catalog/index.server.ts",
       "default": "./src/domains/pharmacy-profile-catalog/index.server.ts"

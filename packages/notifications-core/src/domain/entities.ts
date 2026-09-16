@@ -217,6 +217,17 @@ export interface SendNotificationToUsersInput {
   /** Fallback language for devices that never reported one. */
   locale?: NotificationLocale;
   dedupeKey: string;
+  /**
+   * Restricts delivery to these device platforms. Absent means every registered
+   * device, which is what an ordinary user-visible notification wants.
+   *
+   * It exists for sends that address a *capability of one device* rather than a
+   * person: the verification SMS gateway is the Super Admin's Android phone, and
+   * fanning that signal out to their iPhone would wake a device that cannot act
+   * on it. The field travels inside the signed grant, so a courier cannot widen
+   * it back to every platform.
+   */
+  platforms?: NotificationPlatform[];
   variables?: NotificationVariables;
   /**
    * Variables that differ per language — a formatted amount, a category name.

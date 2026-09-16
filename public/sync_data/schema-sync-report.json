@@ -1,9 +1,9 @@
 {
-  "executedAt": "2026-09-15T11:58:25.330Z",
-  "durationMs": 12009,
-  "desiredSchemaVersion": "dec58a57cd8034fe",
-  "tursoSchemaVersionBefore": "dec58a57cd8034fe",
-  "tursoSchemaVersionAfter": "dec58a57cd8034fe",
+  "executedAt": "2026-09-16T07:02:40.859Z",
+  "durationMs": 13435,
+  "desiredSchemaVersion": "cdcbc8cd1c9b2657",
+  "tursoSchemaVersionBefore": "2715e6294d93a031",
+  "tursoSchemaVersionAfter": "2715e6294d93a031",
   "operations": [],
   "migrationsRequired": [],
   "tablesModified": 0,
@@ -14,6 +14,8 @@
   "sqlExecuted": [],
   "residualOperations": [],
   "errors": [],
-  "warnings": [],
+  "warnings": [
+    "Table \"password_recovery_challenges\" exists on Turso but not in the desired schema. Not dropped automatically."
+  ],
   "skipped": false
 }

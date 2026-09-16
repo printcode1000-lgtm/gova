@@ -21,7 +21,19 @@ function createPhoneField(t: ProfileTranslateFn) {
   });
 }
 
-export function createProfileSchema(t: ProfileTranslateFn) {
+export interface ProfileSchemaOptions {
+  /**
+   * Whether this phone number can only be verified by email. Injected for the same
+   * reason as the registration schema: the channel rule belongs to the
+   * verification capability, which imports this package rather than the reverse.
+   */
+  requiresEmail?: (phone: string) => boolean;
+}
+
+export function createProfileSchema(
+  t: ProfileTranslateFn,
+  options: ProfileSchemaOptions = {},
+) {
   const phoneField = createPhoneField(t);
 
   return z
@@ -38,6 +50,14 @@ export function createProfileSchema(t: ProfileTranslateFn) {
       confirmPassword: z.string(),
     })
     .superRefine((data, ctx) => {
+      if (options.requiresEmail?.(data.phone) && !(data.email ?? '').trim()) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: t('auth.validation.emailRequiredForInternationalPhone'),
+          path: ['email'],
+        });
+      }
+
       const changingPassword =
         !!data.newPassword || !!data.confirmPassword || !!data.currentPassword;
       if (!changingPassword) return;

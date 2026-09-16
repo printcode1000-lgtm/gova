@@ -5,7 +5,7 @@
 
 # Dead Docs Report
 
-Findings: **84**
+Findings: **83**
 
 | Kind | Source | Reference | Detail |
 |---|---|---|---|
@@ -82,6 +82,7 @@ Findings: **84**
 | `missing-file` | `docs/05-platform-features/sealed-packages/ota-core-module.md` | `src/index.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/sealed-packages/service-runtime-core-module.md` | `src/app/lib/http.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/05-platform-features/service-bridge-module.md` | `src/features/service-bridge/` | documentation mentions a missing repository path |
+| `missing-file` | `docs/05-platform-features/unified-verification-system.md` | `packages/native-core/android/.../AsolVerificationSmsDispatch.java` | documentation mentions a missing repository path |
 | `missing-file` | `docs/07-mobile-and-release/release-and-secrets.md` | `scripts/lib/` | documentation mentions a missing repository path |
 | `missing-file` | `docs/08-troubleshooting/problems/page-save-read-marker-crlf-windows.md` | `src/features/data-health/presentation/use-data-health-page.ts` | documentation mentions a missing repository path |
 | `missing-file` | `docs/09-agent-knowledge/local-agent-runtime.md` | `scripts/local-agent-watch.ts` | documentation mentions a missing repository path |
@@ -91,5 +92,3 @@ Findings: **84**
 | `missing-package` | `docs/05-platform-features/sealed-packages/data-core-module.md` | `@asol/backup-core` | documentation mentions unknown package @asol/backup-core |
 | `missing-package` | `docs/05-platform-features/sealed-packages/data-core-module.md` | `@asol/data-health-core` | documentation mentions unknown package @asol/data-health-core |
 | `missing-package` | `docs/09-agent-knowledge/local-agent-runtime.md` | `@asol/local-agent-core` | documentation mentions unknown package @asol/local-agent-core |
-| `stale-link` | `docs/08-troubleshooting/problems/incomplete-npm-workspaces-asol-modules.md` | `docs/08-troubleshooting/problems/npm-ci-embedded local database driver-python-windows.md` | broken internal markdown link from docs/08-troubleshooting/problems/incomplete-npm-workspaces-asol-modules.md |
-| `stale-link` | `docs/08-troubleshooting/problems/README.md` | `docs/08-troubleshooting/problems/npm-ci-embedded local database driver-python-windows.md` | broken internal markdown link from docs/08-troubleshooting/problems/README.md |

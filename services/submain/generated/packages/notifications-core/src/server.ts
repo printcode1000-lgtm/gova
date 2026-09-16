@@ -13,6 +13,7 @@ import 'server-only';
 export * from './service-runtime';
 export * from './services/notification-send-service.server';
 export * from './services/notification-grant.server';
+export * from './services/notification-grant-courier.server';
 export * from './services/providers/notification-provider.interface';
 export * from './services/providers/notification-provider-registry.server';
 

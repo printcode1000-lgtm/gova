@@ -33,7 +33,7 @@ const credentialsSchema = z
     phone: createPhoneField(t),
     password: z.string().min(4, t('auth.validation.passwordMinLength')),
     confirmPassword: z.string().min(1),
-    phoneVerified: z.boolean().refine((val) => val === true),
+    verificationProof: z.string().min(1, t('auth.validation.phoneVerification')),
   })
   .refine((d) => d.password === d.confirmPassword, { path: ['confirmPassword'] });
 ```
@@ -54,3 +54,7 @@ one table it needs — never reopen a door onto the whole schema. See
 ## Rule
 
 **UI validates UX** — **server validates truth**. Never trust client-only validation for security.
+For account verification flows, local UI state can only enable or disable form
+controls. Registration, primary-phone changes, and password recovery must submit
+a short-lived `verificationProof` that the server verifies and consumes against
+the requested phone, purpose, uid, email, and channel.

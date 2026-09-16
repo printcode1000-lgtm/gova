@@ -81,6 +81,8 @@
     "test:format-core": "npx tsx packages/format-core/src/tests/index.test.ts",
     "test:google-play-store-assets-core": "npx tsx packages/google-play-store-assets-core/src/tests/index.test.ts",
     "test:signed-token-core": "npx tsx packages/signed-token-core/src/tests/index.test.ts",
+    "test:verification-core": "npx tsx packages/verification-core/src/tests/index.test.ts && npx tsx packages/verification-core/src/tests/sms-dispatch-parity.test.ts",
+    "test:verification-service": "cross-env NODE_OPTIONS=--conditions=react-server ASOL_VERIFICATION_SIGNING_SECRET=verification-service-test-secret-0123456789 npx tsx src/features/verification/tests/verification-service.test.ts",
     "test:service-runtime-core": "npx tsx packages/service-runtime-core/src/tests/index.test.ts",
     "test:import-without-composition": "npx tsx scripts/architecture/import-without-composition.test.ts",
     "test:architecture-core": "npx tsx packages/architecture-core/src/tests/index.test.ts && npx tsx scripts/architecture/application-features-attack.test.ts",

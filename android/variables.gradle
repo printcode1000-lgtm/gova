@@ -17,6 +17,9 @@ ext {
     // `implementation` dependency. Keep in step with the plugin's default in
     // node_modules/@capacitor/push-notifications/android/build.gradle.
     firebaseMessagingVersion = '25.0.1'
+    // Durable background execution for the verification SMS gateway: a dispatch
+    // has to complete after a process death or a reboot.
+    androidxWorkVersion = '2.10.1'
     junitVersion = '4.13.2'
     androidxJunitVersion = '1.3.0'
     androidxEspressoCoreVersion = '3.7.0'

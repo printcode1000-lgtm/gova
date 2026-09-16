@@ -6,7 +6,8 @@ import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@asol/data-core/browser';
 import { useTranslation } from '@/shared/i18n';
-import { createRegistrationSchema, type RegistrationFormData } from '@asol/auth-core';
+import { createRegistrationSchema, isValidPhone, type RegistrationFormData } from '@asol/auth-core';
+import { VerificationChannels, verificationChannelForPhone } from '@asol/verification-core';
 import { useGuestSession } from '@/features/auth/application/hooks/use-guest-session';
 import { useSession } from '@/features/auth/presentation/SessionProvider';
 import { authService } from '../../application/services/auth-service';
@@ -23,14 +24,25 @@ export function useRegister() {
   const router = useRouter();
   const { endGuestSession } = useGuestSession();
   const { setSession } = useSession();
-  const registrationSchema = useMemo(() => createRegistrationSchema(t), [t]);
+  const registrationSchema = useMemo(
+    () =>
+      createRegistrationSchema(t, {
+        // A non-Egyptian number can only be verified by email, so the form asks for
+        // one before a challenge is requested rather than letting the request fail.
+        // An incomplete number has no channel yet and must not trip the rule.
+        requiresEmail: (phone) =>
+          isValidPhone(phone) &&
+          verificationChannelForPhone(phone) === VerificationChannels.InternationalEmail,
+      }),
+    [t],
+  );
   const form = useForm<RegistrationFormData>({
     resolver: zodResolver(registrationSchema),
-    defaultValues: { phone: '', password: '', confirmPassword: '', email: '', storeName: '', phoneVerified: false },
+    defaultValues: { phone: '', password: '', confirmPassword: '', email: '', storeName: '', verificationProof: '' },
     mode: 'onChange',
   });
   const password = useWatch({ control: form.control, name: 'password' }) ?? '';
-  const phoneVerified = useWatch({ control: form.control, name: 'phoneVerified' }) ?? false;
+  const phoneVerified = Boolean(useWatch({ control: form.control, name: 'verificationProof' }) ?? '');
 
   const mutation = useMutation({
     mutationFn: async (data: RegistrationFormData) => {

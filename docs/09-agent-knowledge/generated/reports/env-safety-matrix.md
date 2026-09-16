@@ -7,7 +7,7 @@
 
 Key **names only**. Values are never emitted. Command assignments are redacted elsewhere in generated catalogs.
 
-Keys: **241**
+Keys: **243**
 
 | Key | Visibility | Static/native | Consumers (sample) | Relevance | Classification | Runtime checks |
 |---|---|---|---|---|---|---|
@@ -91,6 +91,8 @@ Keys: **241**
 | `ASOL_SMOKE_PORT` | server-only | unknown | `scripts/check-production-smoke.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_STATIC_PREVIEW_API_BASE_URL` | server-only | unknown | `packages/ota-core/scripts/serve-static.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_TEST_DEPLOY_TOKEN` | server-only | dangerous | `packages/release-core/src/tests/index.test.ts` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
+| `ASOL_VERIFICATION_SIGNING_SECRET` | server-only | dangerous | `npm run test:verification-service`, `src/core/config/server-env/server-env.values.turso-env.ts` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
+| `ASOL_VERIFICATION_SMS_SIGNING_KEY_BASE64` | server-only | unknown | `src/core/config/server-env/server-env.values.turso-env.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `ASOL_WEB_BUNDLE_READY` | server-only | unknown | `scripts/build-android-signed.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `CAPACITOR_SERVER_URL` | server-only | unknown | none | native/fastlane | missing/unknown consumers | npm run runtime:check:changed |
 | `CI` | server-only | unknown | `scripts/schema-sync.ts` | unclassified | server-only | npm run runtime:check:changed |

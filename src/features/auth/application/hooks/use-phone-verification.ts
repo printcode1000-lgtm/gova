@@ -2,24 +2,36 @@
 
 import * as React from 'react';
 import { useTranslation } from '@/shared/i18n';
-import { publicEnv } from '@/core/config/public-env';
 import { reportPreAuthFailure } from '@/features/system-logs';
-import { shouldBypassPhoneVerification } from '@/features/auth/domain/phone-verification-policy';
-import { isValidPhone, phoneDialDigits } from '@asol/auth-core';
+import { isValidPhone } from '@asol/auth-core';
 import { authService } from '../services/auth-service';
+import { getPlatformName } from '@asol/native-core';
+import { verificationApiService } from '@/features/verification';
+import type { VerificationChannel, VerificationPurpose } from '@asol/verification-core';
 
 const RESEND_COUNTDOWN = 60;
-const bypassPhoneVerification = shouldBypassPhoneVerification(publicEnv);
 
-export function usePhoneVerification() {
-  const { t } = useTranslation();
+function clientRuntime() {
+  const platform = getPlatformName();
+  return platform === 'android' || platform === 'ios' ? platform : 'web';
+}
+
+export function usePhoneVerification(purpose: VerificationPurpose = 'registration', uid?: string | null, email?: string | null) {
+  const { t, formatApiError } = useTranslation();
   const [otpSent, setOtpSent] = React.useState(false);
   const [otp, setOtp] = React.useState('');
   const [isSending, setIsSending] = React.useState(false);
   const [isVerifying, setIsVerifying] = React.useState(false);
   const [countdown, setCountdown] = React.useState(0);
   const [otpError, setOtpError] = React.useState('');
-  const [generatedOtp, setGeneratedOtp] = React.useState('');
+  const [challengeId, setChallengeId] = React.useState('');
+  const [channel, setChannel] = React.useState<VerificationChannel | null>(null);
+  /**
+   * A delivery failure the user can act on by retrying, as opposed to a wrong code.
+   * The gateway being momentarily unreachable is not the user's mistake and must
+   * not read like one.
+   */
+  const [deliveryFailed, setDeliveryFailed] = React.useState(false);
 
   React.useEffect(() => {
     if (countdown > 0) {
@@ -28,40 +40,37 @@ export function usePhoneVerification() {
     }
   }, [countdown]);
 
-  const generateOtp = (): string => {
-    if (bypassPhoneVerification) return '0000';
-    return Array.from({ length: 4 }, () => Math.floor(Math.random() * 10)).join('');
-  };
-
-  const sendWhatsappVerificationCode = async (phone: string, code: string) => {
-    const textMsg = t('auth.wa_msg_template', { code });
-    // WhatsApp addresses a number by its full international digits, so the
-    // country calling code has to be part of the link, never assumed.
-    const cleanPhone = phoneDialDigits(phone);
-    const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(textMsg)}`;
-    const openedWindow = window.open(waUrl, '_blank');
-    if (!openedWindow) reportPreAuthFailure('open-whatsapp-verification', new Error('popupBlocked'));
-    console.log(`[WhatsApp Link] Done Attempt : ${waUrl}`);
-  };
-
-  const handleSendOtp = async (phone: string, onDevelopmentVerified?: () => void) => {
+  const handleSendOtp = async (phone: string) => {
     if (!isValidPhone(phone)) return;
     setIsSending(true);
     setOtpError('');
 
-    if (bypassPhoneVerification) {
-      setGeneratedOtp('0000');
-      setOtp('');
-      setOtpSent(false);
-      setCountdown(0);
-      onDevelopmentVerified?.();
-      setIsSending(false);
+    // An existing challenge is rotated in place so lineage, rate limits and the
+    // purpose/target bindings stay attached to one server-owned challenge.
+    if (challengeId) {
+      try {
+        await verificationApiService.resend({
+          challengeId,
+          purpose,
+          phone,
+          uid,
+          email,
+          runtime: clientRuntime(),
+        });
+        setDeliveryFailed(false);
+        setCountdown(RESEND_COUNTDOWN);
+      } catch (error) {
+        reportPreAuthFailure('resend-phone-verification-code', error);
+        setDeliveryFailed(true);
+        setOtpError(formatApiError(error));
+      } finally {
+        setIsSending(false);
+      }
       return;
     }
 
     try {
-      const response = await authService.checkPhone(phone);
-      if (response.exists) {
+      if (purpose === 'registration' && (await authService.checkPhone(phone)).exists) {
         reportPreAuthFailure('check-registration-phone', new Error('phoneAlreadyRegistered'), {}, 'warn');
         setOtpError(t('auth.validation.phoneAlreadyRegistered'));
         setIsSending(false);
@@ -69,43 +78,53 @@ export function usePhoneVerification() {
       }
     } catch (err) {
       reportPreAuthFailure('check-registration-phone', err);
-      setOtpError('An error occurred. Please try again.');
+      setOtpError(formatApiError(err));
       setIsSending(false);
       return;
     }
 
-    const newOtp = generateOtp();
-    setGeneratedOtp(newOtp);
     try {
-      await sendWhatsappVerificationCode(phone, newOtp);
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const response = await verificationApiService.request({
+        purpose,
+        phone,
+        uid,
+        email,
+        runtime: clientRuntime(),
+      });
+      setChallengeId(response.challengeId);
+      setChannel(response.channel);
+      setDeliveryFailed(false);
       setOtpSent(true);
       setCountdown(RESEND_COUNTDOWN);
     } catch (error) {
       reportPreAuthFailure('send-phone-verification-code', error);
-      setOtpError('An error occurred. Please try again.');
+      setDeliveryFailed(true);
+      setOtpError(formatApiError(error));
     } finally {
       setIsSending(false);
     }
   };
 
-  const handleVerifyOtp = async (inputOtp: string, onVerified: () => void) => {
-    if (inputOtp.length !== 4) {
+  const handleVerifyOtp = async (inputOtp: string, phone: string, onVerified: (verificationProof: string) => void) => {
+    if (inputOtp.length !== 6 || !challengeId) {
       setOtpError(t('auth.phone.otpLength'));
       return;
     }
     setIsVerifying(true);
     setOtpError('');
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1200));
-      if (inputOtp === generatedOtp) onVerified();
-      else {
-        reportPreAuthFailure('verify-phone-code', new Error('invalidOtp'), {}, 'warn');
-        setOtpError(t('auth.validation.invalidPassword'));
-      }
+      const result = await verificationApiService.verify({
+        challengeId,
+        purpose,
+        phone,
+        uid,
+        email,
+        code: inputOtp,
+      });
+      onVerified(result.verificationProof);
     } catch (error) {
       reportPreAuthFailure('verify-phone-code', error);
-      setOtpError('An error occurred. Please try again.');
+      setOtpError(formatApiError(error, 'errors.api.codes.verificationCodeInvalid'));
     } finally {
       setIsVerifying(false);
     }
@@ -114,10 +133,25 @@ export function usePhoneVerification() {
   const handleEditPhone = () => {
     setOtpSent(false);
     setOtp('');
-    setGeneratedOtp('');
+    setChallengeId('');
+    setChannel(null);
+    setDeliveryFailed(false);
     setOtpError('');
     setCountdown(0);
   };
 
-  return { otpSent, otp, setOtp, isSending, isVerifying, countdown, otpError, generatedOtp, handleSendOtp, handleVerifyOtp, handleEditPhone };
+  return {
+    otpSent,
+    otp,
+    setOtp,
+    isSending,
+    isVerifying,
+    countdown,
+    otpError,
+    channel,
+    deliveryFailed,
+    handleSendOtp,
+    handleVerifyOtp,
+    handleEditPhone,
+  };
 }

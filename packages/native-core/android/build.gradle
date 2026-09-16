@@ -25,6 +25,10 @@ dependencies {
     implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
     implementation "androidx.core:core:$androidxCoreVersion"
     implementation "com.google.firebase:firebase-messaging:$firebaseMessagingVersion"
+    // The verification SMS dispatch must survive a backgrounded or dead process
+    // and a reboot, which is exactly what WorkManager guarantees and a bare
+    // thread in a broadcast receiver does not.
+    implementation "androidx.work:work-runtime:$androidxWorkVersion"
     implementation project(':capacitor-android')
     // This module's own Java extends the push-notifications plugin, so the plugin project
     // must be on its compile classpath. Registering it for the app module alone left

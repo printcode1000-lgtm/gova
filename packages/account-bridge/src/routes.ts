@@ -44,6 +44,7 @@ export const ROUTE_OWNERSHIP: readonly RouteOwnership[] = [
   { owner: 'submain', pattern: '/api/ota/access', methods: ['POST'] },
   { owner: 'submain', pattern: '/api/account/**', methods: ALL },
   { owner: 'submain', pattern: '/api/auth/**', methods: ALL },
+  { owner: 'submain', pattern: '/api/verification/**', methods: ALL },
   { owner: 'submain', pattern: '/api/contact', methods: ['POST'] },
   { owner: 'submain', pattern: '/api/feature-flags', methods: ALL },
   { owner: 'submain', pattern: '/api/advertisements/**', methods: ALL },

@@ -4053,6 +4053,34 @@
       ]
     },
     {
+      "id": "command:test:verification-core",
+      "kind": "command",
+      "name": "npm run test:verification-core",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run test:verification-core",
+        "run",
+        "test",
+        "test:verification-core",
+        "verification-core"
+      ]
+    },
+    {
+      "id": "command:test:verification-service",
+      "kind": "command",
+      "name": "npm run test:verification-service",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "npm",
+        "npm run test:verification-service",
+        "run",
+        "test",
+        "test:verification-service",
+        "verification-service"
+      ]
+    },
+    {
       "id": "command:typecheck",
       "kind": "command",
       "name": "npm run typecheck",
@@ -6160,6 +6188,7 @@
         "@asol/system-logs-core",
         "@asol/trending-ribbon-core",
         "@asol/vercel-deploy-core",
+        "@asol/verification-core",
         "application",
         "application feature catalog",
         "application_features",
@@ -6233,6 +6262,7 @@
         "src/features/super-admin/",
         "src/features/system-logs/",
         "src/features/vehicle-catalog/",
+        "src/features/verification/",
         "src/features/voice-input/",
         "src/hooks/",
         "src/lib/",
@@ -6344,6 +6374,7 @@
         "@asol/data-core/system-logs",
         "@asol/data-core/telemetry",
         "@asol/data-core/tooling",
+        "@asol/data-core/verification",
         "@asol/dev-core",
         "@asol/dev-core/server",
         "@asol/env-core",
@@ -6428,6 +6459,8 @@
         "@asol/vercel-deploy-core/release-state",
         "@asol/vercel-deploy-core/remote-deploy-contracts",
         "@asol/vercel-deploy-core/remote-deploy-sandbox",
+        "@asol/verification-core",
+        "@asol/verification-core/server",
         "application_features",
         "architecture",
         "by",
@@ -6500,6 +6533,7 @@
         "packages/system-logs-core/",
         "packages/trending-ribbon-core/",
         "packages/vercel-deploy-core/",
+        "packages/verification-core/",
         "regenerate",
         "registries",
         "run",
@@ -6587,6 +6621,7 @@
         "@asol/system-logs-core",
         "@asol/trending-ribbon-core",
         "@asol/vercel-deploy-core",
+        "@asol/verification-core",
         "application_features",
         "architecture",
         "by",
@@ -6739,6 +6774,7 @@
         "@asol/system-logs-core",
         "@asol/trending-ribbon-core",
         "@asol/vercel-deploy-core",
+        "@asol/verification-core",
         "application_features",
         "architecture",
         "by",
@@ -6811,6 +6847,7 @@
         "packages/system-logs-core/",
         "packages/trending-ribbon-core/",
         "packages/vercel-deploy-core/",
+        "packages/verification-core/",
         "regenerate",
         "registries",
         "run",
@@ -11103,58 +11140,53 @@
       "kind": "document",
       "name": "Password Recovery System",
       "path": "docs/05-platform-features/password-recovery-system.md",
-      "summary": "The `src/features/password-recovery` module provides an independent password recovery flow via email. The user begins with their registered phone number, receives a 6-digit verification code, and sets a new password upon code verification.",
+      "summary": "The `src/features/password-recovery` module lets a user recover access by proving control of the registered phone through the unified verification system, then setting a new password.",
       "tags": [
-        "6-digit",
         "@asol/auth-core",
         "@asol/auth-core/server",
-        "an",
-        "and",
-        "begins",
-        "code",
+        "access",
+        "by",
+        "control",
         "docs/05-platform-features/password-recovery-system",
         "docs/05-platform-features/password-recovery-system.md",
-        "email",
-        "flow",
-        "independent",
+        "lets",
         "md",
         "module",
         "new",
-        "number",
+        "of",
         "packages/auth-core/src/domain/phone",
         "packages/auth-core/src/domain/phone.ts",
         "packages/data-core/src/core/database/migrations/0004_breezy_cammi",
         "packages/data-core/src/core/database/migrations/0004_breezy_cammi.sql",
-        "packages/data-core/src/domains/password-recovery/repositories/password-recovery-repository",
-        "packages/data-core/src/domains/password-recovery/repositories/password-recovery-repository.ts",
+        "packages/data-core/src/domains/verification/repositories/verification-challenge-repository",
+        "packages/data-core/src/domains/verification/repositories/verification-challenge-repository.ts",
         "password",
         "password recovery system",
         "phone",
-        "provides",
-        "receives",
+        "proving",
+        "recover",
         "recovery",
         "registered",
         "server",
-        "sets",
+        "setting",
         "sql",
         "src/features/password-recovery",
         "src/features/password-recovery/presentation/passwordrecoverypagecontent",
         "src/features/password-recovery/presentation/passwordrecoverypagecontent.tsx",
-        "src/features/password-recovery/server/services/password-recovery-email-service",
-        "src/features/password-recovery/server/services/password-recovery-email-service.server.ts",
         "src/features/password-recovery/server/services/password-recovery-service",
         "src/features/password-recovery/server/services/password-recovery-service.server.ts",
+        "src/features/verification/server/services/verification-service",
+        "src/features/verification/server/services/verification-service.server.ts",
         "system",
         "the",
-        "the `src/features/password-recovery` module provides an independent password recovery flow via email. the user begins with their registered phone number, receives a 6-digit verification code, and sets a new password upon code verification.",
-        "their",
+        "the `src/features/password-recovery` module lets a user recover access by proving control of the registered phone through the unified verification system, then setting a new password.",
+        "then",
+        "through",
         "ts",
         "tsx",
-        "upon",
+        "unified",
         "user",
-        "verification",
-        "via",
-        "with"
+        "verification"
       ]
     },
     {
@@ -12284,6 +12316,72 @@
       ]
     },
     {
+      "id": "document:docs/05-platform-features/unified-verification-system.md",
+      "kind": "document",
+      "name": "Unified Verification System",
+      "path": "docs/05-platform-features/unified-verification-system.md",
+      "summary": "The unified verification system owns one server-side challenge and proof model for registration, primary-phone changes, and password recovery. Clients may store transient UI state, but account-changing server operations only trust a short-lived signed `verificationProof` that is ",
+      "tags": [
+        "/asolverificationsmsdispatch",
+        "@asol/auth-core",
+        "@asol/verification-core",
+        "@asol/verification-core/server",
+        "account-changing",
+        "and",
+        "but",
+        "challenge",
+        "changes",
+        "clients",
+        "docs/05-platform-features/unified-verification-system",
+        "docs/05-platform-features/unified-verification-system.md",
+        "for",
+        "is",
+        "java",
+        "may",
+        "md",
+        "model",
+        "one",
+        "only",
+        "operations",
+        "owns",
+        "packages/data-core/src/domains/verification",
+        "packages/native-core/android/",
+        "packages/native-core/android/.../asolverificationsmsdispatch.java",
+        "packages/signed-token-core",
+        "packages/verification-core",
+        "password",
+        "primary-phone",
+        "proof",
+        "recovery",
+        "registration",
+        "server",
+        "server-side",
+        "service",
+        "short-lived",
+        "signed",
+        "src/features/auth/presentation/phoneverification",
+        "src/features/auth/presentation/phoneverification.tsx",
+        "src/features/notifications/server/services/verification-sms-dispatch",
+        "src/features/notifications/server/services/verification-sms-dispatch.service.server.ts",
+        "src/features/verification",
+        "state",
+        "store",
+        "system",
+        "that",
+        "the",
+        "the unified verification system owns one server-side challenge and proof model for registration, primary-phone changes, and password recovery. clients may store transient ui state, but account-changing server operations only trust a short-lived signed `verificationproof` that is ",
+        "transient",
+        "trust",
+        "ts",
+        "tsx",
+        "ui",
+        "unified",
+        "unified verification system",
+        "verification",
+        "verificationproof"
+      ]
+    },
+    {
       "id": "document:docs/05-platform-features/voice-input-system.md",
       "kind": "document",
       "name": "Global Voice Input System",
@@ -13090,6 +13188,8 @@
         "android",
         "android push notifications",
         "android/app",
+        "android/variables",
+        "android/variables.gradle",
         "application",
         "asol",
         "asol android uses firebase cloud messaging through the official capacitor 8 push notifications plugin. the integration covers foreground, background, and terminated application states while keeping the in-app notification center local-first in asoldb.",
@@ -13103,6 +13203,7 @@
         "docs/07-mobile-and-release/capacitor/android-push-notifications.md",
         "firebase",
         "foreground",
+        "gradle",
         "in",
         "in-app",
         "integration",
@@ -18663,6 +18764,32 @@
       ]
     },
     {
+      "id": "environment-key:ASOL_VERIFICATION_SIGNING_SECRET",
+      "kind": "environment-key",
+      "name": "ASOL_VERIFICATION_SIGNING_SECRET",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "asol_verification_signing_secret",
+        "environment",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
+      "id": "environment-key:ASOL_VERIFICATION_SMS_SIGNING_KEY_BASE64",
+      "kind": "environment-key",
+      "name": "ASOL_VERIFICATION_SMS_SIGNING_KEY_BASE64",
+      "summary": "Server/tooling environment key name",
+      "tags": [
+        "asol_verification_sms_signing_key_base64",
+        "environment",
+        "server",
+        "server tooling environment",
+        "tooling"
+      ]
+    },
+    {
       "id": "environment-key:ASOL_WEB_BUNDLE_READY",
       "kind": "environment-key",
       "name": "ASOL_WEB_BUNDLE_READY",
@@ -22710,6 +22837,16 @@
       ]
     },
     {
+      "id": "feature:verification",
+      "kind": "feature",
+      "name": "verification",
+      "path": "src/features/verification",
+      "tags": [
+        "src/features/verification",
+        "verification"
+      ]
+    },
+    {
       "id": "feature:voice-input",
       "kind": "feature",
       "name": "voice-input",
@@ -22932,7 +23069,7 @@
       "kind": "package",
       "name": "@asol/data-core",
       "path": "packages/data-core",
-      "summary": "Database access, sharding, and domain repositories; Layer: capability; Public exports: ., ./account-deletion, ./advertisements, ./auth, ./auth/entities, ./browser, ./composition, ./control-ota, ./control-release-state, ./control-system-logs, ./feature-flags, ./follow, ./follow/entities, ./marketplace-orders, ./notifications, ./ota, ./ota-runtime, ./password-recovery, ./pharmacy-profile-catalog, ./pharmacy-profile-catalog/entities, ./product, ./product-search, ./product-search-fields, ./product-search/entities, ./product/entities, ./profile, ./profile/entities, ./provisioning, ./runtime-config, ./seller-discounts, ./seller-discounts/entities, ./super-admin, ./system-logs, ./telemetry, ./tooling",
+      "summary": "Database access, sharding, and domain repositories; Layer: capability; Public exports: ., ./account-deletion, ./advertisements, ./auth, ./auth/entities, ./browser, ./composition, ./control-ota, ./control-release-state, ./control-system-logs, ./feature-flags, ./follow, ./follow/entities, ./marketplace-orders, ./notifications, ./ota, ./ota-runtime, ./password-recovery, ./pharmacy-profile-catalog, ./pharmacy-profile-catalog/entities, ./product, ./product-search, ./product-search-fields, ./product-search/entities, ./product/entities, ./profile, ./profile/entities, ./provisioning, ./runtime-config, ./seller-discounts, ./seller-discounts/entities, ./super-admin, ./system-logs, ./telemetry, ./tooling, ./verification",
       "tags": [
         ".",
         "./account-deletion",
@@ -22969,6 +23106,7 @@
         "./system-logs",
         "./telemetry",
         "./tooling",
+        "./verification",
         "/account-deletion",
         "/advertisements",
         "/auth",
@@ -23003,6 +23141,7 @@
         "/system-logs",
         "/telemetry",
         "/tooling",
+        "/verification",
         "@asol/data-core",
         "@libsql/client",
         "access",
@@ -23870,6 +24009,29 @@
         "packages/vercel-deploy-core",
         "vercel",
         "vercel account api and deployment orchestration"
+      ]
+    },
+    {
+      "id": "package:@asol/verification-core",
+      "kind": "package",
+      "name": "@asol/verification-core",
+      "path": "packages/verification-core",
+      "summary": "Purpose-bound account verification challenges and proof contracts; Layer: capability; Public exports: ., ./server",
+      "tags": [
+        ".",
+        "./server",
+        "/server",
+        "@asol/verification-core",
+        "account",
+        "and",
+        "capability",
+        "challenges",
+        "contracts",
+        "packages/verification-core",
+        "proof",
+        "purpose-bound",
+        "purpose-bound account verification challenges and proof contracts",
+        "verification"
       ]
     },
     {
@@ -25588,6 +25750,86 @@
         "handler api",
         "src/app/api/system-logs/summary/route",
         "src/app/api/system-logs/summary/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "route:/api/verification/admin-sms/redeem:handler",
+      "kind": "route",
+      "name": "/api/verification/admin-sms/redeem",
+      "path": "src/app/api/verification/admin-sms/redeem/route.ts",
+      "summary": "App Router request handler",
+      "tags": [
+        "/api/verification/admin-sms/redeem",
+        "api",
+        "handler",
+        "handler api",
+        "src/app/api/verification/admin-sms/redeem/route",
+        "src/app/api/verification/admin-sms/redeem/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "route:/api/verification/admin-sms/status:handler",
+      "kind": "route",
+      "name": "/api/verification/admin-sms/status",
+      "path": "src/app/api/verification/admin-sms/status/route.ts",
+      "summary": "App Router request handler",
+      "tags": [
+        "/api/verification/admin-sms/status",
+        "api",
+        "handler",
+        "handler api",
+        "src/app/api/verification/admin-sms/status/route",
+        "src/app/api/verification/admin-sms/status/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "route:/api/verification/request:handler",
+      "kind": "route",
+      "name": "/api/verification/request",
+      "path": "src/app/api/verification/request/route.ts",
+      "summary": "App Router request handler",
+      "tags": [
+        "/api/verification/request",
+        "api",
+        "handler",
+        "handler api",
+        "src/app/api/verification/request/route",
+        "src/app/api/verification/request/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "route:/api/verification/resend:handler",
+      "kind": "route",
+      "name": "/api/verification/resend",
+      "path": "src/app/api/verification/resend/route.ts",
+      "summary": "App Router request handler",
+      "tags": [
+        "/api/verification/resend",
+        "api",
+        "handler",
+        "handler api",
+        "src/app/api/verification/resend/route",
+        "src/app/api/verification/resend/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "route:/api/verification/verify:handler",
+      "kind": "route",
+      "name": "/api/verification/verify",
+      "path": "src/app/api/verification/verify/route.ts",
+      "summary": "App Router request handler",
+      "tags": [
+        "/api/verification/verify",
+        "api",
+        "handler",
+        "handler api",
+        "src/app/api/verification/verify/route",
+        "src/app/api/verification/verify/route.ts",
         "ts"
       ]
     },
@@ -31275,17 +31517,6 @@
       ]
     },
     {
-      "id": "source:packages/data-core/src/domains/password-recovery/repositories/password-recovery-repository.ts",
-      "kind": "source",
-      "name": "password-recovery-repository.ts",
-      "path": "packages/data-core/src/domains/password-recovery/repositories/password-recovery-repository.ts",
-      "tags": [
-        "packages/data-core/src/domains/password-recovery/repositories/password-recovery-repository",
-        "packages/data-core/src/domains/password-recovery/repositories/password-recovery-repository.ts",
-        "ts"
-      ]
-    },
-    {
       "id": "source:packages/data-core/src/domains/pharmacy-profile-catalog/entities/index.ts",
       "kind": "source",
       "name": "index.ts",
@@ -31961,6 +32192,41 @@
         "packages/data-core/src/domains/system-logs/system-logs.repository.server.ts",
         "repository",
         "server",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/domains/verification/index.server.ts",
+      "kind": "source",
+      "name": "index.server.ts",
+      "path": "packages/data-core/src/domains/verification/index.server.ts",
+      "tags": [
+        "packages/data-core/src/domains/verification/index",
+        "packages/data-core/src/domains/verification/index.server.ts",
+        "server",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/domains/verification/operations/verification.operations.ts",
+      "kind": "source",
+      "name": "verification.operations.ts",
+      "path": "packages/data-core/src/domains/verification/operations/verification.operations.ts",
+      "tags": [
+        "operations",
+        "packages/data-core/src/domains/verification/operations/verification",
+        "packages/data-core/src/domains/verification/operations/verification.operations.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/domains/verification/repositories/verification-challenge-repository.ts",
+      "kind": "source",
+      "name": "verification-challenge-repository.ts",
+      "path": "packages/data-core/src/domains/verification/repositories/verification-challenge-repository.ts",
+      "tags": [
+        "packages/data-core/src/domains/verification/repositories/verification-challenge-repository",
+        "packages/data-core/src/domains/verification/repositories/verification-challenge-repository.ts",
         "ts"
       ]
     },
@@ -33291,6 +33557,83 @@
       ]
     },
     {
+      "id": "source:packages/native-core/android/src/main/java/hgh/asol/app/AsolVerificationApi.java",
+      "kind": "source",
+      "name": "AsolVerificationApi.java",
+      "path": "packages/native-core/android/src/main/java/hgh/asol/app/AsolVerificationApi.java",
+      "tags": [
+        "java",
+        "packages/native-core/android/src/main/java/hgh/asol/app/asolverificationapi",
+        "packages/native-core/android/src/main/java/hgh/asol/app/asolverificationapi.java"
+      ]
+    },
+    {
+      "id": "source:packages/native-core/android/src/main/java/hgh/asol/app/AsolVerificationSmsDispatch.java",
+      "kind": "source",
+      "name": "AsolVerificationSmsDispatch.java",
+      "path": "packages/native-core/android/src/main/java/hgh/asol/app/AsolVerificationSmsDispatch.java",
+      "tags": [
+        "java",
+        "packages/native-core/android/src/main/java/hgh/asol/app/asolverificationsmsdispatch",
+        "packages/native-core/android/src/main/java/hgh/asol/app/asolverificationsmsdispatch.java"
+      ]
+    },
+    {
+      "id": "source:packages/native-core/android/src/main/java/hgh/asol/app/AsolVerificationSmsGateway.java",
+      "kind": "source",
+      "name": "AsolVerificationSmsGateway.java",
+      "path": "packages/native-core/android/src/main/java/hgh/asol/app/AsolVerificationSmsGateway.java",
+      "tags": [
+        "java",
+        "packages/native-core/android/src/main/java/hgh/asol/app/asolverificationsmsgateway",
+        "packages/native-core/android/src/main/java/hgh/asol/app/asolverificationsmsgateway.java"
+      ]
+    },
+    {
+      "id": "source:packages/native-core/android/src/main/java/hgh/asol/app/AsolVerificationSmsPlugin.java",
+      "kind": "source",
+      "name": "AsolVerificationSmsPlugin.java",
+      "path": "packages/native-core/android/src/main/java/hgh/asol/app/AsolVerificationSmsPlugin.java",
+      "tags": [
+        "java",
+        "packages/native-core/android/src/main/java/hgh/asol/app/asolverificationsmsplugin",
+        "packages/native-core/android/src/main/java/hgh/asol/app/asolverificationsmsplugin.java"
+      ]
+    },
+    {
+      "id": "source:packages/native-core/android/src/main/java/hgh/asol/app/AsolVerificationSmsResultReceiver.java",
+      "kind": "source",
+      "name": "AsolVerificationSmsResultReceiver.java",
+      "path": "packages/native-core/android/src/main/java/hgh/asol/app/AsolVerificationSmsResultReceiver.java",
+      "tags": [
+        "java",
+        "packages/native-core/android/src/main/java/hgh/asol/app/asolverificationsmsresultreceiver",
+        "packages/native-core/android/src/main/java/hgh/asol/app/asolverificationsmsresultreceiver.java"
+      ]
+    },
+    {
+      "id": "source:packages/native-core/android/src/main/java/hgh/asol/app/AsolVerificationSmsStatusWorker.java",
+      "kind": "source",
+      "name": "AsolVerificationSmsStatusWorker.java",
+      "path": "packages/native-core/android/src/main/java/hgh/asol/app/AsolVerificationSmsStatusWorker.java",
+      "tags": [
+        "java",
+        "packages/native-core/android/src/main/java/hgh/asol/app/asolverificationsmsstatusworker",
+        "packages/native-core/android/src/main/java/hgh/asol/app/asolverificationsmsstatusworker.java"
+      ]
+    },
+    {
+      "id": "source:packages/native-core/android/src/main/java/hgh/asol/app/AsolVerificationSmsWorker.java",
+      "kind": "source",
+      "name": "AsolVerificationSmsWorker.java",
+      "path": "packages/native-core/android/src/main/java/hgh/asol/app/AsolVerificationSmsWorker.java",
+      "tags": [
+        "java",
+        "packages/native-core/android/src/main/java/hgh/asol/app/asolverificationsmsworker",
+        "packages/native-core/android/src/main/java/hgh/asol/app/asolverificationsmsworker.java"
+      ]
+    },
+    {
       "id": "source:packages/native-core/android/src/main/java/hgh/asol/app/BackgroundDownloadPlugin.java",
       "kind": "source",
       "name": "BackgroundDownloadPlugin.java",
@@ -33947,6 +34290,18 @@
       ]
     },
     {
+      "id": "source:packages/native-core/src/adapters/verification-sms-gateway.adapter.ts",
+      "kind": "source",
+      "name": "verification-sms-gateway.adapter.ts",
+      "path": "packages/native-core/src/adapters/verification-sms-gateway.adapter.ts",
+      "tags": [
+        "adapter",
+        "packages/native-core/src/adapters/verification-sms-gateway",
+        "packages/native-core/src/adapters/verification-sms-gateway.adapter.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/native-core/src/api/actionSheet.api.ts",
       "kind": "source",
       "name": "actionSheet.api.ts",
@@ -34302,6 +34657,18 @@
         "api",
         "packages/native-core/src/api/toast",
         "packages/native-core/src/api/toast.api.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/native-core/src/api/verification-sms-gateway.api.ts",
+      "kind": "source",
+      "name": "verification-sms-gateway.api.ts",
+      "path": "packages/native-core/src/api/verification-sms-gateway.api.ts",
+      "tags": [
+        "api",
+        "packages/native-core/src/api/verification-sms-gateway",
+        "packages/native-core/src/api/verification-sms-gateway.api.ts",
         "ts"
       ]
     },
@@ -35238,6 +35605,18 @@
       "tags": [
         "packages/notifications-core/src/service-runtime",
         "packages/notifications-core/src/service-runtime.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/notifications-core/src/services/notification-grant-courier.server.ts",
+      "kind": "source",
+      "name": "notification-grant-courier.server.ts",
+      "path": "packages/notifications-core/src/services/notification-grant-courier.server.ts",
+      "tags": [
+        "packages/notifications-core/src/services/notification-grant-courier",
+        "packages/notifications-core/src/services/notification-grant-courier.server.ts",
+        "server",
         "ts"
       ]
     },
@@ -37346,6 +37725,17 @@
       ]
     },
     {
+      "id": "source:packages/signed-token-core/src/domain/asymmetric-envelope.ts",
+      "kind": "source",
+      "name": "asymmetric-envelope.ts",
+      "path": "packages/signed-token-core/src/domain/asymmetric-envelope.ts",
+      "tags": [
+        "packages/signed-token-core/src/domain/asymmetric-envelope",
+        "packages/signed-token-core/src/domain/asymmetric-envelope.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/signed-token-core/src/domain/signed-envelope.ts",
       "kind": "source",
       "name": "signed-envelope.ts",
@@ -38379,6 +38769,50 @@
       "tags": [
         "packages/vercel-deploy-core/src/vercel-usage",
         "packages/vercel-deploy-core/src/vercel-usage.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/verification-core/src/challenge-state-machine.ts",
+      "kind": "source",
+      "name": "challenge-state-machine.ts",
+      "path": "packages/verification-core/src/challenge-state-machine.ts",
+      "tags": [
+        "packages/verification-core/src/challenge-state-machine",
+        "packages/verification-core/src/challenge-state-machine.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/verification-core/src/index.ts",
+      "kind": "source",
+      "name": "index.ts",
+      "path": "packages/verification-core/src/index.ts",
+      "tags": [
+        "packages/verification-core/src/index",
+        "packages/verification-core/src/index.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/verification-core/src/server.ts",
+      "kind": "source",
+      "name": "server.ts",
+      "path": "packages/verification-core/src/server.ts",
+      "tags": [
+        "packages/verification-core/src/server",
+        "packages/verification-core/src/server.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/verification-core/src/sms-dispatch-contract.ts",
+      "kind": "source",
+      "name": "sms-dispatch-contract.ts",
+      "path": "packages/verification-core/src/sms-dispatch-contract.ts",
+      "tags": [
+        "packages/verification-core/src/sms-dispatch-contract",
+        "packages/verification-core/src/sms-dispatch-contract.ts",
         "ts"
       ]
     },
@@ -40020,6 +40454,61 @@
       ]
     },
     {
+      "id": "source:services/submain/src/app/api/verification/admin-sms/redeem/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/verification/admin-sms/redeem/route.ts",
+      "tags": [
+        "services/submain/src/app/api/verification/admin-sms/redeem/route",
+        "services/submain/src/app/api/verification/admin-sms/redeem/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/verification/admin-sms/status/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/verification/admin-sms/status/route.ts",
+      "tags": [
+        "services/submain/src/app/api/verification/admin-sms/status/route",
+        "services/submain/src/app/api/verification/admin-sms/status/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/verification/request/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/verification/request/route.ts",
+      "tags": [
+        "services/submain/src/app/api/verification/request/route",
+        "services/submain/src/app/api/verification/request/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/verification/resend/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/verification/resend/route.ts",
+      "tags": [
+        "services/submain/src/app/api/verification/resend/route",
+        "services/submain/src/app/api/verification/resend/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/verification/verify/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/verification/verify/route.ts",
+      "tags": [
+        "services/submain/src/app/api/verification/verify/route",
+        "services/submain/src/app/api/verification/verify/route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:services/submain/src/app/layout.tsx",
       "kind": "source",
       "name": "layout.tsx",
@@ -41218,6 +41707,61 @@
       "tags": [
         "src/app/api/system-logs/summary/route",
         "src/app/api/system-logs/summary/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/app/api/verification/admin-sms/redeem/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "src/app/api/verification/admin-sms/redeem/route.ts",
+      "tags": [
+        "src/app/api/verification/admin-sms/redeem/route",
+        "src/app/api/verification/admin-sms/redeem/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/app/api/verification/admin-sms/status/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "src/app/api/verification/admin-sms/status/route.ts",
+      "tags": [
+        "src/app/api/verification/admin-sms/status/route",
+        "src/app/api/verification/admin-sms/status/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/app/api/verification/request/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "src/app/api/verification/request/route.ts",
+      "tags": [
+        "src/app/api/verification/request/route",
+        "src/app/api/verification/request/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/app/api/verification/resend/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "src/app/api/verification/resend/route.ts",
+      "tags": [
+        "src/app/api/verification/resend/route",
+        "src/app/api/verification/resend/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/app/api/verification/verify/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "src/app/api/verification/verify/route.ts",
+      "tags": [
+        "src/app/api/verification/verify/route",
+        "src/app/api/verification/verify/route.ts",
         "ts"
       ]
     },
@@ -42876,17 +43420,6 @@
       "tags": [
         "src/features/auth/application/services/session-service",
         "src/features/auth/application/services/session-service.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:src/features/auth/domain/phone-verification-policy.ts",
-      "kind": "source",
-      "name": "phone-verification-policy.ts",
-      "path": "src/features/auth/domain/phone-verification-policy.ts",
-      "tags": [
-        "src/features/auth/domain/phone-verification-policy",
-        "src/features/auth/domain/phone-verification-policy.ts",
         "ts"
       ]
     },
@@ -46188,6 +46721,17 @@
       ]
     },
     {
+      "id": "source:src/features/notifications/server/ports/verification-dispatch-transport.ts",
+      "kind": "source",
+      "name": "verification-dispatch-transport.ts",
+      "path": "src/features/notifications/server/ports/verification-dispatch-transport.ts",
+      "tags": [
+        "src/features/notifications/server/ports/verification-dispatch-transport",
+        "src/features/notifications/server/ports/verification-dispatch-transport.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/notifications/server/services/mobile-push-crypto.server.ts",
       "kind": "source",
       "name": "mobile-push-crypto.server.ts",
@@ -46272,6 +46816,19 @@
         "server",
         "src/features/notifications/server/services/notification-token-service",
         "src/features/notifications/server/services/notification-token-service.server.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/notifications/server/services/verification-sms-dispatch.service.server.ts",
+      "kind": "source",
+      "name": "verification-sms-dispatch.service.server.ts",
+      "path": "src/features/notifications/server/services/verification-sms-dispatch.service.server.ts",
+      "tags": [
+        "server",
+        "service",
+        "src/features/notifications/server/services/verification-sms-dispatch",
+        "src/features/notifications/server/services/verification-sms-dispatch.service.server.ts",
         "ts"
       ]
     },
@@ -51267,6 +51824,97 @@
       ]
     },
     {
+      "id": "source:src/features/verification/application/services/verification-api-service.ts",
+      "kind": "source",
+      "name": "verification-api-service.ts",
+      "path": "src/features/verification/application/services/verification-api-service.ts",
+      "tags": [
+        "src/features/verification/application/services/verification-api-service",
+        "src/features/verification/application/services/verification-api-service.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/verification/application/types.ts",
+      "kind": "source",
+      "name": "types.ts",
+      "path": "src/features/verification/application/types.ts",
+      "tags": [
+        "src/features/verification/application/types",
+        "src/features/verification/application/types.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/verification/index.ts",
+      "kind": "source",
+      "name": "index.ts",
+      "path": "src/features/verification/index.ts",
+      "tags": [
+        "src/features/verification/index",
+        "src/features/verification/index.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/verification/ports.ts",
+      "kind": "source",
+      "name": "ports.ts",
+      "path": "src/features/verification/ports.ts",
+      "tags": [
+        "src/features/verification/ports",
+        "src/features/verification/ports.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/verification/server.ts",
+      "kind": "source",
+      "name": "server.ts",
+      "path": "src/features/verification/server.ts",
+      "tags": [
+        "src/features/verification/server",
+        "src/features/verification/server.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/verification/server/services/verification-email-service.server.ts",
+      "kind": "source",
+      "name": "verification-email-service.server.ts",
+      "path": "src/features/verification/server/services/verification-email-service.server.ts",
+      "tags": [
+        "server",
+        "src/features/verification/server/services/verification-email-service",
+        "src/features/verification/server/services/verification-email-service.server.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/verification/server/services/verification-proof-consumer.server.ts",
+      "kind": "source",
+      "name": "verification-proof-consumer.server.ts",
+      "path": "src/features/verification/server/services/verification-proof-consumer.server.ts",
+      "tags": [
+        "server",
+        "src/features/verification/server/services/verification-proof-consumer",
+        "src/features/verification/server/services/verification-proof-consumer.server.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/verification/server/services/verification-service.server.ts",
+      "kind": "source",
+      "name": "verification-service.server.ts",
+      "path": "src/features/verification/server/services/verification-service.server.ts",
+      "tags": [
+        "server",
+        "src/features/verification/server/services/verification-service",
+        "src/features/verification/server/services/verification-service.server.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/voice-input/application/voice-input-scanner.ts",
       "kind": "source",
       "name": "voice-input-scanner.ts",
@@ -54072,6 +54720,30 @@
       ]
     },
     {
+      "id": "test:packages/verification-core/src/tests/index.test.ts",
+      "kind": "test",
+      "name": "index.test.ts",
+      "path": "packages/verification-core/src/tests/index.test.ts",
+      "tags": [
+        "packages/verification-core/src/tests/index",
+        "packages/verification-core/src/tests/index.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/verification-core/src/tests/sms-dispatch-parity.test.ts",
+      "kind": "test",
+      "name": "sms-dispatch-parity.test.ts",
+      "path": "packages/verification-core/src/tests/sms-dispatch-parity.test.ts",
+      "tags": [
+        "packages/verification-core/src/tests/sms-dispatch-parity",
+        "packages/verification-core/src/tests/sms-dispatch-parity.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:scripts/architecture/application-features-attack.test.ts",
       "kind": "test",
       "name": "application-features-attack.test.ts",
@@ -55323,6 +55995,18 @@
       "tags": [
         "src/features/system-logs/tests/system-log-security",
         "src/features/system-logs/tests/system-log-security.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/features/verification/tests/verification-service.test.ts",
+      "kind": "test",
+      "name": "verification-service.test.ts",
+      "path": "src/features/verification/tests/verification-service.test.ts",
+      "tags": [
+        "src/features/verification/tests/verification-service",
+        "src/features/verification/tests/verification-service.test.ts",
         "test",
         "ts"
       ]

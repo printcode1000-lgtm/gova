@@ -31,10 +31,12 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
   const { t, locale } = useTranslation();
   const {
     form,
+    uid,
     updateField: updateRegistrationField,
     fieldErrors,
     phoneVerified,
     setPhoneVerified,
+    setVerificationProof,
     isDirty,
     isLoading,
     isSaving,
@@ -101,6 +103,10 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
           error={fieldErrors.phone}
           onPhoneChange={(phone: string) => updateRegistrationField("phone", phone)}
           onVerifiedChange={setPhoneVerified}
+          onVerificationProofChange={setVerificationProof}
+          purpose="primary_phone_change"
+          uid={uid}
+          email={form.email}
         />
 
         <div id='features-profile-presentation-profileregistrationinfocard-div-9-yua6ah' className="space-y-2">

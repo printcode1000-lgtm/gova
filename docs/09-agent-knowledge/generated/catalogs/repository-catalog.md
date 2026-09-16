@@ -10,20 +10,20 @@
 | Kind | Count |
 |---|---:|
 | artifact | 4 |
-| command | 285 |
+| command | 287 |
 | config | 12 |
-| document | 277 |
+| document | 278 |
 | domain | 10 |
-| environment-key | 241 |
+| environment-key | 243 |
 | external-dependency | 104 |
-| feature | 43 |
-| package | 48 |
-| route | 152 |
+| feature | 44 |
+| package | 49 |
+| route | 157 |
 | runtime | 7 |
 | script | 155 |
 | service | 7 |
-| source | 2136 |
-| test | 258 |
+| source | 2172 |
+| test | 261 |
 
 ## Domains
 
@@ -53,7 +53,7 @@
 | @asol/catalog-core | `packages/catalog-core` | Category catalog domain; Layer: capability; Public exports: ., ./server |
 | @asol/control-composition | `packages/control-composition` | Composition root for the control account; Layer: composition; Public exports: . |
 | @asol/cors | `packages/cors` | Cross-origin (CORS) policy, headers, and preflight; Layer: capability; Public exports: . |
-| @asol/data-core | `packages/data-core` | Database access, sharding, and domain repositories; Layer: capability; Public exports: ., ./account-deletion, ./advertisements, ./auth, ./auth/entities, ./browser, ./composition, ./control-ota, ./control-release-state, ./control-system-logs, ./feature-flags, ./follow, ./follow/entities, ./marketplace-orders, ./notifications, ./ota, ./ota-runtime, ./password-recovery, ./pharmacy-profile-catalog, ./pharmacy-profile-catalog/entities, ./product, ./product-search, ./product-search-fields, ./product-search/entities, ./product/entities, ./profile, ./profile/entities, ./provisioning, ./runtime-config, ./seller-discounts, ./seller-discounts/entities, ./super-admin, ./system-logs, ./telemetry, ./tooling |
+| @asol/data-core | `packages/data-core` | Database access, sharding, and domain repositories; Layer: capability; Public exports: ., ./account-deletion, ./advertisements, ./auth, ./auth/entities, ./browser, ./composition, ./control-ota, ./control-release-state, ./control-system-logs, ./feature-flags, ./follow, ./follow/entities, ./marketplace-orders, ./notifications, ./ota, ./ota-runtime, ./password-recovery, ./pharmacy-profile-catalog, ./pharmacy-profile-catalog/entities, ./product, ./product-search, ./product-search-fields, ./product-search/entities, ./product/entities, ./profile, ./profile/entities, ./provisioning, ./runtime-config, ./seller-discounts, ./seller-discounts/entities, ./super-admin, ./system-logs, ./telemetry, ./tooling, ./verification |
 | @asol/dev-core | `packages/dev-core` | Development-runtime guards for developer-only tooling; Layer: capability; Public exports: ., ./server |
 | @asol/env-core | `packages/env-core` | Environment variable reading rules; Layer: capability; Public exports: ., ./files, ./process |
 | @asol/favorites-core | `packages/favorites-core` | Device-local favorites state, card adapters, and the favorite control; Layer: capability; Public exports: ., ./ui |
@@ -92,6 +92,7 @@
 | @asol/system-logs-core | `packages/system-logs-core` | System log capture and persistence contract; Layer: capability; Public exports: ., ./server |
 | @asol/trending-ribbon-core | `packages/trending-ribbon-core` | Trending ribbon UI capability; Layer: capability; Public exports: ., ./server |
 | @asol/vercel-deploy-core | `packages/vercel-deploy-core` | Vercel account API and deployment orchestration; Layer: capability; Public exports: ., ./project-env, ./release-rollback, ./release-state, ./remote-deploy-contracts, ./remote-deploy-sandbox |
+| @asol/verification-core | `packages/verification-core` | Purpose-bound account verification challenges and proof contracts; Layer: capability; Public exports: ., ./server |
 
 ## Features
 
@@ -139,6 +140,7 @@
 | super-admin | `src/features/super-admin` |  |
 | system-logs | `src/features/system-logs` |  |
 | vehicle-catalog | `src/features/vehicle-catalog` |  |
+| verification | `src/features/verification` |  |
 | voice-input | `src/features/voice-input` |  |
 
 ## Services

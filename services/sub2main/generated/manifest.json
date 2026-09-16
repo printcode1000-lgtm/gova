@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-15T10:36:39.939Z",
+  "generatedAt": "2026-09-16T05:26:49.241Z",
   "entryPoints": [
     "features/product/server/services/product-service.server.ts",
     "features/profile/server/services/profile-service.bootstrap.server.ts",
@@ -19,7 +19,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 439,
+  "fileCount": 452,
   "files": [
     "packages/account-declarations/src/accounts/products.ts",
     "packages/account-declarations/src/accounts/profiles.ts",
@@ -196,6 +196,9 @@
     "packages/data-core/src/domains/seller-discounts/index.server.ts",
     "packages/data-core/src/domains/seller-discounts/repositories/seller-discount-repository.ts",
     "packages/data-core/src/domains/system-logs/system-logs.repository.server.ts",
+    "packages/data-core/src/domains/verification/index.server.ts",
+    "packages/data-core/src/domains/verification/operations/verification.operations.ts",
+    "packages/data-core/src/domains/verification/repositories/verification-challenge-repository.ts",
     "packages/data-core/src/ports/runtime-config.ts",
     "packages/data-core/src/ports/telemetry.ts",
     "packages/env-core/src/domain/read-env.ts",
@@ -225,6 +228,7 @@
     "packages/notifications-core/src/ports/token-store.ts",
     "packages/notifications-core/src/server.ts",
     "packages/notifications-core/src/service-runtime.ts",
+    "packages/notifications-core/src/services/notification-grant-courier.server.ts",
     "packages/notifications-core/src/services/notification-grant.server.ts",
     "packages/notifications-core/src/services/notification-send-service.server.ts",
     "packages/notifications-core/src/services/providers/apns-notification-provider.server.ts",
@@ -266,6 +270,7 @@
     "packages/service-runtime-core/src/domain/service-http.ts",
     "packages/service-runtime-core/src/domain/service-proxy.ts",
     "packages/service-runtime-core/src/index.ts",
+    "packages/signed-token-core/src/domain/asymmetric-envelope.ts",
     "packages/signed-token-core/src/domain/signed-envelope.ts",
     "packages/signed-token-core/src/index.ts",
     "packages/storage-core/src/adapters/s3-client.adapter.ts",
@@ -318,6 +323,10 @@
     "packages/system-logs-core/src/server/persistent-log-service.ts",
     "packages/system-logs-core/src/server/stream-hub.ts",
     "packages/system-logs-core/src/server/terminal-logger.ts",
+    "packages/verification-core/src/challenge-state-machine.ts",
+    "packages/verification-core/src/index.ts",
+    "packages/verification-core/src/server.ts",
+    "packages/verification-core/src/sms-dispatch-contract.ts",
     "public/catagory/core/categories.json",
     "public/catagory/core/collections.json",
     "public/catagory/core/specialty-columns.json",
@@ -393,6 +402,7 @@
     "src/features/notifications/server.ts",
     "src/features/notifications/server/dev-notification-send-handler.server.ts",
     "src/features/notifications/server/notification-admin-authorization.ts",
+    "src/features/notifications/server/ports/verification-dispatch-transport.ts",
     "src/features/notifications/server/services/mobile-push-crypto.server.ts",
     "src/features/notifications/server/services/mobile-push-unlock.service.server.ts",
     "src/features/notifications/server/services/notification-broadcast-service.server.ts",
@@ -400,6 +410,7 @@
     "src/features/notifications/server/services/notification-self-test.service.server.ts",
     "src/features/notifications/server/services/notification-service.bootstrap.server.ts",
     "src/features/notifications/server/services/notification-token-service.server.ts",
+    "src/features/notifications/server/services/verification-sms-dispatch.service.server.ts",
     "src/features/orders/application/order-action-grants.server.ts",
     "src/features/orders/application/order-actions.server.ts",
     "src/features/orders/application/order-detail-loader.server.ts",
@@ -459,7 +470,9 @@
     "src/features/storage/server/services/image-storage-service.bootstrap.server.ts",
     "src/features/system-logs/server.ts",
     "src/features/system-logs/server/control-persistence.server.ts",
-    "src/features/system-logs/server/services/persistent-system-log-service.server.ts"
+    "src/features/system-logs/server/services/persistent-system-log-service.server.ts",
+    "src/features/verification/ports.ts",
+    "src/features/verification/server/services/verification-proof-consumer.server.ts"
   ],
   "runtimeAssets": []
 }

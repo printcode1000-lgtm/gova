@@ -124,8 +124,10 @@ export const APPLICATION_FEATURES: readonly ApplicationFeature[] = [
     "Authentication, session, registration, and account deletion UI/services",
     [".", "./ui", "./server", "./session"],
     WEB_MOBILE_SERVER,
-    ["@asol/auth-core", "@asol/data-core"],
-    ["app-reset", "notifications", "page-save", "storage", "system-logs"],
+    // Verification-core for the channel rule: a non-Egyptian number is verified by
+    // email, so the registration form must require one before a challenge exists.
+    ["@asol/auth-core", "@asol/data-core", "@asol/verification-core"],
+    ["app-reset", "notifications", "page-save", "storage", "system-logs", "verification"],
     FULL,
   ),
   feature(
@@ -319,7 +321,7 @@ export const APPLICATION_FEATURES: readonly ApplicationFeature[] = [
     [".", "./ui", "./server"],
     WEB_MOBILE_SERVER,
     [],
-    ["auth"],
+    ["auth", "verification"],
     FULL,
   ),
   feature(
@@ -386,6 +388,7 @@ export const APPLICATION_FEATURES: readonly ApplicationFeature[] = [
       "specialty-chat",
       "storage",
       "system-logs",
+      "verification",
     ],
     FULL,
   ),
@@ -508,6 +511,18 @@ export const APPLICATION_FEATURES: readonly ApplicationFeature[] = [
     ["@asol/system-logs-core"],
     ["auth", "page-save"],
     FULL,
+  ),
+  feature(
+    "verification",
+    "Purpose-bound account verification challenges and proof consumption",
+    [".", "./server", "./ports"],
+    WEB_MOBILE_SERVER,
+    ["@asol/verification-core", "@asol/data-core"],
+    // The gateway is reached by notification: verification decides that a dispatch
+    // must happen, the notification capability owns recipient targeting and
+    // transport. One direction only — notifications never imports verification.
+    ["notifications"],
+    [true, true, false],
   ),
   feature("vehicle-catalog", "Vehicle catalog helpers", ["."], WEB),
   feature(

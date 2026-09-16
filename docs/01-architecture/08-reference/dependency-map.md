@@ -130,6 +130,9 @@ ALLOWED_TO_IMPORT → `@asol/trending-ribbon-core`
 `@asol/data-core`
 ALLOWED_TO_IMPORT → `@asol/vercel-deploy-core`
 
+`@asol/data-core`
+ALLOWED_TO_IMPORT → `@asol/verification-core`
+
 ### @asol/dev-core
 
 `@asol/dev-core` has no production `@asol/*` imports.
@@ -363,9 +366,17 @@ ALLOWED_TO_IMPORT → `@asol/orders-core`
 `@asol/vercel-deploy-core`
 ALLOWED_TO_IMPORT → `@asol/account-declarations`
 
+### @asol/verification-core
+
+`@asol/verification-core`
+ALLOWED_TO_IMPORT → `@asol/auth-core`
+
+`@asol/verification-core`
+ALLOWED_TO_IMPORT → `@asol/signed-token-core`
+
 ## Counts
 
 | Metric | Value |
 |---|---|
-| Packages | 48 |
-| Import edges | 58 |
+| Packages | 49 |
+| Import edges | 61 |

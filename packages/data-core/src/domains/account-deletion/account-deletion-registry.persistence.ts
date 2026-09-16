@@ -254,7 +254,7 @@ export const ACCOUNT_DELETION_TABLE_REGISTRY: DeletionTableRegistryEntry[] = [
   },
   {
     database: 'users',
-    table: 'password_recovery_challenges',
+    table: 'verification_challenges',
     action: 'delete_rows',
     step: 'delete_main',
     columns: ['uid'],

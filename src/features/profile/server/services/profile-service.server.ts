@@ -14,6 +14,13 @@ import type { UpsertProfileFulfillmentSettingsCommand } from "@asol/data-core/pr
 import type { GetUserByUidQuery } from "@asol/data-core/auth";
 import { MAX_PROFILE_COVER_IMAGES } from "@asol/data-core/profile";
 import { authOperationsService } from "@/features/auth/server";
+import { verificationProofConsumer } from "@/features/verification/ports";
+import {
+  normalizeVerificationEmail,
+  normalizeVerificationPhone,
+  verificationChannelForPhone,
+  VerificationPurposes,
+} from "@asol/verification-core";
 import { isSuperAdminIdentity } from "@asol/auth-core/server";
 import type {
   ProfileContactsData,
@@ -422,9 +429,22 @@ export class ProfileService implements IProfileService {
           if (
             comparablePhone(input.registration.phone) !==
               comparablePhone(user.phone) &&
-            !input.registration.phoneVerified
+            !input.registration.verificationProof
           ) {
             throw new Error("phoneVerificationRequired");
+          }
+          if (
+            comparablePhone(input.registration.phone) !==
+            comparablePhone(user.phone)
+          ) {
+            const phone = normalizeVerificationPhone(input.registration.phone);
+            await verificationProofConsumer.consume(input.registration.verificationProof ?? "", {
+              purpose: VerificationPurposes.PrimaryPhoneChange,
+              phone,
+              uid: input.uid,
+              email: normalizeVerificationEmail(input.registration.email),
+              channel: verificationChannelForPhone(phone),
+            });
           }
           if (
             input.registration.newPassword !==
@@ -437,6 +457,7 @@ export class ProfileService implements IProfileService {
             uid: input.uid,
             phone: input.registration.phone,
             email: input.registration.email,
+            verificationProof: input.registration.verificationProof,
             providerAccountEnabled: input.registration.providerAccountEnabled,
             currentPassword: input.registration.newPassword
               ? input.registration.currentPassword

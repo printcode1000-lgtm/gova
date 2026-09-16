@@ -18,6 +18,15 @@ export const ASOL_API_ROUTES = {
       reset: "/api/auth/password-recovery/reset",
     },
   },
+  verification: {
+    request: "/api/verification/request",
+    verify: "/api/verification/verify",
+    resend: "/api/verification/resend",
+    adminSms: {
+      redeem: "/api/verification/admin-sms/redeem",
+      status: "/api/verification/admin-sms/status",
+    },
+  },
   profile: {
     contacts: "/api/profile/contacts",
     storeImages: "/api/profile/store-images",

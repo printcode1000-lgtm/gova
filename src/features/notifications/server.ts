@@ -188,3 +188,18 @@ export {
   handleDevNotificationSendPost,
   isDevNotificationSendEnabled,
 } from './server/dev-notification-send-handler.server';
+export {
+  VerificationSmsDispatchService,
+  verificationSmsDispatchService,
+  type VerificationSmsDispatchOutcome,
+} from './server/services/verification-sms-dispatch.service.server';
+export {
+  registerVerificationDispatchTransport,
+  resetVerificationDispatchTransport,
+  verificationDispatchTransport,
+  type VerificationDispatchTransport,
+} from './server/ports/verification-dispatch-transport';
+export {
+  deliverNotificationGrants,
+  postNotificationGrantToService,
+} from '@asol/notifications-core/server';

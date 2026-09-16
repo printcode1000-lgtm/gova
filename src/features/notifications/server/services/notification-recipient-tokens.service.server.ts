@@ -7,6 +7,7 @@ import type {
 } from "@asol/notifications-core";
 import {
   MAX_GRANTS_PER_REQUEST,
+  selectTokensForPlatforms,
   verifyNotificationGrant,
 } from "@asol/notifications-core/server";
 import { DeleteNotificationTokenCommand } from "@asol/data-core/notifications";
@@ -75,9 +76,10 @@ export class NotificationRecipientTokensService {
           if (!pushEnabled.has(recipientUid)) {
             return { uid: recipientUid, status: "muted" as const, tokens: [] };
           }
-          const tokens = (tokensByUid[recipientUid] ?? []).filter((token) =>
-            MOBILE_PUSH_PROVIDERS.has(token.provider),
-          );
+          const tokens = selectTokensForPlatforms(
+            tokensByUid[recipientUid] ?? [],
+            payload.send.platforms,
+          ).filter((token) => MOBILE_PUSH_PROVIDERS.has(token.provider));
           if (tokens.length === 0) {
             return { uid: recipientUid, status: "no_tokens" as const, tokens: [] };
           }

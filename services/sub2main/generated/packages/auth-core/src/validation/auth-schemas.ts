@@ -20,7 +20,26 @@ function createPhoneField(t: AuthTranslateFn) {
   });
 }
 
-export function createRegistrationSchema(t: AuthTranslateFn) {
+export interface RegistrationSchemaOptions {
+  /**
+   * Whether this phone number can only be verified by email.
+   *
+   * Injected rather than decided here: which numbers route to the SMS gateway and
+   * which to email is the verification capability's rule, and `@asol/auth-core`
+   * cannot import that package — verification-core imports this one for the phone
+   * value object. The form asks the question; verification-core answers it.
+   *
+   * Omitted means "no opinion", and email stays optional. The server enforces the
+   * requirement regardless, so a form built without this cannot bypass it — it can
+   * only discover the problem later than it should have.
+   */
+  requiresEmail?: (phone: string) => boolean;
+}
+
+export function createRegistrationSchema(
+  t: AuthTranslateFn,
+  options: RegistrationSchemaOptions = {},
+) {
   const phoneField = createPhoneField(t);
 
   return z
@@ -30,13 +49,20 @@ export function createRegistrationSchema(t: AuthTranslateFn) {
       email: z.string().email(t('auth.validation.emailInvalid')).optional().or(z.literal('')),
       storeName: z.string().max(120).optional().or(z.literal('')),
       confirmPassword: z.string().min(1, t('auth.validation.confirmPasswordRequired')),
-      phoneVerified: z.boolean().refine((val) => val === true, {
-        message: t('auth.validation.phoneVerification'),
-      }),
+      verificationProof: z.string().min(1, t('auth.validation.phoneVerification')),
     })
     .refine((data) => data.password === data.confirmPassword, {
       message: t('auth.validation.passwordMatch'),
       path: ['confirmPassword'],
+    })
+    .superRefine((data, ctx) => {
+      if (!options.requiresEmail?.(data.phone)) return;
+      if ((data.email ?? '').trim()) return;
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: t('auth.validation.emailRequiredForInternationalPhone'),
+        path: ['email'],
+      });
     });
 }
 

@@ -1,15 +1,14 @@
 import 'server-only';
 
-import { randomBytes, randomInt, timingSafeEqual } from 'node:crypto';
-import { hmacDigest } from '@asol/signed-token-core';
 import { hashPassword } from '@asol/auth-core/server';
 import { assertPasswordMeetsMinimum, readPasswordInput } from '@asol/auth-core';
-import { getPasswordRecoveryConfig } from '@/core/config/server-env';
 import { PasswordRecoveryOperations } from '@asol/data-core/password-recovery';
+import { verificationChannelForPhone } from '@asol/verification-core';
+import { verificationProofConsumer } from '@/features/verification/ports';
+import { verificationService } from '@/features/verification/server';
 import {
   maskRecoveryEmail,
   normalizeRecoveryPhone,
-  PASSWORD_RECOVERY_POLICY,
 } from '../../application/password-recovery-policy';
 import type {
   RecoveryRequestInput,
@@ -19,99 +18,63 @@ import type {
   RecoveryVerifyInput,
   RecoveryVerifyResult,
 } from '../../application/types';
-import { PasswordRecoveryEmailService } from './password-recovery-email-service.server';
 
 export class PasswordRecoveryService {
   constructor(
     private readonly operations = new PasswordRecoveryOperations(),
-    private readonly mailer = new PasswordRecoveryEmailService(),
   ) {}
-
-  /**
-   * A lookup hash, not a token: the recovery table stores these and queries by them, so the
-   * encoding is hex and stays hex. The HMAC itself comes from `@asol/signed-token-core`, which is
-   * where every keyed digest in this project is computed.
-   */
-  private digest(value: string): string {
-    return hmacDigest(getPasswordRecoveryConfig().signingSecret, value);
-  }
 
   async requestCode(input: RecoveryRequestInput, requestIp: string): Promise<RecoveryRequestResult> {
     const phone = normalizeRecoveryPhone(input.phone);
-    const phoneHash = this.digest(`phone:${phone}`);
-    const requestIpHash = this.digest(`ip:${requestIp || 'unknown'}`);
-    const now = new Date();
-    const since = new Date(now.getTime() - PASSWORD_RECOVERY_POLICY.rateWindowMs).toISOString();
-
-    const [phoneRequests, ipRequests] = await this.operations.countRecent(
-      phoneHash,
-      requestIpHash,
-      since,
-    );
-    if (
-      phoneRequests >= PASSWORD_RECOVERY_POLICY.maxPhoneRequests ||
-      ipRequests >= PASSWORD_RECOVERY_POLICY.maxIpRequests
-    ) {
-      throw new Error('passwordRecoveryRateLimited');
-    }
-
     const user = await this.operations.getUserByPhone(phone);
-    const code = randomInt(100000, 1000000).toString();
-    const id = randomBytes(18).toString('hex');
-    await this.operations.createChallenge({
-      id,
-      phoneHash,
-      uid: user?.uid ?? null,
-      codeHash: this.digest(`code:${id}:${code}`),
-      requestIpHash,
-      expiresAt: new Date(now.getTime() + PASSWORD_RECOVERY_POLICY.codeTtlMs).toISOString(),
-      attempts: 0,
-      createdAt: now.toISOString(),
-    });
-
     if (!user) return { status: 'accepted' };
     const email = user.email?.trim();
-    if (!email) return { status: 'contactAdmin' };
+    const channel = verificationChannelForPhone(phone);
+    if (channel === 'international_email' && !email) return { status: 'contactAdmin' };
 
-    await this.mailer.sendCode(email, code);
-    return { status: 'sent', maskedEmail: maskRecoveryEmail(email), expiresInSeconds: 600 };
+    const result = await verificationService.request(
+      {
+        purpose: 'password_recovery',
+        phone,
+        uid: user.uid,
+        email: email ?? null,
+        runtime: 'web',
+      },
+      requestIp,
+    );
+
+    if (result.channel === 'international_email') {
+      return {
+        status: 'sent',
+        challengeId: result.challengeId,
+        maskedEmail: maskRecoveryEmail(email!),
+        expiresInSeconds: result.expiresInSeconds,
+      };
+    }
+
+    return { status: 'accepted', challengeId: result.challengeId };
   }
 
   async verifyCode(input: RecoveryVerifyInput): Promise<RecoveryVerifyResult> {
     const phone = normalizeRecoveryPhone(input.phone);
-    if (typeof input.code !== 'string' || !/^\d{6}$/.test(input.code)) {
-      throw new Error('passwordRecoveryInvalidCode');
-    }
-    const phoneHash = this.digest(`phone:${phone}`);
-    const challenge = await this.operations.findLatestActive(phoneHash, new Date().toISOString());
-
-    if (
-      !challenge ||
-      !challenge.uid ||
-      challenge.verifiedAt ||
-      challenge.attempts >= PASSWORD_RECOVERY_POLICY.maxCodeAttempts
-    ) {
+    const user = await this.operations.getUserByPhone(phone);
+    if (!user || !input.challengeId) {
       throw new Error('passwordRecoveryInvalidCode');
     }
 
-    const candidate = this.digest(`code:${challenge.id}:${input.code}`);
-    const valid = timingSafeEqual(Buffer.from(candidate, 'hex'), Buffer.from(challenge.codeHash, 'hex'));
-    if (!valid) {
-      await this.operations.recordFailedAttempt(
-        challenge.id,
-        challenge.attempts + 1,
-        new Date().toISOString(),
-      );
+    try {
+      const result = await verificationService.verify({
+        challengeId: input.challengeId,
+        purpose: 'password_recovery',
+        phone,
+        uid: user.uid,
+        email: user.email ?? null,
+        code: input.code,
+      });
+      return { resetToken: result.verificationProof, expiresInSeconds: result.expiresInSeconds };
+    } catch {
       throw new Error('passwordRecoveryInvalidCode');
     }
-
-    const resetToken = randomBytes(32).toString('base64url');
-    await this.operations.markVerified(
-      challenge.id,
-      this.digest(`reset:${resetToken}`),
-      new Date().toISOString(),
-    );
-    return { resetToken, expiresInSeconds: 600 };
   }
 
   async resetPassword(input: RecoveryResetInput): Promise<RecoveryResetResult> {
@@ -128,21 +91,23 @@ export class PasswordRecoveryService {
       throw new Error('passwordRecoveryInvalidToken');
     }
 
-    const phoneHash = this.digest(`phone:${phone}`);
-    const challenge = await this.operations.findVerifiedByToken(
-      phoneHash,
-      this.digest(`reset:${input.resetToken}`),
-      new Date().toISOString(),
-    );
-    if (!challenge?.uid || !challenge.verifiedAt) throw new Error('passwordRecoveryInvalidToken');
+    const user = await this.operations.getUserByPhone(phone);
+    if (!user) throw new Error('passwordRecoveryInvalidToken');
+
+    try {
+      await verificationProofConsumer.consume(input.resetToken, {
+        purpose: 'password_recovery',
+        phone,
+        uid: user.uid,
+        email: user.email ?? null,
+        channel: verificationChannelForPhone(phone),
+      });
+    } catch {
+      throw new Error('passwordRecoveryInvalidToken');
+    }
 
     const hashedPassword = await hashPassword(plainPassword);
-    await this.operations.updatePasswordAndConsume(
-      challenge.uid,
-      hashedPassword,
-      challenge.id,
-      new Date().toISOString(),
-    );
+    await this.operations.updatePassword(user.uid, hashedPassword);
     return { success: true };
   }
 }

@@ -74,7 +74,7 @@ packages/data-core/src/core/database/schema.ts
 Primary table:
 
 - `users`
-- `password_recovery_challenges`
+- `verification_challenges`
 - `feature_flags`
 - `ota_releases`
 - `ota_release_audit`

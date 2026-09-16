@@ -120,7 +120,7 @@ export function runPhoneTest() {
         password: '0258',
         confirmPassword: '0258',
         email: '',
-        phoneVerified: true,
+        verificationProof: 'proof',
       }).success,
       true,
       `${phone} is a valid registration phone`,
@@ -132,7 +132,7 @@ export function runPhoneTest() {
       password: '0258',
       confirmPassword: '0258',
       email: '',
-      phoneVerified: true,
+      verificationProof: 'proof',
     }).success,
     false,
   );

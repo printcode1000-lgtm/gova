@@ -16,6 +16,7 @@ import { keyboardApi } from "./keyboard.api";
 import { locationApi } from "./location.api";
 import { networkApi } from "./network.api";
 import { notificationsApi } from "./notifications.api";
+import { verificationSmsGatewayApi } from "./verification-sms-gateway.api";
 import { otaApi } from "./ota.api";
 import { permissionsApi } from "./permissions.api";
 import { shareApi } from "./share.api";
@@ -131,6 +132,10 @@ export class NativeCore {
   static readonly onPushToken = notificationsApi.onPushToken;
   static readonly onPushNotificationReceived = notificationsApi.onPushNotificationReceived;
   static readonly onPushNotificationActionPerformed = notificationsApi.onPushNotificationActionPerformed;
+  // Verification SMS gateway (Android only)
+  static readonly configureVerificationSmsGateway = verificationSmsGatewayApi.configure;
+  static readonly isVerificationSmsGatewayConfigured = verificationSmsGatewayApi.isConfigured;
+
   static readonly listPendingInbox = notificationsApi.listPendingInbox;
   static readonly acknowledgeInbox = notificationsApi.acknowledgeInbox;
   static readonly clearInbox = notificationsApi.clearInbox;

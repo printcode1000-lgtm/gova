@@ -9,6 +9,7 @@ export interface UpdateProfileInput {
   uid: string;
   phone: string;
   email: string;
+  verificationProof?: string;
   providerAccountEnabled?: boolean;
   currentPassword?: string;
   newPassword?: string;

@@ -16,3 +16,12 @@ export {
   signaturesMatch,
   verifyEnvelope,
 } from './domain/signed-envelope';
+export type {
+  AsymmetricEnvelopeOptions,
+  AsymmetricExpiringPayload,
+  AsymmetricVerifyOptions,
+} from './domain/asymmetric-envelope';
+export {
+  signAsymmetricEnvelope,
+  verifyAsymmetricEnvelope,
+} from './domain/asymmetric-envelope';

@@ -18,6 +18,23 @@ import { createNotificationId } from "../domain/create-notification-id";
 import { NotificationProviderRegistry } from "./providers/notification-provider-registry.server";
 import type { NotificationProviderPayload } from "./providers/notification-provider.interface";
 
+/**
+ * Narrows a recipient's registrations to the platforms a send asked for.
+ *
+ * No `platforms` means every device, which is what a user-visible notification
+ * wants. A send that names them is addressing a device capability, and a
+ * recipient with no matching device reports `no_tokens` — the caller decides
+ * whether that is an outage.
+ */
+export function selectTokensForPlatforms(
+  tokens: RegisteredNotificationToken[],
+  platforms: SendNotificationToUsersInput["platforms"],
+): RegisteredNotificationToken[] {
+  if (!platforms || platforms.length === 0) return tokens;
+  const allowed = new Set(platforms);
+  return tokens.filter((token) => allowed.has(token.platform));
+}
+
 export class NotificationSendService {
   constructor(
     private readonly providers = new NotificationProviderRegistry(),
@@ -58,7 +75,7 @@ export class NotificationSendService {
         if (!pushEnabledUids.has(uid)) {
           return { uid, tokenCount: 0, status: "muted" };
         }
-        const tokens = tokensByUid[uid] ?? [];
+        const tokens = selectTokensForPlatforms(tokensByUid[uid] ?? [], input.platforms);
         if (tokens.length === 0) {
           return { uid, tokenCount: 0, status: "no_tokens" };
         }

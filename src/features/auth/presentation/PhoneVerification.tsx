@@ -22,6 +22,10 @@ interface PhoneVerificationProps {
   error?: string;
   onPhoneChange?: (phone: string) => void;
   onVerifiedChange?: (verified: boolean) => void;
+  onVerificationProofChange?: (verificationProof: string) => void;
+  purpose?: 'registration' | 'primary_phone_change' | 'password_recovery';
+  uid?: string | null;
+  email?: string | null;
   // Form mode (for registration) - if not provided, uses useFormContext
   useForm?: boolean;
 }
@@ -32,6 +36,10 @@ export function PhoneVerification({ id,
   error: propError,
   onPhoneChange,
   onVerifiedChange,
+  onVerificationProofChange,
+  purpose = 'registration',
+  uid,
+  email,
   useForm = false,
 }: PhoneVerificationProps & { id?: string } = {}) {
   const { t, locale } = useTranslation();
@@ -40,14 +48,14 @@ export function PhoneVerification({ id,
   // Form mode (registration)
   const formContext = useForm ? useFormContext<RegistrationFormData>() : null;
   const formPhone = formContext?.watch('phone') ?? '';
-  const formPhoneVerified = formContext?.watch('phoneVerified') ?? false;
+  const formVerificationProof = formContext?.watch('verificationProof') ?? '';
   const formSetValue = formContext?.setValue;
   const formTrigger = formContext?.trigger;
 
   // Determine which mode to use
   const isFormMode = useForm && formContext;
   const phone = isFormMode ? formPhone : propPhone ?? '';
-  const phoneVerified = isFormMode ? formPhoneVerified : propVerified ?? false;
+  const phoneVerified = isFormMode ? Boolean(formVerificationProof) : propVerified ?? false;
   const error = isFormMode ? undefined : propError;
 
   const {
@@ -58,17 +66,25 @@ export function PhoneVerification({ id,
     isVerifying,
     countdown,
     otpError,
+    channel,
     handleSendOtp,
     handleVerifyOtp,
     handleEditPhone,
-  } = usePhoneVerification();
+  } = usePhoneVerification(purpose, uid, email);
 
-  const markVerified = () => {
+  const codeSentToEmail = channel === 'international_email';
+  const destinationLabel = codeSentToEmail
+    ? (email ?? '').trim()
+    : formatPhoneDisplay(phone);
+  const sentToText = codeSentToEmail ? t('auth.phone.sentToEmail') : t('auth.phone.sentTo');
+
+  const markVerified = (verificationProof: string) => {
     if (isFormMode && formSetValue) {
-      formSetValue('phoneVerified', true, { shouldValidate: true });
+      formSetValue('verificationProof', verificationProof, { shouldValidate: true });
     } else if (onVerifiedChange) {
       onVerifiedChange(true);
     }
+    onVerificationProofChange?.(verificationProof);
   };
 
   const handleSendOtpWrapper = async () => {
@@ -85,7 +101,7 @@ export function PhoneVerification({ id,
           return;
         }
       }
-      await handleSendOtp(phone, markVerified);
+      await handleSendOtp(phone);
     } catch (error) {
       reportPreAuthFailure('start-phone-verification', error);
     }
@@ -93,7 +109,7 @@ export function PhoneVerification({ id,
 
   const handleVerifyOtpWrapper = async () => {
     try {
-      await handleVerifyOtp(otp, markVerified);
+      await handleVerifyOtp(otp, phone, markVerified);
     } catch (error) {
       reportPreAuthFailure('complete-phone-verification', error);
     }
@@ -102,19 +118,21 @@ export function PhoneVerification({ id,
   const handleEditPhoneWrapper = () => {
     handleEditPhone();
     if (isFormMode && formSetValue) {
-      formSetValue('phoneVerified', false);
+      formSetValue('verificationProof', '');
     } else if (onVerifiedChange) {
       onVerifiedChange(false);
     }
+    onVerificationProofChange?.('');
   };
 
   const handlePhoneChange = (value: string) => {
     if (isFormMode && formSetValue) {
       formSetValue('phone', value);
-      if (phoneVerified) formSetValue('phoneVerified', false);
+      if (phoneVerified) formSetValue('verificationProof', '');
     } else if (onPhoneChange) {
       onPhoneChange(value);
     }
+    if (phoneVerified) onVerificationProofChange?.('');
   };
 
   const canSend = canSendPhoneOtp(phone);
@@ -143,7 +161,7 @@ export function PhoneVerification({ id,
                   value={field.value}
                   onChange={(next) => {
                     field.onChange(next);
-                    if (phoneVerified) formSetValue?.('phoneVerified', false);
+                    if (phoneVerified) formSetValue?.('verificationProof', '');
                   }}
                   onKeyDown={(event) => {
                     if (event.key === 'Enter' && !phoneVerified && !otpSent) {
@@ -208,8 +226,8 @@ export function PhoneVerification({ id,
             <div id='features-auth-presentation-phoneverification-div-15-dscmxt' className="space-y-1">
               <p id='features-auth-presentation-phoneverification-text-16-xebcwm' className="text-sm font-semibold text-on-surface">{t('auth.phone.enterOtp')}</p>
               <p id='features-auth-presentation-phoneverification-text-17-wkh9mv' className="text-xs text-on-surface-variant">
-                {t('auth.phone.sentTo')}{' '}
-                <span id='features-auth-presentation-phoneverification-text-18-vqmncc' className="font-medium text-on-surface">{formatPhoneDisplay(phone)}</span>
+                {sentToText}{' '}
+                <span id='features-auth-presentation-phoneverification-text-18-vqmncc' className="font-medium text-on-surface">{destinationLabel}</span>
               </p>
             </div>
 
@@ -227,7 +245,7 @@ export function PhoneVerification({ id,
               <button id='features-auth-presentation-phoneverification-button-21-da01ho'
                 type="button"
                 onClick={() => void handleVerifyOtpWrapper()}
-                disabled={otp.length !== 4 || isVerifying}
+                disabled={otp.length !== 6 || isVerifying}
                 className="flex-1 auth-cta h-10 text-sm"
               >
                 {isVerifying ? t('auth.phone.verifying') : t('auth.phone.verifyOtp')}
@@ -335,9 +353,9 @@ export function PhoneVerification({ id,
               {t('auth.phone.enterOtp')}
             </p>
             <p id='features-auth-presentation-phoneverification-text-39-6waurh' className="text-[10px] sm:text-xs text-on-surface-variant">
-              {t('auth.phone.sentTo')}{' '}
+              {sentToText}{' '}
               <span id='features-auth-presentation-phoneverification-text-40-rcz1tl' className="font-medium text-on-surface">
-                {formatPhoneDisplay(phone)}
+                {destinationLabel}
               </span>
             </p>
           </div>
@@ -357,7 +375,7 @@ export function PhoneVerification({ id,
             <button id='features-auth-presentation-phoneverification-button-43-fs1i65'
               type="button"
               onClick={() => void handleVerifyOtpWrapper()}
-              disabled={otp.length !== 4 || isVerifying}
+              disabled={otp.length !== 6 || isVerifying}
               className="auth-cta h-9 sm:h-10 flex-1 text-xs sm:text-sm"
             >
               {isVerifying

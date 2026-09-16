@@ -56,6 +56,27 @@
             </intent-filter>
         </service>
 
+        <!--
+            Verification SMS gateway result.
+
+            SMS Sender is asked to send a verification message through an explicit
+            broadcast; this receiver takes back the send result and reports it as a
+            dispatch status. Exported because the sender is another application,
+            and harmless to expose: the extras it accepts are a request id and a
+            status, nothing that can cause a send, and a status report can never
+            make an OTP valid — only the server decides that.
+
+            The currently installed SMS Sender build emits no result broadcast, so
+            this receiver stays dormant until an authenticated build adds one.
+        -->
+        <receiver
+            android:name="hgh.asol.app.AsolVerificationSmsResultReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.hesham.smssender.action.SEND_RESULT" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode|navigation|density"
             android:name=".MainActivity"
@@ -215,5 +236,13 @@
             <action android:name="android.intent.action.VIEW" />
             <data android:mimeType="*/*" />
         </intent>
+        <!--
+            The verification SMS gateway. From Android 11 package visibility is
+            filtered by default, and an explicit broadcast to another application's
+            receiver needs the package declared here or it is silently dropped.
+            Declaring it grants no permission: SMS Sender still owns whether it
+            accepts the send, and this application never gains SEND_SMS.
+        -->
+        <package android:name="com.hesham.smssender" />
     </queries>
 </manifest>

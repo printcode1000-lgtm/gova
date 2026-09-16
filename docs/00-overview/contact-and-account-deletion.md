@@ -88,7 +88,7 @@ no request performs.
 
 ### Permanently Deleted Data
 
-- User record, password (scrypt), password recovery challenges, and device notification tokens.
+- User record, password (scrypt), verification and password recovery challenges, and device notification tokens.
 - Profile, social links, addresses, photos, specialties, seller discounts, pharmacy catalog overrides, working hours, and associated settings.
 - Products, product images, reviews, interactions, and followings owned by the user.
 - Custom order images uploaded by the user from storage, with personal references scrubbed from the order record.

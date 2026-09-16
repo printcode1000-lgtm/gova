@@ -285,6 +285,8 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:trending-ribbon-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:turso-read-retry` | `Tooling` | 1 |  | 0 |
 | `npm run test:vercel-deploy-core` | `Tooling`, `Web` | 3 |  | 0 |
+| `npm run test:verification-core` | `Tooling` | 2 |  | 0 |
+| `npm run test:verification-service` | `Tooling` | 1 |  | 2 |
 | `npm run typecheck` | `Tooling` | 0 |  | 0 |
 | `npm run validate-storage-profiles` | `Tooling` | 1 |  | 0 |
 | `npm run validate:app-versions` | `Tooling` | 1 |  | 0 |

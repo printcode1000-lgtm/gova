@@ -27,6 +27,7 @@ public final class AsolNativeCore {
         activity.registerPlugin(AppSettingsPlugin.class);
         activity.registerPlugin(AsolNotificationInboxPlugin.class);
         activity.registerPlugin(NativeCrashPlugin.class);
+        activity.registerPlugin(AsolVerificationSmsPlugin.class);
         NativeCrashReporter.install();
     }
 

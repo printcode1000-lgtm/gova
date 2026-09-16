@@ -11,7 +11,7 @@ Canonical inventory of every sealed `@asol/*` package in `packages/`.
 
 ## Scope
 
-Covers all 48 sealed packages under `packages/`. Does not cover `services/*/generated/` mirrors.
+Covers all 49 sealed packages under `packages/`. Does not cover `services/*/generated/` mirrors.
 
 ## Source of Truth
 
@@ -154,7 +154,7 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Folder** | `packages/data-core/` |
 | **Purpose** | Database access, sharding, and domain repositories |
 | **Architectural Layer** | capability |
-| **Public Exports** | `.` · `./account-deletion` · `./advertisements` · `./auth` · `./auth/entities` · `./browser` · `./composition` · `./control-ota` · `./control-release-state` · `./control-system-logs` · `./feature-flags` · `./follow` · `./follow/entities` · `./marketplace-orders` · `./notifications` · `./ota` · `./ota-runtime` · `./password-recovery` · `./pharmacy-profile-catalog` · `./pharmacy-profile-catalog/entities` · `./product` · `./product-search` · `./product-search-fields` · `./product-search/entities` · `./product/entities` · `./profile` · `./profile/entities` · `./provisioning` · `./runtime-config` · `./seller-discounts` · `./seller-discounts/entities` · `./super-admin` · `./system-logs` · `./telemetry` · `./tooling` |
+| **Public Exports** | `.` · `./account-deletion` · `./advertisements` · `./auth` · `./auth/entities` · `./browser` · `./composition` · `./control-ota` · `./control-release-state` · `./control-system-logs` · `./feature-flags` · `./follow` · `./follow/entities` · `./marketplace-orders` · `./notifications` · `./ota` · `./ota-runtime` · `./password-recovery` · `./pharmacy-profile-catalog` · `./pharmacy-profile-catalog/entities` · `./product` · `./product-search` · `./product-search-fields` · `./product-search/entities` · `./product/entities` · `./profile` · `./profile/entities` · `./provisioning` · `./runtime-config` · `./seller-discounts` · `./seller-discounts/entities` · `./super-admin` · `./system-logs` · `./telemetry` · `./tooling` · `./verification` |
 | **Infrastructure Privileges** | `@libsql/client` |
 | **May Import App (`@/`)** | no |
 | **Test Gate** | `npm run test:data-core` |
@@ -692,8 +692,22 @@ This Markdown file is **generated** and verified by `architecture:check`.
 | **Test Gate** | `npm run test:vercel-deploy-core` |
 | **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
 
+### @asol/verification-core
+
+| Field | Value |
+|---|---|
+| **Package** | `@asol/verification-core` |
+| **Folder** | `packages/verification-core/` |
+| **Purpose** | Purpose-bound account verification challenges and proof contracts |
+| **Architectural Layer** | capability |
+| **Public Exports** | `.` · `./server` |
+| **Infrastructure Privileges** | none |
+| **May Import App (`@/`)** | no |
+| **Test Gate** | `npm run test:verification-core` |
+| **Canonical Documentation** | [capability-map.md](./capability-map.md) · [module-isolation-rules.md](../02-packages/module-isolation-rules.md) |
+
 ## Counts
 
 | Metric | Value |
 |---|---|
-| Packages | 48 |
+| Packages | 49 |

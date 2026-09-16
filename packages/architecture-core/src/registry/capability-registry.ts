@@ -460,6 +460,14 @@ export const CAPABILITY_PACKAGES: readonly CapabilityPackage[] = [
     vendorModules: ['@vercel/sandbox'],
     mayImportApp: false,
   },
+  {
+    folder: 'verification-core',
+    name: '@asol/verification-core',
+    owns: 'Purpose-bound account verification challenges and proof contracts',
+    layer: 'capability',
+    vendorModules: [],
+    mayImportApp: false,
+  },
 ] as const;
 
 /**

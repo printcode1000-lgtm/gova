@@ -5,6 +5,7 @@ export {
   getAppLinkAssociationConfig,
   listLibsqlDatabaseUrlKeys,
   getPasswordRecoveryConfig,
+  getVerificationConfig,
   getFirebaseAdminServiceAccount,
   getAsolSessionSigningSecret,
   getApnsServerConfig,

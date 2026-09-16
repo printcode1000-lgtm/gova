@@ -206,6 +206,12 @@
       "@asol/native-core": [
         "./packages/native-core/src/index.ts"
       ],
+      "@asol/verification-core": [
+        "./packages/verification-core/src/index.ts"
+      ],
+      "@asol/verification-core/server": [
+        "./packages/verification-core/src/server.ts"
+      ],
       "@asol/notifications-composition": [
         "./packages/notifications-composition/src/index.ts"
       ],

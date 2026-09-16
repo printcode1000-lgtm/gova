@@ -1,7 +1,7 @@
 export type RecoveryRequestResult =
-  | { status: 'sent'; maskedEmail: string; expiresInSeconds: number }
+  | { status: 'sent'; challengeId: string; maskedEmail: string; expiresInSeconds: number }
   | { status: 'contactAdmin' }
-  | { status: 'accepted' };
+  | { status: 'accepted'; challengeId?: string };
 
 export interface RecoveryVerifyResult {
   resetToken: string;
@@ -17,6 +17,7 @@ export interface RecoveryRequestInput {
 }
 
 export interface RecoveryVerifyInput {
+  challengeId: string;
   phone: string;
   code: string;
 }

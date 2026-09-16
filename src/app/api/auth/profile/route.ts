@@ -14,6 +14,7 @@ export async function PUT(request: Request) {
         phone: body.phone,
         email: body.email,
         providerAccountEnabled: body.providerAccountEnabled,
+        verificationProof: body.verificationProof,
         currentPassword: body.currentPassword,
         newPassword: body.newPassword,
         sessionToken,

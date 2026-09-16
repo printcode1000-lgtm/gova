@@ -42,8 +42,8 @@ npm run dependencies:install
 ```
 
    On Windows this avoids npm's erroneous `embedded local database driver@13` rebuild while
-   still executing and validating the bundled binary. See
-   [npm-ci-embedded local database driver-python-windows.md](./npm-ci-embedded local database driver-python-windows.md).
+   still executing and validating the bundled binary. See the installation
+   policy in [technologies.md](../../00-overview/technologies.md).
 2. Confirm every workspace is linked, then re-run the build:
 
 ```powershell

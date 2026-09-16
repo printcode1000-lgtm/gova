@@ -181,7 +181,7 @@ silently remain on an older framework release.
    the `esbuild` and `unrs-resolver` tool binaries, and requires `npm ls --all`
    to pass. On other
    platforms it uses ordinary `npm ci`. See
-   `docs/08-troubleshooting/problems/npm-ci-embedded local database driver-python-windows.md`.
+   the installation policy below.
 3. The approved install scripts remain pinned in `allowScripts` for
    `embedded local database driver`, `esbuild`, and `unrs-resolver`. After install,
    `node_modules/@asol/*` must cover every `packages/*` workspace — see

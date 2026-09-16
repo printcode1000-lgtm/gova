@@ -671,6 +671,14 @@ The `/notifications` page filters by `all`, `unread`, and every category:
 `orders`, `chat`, `offers`, `payment`, and `system`. Shipping-quote and
 delivery-plan notifications are published under `offers`.
 
+## Platform Targeting
+
+`SendNotificationToUsersInput.platforms` restricts a send to named device platforms (`web`, `android`, `ios`). Omitting it — the normal case — delivers to every registered device of every recipient.
+
+It exists for a send that addresses a *device capability* rather than a person. The verification SMS gateway is the Super Admin's Android phone, so the verification dispatch signal sets `["android"]`: waking their iPhone for a signal it cannot act on would be noise at best. `selectTokensForPlatforms` applies the filter in both delivery paths — `NotificationSendService.sendToUsersLocally` and the recipient-token resolver the native courier uses — and the field travels inside the signed grant, so a courier cannot widen it back.
+
+A recipient with no matching device reports `no_tokens`. Whether that is an outage is the caller's decision: for verification it is `verificationSmsGatewayUnavailable`, a retriable failure that never falls back to another platform. See [Unified Verification System](./unified-verification-system.md).
+
 ## Priority
 
 Supported priorities:

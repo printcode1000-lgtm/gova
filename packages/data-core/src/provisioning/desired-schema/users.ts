@@ -295,94 +295,36 @@ export const usersDesiredSchema: DatabaseSchema = {
         "uniqueConstraints": []
       }
     },
-    "password_recovery_challenges": {
-      "name": "password_recovery_challenges",
-      "createSql": "CREATE TABLE `password_recovery_challenges` ( `id` text PRIMARY KEY NOT NULL, `phone_hash` text NOT NULL, `uid` text, `code_hash` text NOT NULL, `reset_token_hash` text, `request_ip_hash` text NOT NULL, `expires_at` text NOT NULL, `verified_at` text, `consumed_at` text, `attempts` integer DEFAULT 0 NOT NULL, `created_at` text NOT NULL, `last_attempt_at` text )",
+    "verification_challenges": {
+      "name": "verification_challenges",
+      "createSql": "CREATE TABLE `verification_challenges` ( `id` text PRIMARY KEY NOT NULL, `purpose` text NOT NULL, `channel` text NOT NULL, `state` text NOT NULL, `uid` text, `phone_e164` text NOT NULL, `email` text, `code_hash` text NOT NULL, `proof_nonce_hash` text, `request_ip_hash` text NOT NULL, `requester_device_hash` text, `expires_at` text NOT NULL, `attempts` integer DEFAULT 0 NOT NULL, `resend_count` integer DEFAULT 0 NOT NULL, `created_at` text NOT NULL, `updated_at` text NOT NULL, `verified_at` text, `consumed_at` text, `cancelled_at` text, `dispatch_id` text, `dispatch_nonce_hash` text, `dispatch_expires_at` text, `dispatch_redeemed_at` text, `dispatch_status` text, `dispatch_failure_code` text, `last_attempt_at` text )",
       "columns": [
-        {
-          "name": "id",
-          "type": "TEXT",
-          "notNull": true,
-          "defaultValue": null,
-          "primaryKeyPosition": 1
-        },
-        {
-          "name": "phone_hash",
-          "type": "TEXT",
-          "notNull": true,
-          "defaultValue": null,
-          "primaryKeyPosition": 0
-        },
-        {
-          "name": "uid",
-          "type": "TEXT",
-          "notNull": false,
-          "defaultValue": null,
-          "primaryKeyPosition": 0
-        },
-        {
-          "name": "code_hash",
-          "type": "TEXT",
-          "notNull": true,
-          "defaultValue": null,
-          "primaryKeyPosition": 0
-        },
-        {
-          "name": "reset_token_hash",
-          "type": "TEXT",
-          "notNull": false,
-          "defaultValue": null,
-          "primaryKeyPosition": 0
-        },
-        {
-          "name": "request_ip_hash",
-          "type": "TEXT",
-          "notNull": true,
-          "defaultValue": null,
-          "primaryKeyPosition": 0
-        },
-        {
-          "name": "expires_at",
-          "type": "TEXT",
-          "notNull": true,
-          "defaultValue": null,
-          "primaryKeyPosition": 0
-        },
-        {
-          "name": "verified_at",
-          "type": "TEXT",
-          "notNull": false,
-          "defaultValue": null,
-          "primaryKeyPosition": 0
-        },
-        {
-          "name": "consumed_at",
-          "type": "TEXT",
-          "notNull": false,
-          "defaultValue": null,
-          "primaryKeyPosition": 0
-        },
-        {
-          "name": "attempts",
-          "type": "INTEGER",
-          "notNull": true,
-          "defaultValue": "0",
-          "primaryKeyPosition": 0
-        },
-        {
-          "name": "created_at",
-          "type": "TEXT",
-          "notNull": true,
-          "defaultValue": null,
-          "primaryKeyPosition": 0
-        },
-        {
-          "name": "last_attempt_at",
-          "type": "TEXT",
-          "notNull": false,
-          "defaultValue": null,
-          "primaryKeyPosition": 0
-        }
+        { "name": "id", "type": "TEXT", "notNull": true, "defaultValue": null, "primaryKeyPosition": 1 },
+        { "name": "purpose", "type": "TEXT", "notNull": true, "defaultValue": null, "primaryKeyPosition": 0 },
+        { "name": "channel", "type": "TEXT", "notNull": true, "defaultValue": null, "primaryKeyPosition": 0 },
+        { "name": "state", "type": "TEXT", "notNull": true, "defaultValue": null, "primaryKeyPosition": 0 },
+        { "name": "uid", "type": "TEXT", "notNull": false, "defaultValue": null, "primaryKeyPosition": 0 },
+        { "name": "phone_e164", "type": "TEXT", "notNull": true, "defaultValue": null, "primaryKeyPosition": 0 },
+        { "name": "email", "type": "TEXT", "notNull": false, "defaultValue": null, "primaryKeyPosition": 0 },
+        { "name": "code_hash", "type": "TEXT", "notNull": true, "defaultValue": null, "primaryKeyPosition": 0 },
+        { "name": "proof_nonce_hash", "type": "TEXT", "notNull": false, "defaultValue": null, "primaryKeyPosition": 0 },
+        { "name": "request_ip_hash", "type": "TEXT", "notNull": true, "defaultValue": null, "primaryKeyPosition": 0 },
+        { "name": "requester_device_hash", "type": "TEXT", "notNull": false, "defaultValue": null, "primaryKeyPosition": 0 },
+        { "name": "expires_at", "type": "TEXT", "notNull": true, "defaultValue": null, "primaryKeyPosition": 0 },
+        { "name": "attempts", "type": "INTEGER", "notNull": true, "defaultValue": "0", "primaryKeyPosition": 0 },
+        { "name": "resend_count", "type": "INTEGER", "notNull": true, "defaultValue": "0", "primaryKeyPosition": 0 },
+        { "name": "created_at", "type": "TEXT", "notNull": true, "defaultValue": null, "primaryKeyPosition": 0 },
+        { "name": "updated_at", "type": "TEXT", "notNull": true, "defaultValue": null, "primaryKeyPosition": 0 },
+        { "name": "verified_at", "type": "TEXT", "notNull": false, "defaultValue": null, "primaryKeyPosition": 0 },
+        { "name": "consumed_at", "type": "TEXT", "notNull": false, "defaultValue": null, "primaryKeyPosition": 0 },
+        { "name": "cancelled_at", "type": "TEXT", "notNull": false, "defaultValue": null, "primaryKeyPosition": 0 },
+        { "name": "dispatch_id", "type": "TEXT", "notNull": false, "defaultValue": null, "primaryKeyPosition": 0 },
+        { "name": "dispatch_nonce_hash", "type": "TEXT", "notNull": false, "defaultValue": null, "primaryKeyPosition": 0 },
+        { "name": "dispatch_expires_at", "type": "TEXT", "notNull": false, "defaultValue": null, "primaryKeyPosition": 0 },
+        { "name": "dispatch_redeemed_at", "type": "TEXT", "notNull": false, "defaultValue": null, "primaryKeyPosition": 0 },
+        { "name": "dispatch_status", "type": "TEXT", "notNull": false, "defaultValue": null, "primaryKeyPosition": 0 },
+        { "name": "dispatch_failure_code", "type": "TEXT", "notNull": false, "defaultValue": null, "primaryKeyPosition": 0 },
+        { "name": "last_attempt_at", "type": "TEXT", "notNull": false, "defaultValue": null, "primaryKeyPosition": 0 }
       ],
       "foreignKeys": [],
       "constraints": {
@@ -500,35 +442,58 @@ export const usersDesiredSchema: DatabaseSchema = {
       ],
       "where": null
     },
-    "password_recovery_phone_created_idx": {
-      "name": "password_recovery_phone_created_idx",
-      "tableName": "password_recovery_challenges",
-      "sql": "CREATE INDEX `password_recovery_phone_created_idx` ON `password_recovery_challenges` (`phone_hash`,`created_at`)",
+    "verification_phone_purpose_idx": {
+      "name": "verification_phone_purpose_idx",
+      "tableName": "verification_challenges",
+      "sql": "CREATE INDEX `verification_phone_purpose_idx` ON `verification_challenges` (`phone_e164`,`purpose`,`created_at`)",
       "unique": false,
       "columns": [
-        "phone_hash",
+        "phone_e164",
+        "purpose",
         "created_at"
       ],
       "where": null
     },
-    "password_recovery_ip_created_idx": {
-      "name": "password_recovery_ip_created_idx",
-      "tableName": "password_recovery_challenges",
-      "sql": "CREATE INDEX `password_recovery_ip_created_idx` ON `password_recovery_challenges` (`request_ip_hash`,`created_at`)",
+    "verification_uid_purpose_idx": {
+      "name": "verification_uid_purpose_idx",
+      "tableName": "verification_challenges",
+      "sql": "CREATE INDEX `verification_uid_purpose_idx` ON `verification_challenges` (`uid`,`purpose`,`created_at`)",
+      "unique": false,
+      "columns": [
+        "uid",
+        "purpose",
+        "created_at"
+      ],
+      "where": null
+    },
+    "verification_expires_at_idx": {
+      "name": "verification_expires_at_idx",
+      "tableName": "verification_challenges",
+      "sql": "CREATE INDEX `verification_expires_at_idx` ON `verification_challenges` (`expires_at`)",
+      "unique": false,
+      "columns": [
+        "expires_at"
+      ],
+      "where": null
+    },
+    "verification_dispatch_id_unique": {
+      "name": "verification_dispatch_id_unique",
+      "tableName": "verification_challenges",
+      "sql": "CREATE UNIQUE INDEX `verification_dispatch_id_unique` ON `verification_challenges` (`dispatch_id`)",
+      "unique": true,
+      "columns": [
+        "dispatch_id"
+      ],
+      "where": null
+    },
+    "verification_request_ip_idx": {
+      "name": "verification_request_ip_idx",
+      "tableName": "verification_challenges",
+      "sql": "CREATE INDEX `verification_request_ip_idx` ON `verification_challenges` (`request_ip_hash`,`created_at`)",
       "unique": false,
       "columns": [
         "request_ip_hash",
         "created_at"
-      ],
-      "where": null
-    },
-    "password_recovery_reset_token_idx": {
-      "name": "password_recovery_reset_token_idx",
-      "tableName": "password_recovery_challenges",
-      "sql": "CREATE INDEX `password_recovery_reset_token_idx` ON `password_recovery_challenges` (`reset_token_hash`)",
-      "unique": false,
-      "columns": [
-        "reset_token_hash"
       ],
       "where": null
     },

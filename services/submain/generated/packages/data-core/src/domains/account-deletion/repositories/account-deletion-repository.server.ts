@@ -223,7 +223,7 @@ export class AccountDeletionRepository {
 
   async deleteMain(uid: string): Promise<void> {
     await this.deleteNotifications(uid);
-    await usersDataSource.execute("DELETE FROM password_recovery_challenges WHERE uid = ?", [uid]);
+    await usersDataSource.execute("DELETE FROM verification_challenges WHERE uid = ?", [uid]);
     await usersDataSource.execute(
       "UPDATE ota_releases SET approved_by_uid = NULL WHERE approved_by_uid = ?",
       [uid],

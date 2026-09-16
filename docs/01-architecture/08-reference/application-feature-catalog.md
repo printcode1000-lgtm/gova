@@ -11,7 +11,7 @@ Canonical inventory of every application feature under `src/features/`.
 
 ## Scope
 
-All 43 registered features. Sealed packages are listed in [package-catalog.md](./package-catalog.md).
+All 44 registered features. Sealed packages are listed in [package-catalog.md](./package-catalog.md).
 
 ## Source of Truth
 
@@ -80,8 +80,8 @@ src/
 | **Owns** | Authentication, session, registration, and account deletion UI/services |
 | **Public Doors** | `@/features/auth` · `@/features/auth/ui` · `@/features/auth/server` · `@/features/auth/session` |
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
-| **Capability Owners** | `@asol/auth-core`, `@asol/data-core` |
-| **Permitted Feature Dependencies** | `app-reset`, `notifications`, `page-save`, `storage`, `system-logs` |
+| **Capability Owners** | `@asol/auth-core`, `@asol/data-core`, `@asol/verification-core` |
+| **Permitted Feature Dependencies** | `app-reset`, `notifications`, `page-save`, `storage`, `system-logs`, `verification` |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### cart
@@ -354,7 +354,7 @@ src/
 | **Public Doors** | `@/features/password-recovery` · `@/features/password-recovery/ui` · `@/features/password-recovery/server` |
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | _(none)_ |
-| **Permitted Feature Dependencies** | `auth` |
+| **Permitted Feature Dependencies** | `auth`, `verification` |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### pharmacy-profile-catalog
@@ -406,7 +406,7 @@ src/
 | **Public Doors** | `@/features/profile` · `@/features/profile/ui` · `@/features/profile/server` |
 | **Runtime Targets** | `web`, `android`, `ios`, `server` |
 | **Capability Owners** | `@asol/seller-card-core` |
-| **Permitted Feature Dependencies** | `advertisements`, `auth`, `categories`, `follow`, `location`, `page-save`, `page-snapshot`, `product`, `profile-products`, `profile-working-hours`, `seller-discounts`, `sharing`, `specialty-chat`, `storage`, `system-logs` |
+| **Permitted Feature Dependencies** | `advertisements`, `auth`, `categories`, `follow`, `location`, `page-save`, `page-snapshot`, `product`, `profile-products`, `profile-working-hours`, `seller-discounts`, `sharing`, `specialty-chat`, `storage`, `system-logs`, `verification` |
 | **Surfaces** | browser=true · server=true · ui=true |
 
 ### profile-products
@@ -565,6 +565,19 @@ src/
 | **Permitted Feature Dependencies** | `auth`, `page-save` |
 | **Surfaces** | browser=true · server=true · ui=true |
 
+### verification
+
+| Field | Value |
+|---|---|
+| **Feature** | `verification` |
+| **Source** | `src/features/verification/` |
+| **Owns** | Purpose-bound account verification challenges and proof consumption |
+| **Public Doors** | `@/features/verification` · `@/features/verification/server` · `@/features/verification/ports` |
+| **Runtime Targets** | `web`, `android`, `ios`, `server` |
+| **Capability Owners** | `@asol/verification-core`, `@asol/data-core` |
+| **Permitted Feature Dependencies** | `notifications` |
+| **Surfaces** | browser=true · server=true · ui=false |
+
 ### vehicle-catalog
 
 | Field | Value |
@@ -595,7 +608,7 @@ src/
 
 | Metric | Value |
 |---|---|
-| Application features | 43 |
+| Application features | 44 |
 | Features with UI door | 31 |
-| Features with server door | 25 |
-| Sealed capability packages | 48 |
+| Features with server door | 26 |
+| Sealed capability packages | 49 |

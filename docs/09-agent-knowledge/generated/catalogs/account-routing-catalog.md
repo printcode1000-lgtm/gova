@@ -27,7 +27,7 @@ is listed as `gova/dev` and answered wherever the request lands.
 | `products` | `asol-products` | `NEXT_PUBLIC_ASOL_PRODUCTS_URL` | 3 | 3 | 0 |
 | `profiles` | `asol-profiles` | `NEXT_PUBLIC_ASOL_PROFILES_URL` | 7 | 7 | 0 |
 | `sub2main` | `asol-sub2main` | `NEXT_PUBLIC_ASOL_SUB2MAIN_URL` | 28 | 28 | 0 |
-| `submain` | `asol-submain` | `NEXT_PUBLIC_ASOL_SUBMAIN_URL` | 47 | 46 | 1 |
+| `submain` | `asol-submain` | `NEXT_PUBLIC_ASOL_SUBMAIN_URL` | 52 | 51 | 1 |
 
 ## `control`
 
@@ -208,3 +208,8 @@ routes, which are omitted from the production artifact entirely.
 | `POST` | `/api/specialty-chat/profile-conversations` | shipped |
 | `POST` | `/api/specialty-chat/receipts` | shipped |
 | `POST` | `/api/specialty-chat/requests` | shipped |
+| `POST` | `/api/verification/admin-sms/redeem` | shipped |
+| `POST` | `/api/verification/admin-sms/status` | shipped |
+| `POST` | `/api/verification/request` | shipped |
+| `POST` | `/api/verification/resend` | shipped |
+| `POST` | `/api/verification/verify` | shipped |

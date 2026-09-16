@@ -177,6 +177,17 @@ export class NativePushService {
 
       const token = await this.buildDeviceToken(platform, tokenValue);
       this.lastTokenValue = tokenValue;
+      // An Android registration is what makes this device addressable as the
+      // verification SMS gateway, so the native side is told where to redeem a
+      // dispatch at the same moment. Advisory: a device that is not the Super
+      // Admin's is never sent a dispatch, and a failure here cannot affect push.
+      if (platform === "android") {
+        void NativeCore.configureVerificationSmsGateway().then((result) => {
+          if (!result.ok) {
+            notificationLog.warn("The verification SMS gateway origin could not be configured.", result.error);
+          }
+        });
+      }
       return token;
     } finally {
       this.registering = false;

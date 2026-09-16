@@ -137,6 +137,9 @@
       "@asol/data-core/password-recovery": [
         "./generated/packages/data-core/src/domains/password-recovery/index.server.ts"
       ],
+      "@asol/data-core/verification": [
+        "./generated/packages/data-core/src/domains/verification/index.server.ts"
+      ],
       "@asol/data-core/pharmacy-profile-catalog": [
         "./generated/packages/data-core/src/domains/pharmacy-profile-catalog/index.server.ts"
       ],
