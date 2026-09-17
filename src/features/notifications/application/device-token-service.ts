@@ -195,10 +195,28 @@ export class DeviceTokenService {
     const safeUid = assertUid(uid);
     const safePhone = assertPhone(phone);
     if (nativePushService.isNativePush()) {
-      await this.register(safeUid, safePhone);
+      const token = await this.register(safeUid, safePhone);
+      if (!token) {
+        throw new Error("notificationRegistrationFailed");
+      }
       return;
     }
     await webPushBrowserService.subscribe(safeUid, safePhone);
+  }
+
+  /**
+   * Repair a native registration whose local opt-in flag survived while its
+   * server row did not (deployment rollback, token rotation, or a failed prior
+   * POST). Permission + a local flag are not proof of addressability, so this
+   * deliberately re-registers with FCM/APNs and upserts the server row.
+   */
+  async reconcile(uid: string, phone: string): Promise<DeviceToken | null> {
+    const safeUid = assertUid(uid);
+    const safePhone = assertPhone(phone);
+    if (!nativePushService.isNativePush()) return null;
+    if (!(await nativePushService.isEnabled())) return null;
+    if ((await nativePushService.permissionState()) !== "granted") return null;
+    return this.register(safeUid, safePhone);
   }
 
   getPlatform(): "android" | "ios" | "web" {

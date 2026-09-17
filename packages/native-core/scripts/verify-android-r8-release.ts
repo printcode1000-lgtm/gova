@@ -39,6 +39,8 @@ const reflectionEntryPoints = [
   "hgh.asol.app.BackgroundDownloadPlugin",
   "hgh.asol.app.ShareReceivePlugin",
   "hgh.asol.app.StorageCapacityPlugin",
+  "androidx.work.impl.WorkDatabase",
+  "androidx.work.impl.WorkDatabase_Impl",
   "com.capacitorjs.plugins.app.AppPlugin",
   "com.capacitorjs.plugins.camera.CameraPlugin",
   "com.capacitorjs.plugins.filesystem.FilesystemPlugin",

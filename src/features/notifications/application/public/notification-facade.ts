@@ -201,6 +201,14 @@ export class NotificationsFacade {
     );
   }
 
+  /** Reconcile this opted-in native device with the server registration. */
+  reconcileDevice(input: { uid: string; phone: string }): Promise<DeviceToken | null> {
+    return notificationDeviceTokenService.reconcile(
+      assertUid(input.uid),
+      assertPhone(input.phone),
+    );
+  }
+
   unregisterDevice(input: { uid: string; phone: string }): Promise<void> {
     return notificationDeviceTokenService.unregister(
       assertUid(input.uid),
@@ -367,10 +375,12 @@ export class NotificationsFacade {
   listPushRecipients(identity: {
     uid: string;
     phone: string;
+    sessionToken?: string;
   }): Promise<BroadcastRecipientsResult> {
     return notificationApiService.getBroadcastRecipients({
       uid: assertUid(identity.uid),
       phone: assertPhone(identity.phone),
+      sessionToken: identity.sessionToken,
     });
   }
 

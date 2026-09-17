@@ -41,10 +41,31 @@ export function useAccountDevices(
     if (!session?.sessionToken || !session.uid) return;
     setAccountDevicesLoading(true);
     try {
-      const [account, local] = await Promise.all([
+      let [account, local] = await Promise.all([
         notifications.listAccountDevices({ sessionToken: session.sessionToken }),
         notifications.listDevices({ uid: session.uid }),
       ]);
+
+      // A local opt-in flag can outlive the server row. That state used to paint
+      // the switch as FCM-enabled while self-test correctly reported zero
+      // devices. Heal it immediately and then prove the server can see the row.
+      if (deviceEnabled && local.length > 0) {
+        const serverIds = new Set(account.devices.map((device) => device.deviceId));
+        const missingLocallyKnownDevice = local.some(
+          (token) => token.enabled && !serverIds.has(token.deviceId),
+        );
+        if (missingLocallyKnownDevice) {
+          await notifications.reconcileDevice({
+            uid: session.uid,
+            phone: session.phone,
+          });
+          [account, local] = await Promise.all([
+            notifications.listAccountDevices({ sessionToken: session.sessionToken }),
+            notifications.listDevices({ uid: session.uid }),
+          ]);
+        }
+      }
+
       setAccountDevices(account.devices);
       setLocalDeviceIds(local.map((token) => token.deviceId));
       setAccountDevicesFailed(false);
@@ -53,7 +74,7 @@ export function useAccountDevices(
     } finally {
       setAccountDevicesLoading(false);
     }
-  }, [session]);
+  }, [deviceEnabled, session]);
 
   // Enabling or disabling this device changes the account's list, and the
   // switch is the only other control that can.

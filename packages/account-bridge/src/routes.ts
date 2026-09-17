@@ -30,6 +30,9 @@ export const ROUTE_OWNERSHIP: readonly RouteOwnership[] = [
   // The Super Admin broadcast test verifies a session too, so it joins the two
   // above on the account that holds the signing secret.
   { owner: 'submain', pattern: '/api/notifications/test/send', methods: ALL },
+  // Broadcast recipient discovery and grant issuance are Super Admin actions.
+  // They require the signed session, so they belong beside the other session-bound notification routes.
+  { owner: 'submain', pattern: '/api/notifications/broadcast/**', methods: ALL },
   // Registering or revoking a device verifies that the caller owns it, and that
   // check reads the users repository — which `asol-notifications` must never
   // hold. The account that holds the users database and the notifications

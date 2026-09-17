@@ -2709,6 +2709,20 @@
       ]
     },
     {
+      "id": "command:test:android-r8-policy",
+      "kind": "command",
+      "name": "npm run test:android-r8-policy",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "android-r8-policy",
+        "npm",
+        "npm run test:android-r8-policy",
+        "run",
+        "test",
+        "test:android-r8-policy"
+      ]
+    },
+    {
       "id": "command:test:api-contract-core",
       "kind": "command",
       "name": "npm run test:api-contract-core",
@@ -53599,6 +53613,18 @@
       "tags": [
         "packages/native-core/scripts/android-build-preflight",
         "packages/native-core/scripts/android-build-preflight.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:packages/native-core/scripts/validate-android-r8-policy.test.ts",
+      "kind": "test",
+      "name": "validate-android-r8-policy.test.ts",
+      "path": "packages/native-core/scripts/validate-android-r8-policy.test.ts",
+      "tags": [
+        "packages/native-core/scripts/validate-android-r8-policy",
+        "packages/native-core/scripts/validate-android-r8-policy.test.ts",
         "test",
         "ts"
       ]

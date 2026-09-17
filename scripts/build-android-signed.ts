@@ -41,10 +41,10 @@ function requireSyncedWebBundle(): void {
   }
 }
 
-function resolveApkSigner(): string {
-  const sdkRoot = process.env.ANDROID_SDK_ROOT
-    ?? process.env.ANDROID_HOME
-    ?? (process.env.LOCALAPPDATA ? path.join(process.env.LOCALAPPDATA, "Android", "Sdk") : undefined);
+function resolveApkSigner(env: NodeJS.ProcessEnv = process.env): string {
+  const sdkRoot = env.ANDROID_SDK_ROOT
+    ?? env.ANDROID_HOME
+    ?? (env.LOCALAPPDATA ? path.join(env.LOCALAPPDATA, "Android", "Sdk") : undefined);
   if (!sdkRoot) throw new Error("Android SDK was not found; set ANDROID_SDK_ROOT or ANDROID_HOME.");
   const buildToolsRoot = path.join(sdkRoot, "build-tools");
   const versions = existsSync(buildToolsRoot)
@@ -99,13 +99,33 @@ async function main(): Promise<void> {
     env,
   );
 
-  const aab = path.join(androidDirectory, "app", "build", "outputs", "bundle", "release", "app-release.aab");
-  const apk = path.join(androidDirectory, "app", "build", "outputs", "apk", "release", "app-release.apk");
+  const aab = path.join(
+    androidDirectory,
+    "app",
+    "build",
+    "outputs",
+    "bundle",
+    "release",
+    "app-release.aab",
+  );
+  const apk = path.join(
+    androidDirectory,
+    "app",
+    "build",
+    "outputs",
+    "apk",
+    "release",
+    "app-release.apk",
+  );
   assertArtifact(aab);
   assertArtifact(apk);
 
   const jarSigner = javaHome
-    ? path.join(javaHome, "bin", process.platform === "win32" ? "jarsigner.exe" : "jarsigner")
+    ? path.join(
+        javaHome,
+        "bin",
+        process.platform === "win32" ? "jarsigner.exe" : "jarsigner",
+      )
     : "jarsigner";
   // Google Play upload keys are normally self-signed. `-strict` treats that
   // expected trust-chain shape as exit code 4 even when the archive signature
@@ -113,12 +133,98 @@ async function main(): Promise<void> {
   // a public-CA chain.
   reportStage("signing");
   run(jarSigner, ["-verify", aab], root, env);
-  run(resolveApkSigner(), ["verify", "--verbose", "--print-certs", apk], root, env);
-  console.log(`Signed AAB ready: ${aab} (${statSync(aab).size} bytes)`);
-  console.log(`Signed APK ready: ${apk} (${statSync(apk).size} bytes)`);
+  run(
+    resolveApkSigner(env),
+    ["verify", "--verbose", "--print-certs", apk],
+    root,
+    env,
+  );
+
+  // If a release-test target is explicitly selected, cold-start the exact
+  // optimized APK on it before the artifact leaves this build step. This
+  // catches reflection failures that Gradle/signing checks do not execute.
+  // The APK uses the local release/upload identity, so the selected device
+  // must accept that signer.
+  const configuredSerial = env.ANDROID_RELEASE_TEST_SERIAL?.trim();
+  if (!configuredSerial) {
+    throw new Error(
+      "ANDROID_RELEASE_TEST_SERIAL is required for a signed Android release. Refusing to produce a shippable artifact without cold-starting the exact R8-optimized APK on a device.",
+    );
+  }
+  {
+    const deviceSdkRoot = env.ANDROID_SDK_ROOT ?? env.ANDROID_HOME;
+    const adb = deviceSdkRoot
+      ? path.join(
+          deviceSdkRoot,
+          "platform-tools",
+          process.platform === "win32" ? "adb.exe" : "adb",
+        )
+      : "adb";
+    try {
+      // Clear the crash buffer so only this launch is judged.
+      const deviceEnv = { ...env, ANDROID_SERIAL: configuredSerial };
+      run(adb, ["get-state"], root, deviceEnv);
+      reportStage("testing-on-device");
+      run(adb, ["logcat", "-b", "crash", "-c"], root, deviceEnv);
+      run(adb, ["install", "-r", "-d", apk], root, deviceEnv);
+      run(
+        adb,
+        ["shell", "am", "force-stop", "hgh.asol.app"],
+        root,
+        deviceEnv,
+      );
+      run(
+        adb,
+        [
+          "shell",
+          "monkey",
+          "-p",
+          "hgh.asol.app",
+          "-c",
+          "android.intent.category.LAUNCHER",
+          "1",
+        ],
+        root,
+        deviceEnv,
+      );
+      execFileSync(process.execPath, ["-e", "setTimeout(()=>{},5000)"], {
+        stdio: "ignore",
+      });
+      const pid = execFileSync(adb, ["shell", "pidof", "hgh.asol.app"], {
+        env: deviceEnv,
+        encoding: "utf8",
+      }).trim();
+      if (!pid) {
+        throw new Error("release APK process exited during cold-start smoke test");
+      }
+      const crashes = execFileSync(adb, ["logcat", "-d", "-b", "crash"], {
+        env: deviceEnv,
+        encoding: "utf8",
+      });
+      if (/Process:\s+hgh\.asol\.app\b/.test(crashes)) {
+        throw new Error(
+          `release APK crashed during cold-start smoke test:\n${crashes}`,
+        );
+      }
+      console.log(
+        `Release cold-start smoke test passed on attached Android device (pid ${pid}).`,
+      );
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      throw new Error(
+        `Signed release device smoke test failed: ${message}`,
+      );
+    }
+  }
+
+  const aabSize = statSync(aab).size;
+  const apkSize = statSync(apk).size;
+  console.log(`Signed AAB ready: ${aab} (${aabSize} bytes)`);
+  console.log(`Signed APK ready: ${apk} (${apkSize} bytes)`);
 }
 
 main().catch((error) => {
-  console.error(`Signed Android build failed: ${error instanceof Error ? error.message : error}`);
+  const message = error instanceof Error ? error.message : String(error);
+  console.error(`Signed Android build failed: ${message}`);
   process.exitCode = 1;
 });

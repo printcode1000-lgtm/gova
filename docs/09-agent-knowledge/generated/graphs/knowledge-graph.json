@@ -2709,6 +2709,20 @@
       ]
     },
     {
+      "id": "command:test:android-r8-policy",
+      "kind": "command",
+      "name": "npm run test:android-r8-policy",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "android-r8-policy",
+        "npm",
+        "npm run test:android-r8-policy",
+        "run",
+        "test",
+        "test:android-r8-policy"
+      ]
+    },
+    {
       "id": "command:test:api-contract-core",
       "kind": "command",
       "name": "npm run test:api-contract-core",
@@ -53604,6 +53618,18 @@
       ]
     },
     {
+      "id": "test:packages/native-core/scripts/validate-android-r8-policy.test.ts",
+      "kind": "test",
+      "name": "validate-android-r8-policy.test.ts",
+      "path": "packages/native-core/scripts/validate-android-r8-policy.test.ts",
+      "tags": [
+        "packages/native-core/scripts/validate-android-r8-policy",
+        "packages/native-core/scripts/validate-android-r8-policy.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/native-core/src/tests/contract/app-settings-plugin.test.ts",
       "kind": "test",
       "name": "app-settings-plugin.test.ts",
@@ -58605,6 +58631,16 @@
       "from": "command:test:account-deletion-schema",
       "to": "environment-key:NODE_OPTIONS",
       "kind": "uses-environment"
+    },
+    {
+      "from": "command:test:android-r8-policy",
+      "to": "test:packages/native-core/scripts/validate-android-r8-policy.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:android-r8-policy",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
     },
     {
       "from": "command:test:api-contract-core",
@@ -84430,6 +84466,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "test:packages/native-core/scripts/validate-android-r8-policy.test.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "test:packages/native-core/src/tests/contract/app-settings-plugin.test.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -90689,6 +90731,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "test:packages/native-core/scripts/android-build-preflight.test.ts",
+      "kind": "documents",
+      "detail": "packages/native-core/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "test:packages/native-core/scripts/validate-android-r8-policy.test.ts",
       "kind": "documents",
       "detail": "packages/native-core/"
     },
@@ -97787,6 +97835,12 @@
     {
       "from": "domain:platform-features",
       "to": "test:packages/native-core/scripts/android-build-preflight.test.ts",
+      "kind": "documents",
+      "detail": "packages/native-core/"
+    },
+    {
+      "from": "domain:platform-features",
+      "to": "test:packages/native-core/scripts/validate-android-r8-policy.test.ts",
       "kind": "documents",
       "detail": "packages/native-core/"
     },
@@ -134565,27 +134619,12 @@
     },
     {
       "from": "script:scripts/build-android-signed.ts",
-      "to": "environment-key:ANDROID_HOME",
-      "kind": "uses-environment"
-    },
-    {
-      "from": "script:scripts/build-android-signed.ts",
-      "to": "environment-key:ANDROID_SDK_ROOT",
-      "kind": "uses-environment"
-    },
-    {
-      "from": "script:scripts/build-android-signed.ts",
       "to": "environment-key:ASOL_ANDROID_KEYSTORE_FILE",
       "kind": "uses-environment"
     },
     {
       "from": "script:scripts/build-android-signed.ts",
       "to": "environment-key:ASOL_WEB_BUNDLE_READY",
-      "kind": "uses-environment"
-    },
-    {
-      "from": "script:scripts/build-android-signed.ts",
-      "to": "environment-key:LOCALAPPDATA",
       "kind": "uses-environment"
     },
     {
@@ -238393,6 +238432,52 @@
     },
     {
       "from": "test:packages/native-core/scripts/android-build-preflight.test.ts",
+      "to": "package:@asol/native-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:packages/native-core/scripts/validate-android-r8-policy.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/native-core/scripts/validate-android-r8-policy.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/native-core/scripts/validate-android-r8-policy.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/native-core/scripts/validate-android-r8-policy.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/native-core/scripts/validate-android-r8-policy.test.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/native-core/scripts/validate-android-r8-policy.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/native-core/scripts/validate-android-r8-policy.test.ts",
+      "to": "package:@asol/native-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:packages/native-core/scripts/validate-android-r8-policy.test.ts",
+      "to": "source:packages/native-core/scripts/validate-android-r8-policy.ts",
+      "kind": "imports",
+      "detail": "./validate-android-r8-policy"
+    },
+    {
+      "from": "test:packages/native-core/scripts/validate-android-r8-policy.test.ts",
       "to": "package:@asol/native-core",
       "kind": "tests"
     },

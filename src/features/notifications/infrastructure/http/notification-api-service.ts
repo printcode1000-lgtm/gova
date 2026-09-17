@@ -89,6 +89,7 @@ export class NotificationApiService {
   getBroadcastRecipients(identity: {
     uid: string;
     phone: string;
+    sessionToken?: string;
   }): Promise<BroadcastRecipientsResult> {
     const query = new URLSearchParams({
       uid: identity.uid,
@@ -96,7 +97,7 @@ export class NotificationApiService {
     });
     return asolApi.get<BroadcastRecipientsResult>(
       `${ASOL_API_ROUTES.notifications.broadcastRecipients}?${query}`,
-      { cache: "no-store" },
+      { headers: sessionHeaders(identity.sessionToken ?? ""), cache: "no-store" },
     );
   }
 
@@ -106,7 +107,10 @@ export class NotificationApiService {
     const granted = await asolApi.post<BroadcastNotificationResult>(
       ASOL_API_ROUTES.notifications.broadcastSend,
       input,
-      { notificationGrantDelivery: "manual" },
+      {
+        headers: sessionHeaders(input.identity.sessionToken ?? ""),
+        notificationGrantDelivery: "manual",
+      },
     );
     const delivery = await deliverNotificationGrants(granted);
     return mergeBroadcastDeliveryResult(granted, delivery.recipientResults);

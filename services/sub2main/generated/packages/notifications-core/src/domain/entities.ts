@@ -299,6 +299,8 @@ export interface BroadcastNotificationInput {
   identity: {
     uid: string;
     phone: string;
+    /** Signed session used by privileged broadcast HTTP routes. */
+    sessionToken?: string;
   };
   requestId?: string;
   title: string;

@@ -95,6 +95,8 @@ export function validateAndroidR8PolicySources(sources: AndroidR8PolicySources):
   if (/android\.r8\.optimizedResourceShrinking\s*=\s*false/.test(sources.properties)) throw new Error("Optimized R8 resource shrinking must not be disabled.");
   requireMatch(sources.appRules, /@android\.webkit\.JavascriptInterface\s+<methods>;/, "App R8 rules must preserve WebView JavaScript interface methods.");
   requireMatch(sources.appRules, /RuntimeVisibleAnnotations/, "App R8 rules must preserve runtime-visible annotations.");
+  requireMatch(sources.appRules, /-keep\s+class\s+androidx\.work\.impl\.WorkDatabase_Impl\s*\{\s*\*;\s*\}/, "App R8 rules must preserve every WorkDatabase_Impl member; a class-name-only or constructor-only keep rule can still allow R8 to break Room reflection at startup.");
+  requireMatch(sources.appRules, /androidx\.room\.RoomDatabase/, "App R8 rules must preserve the Room database hierarchy used reflectively by WorkManager.");
   requireMatch(sources.capacitorRules, /extends\s+com\.getcapacitor\.Plugin/, "Installed Capacitor consumer rules must preserve Plugin subclasses.");
   requireMatch(sources.capacitorRules, /@com\.getcapacitor\.PluginMethod/, "Installed Capacitor consumer rules must preserve PluginMethod entry points.");
   for (const forbidden of [/-dontshrink\b/, /-dontoptimize\b/, /-dontobfuscate\b/, /-keep\s+class\s+\*\*/]) {

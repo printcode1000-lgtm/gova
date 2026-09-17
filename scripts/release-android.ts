@@ -92,10 +92,21 @@ async function main(): Promise<void> {
 
   // Signing starts only after the complete web/native preparation succeeds.
   // `ASOL_WEB_BUNDLE_READY` is that proof: cap-build built the bundle, stamped
-  // the versions it ships with, and synced it into the native projects.
+  // the versions it ships with, and synced it into the native projects. When a
+  // dedicated release-test device is selected through
+  // ANDROID_RELEASE_TEST_SERIAL, the signed-build step also cold-starts the
+  // exact optimized APK on that device.
+  const releaseTestSerial =
+    environment.ANDROID_RELEASE_TEST_SERIAL?.trim();
   execFileSync(process.execPath, [tsxCliPath, signedBuildPath], {
     stdio: "inherit",
-    env: { ...environment, ASOL_WEB_BUNDLE_READY: "1" },
+    env: {
+      ...environment,
+      ASOL_WEB_BUNDLE_READY: "1",
+      ...(releaseTestSerial
+        ? { ANDROID_RELEASE_TEST_SERIAL: releaseTestSerial }
+        : {}),
+    },
   });
 }
 

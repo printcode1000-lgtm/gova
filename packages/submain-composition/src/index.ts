@@ -129,6 +129,8 @@ export interface SubmainDeviceTask {
   sendSelfTest: typeof notificationSelfTestService.send;
   /** The Super Admin broadcast test: a verified session decides who may send it. */
   sendBroadcastTest: typeof notificationBroadcastService.sendTest;
+  listBroadcastRecipients: typeof notificationBroadcastService.listRecipients;
+  sendBroadcast: typeof notificationBroadcastService.send;
   assertSuperAdmin: typeof assertSuperAdminRequest;
 }
 
@@ -252,6 +254,8 @@ export function createSubmainRuntime(_config?: SubmainRuntimeConfig): SubmainRun
         notificationTokenService.setPushPreference(uid, phone, pushEnabled),
       sendSelfTest: (input) => notificationSelfTestService.send(input),
       sendBroadcastTest: (input) => notificationBroadcastService.sendTest(input),
+      listBroadcastRecipients: (identity) => notificationBroadcastService.listRecipients(identity),
+      sendBroadcast: (input) => notificationBroadcastService.send(input),
       assertSuperAdmin: assertSuperAdminRequest,
     },
     orders: {

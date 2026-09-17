@@ -9,8 +9,8 @@ Key names only. No environment value is stored in the graph or this catalog.
 
 | Key | Visibility | Direct consumers | Example consumer paths/commands |
 |---|---|---:|---|
-| `ANDROID_HOME` | server/tooling | 3 | `scripts/android/adb.ts`, `scripts/build-android-signed.ts`, `scripts/check-environment-requirements.ts` |
-| `ANDROID_SDK_ROOT` | server/tooling | 3 | `scripts/android/adb.ts`, `scripts/build-android-signed.ts`, `scripts/check-environment-requirements.ts` |
+| `ANDROID_HOME` | server/tooling | 2 | `scripts/android/adb.ts`, `scripts/check-environment-requirements.ts` |
+| `ANDROID_SDK_ROOT` | server/tooling | 2 | `scripts/android/adb.ts`, `scripts/check-environment-requirements.ts` |
 | `APNS_BUNDLE_ID` | server/tooling | 1 | `src/core/config/server-env/server-env.values.turso-env.ts` |
 | `APNS_KEY_ID` | server/tooling | 2 | `services/notifications/src/app/api/health/route.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` |
 | `APNS_PRIVATE_KEY` | server/tooling | 2 | `services/notifications/src/app/api/health/route.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` |
@@ -146,7 +146,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `LANG` | server/tooling | 1 | `scripts/fastlane-runner.ts` |
 | `LC_ALL` | server/tooling | 1 | `scripts/fastlane-runner.ts` |
 | `LEGACY_PRODUCT_DATABASE_URL` | server/tooling | 1 | `packages/data-core/src/tooling/migrate-product-database.ts` |
-| `LOCALAPPDATA` | server/tooling | 2 | `scripts/android/adb.ts`, `scripts/build-android-signed.ts` |
+| `LOCALAPPDATA` | server/tooling | 1 | `scripts/android/adb.ts` |
 | `NEXT_PUBLIC_` | client-visible | 1 | `src/core/config/business-api-origins.ts` |
 | `NEXT_PUBLIC_ASOL_API_BASE_URL` | client-visible | 4 | `npm run build:static:local`, `scripts/verify-live-api-cors.ts`, `packages/ota-core/scripts/serve-static.ts`, `src/core/config/public-env.ts` |
 | `NEXT_PUBLIC_ASOL_APP_STORE_URL` | client-visible | 1 | `src/core/config/public-env.ts` |

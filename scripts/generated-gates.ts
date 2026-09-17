@@ -91,6 +91,7 @@ const GATE_POLICY: Readonly<Record<GeneratedGateId, readonly GatePolicyStep[]>> 
     { kind: 'script', name: 'validate:error-logging' },
     { kind: 'script', name: 'android:backup:validate' },
     { kind: 'script', name: 'android:r8:validate' },
+    { kind: 'script', name: 'test:android-r8-policy' },
     { kind: 'script', name: 'ios:push:validate' },
     allTests,
   ],

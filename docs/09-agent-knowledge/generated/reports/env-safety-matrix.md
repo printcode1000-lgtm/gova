@@ -11,8 +11,8 @@ Keys: **243**
 
 | Key | Visibility | Static/native | Consumers (sample) | Relevance | Classification | Runtime checks |
 |---|---|---|---|---|---|---|
-| `ANDROID_HOME` | server-only | unknown | `scripts/android/adb.ts`, `scripts/build-android-signed.ts`, `scripts/check-environment-requirements.ts` | native/fastlane | server-only | npm run runtime:check:changed |
-| `ANDROID_SDK_ROOT` | server-only | unknown | `scripts/android/adb.ts`, `scripts/build-android-signed.ts`, `scripts/check-environment-requirements.ts` | native/fastlane | server-only | npm run runtime:check:changed |
+| `ANDROID_HOME` | server-only | unknown | `scripts/android/adb.ts`, `scripts/check-environment-requirements.ts` | native/fastlane | server-only | npm run runtime:check:changed |
+| `ANDROID_SDK_ROOT` | server-only | unknown | `scripts/android/adb.ts`, `scripts/check-environment-requirements.ts` | native/fastlane | server-only | npm run runtime:check:changed |
 | `APNS_BUNDLE_ID` | server-only | unknown | `src/core/config/server-env/server-env.values.turso-env.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `APNS_KEY_ID` | server-only | unknown | `services/notifications/src/app/api/health/route.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `APNS_PRIVATE_KEY` | server-only | dangerous | `services/notifications/src/app/api/health/route.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` | unclassified | dangerous-for-static-native-if-leaked | npm run runtime:check:static, npm run runtime:check:web, npm run docs:ci |
@@ -148,7 +148,7 @@ Keys: **243**
 | `LANG` | server-only | unknown | `scripts/fastlane-runner.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `LC_ALL` | server-only | unknown | `scripts/fastlane-runner.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `LEGACY_PRODUCT_DATABASE_URL` | server-only | unknown | `packages/data-core/src/tooling/migrate-product-database.ts` | vercel/database | server-only | npm run runtime:check:changed |
-| `LOCALAPPDATA` | server-only | unknown | `scripts/android/adb.ts`, `scripts/build-android-signed.ts` | unclassified | server-only | npm run runtime:check:changed |
+| `LOCALAPPDATA` | server-only | unknown | `scripts/android/adb.ts` | unclassified | server-only | npm run runtime:check:changed |
 | `NEXT_PUBLIC_` | client-visible | allowed | `src/core/config/business-api-origins.ts` | unclassified | client-visible | npm run runtime:check:changed |
 | `NEXT_PUBLIC_ASOL_API_BASE_URL` | client-visible | allowed | `npm run build:static:local`, `packages/ota-core/scripts/serve-static.ts`, `scripts/verify-live-api-cors.ts`, `src/core/config/public-env.ts` | unclassified | client-visible | npm run runtime:check:changed |
 | `NEXT_PUBLIC_ASOL_APP_STORE_URL` | client-visible | allowed | `src/core/config/public-env.ts` | unclassified | client-visible | npm run runtime:check:changed |

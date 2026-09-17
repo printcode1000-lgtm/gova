@@ -76,8 +76,6 @@ export interface OwnedRoute {
  * records what the backlog is and how to work it down.
  */
 export const KNOWN_UNSHIPPED: readonly string[] = [
-  "GET /api/notifications/broadcast/recipients",
-  "POST /api/notifications/broadcast/send",
   "POST /api/notifications/mobile-push/unlock",
   "POST /api/notifications/recipient-tokens",
   "POST /api/ota/access",

@@ -72,7 +72,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/gova-deployment-core` | package | 5 | 2 | 0 | 0 | 6 | 4 |
 | `@asol/hero-slider-core` | package | 7 | 2 | 126 | 0 | 23 | 1 |
 | `@asol/map-core` | package | 10 | 1 | 2 | 0 | 9 | 7 |
-| `@asol/native-core` | package | 39 | 21 | 52 | 0 | 88 | 27 |
+| `@asol/native-core` | package | 39 | 22 | 52 | 0 | 88 | 27 |
 | `@asol/notifications-composition` | package | 11 | 1 | 0 | 0 | 2 | 4 |
 | `@asol/notifications-core` | package | 19 | 15 | 133 | 0 | 98 | 5 |
 | `@asol/observability-core` | package | 8 | 1 | 123 | 0 | 23 | 4 |
