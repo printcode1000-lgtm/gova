@@ -44,9 +44,12 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run catalog:validate` | `Tooling` | 2 |  | 0 |
 | `npm run category:validate` | `Tooling` | 1 |  | 0 |
 | `npm run ci:coverage` | `Tooling` | 1 |  | 0 |
+| `npm run cloud-accounts:r2-contents` | `Tooling` | 1 |  | 0 |
 | `npm run cloud-accounts:r2-usage` | `Tooling` | 1 |  | 0 |
 | `npm run cloud-accounts:turso-usage` | `Tooling` | 1 |  | 0 |
 | `npm run cloud-accounts:vercel-usage` | `Tooling`, `Web` | 1 |  | 0 |
+| `npm run cloudflare:control` | `Tooling` | 1 |  | 0 |
+| `npm run cloudflare:r2-analytics:check` | `Tooling` | 1 |  | 0 |
 | `npm run control:build` | `Tooling` | 1 |  | 0 |
 | `npm run control:deploy` | `Tooling` | 1 |  | 0 |
 | `npm run control:smoke` | `Tooling` | 1 |  | 0 |
@@ -202,7 +205,8 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:catalog-display` | `Tooling` | 1 |  | 0 |
 | `npm run test:catalog-studio` | `Tooling` | 1 |  | 1 |
 | `npm run test:categories` | `Tooling` | 1 |  | 0 |
-| `npm run test:cloud-accounts` | `Tooling` | 1 |  | 0 |
+| `npm run test:cloud-accounts` | `Tooling` | 4 |  | 0 |
+| `npm run test:cloudflare-control` | `Tooling` | 1 |  | 0 |
 | `npm run test:composition-ports` | `Tooling` | 1 |  | 0 |
 | `npm run test:compositions` | `Tooling` | 6 |  | 0 |
 | `npm run test:console-command-parity` | `Tooling` | 1 |  | 0 |

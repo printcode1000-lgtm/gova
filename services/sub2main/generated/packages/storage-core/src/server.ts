@@ -6,6 +6,8 @@ export * from './server/transport/r2-object-store';
 export * from './server/transport/r2-presign';
 export * from './server/transport/r2-cors-policy';
 export * from './server/transport/r2-platform-api';
+export * from './server/analytics/r2-usage-analytics';
+export * from './server/analytics/r2-bucket-contents';
 
 export * from './server/providers/storage-provider.interface';
 export * from './server/providers/r2-account.provider';

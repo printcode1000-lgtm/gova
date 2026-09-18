@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-16T05:26:49.241Z",
+  "generatedAt": "2026-09-18T12:12:11.150Z",
   "entryPoints": [
     "features/product/server/services/product-service.server.ts",
     "features/profile/server/services/profile-service.bootstrap.server.ts",
@@ -19,7 +19,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 452,
+  "fileCount": 454,
   "files": [
     "packages/account-declarations/src/accounts/products.ts",
     "packages/account-declarations/src/accounts/profiles.ts",
@@ -293,6 +293,8 @@
     "packages/storage-core/src/index.ts",
     "packages/storage-core/src/ports/http-fetch.ts",
     "packages/storage-core/src/server.ts",
+    "packages/storage-core/src/server/analytics/r2-bucket-contents.ts",
+    "packages/storage-core/src/server/analytics/r2-usage-analytics.ts",
     "packages/storage-core/src/server/config/account-credentials.ts",
     "packages/storage-core/src/server/orchestration/image-storage-orchestrator.ts",
     "packages/storage-core/src/server/processing/image-processor.ts",

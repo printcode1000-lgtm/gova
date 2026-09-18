@@ -80,6 +80,11 @@ npm run secrets:verify             # names/paths only: present/empty/missing/fil
 npm run secrets:key:init
 
 # Cloudflare R2
+npm run cloudflare:control -- accounts:list
+npm run cloudflare:control -- token:verify --account general
+npm run cloudflare:control -- r2:buckets:list --account general
+npm run cloudflare:r2-analytics:check
+npm run cloud-accounts:r2-contents
 npm run r2:sync:cors
 ```
 

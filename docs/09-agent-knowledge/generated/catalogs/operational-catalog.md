@@ -58,9 +58,12 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run catalog:validate` | `npx tsx scripts/validate-catalog.ts && npm run test:catalog-display` |
 | `npm run category:validate` | `npx tsx scripts/validate-categories.ts` |
 | `npm run ci:coverage` | `npx tsx scripts/github-ci-policy.ts` |
+| `npm run cloud-accounts:r2-contents` | `npx tsx scripts/update-cloud-accounts-r2-contents.ts` |
 | `npm run cloud-accounts:r2-usage` | `npx tsx scripts/update-cloud-accounts-r2-usage.ts` |
 | `npm run cloud-accounts:turso-usage` | `npx tsx scripts/update-cloud-accounts-turso-usage.ts` |
 | `npm run cloud-accounts:vercel-usage` | `npx tsx scripts/update-cloud-accounts-vercel-usage.ts` |
+| `npm run cloudflare:control` | `npx tsx scripts/cloudflare-control.ts` |
+| `npm run cloudflare:r2-analytics:check` | `npx tsx scripts/check-cloudflare-r2-analytics.ts` |
 | `npm run control:build` | `npm run control:sync && npm --prefix services/control ci --ignore-scripts && npm --prefix services/control run build` |
 | `npm run control:deploy` | `npx tsx scripts/deploy-control-service.ts` |
 | `npm run control:smoke` | `npx tsx scripts/smoke-control-service.ts` |
@@ -216,7 +219,8 @@ This catalog exposes command and environment **names only**. Environment assignm
 | `npm run test:catalog-display` | `npx tsx scripts/test-catalog-display.ts` |
 | `npm run test:catalog-studio` | `cross-env NODE_OPTIONS=<redacted> npx tsx src/features/catalog-studio/tests/catalog-studio.test.ts` |
 | `npm run test:categories` | `npx tsx scripts/test-categories.ts` |
-| `npm run test:cloud-accounts` | `npx tsx src/features/super-admin/tests/cloud-accounts-emails.test.ts` |
+| `npm run test:cloud-accounts` | `npx tsx src/features/super-admin/tests/cloud-accounts-emails.test.ts && npx tsx src/features/super-admin/tests/cloud-accounts-dynamic-binding.test.ts && npx tsx src/features/super-admin/tests/cloud-accounts-live-refresh.test.ts && npx tsx src/features/super-admin/tests/cloud-accounts-gova-boundary.test.ts` |
+| `npm run test:cloudflare-control` | `npx tsx scripts/tests/cloudflare-control.test.ts` |
 | `npm run test:composition-ports` | `npx tsx src/core/composition/tests/ports-registry.test.ts` |
 | `npm run test:compositions` | `npm run test:notifications-composition && npm run test:products-composition && npm run test:orders-composition && npm run test:profiles-composition && npm run test:submain-composition && npm run test:sub2main-composition` |
 | `npm run test:console-command-parity` | `npx tsx src/features/release-commands/tests/console-command-parity.test.ts` |

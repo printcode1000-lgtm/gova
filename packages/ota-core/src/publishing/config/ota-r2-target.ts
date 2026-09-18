@@ -4,6 +4,14 @@ import path from 'node:path';
 
 export interface OtaR2Target {
   accountId: string;
+  /**
+   * The Cloudflare login that owns the OTA account — required for the same reason
+   * `StorageAccountDefinition.email` is: the account id names the tenant, not the
+   * person who can rotate its keys.
+   */
+  email: string;
+  /** Prefix of the `<prefix>_ACCOUNT_ID` / `<prefix>_API_TOKEN` environment keys. */
+  envPrefix: string;
   endpoint: string;
   bucketName: string;
   publicUrl: string;
@@ -13,6 +21,8 @@ export interface OtaR2Target {
 
 export const OTA_R2_STORAGE_TARGET: OtaR2Target = {
   accountId: '21fce63d15897aaa0b68fae1360a1810',
+  email: 'tenderx.engineer100@gmail.com',
+  envPrefix: 'ASOL_OTA_R2',
   endpoint: 'https://21fce63d15897aaa0b68fae1360a1810.r2.cloudflarestorage.com',
   bucketName: 'ota',
   publicUrl: 'https://pub-ee70bc6c84c54d9b8a8ba44c6f7820a9.r2.dev',

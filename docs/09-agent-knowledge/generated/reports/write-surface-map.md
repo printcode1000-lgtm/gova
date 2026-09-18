@@ -5,7 +5,7 @@
 
 # Write Surface Map
 
-Detected write-like surfaces: **373**
+Detected write-like surfaces: **380**
 Unproven gateway paths: **146**
 
 | Source | Owner | Operations | Gateway | Proven | Route | Runtimes | Risk |
@@ -179,6 +179,7 @@ Unproven gateway paths: **146**
 | `src/app/api/profile/reviews/route.ts` | `unknown` | create, delete, update | `unproven` | NO | `/api/profile/reviews` | development, web | high |
 | `src/app/api/storage/images/upload/route.ts` | `unknown` | upload | `@asol/storage-core` | yes | `/api/storage/images/upload` | development, web | medium |
 | `src/app/api/super-admin/orders/clear/route.ts` | `unknown` | delete | `@asol/data-core` | yes | `/api/super-admin/orders/clear` | development, web | medium |
+| `src/app/dev/cloud-accounts/turso-database-inventory.ts` | `unknown` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/app/dev/monitor/SchemaSyncPanel.tsx` | `unknown` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/core/composition/server-ports.ts` | `unknown` | write-like | `@asol/storage-core` | yes | `` | development, web | medium |
 | `src/core/composition/tests/ports-registry.test.ts` | `unknown` | write-like | `@asol/data-core, @asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
@@ -363,7 +364,6 @@ Unproven gateway paths: **146**
 | `src/features/storage/application/services/image-storage-api-service.ts` | `storage` | delete, upload | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/storage/ports/storage-core-ports.ts` | `storage` | write-like | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/storage/tests/image-upload-queue.test.ts` | `storage` | save, upload | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
-| `src/features/super-admin/presentation/cloud-accounts-reference.ts` | `super-admin` | write-like | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/super-admin/presentation/featured-marquee/SuperAdminFeaturedMarqueePage.product-display.tsx` | `super-admin` | save | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/super-admin/presentation/SuperAdminFeaturedMarqueePage.tsx` | `super-admin` | delete, save | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/super-admin/presentation/SuperAdminImpersonationBanner.tsx` | `super-admin` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
@@ -372,7 +372,14 @@ Unproven gateway paths: **146**
 | `src/features/super-admin/presentation/SuperAdminUiAttributeInspector.tsx` | `super-admin` | mutate, publish | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/features/super-admin/presentation/SuperAdminUsersPage.tsx` | `super-admin` | delete, save | `@asol/page-save-core, @asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/super-admin/presentation/use-super-admin-hero-slider-save.ts` | `super-admin` | save | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
+| `src/features/super-admin/server/services/cloud-accounts-r2-contents.server.ts` | `super-admin` | write-like | `@asol/storage-core` | yes | `` | development, web | medium |
+| `src/features/super-admin/server/services/cloud-accounts-r2-facts.ts` | `super-admin` | upload | `@asol/storage-core` | yes | `` | development, web | medium |
+| `src/features/super-admin/server/services/cloud-accounts-r2-live-accounts.server.ts` | `super-admin` | write-like | `@asol/storage-core` | yes | `` | development, web | medium |
+| `src/features/super-admin/server/services/cloud-accounts-r2-usage.server.ts` | `super-admin` | write-like | `@asol/storage-core` | yes | `` | development, web | medium |
+| `src/features/super-admin/server/services/cloud-accounts-turso-usage.ts` | `super-admin` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/features/super-admin/server/services/super-admin-user-service.server.ts` | `super-admin` | delete | `@asol/data-core` | yes | `` | development, web | medium |
+| `src/features/super-admin/tests/cloud-accounts-dynamic-binding.test.ts` | `super-admin` | write-like | `@asol/data-core, @asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
+| `src/features/super-admin/tests/cloud-accounts-emails.test.ts` | `super-admin` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/super-admin/tests/super-admin-user-deletion.test.ts` | `super-admin` | delete, save | `@asol/page-save-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/system-logs/server/control-persistence.server.ts` | `system-logs` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/features/verification/server/services/verification-proof-consumer.server.ts` | `verification` | write-like | `@asol/data-core` | yes | `` | development, web | medium |

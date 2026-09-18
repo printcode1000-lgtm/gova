@@ -13,9 +13,12 @@ export type CloudAccountsVercelUsageSnapshotStatus =
 export type CloudAccountsVercelUsageSnapshotRow = {
   readonly status: CloudAccountsVercelUsageSnapshotStatus;
   readonly capturedAt: string | null;
+  readonly teamSlug: string | null;
+  readonly ownerEmail: string | null;
   readonly billingPeriodStart: string | null;
   readonly billingPeriodEnd: string | null;
-  readonly planLabel: string;
+  readonly planLabel: string | null;
+  readonly gitRepository: string | null;
   readonly edgeRequestsLimit: number;
   readonly fastDataTransferBytesLimit: number;
   readonly deploymentsPerDayLimit: number;
@@ -45,10 +48,13 @@ export type CloudAccountsVercelUsageMetricSnapshot = {
 export const VERCEL_USAGE_SNAPSHOT = {
   "gova": {
     "status": "ok",
-    "capturedAt": "2026-09-08T04:17:48.026Z",
+    "capturedAt": "2026-09-18T12:05:47.764Z",
+    "teamSlug": "hesham-101",
+    "ownerEmail": "print.code.1000@gmail.com",
+    "planLabel": "hobby",
+    "gitRepository": null,
     "billingPeriodStart": "2026-09-01T00:00:00.000Z",
-    "billingPeriodEnd": "2026-09-08T04:17:48.026Z",
-    "planLabel": "Hobby/default",
+    "billingPeriodEnd": "2026-09-18T12:05:47.764Z",
     "edgeRequestsLimit": 1000000,
     "fastDataTransferBytesLimit": 100000000000,
     "deploymentsPerDayLimit": 100,
@@ -58,7 +64,7 @@ export const VERCEL_USAGE_SNAPSHOT = {
     "functionDurationSecondsLimit": 300,
     "apiRateLimit": 400,
     "apiRateLimitRemaining": 399,
-    "apiRateLimitReset": "2026-09-08T04:18:50.000Z",
+    "apiRateLimitReset": "2026-09-18T12:06:51.000Z",
     "billedCostUsd": null,
     "effectiveCostUsd": null,
     "billingLineCount": null,
@@ -135,14 +141,17 @@ export const VERCEL_USAGE_SNAPSHOT = {
         "source": "dashboardOnly"
       }
     ],
-    "message": "Vercel billing API returned HTTP 404"
+    "message": "خطة hobby لا تتيح Vercel Billing/Usage API لهذا النطاق."
   },
   "control": {
     "status": "ok",
-    "capturedAt": "2026-09-08T04:17:48.026Z",
+    "capturedAt": "2026-09-18T12:05:47.764Z",
+    "teamSlug": "01026546550",
+    "ownerEmail": "tenderxcontractors@gmail.com",
+    "planLabel": "hobby",
+    "gitRepository": null,
     "billingPeriodStart": "2026-09-01T00:00:00.000Z",
-    "billingPeriodEnd": "2026-09-08T04:17:48.026Z",
-    "planLabel": "Hobby/default",
+    "billingPeriodEnd": "2026-09-18T12:05:47.764Z",
     "edgeRequestsLimit": 1000000,
     "fastDataTransferBytesLimit": 100000000000,
     "deploymentsPerDayLimit": 100,
@@ -152,7 +161,7 @@ export const VERCEL_USAGE_SNAPSHOT = {
     "functionDurationSecondsLimit": 300,
     "apiRateLimit": 400,
     "apiRateLimitRemaining": 399,
-    "apiRateLimitReset": "2026-09-08T04:18:52.000Z",
+    "apiRateLimitReset": "2026-09-18T12:06:54.000Z",
     "billedCostUsd": null,
     "effectiveCostUsd": null,
     "billingLineCount": null,
@@ -229,14 +238,17 @@ export const VERCEL_USAGE_SNAPSHOT = {
         "source": "dashboardOnly"
       }
     ],
-    "message": "Vercel billing API returned HTTP 404"
+    "message": "خطة hobby لا تتيح Vercel Billing/Usage API لهذا النطاق."
   },
   "submain": {
     "status": "ok",
-    "capturedAt": "2026-09-08T04:17:48.026Z",
+    "capturedAt": "2026-09-18T12:05:47.764Z",
+    "teamSlug": "283",
+    "ownerEmail": "groupstenderximages@gmail.com",
+    "planLabel": "hobby",
+    "gitRepository": null,
     "billingPeriodStart": "2026-09-01T00:00:00.000Z",
-    "billingPeriodEnd": "2026-09-08T04:17:48.026Z",
-    "planLabel": "Hobby/default",
+    "billingPeriodEnd": "2026-09-18T12:05:47.764Z",
     "edgeRequestsLimit": 1000000,
     "fastDataTransferBytesLimit": 100000000000,
     "deploymentsPerDayLimit": 100,
@@ -246,7 +258,7 @@ export const VERCEL_USAGE_SNAPSHOT = {
     "functionDurationSecondsLimit": 300,
     "apiRateLimit": 400,
     "apiRateLimitRemaining": 399,
-    "apiRateLimitReset": "2026-09-08T04:18:54.000Z",
+    "apiRateLimitReset": "2026-09-18T12:06:57.000Z",
     "billedCostUsd": null,
     "effectiveCostUsd": null,
     "billingLineCount": null,
@@ -323,14 +335,17 @@ export const VERCEL_USAGE_SNAPSHOT = {
         "source": "dashboardOnly"
       }
     ],
-    "message": "Vercel billing API returned HTTP 404"
+    "message": "خطة hobby لا تتيح Vercel Billing/Usage API لهذا النطاق."
   },
   "sub2main": {
     "status": "ok",
-    "capturedAt": "2026-09-08T04:17:48.026Z",
+    "capturedAt": "2026-09-18T12:05:47.764Z",
+    "teamSlug": "773",
+    "ownerEmail": "tenderx.engineer100@gmail.com",
+    "planLabel": "hobby",
+    "gitRepository": null,
     "billingPeriodStart": "2026-09-01T00:00:00.000Z",
-    "billingPeriodEnd": "2026-09-08T04:17:48.026Z",
-    "planLabel": "Hobby/default",
+    "billingPeriodEnd": "2026-09-18T12:05:47.764Z",
     "edgeRequestsLimit": 1000000,
     "fastDataTransferBytesLimit": 100000000000,
     "deploymentsPerDayLimit": 100,
@@ -340,7 +355,7 @@ export const VERCEL_USAGE_SNAPSHOT = {
     "functionDurationSecondsLimit": 300,
     "apiRateLimit": 400,
     "apiRateLimitRemaining": 399,
-    "apiRateLimitReset": "2026-09-08T04:18:58.000Z",
+    "apiRateLimitReset": "2026-09-18T12:07:02.000Z",
     "billedCostUsd": null,
     "effectiveCostUsd": null,
     "billingLineCount": null,
@@ -417,14 +432,17 @@ export const VERCEL_USAGE_SNAPSHOT = {
         "source": "dashboardOnly"
       }
     ],
-    "message": "Vercel billing API returned HTTP 404"
+    "message": "خطة hobby لا تتيح Vercel Billing/Usage API لهذا النطاق."
   },
   "notifications": {
     "status": "ok",
-    "capturedAt": "2026-09-08T04:17:48.026Z",
+    "capturedAt": "2026-09-18T12:05:47.764Z",
+    "teamSlug": "101-0902",
+    "ownerEmail": "bs.bid.story@gmail.com",
+    "planLabel": "hobby",
+    "gitRepository": null,
     "billingPeriodStart": "2026-09-01T00:00:00.000Z",
-    "billingPeriodEnd": "2026-09-08T04:17:48.026Z",
-    "planLabel": "Hobby/default",
+    "billingPeriodEnd": "2026-09-18T12:05:47.764Z",
     "edgeRequestsLimit": 1000000,
     "fastDataTransferBytesLimit": 100000000000,
     "deploymentsPerDayLimit": 100,
@@ -434,7 +452,7 @@ export const VERCEL_USAGE_SNAPSHOT = {
     "functionDurationSecondsLimit": 300,
     "apiRateLimit": 400,
     "apiRateLimitRemaining": 399,
-    "apiRateLimitReset": "2026-09-08T04:19:01.000Z",
+    "apiRateLimitReset": "2026-09-18T12:07:04.000Z",
     "billedCostUsd": null,
     "effectiveCostUsd": null,
     "billingLineCount": null,
@@ -511,14 +529,17 @@ export const VERCEL_USAGE_SNAPSHOT = {
         "source": "dashboardOnly"
       }
     ],
-    "message": "Vercel billing API returned HTTP 404"
+    "message": "خطة hobby لا تتيح Vercel Billing/Usage API لهذا النطاق."
   },
   "products": {
     "status": "ok",
-    "capturedAt": "2026-09-08T04:17:48.026Z",
+    "capturedAt": "2026-09-18T12:05:47.764Z",
+    "teamSlug": "87-0bf2",
+    "ownerEmail": "gnagnahesham@gmail.com",
+    "planLabel": "hobby",
+    "gitRepository": null,
     "billingPeriodStart": "2026-09-01T00:00:00.000Z",
-    "billingPeriodEnd": "2026-09-08T04:17:48.026Z",
-    "planLabel": "Hobby/default",
+    "billingPeriodEnd": "2026-09-18T12:05:47.764Z",
     "edgeRequestsLimit": 1000000,
     "fastDataTransferBytesLimit": 100000000000,
     "deploymentsPerDayLimit": 100,
@@ -528,7 +549,7 @@ export const VERCEL_USAGE_SNAPSHOT = {
     "functionDurationSecondsLimit": 300,
     "apiRateLimit": 400,
     "apiRateLimitRemaining": 399,
-    "apiRateLimitReset": "2026-09-08T04:19:05.000Z",
+    "apiRateLimitReset": "2026-09-18T12:07:08.000Z",
     "billedCostUsd": null,
     "effectiveCostUsd": null,
     "billingLineCount": null,
@@ -605,14 +626,17 @@ export const VERCEL_USAGE_SNAPSHOT = {
         "source": "dashboardOnly"
       }
     ],
-    "message": "Vercel billing API returned HTTP 404"
+    "message": "خطة hobby لا تتيح Vercel Billing/Usage API لهذا النطاق."
   },
   "orders": {
     "status": "ok",
-    "capturedAt": "2026-09-08T04:17:48.026Z",
+    "capturedAt": "2026-09-18T12:05:47.764Z",
+    "teamSlug": "434-49de",
+    "ownerEmail": "tenderx10@gmail.com",
+    "planLabel": "hobby",
+    "gitRepository": null,
     "billingPeriodStart": "2026-09-01T00:00:00.000Z",
-    "billingPeriodEnd": "2026-09-08T04:17:48.026Z",
-    "planLabel": "Hobby/default",
+    "billingPeriodEnd": "2026-09-18T12:05:47.764Z",
     "edgeRequestsLimit": 1000000,
     "fastDataTransferBytesLimit": 100000000000,
     "deploymentsPerDayLimit": 100,
@@ -622,7 +646,7 @@ export const VERCEL_USAGE_SNAPSHOT = {
     "functionDurationSecondsLimit": 300,
     "apiRateLimit": 400,
     "apiRateLimitRemaining": 399,
-    "apiRateLimitReset": "2026-09-08T04:19:08.000Z",
+    "apiRateLimitReset": "2026-09-18T12:07:11.000Z",
     "billedCostUsd": null,
     "effectiveCostUsd": null,
     "billingLineCount": null,
@@ -699,14 +723,17 @@ export const VERCEL_USAGE_SNAPSHOT = {
         "source": "dashboardOnly"
       }
     ],
-    "message": "Vercel billing API returned HTTP 404"
+    "message": "خطة hobby لا تتيح Vercel Billing/Usage API لهذا النطاق."
   },
   "profiles": {
     "status": "ok",
-    "capturedAt": "2026-09-08T04:17:48.026Z",
+    "capturedAt": "2026-09-18T12:05:47.764Z",
+    "teamSlug": "656-1bdb",
+    "ownerEmail": "hesham10125@gmail.com",
+    "planLabel": "hobby",
+    "gitRepository": null,
     "billingPeriodStart": "2026-09-01T00:00:00.000Z",
-    "billingPeriodEnd": "2026-09-08T04:17:48.026Z",
-    "planLabel": "Hobby/default",
+    "billingPeriodEnd": "2026-09-18T12:05:47.764Z",
     "edgeRequestsLimit": 1000000,
     "fastDataTransferBytesLimit": 100000000000,
     "deploymentsPerDayLimit": 100,
@@ -716,7 +743,7 @@ export const VERCEL_USAGE_SNAPSHOT = {
     "functionDurationSecondsLimit": 300,
     "apiRateLimit": 400,
     "apiRateLimitRemaining": 399,
-    "apiRateLimitReset": "2026-09-08T04:19:11.000Z",
+    "apiRateLimitReset": "2026-09-18T12:07:14.000Z",
     "billedCostUsd": null,
     "effectiveCostUsd": null,
     "billingLineCount": null,
@@ -793,6 +820,6 @@ export const VERCEL_USAGE_SNAPSHOT = {
         "source": "dashboardOnly"
       }
     ],
-    "message": "Vercel billing API returned HTTP 404"
+    "message": "خطة hobby لا تتيح Vercel Billing/Usage API لهذا النطاق."
   }
 } as const satisfies Record<string, CloudAccountsVercelUsageSnapshotRow>;

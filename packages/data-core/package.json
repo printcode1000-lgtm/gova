@@ -138,6 +138,10 @@
       "types": "./src/domains/super-admin/index.server.ts",
       "default": "./src/domains/super-admin/index.server.ts"
     },
+    "./turso-platform": {
+      "types": "./src/domains/turso-platform/index.server.ts",
+      "default": "./src/domains/turso-platform/index.server.ts"
+    },
     "./system-logs": {
       "types": "./src/domains/system-logs/index.server.ts",
       "default": "./src/domains/system-logs/index.server.ts"

@@ -21,7 +21,7 @@ is listed as `gova/dev` and answered wherever the request lands.
 | Account | Vercel project | Origin variable | Owned pairs | Shipped | Unshipped |
 | --- | --- | --- | ---: | ---: | ---: |
 | `control` | `asol-control` | `NEXT_PUBLIC_ASOL_CONTROL_URL` | 34 | 34 | 0 |
-| `gova/dev` | — | — | 12 | 12 | 0 |
+| `gova/dev` | — | — | 16 | 16 | 0 |
 | `notifications` | `asol-notifications` | `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | 13 | 13 | 0 |
 | `orders` | `asol-orders` | `NEXT_PUBLIC_ASOL_ORDERS_URL` | 1 | 1 | 0 |
 | `products` | `asol-products` | `NEXT_PUBLIC_ASOL_PRODUCTS_URL` | 3 | 3 | 0 |
@@ -80,6 +80,10 @@ routes, which are omitted from the production artifact entirely.
 | `PUT` | `/api/dev/catalog-studio` | gova |
 | `DELETE` | `/api/dev/catalog-studio/images` | gova |
 | `POST` | `/api/dev/catalog-studio/images` | gova |
+| `GET` | `/api/dev/cloud-accounts/r2-contents` | gova |
+| `GET` | `/api/dev/cloud-accounts/r2-usage` | gova |
+| `GET` | `/api/dev/cloud-accounts/turso-usage` | gova |
+| `GET` | `/api/dev/cloud-accounts/vercel-usage` | gova |
 | `GET` | `/api/dev/product-style` | gova |
 | `PUT` | `/api/dev/product-style` | gova |
 | `POST` | `/api/dev/simulation/checkpoint` | gova |

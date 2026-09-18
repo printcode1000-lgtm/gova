@@ -1,11 +1,16 @@
 import { notFound } from "next/navigation";
 
 import { getServerRuntimeContext } from "@/core/config/runtime-context.server";
+import { readOptionalEnv } from "@/core/config/server-env";
 import { SuperAdminCloudAccountsPage } from "@/features/super-admin";
+import { buildCloudAccountsFacts } from "@/features/super-admin/server";
+
+import { readTursoDatabaseInventory } from "./turso-database-inventory";
 
 /**
- * Always re-evaluate: account tables are derived from sealed package
- * declarations.
+ * Always re-evaluate: every fact the page shows is derived per request on the
+ * server (`buildCloudAccountsFacts`) from the code that owns it, and handed to
+ * the client as props.
  *
  * Lives under `/dev` because this is a development-only reference, and that
  * scope is what keeps it out of every shipped surface: `app/dev` is excluded
@@ -28,5 +33,9 @@ export const dynamic = "force-dynamic";
 
 export default function DevCloudAccountsRoute() {
   if (!getServerRuntimeContext().isDevelopment) notFound();
-  return <SuperAdminCloudAccountsPage />;
+  const facts = buildCloudAccountsFacts({
+    tursoInventory: readTursoDatabaseInventory(),
+    readEnv: readOptionalEnv,
+  });
+  return <SuperAdminCloudAccountsPage facts={facts} />;
 }

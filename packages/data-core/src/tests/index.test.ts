@@ -95,6 +95,9 @@ const EXPECTED_DOORS = [
   './control-release-state',
   './password-recovery',
   './verification',
+  // Turso Platform API reads (usage, plan, token owner, database names) for the
+  // development-only /dev/cloud-accounts page; names and numbers only.
+  './turso-platform',
   './pharmacy-profile-catalog',
   './product',
   './product-search',

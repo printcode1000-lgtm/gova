@@ -4,6 +4,12 @@
 
 Prevent unsafe edits caused by incomplete repository context. Every implementation task starts with impact discovery, ownership discovery, and five-runtime compatibility — not with code editing.
 
+## Session Startup
+
+At the beginning of every new chat, task, or agent session involving this repository, perform a fresh repository-grounded startup before the first implementation action. Re-read the current project instruction surface, then `docs/README.md` and `docs/09-agent-knowledge/README.md`; run the narrowest task-specific Context Pack; and read the relevant documents, contracts, reference files, media/artifacts, and generated indexes it identifies. Do not substitute remembered rules or prior-chat summaries for the current repository state.
+
+If the task changes behavior, APIs, data, architecture, configuration, runtime behavior, or operations, update the related editable documentation in the same task and regenerate derived documentation when required. Protected documentation still requires explicit user authorization and generated documentation must never be edited by hand.
+
 ## Permanent Project Context
 
 Before considering the specific task, remember that the application operates through **Development, Web, Static `out/`, Android, and iOS**. These are not five unrelated projects: shared code feeds the web/static build, and production Android/iOS consume the static `out/` payload through Capacitor while adding platform-native behavior.

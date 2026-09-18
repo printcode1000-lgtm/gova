@@ -40,6 +40,8 @@ const EXTERNAL_SNAKE_CASE_FILES = new Map<string, string>([
   ['packages/notifications-core/src/services/providers/fcm-notification-provider.server.ts', 'Firebase Cloud Messaging protocol'],
   ['packages/ota-core/src/publishing/adapters/google-play.adapter.ts', 'Google Play service-account protocol'],
   ['packages/native-core/scripts/sync-android-push-assets.ts', 'google-services.json protocol'],
+  ['packages/data-core/src/domains/turso-platform/providers/turso-platform-usage.provider.ts', 'Turso Platform API protocol'],
+  ['packages/storage-core/src/server/analytics/r2-bucket-contents.ts', 'Cloudflare R2 objects REST protocol'],
   ['packages/map-core/src/AsolMap.tsx', 'MapLibre feature properties protocol'],
 ]);
 

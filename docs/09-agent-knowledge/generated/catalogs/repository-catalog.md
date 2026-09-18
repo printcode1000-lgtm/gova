@@ -10,7 +10,7 @@
 | Kind | Count |
 |---|---:|
 | artifact | 4 |
-| command | 289 |
+| command | 293 |
 | config | 12 |
 | document | 279 |
 | domain | 10 |
@@ -18,12 +18,12 @@
 | external-dependency | 104 |
 | feature | 44 |
 | package | 49 |
-| route | 157 |
+| route | 161 |
 | runtime | 7 |
-| script | 158 |
+| script | 161 |
 | service | 7 |
-| source | 2179 |
-| test | 273 |
+| source | 2215 |
+| test | 277 |
 
 ## Domains
 
@@ -53,7 +53,7 @@
 | @asol/catalog-core | `packages/catalog-core` | Category catalog domain; Layer: capability; Public exports: ., ./server |
 | @asol/control-composition | `packages/control-composition` | Composition root for the control account; Layer: composition; Public exports: . |
 | @asol/cors | `packages/cors` | Cross-origin (CORS) policy, headers, and preflight; Layer: capability; Public exports: . |
-| @asol/data-core | `packages/data-core` | Database access, sharding, and domain repositories; Layer: capability; Public exports: ., ./account-deletion, ./advertisements, ./auth, ./auth/entities, ./browser, ./composition, ./control-ota, ./control-release-state, ./control-system-logs, ./feature-flags, ./follow, ./follow/entities, ./marketplace-orders, ./notifications, ./ota, ./ota-runtime, ./password-recovery, ./pharmacy-profile-catalog, ./pharmacy-profile-catalog/entities, ./product, ./product-search, ./product-search-fields, ./product-search/entities, ./product/entities, ./profile, ./profile/entities, ./provisioning, ./runtime-config, ./seller-discounts, ./seller-discounts/entities, ./super-admin, ./system-logs, ./telemetry, ./tooling, ./verification |
+| @asol/data-core | `packages/data-core` | Database access, sharding, and domain repositories; Layer: capability; Public exports: ., ./account-deletion, ./advertisements, ./auth, ./auth/entities, ./browser, ./composition, ./control-ota, ./control-release-state, ./control-system-logs, ./feature-flags, ./follow, ./follow/entities, ./marketplace-orders, ./notifications, ./ota, ./ota-runtime, ./password-recovery, ./pharmacy-profile-catalog, ./pharmacy-profile-catalog/entities, ./product, ./product-search, ./product-search-fields, ./product-search/entities, ./product/entities, ./profile, ./profile/entities, ./provisioning, ./runtime-config, ./seller-discounts, ./seller-discounts/entities, ./super-admin, ./system-logs, ./telemetry, ./tooling, ./turso-platform, ./verification |
 | @asol/dev-core | `packages/dev-core` | Development-runtime guards for developer-only tooling; Layer: capability; Public exports: ., ./server |
 | @asol/env-core | `packages/env-core` | Environment variable reading rules; Layer: capability; Public exports: ., ./files, ./process |
 | @asol/favorites-core | `packages/favorites-core` | Device-local favorites state, card adapters, and the favorite control; Layer: capability; Public exports: ., ./ui |

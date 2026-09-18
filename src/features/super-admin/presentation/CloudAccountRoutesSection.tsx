@@ -5,24 +5,55 @@ import { ChevronDown } from "lucide-react";
 
 import { cn } from "@/shared/utils";
 
-import { cloudAccountRouteGroups } from "./cloud-account-routes";
+import { CLOUD_ACCOUNTS_COPY } from "./cloud-accounts-copy";
+import type { CloudAccountRouteGroup, GovaBoundaryFacts } from "./cloud-accounts-facts.types";
+
+const copy = CLOUD_ACCOUNTS_COPY.vercel;
+
+/**
+ * The repository-root deployment as one more group: the routes its build keeps,
+ * then the `/api` compatibility boundary that redirects everything else — so the
+ * account that owns no `ROUTE_OWNERSHIP` entry still shows what it answers.
+ */
+function boundaryGroup(boundary: GovaBoundaryFacts): CloudAccountRouteGroup {
+  return {
+    owner: boundary.project,
+    project: boundary.project,
+    patterns: [
+      ...boundary.keptRoutes.map((route) => ({
+        pattern: route.pattern,
+        methods: route.methods,
+        description: copy.keptRouteDescription(boundary),
+      })),
+      {
+        pattern: boundary.boundaryMatcher,
+        methods: boundary.boundaryMethods,
+        description: copy.boundaryDescription(boundary),
+      },
+    ],
+  };
+}
 
 /**
  * Which account answers which request, as a collapsible list per account.
  *
  * After the cutover a request's destination is chosen per route and method, so
  * "where does this call go?" stopped being answerable by reading one folder.
- * This is that answer on the page the operator already opens to see the
- * accounts.
- *
- * The data comes from `ROUTE_OWNERSHIP`, the same pure registry the client
- * router and the gova compatibility boundary use, so the page cannot disagree
- * with where a request actually lands — and it renders identically in the web
- * app, a static export, and a native bundle because nothing is fetched.
+ * The groups come from `ROUTE_OWNERSHIP` — the same registry the client router
+ * uses — plus the frontend deployment's kept routes and redirect boundary, all
+ * derived on the server, so the page cannot disagree with where a request lands.
  */
-export function CloudAccountRoutesSection({ id }: { id?: string }) {
-  const groups = React.useMemo(() => cloudAccountRouteGroups(), []);
+export function CloudAccountRoutesSection({
+  id,
+  groups: ownedGroups,
+  boundary,
+}: {
+  id?: string;
+  groups: readonly CloudAccountRouteGroup[];
+  boundary: GovaBoundaryFacts | null;
+}) {
   const [openOwner, setOpenOwner] = React.useState<string | null>(null);
+  const groups = boundary ? [...ownedGroups, boundaryGroup(boundary)] : ownedGroups;
 
   return (
     <div id={id} className="mt-4 space-y-2">
@@ -42,7 +73,7 @@ export function CloudAccountRoutesSection({ id }: { id?: string }) {
                 {group.project}
               </span>
               <span className="text-xs font-normal text-on-surface-variant">
-                {group.patterns.length} مسار
+                {copy.routeCount(group.patterns.length)}
               </span>
               <ChevronDown
                 aria-hidden
@@ -55,9 +86,11 @@ export function CloudAccountRoutesSection({ id }: { id?: string }) {
                 <table className="min-w-[720px] w-full text-xs [&_td]:break-words">
                   <thead>
                     <tr>
-                      <th className="p-1 text-start font-medium text-on-surface-variant">المسار</th>
-                      <th className="p-1 text-start font-medium text-on-surface-variant">الطرق</th>
-                      <th className="p-1 text-start font-medium text-on-surface-variant">ما يقوم به الطلب</th>
+                      {copy.routeHeaders.map((header) => (
+                        <th key={header} className="p-1 text-start font-medium text-on-surface-variant">
+                          {header}
+                        </th>
+                      ))}
                     </tr>
                   </thead>
                   <tbody>

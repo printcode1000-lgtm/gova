@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-18T04:44:11.003Z",
+  "generatedAt": "2026-09-18T12:12:09.176Z",
   "entryPoints": [
     "features/product-search/server/services/product-search-service.server.ts",
     "features/product-search/server/services/product-search-products.server.ts",
@@ -15,7 +15,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 491,
+  "fileCount": 493,
   "files": [
     "packages/account-declarations/src/accounts/gova-runtime-env-keys.ts",
     "packages/account-declarations/src/accounts/submain-runtime-env-keys.ts",
@@ -320,6 +320,8 @@
     "packages/storage-core/src/index.ts",
     "packages/storage-core/src/ports/http-fetch.ts",
     "packages/storage-core/src/server.ts",
+    "packages/storage-core/src/server/analytics/r2-bucket-contents.ts",
+    "packages/storage-core/src/server/analytics/r2-usage-analytics.ts",
     "packages/storage-core/src/server/config/account-credentials.ts",
     "packages/storage-core/src/server/orchestration/image-storage-orchestrator.ts",
     "packages/storage-core/src/server/processing/image-processor.ts",

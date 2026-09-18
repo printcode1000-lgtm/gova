@@ -77,6 +77,41 @@ export async function resolveTeamId(token: string): Promise<string | undefined> 
   return team?.id;
 }
 
+/**
+ * The team a token deploys into — the same team `resolveTeamId` selects — as
+ * Vercel describes it: its dashboard slug and its billing plan.
+ */
+export async function resolveTeamSummary(
+  token: string,
+): Promise<{ slug: string; plan: string | null } | undefined> {
+  const response = await fetch('https://api.vercel.com/v2/teams', { headers: buildHeaders(token) });
+  if (!response.ok) return undefined;
+  const data = (await response.json()) as {
+    teams?: Array<{ id: string; slug: string; billing?: { plan?: string } }>;
+  };
+  const team = data.teams?.[0];
+  return team ? { slug: team.slug, plan: team.billing?.plan ?? null } : undefined;
+}
+
+/**
+ * The Git repository a project is linked to, as Vercel reports it: `null` when
+ * the project has no Git link, `undefined` when the project cannot be read.
+ */
+export async function readProjectGitRepository(
+  token: string,
+  projectName: string,
+  teamId?: string,
+): Promise<string | null | undefined> {
+  const response = await fetch(
+    withTeam(`https://api.vercel.com/v9/projects/${encodeURIComponent(projectName)}`, teamId),
+    { headers: buildHeaders(token) },
+  );
+  if (!response.ok) return undefined;
+  const data = (await response.json()) as { link?: { org?: string; repo?: string; type?: string } | null };
+  if (!data.link?.repo) return null;
+  return data.link.org ? `${data.link.org}/${data.link.repo}` : data.link.repo;
+}
+
 export interface VercelAccountAccessReport {
   name: AccountDeclaration['name'];
   project: string;

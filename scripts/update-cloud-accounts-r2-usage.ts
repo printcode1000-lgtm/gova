@@ -4,7 +4,7 @@ import path from "node:path";
 import { readEnvFiles } from "@asol/env-core/files";
 import { getAllStorageAccounts, type StorageAccountDefinition } from "@asol/storage-core";
 
-import { OTA_R2_CLOUD_ACCOUNT } from "../src/features/super-admin/presentation/cloud-accounts-reference";
+import { OTA_R2_CLOUD_ACCOUNT } from "../src/features/super-admin/server/services/cloud-accounts-ota-account";
 import { classifyR2Operation } from "./cloud-accounts-r2-usage-classification";
 import { postCloudflareGraphqlViaBrowser } from "./cloudflare-browser-graphql";
 import { R2_USAGE_SNAPSHOT } from "../src/features/super-admin/presentation/cloud-accounts-r2-usage-snapshot";

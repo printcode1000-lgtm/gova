@@ -38,16 +38,18 @@ of them. See [The control runtime](control-runtime.md).
 
 ## Vercel — eight accounts
 
+The Account column is the team slug Vercel reports for each token (`resolveTeamSummary`); `/dev/cloud-accounts` reads it from Vercel rather than from this table, and so does its Git column (`readProjectGitRepository`).
+
 | Account | Email | Project | Serves | GitHub | Updated by |
 |---|---|---|---|---|---|
-| `hesham-101` | `print.code.1000@gmail.com` | `gova` | frontend, static assets, `/.well-known/**`, `/api/health`, and the compatibility redirect boundary. No Business API. | connected — Git deploy disabled | `deploy:all` or `deploy:push:fast` |
-| `asol-control` | `tenderxcontractors@gmail.com` | `asol-control` | Super Admin server operations, System Logs, OTA administration, build/release jobs, production deployment authority, Vercel Sandbox orchestration, callbacks, release readiness | not connected | `npm run control:deploy` |
-| `submain` | `groupstenderximages@gmail.com` | `asol-submain` | search (`/api/search/*`), cart checkout, order creation (`POST /api/orders/from-cart`, `POST /api/orders/custom-request-from-profile`) | not connected | `npm run submain:deploy` |
-| `sub2main` | `tenderx.engineer100@gmail.com` | `asol-sub2main` | seller writes: product mutations, profile updates, storage uploads, pharmacy catalog | not connected | `npm run sub2main:deploy` |
+| `hesham-101` | `print.code.1000@gmail.com` | `gova` | frontend, static assets, `/.well-known/**`, `/api/health`, and the compatibility redirect boundary. No Business API. | not linked; `vercel.json` disables Git deploys | `deploy:all` or `deploy:push:fast` |
+| `01026546550` | `tenderxcontractors@gmail.com` | `asol-control` | Super Admin server operations, System Logs, OTA administration, build/release jobs, production deployment authority, Vercel Sandbox orchestration, callbacks, release readiness | not connected | `npm run control:deploy` |
+| `283` | `groupstenderximages@gmail.com` | `asol-submain` | search (`/api/search/*`), cart checkout, order creation (`POST /api/orders/from-cart`, `POST /api/orders/custom-request-from-profile`) | not connected | `npm run submain:deploy` |
+| `773` | `tenderx.engineer100@gmail.com` | `asol-sub2main` | seller writes: product mutations, profile updates, storage uploads, pharmacy catalog | not connected | `npm run sub2main:deploy` |
 | `101-0902` | `bs.bid.story@gmail.com` | `asol-notifications` | push fan-out only | not connected | `npm run notifications:deploy` |
-| products account | `gnagnahesham@gmail.com` | `asol-products` | product reads | not connected | `npm run products:deploy` |
-| orders account | `tenderx10@gmail.com` | `asol-orders` | `GET /api/orders` (the list only) | not connected | `npm run orders:deploy` |
-| profiles account | `hesham10125@gmail.com` | `asol-profiles` | five profile reads | not connected | `npm run profiles:deploy` |
+| `87-0bf2` | `gnagnahesham@gmail.com` | `asol-products` | product reads | not connected | `npm run products:deploy` |
+| `434-49de` | `tenderx10@gmail.com` | `asol-orders` | `GET /api/orders` (the list only) | not connected | `npm run orders:deploy` |
+| `656-1bdb` | `hesham10125@gmail.com` | `asol-profiles` | five profile reads | not connected | `npm run profiles:deploy` |
 
 ## Every account names its owner
 
@@ -60,41 +62,54 @@ adding one without an email is made to fail rather than trusted to be remembered
 |---|---|---|
 | Vercel | `AccountDeclaration.email` in `@asol/account-declarations` | `typecheck` — `TS2741: Property 'email' is missing` |
 | Cloudflare R2 | `StorageAccountDefinition.email` in `@asol/storage-core` | `typecheck`, plus `registerStorageAccount` at runtime |
-| Turso | this table and the super-admin page | `npm run test:cloud-accounts` |
+| Cloudflare R2 (OTA) | `OtaR2Target.email` in `@asol/ota-core` | `typecheck` |
+| Turso | the Turso API (`readTursoOrganizationIdentity`: the token owner) | `npm run test:cloud-accounts` |
 
-Turso is the weak one, and deliberately so rather than by oversight: its five
-accounts are Turso *organizations* reached through `TURSO_*_ORGANIZATION` and
-`TURSO_*_API_TOKEN`, with no registry object anywhere in the tree to attach a field
-to. Inventing one to hold a single string would be a package that exists to satisfy
-a test.
+Turso has no registry object, and needs none: its organizations are the
+`TURSO_[<SCOPE>_]ORGANIZATION` / `TURSO_[<SCOPE>_]API_TOKEN` pairs in
+`.env.example`, each logical database belongs to the organization its configured
+URL host names (`<database>-<organization>`), and the token owner's login and the
+organization's database list are read from Turso. The Vercel email is also checked
+against the token owner Vercel reports.
 
-Usage display follows the same boundary. The app runtime never calls the Turso
-Platform API; a local tooling command (`npm run cloud-accounts:turso-usage`)
-queries organization usage and rewrites a safe snapshot beside the page
-reference. `/dev/cloud-accounts` renders that snapshot as rows-read,
-rows-written, storage, embedded sync, database-count, location, and group usage.
-Percentages use the Free plan limits: 500,000,000 rows read, 10,000,000 rows
-written, 5 GB storage, 3 GB embedded sync, and 100 databases. A stale snapshot
-is acceptable operational evidence; live API tokens in a route or client
-component are not.
+Turso usage follows the same safe-live pattern as R2 in local development.
+After a verified super-admin session, `/dev/cloud-accounts` calls the strict
+development-only `GET /api/dev/cloud-accounts/turso-usage` route. The route
+keeps every Turso platform token on the server and queries Organization Usage
+plus Current Subscription and List Plans. It returns sanitized rows-read,
+rows-written, storage, embedded sync, input/output byte totals, database count,
+locations, groups, current plan, billing-cycle metadata, and plan quotas only.
+The browser never receives organization names from env or platform tokens.
+
+A successful live row replaces the display-time snapshot for that organization.
+A missing credential or a Turso API failure affects only that row and falls back
+to `cloud-accounts-turso-usage-snapshot.ts`. The manual
+`npm run cloud-accounts:turso-usage` command remains the explicit snapshot
+writer and operational fallback. The snapshot still uses the Starter/Free
+limits, while live rows use the quotas returned for the account's current plan.
 
 `npm run test:cloud-accounts` covers all three anyway, and it is also what makes
-updating the reference mandatory rather than customary. The page renders from
-`cloud-accounts-reference.ts` (Vercel from `ACCOUNT_DECLARATIONS`, R2 from
-`getAllStorageAccounts()` plus explicit OTA, Turso from `TURSO_CLOUD_ACCOUNTS`).
-The test fails when:
+updating the reference mandatory rather than customary. The page renders
+`CloudAccountsFacts`, which `buildCloudAccountsFacts()` derives per request from
+`ACCOUNT_DECLARATIONS`, `ROUTE_OWNERSHIP`, the storage account and profile
+registries, the OTA target, the desired-schema manifests, and `package.json`
+(see [super-admin-cloud-accounts.md](./super-admin-cloud-accounts.md)). The
+suites fail when:
 
-- a Vercel declaration is missing from `listVercelCloudAccounts()`, or its email /
-  project disagrees with the declaration;
-- an R2 registry email is missing from `listR2CloudAccounts()`, or OTA is dropped;
-- a Turso row lacks a valid email or database count;
-- glance counts disagree with those lists.
+- a Vercel declaration, route owner, storage account, storage profile, or Turso
+  database is missing from the facts, or any derived value disagrees with its
+  source;
+- a Turso row lacks a valid email, or a logical database belongs to no
+  organization or to two;
+- a command the page names is not a `package.json` script;
+- a presentation component paints text of its own instead of the copy module;
+- a provider tab stops refreshing its values live on activation.
 
-It runs inside `npm test` and `npm run build`. The route is `force-dynamic`.
+They run inside `npm test`, which `deploy:all` preflight runs. The route is
+`force-dynamic`.
 
 The page lists one R2 account the registry does not — OTA is routed through
-`R2_STORAGE_TARGETS` rather than the account registry — so the R2 comparison is
-"at least", while Vercel's is exact.
+`@asol/ota-core` (`OTA_R2_STORAGE_TARGET`) rather than the account registry.
 
 ### The rule that makes this work
 
@@ -103,37 +118,73 @@ code path to one. Every crossing goes through a bridge module that is deployed
 to no account at all — it runs in the user's browser:
 
 ```text
-                          browser
-        ╱───────────────────┼───────────────────╲
-       ╱                    │                    ╲
-  gova ◄── service-bridge ──┼──► asol-products
-       ╲  (@asol/account    │    asol-orders
-        ╲  -bridge)         │    asol-profiles
-         ╲── notification-bridge ──► asol-notifications
-         ╲── account-bridge ──► asol-submain   (search, cart, orders)
-          ╲── account-bridge ──► asol-sub2main (seller writes, uploads)
+browser
+  └─ @asol/account-bridge (ROUTE_OWNERSHIP)
+       ├─► asol-control
+       ├─► asol-notifications
+       ├─► asol-submain    (search, cart, orders)
+       ├─► asol-orders
+       ├─► asol-sub2main   (seller writes, uploads)
+       ├─► asol-profiles
+       ├─► asol-products
+       └─► gova            (/api/health only; /api/:path* → 307 to the owner)
 ```
 
-Only `gova` is connected to GitHub. All six other accounts deploy from
-`services/<name>/` via terminal commands — never via a Git repository link.
+`gova` answers no Business API. Its build (`@asol/gova-deployment-core`) keeps
+only `GOVA_KEPT_API_ROUTES` (`/api/health`), and `src/proxy.ts` redirects every
+owned `/api` route to its owner with 307, answers CORS preflight, and returns 502
+`businessApiRouteHasNoOwner` for a business route no account owns.
+
+`/dev/cloud-accounts` draws this picture from `ROUTE_OWNERSHIP`, the gova build
+manifest, and `src/proxy.ts` on every load, so the page cannot lag them.
+
+No Vercel project is linked to a Git repository — Vercel reports no Git link for
+any of them, `ensureProject` removes one if it appears, and `gova`'s
+`vercel.json` also disables Git deployments. `gova` deploys through
+`npm run main:deploy` inside the release commands; all other accounts deploy from
+`services/<name>/` via terminal commands. The page reads each project's Git link
+from Vercel and each deployment's `vercel.json` to state this.
 CLI deploy metadata uses `asolDeployment*` keys only; `githubCommit*` metadata is
 reserved for the GitHub-linked `gova` project so CLI full-app deploys cannot appear on
 the repository's Deployments tab.
 
-Vercel usage display is also snapshot-only. `npm run
-cloud-accounts:vercel-usage` uses the declarations' Vercel token names locally,
-queries the documented REST API for rate-limit headers and FOCUS billing charges
-when available, and writes a generated safe snapshot for `/dev/cloud-accounts`.
-The client page renders limits and sanitized totals only; it never imports or
-calls the Vercel API directly.
+Vercel usage refreshes live when the Vercel tab opens, through the strict
+development-only `GET /api/dev/cloud-accounts/vercel-usage` route.
+`readVercelAccountUsage` summarizes rate-limit headers and FOCUS billing charges
+read through `@asol/vercel-deploy-core`; `npm run cloud-accounts:vercel-usage`
+uses the same summarizer to write the fallback snapshot. The client page renders
+limits and sanitized totals only; it never imports or calls the Vercel API
+directly.
 
-Cloudflare R2 usage follows the same rule. `npm run cloud-accounts:r2-usage`
-queries Cloudflare GraphQL Analytics locally for the current month and rewrites
-`cloud-accounts-r2-usage-snapshot.ts`. The page renders Class A operations,
-Class B operations, total storage, object count, upload count, capture time, and
-the documented free-tier limits. Tokens are tooling-only; if GraphQL Analytics is
-not authorized for an account, the snapshot records that status and the page
-shows the limit rather than a fabricated usage value.
+Cloudflare R2 usage is intentionally different from the other provider
+snapshots: in local development it refreshes live when the Cloudflare tab of
+`/dev/cloud-accounts` opens. After the browser has a verified super-admin session it calls the strict
+development-only `GET /api/dev/cloud-accounts/r2-usage` route. The route keeps
+Cloudflare tokens on the server, delegates the GraphQL transport to
+`@asol/storage-core/server`, and returns only safe usage rows. A successful
+live row replaces the display-time snapshot for that account; a missing or
+under-scoped token falls back to the previous safe snapshot without blocking
+other R2 accounts.
+
+`npm run cloud-accounts:r2-usage` remains the explicit snapshot writer. It
+queries the same current-month GraphQL data and rewrites
+`cloud-accounts-r2-usage-snapshot.ts`. Both live and snapshot paths render
+Class A operations, Class B operations, total storage, object count, upload
+count, capture time, and the documented free-tier limits.
+
+`npm run cloudflare:r2-analytics:check` verifies that every local R2 API token
+can read the GraphQL Analytics dataset needed for Class A and Class B
+operations. Passing requires account-scoped Cloudflare permissions `Account
+Analytics Read` and `Workers R2 Storage Read` on each of the four R2 accounts.
+
+Bucket contents refresh live on the same tab through
+`GET /api/dev/cloud-accounts/r2-contents` (`readCloudflareR2BucketContents` in
+`@asol/storage-core/server`), and fall back to a second snapshot:
+`npm run cloud-accounts:r2-contents` walks the Cloudflare R2 objects REST list for
+every registered R2 account and the explicit OTA bucket. It writes `cloud-accounts-r2-contents-snapshot.ts` with
+object counts, byte totals, and latest-object metadata for every bucket. This
+keeps "current contents" complete even when GraphQL Analytics is unavailable for
+one of the Cloudflare accounts.
 
 The Vercel CLI also probes the local repository on its own and attaches the last
 commit (sha, branch, message, remote URL) to every upload, which the dashboard
@@ -254,7 +305,7 @@ profile overrides.
 | Account ID | `8486fdbb…3e043` | `166409f3…d3e08` | `f08cd5b7…f2642` | `21fce63d…1810` |
 | Email | `print.code.1000@gmail.com` | `bids.stories@gmail.com` | `hesham.gaber@gmail.com` | `tenderx.engineer100@gmail.com` |
 | Bucket | `pic1` | `gova-storage` | `productcat1` | `ota` |
-| Target / Provider | `CloudflareR2` | `CloudflareR2Products` | `CloudflareR2_products-apparel-pets` | `ota` (in `R2_STORAGE_TARGETS`) |
+| Target / Provider | `CloudflareR2` | `CloudflareR2Products` | `CloudflareR2_products-apparel-pets` | `@asol/ota-core` (`OTA_R2_STORAGE_TARGET`) |
 | Public Base URL | `https://pub-91c79e3f34ed4575b997fd68ac8dd278.r2.dev` | `https://pub-e1fa9cec1a694b118840c7c2ebc1633b.r2.dev` | `https://pub-de6cc53c347e4e6fa0dea7b79bd0ce3e.r2.dev` | `https://pub-ee70bc6c84c54d9b8a8ba44c6f7820a9.r2.dev` |
 
 ### What decides where a file goes
@@ -292,6 +343,17 @@ The general and product buckets hold zero OTA objects; `images/` objects in both
 ### Reading an image is not an account operation
 
 `R2_API_TOKEN`, `PRODUCT_R2_API_TOKEN`, `APPAREL_PETS_R2_API_TOKEN`, and `ASOL_OTA_R2_API_TOKEN` create buckets and manage CORS policy. Turning a key into a URL is string work and an existence check needs only the S3 pair, so the read paths take the narrow accessors — and neither `asol-products` nor `asol-profiles` holds an API token. `asol-products` does receive `APPAREL_PETS_R2_*` public/S3 keys so apparel/pets image URLs resolve.
+
+### Local Cloudflare control CLI
+
+`npm run cloudflare:control` is the local Cloudflare operator entrypoint. It is
+tooling-only, uses `@asol/storage-core` plus the explicit OTA account for its
+account catalog, and reads tokens from `.env.local` through the shared env-file
+reader. It exposes safe account/token/R2 listing commands plus an advanced
+`api:request` escape hatch for Cloudflare REST endpoints. That escape hatch
+still requires an account selector, replaces `{account_id}` from the selected
+account, redacts secret-looking fields in output, and refuses write methods
+without `--confirm`.
 
 See [R2 Storage Accounts](../05-platform-features/r2-storage-accounts.md).
 

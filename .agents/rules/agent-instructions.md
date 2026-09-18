@@ -2,6 +2,8 @@
 
 Binding on every agent and developer working on this project.
 
+**Session-start rule (mandatory).** At the beginning of every new chat, task, or agent session involving this repository, and before the first repository action, re-read the current project working rules and the current documentation entry points (`docs/README.md` and `docs/09-agent-knowledge/README.md`). Then run the task-specific Context Pack and read every relevant document, contract, reference file, media/artifact, and generated index it identifies before editing. Never rely on a remembered copy of project rules when the repository can be checked; the repository's current rules are authoritative. If the task changes behavior, APIs, data, architecture, configuration, runtime behavior, or operations, update the related editable documentation in the same task, regenerate derived documentation when required, and do not leave code/documentation drift.
+
 1. **Documentation and architecture before and during any change (mandatory).** The documentation system is the primary entry point for understanding and working on the project:
    - To understand the project or its structure, start with `docs/README.md`, then `docs/09-agent-knowledge/README.md`, and use the generated Knowledge Graph and catalogs.
    - For research or a specific change, run the Context Pack through `npx tsx scripts/docs/context.ts <target>` for the relevant target, then read the documents and contracts it identifies before writing code.

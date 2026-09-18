@@ -620,6 +620,20 @@
       ]
     },
     {
+      "id": "command:cloud-accounts:r2-contents",
+      "kind": "command",
+      "name": "npm run cloud-accounts:r2-contents",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "cloud-accounts",
+        "cloud-accounts:r2-contents",
+        "npm",
+        "npm run cloud-accounts:r2-contents",
+        "r2-contents",
+        "run"
+      ]
+    },
+    {
       "id": "command:cloud-accounts:r2-usage",
       "kind": "command",
       "name": "npm run cloud-accounts:r2-usage",
@@ -659,6 +673,35 @@
         "npm run cloud-accounts:vercel-usage",
         "run",
         "vercel-usage"
+      ]
+    },
+    {
+      "id": "command:cloudflare:control",
+      "kind": "command",
+      "name": "npm run cloudflare:control",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "cloudflare",
+        "cloudflare:control",
+        "control",
+        "npm",
+        "npm run cloudflare:control",
+        "run"
+      ]
+    },
+    {
+      "id": "command:cloudflare:r2-analytics:check",
+      "kind": "command",
+      "name": "npm run cloudflare:r2-analytics:check",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "check",
+        "cloudflare",
+        "cloudflare:r2-analytics:check",
+        "npm",
+        "npm run cloudflare:r2-analytics:check",
+        "r2-analytics",
+        "run"
       ]
     },
     {
@@ -2902,6 +2945,20 @@
         "run",
         "test",
         "test:cloud-accounts"
+      ]
+    },
+    {
+      "id": "command:test:cloudflare-control",
+      "kind": "command",
+      "name": "npm run test:cloudflare-control",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "cloudflare-control",
+        "npm",
+        "npm run test:cloudflare-control",
+        "run",
+        "test",
+        "test:cloudflare-control"
       ]
     },
     {
@@ -6403,6 +6460,7 @@
         "@asol/data-core/system-logs",
         "@asol/data-core/telemetry",
         "@asol/data-core/tooling",
+        "@asol/data-core/turso-platform",
         "@asol/data-core/verification",
         "@asol/dev-core",
         "@asol/dev-core/server",
@@ -12613,6 +12671,7 @@
         "@asol/profiles-composition",
         "@asol/service-mirror-core",
         "@asol/storage-core",
+        "@asol/storage-core/server",
         "@asol/vercel-deploy-core",
         "accounts",
         "architectural",
@@ -12644,7 +12703,10 @@
         "reconstruction",
         "relationships",
         "relocated",
-        "the"
+        "src/proxy",
+        "src/proxy.ts",
+        "the",
+        "ts"
       ]
     },
     {
@@ -13061,8 +13123,12 @@
       "summary": "`/dev/cloud-accounts` is a read-only reference, development-only.",
       "tags": [
         "/dev/cloud-accounts",
+        "@asol/account-bridge/routes",
         "@asol/account-declarations",
+        "@asol/data-core/provisioning",
+        "@asol/ota-core",
         "@asol/storage-core",
+        "@asol/storage-core/server",
         "@asol/vercel-deploy-core",
         "`/dev/cloud-accounts` is a read-only reference, development-only.",
         "accounts",
@@ -13077,12 +13143,16 @@
         "packages/account-declarations/src/accounts/submain.ts",
         "read-only",
         "reference",
-        "src/features/super-admin/presentation/cloud-accounts-reference",
-        "src/features/super-admin/presentation/cloud-accounts-reference.ts",
+        "src/features/super-admin/presentation/cloud-accounts-copy",
+        "src/features/super-admin/presentation/cloud-accounts-copy.ts",
         "src/features/super-admin/presentation/superadmincloudaccountscontent",
         "src/features/super-admin/presentation/superadmincloudaccountscontent.tsx",
         "src/features/super-admin/presentation/superadmincloudaccountspage",
         "src/features/super-admin/presentation/superadmincloudaccountspage.tsx",
+        "src/features/super-admin/server/services/cloud-accounts-facts",
+        "src/features/super-admin/server/services/cloud-accounts-facts.ts",
+        "src/proxy",
+        "src/proxy.ts",
         "super",
         "super admin cloud accounts",
         "ts",
@@ -16125,6 +16195,10 @@
         "discovery",
         "docs/09-agent-knowledge/agent-protocol",
         "docs/09-agent-knowledge/agent-protocol.md",
+        "docs/09-agent-knowledge/readme",
+        "docs/09-agent-knowledge/readme.md",
+        "docs/readme",
+        "docs/readme.md",
         "editing",
         "edits",
         "every",
@@ -23161,7 +23235,7 @@
       "kind": "package",
       "name": "@asol/data-core",
       "path": "packages/data-core",
-      "summary": "Database access, sharding, and domain repositories; Layer: capability; Public exports: ., ./account-deletion, ./advertisements, ./auth, ./auth/entities, ./browser, ./composition, ./control-ota, ./control-release-state, ./control-system-logs, ./feature-flags, ./follow, ./follow/entities, ./marketplace-orders, ./notifications, ./ota, ./ota-runtime, ./password-recovery, ./pharmacy-profile-catalog, ./pharmacy-profile-catalog/entities, ./product, ./product-search, ./product-search-fields, ./product-search/entities, ./product/entities, ./profile, ./profile/entities, ./provisioning, ./runtime-config, ./seller-discounts, ./seller-discounts/entities, ./super-admin, ./system-logs, ./telemetry, ./tooling, ./verification",
+      "summary": "Database access, sharding, and domain repositories; Layer: capability; Public exports: ., ./account-deletion, ./advertisements, ./auth, ./auth/entities, ./browser, ./composition, ./control-ota, ./control-release-state, ./control-system-logs, ./feature-flags, ./follow, ./follow/entities, ./marketplace-orders, ./notifications, ./ota, ./ota-runtime, ./password-recovery, ./pharmacy-profile-catalog, ./pharmacy-profile-catalog/entities, ./product, ./product-search, ./product-search-fields, ./product-search/entities, ./product/entities, ./profile, ./profile/entities, ./provisioning, ./runtime-config, ./seller-discounts, ./seller-discounts/entities, ./super-admin, ./system-logs, ./telemetry, ./tooling, ./turso-platform, ./verification",
       "tags": [
         ".",
         "./account-deletion",
@@ -23198,6 +23272,7 @@
         "./system-logs",
         "./telemetry",
         "./tooling",
+        "./turso-platform",
         "./verification",
         "/account-deletion",
         "/advertisements",
@@ -23233,6 +23308,7 @@
         "/system-logs",
         "/telemetry",
         "/tooling",
+        "/turso-platform",
         "/verification",
         "@asol/data-core",
         "@libsql/client",
@@ -24462,6 +24538,70 @@
         "handler api",
         "src/app/api/dev/catalog-studio/images/route",
         "src/app/api/dev/catalog-studio/images/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "route:/api/dev/cloud-accounts/r2-contents:handler",
+      "kind": "route",
+      "name": "/api/dev/cloud-accounts/r2-contents",
+      "path": "src/app/api/dev/cloud-accounts/r2-contents/route.ts",
+      "summary": "App Router request handler",
+      "tags": [
+        "/api/dev/cloud-accounts/r2-contents",
+        "api",
+        "handler",
+        "handler api",
+        "src/app/api/dev/cloud-accounts/r2-contents/route",
+        "src/app/api/dev/cloud-accounts/r2-contents/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "route:/api/dev/cloud-accounts/r2-usage:handler",
+      "kind": "route",
+      "name": "/api/dev/cloud-accounts/r2-usage",
+      "path": "src/app/api/dev/cloud-accounts/r2-usage/route.ts",
+      "summary": "App Router request handler",
+      "tags": [
+        "/api/dev/cloud-accounts/r2-usage",
+        "api",
+        "handler",
+        "handler api",
+        "src/app/api/dev/cloud-accounts/r2-usage/route",
+        "src/app/api/dev/cloud-accounts/r2-usage/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "route:/api/dev/cloud-accounts/turso-usage:handler",
+      "kind": "route",
+      "name": "/api/dev/cloud-accounts/turso-usage",
+      "path": "src/app/api/dev/cloud-accounts/turso-usage/route.ts",
+      "summary": "App Router request handler",
+      "tags": [
+        "/api/dev/cloud-accounts/turso-usage",
+        "api",
+        "handler",
+        "handler api",
+        "src/app/api/dev/cloud-accounts/turso-usage/route",
+        "src/app/api/dev/cloud-accounts/turso-usage/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "route:/api/dev/cloud-accounts/vercel-usage:handler",
+      "kind": "route",
+      "name": "/api/dev/cloud-accounts/vercel-usage",
+      "path": "src/app/api/dev/cloud-accounts/vercel-usage/route.ts",
+      "summary": "App Router request handler",
+      "tags": [
+        "/api/dev/cloud-accounts/vercel-usage",
+        "api",
+        "handler",
+        "handler api",
+        "src/app/api/dev/cloud-accounts/vercel-usage/route",
+        "src/app/api/dev/cloud-accounts/vercel-usage/route.ts",
         "ts"
       ]
     },
@@ -27057,6 +27197,17 @@
       ]
     },
     {
+      "id": "script:scripts/check-cloudflare-r2-analytics.ts",
+      "kind": "script",
+      "name": "check-cloudflare-r2-analytics.ts",
+      "path": "scripts/check-cloudflare-r2-analytics.ts",
+      "tags": [
+        "scripts/check-cloudflare-r2-analytics",
+        "scripts/check-cloudflare-r2-analytics.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/check-deployed-origins.ts",
       "kind": "script",
       "name": "check-deployed-origins.ts",
@@ -27196,6 +27347,17 @@
       "tags": [
         "scripts/cloudflare-browser-graphql",
         "scripts/cloudflare-browser-graphql.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/cloudflare-control.ts",
+      "kind": "script",
+      "name": "cloudflare-control.ts",
+      "path": "scripts/cloudflare-control.ts",
+      "tags": [
+        "scripts/cloudflare-control",
+        "scripts/cloudflare-control.ts",
         "ts"
       ]
     },
@@ -28395,6 +28557,17 @@
       "tags": [
         "scripts/test-runtime-context",
         "scripts/test-runtime-context.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/update-cloud-accounts-r2-contents.ts",
+      "kind": "script",
+      "name": "update-cloud-accounts-r2-contents.ts",
+      "path": "scripts/update-cloud-accounts-r2-contents.ts",
+      "tags": [
+        "scripts/update-cloud-accounts-r2-contents",
+        "scripts/update-cloud-accounts-r2-contents.ts",
         "ts"
       ]
     },
@@ -32328,6 +32501,42 @@
         "packages/data-core/src/domains/system-logs/system-logs.repository.server.ts",
         "repository",
         "server",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/domains/turso-platform/index.server.ts",
+      "kind": "source",
+      "name": "index.server.ts",
+      "path": "packages/data-core/src/domains/turso-platform/index.server.ts",
+      "tags": [
+        "packages/data-core/src/domains/turso-platform/index",
+        "packages/data-core/src/domains/turso-platform/index.server.ts",
+        "server",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/domains/turso-platform/providers/turso-platform-identity.provider.ts",
+      "kind": "source",
+      "name": "turso-platform-identity.provider.ts",
+      "path": "packages/data-core/src/domains/turso-platform/providers/turso-platform-identity.provider.ts",
+      "tags": [
+        "packages/data-core/src/domains/turso-platform/providers/turso-platform-identity",
+        "packages/data-core/src/domains/turso-platform/providers/turso-platform-identity.provider.ts",
+        "provider",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/data-core/src/domains/turso-platform/providers/turso-platform-usage.provider.ts",
+      "kind": "source",
+      "name": "turso-platform-usage.provider.ts",
+      "path": "packages/data-core/src/domains/turso-platform/providers/turso-platform-usage.provider.ts",
+      "tags": [
+        "packages/data-core/src/domains/turso-platform/providers/turso-platform-usage",
+        "packages/data-core/src/domains/turso-platform/providers/turso-platform-usage.provider.ts",
+        "provider",
         "ts"
       ]
     },
@@ -38186,6 +38395,28 @@
       ]
     },
     {
+      "id": "source:packages/storage-core/src/server/analytics/r2-bucket-contents.ts",
+      "kind": "source",
+      "name": "r2-bucket-contents.ts",
+      "path": "packages/storage-core/src/server/analytics/r2-bucket-contents.ts",
+      "tags": [
+        "packages/storage-core/src/server/analytics/r2-bucket-contents",
+        "packages/storage-core/src/server/analytics/r2-bucket-contents.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:packages/storage-core/src/server/analytics/r2-usage-analytics.ts",
+      "kind": "source",
+      "name": "r2-usage-analytics.ts",
+      "path": "packages/storage-core/src/server/analytics/r2-usage-analytics.ts",
+      "tags": [
+        "packages/storage-core/src/server/analytics/r2-usage-analytics",
+        "packages/storage-core/src/server/analytics/r2-usage-analytics.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/storage-core/src/server/config/account-credentials.ts",
       "kind": "source",
       "name": "account-credentials.ts",
@@ -40967,6 +41198,50 @@
       ]
     },
     {
+      "id": "source:src/app/api/dev/cloud-accounts/r2-contents/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "src/app/api/dev/cloud-accounts/r2-contents/route.ts",
+      "tags": [
+        "src/app/api/dev/cloud-accounts/r2-contents/route",
+        "src/app/api/dev/cloud-accounts/r2-contents/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/app/api/dev/cloud-accounts/r2-usage/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "src/app/api/dev/cloud-accounts/r2-usage/route.ts",
+      "tags": [
+        "src/app/api/dev/cloud-accounts/r2-usage/route",
+        "src/app/api/dev/cloud-accounts/r2-usage/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/app/api/dev/cloud-accounts/turso-usage/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "src/app/api/dev/cloud-accounts/turso-usage/route.ts",
+      "tags": [
+        "src/app/api/dev/cloud-accounts/turso-usage/route",
+        "src/app/api/dev/cloud-accounts/turso-usage/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/app/api/dev/cloud-accounts/vercel-usage/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "src/app/api/dev/cloud-accounts/vercel-usage/route.ts",
+      "tags": [
+        "src/app/api/dev/cloud-accounts/vercel-usage/route",
+        "src/app/api/dev/cloud-accounts/vercel-usage/route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/app/api/dev/product-style/route.ts",
       "kind": "source",
       "name": "route.ts",
@@ -42087,6 +42362,17 @@
         "src/app/dev/cloud-accounts/page",
         "src/app/dev/cloud-accounts/page.tsx",
         "tsx"
+      ]
+    },
+    {
+      "id": "source:src/app/dev/cloud-accounts/turso-database-inventory.ts",
+      "kind": "source",
+      "name": "turso-database-inventory.ts",
+      "path": "src/app/dev/cloud-accounts/turso-database-inventory.ts",
+      "tags": [
+        "src/app/dev/cloud-accounts/turso-database-inventory",
+        "src/app/dev/cloud-accounts/turso-database-inventory.ts",
+        "ts"
       ]
     },
     {
@@ -51465,13 +51751,58 @@
       ]
     },
     {
-      "id": "source:src/features/super-admin/presentation/cloud-account-routes.ts",
+      "id": "source:src/features/super-admin/presentation/cloud-accounts-bridge-diagram.ts",
       "kind": "source",
-      "name": "cloud-account-routes.ts",
-      "path": "src/features/super-admin/presentation/cloud-account-routes.ts",
+      "name": "cloud-accounts-bridge-diagram.ts",
+      "path": "src/features/super-admin/presentation/cloud-accounts-bridge-diagram.ts",
       "tags": [
-        "src/features/super-admin/presentation/cloud-account-routes",
-        "src/features/super-admin/presentation/cloud-account-routes.ts",
+        "src/features/super-admin/presentation/cloud-accounts-bridge-diagram",
+        "src/features/super-admin/presentation/cloud-accounts-bridge-diagram.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/presentation/cloud-accounts-copy.ts",
+      "kind": "source",
+      "name": "cloud-accounts-copy.ts",
+      "path": "src/features/super-admin/presentation/cloud-accounts-copy.ts",
+      "tags": [
+        "src/features/super-admin/presentation/cloud-accounts-copy",
+        "src/features/super-admin/presentation/cloud-accounts-copy.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/presentation/cloud-accounts-facts.types.ts",
+      "kind": "source",
+      "name": "cloud-accounts-facts.types.ts",
+      "path": "src/features/super-admin/presentation/cloud-accounts-facts.types.ts",
+      "tags": [
+        "src/features/super-admin/presentation/cloud-accounts-facts",
+        "src/features/super-admin/presentation/cloud-accounts-facts.types.ts",
+        "ts",
+        "types"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/presentation/cloud-accounts-format.ts",
+      "kind": "source",
+      "name": "cloud-accounts-format.ts",
+      "path": "src/features/super-admin/presentation/cloud-accounts-format.ts",
+      "tags": [
+        "src/features/super-admin/presentation/cloud-accounts-format",
+        "src/features/super-admin/presentation/cloud-accounts-format.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/presentation/cloud-accounts-r2-contents-snapshot.ts",
+      "kind": "source",
+      "name": "cloud-accounts-r2-contents-snapshot.ts",
+      "path": "src/features/super-admin/presentation/cloud-accounts-r2-contents-snapshot.ts",
+      "tags": [
+        "src/features/super-admin/presentation/cloud-accounts-r2-contents-snapshot",
+        "src/features/super-admin/presentation/cloud-accounts-r2-contents-snapshot.ts",
         "ts"
       ]
     },
@@ -51487,13 +51818,13 @@
       ]
     },
     {
-      "id": "source:src/features/super-admin/presentation/cloud-accounts-reference.ts",
+      "id": "source:src/features/super-admin/presentation/cloud-accounts-rich-text.ts",
       "kind": "source",
-      "name": "cloud-accounts-reference.ts",
-      "path": "src/features/super-admin/presentation/cloud-accounts-reference.ts",
+      "name": "cloud-accounts-rich-text.ts",
+      "path": "src/features/super-admin/presentation/cloud-accounts-rich-text.ts",
       "tags": [
-        "src/features/super-admin/presentation/cloud-accounts-reference",
-        "src/features/super-admin/presentation/cloud-accounts-reference.ts",
+        "src/features/super-admin/presentation/cloud-accounts-rich-text",
+        "src/features/super-admin/presentation/cloud-accounts-rich-text.ts",
         "ts"
       ]
     },
@@ -51527,6 +51858,61 @@
       "tags": [
         "src/features/super-admin/presentation/cloudaccountroutessection",
         "src/features/super-admin/presentation/cloudaccountroutessection.tsx",
+        "tsx"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/presentation/CloudAccountsCloudflareTab.tsx",
+      "kind": "source",
+      "name": "CloudAccountsCloudflareTab.tsx",
+      "path": "src/features/super-admin/presentation/CloudAccountsCloudflareTab.tsx",
+      "tags": [
+        "src/features/super-admin/presentation/cloudaccountscloudflaretab",
+        "src/features/super-admin/presentation/cloudaccountscloudflaretab.tsx",
+        "tsx"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/presentation/CloudAccountsGeneralTab.tsx",
+      "kind": "source",
+      "name": "CloudAccountsGeneralTab.tsx",
+      "path": "src/features/super-admin/presentation/CloudAccountsGeneralTab.tsx",
+      "tags": [
+        "src/features/super-admin/presentation/cloudaccountsgeneraltab",
+        "src/features/super-admin/presentation/cloudaccountsgeneraltab.tsx",
+        "tsx"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/presentation/CloudAccountsPrimitives.tsx",
+      "kind": "source",
+      "name": "CloudAccountsPrimitives.tsx",
+      "path": "src/features/super-admin/presentation/CloudAccountsPrimitives.tsx",
+      "tags": [
+        "src/features/super-admin/presentation/cloudaccountsprimitives",
+        "src/features/super-admin/presentation/cloudaccountsprimitives.tsx",
+        "tsx"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/presentation/CloudAccountsTursoTab.tsx",
+      "kind": "source",
+      "name": "CloudAccountsTursoTab.tsx",
+      "path": "src/features/super-admin/presentation/CloudAccountsTursoTab.tsx",
+      "tags": [
+        "src/features/super-admin/presentation/cloudaccountstursotab",
+        "src/features/super-admin/presentation/cloudaccountstursotab.tsx",
+        "tsx"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/presentation/CloudAccountsVercelTab.tsx",
+      "kind": "source",
+      "name": "CloudAccountsVercelTab.tsx",
+      "path": "src/features/super-admin/presentation/CloudAccountsVercelTab.tsx",
+      "tags": [
+        "src/features/super-admin/presentation/cloudaccountsverceltab",
+        "src/features/super-admin/presentation/cloudaccountsverceltab.tsx",
         "tsx"
       ]
     },
@@ -51732,6 +52118,17 @@
       ]
     },
     {
+      "id": "source:src/features/super-admin/presentation/use-cloud-accounts-live-usage.ts",
+      "kind": "source",
+      "name": "use-cloud-accounts-live-usage.ts",
+      "path": "src/features/super-admin/presentation/use-cloud-accounts-live-usage.ts",
+      "tags": [
+        "src/features/super-admin/presentation/use-cloud-accounts-live-usage",
+        "src/features/super-admin/presentation/use-cloud-accounts-live-usage.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/super-admin/presentation/use-super-admin-hero-slider-save.ts",
       "kind": "source",
       "name": "use-super-admin-hero-slider-save.ts",
@@ -51750,6 +52147,188 @@
       "tags": [
         "src/features/super-admin/server",
         "src/features/super-admin/server.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/server/services/cloud-accounts-facts.server.ts",
+      "kind": "source",
+      "name": "cloud-accounts-facts.server.ts",
+      "path": "src/features/super-admin/server/services/cloud-accounts-facts.server.ts",
+      "tags": [
+        "server",
+        "src/features/super-admin/server/services/cloud-accounts-facts",
+        "src/features/super-admin/server/services/cloud-accounts-facts.server.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/server/services/cloud-accounts-facts.ts",
+      "kind": "source",
+      "name": "cloud-accounts-facts.ts",
+      "path": "src/features/super-admin/server/services/cloud-accounts-facts.ts",
+      "tags": [
+        "src/features/super-admin/server/services/cloud-accounts-facts",
+        "src/features/super-admin/server/services/cloud-accounts-facts.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/server/services/cloud-accounts-gova-boundary-facts.ts",
+      "kind": "source",
+      "name": "cloud-accounts-gova-boundary-facts.ts",
+      "path": "src/features/super-admin/server/services/cloud-accounts-gova-boundary-facts.ts",
+      "tags": [
+        "src/features/super-admin/server/services/cloud-accounts-gova-boundary-facts",
+        "src/features/super-admin/server/services/cloud-accounts-gova-boundary-facts.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/server/services/cloud-accounts-ota-account.ts",
+      "kind": "source",
+      "name": "cloud-accounts-ota-account.ts",
+      "path": "src/features/super-admin/server/services/cloud-accounts-ota-account.ts",
+      "tags": [
+        "src/features/super-admin/server/services/cloud-accounts-ota-account",
+        "src/features/super-admin/server/services/cloud-accounts-ota-account.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/server/services/cloud-accounts-r2-contents.server.ts",
+      "kind": "source",
+      "name": "cloud-accounts-r2-contents.server.ts",
+      "path": "src/features/super-admin/server/services/cloud-accounts-r2-contents.server.ts",
+      "tags": [
+        "server",
+        "src/features/super-admin/server/services/cloud-accounts-r2-contents",
+        "src/features/super-admin/server/services/cloud-accounts-r2-contents.server.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/server/services/cloud-accounts-r2-facts.ts",
+      "kind": "source",
+      "name": "cloud-accounts-r2-facts.ts",
+      "path": "src/features/super-admin/server/services/cloud-accounts-r2-facts.ts",
+      "tags": [
+        "src/features/super-admin/server/services/cloud-accounts-r2-facts",
+        "src/features/super-admin/server/services/cloud-accounts-r2-facts.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/server/services/cloud-accounts-r2-live-accounts.server.ts",
+      "kind": "source",
+      "name": "cloud-accounts-r2-live-accounts.server.ts",
+      "path": "src/features/super-admin/server/services/cloud-accounts-r2-live-accounts.server.ts",
+      "tags": [
+        "server",
+        "src/features/super-admin/server/services/cloud-accounts-r2-live-accounts",
+        "src/features/super-admin/server/services/cloud-accounts-r2-live-accounts.server.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/server/services/cloud-accounts-r2-usage.server.ts",
+      "kind": "source",
+      "name": "cloud-accounts-r2-usage.server.ts",
+      "path": "src/features/super-admin/server/services/cloud-accounts-r2-usage.server.ts",
+      "tags": [
+        "server",
+        "src/features/super-admin/server/services/cloud-accounts-r2-usage",
+        "src/features/super-admin/server/services/cloud-accounts-r2-usage.server.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/server/services/cloud-accounts-repository-facts.ts",
+      "kind": "source",
+      "name": "cloud-accounts-repository-facts.ts",
+      "path": "src/features/super-admin/server/services/cloud-accounts-repository-facts.ts",
+      "tags": [
+        "src/features/super-admin/server/services/cloud-accounts-repository-facts",
+        "src/features/super-admin/server/services/cloud-accounts-repository-facts.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/server/services/cloud-accounts-turso-facts.ts",
+      "kind": "source",
+      "name": "cloud-accounts-turso-facts.ts",
+      "path": "src/features/super-admin/server/services/cloud-accounts-turso-facts.ts",
+      "tags": [
+        "src/features/super-admin/server/services/cloud-accounts-turso-facts",
+        "src/features/super-admin/server/services/cloud-accounts-turso-facts.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/server/services/cloud-accounts-turso-organizations.ts",
+      "kind": "source",
+      "name": "cloud-accounts-turso-organizations.ts",
+      "path": "src/features/super-admin/server/services/cloud-accounts-turso-organizations.ts",
+      "tags": [
+        "src/features/super-admin/server/services/cloud-accounts-turso-organizations",
+        "src/features/super-admin/server/services/cloud-accounts-turso-organizations.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/server/services/cloud-accounts-turso-usage.server.ts",
+      "kind": "source",
+      "name": "cloud-accounts-turso-usage.server.ts",
+      "path": "src/features/super-admin/server/services/cloud-accounts-turso-usage.server.ts",
+      "tags": [
+        "server",
+        "src/features/super-admin/server/services/cloud-accounts-turso-usage",
+        "src/features/super-admin/server/services/cloud-accounts-turso-usage.server.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/server/services/cloud-accounts-turso-usage.ts",
+      "kind": "source",
+      "name": "cloud-accounts-turso-usage.ts",
+      "path": "src/features/super-admin/server/services/cloud-accounts-turso-usage.ts",
+      "tags": [
+        "src/features/super-admin/server/services/cloud-accounts-turso-usage",
+        "src/features/super-admin/server/services/cloud-accounts-turso-usage.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/server/services/cloud-accounts-vercel-facts.ts",
+      "kind": "source",
+      "name": "cloud-accounts-vercel-facts.ts",
+      "path": "src/features/super-admin/server/services/cloud-accounts-vercel-facts.ts",
+      "tags": [
+        "src/features/super-admin/server/services/cloud-accounts-vercel-facts",
+        "src/features/super-admin/server/services/cloud-accounts-vercel-facts.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/server/services/cloud-accounts-vercel-usage.server.ts",
+      "kind": "source",
+      "name": "cloud-accounts-vercel-usage.server.ts",
+      "path": "src/features/super-admin/server/services/cloud-accounts-vercel-usage.server.ts",
+      "tags": [
+        "server",
+        "src/features/super-admin/server/services/cloud-accounts-vercel-usage",
+        "src/features/super-admin/server/services/cloud-accounts-vercel-usage.server.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/super-admin/server/services/cloud-accounts-vercel-usage.ts",
+      "kind": "source",
+      "name": "cloud-accounts-vercel-usage.ts",
+      "path": "src/features/super-admin/server/services/cloud-accounts-vercel-usage.ts",
+      "tags": [
+        "src/features/super-admin/server/services/cloud-accounts-vercel-usage",
+        "src/features/super-admin/server/services/cloud-accounts-vercel-usage.ts",
         "ts"
       ]
     },
@@ -55006,6 +55585,18 @@
       ]
     },
     {
+      "id": "test:scripts/tests/cloudflare-control.test.ts",
+      "kind": "test",
+      "name": "cloudflare-control.test.ts",
+      "path": "scripts/tests/cloudflare-control.test.ts",
+      "tags": [
+        "scripts/tests/cloudflare-control",
+        "scripts/tests/cloudflare-control.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:scripts/tests/control-service.test.ts",
       "kind": "test",
       "name": "control-service.test.ts",
@@ -56275,6 +56866,18 @@
       ]
     },
     {
+      "id": "test:src/features/super-admin/tests/cloud-accounts-dynamic-binding.test.ts",
+      "kind": "test",
+      "name": "cloud-accounts-dynamic-binding.test.ts",
+      "path": "src/features/super-admin/tests/cloud-accounts-dynamic-binding.test.ts",
+      "tags": [
+        "src/features/super-admin/tests/cloud-accounts-dynamic-binding",
+        "src/features/super-admin/tests/cloud-accounts-dynamic-binding.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:src/features/super-admin/tests/cloud-accounts-emails.test.ts",
       "kind": "test",
       "name": "cloud-accounts-emails.test.ts",
@@ -56282,6 +56885,30 @@
       "tags": [
         "src/features/super-admin/tests/cloud-accounts-emails",
         "src/features/super-admin/tests/cloud-accounts-emails.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/features/super-admin/tests/cloud-accounts-gova-boundary.test.ts",
+      "kind": "test",
+      "name": "cloud-accounts-gova-boundary.test.ts",
+      "path": "src/features/super-admin/tests/cloud-accounts-gova-boundary.test.ts",
+      "tags": [
+        "src/features/super-admin/tests/cloud-accounts-gova-boundary",
+        "src/features/super-admin/tests/cloud-accounts-gova-boundary.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/features/super-admin/tests/cloud-accounts-live-refresh.test.ts",
+      "kind": "test",
+      "name": "cloud-accounts-live-refresh.test.ts",
+      "path": "src/features/super-admin/tests/cloud-accounts-live-refresh.test.ts",
+      "tags": [
+        "src/features/super-admin/tests/cloud-accounts-live-refresh",
+        "src/features/super-admin/tests/cloud-accounts-live-refresh.test.ts",
         "test",
         "ts"
       ]
