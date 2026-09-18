@@ -152,6 +152,12 @@ npm run android:r8:verify-release
 ```
 
 Normal native and OTA updates preserve AsolDB and the current user session.
+For native push, Android/iOS permission or a device-local enabled flag is never
+proof that the server can address the device. Settings reconciles the native
+FCM/APNs token with the server before painting the per-device switch enabled;
+a failed server registration is rolled back locally, and a stale token cache is
+cleared on failed repair. `test:notifications` includes the settings regression
+contract so this invariant is part of the normal notification gate.
 Clean-run commands are limited to test targets. See
 [capacitor.md](./capacitor/capacitor.md) and
 [installation-state-and-clean-testing.md](./capacitor/installation-state-and-clean-testing.md).

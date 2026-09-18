@@ -11,7 +11,14 @@ export async function POST(request: Request): Promise<Response> {
     assertSubmainEnv();
     const claims = devices.assertSuperAdmin(request);
     const body = await readJsonBody<BroadcastNotificationInput>(request);
-    const result = await devices.sendBroadcast({ ...body, identity: { uid: claims.uid, phone: claims.phone } });
+    const result = await devices.sendBroadcast({
+      identity: { uid: claims.uid, phone: claims.phone },
+      requestId: body.requestId,
+      title: body.title,
+      body: body.body,
+      uids: body.uids,
+      sendToAll: body.sendToAll,
+    });
     return jsonResponse(request, result, 200);
   } catch (error) {
     return businessErrorResponse(request, error);

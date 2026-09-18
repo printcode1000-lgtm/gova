@@ -24,6 +24,9 @@ const accountDevicesSection = source(`${presentation}/AccountDevicesSection.tsx`
 const accountDevicesHook = source(`${presentation}/use-account-devices.ts`);
 const selfTestButton = source(`${presentation}/SelfTestNotificationButton.tsx`);
 const selfTestHook = source(`${presentation}/use-self-test-notification.ts`);
+const deviceTokenService = source(
+  'src/features/notifications/application/device-token-service.ts',
+);
 
 // The status timer is owned, so a second message keeps its full duration and an
 // unmount never lands a setState on a gone component.
@@ -36,6 +39,31 @@ assert.match(banner, /SettingsStatusTone = "success" \| "error"/);
 assert.match(card, /statusTone === "error"/);
 assert.match(deviceSection, /permissionNoticeTone === "error"/);
 assert.match(deviceToggle, /permissionNoticeTone/);
+// Native UI state is verified by an actual re-registration. A stale local flag
+// cannot paint the switch enabled when FCM is absent from the server.
+assert.match(deviceToggle, /setNotificationRuntimeReady\(false\)/);
+assert.match(deviceToggle, /catch \(error\)[\s\S]{0,100}setNotificationRuntimeReady\(true\)/);
+assert.match(deviceToggle, /getDiagnostics\(\{ uid: sessionUid \}\)/);
+assert.match(deviceToggle, /loadNotificationState\(\)\.catch/);
+assert.match(deviceToggle, /nativePlatform \? false : diagnostics\.deviceEnabled/);
+assert.match(deviceToggle, /verifiedDeviceEnabled/);
+assert.match(deviceToggle, /notifications\.reconcileDevice/);
+assert.match(deviceToggle, /notifications\.listAccountDevices/);
+assert.match(deviceToggle, /device\.deviceId === repaired\.deviceId/);
+assert.match(deviceToggle, /sessionToken/);
+assert.match(deviceToggle, /nativePlatform &&[\s\S]{0,180}sessionToken/);
+assert.match(deviceToggle, /!sessionUid \|\| !sessionPhone \|\| !sessionToken/);
+assert.doesNotMatch(
+  deviceToggle,
+  /diagnostics\.deviceEnabled &&[\s\S]{0,250}notifications\.reconcileDevice/,
+);
+assert.match(deviceToggle, /verifiedDeviceEnabled = false/);
+assert.match(deviceToggle, /setDeviceEnabled\(verifiedDeviceEnabled\)/);
+assert.match(deviceToggle, /setDeviceEnabled\(false\);[\s\S]{0,120}getPermissionState/);
+assert.match(deviceToggle, /registrationConfirmed/);
+assert.match(deviceToggle, /setDeviceEnabled\(true\)/);
+assert.match(deviceToggle, /catch \(error\) \{\n        setDeviceEnabled\(false\)/);
+assert.match(deviceToggle, /serverIds\.has\(token\.deviceId\)/);
 
 // A runtime that has not reported yet is a skeleton, not a switch that looks off.
 assert.match(deviceSection, /!state\.notificationRuntimeReady/);
@@ -63,10 +91,39 @@ assert.match(card, /<SystemNotificationSettingsButton state=\{state\} \/>/);
 // The account's other devices are listed and revocable, and revoking the
 // device in hand goes through the local unregister so no stale subscription
 // outlives the server row.
+assert.match(accountDevicesHook, /sessionToken && sessionUid && sessionPhone/);
+assert.match(accountDevicesHook, /if \(!accountDevicesAvailable\)/);
 assert.match(accountDevicesHook, /notifications\.listAccountDevices/);
 assert.match(accountDevicesHook, /notifications\.revokeAccountDevice/);
 assert.match(accountDevicesHook, /localDeviceIds\.includes\(deviceId\)/);
 assert.match(accountDevicesHook, /notifications\.unregisterDevice/);
+// An enabled native flag is never enough: if no local token is confirmed by
+// the server, settings must reconcile even when the local token cache is empty.
+assert.match(accountDevicesHook, /!sessionToken \|\| !sessionUid \|\| !sessionPhone/);
+assert.match(accountDevicesHook, /if \(deviceEnabled\)/);
+assert.match(accountDevicesHook, /hasConfirmedLocalRegistration/);
+assert.match(accountDevicesHook, /if \(!hasConfirmedLocalRegistration\)/);
+assert.match(accountDevicesHook, /notifications\.reconcileDevice/);
+assert.doesNotMatch(accountDevicesHook, /deviceEnabled && local\.length > 0/);
+assert.match(accountDevicesHook, /confirmedLocalIds/);
+assert.match(accountDevicesHook, /notificationRegistrationNotConfirmed/);
+assert.match(accountDevicesHook, /setLocalDeviceIds\(\[\]\)/);
+// A failed server registration must not leave a locally cached token that makes
+// the next render look healthy. Server acceptance precedes the local save.
+const serverRegistrationIndex = deviceTokenService.indexOf(
+  'await notificationApiService.registerToken',
+);
+const localTokenSaveIndex = deviceTokenService.indexOf(
+  'await asolNotificationRepository.saveDeviceToken(token)',
+);
+assert.ok(serverRegistrationIndex >= 0 && localTokenSaveIndex >= 0);
+assert.ok(serverRegistrationIndex < localTokenSaveIndex);
+assert.match(deviceTokenService, /catch \(error\)[\s\S]*await nativePushService\.unregister\(\)/);
+assert.match(deviceTokenService, /Failed push registration could not be rolled back locally/);
+assert.match(deviceTokenService, /Reconciliation is explicit repair/);
+assert.doesNotMatch(deviceTokenService, /reconcile[\s\S]{0,500}isEnabled\(\)/);
+assert.match(deviceTokenService, /Repair must fail closed too/);
+assert.match(deviceTokenService, /await asolNotificationRepository\.removeDeviceToken/);
 assert.match(accountDevicesSection, /notifications\.accountDevices\.thisDevice/);
 assert.match(accountDevicesSection, /notifications\.accountDevices\.empty/);
 assert.match(card, /<AccountDevicesSection state=\{state\} \/>/);

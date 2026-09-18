@@ -31,14 +31,31 @@ export class DeviceTokenService {
     return this.flights.run(`register:${safeUid}`, async () => {
       const token = await nativePushService.register(safeUid);
       if (!token) return null;
-      await this.persist(token, safePhone);
-      return token;
+      try {
+        await this.persist(token, safePhone);
+        return token;
+      } catch (error) {
+        // Native registration sets the device opt-in flag while obtaining the
+        // provider token. If the server rejects the token, roll that flag back
+        // so diagnostics and the settings switch cannot claim a false success.
+        try {
+          await nativePushService.unregister();
+        } catch (rollbackError) {
+          notificationLog.warn(
+            "Failed push registration could not be rolled back locally.",
+            rollbackError,
+          );
+        }
+        throw error;
+      }
     });
   }
 
-  /** Store this device's token locally and register it with the server. */
+  /** Store this device only after the server has accepted its registration. */
   private async persist(token: DeviceToken, phone: string): Promise<void> {
-    await asolNotificationRepository.saveDeviceToken(token);
+    // Server addressability is the source of truth. Writing the local token first
+    // can leave the UI claiming FCM is enabled after a failed POST, while the
+    // server has no device to deliver to.
     await notificationApiService.registerToken({
       uid: token.uid,
       phone,
@@ -49,6 +66,7 @@ export class DeviceTokenService {
       locale: token.locale,
       deviceLabel: token.deviceLabel,
     });
+    await asolNotificationRepository.saveDeviceToken(token);
     if (nativePushService.isNativePush()) {
       try {
         await ensureMobilePushCredentials({ uid: token.uid, phone });
@@ -205,18 +223,29 @@ export class DeviceTokenService {
   }
 
   /**
-   * Repair a native registration whose local opt-in flag survived while its
-   * server row did not (deployment rollback, token rotation, or a failed prior
-   * POST). Permission + a local flag are not proof of addressability, so this
-   * deliberately re-registers with FCM/APNs and upserts the server row.
+   * Repair a native registration whose local state and server row diverged
+   * (deployment rollback, token rotation, or a failed prior POST). Permission
+   * alone is not proof of addressability, so this deliberately re-registers
+   * with FCM/APNs and upserts the server row.
    */
   async reconcile(uid: string, phone: string): Promise<DeviceToken | null> {
     const safeUid = assertUid(uid);
     const safePhone = assertPhone(phone);
     if (!nativePushService.isNativePush()) return null;
-    if (!(await nativePushService.isEnabled())) return null;
     if ((await nativePushService.permissionState()) !== "granted") return null;
-    return this.register(safeUid, safePhone);
+    try {
+      // Reconciliation is explicit repair, so it must also recover the legacy
+      // state where a failed registration already rolled the native opt-in flag
+      // off but Android permission is still granted.
+      return await this.register(safeUid, safePhone);
+    } catch (error) {
+      // Repair must fail closed too. A stale local token from an older build
+      // cannot survive a failed reconciliation and masquerade as server-backed.
+      for (const token of await this.list(safeUid)) {
+        await asolNotificationRepository.removeDeviceToken(safeUid, token.id);
+      }
+      throw error;
+    }
   }
 
   getPlatform(): "android" | "ios" | "web" {

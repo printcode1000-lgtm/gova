@@ -67,10 +67,18 @@ const summaryMapper = tokenService.slice(
 assert.doesNotMatch(summaryMapper, /\btoken:/);
 
 // Incomplete legacy sessions must never issue account notification requests.
-assert.match(deviceToggle, /if \(!session\?\.uid \|\| !session\.phone\)/);
+// Device operations also require the signed session token because server-backed
+// registration, listing, and revocation are the source of truth.
+assert.match(deviceToggle, /const sessionUid = session\?\.uid \?\? ""/);
+assert.match(deviceToggle, /const sessionPhone = session\?\.phone \?\? ""/);
+assert.match(deviceToggle, /const sessionToken = session\?\.sessionToken \?\? ""/);
 assert.match(
   deviceToggle,
-  /if \(!session\?\.uid \|\| !session\.phone \|\| deviceBusy\) return;/,
+  /if \(!sessionUid \|\| !sessionPhone \|\| !sessionToken\)/,
+);
+assert.match(
+  deviceToggle,
+  /if \(!sessionUid \|\| !sessionPhone \|\| !sessionToken \|\| deviceBusy\) return;/,
 );
 
 // Notification UI is always below the locale runtime. This guards the prompt's

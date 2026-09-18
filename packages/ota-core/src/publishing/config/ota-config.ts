@@ -32,6 +32,22 @@ export function getOtaManifestUrl(): string {
   return `${getOtaPublicBaseUrl()}/${getOtaPrefix()}/manifest.json`;
 }
 
+/**
+ * Fail release tooling when a manually configured client manifest URL drifts
+ * away from the R2 publisher destination. Without this guard an Android build
+ * can be permanently sealed with a valid-looking URL that only returns 404.
+ */
+export function assertOtaClientManifestUrlAligned(): void {
+  const configured = process.env.NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL?.replace(/\/$/, "");
+  if (!configured) return;
+  const expected = getOtaManifestUrl();
+  if (configured !== expected) {
+    throw new Error(
+      `NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL must match the OTA publisher destination: ${expected}`,
+    );
+  }
+}
+
 export function getOtaBucketName(): string {
   const value = process.env.ASOL_OTA_R2_BUCKET_NAME;
   if (!value) throw new Error("ASOL_OTA_R2_BUCKET_NAME is required");
@@ -68,6 +84,7 @@ export function otaClientBuildEnv(
   nativeVersion = version,
 ): Record<string, string> {
   try {
+    assertOtaClientManifestUrlAligned();
     return {
       ASOL_NEXT_BUILD_ID: `asol-${version}`,
       NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL: getOtaManifestUrl(),

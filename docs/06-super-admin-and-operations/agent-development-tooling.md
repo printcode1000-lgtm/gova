@@ -4,7 +4,9 @@
 
 Gova agents have a shared development toolbox for repository discovery, structural and semantic analysis, browser verification, static analysis, shell/workflow checks, and external-service operations. The policy applies to execution Modes A, B, and C; the selected mode still decides where commands are allowed to execute.
 
-Remote Desktop Commander is the Mode-C transport. It is not one of the numbered code-analysis tools below. On the Desktop host, user-level binaries live primarily in `~/.local/bin`; project-local dependencies and npm scripts take precedence when a repository-specific version exists.
+Desktop Commander Local MCP is installed on the Desktop host and is the preferred local Desktop MCP when the selected execution mode permits local MCP access. Gova registers it in the project `.mcp.json` as `desktop-commander`, launched with `npx -y @wonderwhy-er/desktop-commander@latest`. Prefer this local MCP over the hosted `remote-desktop-commander` when both are available, so ordinary Desktop work does not depend on the hosted Remote MCP quota.
+
+Remote Desktop Commander remains the Mode-C transport when Mode C is explicitly selected; installing the local MCP does not silently change Mode-C isolation rules. Mode A may bootstrap/recover the Desktop-side Gateway and local tooling as defined by the agent workflow. On the Desktop host, user-level binaries live primarily in `~/.local/bin`; project-local dependencies and npm scripts take precedence when a repository-specific version exists.
 
 ## Baseline Search: ripgrep (`rg`)
 

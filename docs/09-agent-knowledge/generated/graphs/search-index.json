@@ -27738,6 +27738,17 @@
       ]
     },
     {
+      "id": "script:scripts/ota-publish.ts",
+      "kind": "script",
+      "name": "ota-publish.ts",
+      "path": "scripts/ota-publish.ts",
+      "tags": [
+        "scripts/ota-publish",
+        "scripts/ota-publish.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/probe-notifications-service.ts",
       "kind": "script",
       "name": "probe-notifications-service.ts",
@@ -40284,6 +40295,28 @@
       "tags": [
         "services/submain/src/app/api/health/route",
         "services/submain/src/app/api/health/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/notifications/broadcast/recipients/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/notifications/broadcast/recipients/route.ts",
+      "tags": [
+        "services/submain/src/app/api/notifications/broadcast/recipients/route",
+        "services/submain/src/app/api/notifications/broadcast/recipients/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/notifications/broadcast/send/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/notifications/broadcast/send/route.ts",
+      "tags": [
+        "services/submain/src/app/api/notifications/broadcast/send/route",
+        "services/submain/src/app/api/notifications/broadcast/send/route.ts",
         "ts"
       ]
     },
@@ -54969,6 +55002,18 @@
       "tags": [
         "scripts/tests/mirror-status-parity",
         "scripts/tests/mirror-status-parity.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:scripts/tests/ota-manifest-url-alignment.test.ts",
+      "kind": "test",
+      "name": "ota-manifest-url-alignment.test.ts",
+      "path": "scripts/tests/ota-manifest-url-alignment.test.ts",
+      "tags": [
+        "scripts/tests/ota-manifest-url-alignment",
+        "scripts/tests/ota-manifest-url-alignment.test.ts",
         "test",
         "ts"
       ]

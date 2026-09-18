@@ -22,12 +22,12 @@ is listed as `gova/dev` and answered wherever the request lands.
 | --- | --- | --- | ---: | ---: | ---: |
 | `control` | `asol-control` | `NEXT_PUBLIC_ASOL_CONTROL_URL` | 34 | 34 | 0 |
 | `gova/dev` | — | — | 12 | 12 | 0 |
-| `notifications` | `asol-notifications` | `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | 5 | 1 | 4 |
+| `notifications` | `asol-notifications` | `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | 3 | 1 | 2 |
 | `orders` | `asol-orders` | `NEXT_PUBLIC_ASOL_ORDERS_URL` | 1 | 1 | 0 |
 | `products` | `asol-products` | `NEXT_PUBLIC_ASOL_PRODUCTS_URL` | 3 | 3 | 0 |
 | `profiles` | `asol-profiles` | `NEXT_PUBLIC_ASOL_PROFILES_URL` | 7 | 7 | 0 |
 | `sub2main` | `asol-sub2main` | `NEXT_PUBLIC_ASOL_SUB2MAIN_URL` | 28 | 28 | 0 |
-| `submain` | `asol-submain` | `NEXT_PUBLIC_ASOL_SUBMAIN_URL` | 52 | 51 | 1 |
+| `submain` | `asol-submain` | `NEXT_PUBLIC_ASOL_SUBMAIN_URL` | 54 | 53 | 1 |
 
 ## `control`
 
@@ -92,8 +92,6 @@ routes, which are omitted from the production artifact entirely.
 
 | Method | Route | Status |
 | --- | --- | --- |
-| `GET` | `/api/notifications/broadcast/recipients` | **unshipped (tracked)** |
-| `POST` | `/api/notifications/broadcast/send` | **unshipped (tracked)** |
 | `POST` | `/api/notifications/mobile-push/unlock` | **unshipped (tracked)** |
 | `POST` | `/api/notifications/recipient-tokens` | **unshipped (tracked)** |
 | `POST` | `/api/notifications/send` | shipped |
@@ -186,6 +184,8 @@ routes, which are omitted from the production artifact entirely.
 | `POST` | `/api/follow` | shipped |
 | `POST` | `/api/follow/notifications` | shipped |
 | `GET` | `/api/follow/status` | shipped |
+| `GET` | `/api/notifications/broadcast/recipients` | shipped |
+| `POST` | `/api/notifications/broadcast/send` | shipped |
 | `DELETE` | `/api/notifications/device-token` | shipped |
 | `POST` | `/api/notifications/device-token` | shipped |
 | `DELETE` | `/api/notifications/devices` | shipped |

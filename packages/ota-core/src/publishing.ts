@@ -223,3 +223,5 @@ export {
 } from "./publishing/release/history";
 export { filesystemAdapter } from "./publishing/adapters/filesystem.adapter";
 export { processAdapter } from "./publishing/adapters/process.adapter";
+
+export { assertOtaClientManifestUrlAligned } from "./publishing/config/ota-config";

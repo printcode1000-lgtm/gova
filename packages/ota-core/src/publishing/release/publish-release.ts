@@ -157,7 +157,11 @@ function collectOutFiles(
 async function uploadFilesConcurrently(
   paths: readonly string[],
   uploader: (filePath: string) => Promise<void>,
-  concurrency = 24,
+  // R2's S3 endpoint can time out under the former 24-way burst, especially
+  // for a 2k-file OTA. Keep publishing bounded to the same conservative
+  // parallelism used by the OTA client downloads; retries then heal transient
+  // network faults instead of amplifying them.
+  concurrency = 6,
 ): Promise<void> {
   const queue = [...paths];
   const workers = Array.from({ length: Math.min(concurrency, queue.length) }, async () => {

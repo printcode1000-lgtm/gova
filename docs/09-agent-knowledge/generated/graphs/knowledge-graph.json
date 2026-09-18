@@ -27738,6 +27738,17 @@
       ]
     },
     {
+      "id": "script:scripts/ota-publish.ts",
+      "kind": "script",
+      "name": "ota-publish.ts",
+      "path": "scripts/ota-publish.ts",
+      "tags": [
+        "scripts/ota-publish",
+        "scripts/ota-publish.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/probe-notifications-service.ts",
       "kind": "script",
       "name": "probe-notifications-service.ts",
@@ -40284,6 +40295,28 @@
       "tags": [
         "services/submain/src/app/api/health/route",
         "services/submain/src/app/api/health/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/notifications/broadcast/recipients/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/notifications/broadcast/recipients/route.ts",
+      "tags": [
+        "services/submain/src/app/api/notifications/broadcast/recipients/route",
+        "services/submain/src/app/api/notifications/broadcast/recipients/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/notifications/broadcast/send/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/notifications/broadcast/send/route.ts",
+      "tags": [
+        "services/submain/src/app/api/notifications/broadcast/send/route",
+        "services/submain/src/app/api/notifications/broadcast/send/route.ts",
         "ts"
       ]
     },
@@ -54974,6 +55007,18 @@
       ]
     },
     {
+      "id": "test:scripts/tests/ota-manifest-url-alignment.test.ts",
+      "kind": "test",
+      "name": "ota-manifest-url-alignment.test.ts",
+      "path": "scripts/tests/ota-manifest-url-alignment.test.ts",
+      "tags": [
+        "scripts/tests/ota-manifest-url-alignment",
+        "scripts/tests/ota-manifest-url-alignment.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:scripts/tests/pipeline-coverage.test.ts",
       "kind": "test",
       "name": "pipeline-coverage.test.ts",
@@ -57884,7 +57929,7 @@
     },
     {
       "from": "command:ota:check",
-      "to": "source:packages/ota-core/scripts/ota-publish.ts",
+      "to": "script:scripts/ota-publish.ts",
       "kind": "invokes"
     },
     {
@@ -57924,7 +57969,7 @@
     },
     {
       "from": "command:ota:publish",
-      "to": "source:packages/ota-core/scripts/ota-publish.ts",
+      "to": "script:scripts/ota-publish.ts",
       "kind": "invokes"
     },
     {
@@ -59460,6 +59505,11 @@
     {
       "from": "command:test:notifications",
       "to": "test:src/features/notifications/tests/web-push-subscription-retry.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:notifications",
+      "to": "test:src/features/settings/tests/notifications-settings-surface.test.ts",
       "kind": "invokes"
     },
     {
@@ -87652,6 +87702,12 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "script:scripts/ota-publish.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "script:scripts/probe-notifications-service.ts",
       "kind": "documents",
       "detail": "scripts/"
@@ -90574,6 +90630,18 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/notifications/broadcast/recipients/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/notifications/broadcast/send/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "source:services/submain/src/app/api/notifications/device-token/route.ts",
       "kind": "documents",
       "detail": "services/"
@@ -91079,6 +91147,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "test:scripts/tests/mirror-status-parity.test.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "test:scripts/tests/ota-manifest-url-alignment.test.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -136183,6 +136257,29 @@
       "kind": "affects-runtime"
     },
     {
+      "from": "script:scripts/ota-publish.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/ota-publish.ts",
+      "to": "package:@asol/ota-core",
+      "kind": "imports",
+      "detail": "@asol/ota-core"
+    },
+    {
+      "from": "script:scripts/ota-publish.ts",
+      "to": "package:@asol/ota-core",
+      "kind": "imports",
+      "detail": "@asol/ota-core/publishing"
+    },
+    {
+      "from": "script:scripts/ota-publish.ts",
+      "to": "source:src/features/categories/index.ts",
+      "kind": "imports",
+      "detail": "@/features/categories"
+    },
+    {
       "from": "script:scripts/probe-notifications-service.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
@@ -167675,6 +167772,11 @@
       "kind": "uses-environment"
     },
     {
+      "from": "source:packages/ota-core/src/publishing/config/ota-config.ts",
+      "to": "environment-key:NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL",
+      "kind": "uses-environment"
+    },
+    {
       "from": "source:packages/ota-core/src/publishing/config/ota-r2-target.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -179273,6 +179375,56 @@
       "from": "source:services/submain/src/app/api/health/route.ts",
       "to": "environment-key:TURSO_PRODUCT_DATABASE_URL",
       "kind": "uses-environment"
+    },
+    {
+      "from": "source:services/submain/src/app/api/notifications/broadcast/recipients/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/notifications/broadcast/recipients/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/notifications/broadcast/recipients/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/notifications/broadcast/recipients/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../../lib/http"
+    },
+    {
+      "from": "source:services/submain/src/app/api/notifications/broadcast/send/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/notifications/broadcast/send/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/notifications/broadcast/send/route.ts",
+      "to": "package:@asol/notifications-core",
+      "kind": "imports",
+      "detail": "@asol/notifications-core"
+    },
+    {
+      "from": "source:services/submain/src/app/api/notifications/broadcast/send/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/notifications/broadcast/send/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../../lib/http"
     },
     {
       "from": "source:services/submain/src/app/api/notifications/device-token/route.ts",
@@ -243639,6 +243791,37 @@
       "from": "test:scripts/tests/mirror-status-parity.test.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
+    },
+    {
+      "from": "test:scripts/tests/ota-manifest-url-alignment.test.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:scripts/tests/ota-manifest-url-alignment.test.ts",
+      "to": "package:@asol/ota-core",
+      "kind": "imports",
+      "detail": "@asol/ota-core/publishing"
+    },
+    {
+      "from": "test:scripts/tests/ota-manifest-url-alignment.test.ts",
+      "to": "package:@asol/ota-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:scripts/tests/ota-manifest-url-alignment.test.ts",
+      "to": "environment-key:ASOL_OTA_R2_PREFIX",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "test:scripts/tests/ota-manifest-url-alignment.test.ts",
+      "to": "environment-key:ASOL_OTA_R2_PUBLIC_URL",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "test:scripts/tests/ota-manifest-url-alignment.test.ts",
+      "to": "environment-key:NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL",
+      "kind": "uses-environment"
     },
     {
       "from": "test:scripts/tests/pipeline-coverage.test.ts",

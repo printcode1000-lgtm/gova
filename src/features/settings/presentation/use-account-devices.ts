@@ -35,67 +35,92 @@ export function useAccountDevices(
   const [accountDevicesFailed, setAccountDevicesFailed] = React.useState(false);
   const [revokingDeviceId, setRevokingDeviceId] = React.useState("");
 
-  const accountDevicesAvailable = Boolean(session?.sessionToken);
+  const sessionToken = session?.sessionToken ?? "";
+  const sessionUid = session?.uid ?? "";
+  const sessionPhone = session?.phone ?? "";
+  const accountDevicesAvailable = Boolean(
+    sessionToken && sessionUid && sessionPhone,
+  );
 
   const refreshAccountDevices = React.useCallback(async () => {
-    if (!session?.sessionToken || !session.uid) return;
+    if (!sessionToken || !sessionUid || !sessionPhone) return;
     setAccountDevicesLoading(true);
     try {
       let [account, local] = await Promise.all([
-        notifications.listAccountDevices({ sessionToken: session.sessionToken }),
-        notifications.listDevices({ uid: session.uid }),
+        notifications.listAccountDevices({ sessionToken }),
+        notifications.listDevices({ uid: sessionUid }),
       ]);
 
-      // A local opt-in flag can outlive the server row. That state used to paint
-      // the switch as FCM-enabled while self-test correctly reported zero
-      // devices. Heal it immediately and then prove the server can see the row.
-      if (deviceEnabled && local.length > 0) {
+      // A native permission can outlive both the local token and the server row.
+      // The device-state hook performs the repair first; this hook independently
+      // proves that the resulting local token is visible on the server.
+      if (deviceEnabled) {
         const serverIds = new Set(account.devices.map((device) => device.deviceId));
-        const missingLocallyKnownDevice = local.some(
-          (token) => token.enabled && !serverIds.has(token.deviceId),
+        const hasConfirmedLocalRegistration = local.some(
+          (token) => token.enabled && serverIds.has(token.deviceId),
         );
-        if (missingLocallyKnownDevice) {
+        // Reconcile every unconfirmed enabled device, including legacy states
+        // whose local token cache is empty.
+        if (!hasConfirmedLocalRegistration) {
           await notifications.reconcileDevice({
-            uid: session.uid,
-            phone: session.phone,
+            uid: sessionUid,
+            phone: sessionPhone,
           });
           [account, local] = await Promise.all([
-            notifications.listAccountDevices({ sessionToken: session.sessionToken }),
-            notifications.listDevices({ uid: session.uid }),
+            notifications.listAccountDevices({ sessionToken }),
+            notifications.listDevices({ uid: sessionUid }),
           ]);
         }
       }
 
+      const confirmedServerIds = new Set(
+        account.devices.map((device) => device.deviceId),
+      );
+      const confirmedLocalIds = local
+        .filter((token) => token.enabled && confirmedServerIds.has(token.deviceId))
+        .map((token) => token.deviceId);
+      if (deviceEnabled && confirmedLocalIds.length === 0) {
+        throw new Error("notificationRegistrationNotConfirmed");
+      }
+
       setAccountDevices(account.devices);
-      setLocalDeviceIds(local.map((token) => token.deviceId));
+      setLocalDeviceIds(confirmedLocalIds);
       setAccountDevicesFailed(false);
     } catch {
+      setAccountDevices([]);
+      setLocalDeviceIds([]);
       setAccountDevicesFailed(true);
     } finally {
       setAccountDevicesLoading(false);
     }
-  }, [deviceEnabled, session]);
+  }, [deviceEnabled, sessionPhone, sessionToken, sessionUid]);
 
   // Enabling or disabling this device changes the account's list, and the
   // switch is the only other control that can.
   React.useEffect(() => {
+    if (!accountDevicesAvailable) {
+      setAccountDevices([]);
+      setLocalDeviceIds([]);
+      setAccountDevicesFailed(false);
+      return;
+    }
     void refreshAccountDevices();
-  }, [deviceEnabled, refreshAccountDevices]);
+  }, [accountDevicesAvailable, deviceEnabled, refreshAccountDevices]);
 
   const revokeAccountDevice = React.useCallback(
     async (deviceId: string) => {
-      if (!session?.sessionToken || !session.uid || revokingDeviceId) return;
+      if (!sessionToken || !sessionUid || !sessionPhone || revokingDeviceId) return;
       setRevokingDeviceId(deviceId);
       try {
         if (localDeviceIds.includes(deviceId)) {
           await notifications.unregisterDevice({
-            uid: session.uid,
-            phone: session.phone,
+            uid: sessionUid,
+            phone: sessionPhone,
           });
           await refreshDeviceState();
         } else {
           await notifications.revokeAccountDevice({
-            sessionToken: session.sessionToken,
+            sessionToken,
             deviceId,
           });
         }
@@ -117,7 +142,9 @@ export function useAccountDevices(
       refreshAccountDevices,
       refreshDeviceState,
       revokingDeviceId,
-      session,
+      sessionPhone,
+      sessionToken,
+      sessionUid,
       showStatus,
       t,
     ],

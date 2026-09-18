@@ -42,6 +42,9 @@ export function useNotificationDeviceToggle(showStatus: ShowSettingsStatus) {
     React.useState<string>("unsupported");
   const [canOpenSettings, setCanOpenSettings] = React.useState(false);
   const accountMutedRef = React.useRef(false);
+  const sessionUid = session?.uid ?? "";
+  const sessionPhone = session?.phone ?? "";
+  const sessionToken = session?.sessionToken ?? "";
 
   const isAndroidNotifications = notificationPlatform === "android";
   const isIosNotifications = notificationPlatform === "ios";
@@ -63,18 +66,60 @@ export function useNotificationDeviceToggle(showStatus: ShowSettingsStatus) {
   const clearNotice = React.useCallback(() => setPermissionNotice(""), []);
 
   const loadNotificationState = React.useCallback(async () => {
-    const diagnostics = await notifications.getDiagnostics();
+    setNotificationRuntimeReady(false);
+    let diagnostics;
+    try {
+      diagnostics = await notifications.getDiagnostics({ uid: sessionUid });
+    } catch (error) {
+      setDeviceEnabled(false);
+      setNotificationRuntimeReady(true);
+      throw error;
+    }
+    const nativePlatform =
+      diagnostics.platform === "android" || diagnostics.platform === "ios";
+    let verifiedDeviceEnabled = nativePlatform ? false : diagnostics.deviceEnabled;
+    if (
+      nativePlatform &&
+      diagnostics.permission.granted &&
+      sessionUid &&
+      sessionPhone &&
+      sessionToken
+    ) {
+      try {
+        const repaired = await notifications.reconcileDevice({
+          uid: sessionUid,
+          phone: sessionPhone,
+        });
+        if (!repaired) {
+          verifiedDeviceEnabled = false;
+        } else {
+          const account = await notifications.listAccountDevices({ sessionToken });
+          verifiedDeviceEnabled = Boolean(
+            account.devices.some(
+              (device) => device.deviceId === repaired.deviceId,
+            ),
+          );
+        }
+      } catch {
+        verifiedDeviceEnabled = false;
+      }
+    }
     setNotificationPlatform(diagnostics.platform);
     setPushSupported(diagnostics.pushSupported);
     setWebPushPermission(diagnostics.permission.state);
-    setDeviceEnabled(diagnostics.deviceEnabled);
+    setDeviceEnabled(verifiedDeviceEnabled);
     setNativePermission(diagnostics.permission.state);
     setCanOpenSettings(diagnostics.permission.canOpenSettings);
     setNotificationRuntimeReady(true);
-  }, []);
+  }, [sessionPhone, sessionToken, sessionUid]);
 
   React.useEffect(() => {
-    void loadNotificationState();
+    void loadNotificationState().catch((error) => {
+      console.warn(
+        "[NotificationDeviceSettingsCard] Failed to load notification state.",
+        error,
+      );
+    });
   }, [loadNotificationState]);
 
   const applyPermissionState = React.useCallback(
@@ -101,11 +146,12 @@ export function useNotificationDeviceToggle(showStatus: ShowSettingsStatus) {
   );
 
   const enableThisDevice = React.useCallback(async (): Promise<boolean> => {
-    if (!session?.uid || !session.phone) {
+    if (!sessionUid || !sessionPhone || !sessionToken) {
       showNotice(t("notifications.deviceCard.loginRequired"), "error");
       return false;
     }
 
+    setDeviceEnabled(false);
     const before = await notifications.getPermissionState();
     applyPermissionState(before);
     if (before.state === "denied" || before.state === "blocked") {
@@ -124,28 +170,39 @@ export function useNotificationDeviceToggle(showStatus: ShowSettingsStatus) {
     }
 
     await notifications.enableDevice({
-      uid: session.uid,
-      phone: session.phone,
+      uid: sessionUid,
+      phone: sessionPhone,
     });
 
     if (accountMutedRef.current) {
       await notifications.setPushPreference({
-        uid: session.uid,
-        phone: session.phone,
+        uid: sessionUid,
+        phone: sessionPhone,
         pushEnabled: true,
       });
       accountMutedRef.current = false;
     }
 
-    await loadNotificationState();
+    const account = await notifications.listAccountDevices({ sessionToken });
+    const local = await notifications.listDevices({ uid: sessionUid });
+    const serverIds = new Set(account.devices.map((device) => device.deviceId));
+    const registrationConfirmed = local.some(
+      (token) => token.enabled && serverIds.has(token.deviceId),
+    );
+    if (!registrationConfirmed) {
+      showNotice(t("notifications.deviceCard.updateError"), "error");
+      return false;
+    }
+    setDeviceEnabled(true);
     clearNotice();
     return true;
   }, [
     applyPermissionState,
     blockedNotice,
     clearNotice,
-    loadNotificationState,
-    session,
+    sessionPhone,
+    sessionToken,
+    sessionUid,
     showNotice,
     t,
   ]);
@@ -175,12 +232,12 @@ export function useNotificationDeviceToggle(showStatus: ShowSettingsStatus) {
   }, [permissionBlocked, syncAfterPermissionChange]);
 
   React.useEffect(() => {
-    if (!session?.uid || !session.phone) {
+    if (!sessionUid || !sessionPhone) {
       accountMutedRef.current = false;
       return;
     }
     void notifications
-      .getPushPreference({ uid: session.uid, phone: session.phone })
+      .getPushPreference({ uid: sessionUid, phone: sessionPhone })
       .then((preference) => {
         accountMutedRef.current = !preference.pushEnabled;
       })
@@ -190,18 +247,18 @@ export function useNotificationDeviceToggle(showStatus: ShowSettingsStatus) {
           error,
         );
       });
-  }, [session]);
+  }, [sessionPhone, sessionUid]);
 
   const updateDeviceNotifications = React.useCallback(
     async (enabled: boolean) => {
-      if (!session?.uid || !session.phone || deviceBusy) return;
+      if (!sessionUid || !sessionPhone || !sessionToken || deviceBusy) return;
       setDeviceBusy(true);
       clearNotice();
       try {
         if (!enabled) {
           await notifications.unregisterDevice({
-            uid: session.uid,
-            phone: session.phone,
+            uid: sessionUid,
+            phone: sessionPhone,
           });
           await loadNotificationState();
           showStatus(t("notifications.deviceCard.disabledStatus"));
@@ -217,6 +274,7 @@ export function useNotificationDeviceToggle(showStatus: ShowSettingsStatus) {
             : t("notifications.deviceCard.enabledStatusWeb"),
         );
       } catch (error) {
+        setDeviceEnabled(false);
         showNotice(
           error instanceof Error
             ? error.message
@@ -235,7 +293,9 @@ export function useNotificationDeviceToggle(showStatus: ShowSettingsStatus) {
       isIosNotifications,
       isNativeNotifications,
       loadNotificationState,
-      session,
+      sessionPhone,
+      sessionToken,
+      sessionUid,
       showNotice,
       t,
     ],

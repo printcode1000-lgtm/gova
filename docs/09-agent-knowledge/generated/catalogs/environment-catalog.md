@@ -66,8 +66,8 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `ASOL_OTA_R2_ENDPOINT` | server/tooling | 0 |  |
 | `ASOL_OTA_R2_JURISDICTION` | server/tooling | 1 | `packages/ota-core/src/publishing/config/ota-r2-target.ts` |
 | `ASOL_OTA_R2_LOCATION` | server/tooling | 1 | `packages/ota-core/src/publishing/config/ota-r2-target.ts` |
-| `ASOL_OTA_R2_PREFIX` | server/tooling | 2 | `packages/ota-core/src/publishing/config/ota-config.ts`, `packages/ota-core/src/publishing/config/ota-r2-target.ts` |
-| `ASOL_OTA_R2_PUBLIC_URL` | server/tooling | 2 | `packages/ota-core/src/publishing/config/ota-config.ts`, `packages/ota-core/src/publishing/config/ota-r2-target.ts` |
+| `ASOL_OTA_R2_PREFIX` | server/tooling | 3 | `packages/ota-core/src/publishing/config/ota-config.ts`, `packages/ota-core/src/publishing/config/ota-r2-target.ts`, `scripts/tests/ota-manifest-url-alignment.test.ts` |
+| `ASOL_OTA_R2_PUBLIC_URL` | server/tooling | 3 | `packages/ota-core/src/publishing/config/ota-config.ts`, `packages/ota-core/src/publishing/config/ota-r2-target.ts`, `scripts/tests/ota-manifest-url-alignment.test.ts` |
 | `ASOL_OTA_R2_SECRET_ACCESS_KEY` | server/tooling | 0 |  |
 | `ASOL_OTA_R2_WAREHOUSE_NAME` | server/tooling | 0 |  |
 | `ASOL_OTA_SIGNING_PRIVATE_KEY` | server/tooling | 2 | `packages/ota-core/src/publishing/config/ota-config.ts`, `packages/ota-core/src/publishing/config/ota-r2-target.ts` |
@@ -157,7 +157,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `NEXT_PUBLIC_ASOL_NATIVE_VERSION` | client-visible | 1 | `src/core/config/public-env.ts` |
 | `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | client-visible | 3 | `scripts/probe-notifications-service.ts`, `src/core/config/business-api-origins.ts`, `src/core/api/tests/compatibility-boundary.test.ts` |
 | `NEXT_PUBLIC_ASOL_ORDERS_URL` | client-visible | 2 | `src/core/config/business-api-origins.ts`, `src/core/api/tests/compatibility-boundary.test.ts` |
-| `NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL` | client-visible | 2 | `packages/ota-core/src/publishing/config/ota-r2-target.ts`, `src/core/config/public-env.ts` |
+| `NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL` | client-visible | 4 | `packages/ota-core/src/publishing/config/ota-config.ts`, `packages/ota-core/src/publishing/config/ota-r2-target.ts`, `src/core/config/public-env.ts`, `scripts/tests/ota-manifest-url-alignment.test.ts` |
 | `NEXT_PUBLIC_ASOL_OTA_PUBLIC_KEY` | client-visible | 2 | `packages/ota-core/src/publishing/config/ota-r2-target.ts`, `src/core/config/public-env.ts` |
 | `NEXT_PUBLIC_ASOL_PRODUCTS_URL` | client-visible | 2 | `src/core/config/business-api-origins.ts`, `src/core/api/tests/compatibility-boundary.test.ts` |
 | `NEXT_PUBLIC_ASOL_PROFILES_URL` | client-visible | 2 | `src/core/config/business-api-origins.ts`, `src/core/api/tests/compatibility-boundary.test.ts` |

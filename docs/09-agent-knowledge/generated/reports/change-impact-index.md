@@ -74,11 +74,11 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/map-core` | package | 10 | 1 | 2 | 0 | 9 | 7 |
 | `@asol/native-core` | package | 39 | 22 | 52 | 0 | 88 | 27 |
 | `@asol/notifications-composition` | package | 11 | 1 | 0 | 0 | 2 | 4 |
-| `@asol/notifications-core` | package | 19 | 15 | 133 | 0 | 98 | 5 |
+| `@asol/notifications-core` | package | 19 | 15 | 133 | 0 | 99 | 5 |
 | `@asol/observability-core` | package | 8 | 1 | 123 | 0 | 23 | 4 |
 | `@asol/orders-composition` | package | 12 | 1 | 0 | 0 | 2 | 5 |
 | `@asol/orders-core` | package | 17 | 6 | 129 | 0 | 54 | 1 |
-| `@asol/ota-core` | package | 36 | 26 | 28 | 0 | 44 | 14 |
+| `@asol/ota-core` | package | 36 | 27 | 28 | 0 | 47 | 14 |
 | `@asol/page-save-core` | package | 27 | 4 | 1 | 0 | 10 | 0 |
 | `@asol/page-snapshot-core` | package | 8 | 1 | 0 | 0 | 3 | 0 |
 | `@asol/product-card-core` | package | 5 | 1 | 3 | 0 | 16 | 5 |
@@ -97,7 +97,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/storage-core` | package | 34 | 22 | 126 | 0 | 53 | 5 |
 | `@asol/storage-image-manager-core` | package | 10 | 2 | 20 | 0 | 18 | 8 |
 | `@asol/sub2main-composition` | package | 7 | 1 | 0 | 0 | 9 | 7 |
-| `@asol/submain-composition` | package | 9 | 3 | 0 | 0 | 38 | 18 |
+| `@asol/submain-composition` | package | 9 | 3 | 0 | 0 | 40 | 18 |
 | `@asol/system-logs-core` | package | 9 | 5 | 127 | 0 | 61 | 0 |
 | `@asol/trending-ribbon-core` | package | 6 | 1 | 126 | 0 | 13 | 1 |
 | `@asol/vercel-deploy-core` | package | 12 | 8 | 130 | 0 | 35 | 2 |
