@@ -5,11 +5,12 @@
 
 # Write Surface Map
 
-Detected write-like surfaces: **372**
-Unproven gateway paths: **145**
+Detected write-like surfaces: **373**
+Unproven gateway paths: **146**
 
 | Source | Owner | Operations | Gateway | Proven | Route | Runtimes | Risk |
 |---|---|---|---|---|---|---|---|
+| `packages/account-bridge/src/tests/mobile-push-session.test.ts` | `@asol/account-bridge` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/account-bridge/src/tests/mobile-push.test.ts` | `@asol/account-bridge` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/account-declarations/src/accounts/orders.ts` | `@asol/account-declarations` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/account-declarations/src/accounts/products.ts` | `@asol/account-declarations` | write-like | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
@@ -259,7 +260,7 @@ Unproven gateway paths: **145**
 | `src/features/notifications/server/services/verification-sms-dispatch.service.server.ts` | `notifications` | write-like | `@asol/data-core` | yes | `` | development, web | medium |
 | `src/features/notifications/tests/integration/notification-harness.ts` | `notifications` | delete | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/notifications/tests/mobile-push-crypto.test.ts` | `notifications` | update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
-| `src/features/notifications/tests/mobile-push-unlock.service.test.ts` | `notifications` | update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
+| `src/features/notifications/tests/mobile-push-unlock.service.test.ts` | `notifications` | delete, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/features/notifications/tests/notifications-service-module-contract.test.ts` | `notifications` | update, upload | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `src/features/onboarding/domain/onboarding-product-types.ts` | `onboarding` | upload | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `src/features/onboarding/domain/onboarding-profile-types.ts` | `onboarding` | write-like | `@asol/storage-core` | yes | `` | android, development, ios, static-out, web | medium |

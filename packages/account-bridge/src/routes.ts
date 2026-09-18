@@ -7,6 +7,7 @@ export interface RouteOwnership {
   owner: ApiOwner;
   pattern: string;
   methods: readonly BusinessHttpMethod[];
+  description: string;
 }
 
 const ALL = BUSINESS_HTTP_METHODS;
@@ -18,70 +19,46 @@ const WRITE = ['POST', 'PUT', 'PATCH', 'DELETE'] as const;
  * single trailing slash never alter ownership.
  */
 export const ROUTE_OWNERSHIP: readonly RouteOwnership[] = [
-  { owner: 'control', pattern: '/api/super-admin/**', methods: ALL },
-  { owner: 'control', pattern: '/api/system-logs/**', methods: ALL },
-  { owner: 'control', pattern: '/api/ota/admin/**', methods: ALL },
-  // Two notification surfaces need a verified session as well as the
-  // notifications database, and `asol-notifications` holds only the second.
-  // They move to the account that already holds both rather than granting
-  // session signing to a push fan-out runtime.
-  { owner: 'submain', pattern: '/api/notifications/devices', methods: ALL },
-  { owner: 'submain', pattern: '/api/notifications/test/self', methods: ALL },
-  // The Super Admin broadcast test verifies a session too, so it joins the two
-  // above on the account that holds the signing secret.
-  { owner: 'submain', pattern: '/api/notifications/test/send', methods: ALL },
-  // Broadcast recipient discovery and grant issuance are Super Admin actions.
-  // They require the signed session, so they belong beside the other session-bound notification routes.
-  { owner: 'submain', pattern: '/api/notifications/broadcast/**', methods: ALL },
-  // Registering or revoking a device verifies that the caller owns it, and that
-  // check reads the users repository — which `asol-notifications` must never
-  // hold. The account that holds the users database and the notifications
-  // database owns it instead.
-  { owner: 'submain', pattern: '/api/notifications/device-token', methods: ALL },
-  // The account-wide push mute switch resolves the caller against the users
-  // repository before it reads or writes the preference, so it belongs with
-  // `device-token` for the same reason: `asol-notifications` must never hold
-  // the users database.
-  { owner: 'submain', pattern: '/api/notifications/preferences', methods: ALL },
-  // The native sender's two calls resolve the verified session against the
-  // users repository; unlock also needs the server-only unlock key. Neither may
-  // live on `asol-notifications`, so they join the other session-bound routes.
-  { owner: 'submain', pattern: '/api/notifications/recipient-tokens', methods: ALL },
-  { owner: 'submain', pattern: '/api/notifications/mobile-push/unlock', methods: ALL },
-  { owner: 'notifications', pattern: '/api/notifications/**', methods: ALL },
-  { owner: 'submain', pattern: '/api/ota/access', methods: ['POST'] },
-  { owner: 'submain', pattern: '/api/account/**', methods: ALL },
-  { owner: 'submain', pattern: '/api/auth/**', methods: ALL },
-  { owner: 'submain', pattern: '/api/verification/**', methods: ALL },
-  { owner: 'submain', pattern: '/api/contact', methods: ['POST'] },
-  { owner: 'submain', pattern: '/api/feature-flags', methods: ALL },
-  { owner: 'submain', pattern: '/api/advertisements/**', methods: ALL },
-  { owner: 'submain', pattern: '/api/follow/**', methods: ALL },
-  { owner: 'submain', pattern: '/api/search/**', methods: ALL },
-  { owner: 'submain', pattern: '/api/specialty-chat/**', methods: ALL },
-  { owner: 'submain', pattern: '/api/orders/from-cart', methods: ['POST'] },
-  { owner: 'submain', pattern: '/api/orders/custom-request-from-profile', methods: ['POST'] },
-  { owner: 'submain', pattern: '/api/orders/[orderId]/**', methods: ALL },
-  { owner: 'orders', pattern: '/api/orders', methods: READ },
-  { owner: 'sub2main', pattern: '/api/storage/**', methods: WRITE },
-  { owner: 'profiles', pattern: '/api/storage/profiles/**', methods: READ },
-  { owner: 'sub2main', pattern: '/api/products/reviews/**', methods: WRITE },
-  { owner: 'sub2main', pattern: '/api/products', methods: WRITE },
-  { owner: 'products', pattern: '/api/products/**', methods: READ },
-  { owner: 'products', pattern: '/api/products', methods: READ },
+  { owner: 'control', pattern: '/api/super-admin/**', methods: ALL, description: 'طلبات أدوات وإجراءات السوبر أدمن.' },
+  { owner: 'control', pattern: '/api/system-logs/**', methods: ALL, description: 'قراءة وإدارة سجلات النظام التشغيلية.' },
+  { owner: 'control', pattern: '/api/ota/admin/**', methods: ALL, description: 'إدارة إصدارات OTA وأوامرها الإدارية.' },
+  // The notifications account owns the whole notification surface, including
+  // the session-bound routes: it holds the users database, the session signing
+  // secret, and the mobile push unlock key beside its own database for them.
+  { owner: 'notifications', pattern: '/api/notifications/**', methods: ALL, description: 'كل مسارات الإشعارات: التسليم وتسجيل الأجهزة والتفضيلات والاختبارات والبث ومرسل الموبايل.' },
+  { owner: 'submain', pattern: '/api/ota/access', methods: ['POST'], description: 'إصدار وصول OTA للمستخدم بعد التحقق من الجلسة.' },
+  { owner: 'submain', pattern: '/api/account/**', methods: ALL, description: 'إدارة حساب المستخدم وعمليات الحذف المرتبطة به.' },
+  { owner: 'submain', pattern: '/api/auth/**', methods: ALL, description: 'تسجيل الدخول والتسجيل والجلسة واسترجاع كلمة المرور.' },
+  { owner: 'submain', pattern: '/api/verification/**', methods: ALL, description: 'طلبات تحقق الهاتف ونتائج بوابة الرسائل.' },
+  { owner: 'submain', pattern: '/api/contact', methods: ['POST'], description: 'استقبال نموذج التواصل العام.' },
+  { owner: 'submain', pattern: '/api/feature-flags', methods: ALL, description: 'قراءة وتعديل أعلام الميزات العامة.' },
+  { owner: 'submain', pattern: '/api/advertisements/**', methods: ALL, description: 'إدارة وقراءة إعلانات الصفحة الرئيسية.' },
+  { owner: 'submain', pattern: '/api/follow/**', methods: ALL, description: 'قراءة وتحديث علاقات المتابعة.' },
+  { owner: 'submain', pattern: '/api/search/**', methods: ALL, description: 'تنفيذ بحث السوق والبائعين والمنتجات.' },
+  { owner: 'submain', pattern: '/api/specialty-chat/**', methods: ALL, description: 'تشغيل محادثة التخصص الموقعة.' },
+  { owner: 'submain', pattern: '/api/orders/from-cart', methods: ['POST'], description: 'إنشاء طلب سوق من محتوى السلة.' },
+  { owner: 'submain', pattern: '/api/orders/custom-request-from-profile', methods: ['POST'], description: 'إنشاء طلب خاص من صفحة البروفايل.' },
+  { owner: 'submain', pattern: '/api/orders/[orderId]/**', methods: ALL, description: 'قراءة أو تعديل تفاصيل طلب محدد ومساراته الفرعية.' },
+  { owner: 'orders', pattern: '/api/orders', methods: READ, description: 'قراءة قائمة الطلبات العامة من حساب الطلبات.' },
+  { owner: 'sub2main', pattern: '/api/storage/**', methods: WRITE, description: 'كتابة أو توقيع عمليات التخزين العامة.' },
+  { owner: 'profiles', pattern: '/api/storage/profiles/**', methods: READ, description: 'قراءة وسائط بروفايلات الصيدليات.' },
+  { owner: 'sub2main', pattern: '/api/products/reviews/**', methods: WRITE, description: 'كتابة تقييمات المنتجات وردودها.' },
+  { owner: 'sub2main', pattern: '/api/products', methods: WRITE, description: 'إنشاء أو تعديل بيانات المنتجات.' },
+  { owner: 'products', pattern: '/api/products/**', methods: READ, description: 'قراءة تفاصيل المنتجات ومساراتها الفرعية.' },
+  { owner: 'products', pattern: '/api/products', methods: READ, description: 'قراءة قائمة المنتجات.' },
   // Profile reviews read the product database as well as the profile shards, and
   // `asol-profiles` holds no product credentials — the read cannot live with the
   // other profile reads. `asol-sub2main` holds both, so it owns the whole family.
   // Ownership follows the capability; widening an account's secrets to match a
   // routing choice is how least privilege is lost.
-  { owner: 'sub2main', pattern: '/api/profile/reviews/**', methods: ALL },
-  { owner: 'sub2main', pattern: '/api/profile/reviews', methods: ALL },
+  { owner: 'sub2main', pattern: '/api/profile/reviews/**', methods: ALL, description: 'قراءة وكتابة تقييمات البروفايل التي تحتاج بيانات المنتجات والبروفايل.' },
+  { owner: 'sub2main', pattern: '/api/profile/reviews', methods: ALL, description: 'قراءة وكتابة قائمة تقييمات البروفايل.' },
   // Inactive discount reads and discount writes require the session-signing capability.
-  { owner: 'sub2main', pattern: '/api/profile/discounts', methods: ALL },
-  { owner: 'sub2main', pattern: '/api/profile/**', methods: WRITE },
-  { owner: 'profiles', pattern: '/api/profile/**', methods: READ },
-  { owner: 'sub2main', pattern: '/api/pharmacy-profile-catalog', methods: WRITE },
-  { owner: 'products', pattern: '/api/pharmacy-profile-catalog', methods: READ },
+  { owner: 'sub2main', pattern: '/api/profile/discounts', methods: ALL, description: 'قراءة أو تعديل خصومات البروفايل المحمية بالجلسة.' },
+  { owner: 'sub2main', pattern: '/api/profile/**', methods: WRITE, description: 'كتابة بيانات البروفايل ومساراته الفرعية.' },
+  { owner: 'profiles', pattern: '/api/profile/**', methods: READ, description: 'قراءة بيانات البروفايل ومساراته الفرعية.' },
+  { owner: 'sub2main', pattern: '/api/pharmacy-profile-catalog', methods: WRITE, description: 'تعديل كتالوج بروفايلات الصيدليات.' },
+  { owner: 'products', pattern: '/api/pharmacy-profile-catalog', methods: READ, description: 'قراءة كتالوج بروفايلات الصيدليات.' },
 ];
 
 export function normalizeApiPath(input: string): string {

@@ -63,7 +63,10 @@ assert.match(deviceToggle, /setDeviceEnabled\(false\);[\s\S]{0,120}getPermission
 assert.match(deviceToggle, /registrationConfirmed/);
 assert.match(deviceToggle, /setDeviceEnabled\(true\)/);
 assert.match(deviceToggle, /catch \(error\) \{\n        setDeviceEnabled\(false\)/);
-assert.match(deviceToggle, /serverIds\.has\(token\.deviceId\)/);
+// Both hooks prove registration through the one shared rule, which
+// notification-registration-confirmation.test.ts exercises per platform.
+assert.match(deviceToggle, /confirmedLocalDeviceIds\(account\.devices, local\)/);
+assert.match(accountDevicesHookSource(), /confirmedLocalDeviceIds\(account\.devices, local\)/);
 
 // A runtime that has not reported yet is a skeleton, not a switch that looks off.
 assert.match(deviceSection, /!state\.notificationRuntimeReady/);
@@ -177,6 +180,10 @@ for (const key of [
   for (const locale of locales) {
     assert.ok(locale[key], `Missing translation: ${key}`);
   }
+}
+
+function accountDevicesHookSource(): string {
+  return source('src/features/settings/presentation/use-account-devices.ts');
 }
 
 console.log('Notifications settings surface tests passed.');

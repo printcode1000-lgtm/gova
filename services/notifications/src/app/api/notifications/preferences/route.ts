@@ -1,4 +1,4 @@
-import { assertSubmainEnv, createSubmainRuntime } from '@asol/submain-composition';
+import { assertNotificationsEnv, createNotificationsRuntime } from '@asol/notifications-composition';
 
 import { businessErrorResponse, corsHeaders, preflight, jsonResponse, readJsonBody } from '../../../lib/http';
 
@@ -8,16 +8,14 @@ export const dynamic = 'force-dynamic';
 /**
  * Read the account-wide push mute switch.
  *
- * On this account because the switch is resolved against the users repository
- * before the preference is read — a capability `asol-notifications` must never
- * hold. This account holds the users database and the notifications database,
- * which is what the check needs. The identity contract is the same uid/phone
+ * The switch is resolved against the users repository before the preference is
+ * read, so this account holds the users database beside its own. The identity contract is the same uid/phone
  * pair the application answered, so no client moves with the origin.
  */
 export async function GET(request: Request): Promise<Response> {
   try {
-    const { devices } = createSubmainRuntime();
-    assertSubmainEnv();
+    const { devices } = createNotificationsRuntime();
+    assertNotificationsEnv();
 
     const query = new URL(request.url).searchParams;
     const preference = await devices.getPushPreference(
@@ -33,8 +31,8 @@ export async function GET(request: Request): Promise<Response> {
 /** Flip the switch. Never touches a registration or a device token. */
 export async function POST(request: Request): Promise<Response> {
   try {
-    const { devices } = createSubmainRuntime();
-    assertSubmainEnv();
+    const { devices } = createNotificationsRuntime();
+    assertNotificationsEnv();
 
     const body = await readJsonBody<{
       uid: string;

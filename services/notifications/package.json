@@ -21,6 +21,7 @@
     "react-dom": "19.2.8",
     "server-only": "^0.0.1",
     "web-push": "3.6.7",
+    "zod": "4.4.3",
     "zustand": "5.0.15"
   },
   "devDependencies": {

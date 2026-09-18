@@ -2531,6 +2531,20 @@
       ]
     },
     {
+      "id": "command:smoke:notifications",
+      "kind": "command",
+      "name": "npm run smoke:notifications",
+      "summary": "Root package script; implementation is available in package.json and generated operational text redacts environment assignment values.",
+      "tags": [
+        "notifications",
+        "npm",
+        "npm run smoke:notifications",
+        "run",
+        "smoke",
+        "smoke:notifications"
+      ]
+    },
+    {
       "id": "command:smoke:owned-reads",
       "kind": "command",
       "name": "npm run smoke:owned-reads",
@@ -5403,6 +5417,7 @@
       "tags": [
         "-composition",
         "@asol/notifications-composition",
+        "@asol/notifications-core",
         "@asol/service-mirror-core",
         "@asol/submain-composition",
         "accounts",
@@ -10893,7 +10908,7 @@
         "scripts/probe-notifications-service.ts",
         "scripts/provision-mobile-push-credentials",
         "scripts/provision-mobile-push-credentials.ts",
-        "services/submain",
+        "services/notifications",
         "ships",
         "src/features/notification-bridge/",
         "test",
@@ -10939,6 +10954,8 @@
         "notifications",
         "only",
         "packages/account-bridge/src/tests/mobile-push",
+        "packages/account-bridge/src/tests/mobile-push-session",
+        "packages/account-bridge/src/tests/mobile-push-session.test.ts",
         "packages/account-bridge/src/tests/mobile-push.test.ts",
         "packages/architecture-core/src/contracts/notification-contract",
         "packages/architecture-core/src/contracts/notification-contract.ts",
@@ -10953,6 +10970,8 @@
         "packages/notifications-core/src/domain/notification-sound.ts",
         "packages/notifications-core/src/domain/web-push-config",
         "packages/notifications-core/src/domain/web-push-config.ts",
+        "scripts/tests/notifications-smoke-probes",
+        "scripts/tests/notifications-smoke-probes.test.ts",
         "server",
         "services/notifications",
         "sole",
@@ -10992,47 +11011,53 @@
       "kind": "document",
       "name": "Notifications Service Module",
       "path": "docs/05-platform-features/notifications-service-module.md",
-      "summary": "An independent deployment that does one thing: fan out push notifications. It lives in `services/notifications/`, runs on its own Vercel account, and reads its own Turso database.",
+      "summary": "An independent deployment that owns the whole `/api/notifications/**` surface: push fan-out, device registration, the account's device list, the push mute switch, the self and broadcast tests, broadcast recipients and sends, and the native sender's recipient tokens and credential",
       "tags": [
+        "/api/notifications/",
+        "@asol/notifications-composition",
         "account",
         "an",
-        "an independent deployment that does one thing: fan out push notifications. it lives in `services/notifications/`, runs on its own vercel account, and reads its own turso database.",
+        "an independent deployment that owns the whole `/api/notifications/**` surface: push fan-out, device registration, the account's device list, the push mute switch, the self and broadcast tests, broadcast recipients and sends, and the native sender's recipient tokens and credential",
         "and",
-        "database",
+        "broadcast",
+        "credential",
         "deployment",
+        "device",
         "docs/05-platform-features/notifications-service-module",
         "docs/05-platform-features/notifications-service-module.md",
         "docs/08-troubleshooting/problems/every-server-route-500-unregistered-port",
         "docs/08-troubleshooting/problems/every-server-route-500-unregistered-port.md",
-        "does",
-        "fan",
-        "in",
+        "fan-out",
         "independent",
-        "it",
-        "its",
-        "lives",
+        "list",
         "md",
         "module",
+        "mute",
+        "native",
         "notifications",
         "notifications service module",
-        "on",
-        "one",
-        "out",
-        "own",
+        "owns",
         "packages/notifications-core/src/service-runtime",
         "packages/notifications-core/src/service-runtime.ts",
         "push",
-        "reads",
-        "runs",
+        "recipient",
+        "recipients",
+        "registration",
+        "self",
+        "sender",
+        "sends",
         "service",
         "services/notifications",
         "services/notifications/",
         "src/app/api/notifications/send",
+        "surface",
+        "switch",
+        "tests",
         "that",
-        "thing",
+        "the",
+        "tokens",
         "ts",
-        "turso",
-        "vercel"
+        "whole"
       ]
     },
     {
@@ -13238,7 +13263,7 @@
         "packages/notifications-core/src/domain/notification-sound.ts",
         "plugin",
         "push",
-        "services/submain",
+        "services/notifications",
         "states",
         "terminated",
         "the",
@@ -15070,6 +15095,53 @@
       ]
     },
     {
+      "id": "document:docs/08-troubleshooting/problems/explicit-error-status-shadowed.md",
+      "kind": "document",
+      "name": "Explicit error statuses answered as `400`, and notification errors as `500`",
+      "path": "docs/08-troubleshooting/problems/explicit-error-status-shadowed.md",
+      "summary": "Every runtime that maps a thrown business code through `businessApiErrorStatus` (`src/core/api/business-api-error-status.ts`): the application's `mapServiceError`, and the service accounts' `businessErrorResponse`.",
+      "tags": [
+        "400",
+        "500",
+        "accounts",
+        "and",
+        "answered",
+        "application",
+        "as",
+        "business",
+        "businessapierrorstatus",
+        "businesserrorresponse",
+        "code",
+        "docs/08-troubleshooting/problems/explicit-error-status-shadowed",
+        "docs/08-troubleshooting/problems/explicit-error-status-shadowed.md",
+        "error",
+        "errors",
+        "every",
+        "every runtime that maps a thrown business code through `businessapierrorstatus` (`src/core/api/business-api-error-status.ts`): the application's `mapserviceerror`, and the service accounts' `businesserrorresponse`.",
+        "explicit",
+        "explicit error statuses answered as `400`, and notification errors as `500`",
+        "maps",
+        "mapserviceerror",
+        "md",
+        "notification",
+        "runtime",
+        "service",
+        "src/core/api/business-api-error-codes",
+        "src/core/api/business-api-error-codes.ts",
+        "src/core/api/business-api-error-status",
+        "src/core/api/business-api-error-status.ts",
+        "src/features/notifications/tests/notification-error-status",
+        "src/features/notifications/tests/notification-error-status.test.ts",
+        "statuses",
+        "test",
+        "that",
+        "the",
+        "through",
+        "thrown",
+        "ts"
+      ]
+    },
+    {
       "id": "document:docs/08-troubleshooting/problems/favorites-storage-contract-stale-path.md",
       "kind": "document",
       "name": "Favorites storage contract fails after feature-layer refactor",
@@ -15510,6 +15582,8 @@
         "md",
         "not",
         "owner",
+        "packages/account-declarations/src/tests/index",
+        "packages/account-declarations/src/tests/index.test.ts",
         "request",
         "returns",
         "route",
@@ -15519,6 +15593,7 @@
         "scripts/route-ownership-coverage.ts",
         "scripts/tests/route-ownership-coverage",
         "scripts/tests/route-ownership-coverage.test.ts",
+        "services/notifications",
         "services/submain",
         "services/submain/src/app/api/notifications/preferences/route",
         "services/submain/src/app/api/notifications/preferences/route.ts",
@@ -27015,6 +27090,17 @@
       ]
     },
     {
+      "id": "script:scripts/check-notifications-smoke.ts",
+      "kind": "script",
+      "name": "check-notifications-smoke.ts",
+      "path": "scripts/check-notifications-smoke.ts",
+      "tags": [
+        "scripts/check-notifications-smoke",
+        "scripts/check-notifications-smoke.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "script:scripts/check-owned-route-reads.ts",
       "kind": "script",
       "name": "check-owned-route-reads.ts",
@@ -27726,6 +27812,17 @@
       "tags": [
         "scripts/migrate-static-dom-ids",
         "scripts/migrate-static-dom-ids.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "script:scripts/notifications-smoke-probes.ts",
+      "kind": "script",
+      "name": "notifications-smoke-probes.ts",
+      "path": "scripts/notifications-smoke-probes.ts",
+      "tags": [
+        "scripts/notifications-smoke-probes",
+        "scripts/notifications-smoke-probes.ts",
         "ts"
       ]
     },
@@ -39413,6 +39510,83 @@
       ]
     },
     {
+      "id": "source:services/notifications/src/app/api/notifications/broadcast/recipients/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/notifications/src/app/api/notifications/broadcast/recipients/route.ts",
+      "tags": [
+        "services/notifications/src/app/api/notifications/broadcast/recipients/route",
+        "services/notifications/src/app/api/notifications/broadcast/recipients/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/notifications/src/app/api/notifications/broadcast/send/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/notifications/src/app/api/notifications/broadcast/send/route.ts",
+      "tags": [
+        "services/notifications/src/app/api/notifications/broadcast/send/route",
+        "services/notifications/src/app/api/notifications/broadcast/send/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/notifications/src/app/api/notifications/device-token/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/notifications/src/app/api/notifications/device-token/route.ts",
+      "tags": [
+        "services/notifications/src/app/api/notifications/device-token/route",
+        "services/notifications/src/app/api/notifications/device-token/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/notifications/src/app/api/notifications/devices/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/notifications/src/app/api/notifications/devices/route.ts",
+      "tags": [
+        "services/notifications/src/app/api/notifications/devices/route",
+        "services/notifications/src/app/api/notifications/devices/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/notifications/src/app/api/notifications/mobile-push/unlock/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/notifications/src/app/api/notifications/mobile-push/unlock/route.ts",
+      "tags": [
+        "services/notifications/src/app/api/notifications/mobile-push/unlock/route",
+        "services/notifications/src/app/api/notifications/mobile-push/unlock/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/notifications/src/app/api/notifications/preferences/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/notifications/src/app/api/notifications/preferences/route.ts",
+      "tags": [
+        "services/notifications/src/app/api/notifications/preferences/route",
+        "services/notifications/src/app/api/notifications/preferences/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/notifications/src/app/api/notifications/recipient-tokens/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/notifications/src/app/api/notifications/recipient-tokens/route.ts",
+      "tags": [
+        "services/notifications/src/app/api/notifications/recipient-tokens/route",
+        "services/notifications/src/app/api/notifications/recipient-tokens/route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:services/notifications/src/app/api/notifications/send/route.ts",
       "kind": "source",
       "name": "route.ts",
@@ -39432,6 +39606,17 @@
         "services/notifications/src/app/layout",
         "services/notifications/src/app/layout.tsx",
         "tsx"
+      ]
+    },
+    {
+      "id": "source:services/notifications/src/app/lib/http.ts",
+      "kind": "source",
+      "name": "http.ts",
+      "path": "services/notifications/src/app/lib/http.ts",
+      "tags": [
+        "services/notifications/src/app/lib/http",
+        "services/notifications/src/app/lib/http.ts",
+        "ts"
       ]
     },
     {
@@ -40309,83 +40494,6 @@
       "tags": [
         "services/submain/src/app/api/health/route",
         "services/submain/src/app/api/health/route.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:services/submain/src/app/api/notifications/broadcast/recipients/route.ts",
-      "kind": "source",
-      "name": "route.ts",
-      "path": "services/submain/src/app/api/notifications/broadcast/recipients/route.ts",
-      "tags": [
-        "services/submain/src/app/api/notifications/broadcast/recipients/route",
-        "services/submain/src/app/api/notifications/broadcast/recipients/route.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:services/submain/src/app/api/notifications/broadcast/send/route.ts",
-      "kind": "source",
-      "name": "route.ts",
-      "path": "services/submain/src/app/api/notifications/broadcast/send/route.ts",
-      "tags": [
-        "services/submain/src/app/api/notifications/broadcast/send/route",
-        "services/submain/src/app/api/notifications/broadcast/send/route.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:services/submain/src/app/api/notifications/device-token/route.ts",
-      "kind": "source",
-      "name": "route.ts",
-      "path": "services/submain/src/app/api/notifications/device-token/route.ts",
-      "tags": [
-        "services/submain/src/app/api/notifications/device-token/route",
-        "services/submain/src/app/api/notifications/device-token/route.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:services/submain/src/app/api/notifications/devices/route.ts",
-      "kind": "source",
-      "name": "route.ts",
-      "path": "services/submain/src/app/api/notifications/devices/route.ts",
-      "tags": [
-        "services/submain/src/app/api/notifications/devices/route",
-        "services/submain/src/app/api/notifications/devices/route.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:services/submain/src/app/api/notifications/mobile-push/unlock/route.ts",
-      "kind": "source",
-      "name": "route.ts",
-      "path": "services/submain/src/app/api/notifications/mobile-push/unlock/route.ts",
-      "tags": [
-        "services/submain/src/app/api/notifications/mobile-push/unlock/route",
-        "services/submain/src/app/api/notifications/mobile-push/unlock/route.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:services/submain/src/app/api/notifications/preferences/route.ts",
-      "kind": "source",
-      "name": "route.ts",
-      "path": "services/submain/src/app/api/notifications/preferences/route.ts",
-      "tags": [
-        "services/submain/src/app/api/notifications/preferences/route",
-        "services/submain/src/app/api/notifications/preferences/route.ts",
-        "ts"
-      ]
-    },
-    {
-      "id": "source:services/submain/src/app/api/notifications/recipient-tokens/route.ts",
-      "kind": "source",
-      "name": "route.ts",
-      "path": "services/submain/src/app/api/notifications/recipient-tokens/route.ts",
-      "tags": [
-        "services/submain/src/app/api/notifications/recipient-tokens/route",
-        "services/submain/src/app/api/notifications/recipient-tokens/route.ts",
         "ts"
       ]
     },
@@ -50550,6 +50658,17 @@
       ]
     },
     {
+      "id": "source:src/features/settings/presentation/notification-registration-confirmation.ts",
+      "kind": "source",
+      "name": "notification-registration-confirmation.ts",
+      "path": "src/features/settings/presentation/notification-registration-confirmation.ts",
+      "tags": [
+        "src/features/settings/presentation/notification-registration-confirmation",
+        "src/features/settings/presentation/notification-registration-confirmation.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/settings/presentation/NotificationDeviceSettingsCard.tsx",
       "kind": "source",
       "name": "NotificationDeviceSettingsCard.tsx",
@@ -53049,6 +53168,18 @@
       ]
     },
     {
+      "id": "test:packages/account-bridge/src/tests/mobile-push-session.test.ts",
+      "kind": "test",
+      "name": "mobile-push-session.test.ts",
+      "path": "packages/account-bridge/src/tests/mobile-push-session.test.ts",
+      "tags": [
+        "packages/account-bridge/src/tests/mobile-push-session",
+        "packages/account-bridge/src/tests/mobile-push-session.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/account-bridge/src/tests/mobile-push.test.ts",
       "kind": "test",
       "name": "mobile-push.test.ts",
@@ -55043,6 +55174,18 @@
       ]
     },
     {
+      "id": "test:scripts/tests/notifications-smoke-probes.test.ts",
+      "kind": "test",
+      "name": "notifications-smoke-probes.test.ts",
+      "path": "scripts/tests/notifications-smoke-probes.test.ts",
+      "tags": [
+        "scripts/tests/notifications-smoke-probes",
+        "scripts/tests/notifications-smoke-probes.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:scripts/tests/ota-manifest-url-alignment.test.ts",
       "kind": "test",
       "name": "ota-manifest-url-alignment.test.ts",
@@ -55199,24 +55342,24 @@
       ]
     },
     {
-      "id": "test:services/submain/src/app/api/notifications/test/self/route.ts",
+      "id": "test:services/notifications/src/app/api/notifications/test/self/route.ts",
       "kind": "test",
       "name": "route.ts",
-      "path": "services/submain/src/app/api/notifications/test/self/route.ts",
+      "path": "services/notifications/src/app/api/notifications/test/self/route.ts",
       "tags": [
-        "services/submain/src/app/api/notifications/test/self/route",
-        "services/submain/src/app/api/notifications/test/self/route.ts",
+        "services/notifications/src/app/api/notifications/test/self/route",
+        "services/notifications/src/app/api/notifications/test/self/route.ts",
         "ts"
       ]
     },
     {
-      "id": "test:services/submain/src/app/api/notifications/test/send/route.ts",
+      "id": "test:services/notifications/src/app/api/notifications/test/send/route.ts",
       "kind": "test",
       "name": "route.ts",
-      "path": "services/submain/src/app/api/notifications/test/send/route.ts",
+      "path": "services/notifications/src/app/api/notifications/test/send/route.ts",
       "tags": [
-        "services/submain/src/app/api/notifications/test/send/route",
-        "services/submain/src/app/api/notifications/test/send/route.ts",
+        "services/notifications/src/app/api/notifications/test/send/route",
+        "services/notifications/src/app/api/notifications/test/send/route.ts",
         "ts"
       ]
     },
@@ -55459,6 +55602,30 @@
       ]
     },
     {
+      "id": "test:src/features/notifications/tests/device-token-service-native.test.ts",
+      "kind": "test",
+      "name": "device-token-service-native.test.ts",
+      "path": "src/features/notifications/tests/device-token-service-native.test.ts",
+      "tags": [
+        "src/features/notifications/tests/device-token-service-native",
+        "src/features/notifications/tests/device-token-service-native.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/features/notifications/tests/device-token-service-web.test.ts",
+      "kind": "test",
+      "name": "device-token-service-web.test.ts",
+      "path": "src/features/notifications/tests/device-token-service-web.test.ts",
+      "tags": [
+        "src/features/notifications/tests/device-token-service-web",
+        "src/features/notifications/tests/device-token-service-web.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:src/features/notifications/tests/integration/notification-flow.integration.test.ts",
       "kind": "test",
       "name": "notification-flow.integration.test.ts",
@@ -55615,6 +55782,18 @@
       ]
     },
     {
+      "id": "test:src/features/notifications/tests/notification-error-status.test.ts",
+      "kind": "test",
+      "name": "notification-error-status.test.ts",
+      "path": "src/features/notifications/tests/notification-error-status.test.ts",
+      "tags": [
+        "src/features/notifications/tests/notification-error-status",
+        "src/features/notifications/tests/notification-error-status.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:src/features/notifications/tests/notification-grant.test.ts",
       "kind": "test",
       "name": "notification-grant.test.ts",
@@ -55687,6 +55866,43 @@
       ]
     },
     {
+      "id": "test:src/features/notifications/tests/notification-recipient-tokens.service.test.ts",
+      "kind": "test",
+      "name": "notification-recipient-tokens.service.test.ts",
+      "path": "src/features/notifications/tests/notification-recipient-tokens.service.test.ts",
+      "tags": [
+        "service",
+        "src/features/notifications/tests/notification-recipient-tokens",
+        "src/features/notifications/tests/notification-recipient-tokens.service.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/features/notifications/tests/notification-release-gate.test.ts",
+      "kind": "test",
+      "name": "notification-release-gate.test.ts",
+      "path": "src/features/notifications/tests/notification-release-gate.test.ts",
+      "tags": [
+        "src/features/notifications/tests/notification-release-gate",
+        "src/features/notifications/tests/notification-release-gate.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/features/notifications/tests/notification-route-reachability.test.ts",
+      "kind": "test",
+      "name": "notification-route-reachability.test.ts",
+      "path": "src/features/notifications/tests/notification-route-reachability.test.ts",
+      "tags": [
+        "src/features/notifications/tests/notification-route-reachability",
+        "src/features/notifications/tests/notification-route-reachability.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:src/features/notifications/tests/notification-sound-contract.test.ts",
       "kind": "test",
       "name": "notification-sound-contract.test.ts",
@@ -55706,6 +55922,18 @@
       "tags": [
         "src/features/notifications/tests/notification-test-service",
         "src/features/notifications/tests/notification-test-service.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/features/notifications/tests/notification-test-suite-integrity.test.ts",
+      "kind": "test",
+      "name": "notification-test-suite-integrity.test.ts",
+      "path": "src/features/notifications/tests/notification-test-suite-integrity.test.ts",
+      "tags": [
+        "src/features/notifications/tests/notification-test-suite-integrity",
+        "src/features/notifications/tests/notification-test-suite-integrity.test.ts",
         "test",
         "ts"
       ]
@@ -55958,6 +56186,18 @@
       "tags": [
         "src/features/seller-discounts/tests/seller-discount-security-contract",
         "src/features/seller-discounts/tests/seller-discount-security-contract.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/features/settings/tests/notification-registration-confirmation.test.ts",
+      "kind": "test",
+      "name": "notification-registration-confirmation.test.ts",
+      "path": "src/features/settings/tests/notification-registration-confirmation.test.ts",
+      "tags": [
+        "src/features/settings/tests/notification-registration-confirmation",
+        "src/features/settings/tests/notification-registration-confirmation.test.ts",
         "test",
         "ts"
       ]
@@ -58559,6 +58799,16 @@
       "kind": "targets-runtime"
     },
     {
+      "from": "command:smoke:notifications",
+      "to": "script:scripts/check-notifications-smoke.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:smoke:notifications",
+      "to": "runtime:tooling",
+      "kind": "targets-runtime"
+    },
+    {
       "from": "command:smoke:owned-reads",
       "to": "script:scripts/check-owned-route-reads.ts",
       "kind": "invokes"
@@ -58666,6 +58916,11 @@
     {
       "from": "command:test:account-bridge",
       "to": "test:packages/account-bridge/src/tests/mobile-push-channel-parity.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:account-bridge",
+      "to": "test:packages/account-bridge/src/tests/mobile-push-session.test.ts",
       "kind": "invokes"
     },
     {
@@ -59425,12 +59680,27 @@
     },
     {
       "from": "command:test:notifications",
+      "to": "test:scripts/tests/notifications-smoke-probes.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:notifications",
       "to": "test:src/features/notifications/tests/android-notification-inbox-contract.test.ts",
       "kind": "invokes"
     },
     {
       "from": "command:test:notifications",
       "to": "test:src/features/notifications/tests/dev-notification-bridge.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:notifications",
+      "to": "test:src/features/notifications/tests/device-token-service-native.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:notifications",
+      "to": "test:src/features/notifications/tests/device-token-service-web.test.ts",
       "kind": "invokes"
     },
     {
@@ -59480,6 +59750,11 @@
     },
     {
       "from": "command:test:notifications",
+      "to": "test:src/features/notifications/tests/notification-error-status.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:notifications",
       "to": "test:src/features/notifications/tests/notification-grant.test.ts",
       "kind": "invokes"
     },
@@ -59510,12 +59785,32 @@
     },
     {
       "from": "command:test:notifications",
+      "to": "test:src/features/notifications/tests/notification-recipient-tokens.service.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:notifications",
+      "to": "test:src/features/notifications/tests/notification-release-gate.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:notifications",
+      "to": "test:src/features/notifications/tests/notification-route-reachability.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:notifications",
       "to": "test:src/features/notifications/tests/notification-sound-contract.test.ts",
       "kind": "invokes"
     },
     {
       "from": "command:test:notifications",
       "to": "test:src/features/notifications/tests/notification-test-service.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:notifications",
+      "to": "test:src/features/notifications/tests/notification-test-suite-integrity.test.ts",
       "kind": "invokes"
     },
     {
@@ -60007,6 +60302,11 @@
       "from": "command:test:service-runtime-core",
       "to": "runtime:tooling",
       "kind": "targets-runtime"
+    },
+    {
+      "from": "command:test:settings-notifications",
+      "to": "test:src/features/settings/tests/notification-registration-confirmation.test.ts",
+      "kind": "invokes"
     },
     {
       "from": "command:test:settings-notifications",
@@ -63437,6 +63737,12 @@
       "to": "package:@asol/notifications-composition",
       "kind": "references",
       "detail": "@asol/notifications-composition"
+    },
+    {
+      "from": "document:docs/01-architecture/04-composition/service-composition.md",
+      "to": "package:@asol/notifications-core",
+      "kind": "references",
+      "detail": "@asol/notifications-core"
     },
     {
       "from": "document:docs/01-architecture/04-composition/service-composition.md",
@@ -71316,9 +71622,9 @@
     },
     {
       "from": "document:docs/05-platform-features/notification-bridge-module.md",
-      "to": "service:submain",
+      "to": "service:notifications",
       "kind": "references",
-      "detail": "services/submain"
+      "detail": "services/notifications"
     },
     {
       "from": "document:docs/05-platform-features/notification-bridge-module.md",
@@ -71525,6 +71831,12 @@
     },
     {
       "from": "document:docs/05-platform-features/notification-system.md",
+      "to": "test:packages/account-bridge/src/tests/mobile-push-session.test.ts",
+      "kind": "references",
+      "detail": "packages/account-bridge/src/tests/mobile-push-session.test.ts"
+    },
+    {
+      "from": "document:docs/05-platform-features/notification-system.md",
       "to": "test:packages/account-bridge/src/tests/mobile-push.test.ts",
       "kind": "references",
       "detail": "packages/account-bridge/src/tests/mobile-push.test.ts"
@@ -71534,6 +71846,12 @@
       "to": "test:packages/native-core/src/tests/contract/app-settings-plugin.test.ts",
       "kind": "references",
       "detail": "packages/native-core/src/tests/contract/app-settings-plugin.test.ts"
+    },
+    {
+      "from": "document:docs/05-platform-features/notification-system.md",
+      "to": "test:scripts/tests/notifications-smoke-probes.test.ts",
+      "kind": "references",
+      "detail": "scripts/tests/notifications-smoke-probes.test.ts"
     },
     {
       "from": "document:docs/05-platform-features/notifications-service-module.md",
@@ -71557,6 +71875,12 @@
       "to": "document:docs/08-troubleshooting/problems/every-server-route-500-unregistered-port.md",
       "kind": "references",
       "detail": "docs/08-troubleshooting/problems/every-server-route-500-unregistered-port.md"
+    },
+    {
+      "from": "document:docs/05-platform-features/notifications-service-module.md",
+      "to": "package:@asol/notifications-composition",
+      "kind": "references",
+      "detail": "@asol/notifications-composition"
     },
     {
       "from": "document:docs/05-platform-features/notifications-service-module.md",
@@ -74041,9 +74365,9 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/android-push-notifications.md",
-      "to": "service:submain",
+      "to": "service:notifications",
       "kind": "references",
-      "detail": "services/submain"
+      "detail": "services/notifications"
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/android-push-notifications.md",
@@ -75953,6 +76277,29 @@
       "detail": "src/instrumentation.ts"
     },
     {
+      "from": "document:docs/08-troubleshooting/problems/explicit-error-status-shadowed.md",
+      "to": "domain:troubleshooting",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/explicit-error-status-shadowed.md",
+      "to": "source:src/core/api/business-api-error-codes.ts",
+      "kind": "references",
+      "detail": "src/core/api/business-api-error-codes.ts"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/explicit-error-status-shadowed.md",
+      "to": "source:src/core/api/business-api-error-status.ts",
+      "kind": "references",
+      "detail": "src/core/api/business-api-error-status.ts"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/explicit-error-status-shadowed.md",
+      "to": "test:src/features/notifications/tests/notification-error-status.test.ts",
+      "kind": "references",
+      "detail": "src/features/notifications/tests/notification-error-status.test.ts"
+    },
+    {
       "from": "document:docs/08-troubleshooting/problems/favorites-storage-contract-stale-path.md",
       "to": "domain:troubleshooting",
       "kind": "belongs-to"
@@ -76177,15 +76524,27 @@
     },
     {
       "from": "document:docs/08-troubleshooting/problems/owned-route-not-shipped.md",
+      "to": "service:notifications",
+      "kind": "references",
+      "detail": "services/notifications"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/owned-route-not-shipped.md",
       "to": "service:submain",
       "kind": "references",
       "detail": "services/submain"
     },
     {
       "from": "document:docs/08-troubleshooting/problems/owned-route-not-shipped.md",
-      "to": "source:services/submain/src/app/api/notifications/preferences/route.ts",
+      "to": "service:submain",
       "kind": "references",
       "detail": "services/submain/src/app/api/notifications/preferences/route.ts"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/owned-route-not-shipped.md",
+      "to": "test:packages/account-declarations/src/tests/index.test.ts",
+      "kind": "references",
+      "detail": "packages/account-declarations/src/tests/index.test.ts"
     },
     {
       "from": "document:docs/08-troubleshooting/problems/owned-route-not-shipped.md",
@@ -84228,6 +84587,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "test:packages/account-bridge/src/tests/mobile-push-session.test.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "test:packages/account-bridge/src/tests/mobile-push.test.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -87366,6 +87731,12 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "script:scripts/check-notifications-smoke.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "script:scripts/check-owned-route-reads.ts",
       "kind": "documents",
       "detail": "scripts/"
@@ -87751,6 +88122,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "script:scripts/migrate-static-dom-ids.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "script:scripts/notifications-smoke-probes.ts",
       "kind": "documents",
       "detail": "scripts/"
     },
@@ -90204,6 +90581,48 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "source:services/notifications/src/app/api/notifications/broadcast/recipients/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/notifications/src/app/api/notifications/broadcast/send/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/notifications/src/app/api/notifications/device-token/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/notifications/src/app/api/notifications/devices/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/notifications/src/app/api/notifications/mobile-push/unlock/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/notifications/src/app/api/notifications/preferences/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/notifications/src/app/api/notifications/recipient-tokens/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "source:services/notifications/src/app/api/notifications/send/route.ts",
       "kind": "documents",
       "detail": "services/"
@@ -90211,6 +90630,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "source:services/notifications/src/app/layout.tsx",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/notifications/src/app/lib/http.ts",
       "kind": "documents",
       "detail": "services/"
     },
@@ -90685,48 +91110,6 @@
     {
       "from": "domain:mobile-and-release",
       "to": "source:services/submain/src/app/api/health/route.ts",
-      "kind": "documents",
-      "detail": "services/"
-    },
-    {
-      "from": "domain:mobile-and-release",
-      "to": "source:services/submain/src/app/api/notifications/broadcast/recipients/route.ts",
-      "kind": "documents",
-      "detail": "services/"
-    },
-    {
-      "from": "domain:mobile-and-release",
-      "to": "source:services/submain/src/app/api/notifications/broadcast/send/route.ts",
-      "kind": "documents",
-      "detail": "services/"
-    },
-    {
-      "from": "domain:mobile-and-release",
-      "to": "source:services/submain/src/app/api/notifications/device-token/route.ts",
-      "kind": "documents",
-      "detail": "services/"
-    },
-    {
-      "from": "domain:mobile-and-release",
-      "to": "source:services/submain/src/app/api/notifications/devices/route.ts",
-      "kind": "documents",
-      "detail": "services/"
-    },
-    {
-      "from": "domain:mobile-and-release",
-      "to": "source:services/submain/src/app/api/notifications/mobile-push/unlock/route.ts",
-      "kind": "documents",
-      "detail": "services/"
-    },
-    {
-      "from": "domain:mobile-and-release",
-      "to": "source:services/submain/src/app/api/notifications/preferences/route.ts",
-      "kind": "documents",
-      "detail": "services/"
-    },
-    {
-      "from": "domain:mobile-and-release",
-      "to": "source:services/submain/src/app/api/notifications/recipient-tokens/route.ts",
       "kind": "documents",
       "detail": "services/"
     },
@@ -91224,6 +91607,12 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "test:scripts/tests/notifications-smoke-probes.test.ts",
+      "kind": "documents",
+      "detail": "scripts/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "test:scripts/tests/ota-manifest-url-alignment.test.ts",
       "kind": "documents",
       "detail": "scripts/"
@@ -91302,13 +91691,13 @@
     },
     {
       "from": "domain:mobile-and-release",
-      "to": "test:services/submain/src/app/api/notifications/test/self/route.ts",
+      "to": "test:services/notifications/src/app/api/notifications/test/self/route.ts",
       "kind": "documents",
       "detail": "services/"
     },
     {
       "from": "domain:mobile-and-release",
-      "to": "test:services/submain/src/app/api/notifications/test/send/route.ts",
+      "to": "test:services/notifications/src/app/api/notifications/test/send/route.ts",
       "kind": "documents",
       "detail": "services/"
     },
@@ -97164,6 +97553,12 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "source:src/features/settings/presentation/notification-registration-confirmation.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "source:src/features/settings/presentation/NotificationDeviceSettingsCard.tsx",
       "kind": "documents",
       "detail": "src/features/"
@@ -98178,6 +98573,18 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "test:src/features/notifications/tests/device-token-service-native.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
+      "to": "test:src/features/notifications/tests/device-token-service-web.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "test:src/features/notifications/tests/integration/notification-flow.integration.test.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -98256,6 +98663,12 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "test:src/features/notifications/tests/notification-error-status.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "test:src/features/notifications/tests/notification-grant.test.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -98292,6 +98705,24 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "test:src/features/notifications/tests/notification-recipient-tokens.service.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
+      "to": "test:src/features/notifications/tests/notification-release-gate.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
+      "to": "test:src/features/notifications/tests/notification-route-reachability.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "test:src/features/notifications/tests/notification-sound-contract.test.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -98299,6 +98730,12 @@
     {
       "from": "domain:platform-features",
       "to": "test:src/features/notifications/tests/notification-test-service.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
+      "to": "test:src/features/notifications/tests/notification-test-suite-integrity.test.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -98425,6 +98862,12 @@
     {
       "from": "domain:platform-features",
       "to": "test:src/features/seller-discounts/tests/seller-discount-security-contract.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
+      "to": "test:src/features/settings/tests/notification-registration-confirmation.test.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -106620,6 +107063,12 @@
     },
     {
       "from": "domain:ui-components",
+      "to": "source:src/features/settings/presentation/notification-registration-confirmation.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
       "to": "source:src/features/settings/presentation/NotificationDeviceSettingsCard.tsx",
       "kind": "documents",
       "detail": "src/features/"
@@ -107526,6 +107975,18 @@
     },
     {
       "from": "domain:ui-components",
+      "to": "test:src/features/notifications/tests/device-token-service-native.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "test:src/features/notifications/tests/device-token-service-web.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
       "to": "test:src/features/notifications/tests/integration/notification-flow.integration.test.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -107604,6 +108065,12 @@
     },
     {
       "from": "domain:ui-components",
+      "to": "test:src/features/notifications/tests/notification-error-status.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
       "to": "test:src/features/notifications/tests/notification-grant.test.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -107640,6 +108107,24 @@
     },
     {
       "from": "domain:ui-components",
+      "to": "test:src/features/notifications/tests/notification-recipient-tokens.service.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "test:src/features/notifications/tests/notification-release-gate.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "test:src/features/notifications/tests/notification-route-reachability.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
       "to": "test:src/features/notifications/tests/notification-sound-contract.test.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -107647,6 +108132,12 @@
     {
       "from": "domain:ui-components",
       "to": "test:src/features/notifications/tests/notification-test-service.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "test:src/features/notifications/tests/notification-test-suite-integrity.test.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -107773,6 +108264,12 @@
     {
       "from": "domain:ui-components",
       "to": "test:src/features/seller-discounts/tests/seller-discount-security-contract.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "test:src/features/settings/tests/notification-registration-confirmation.test.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -108562,6 +109059,11 @@
     {
       "from": "feature:notifications",
       "to": "package:@asol/page-save-core",
+      "kind": "imports"
+    },
+    {
+      "from": "feature:notifications",
+      "to": "package:@asol/release-core",
       "kind": "imports"
     },
     {
@@ -110519,12 +111021,32 @@
     },
     {
       "from": "package:@asol/notifications-composition",
+      "to": "feature:auth",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/notifications-composition",
       "to": "feature:data",
       "kind": "imports"
     },
     {
       "from": "package:@asol/notifications-composition",
+      "to": "feature:notifications",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/notifications-composition",
+      "to": "feature:super-admin",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/notifications-composition",
       "to": "package:@asol/account-declarations",
+      "kind": "imports"
+    },
+    {
+      "from": "package:@asol/notifications-composition",
+      "to": "package:@asol/auth-core",
       "kind": "imports"
     },
     {
@@ -110999,17 +111521,7 @@
     },
     {
       "from": "package:@asol/submain-composition",
-      "to": "feature:super-admin",
-      "kind": "imports"
-    },
-    {
-      "from": "package:@asol/submain-composition",
       "to": "package:@asol/account-declarations",
-      "kind": "imports"
-    },
-    {
-      "from": "package:@asol/submain-composition",
-      "to": "package:@asol/notifications-core",
       "kind": "imports"
     },
     {
@@ -135082,6 +135594,39 @@
       "kind": "uses-environment"
     },
     {
+      "from": "script:scripts/check-notifications-smoke.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/check-notifications-smoke.ts",
+      "to": "package:@asol/cors",
+      "kind": "imports",
+      "detail": "@asol/cors"
+    },
+    {
+      "from": "script:scripts/check-notifications-smoke.ts",
+      "to": "package:@asol/native-core",
+      "kind": "imports",
+      "detail": "@asol/native-core"
+    },
+    {
+      "from": "script:scripts/check-notifications-smoke.ts",
+      "to": "script:scripts/notifications-smoke-probes.ts",
+      "kind": "imports",
+      "detail": "./notifications-smoke-probes"
+    },
+    {
+      "from": "script:scripts/check-notifications-smoke.ts",
+      "to": "environment-key:NEXT_PUBLIC_ASOL_API_BASE_URL",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "script:scripts/check-notifications-smoke.ts",
+      "to": "environment-key:NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL",
+      "kind": "uses-environment"
+    },
+    {
       "from": "script:scripts/check-owned-route-reads.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
@@ -136358,6 +136903,17 @@
       "to": "package:@asol/architecture-core",
       "kind": "imports",
       "detail": "@asol/architecture-core"
+    },
+    {
+      "from": "script:scripts/notifications-smoke-probes.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "script:scripts/notifications-smoke-probes.ts",
+      "to": "package:@asol/cors",
+      "kind": "imports",
+      "detail": "@asol/cors"
     },
     {
       "from": "script:scripts/open-android-outputs.ts",
@@ -137884,11 +138440,6 @@
     {
       "from": "service:submain",
       "to": "package:@asol/hero-slider-core",
-      "kind": "imports"
-    },
-    {
-      "from": "service:submain",
-      "to": "package:@asol/notifications-core",
       "kind": "imports"
     },
     {
@@ -162992,6 +163543,12 @@
       "from": "source:packages/notifications-composition/src/index.ts",
       "to": "package:@asol/notifications-core",
       "kind": "imports",
+      "detail": "@asol/notifications-core"
+    },
+    {
+      "from": "source:packages/notifications-composition/src/index.ts",
+      "to": "package:@asol/notifications-core",
+      "kind": "imports",
       "detail": "@asol/notifications-core/server"
     },
     {
@@ -163002,9 +163559,33 @@
     },
     {
       "from": "source:packages/notifications-composition/src/index.ts",
+      "to": "source:src/features/auth/domain/super-admin.ts",
+      "kind": "imports",
+      "detail": "@/features/auth/domain/super-admin"
+    },
+    {
+      "from": "source:packages/notifications-composition/src/index.ts",
+      "to": "source:src/features/auth/server/session-request.server.ts",
+      "kind": "imports",
+      "detail": "@/features/auth/server/session-request.server"
+    },
+    {
+      "from": "source:packages/notifications-composition/src/index.ts",
       "to": "source:src/features/data/ports/data-core-runtime-config-ports.ts",
       "kind": "imports",
       "detail": "@/features/data/ports/data-core-runtime-config-ports"
+    },
+    {
+      "from": "source:packages/notifications-composition/src/index.ts",
+      "to": "source:src/features/notifications/server/services/notification-service.bootstrap.server.ts",
+      "kind": "imports",
+      "detail": "@/features/notifications/server/services/notification-service.bootstrap.server"
+    },
+    {
+      "from": "source:packages/notifications-composition/src/index.ts",
+      "to": "source:src/features/super-admin/server/services/super-admin-auth.server.ts",
+      "kind": "imports",
+      "detail": "@/features/super-admin/server/services/super-admin-auth.server"
     },
     {
       "from": "source:packages/notifications-core/src/builder.ts",
@@ -175195,12 +175776,6 @@
     },
     {
       "from": "source:packages/submain-composition/src/index.ts",
-      "to": "package:@asol/notifications-core",
-      "kind": "imports",
-      "detail": "@asol/notifications-core"
-    },
-    {
-      "from": "source:packages/submain-composition/src/index.ts",
       "to": "package:@asol/orders-core",
       "kind": "imports",
       "detail": "@asol/orders-core"
@@ -175303,12 +175878,6 @@
     },
     {
       "from": "source:packages/submain-composition/src/index.ts",
-      "to": "source:src/features/notifications/server/services/notification-service.bootstrap.server.ts",
-      "kind": "imports",
-      "detail": "@/features/notifications/server/services/notification-service.bootstrap.server"
-    },
-    {
-      "from": "source:packages/submain-composition/src/index.ts",
       "to": "source:src/features/orders/application/order-action-grants.server.ts",
       "kind": "imports",
       "detail": "@/features/orders/application/order-action-grants.server"
@@ -175360,12 +175929,6 @@
       "to": "source:src/features/storage/ports/storage-core-ports.ts",
       "kind": "imports",
       "detail": "@/features/storage/ports/storage-core-ports"
-    },
-    {
-      "from": "source:packages/submain-composition/src/index.ts",
-      "to": "source:src/features/super-admin/server/services/super-admin-auth.server.ts",
-      "kind": "imports",
-      "detail": "@/features/super-admin/server/services/super-admin-auth.server"
     },
     {
       "from": "source:packages/system-logs-core/src/browser/capture-coordinator.ts",
@@ -177747,6 +178310,11 @@
     },
     {
       "from": "source:services/notifications/src/app/api/health/route.ts",
+      "to": "environment-key:ASOL_MOBILE_PUSH_UNLOCK_KEY",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "source:services/notifications/src/app/api/health/route.ts",
       "to": "environment-key:ASOL_NOTIFICATION_GRANT_SECRET",
       "kind": "uses-environment"
     },
@@ -177767,6 +178335,11 @@
     },
     {
       "from": "source:services/notifications/src/app/api/health/route.ts",
+      "to": "environment-key:TURSO_DATABASE_URL",
+      "kind": "uses-environment"
+    },
+    {
+      "from": "source:services/notifications/src/app/api/health/route.ts",
       "to": "environment-key:TURSO_NOTIFICATIONS_DATABASE_URL",
       "kind": "uses-environment"
     },
@@ -177774,6 +178347,160 @@
       "from": "source:services/notifications/src/app/api/health/route.ts",
       "to": "environment-key:WEB_PUSH_VAPID_PRIVATE_KEY",
       "kind": "uses-environment"
+    },
+    {
+      "from": "source:services/notifications/src/app/api/notifications/broadcast/recipients/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/notifications/src/app/api/notifications/broadcast/recipients/route.ts",
+      "to": "service:notifications",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/notifications/src/app/api/notifications/broadcast/recipients/route.ts",
+      "to": "package:@asol/notifications-composition",
+      "kind": "imports",
+      "detail": "@asol/notifications-composition"
+    },
+    {
+      "from": "source:services/notifications/src/app/api/notifications/broadcast/recipients/route.ts",
+      "to": "source:services/notifications/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../../lib/http"
+    },
+    {
+      "from": "source:services/notifications/src/app/api/notifications/broadcast/send/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/notifications/src/app/api/notifications/broadcast/send/route.ts",
+      "to": "service:notifications",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/notifications/src/app/api/notifications/broadcast/send/route.ts",
+      "to": "package:@asol/notifications-composition",
+      "kind": "imports",
+      "detail": "@asol/notifications-composition"
+    },
+    {
+      "from": "source:services/notifications/src/app/api/notifications/broadcast/send/route.ts",
+      "to": "source:services/notifications/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../../lib/http"
+    },
+    {
+      "from": "source:services/notifications/src/app/api/notifications/device-token/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/notifications/src/app/api/notifications/device-token/route.ts",
+      "to": "service:notifications",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/notifications/src/app/api/notifications/device-token/route.ts",
+      "to": "package:@asol/notifications-composition",
+      "kind": "imports",
+      "detail": "@asol/notifications-composition"
+    },
+    {
+      "from": "source:services/notifications/src/app/api/notifications/device-token/route.ts",
+      "to": "source:services/notifications/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../lib/http"
+    },
+    {
+      "from": "source:services/notifications/src/app/api/notifications/devices/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/notifications/src/app/api/notifications/devices/route.ts",
+      "to": "service:notifications",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/notifications/src/app/api/notifications/devices/route.ts",
+      "to": "package:@asol/notifications-composition",
+      "kind": "imports",
+      "detail": "@asol/notifications-composition"
+    },
+    {
+      "from": "source:services/notifications/src/app/api/notifications/devices/route.ts",
+      "to": "source:services/notifications/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../lib/http"
+    },
+    {
+      "from": "source:services/notifications/src/app/api/notifications/mobile-push/unlock/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/notifications/src/app/api/notifications/mobile-push/unlock/route.ts",
+      "to": "service:notifications",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/notifications/src/app/api/notifications/mobile-push/unlock/route.ts",
+      "to": "package:@asol/notifications-composition",
+      "kind": "imports",
+      "detail": "@asol/notifications-composition"
+    },
+    {
+      "from": "source:services/notifications/src/app/api/notifications/mobile-push/unlock/route.ts",
+      "to": "source:services/notifications/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../../lib/http"
+    },
+    {
+      "from": "source:services/notifications/src/app/api/notifications/preferences/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/notifications/src/app/api/notifications/preferences/route.ts",
+      "to": "service:notifications",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/notifications/src/app/api/notifications/preferences/route.ts",
+      "to": "package:@asol/notifications-composition",
+      "kind": "imports",
+      "detail": "@asol/notifications-composition"
+    },
+    {
+      "from": "source:services/notifications/src/app/api/notifications/preferences/route.ts",
+      "to": "source:services/notifications/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../lib/http"
+    },
+    {
+      "from": "source:services/notifications/src/app/api/notifications/recipient-tokens/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/notifications/src/app/api/notifications/recipient-tokens/route.ts",
+      "to": "service:notifications",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/notifications/src/app/api/notifications/recipient-tokens/route.ts",
+      "to": "package:@asol/notifications-composition",
+      "kind": "imports",
+      "detail": "@asol/notifications-composition"
+    },
+    {
+      "from": "source:services/notifications/src/app/api/notifications/recipient-tokens/route.ts",
+      "to": "source:services/notifications/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../lib/http"
     },
     {
       "from": "source:services/notifications/src/app/api/notifications/send/route.ts",
@@ -177812,6 +178539,34 @@
       "from": "source:services/notifications/src/app/layout.tsx",
       "to": "service:notifications",
       "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/notifications/src/app/lib/http.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/notifications/src/app/lib/http.ts",
+      "to": "service:notifications",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/notifications/src/app/lib/http.ts",
+      "to": "package:@asol/cors",
+      "kind": "imports",
+      "detail": "@asol/cors"
+    },
+    {
+      "from": "source:services/notifications/src/app/lib/http.ts",
+      "to": "package:@asol/service-runtime-core",
+      "kind": "imports",
+      "detail": "@asol/service-runtime-core"
+    },
+    {
+      "from": "source:services/notifications/src/app/lib/http.ts",
+      "to": "source:src/core/api/business-api-error-status.ts",
+      "kind": "imports",
+      "detail": "@/core/api/business-api-error-status"
     },
     {
       "from": "source:services/notifications/src/proxy.ts",
@@ -179549,166 +180304,6 @@
       "from": "source:services/submain/src/app/api/health/route.ts",
       "to": "environment-key:TURSO_PRODUCT_DATABASE_URL",
       "kind": "uses-environment"
-    },
-    {
-      "from": "source:services/submain/src/app/api/notifications/broadcast/recipients/route.ts",
-      "to": "runtime:services",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:services/submain/src/app/api/notifications/broadcast/recipients/route.ts",
-      "to": "service:submain",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "source:services/submain/src/app/api/notifications/broadcast/recipients/route.ts",
-      "to": "package:@asol/submain-composition",
-      "kind": "imports",
-      "detail": "@asol/submain-composition"
-    },
-    {
-      "from": "source:services/submain/src/app/api/notifications/broadcast/recipients/route.ts",
-      "to": "source:services/submain/src/app/lib/http.ts",
-      "kind": "imports",
-      "detail": "../../../../lib/http"
-    },
-    {
-      "from": "source:services/submain/src/app/api/notifications/broadcast/send/route.ts",
-      "to": "runtime:services",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:services/submain/src/app/api/notifications/broadcast/send/route.ts",
-      "to": "service:submain",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "source:services/submain/src/app/api/notifications/broadcast/send/route.ts",
-      "to": "package:@asol/notifications-core",
-      "kind": "imports",
-      "detail": "@asol/notifications-core"
-    },
-    {
-      "from": "source:services/submain/src/app/api/notifications/broadcast/send/route.ts",
-      "to": "package:@asol/submain-composition",
-      "kind": "imports",
-      "detail": "@asol/submain-composition"
-    },
-    {
-      "from": "source:services/submain/src/app/api/notifications/broadcast/send/route.ts",
-      "to": "source:services/submain/src/app/lib/http.ts",
-      "kind": "imports",
-      "detail": "../../../../lib/http"
-    },
-    {
-      "from": "source:services/submain/src/app/api/notifications/device-token/route.ts",
-      "to": "runtime:services",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:services/submain/src/app/api/notifications/device-token/route.ts",
-      "to": "service:submain",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "source:services/submain/src/app/api/notifications/device-token/route.ts",
-      "to": "package:@asol/submain-composition",
-      "kind": "imports",
-      "detail": "@asol/submain-composition"
-    },
-    {
-      "from": "source:services/submain/src/app/api/notifications/device-token/route.ts",
-      "to": "source:services/submain/src/app/lib/http.ts",
-      "kind": "imports",
-      "detail": "../../../lib/http"
-    },
-    {
-      "from": "source:services/submain/src/app/api/notifications/devices/route.ts",
-      "to": "runtime:services",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:services/submain/src/app/api/notifications/devices/route.ts",
-      "to": "service:submain",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "source:services/submain/src/app/api/notifications/devices/route.ts",
-      "to": "package:@asol/submain-composition",
-      "kind": "imports",
-      "detail": "@asol/submain-composition"
-    },
-    {
-      "from": "source:services/submain/src/app/api/notifications/devices/route.ts",
-      "to": "source:services/submain/src/app/lib/http.ts",
-      "kind": "imports",
-      "detail": "../../../lib/http"
-    },
-    {
-      "from": "source:services/submain/src/app/api/notifications/mobile-push/unlock/route.ts",
-      "to": "runtime:services",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:services/submain/src/app/api/notifications/mobile-push/unlock/route.ts",
-      "to": "service:submain",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "source:services/submain/src/app/api/notifications/mobile-push/unlock/route.ts",
-      "to": "package:@asol/submain-composition",
-      "kind": "imports",
-      "detail": "@asol/submain-composition"
-    },
-    {
-      "from": "source:services/submain/src/app/api/notifications/mobile-push/unlock/route.ts",
-      "to": "source:services/submain/src/app/lib/http.ts",
-      "kind": "imports",
-      "detail": "../../../../lib/http"
-    },
-    {
-      "from": "source:services/submain/src/app/api/notifications/preferences/route.ts",
-      "to": "runtime:services",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:services/submain/src/app/api/notifications/preferences/route.ts",
-      "to": "service:submain",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "source:services/submain/src/app/api/notifications/preferences/route.ts",
-      "to": "package:@asol/submain-composition",
-      "kind": "imports",
-      "detail": "@asol/submain-composition"
-    },
-    {
-      "from": "source:services/submain/src/app/api/notifications/preferences/route.ts",
-      "to": "source:services/submain/src/app/lib/http.ts",
-      "kind": "imports",
-      "detail": "../../../lib/http"
-    },
-    {
-      "from": "source:services/submain/src/app/api/notifications/recipient-tokens/route.ts",
-      "to": "runtime:services",
-      "kind": "affects-runtime"
-    },
-    {
-      "from": "source:services/submain/src/app/api/notifications/recipient-tokens/route.ts",
-      "to": "service:submain",
-      "kind": "belongs-to"
-    },
-    {
-      "from": "source:services/submain/src/app/api/notifications/recipient-tokens/route.ts",
-      "to": "package:@asol/submain-composition",
-      "kind": "imports",
-      "detail": "@asol/submain-composition"
-    },
-    {
-      "from": "source:services/submain/src/app/api/notifications/recipient-tokens/route.ts",
-      "to": "source:services/submain/src/app/lib/http.ts",
-      "kind": "imports",
-      "detail": "../../../lib/http"
     },
     {
       "from": "source:services/submain/src/app/api/orders/[orderId]/actions/route.ts",
@@ -205909,6 +206504,12 @@
     },
     {
       "from": "source:src/features/notifications/server/services/notification-service.bootstrap.server.ts",
+      "to": "source:src/features/notifications/server/notification-admin-authorization.ts",
+      "kind": "imports",
+      "detail": "../notification-admin-authorization"
+    },
+    {
+      "from": "source:src/features/notifications/server/services/notification-service.bootstrap.server.ts",
       "to": "source:src/features/notifications/server/services/mobile-push-unlock.service.server.ts",
       "kind": "imports",
       "detail": "./mobile-push-unlock.service.server"
@@ -224982,6 +225583,36 @@
       "detail": "@/features/notifications"
     },
     {
+      "from": "source:src/features/settings/presentation/notification-registration-confirmation.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/settings/presentation/notification-registration-confirmation.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/settings/presentation/notification-registration-confirmation.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/settings/presentation/notification-registration-confirmation.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/settings/presentation/notification-registration-confirmation.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/settings/presentation/notification-registration-confirmation.ts",
+      "to": "feature:settings",
+      "kind": "belongs-to"
+    },
+    {
       "from": "source:src/features/settings/presentation/NotificationDeviceSettingsCard.tsx",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -225523,6 +226154,12 @@
     },
     {
       "from": "source:src/features/settings/presentation/use-account-devices.ts",
+      "to": "source:src/features/settings/presentation/notification-registration-confirmation.ts",
+      "kind": "imports",
+      "detail": "./notification-registration-confirmation"
+    },
+    {
+      "from": "source:src/features/settings/presentation/use-account-devices.ts",
       "to": "source:src/features/settings/presentation/use-settings-status-banner.ts",
       "kind": "imports",
       "detail": "./use-settings-status-banner"
@@ -225724,6 +226361,12 @@
       "to": "source:src/features/settings/presentation/notification-device-settings-card-model.ts",
       "kind": "imports",
       "detail": "./notification-device-settings-card-model"
+    },
+    {
+      "from": "source:src/features/settings/presentation/use-notification-device-toggle.ts",
+      "to": "source:src/features/settings/presentation/notification-registration-confirmation.ts",
+      "kind": "imports",
+      "detail": "./notification-registration-confirmation"
     },
     {
       "from": "source:src/features/settings/presentation/use-notification-device-toggle.ts",
@@ -236196,6 +236839,76 @@
       "kind": "tests"
     },
     {
+      "from": "test:packages/account-bridge/src/tests/mobile-push-session.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/account-bridge/src/tests/mobile-push-session.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/account-bridge/src/tests/mobile-push-session.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/account-bridge/src/tests/mobile-push-session.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/account-bridge/src/tests/mobile-push-session.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/account-bridge/src/tests/mobile-push-session.test.ts",
+      "to": "package:@asol/account-bridge",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:packages/account-bridge/src/tests/mobile-push-session.test.ts",
+      "to": "package:@asol/native-core",
+      "kind": "imports",
+      "detail": "@asol/native-core"
+    },
+    {
+      "from": "test:packages/account-bridge/src/tests/mobile-push-session.test.ts",
+      "to": "source:packages/account-bridge/src/mobile-push/deliver.ts",
+      "kind": "imports",
+      "detail": "../mobile-push/deliver"
+    },
+    {
+      "from": "test:packages/account-bridge/src/tests/mobile-push-session.test.ts",
+      "to": "source:packages/account-bridge/src/mobile-push/enrollment.ts",
+      "kind": "imports",
+      "detail": "../mobile-push/enrollment"
+    },
+    {
+      "from": "test:packages/account-bridge/src/tests/mobile-push-session.test.ts",
+      "to": "source:packages/account-bridge/src/mobile-push/session-route.ts",
+      "kind": "imports",
+      "detail": "../mobile-push/session-route"
+    },
+    {
+      "from": "test:packages/account-bridge/src/tests/mobile-push-session.test.ts",
+      "to": "source:packages/account-bridge/src/ports/app-bridge.ts",
+      "kind": "imports",
+      "detail": "../ports/app-bridge"
+    },
+    {
+      "from": "test:packages/account-bridge/src/tests/mobile-push-session.test.ts",
+      "to": "package:@asol/account-bridge",
+      "kind": "tests"
+    },
+    {
+      "from": "test:packages/account-bridge/src/tests/mobile-push-session.test.ts",
+      "to": "package:@asol/native-core",
+      "kind": "tests"
+    },
+    {
       "from": "test:packages/account-bridge/src/tests/mobile-push.test.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -239518,13 +240231,35 @@
     },
     {
       "from": "test:packages/notifications-composition/src/tests/index.test.ts",
+      "to": "package:@asol/auth-core",
+      "kind": "imports",
+      "detail": "@asol/auth-core"
+    },
+    {
+      "from": "test:packages/notifications-composition/src/tests/index.test.ts",
       "to": "source:packages/notifications-composition/src/index.ts",
       "kind": "imports",
       "detail": "../index"
     },
     {
       "from": "test:packages/notifications-composition/src/tests/index.test.ts",
+      "to": "source:src/features/notifications/server/notification-admin-authorization.ts",
+      "kind": "imports",
+      "detail": "@/features/notifications/server/notification-admin-authorization"
+    },
+    {
+      "from": "test:packages/notifications-composition/src/tests/index.test.ts",
+      "to": "feature:notifications",
+      "kind": "tests"
+    },
+    {
+      "from": "test:packages/notifications-composition/src/tests/index.test.ts",
       "to": "package:@asol/account-declarations",
+      "kind": "tests"
+    },
+    {
+      "from": "test:packages/notifications-composition/src/tests/index.test.ts",
+      "to": "package:@asol/auth-core",
       "kind": "tests"
     },
     {
@@ -244041,6 +244776,44 @@
       "kind": "affects-runtime"
     },
     {
+      "from": "test:scripts/tests/notifications-smoke-probes.test.ts",
+      "to": "runtime:tooling",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:scripts/tests/notifications-smoke-probes.test.ts",
+      "to": "package:@asol/cors",
+      "kind": "imports",
+      "detail": "@asol/cors"
+    },
+    {
+      "from": "test:scripts/tests/notifications-smoke-probes.test.ts",
+      "to": "script:scripts/notifications-smoke-probes.ts",
+      "kind": "imports",
+      "detail": "../notifications-smoke-probes"
+    },
+    {
+      "from": "test:scripts/tests/notifications-smoke-probes.test.ts",
+      "to": "script:scripts/route-ownership-coverage.ts",
+      "kind": "imports",
+      "detail": "../route-ownership-coverage"
+    },
+    {
+      "from": "test:scripts/tests/notifications-smoke-probes.test.ts",
+      "to": "package:@asol/cors",
+      "kind": "tests"
+    },
+    {
+      "from": "test:scripts/tests/notifications-smoke-probes.test.ts",
+      "to": "script:scripts/notifications-smoke-probes.ts",
+      "kind": "tests"
+    },
+    {
+      "from": "test:scripts/tests/notifications-smoke-probes.test.ts",
+      "to": "script:scripts/route-ownership-coverage.ts",
+      "kind": "tests"
+    },
+    {
       "from": "test:scripts/tests/ota-manifest-url-alignment.test.ts",
       "to": "runtime:tooling",
       "kind": "affects-runtime"
@@ -244286,78 +245059,67 @@
       "kind": "affects-runtime"
     },
     {
-      "from": "test:services/submain/src/app/api/notifications/test/self/route.ts",
+      "from": "test:services/notifications/src/app/api/notifications/test/self/route.ts",
       "to": "runtime:services",
       "kind": "affects-runtime"
     },
     {
-      "from": "test:services/submain/src/app/api/notifications/test/self/route.ts",
-      "to": "service:submain",
+      "from": "test:services/notifications/src/app/api/notifications/test/self/route.ts",
+      "to": "service:notifications",
       "kind": "belongs-to"
     },
     {
-      "from": "test:services/submain/src/app/api/notifications/test/self/route.ts",
-      "to": "package:@asol/submain-composition",
+      "from": "test:services/notifications/src/app/api/notifications/test/self/route.ts",
+      "to": "package:@asol/notifications-composition",
       "kind": "imports",
-      "detail": "@asol/submain-composition"
+      "detail": "@asol/notifications-composition"
     },
     {
-      "from": "test:services/submain/src/app/api/notifications/test/self/route.ts",
-      "to": "source:services/submain/src/app/lib/http.ts",
+      "from": "test:services/notifications/src/app/api/notifications/test/self/route.ts",
+      "to": "source:services/notifications/src/app/lib/http.ts",
       "kind": "imports",
       "detail": "../../../../lib/http"
     },
     {
-      "from": "test:services/submain/src/app/api/notifications/test/self/route.ts",
-      "to": "package:@asol/submain-composition",
+      "from": "test:services/notifications/src/app/api/notifications/test/self/route.ts",
+      "to": "package:@asol/notifications-composition",
       "kind": "tests"
     },
     {
-      "from": "test:services/submain/src/app/api/notifications/test/self/route.ts",
-      "to": "service:submain",
+      "from": "test:services/notifications/src/app/api/notifications/test/self/route.ts",
+      "to": "service:notifications",
       "kind": "tests"
     },
     {
-      "from": "test:services/submain/src/app/api/notifications/test/send/route.ts",
+      "from": "test:services/notifications/src/app/api/notifications/test/send/route.ts",
       "to": "runtime:services",
       "kind": "affects-runtime"
     },
     {
-      "from": "test:services/submain/src/app/api/notifications/test/send/route.ts",
-      "to": "service:submain",
+      "from": "test:services/notifications/src/app/api/notifications/test/send/route.ts",
+      "to": "service:notifications",
       "kind": "belongs-to"
     },
     {
-      "from": "test:services/submain/src/app/api/notifications/test/send/route.ts",
-      "to": "package:@asol/notifications-core",
+      "from": "test:services/notifications/src/app/api/notifications/test/send/route.ts",
+      "to": "package:@asol/notifications-composition",
       "kind": "imports",
-      "detail": "@asol/notifications-core"
+      "detail": "@asol/notifications-composition"
     },
     {
-      "from": "test:services/submain/src/app/api/notifications/test/send/route.ts",
-      "to": "package:@asol/submain-composition",
-      "kind": "imports",
-      "detail": "@asol/submain-composition"
-    },
-    {
-      "from": "test:services/submain/src/app/api/notifications/test/send/route.ts",
-      "to": "source:services/submain/src/app/lib/http.ts",
+      "from": "test:services/notifications/src/app/api/notifications/test/send/route.ts",
+      "to": "source:services/notifications/src/app/lib/http.ts",
       "kind": "imports",
       "detail": "../../../../lib/http"
     },
     {
-      "from": "test:services/submain/src/app/api/notifications/test/send/route.ts",
-      "to": "package:@asol/notifications-core",
+      "from": "test:services/notifications/src/app/api/notifications/test/send/route.ts",
+      "to": "package:@asol/notifications-composition",
       "kind": "tests"
     },
     {
-      "from": "test:services/submain/src/app/api/notifications/test/send/route.ts",
-      "to": "package:@asol/submain-composition",
-      "kind": "tests"
-    },
-    {
-      "from": "test:services/submain/src/app/api/notifications/test/send/route.ts",
-      "to": "service:submain",
+      "from": "test:services/notifications/src/app/api/notifications/test/send/route.ts",
+      "to": "service:notifications",
       "kind": "tests"
     },
     {
@@ -245332,6 +246094,174 @@
       "kind": "tests"
     },
     {
+      "from": "test:src/features/notifications/tests/device-token-service-native.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/device-token-service-native.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/device-token-service-native.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/device-token-service-native.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/device-token-service-native.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/device-token-service-native.test.ts",
+      "to": "feature:notifications",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:src/features/notifications/tests/device-token-service-native.test.ts",
+      "to": "package:@asol/account-bridge",
+      "kind": "imports",
+      "detail": "@asol/account-bridge"
+    },
+    {
+      "from": "test:src/features/notifications/tests/device-token-service-native.test.ts",
+      "to": "package:@asol/native-core",
+      "kind": "imports",
+      "detail": "@asol/native-core"
+    },
+    {
+      "from": "test:src/features/notifications/tests/device-token-service-native.test.ts",
+      "to": "package:@asol/notifications-core",
+      "kind": "imports",
+      "detail": "@asol/notifications-core"
+    },
+    {
+      "from": "test:src/features/notifications/tests/device-token-service-native.test.ts",
+      "to": "source:src/features/notifications/application/device-token-service.ts",
+      "kind": "imports",
+      "detail": "../application/device-token-service"
+    },
+    {
+      "from": "test:src/features/notifications/tests/device-token-service-native.test.ts",
+      "to": "source:src/features/notifications/domain/notification-grant-delivery-context.ts",
+      "kind": "imports",
+      "detail": "../domain/notification-grant-delivery-context"
+    },
+    {
+      "from": "test:src/features/notifications/tests/device-token-service-native.test.ts",
+      "to": "source:src/features/notifications/infrastructure/asol-notification-repository.ts",
+      "kind": "imports",
+      "detail": "../infrastructure/asol-notification-repository"
+    },
+    {
+      "from": "test:src/features/notifications/tests/device-token-service-native.test.ts",
+      "to": "source:src/features/notifications/infrastructure/http/notification-api-service.ts",
+      "kind": "imports",
+      "detail": "../infrastructure/http/notification-api-service"
+    },
+    {
+      "from": "test:src/features/notifications/tests/device-token-service-native.test.ts",
+      "to": "source:src/features/notifications/infrastructure/native/native-push.service.ts",
+      "kind": "imports",
+      "detail": "../infrastructure/native/native-push.service"
+    },
+    {
+      "from": "test:src/features/notifications/tests/device-token-service-native.test.ts",
+      "to": "feature:notifications",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/notifications/tests/device-token-service-native.test.ts",
+      "to": "package:@asol/account-bridge",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/notifications/tests/device-token-service-native.test.ts",
+      "to": "package:@asol/native-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/notifications/tests/device-token-service-native.test.ts",
+      "to": "package:@asol/notifications-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/notifications/tests/device-token-service-web.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/device-token-service-web.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/device-token-service-web.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/device-token-service-web.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/device-token-service-web.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/device-token-service-web.test.ts",
+      "to": "feature:notifications",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:src/features/notifications/tests/device-token-service-web.test.ts",
+      "to": "package:@asol/notifications-core",
+      "kind": "imports",
+      "detail": "@asol/notifications-core"
+    },
+    {
+      "from": "test:src/features/notifications/tests/device-token-service-web.test.ts",
+      "to": "source:src/features/notifications/application/device-token-service.ts",
+      "kind": "imports",
+      "detail": "../application/device-token-service"
+    },
+    {
+      "from": "test:src/features/notifications/tests/device-token-service-web.test.ts",
+      "to": "source:src/features/notifications/infrastructure/asol-notification-repository.ts",
+      "kind": "imports",
+      "detail": "../infrastructure/asol-notification-repository"
+    },
+    {
+      "from": "test:src/features/notifications/tests/device-token-service-web.test.ts",
+      "to": "source:src/features/notifications/infrastructure/native/native-push.service.ts",
+      "kind": "imports",
+      "detail": "../infrastructure/native/native-push.service"
+    },
+    {
+      "from": "test:src/features/notifications/tests/device-token-service-web.test.ts",
+      "to": "source:src/features/notifications/infrastructure/web-push/web-push-browser.service.ts",
+      "kind": "imports",
+      "detail": "../infrastructure/web-push/web-push-browser.service"
+    },
+    {
+      "from": "test:src/features/notifications/tests/device-token-service-web.test.ts",
+      "to": "feature:notifications",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/notifications/tests/device-token-service-web.test.ts",
+      "to": "package:@asol/notifications-core",
+      "kind": "tests"
+    },
+    {
       "from": "test:src/features/notifications/tests/integration/notification-flow.integration.test.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -245964,6 +246894,52 @@
       "kind": "tests"
     },
     {
+      "from": "test:src/features/notifications/tests/notification-error-status.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-error-status.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-error-status.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-error-status.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-error-status.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-error-status.test.ts",
+      "to": "feature:notifications",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-error-status.test.ts",
+      "to": "source:src/core/api/business-api-error-status.ts",
+      "kind": "imports",
+      "detail": "@/core/api/business-api-error-status"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-error-status.test.ts",
+      "to": "feature:notifications",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-error-status.test.ts",
+      "to": "source:src/core/api/business-api-error-status.ts",
+      "kind": "tests"
+    },
+    {
       "from": "test:src/features/notifications/tests/notification-grant.test.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -246283,6 +247259,178 @@
       "kind": "tests"
     },
     {
+      "from": "test:src/features/notifications/tests/notification-recipient-tokens.service.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-recipient-tokens.service.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-recipient-tokens.service.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-recipient-tokens.service.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-recipient-tokens.service.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-recipient-tokens.service.test.ts",
+      "to": "feature:notifications",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-recipient-tokens.service.test.ts",
+      "to": "package:@asol/notifications-core",
+      "kind": "imports",
+      "detail": "@asol/notifications-core/server"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-recipient-tokens.service.test.ts",
+      "to": "source:src/features/notifications/ports/notifications-core-ports.ts",
+      "kind": "imports",
+      "detail": "../ports/notifications-core-ports"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-recipient-tokens.service.test.ts",
+      "to": "source:src/features/notifications/server/services/notification-recipient-tokens.service.server.ts",
+      "kind": "imports",
+      "detail": "../server/services/notification-recipient-tokens.service.server"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-recipient-tokens.service.test.ts",
+      "to": "feature:notifications",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-recipient-tokens.service.test.ts",
+      "to": "package:@asol/notifications-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-release-gate.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-release-gate.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-release-gate.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-release-gate.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-release-gate.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-release-gate.test.ts",
+      "to": "feature:notifications",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-release-gate.test.ts",
+      "to": "package:@asol/release-core",
+      "kind": "imports",
+      "detail": "@asol/release-core/console"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-release-gate.test.ts",
+      "to": "script:scripts/generated-gates.ts",
+      "kind": "imports",
+      "detail": "../../../../scripts/generated-gates"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-release-gate.test.ts",
+      "to": "feature:notifications",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-release-gate.test.ts",
+      "to": "package:@asol/release-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-release-gate.test.ts",
+      "to": "script:scripts/generated-gates.ts",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-route-reachability.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-route-reachability.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-route-reachability.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-route-reachability.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-route-reachability.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-route-reachability.test.ts",
+      "to": "feature:notifications",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-route-reachability.test.ts",
+      "to": "package:@asol/account-bridge",
+      "kind": "imports",
+      "detail": "@asol/account-bridge/routes"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-route-reachability.test.ts",
+      "to": "script:scripts/route-ownership-coverage.ts",
+      "kind": "imports",
+      "detail": "../../../../scripts/route-ownership-coverage"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-route-reachability.test.ts",
+      "to": "feature:notifications",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-route-reachability.test.ts",
+      "to": "package:@asol/account-bridge",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-route-reachability.test.ts",
+      "to": "script:scripts/route-ownership-coverage.ts",
+      "kind": "tests"
+    },
+    {
       "from": "test:src/features/notifications/tests/notification-sound-contract.test.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -246401,6 +247549,41 @@
     {
       "from": "test:src/features/notifications/tests/notification-test-service.test.ts",
       "to": "package:@asol/notifications-core",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-test-suite-integrity.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-test-suite-integrity.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-test-suite-integrity.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-test-suite-integrity.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-test-suite-integrity.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-test-suite-integrity.test.ts",
+      "to": "feature:notifications",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-test-suite-integrity.test.ts",
+      "to": "feature:notifications",
       "kind": "tests"
     },
     {
@@ -247348,6 +248531,47 @@
       "kind": "tests"
     },
     {
+      "from": "test:src/features/settings/tests/notification-registration-confirmation.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/settings/tests/notification-registration-confirmation.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/settings/tests/notification-registration-confirmation.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/settings/tests/notification-registration-confirmation.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/settings/tests/notification-registration-confirmation.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/settings/tests/notification-registration-confirmation.test.ts",
+      "to": "feature:settings",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:src/features/settings/tests/notification-registration-confirmation.test.ts",
+      "to": "source:src/features/settings/presentation/notification-registration-confirmation.ts",
+      "kind": "imports",
+      "detail": "../presentation/notification-registration-confirmation"
+    },
+    {
+      "from": "test:src/features/settings/tests/notification-registration-confirmation.test.ts",
+      "to": "feature:settings",
+      "kind": "tests"
+    },
+    {
       "from": "test:src/features/settings/tests/notifications-settings-login-guard.test.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -247662,9 +248886,21 @@
     },
     {
       "from": "test:src/features/super-admin/tests/cloud-accounts-emails.test.ts",
+      "to": "package:@asol/account-bridge",
+      "kind": "imports",
+      "detail": "@asol/account-bridge/routes"
+    },
+    {
+      "from": "test:src/features/super-admin/tests/cloud-accounts-emails.test.ts",
       "to": "package:@asol/account-declarations",
       "kind": "imports",
       "detail": "@asol/account-declarations"
+    },
+    {
+      "from": "test:src/features/super-admin/tests/cloud-accounts-emails.test.ts",
+      "to": "source:src/features/super-admin/presentation/cloud-account-routes.ts",
+      "kind": "imports",
+      "detail": "../presentation/cloud-account-routes"
     },
     {
       "from": "test:src/features/super-admin/tests/cloud-accounts-emails.test.ts",
@@ -247675,6 +248911,11 @@
     {
       "from": "test:src/features/super-admin/tests/cloud-accounts-emails.test.ts",
       "to": "feature:super-admin",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/super-admin/tests/cloud-accounts-emails.test.ts",
+      "to": "package:@asol/account-bridge",
       "kind": "tests"
     },
     {

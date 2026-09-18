@@ -7,6 +7,7 @@ import { useSession } from "@/features/auth/ui";
 import { notifications } from "@/features/notifications";
 import { useTranslation } from "@/shared/i18n";
 
+import { confirmedLocalDeviceIds } from "./notification-registration-confirmation";
 import type { ShowSettingsStatus } from "./use-settings-status-banner";
 
 /**
@@ -55,10 +56,8 @@ export function useAccountDevices(
       // The device-state hook performs the repair first; this hook independently
       // proves that the resulting local token is visible on the server.
       if (deviceEnabled) {
-        const serverIds = new Set(account.devices.map((device) => device.deviceId));
-        const hasConfirmedLocalRegistration = local.some(
-          (token) => token.enabled && serverIds.has(token.deviceId),
-        );
+        const hasConfirmedLocalRegistration =
+          confirmedLocalDeviceIds(account.devices, local).length > 0;
         // Reconcile every unconfirmed enabled device, including legacy states
         // whose local token cache is empty.
         if (!hasConfirmedLocalRegistration) {
@@ -73,12 +72,7 @@ export function useAccountDevices(
         }
       }
 
-      const confirmedServerIds = new Set(
-        account.devices.map((device) => device.deviceId),
-      );
-      const confirmedLocalIds = local
-        .filter((token) => token.enabled && confirmedServerIds.has(token.deviceId))
-        .map((token) => token.deviceId);
+      const confirmedLocalIds = confirmedLocalDeviceIds(account.devices, local);
       if (deviceEnabled && confirmedLocalIds.length === 0) {
         throw new Error("notificationRegistrationNotConfirmed");
       }

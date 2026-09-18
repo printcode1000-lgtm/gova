@@ -1,8 +1,10 @@
 import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { ACCOUNT_DECLARATIONS } from '@asol/account-declarations';
+import { ROUTE_OWNERSHIP } from '@asol/account-bridge/routes';
 
 import {
   cloudAccountsGlance,
@@ -11,6 +13,7 @@ import {
   OTA_R2_CLOUD_ACCOUNT,
   TURSO_CLOUD_ACCOUNTS,
 } from '../presentation/cloud-accounts-reference';
+import { cloudAccountRouteGroups } from '../presentation/cloud-account-routes';
 
 /**
  * /dev/cloud-accounts must stay complete when an account is added anywhere.
@@ -28,6 +31,11 @@ assert.match(
   contentSource,
   /from\s+["']\.\/cloud-accounts-reference["']/,
   `${CONTENT_PATH} must render from cloud-accounts-reference (not a parallel hardcoded table)`,
+);
+assert.match(
+  contentSource,
+  /<CloudAccountRoutesSection\b/,
+  `${CONTENT_PATH} must render the route ownership section from CloudAccountRoutesSection`,
 );
 
 const vercelRows = listVercelCloudAccounts();
@@ -157,8 +165,97 @@ assert.equal(
   TURSO_CLOUD_ACCOUNTS.reduce((sum, row) => sum + row.databases, 0),
 );
 
+const routeGroups = cloudAccountRouteGroups();
+function routeRowsByOwner(
+  entries: readonly {
+    readonly owner: string;
+    readonly pattern: string;
+    readonly methods: readonly string[];
+    readonly description: string;
+  }[],
+) {
+  const byOwner = new Map<string, { pattern: string; methods: readonly string[]; description: string }[]>();
+  for (const entry of entries) {
+    const list = byOwner.get(entry.owner) ?? [];
+    list.push({
+      pattern: entry.pattern,
+      methods: entry.methods,
+      description: entry.description,
+    });
+    byOwner.set(entry.owner, list);
+  }
+  return [...byOwner.entries()].map(([owner, patterns]) => ({ owner, patterns }));
+}
+
+const renderedRouteGroups = routeGroups.map((group) => ({
+  owner: group.owner,
+  patterns: group.patterns.map((entry) => ({
+    pattern: entry.pattern,
+    methods: entry.methods,
+    description: entry.description,
+  })),
+}));
+const canonicalRouteGroups = routeRowsByOwner(ROUTE_OWNERSHIP);
+assert.deepEqual(
+  renderedRouteGroups,
+  canonicalRouteGroups,
+  'the cloud-account route section must render the canonical @asol/account-bridge/routes registry exactly',
+);
+const renderedRoutes = renderedRouteGroups.flatMap((group) => group.patterns);
+for (const entry of renderedRoutes) {
+  assert.ok(
+    entry.description.trim().length > 0,
+    `route ${entry.pattern} must describe what the request does`,
+  );
+}
+
+function routePatternMatches(pattern: string, route: string): boolean {
+  const wildcard = pattern.endsWith('/**');
+  const base = wildcard ? pattern.slice(0, -3) : pattern;
+  const expression = base
+    .split('/')
+    .map((segment) => {
+      if (/^\[[^\]]+\]$/.test(segment)) return '[^/]+';
+      return segment.replace(/[.*+?^${}()|\\]/g, '\\$&');
+    })
+    .join('/');
+  return new RegExp(`^${expression}${wildcard ? '(?:/.*)?' : ''}$`).test(route);
+}
+
+const apiInventory = execFileSync('npx', ['tsx', 'scripts/api-route-inventory.ts'], {
+  cwd: process.cwd(),
+  encoding: 'utf8',
+  maxBuffer: 32 * 1024 * 1024,
+});
+const missingFromRouteTables = apiInventory
+  .split('\n')
+  .filter(Boolean)
+  .map((line) => {
+    const [method, route, owner, file] = line.split('\t');
+    return { method: method!, route: route!, owner: owner!, file: file! };
+  })
+  .filter((entry) => entry.owner !== 'gova/dev')
+  .filter((entry) => {
+    const group = renderedRouteGroups.find((candidate) => candidate.owner === entry.owner);
+    return !group?.patterns.some(
+      (pattern) =>
+        pattern.methods.includes(entry.method) &&
+        routePatternMatches(pattern.pattern, entry.route),
+    );
+  });
+
+assert.deepEqual(
+  missingFromRouteTables,
+  [],
+  'Every business API route+method must appear under its owner in the /dev/cloud-accounts route tables:\n' +
+    missingFromRouteTables
+      .map((entry) => `  - ${entry.method} ${entry.route} -> ${entry.owner} (${entry.file})`)
+      .join('\n'),
+);
+
 console.log(
   'cloud-accounts: ' +
     `Vercel ${vercelRows.length}, Turso ${TURSO_CLOUD_ACCOUNTS.length}, Cloudflare R2 ${r2Rows.length}` +
-    ' — every account has an email, and every stated count matches.',
+    `, route patterns ${renderedRoutes.length}` +
+    ' — every account has an email, every stated count matches, every route has a request description, and every business API appears under its owner.',
 );

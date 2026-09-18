@@ -37,9 +37,9 @@ Weak owners (<70%): **9**
 | `packages/simulation-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `packages/system-logs-core` | package | yes | yes | yes | yes | yes | NO | NO | yes | 75% |
 | `services/control` | service | yes | yes | NO | yes | NO | yes | yes | yes | 75% |
-| `services/notifications` | service | yes | yes | NO | yes | NO | yes | yes | yes | 75% |
 | `services/products` | service | yes | yes | NO | yes | NO | yes | yes | yes | 75% |
 | `services/sub2main` | service | yes | yes | NO | yes | NO | yes | yes | yes | 75% |
+| `services/submain` | service | yes | yes | NO | yes | NO | yes | yes | yes | 75% |
 | `src/features/app-reset` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
 | `src/features/catalog-studio` | feature | yes | yes | yes | yes | NO | yes | NO | yes | 75% |
 | `src/features/categories` | feature | yes | yes | NO | yes | yes | yes | NO | yes | 75% |
@@ -83,7 +83,7 @@ Weak owners (<70%): **9**
 | `packages/trending-ribbon-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/vercel-deploy-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `packages/verification-core` | package | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
-| `services/submain` | service | yes | yes | yes | yes | NO | yes | yes | yes | 88% |
+| `services/notifications` | service | yes | yes | yes | yes | NO | yes | yes | yes | 88% |
 | `src/features/advertisements` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/auth` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |
 | `src/features/cart` | feature | yes | yes | yes | yes | yes | yes | NO | yes | 88% |

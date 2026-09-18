@@ -62,6 +62,41 @@ async function run(): Promise<void> {
     /forbidden/,
   );
 
+  // The right uid with someone else's phone is a different person.
+  await assert.rejects(
+    () =>
+      service.unlock({
+        uid: "usr_1",
+        phone: "+201000000009",
+        credentialBlob: blob,
+      }),
+    /forbidden/,
+  );
+
+  // A well-formed blob that is not the one this server was provisioned with.
+  const otherBlob = encryptBundle({ ...bundle, projectId: "other" }, keyHex);
+  await assert.rejects(
+    () =>
+      service.unlock({
+        uid: "usr_1",
+        phone: "+201000000001",
+        credentialBlob: otherBlob,
+      }),
+    /mobilePushCredentialBlobMismatch/,
+  );
+
+  // Without the server key nothing is decrypted, whoever asks.
+  delete process.env.ASOL_MOBILE_PUSH_UNLOCK_KEY;
+  await assert.rejects(
+    () =>
+      service.unlock({
+        uid: "usr_1",
+        phone: "+201000000001",
+        credentialBlob: blob,
+      }),
+    /mobilePushUnlockNotConfigured/,
+  );
+
   console.log("mobile-push-unlock.service.test: ok");
 }
 

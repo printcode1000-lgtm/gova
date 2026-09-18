@@ -190,6 +190,9 @@ ALLOWED_TO_IMPORT → `@asol/account-declarations/notifications`
 ALLOWED_TO_IMPORT → `@asol/data-core/notifications`
 
 `@asol/notifications-composition`
+ALLOWED_TO_IMPORT → `@asol/notifications-core`
+
+`@asol/notifications-composition`
 ALLOWED_TO_IMPORT → `@asol/notifications-core/server`
 
 ### @asol/notifications-core
@@ -346,9 +349,6 @@ ALLOWED_TO_IMPORT → `@asol/account-declarations/sub2main`
 
 `@asol/submain-composition`
 ALLOWED_TO_IMPORT → `@asol/account-declarations/submain`
-
-`@asol/submain-composition`
-ALLOWED_TO_IMPORT → `@asol/notifications-core`
 
 `@asol/submain-composition`
 ALLOWED_TO_IMPORT → `@asol/orders-core`

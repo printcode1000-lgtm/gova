@@ -29,6 +29,7 @@ export interface CloudAccountRouteGroup {
   readonly patterns: readonly {
     readonly pattern: string;
     readonly methods: readonly BusinessHttpMethod[];
+    readonly description: string;
   }[];
 }
 
@@ -38,7 +39,11 @@ export function cloudAccountRouteGroups(): readonly CloudAccountRouteGroup[] {
 
   for (const entry of ROUTE_OWNERSHIP) {
     const list = byOwner.get(entry.owner) ?? [];
-    list.push({ pattern: entry.pattern, methods: entry.methods });
+    list.push({
+      pattern: entry.pattern,
+      methods: entry.methods,
+      description: entry.description,
+    });
     byOwner.set(entry.owner, list);
   }
 

@@ -19,14 +19,6 @@ import { featuredTrendingRibbonService } from '@/features/advertisements/server/
 import { specialtyChatService } from '@/features/specialty-chat/server/services/specialty-chat-service.server';
 import { loadOrderDetailForActor } from '@/features/orders/application/order-detail-loader.server';
 import { executeOrderAction } from '@/features/orders/application/order-actions.server';
-import {
-  mobilePushUnlockService,
-  notificationBroadcastService,
-  notificationRecipientTokensService,
-  notificationSelfTestService,
-  notificationTokenService,
-} from '@/features/notifications/server/services/notification-service.bootstrap.server';
-import { assertSuperAdminRequest } from '@/features/super-admin/server/services/super-admin-auth.server';
 import { passwordRecoveryService } from '@/features/password-recovery/server/services/password-recovery-service.server';
 import { configureOrdersCore } from '@asol/orders-core';
 import { isSuperAdminIdentity } from '@/features/auth/domain/super-admin';
@@ -43,10 +35,6 @@ export type {
 
 /** The order action's input shape, re-exported so a route needs one door. */
 export type { ActionInput } from '@/features/orders/application/order-action-grants.server';
-export type {
-  DeleteNotificationTokenInput,
-  RegisterNotificationTokenInput,
-} from '@asol/notifications-core';
 
 export interface SubmainRuntimeConfig {
   env?: NodeJS.ProcessEnv;
@@ -109,41 +97,6 @@ export interface SubmainAdvertisementsTask {
 }
 
 /**
- * The two notification surfaces that need a verified session.
- *
- * They live here rather than on `asol-notifications` because they need the
- * session signing secret *and* the notifications database, and this account is
- * the only one holding both. The alternative was granting session signing to an
- * account that only fans out pushes, which widens the blast radius of the one
- * secret every authenticated request depends on.
- */
-export interface SubmainDeviceTask {
-  registerDeviceToken: typeof notificationTokenService.register;
-  listAccountDevices: typeof notificationTokenService.listForAccount;
-  removeDeviceToken: typeof notificationTokenService.remove;
-  /**
-   * The account-wide push mute switch. It resolves the caller against the users
-   * repository before touching the preference, which is the same capability
-   * that keeps `device-token` on this account.
-   */
-  getPushPreference: typeof notificationTokenService.getPushPreference;
-  setPushPreference: typeof notificationTokenService.setPushPreference;
-  sendSelfTest: typeof notificationSelfTestService.send;
-  /** The Super Admin broadcast test: a verified session decides who may send it. */
-  sendBroadcastTest: typeof notificationBroadcastService.sendTest;
-  listBroadcastRecipients: typeof notificationBroadcastService.listRecipients;
-  sendBroadcast: typeof notificationBroadcastService.send;
-  assertSuperAdmin: typeof assertSuperAdminRequest;
-  /**
-   * The native sender's two calls. Both resolve the verified caller against the
-   * users repository and read the notifications database; unlock also needs the
-   * server-only unlock key. `asol-notifications` holds neither users nor that key.
-   */
-  resolveRecipientTokens: typeof notificationRecipientTokensService.resolve;
-  unlockMobilePush: typeof mobilePushUnlockService.unlock;
-}
-
-/**
  * Order detail and the actions taken on it.
  *
  * This account already creates orders, and the detail read joins order shards
@@ -183,7 +136,6 @@ export interface SubmainRuntime {
   messaging: SubmainMessagingTask;
   social: SubmainSocialTask;
   advertisements: SubmainAdvertisementsTask;
-  devices: SubmainDeviceTask;
   orders: SubmainOrderTask;
   passwordRecovery: SubmainPasswordRecoveryTask;
   cart: SubmainCartTask;
@@ -221,9 +173,9 @@ registerDataCoreProductSearchFieldsPort();
 // its HTTP gateway is a port. Without it every advertisements read answered 500
 // while /api/health stayed 200 — the same shape as an unregistered data port.
 registerStorageCorePorts();
-// Session-bound notification routes on this account issue grants and persist device
-// metadata through @asol/notifications-core. The application owns the concrete env/data
-// adapters, so this isolated composition root must register that seam too.
+// Orders and specialty chat on this account issue notification grants through
+// @asol/notifications-core. The application owns the concrete env/data adapters,
+// so this isolated composition root must register that seam too.
 registerNotificationsCorePorts();
 
 export function createSubmainRuntime(_config?: SubmainRuntimeConfig): SubmainRuntime {
@@ -253,21 +205,6 @@ export function createSubmainRuntime(_config?: SubmainRuntimeConfig): SubmainRun
       homeHeroSlider: homeHeroSliderService,
       featuredMarquee: featuredMarqueeService,
       trendingRibbon: featuredTrendingRibbonService,
-    },
-    devices: {
-      registerDeviceToken: (input) => notificationTokenService.register(input),
-      listAccountDevices: (identity) => notificationTokenService.listForAccount(identity),
-      removeDeviceToken: (input) => notificationTokenService.remove(input),
-      getPushPreference: (uid, phone) => notificationTokenService.getPushPreference(uid, phone),
-      setPushPreference: (uid, phone, pushEnabled) =>
-        notificationTokenService.setPushPreference(uid, phone, pushEnabled),
-      sendSelfTest: (input) => notificationSelfTestService.send(input),
-      sendBroadcastTest: (input) => notificationBroadcastService.sendTest(input),
-      listBroadcastRecipients: (identity) => notificationBroadcastService.listRecipients(identity),
-      sendBroadcast: (input) => notificationBroadcastService.send(input),
-      assertSuperAdmin: assertSuperAdminRequest,
-      resolveRecipientTokens: (input) => notificationRecipientTokensService.resolve(input),
-      unlockMobilePush: (input) => mobilePushUnlockService.unlock(input),
     },
     orders: {
       loadDetail: (orderId, searchParams) => loadOrderDetailForActor(orderId, searchParams),

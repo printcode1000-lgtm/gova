@@ -51,12 +51,13 @@ export function CloudAccountRoutesSection({ id }: { id?: string }) {
             </button>
 
             {open && (
-              <div id={panelId} className="border-t p-3">
-                <table className="w-full text-xs">
+              <div id={panelId} className="overflow-x-auto border-t p-3">
+                <table className="min-w-[720px] w-full text-xs [&_td]:break-words">
                   <thead>
                     <tr>
                       <th className="p-1 text-start font-medium text-on-surface-variant">المسار</th>
                       <th className="p-1 text-start font-medium text-on-surface-variant">الطرق</th>
+                      <th className="p-1 text-start font-medium text-on-surface-variant">ما يقوم به الطلب</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -68,6 +69,7 @@ export function CloudAccountRoutesSection({ id }: { id?: string }) {
                         <td className="p-1" dir="ltr">
                           {entry.methods.join(", ")}
                         </td>
+                        <td className="p-1">{entry.description}</td>
                       </tr>
                     ))}
                   </tbody>

@@ -22,3 +22,9 @@ export const notificationSelfTestService = new NotificationSelfTestService();
  */
 export { notificationRecipientTokensService } from './notification-recipient-tokens.service.server';
 export { mobilePushUnlockService } from './mobile-push-unlock.service.server';
+
+/**
+ * The broadcast services refuse everyone until a composition root says who the
+ * administrator is (fail closed). Every root that serves broadcast must call it.
+ */
+export { configureNotificationAdminAuthorization } from '../notification-admin-authorization';

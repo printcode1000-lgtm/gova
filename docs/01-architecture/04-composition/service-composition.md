@@ -53,12 +53,17 @@ Runtime files resolved dynamically rather than through imports must be declared 
 
 ## Notifications special case
 
-`@asol/notifications-composition` owns push fan-out itself. `@asol/submain-composition`
-also registers the application's `registerNotificationsCorePorts()` seam because the
-session-bound notification routes it owns (`devices`, `device-token`, `preferences`,
-`test/self`, and `test/send`) issue grants or use notification metadata. This does not
-grant the isolated push runtime the session secret: the wiring stays on `submain`, whose
-route ownership already requires both session identity and notification data.
+`@asol/notifications-composition` owns the whole `/api/notifications/**` surface: push
+fan-out through the sealed `@asol/notifications-core` delivery path, plus the
+session-bound routes (`device-token`, `devices`, `preferences`, `test/self`,
+`test/send`, `broadcast/**`, `recipient-tokens`, `mobile-push/unlock`) through its
+`account` and `devices` tasks. Those reach the application only through the exact
+`notification-service.bootstrap.server`, `session-request.server` and
+`super-admin-auth.server` seams. This deliberately gives the notifications account the
+users database, the session signing secret and the mobile push unlock key.
+
+`@asol/submain-composition` still registers `registerNotificationsCorePorts()` because
+its orders and specialty-chat routes issue notification grants.
 
 Other account compositions reach DB/storage through application data-access layers
 rather than widening their capability credentials.
@@ -119,9 +124,10 @@ New service account touches declarations, composition, service folder, sync grap
 4. Every deployment is a composition root. An account service has no
    `src/instrumentation.ts` from the application, so its own composition MUST
    register every port its routes reach.
-   For `submain`, this explicitly includes `registerNotificationsCorePorts()`;
-   otherwise grant issuance falls back to the unconfigured notifications-core
-   default and `/api/notifications/test/self` returns `notificationGrantNotIssued`.
+   For `submain`, this explicitly includes `registerNotificationsCorePorts()`, and
+   `notifications-composition` wires the same notifications-core server config
+   itself; otherwise grant issuance falls back to the unconfigured default and
+   `/api/notifications/test/self` returns `notificationGrantNotIssued`.
 5. An account composition root MUST pin a runtime choice its deployment cannot
    serve both sides of.
 

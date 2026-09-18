@@ -249,6 +249,7 @@
         "react-dom": "19.2.8",
         "server-only": "^0.0.1",
         "web-push": "3.6.7",
+        "zod": "4.4.3",
         "zustand": "5.0.15"
       },
       "devDependencies": {
@@ -258,7 +259,7 @@
         "@types/web-push": "3.6.4",
         "typescript": "5.9.3"
       },
-      "lockDigest": "1ad05e3b1f310cac050589493ec506b5e05ecf87e4f5502183cc9acc06b2de91"
+      "lockDigest": "7ee1e66a0b15d7b10a5d487e62767034d12076813bad61cb489efafa84996645"
     },
     "orders": {
       "packageManager": "npm@11.19.0",

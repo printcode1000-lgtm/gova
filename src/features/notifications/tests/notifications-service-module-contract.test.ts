@@ -58,7 +58,7 @@ for (const directory of ownSourceDirectories) {
   }
 }
 
-// ── 2. The service must not reach the main app's databases ───────────────────
+// ── 2. Fan-out stays on the sealed delivery path ─────────────────────────────
 
 const sendRoute = readFileSync(
   path.join(serviceRoot, "src", "app", "api", "notifications", "send", "route.ts"),
@@ -106,11 +106,22 @@ assert.match(
   /from\s+['"]@asol\/notifications-core\/server['"]/,
   "The composition must import @asol/notifications-core/server.",
 );
-assert.doesNotMatch(
+// The account owns the whole `/api/notifications/**` surface, so the composition
+// reaches the application's notification services — but only through the one
+// exact bootstrap seam. The delivery path itself stays on the sealed package.
+const applicationNotificationImports = [
+  ...compositionCode.matchAll(/from\s+['"](@\/features\/notifications\/[^'"]+)['"]/g),
+].map((match) => match[1]);
+assert.deepEqual(
+  applicationNotificationImports,
+  ["@/features/notifications/server/services/notification-service.bootstrap.server"],
+  "The composition may reach the application's notifications feature only through the " +
+    "service bootstrap seam; any wider import grows this deployment's file surface.",
+);
+assert.match(
   compositionCode,
-  /@\/features\/notifications\//,
-  "The composition must not reach the application's notifications feature. The delivery " +
-    "core is a sealed package now, and its import surface is this deployment's file surface.",
+  /deliverGrants:\s*deliverNotificationGrants/,
+  "Fan-out must stay on the sealed @asol/notifications-core delivery path.",
 );
 
 const serviceRuntime = stripComments(

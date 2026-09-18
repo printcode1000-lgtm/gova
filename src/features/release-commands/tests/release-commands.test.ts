@@ -461,7 +461,7 @@ assert.match(
 const r8Sources: AndroidR8PolicySources = {
   buildGradle: `android { buildTypes { release { minifyEnabled true; shrinkResources true; proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro' } releaseNoR8 { initWith release; minifyEnabled false; versionNameSuffix '-nor8' } } } gradle.taskGraph.whenReady { if (project.findProperty('asol.allowNoR8') != 'true') throw new GradleException() }`,
   properties: "android.useAndroidX=true",
-  appRules: "-keepclassmembers class * { @android.webkit.JavascriptInterface <methods>; }\n-keepattributes RuntimeVisibleAnnotations",
+  appRules: "-keepclassmembers class * { @android.webkit.JavascriptInterface <methods>; }\n-keepattributes RuntimeVisibleAnnotations\n-keep class androidx.work.impl.WorkDatabase_Impl { *; }\n-keep class * extends androidx.room.RoomDatabase { *; }",
   capacitorRules: "-keep public class * extends com.getcapacitor.Plugin\n-keepclassmembers class * { @com.getcapacitor.PluginMethod <methods>; }",
   fastfile: "lane :production do\n  build\n  upload_to_play_store(track: 'production')\nend",
 };

@@ -1099,7 +1099,7 @@ authorises with the signed session instead, because it can reach a registration
 the calling device does not own.
 
 Native outbound push (Capacitor only) uses two additional session-bound routes,
-owned by `submain` and served by `asol-submain` (not bundled in `out/`):
+owned by `notifications` and served by `asol-notifications` (not bundled in `out/`):
 
 ```text
 POST /api/notifications/recipient-tokens   # every native send: signed session + grants; return provider=fcm tokens + send payload
@@ -1279,10 +1279,10 @@ The [notification bridge](notification-bridge-module.md) native branch
 
 1. Requires signed-in identity; on Android, `NativeCore.ensureNotificationChannels`.
 2. Loads cached Admin credentials or unlocks via
-   `POST /api/notifications/mobile-push/unlock` (`asol-submain`, signed session; skipped when
+   `POST /api/notifications/mobile-push/unlock` (`asol-notifications`, signed session; skipped when
    Preferences already hold the re-encrypted bundle).
 3. Exchanges a Google OAuth token on the device.
-4. **Every send:** `POST /api/notifications/recipient-tokens` (`asol-submain`
+4. **Every send:** `POST /api/notifications/recipient-tokens` (`asol-notifications`
    verifies the signed session and the grants, returns `fcm` tokens only).
 5. Sequential FCM HTTP v1 from the device to Google. Native send does not
    soft-delete invalid tokens on the server.
@@ -1295,8 +1295,8 @@ with `npm run provision:mobile-push`. Full Android contract:
 
 ```text
 1. device  ──► main app          business action + grant in response
-2. device  ──► asol-submain      recipient-tokens (every send, signed session)
-3. device  ──► asol-submain      unlock (only if Preferences empty, signed session)
+2. device  ──► asol-notifications recipient-tokens (every send, signed session)
+3. device  ──► asol-notifications unlock (only if Preferences empty, signed session)
 4. device  ──► Google FCM HTTP v1
 ```
 
@@ -1335,9 +1335,14 @@ The API response reports what was **granted**, never what a provider accepted �
 `grantedUsers`, and `status: "granted"`. Provider acceptance is not knowable on
 the main app any more, so it is not claimed.
 
-Device-token registration and broadcast recipient listing stay on the main app:
-they need the users database for identity checks and masked contact details.
-The notifications account never receives users, product, or shard credentials.
+Device-token registration, the account's device list, the mute switch, the self
+and broadcast tests, broadcast recipients and sends, and the native sender's
+recipient tokens and unlock are all served by the notifications account too. They
+need the users database and the signed session, so that account holds
+`TURSO_DATABASE_URL`/`TURSO_AUTH_TOKEN`, `ASOL_SESSION_SIGNING_SECRET`, and the
+mobile push unlock key — a deliberate widening so one account owns the whole
+`/api/notifications/**` surface. It still never receives product or shard
+credentials.
 
 The notifications deployment is not connected to GitHub. It updates only when
 `npm run notifications:deploy` is run; a push to the repository redeploys the
@@ -1925,6 +1930,14 @@ driving real flows.
 | `tests/notification-local-storage-contract.test.ts` | No server table for content; service worker matches AsolDB |
 | `tests/notification-center-model.test.ts` | Grouping, preservation, chat ordering |
 | `tests/notifications-service-module-contract.test.ts` | The microservice is self-contained and its mirror is reproducible |
+| `tests/notification-route-reachability.test.ts` | Every call the clients make (read from their source) resolves to `notifications`, is shipped there with its method and `OPTIONS`, has a Development handler, and no other service ships a stray notification route; session-bound service routes authorise with the signed session |
+| `tests/notification-error-status.test.ts` | Every error code thrown on the notification server paths maps to a deliberate status — none falls through to a silent `500` |
+| `tests/notification-recipient-tokens.service.test.ts` | The native sender's token resolution with real signed grants: FCM-only filtering, mute, `no_tokens`, caller/phone/actor refusals, forged grants, batch bound |
+| `tests/device-token-service-web.test.ts`, `tests/device-token-service-native.test.ts` | A browser keeps the server-accepted local record; reconcile repairs without subscribing; failed repair fails closed; native unlock runs only for the owning session and never blocks registration; server refusal rolls back |
+| `packages/account-bridge/src/tests/mobile-push-session.test.ts` | Unlock and recipient tokens go straight to the owner with `x-asol-session-token`, carry no identity in the body, send nothing without a session, and cache the unlocked bundle encrypted |
+| `settings/tests/notification-registration-confirmation.test.ts` | The one rule the settings page uses to confirm "this device is registered", per platform |
+| `scripts/tests/notifications-smoke-probes.test.ts` | The manual smoke's verdicts, and that it probes every shipped route |
+| `tests/notification-test-suite-integrity.test.ts` | No declared check goes uncalled and every notification test file is run by a root `test:*` script |
 | `tests/notification-provider-registry.test.ts`, `web-push-provider.test.ts`, `notification-grant.test.ts`, `notification-test-service.test.ts`, `notification-locale-routing.test.ts`, `notification-broadcast-delivery.test.ts`, `push-token-kind.test.ts`, `notification-permission-prompt-policy.test.ts` | Server-side provider, grant, locale, and policy contracts |
 
 ### The integration harness

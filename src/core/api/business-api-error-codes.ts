@@ -25,6 +25,17 @@ export const KNOWN_BUSINESS_API_ERROR_CODES = [
   'notificationRouteInvalid',
   'notificationTestScenarioInvalid',
   'notificationBroadcastForbidden',
+  // Caller input rejected by device registration, the mute switch, and grant
+  // verification. Each used to fall through to a silent 500.
+  'notificationTokenInvalid',
+  'notificationProviderInvalid',
+  'notificationPlatformInvalid',
+  'notificationDeviceIdInvalid',
+  'notificationPreferenceInvalid',
+  'notificationGrantInvalid',
+  'notificationGrantUnsupportedVersion',
+  'notificationGrantRecipientsRequired',
+  'notificationGrantDedupeKeyRequired',
   'webPushNotConfigured',
   'invalidFollowTarget',
   'followLoginRequired',

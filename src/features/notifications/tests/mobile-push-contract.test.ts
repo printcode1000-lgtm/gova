@@ -41,19 +41,19 @@ function testApiRoutesWired(): void {
   // Both routes hand a native sender delivery material — a Firebase Admin key
   // and push tokens — so the caller is the verified session on every origin
   // that serves them, never a guessable uid/phone pair read from the body.
-  const submainRecipientRoute = readFileSync(
-    path.join(repoRoot, "services/submain/src/app/api/notifications/recipient-tokens/route.ts"),
+  const serviceRecipientRoute = readFileSync(
+    path.join(repoRoot, "services/notifications/src/app/api/notifications/recipient-tokens/route.ts"),
     "utf8",
   );
-  const submainUnlockRoute = readFileSync(
-    path.join(repoRoot, "services/submain/src/app/api/notifications/mobile-push/unlock/route.ts"),
+  const serviceUnlockRoute = readFileSync(
+    path.join(repoRoot, "services/notifications/src/app/api/notifications/mobile-push/unlock/route.ts"),
     "utf8",
   );
   for (const route of [recipientRoute, unlockRoute]) {
     assert.match(route, /assertSignedInRequest\(request\)/);
     assert.match(route, /uid: claims\.uid,\s*phone: claims\.phone/);
   }
-  for (const route of [submainRecipientRoute, submainUnlockRoute]) {
+  for (const route of [serviceRecipientRoute, serviceUnlockRoute]) {
     assert.match(route, /account\.assertSignedIn\(request\)/);
     assert.match(route, /uid: claims\.uid,\s*phone: claims\.phone/);
   }
@@ -82,5 +82,13 @@ function testNativeBranchInBridge(): void {
   assert.match(source, /isNativePlatform\(\)/);
   assert.match(source, /deliverNotificationGrantsFromNative/);
 }
+
+// Every check must run. These four were defined and never called, so the file
+// printed "ok" while asserting nothing — including after the routes it names
+// moved away. `notification-test-suite-integrity.test.ts` now refuses that shape.
+testPublicEnvExposesBlobOnly();
+testUnlockUsesClientBlob();
+testApiRoutesWired();
+testNativeBranchInBridge();
 
 console.log("mobile-push-contract.test: ok");

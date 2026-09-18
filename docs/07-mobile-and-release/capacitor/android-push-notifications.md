@@ -105,7 +105,7 @@ only. The WebView never ships `ASOL_MOBILE_PUSH_UNLOCK_KEY`.
    succeeds, it returns that bundle and **does not** call the server.
 2. Otherwise POSTs `{ credentialBlob }` with the signed session header
    `x-asol-session-token` to `POST /api/notifications/mobile-push/unlock` on
-   its owner, `asol-submain` (`credentials: 'omit'`). With no session on this
+   its owner, `asol-notifications` (`credentials: 'omit'`). With no session on this
    device, unlock is skipped.
 3. On HTTP success, keeps `{ projectId, clientEmail, privateKey }`, re-encrypts
    with a device-local AES-GCM key (`asol.mobilePush.deviceKey.v1`), and stores
@@ -130,14 +130,14 @@ from the body: uid and phone are guessable, and the answer is an Admin key. Ciph
 `base64(iv[12] + authTag[16] + ciphertext)`.
 
 The unlock HTTP handlers are App Router routes. They are **not** inside `out/`.
-Both native-sender routes are owned by `submain` in the route registry and
-served from `services/submain`, which holds the users database, the
+Both native-sender routes are owned by `notifications` in the route registry and
+served from `services/notifications`, which holds the users database, the
 notifications database, the session signing secret, and — for unlock —
 `ASOL_MOBILE_PUSH_UNLOCK_KEY` (and optionally `ASOL_MOBILE_PUSH_CREDENTIAL_BLOB`)
-on the `asol-submain` Vercel project. The device calls the owner origin directly
+on the `asol-notifications` Vercel project. The device calls the owner origin directly
 (`postSessionRoute`); `resolveMainApiBaseUrl` is only the fallback for an
-unconfigured owner. They were previously owned by the `notifications` catch-all
-and answered `404` there.
+unconfigured owner. They briefly lived on `asol-submain` and, before that,
+answered `404` under the `notifications` catch-all with no handler.
 
 ### What still hits the main app on every send
 
@@ -480,7 +480,7 @@ See [Unified Verification System](../../05-platform-features/unified-verificatio
   users database and validate platform/provider pairs and input sizes.
 - **Web send:** the notifications service holds `FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64`.
   The browser never receives that JSON. Grants are the send authority.
-- **Android outbound send:** `asol-submain` decrypts the embedded blob only
+- **Android outbound send:** `asol-notifications` decrypts the embedded blob only
   for a verified signed session whose `uid`/`phone` match the users repository.
   After unlock, the WebView stores the Admin key material re-encrypted in
   Preferences. Unlock and recipient-tokens use `credentials: 'omit'`; identity

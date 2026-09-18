@@ -68,8 +68,9 @@ by a later edit.
 
 `device-token` itself was a second, independent defect: it was unshipped because
 both operations verify device ownership through the users repository, which
-`asol-notifications` must never hold. It now lives on `submain`, which holds both
-the users and notifications databases.
+`asol-notifications` did not hold at the time. It moved to `submain`, and later —
+with every other `/api/notifications/**` route — to `asol-notifications`, once
+that account was deliberately given the users database and session secret.
 
 ## The guard
 

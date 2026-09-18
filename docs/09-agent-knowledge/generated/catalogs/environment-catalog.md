@@ -53,7 +53,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `ASOL_IOS_EXPORT_METHOD` | server/tooling | 0 |  |
 | `ASOL_IOS_TEAM_ID` | server/tooling | 1 | `src/core/config/server-env/server-env.values.turso-env.ts` |
 | `ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` | server/tooling | 1 | `src/features/notifications/tests/mobile-push-unlock.service.test.ts` |
-| `ASOL_MOBILE_PUSH_UNLOCK_KEY` | server/tooling | 2 | `src/features/notifications/tests/mobile-push-crypto.test.ts`, `src/features/notifications/tests/mobile-push-unlock.service.test.ts` |
+| `ASOL_MOBILE_PUSH_UNLOCK_KEY` | server/tooling | 3 | `services/notifications/src/app/api/health/route.ts`, `src/features/notifications/tests/mobile-push-crypto.test.ts`, `src/features/notifications/tests/mobile-push-unlock.service.test.ts` |
 | `ASOL_MODE` | server/tooling | 1 | `src/core/config/runtime-context.server.ts` |
 | `ASOL_NOTIFICATION_GRANT_SECRET` | server/tooling | 5 | `npm run test:follow`, `npm run test:notifications`, `scripts/probe-notifications-service.ts`, `services/notifications/src/app/api/health/route.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` |
 | `ASOL_OTA_NATIVE_BASELINE` | server/tooling | 2 | `packages/ota-core/src/publishing/gate/native-gate.ts`, `packages/ota-core/src/tests/native-compatibility.test.ts` |
@@ -148,14 +148,14 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `LEGACY_PRODUCT_DATABASE_URL` | server/tooling | 1 | `packages/data-core/src/tooling/migrate-product-database.ts` |
 | `LOCALAPPDATA` | server/tooling | 1 | `scripts/android/adb.ts` |
 | `NEXT_PUBLIC_` | client-visible | 1 | `src/core/config/business-api-origins.ts` |
-| `NEXT_PUBLIC_ASOL_API_BASE_URL` | client-visible | 4 | `npm run build:static:local`, `scripts/verify-live-api-cors.ts`, `packages/ota-core/scripts/serve-static.ts`, `src/core/config/public-env.ts` |
+| `NEXT_PUBLIC_ASOL_API_BASE_URL` | client-visible | 5 | `npm run build:static:local`, `scripts/check-notifications-smoke.ts`, `scripts/verify-live-api-cors.ts`, `packages/ota-core/scripts/serve-static.ts`, `src/core/config/public-env.ts` |
 | `NEXT_PUBLIC_ASOL_APP_STORE_URL` | client-visible | 1 | `src/core/config/public-env.ts` |
 | `NEXT_PUBLIC_ASOL_BASE_PATH` | client-visible | 1 | `src/core/config/public-env.ts` |
 | `NEXT_PUBLIC_ASOL_CONTROL_URL` | client-visible | 4 | `scripts/deploy-push.ts`, `scripts/release-readiness-publish.ts`, `src/core/config/business-api-origins.ts`, `src/core/api/tests/compatibility-boundary.test.ts` |
 | `NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` | client-visible | 1 | `src/core/config/public-env.ts` |
 | `NEXT_PUBLIC_ASOL_MODE` | client-visible | 2 | `src/core/config/public-env.ts`, `src/core/config/runtime-context.server.ts` |
 | `NEXT_PUBLIC_ASOL_NATIVE_VERSION` | client-visible | 1 | `src/core/config/public-env.ts` |
-| `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | client-visible | 3 | `scripts/probe-notifications-service.ts`, `src/core/config/business-api-origins.ts`, `src/core/api/tests/compatibility-boundary.test.ts` |
+| `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | client-visible | 4 | `scripts/check-notifications-smoke.ts`, `scripts/probe-notifications-service.ts`, `src/core/config/business-api-origins.ts`, `src/core/api/tests/compatibility-boundary.test.ts` |
 | `NEXT_PUBLIC_ASOL_ORDERS_URL` | client-visible | 2 | `src/core/config/business-api-origins.ts`, `src/core/api/tests/compatibility-boundary.test.ts` |
 | `NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL` | client-visible | 4 | `packages/ota-core/src/publishing/config/ota-config.ts`, `packages/ota-core/src/publishing/config/ota-r2-target.ts`, `src/core/config/public-env.ts`, `scripts/tests/ota-manifest-url-alignment.test.ts` |
 | `NEXT_PUBLIC_ASOL_OTA_PUBLIC_KEY` | client-visible | 2 | `packages/ota-core/src/publishing/config/ota-r2-target.ts`, `src/core/config/public-env.ts` |
@@ -221,7 +221,7 @@ Key names only. No environment value is stored in the graph or this catalog.
 | `TURSO_ADVERTISEMENTS_DATABASE_URL` | server/tooling | 2 | `packages/data-core/src/ports/runtime-config.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` |
 | `TURSO_API_TOKEN` | server/tooling | 1 | `scripts/provision-turso.ts` |
 | `TURSO_AUTH_TOKEN` | server/tooling | 2 | `packages/data-core/src/ports/runtime-config.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` |
-| `TURSO_DATABASE_URL` | server/tooling | 3 | `packages/data-core/src/ports/runtime-config.ts`, `services/control/src/app/api/health/route.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` |
+| `TURSO_DATABASE_URL` | server/tooling | 4 | `packages/data-core/src/ports/runtime-config.ts`, `services/control/src/app/api/health/route.ts`, `services/notifications/src/app/api/health/route.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` |
 | `TURSO_NOTIFICATIONS_API_TOKEN` | server/tooling | 0 |  |
 | `TURSO_NOTIFICATIONS_AUTH_TOKEN` | server/tooling | 2 | `packages/data-core/src/tooling/enforce-notification-token-cardinality.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` |
 | `TURSO_NOTIFICATIONS_DATABASE_URL` | server/tooling | 3 | `packages/data-core/src/tooling/enforce-notification-token-cardinality.ts`, `services/notifications/src/app/api/health/route.ts`, `src/core/config/server-env/server-env.values.turso-env.ts` |

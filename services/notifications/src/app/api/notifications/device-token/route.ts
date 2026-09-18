@@ -1,9 +1,9 @@
 import {
-  assertSubmainEnv,
-  createSubmainRuntime,
+  assertNotificationsEnv,
+  createNotificationsRuntime,
   type DeleteNotificationTokenInput,
   type RegisterNotificationTokenInput,
-} from '@asol/submain-composition';
+} from '@asol/notifications-composition';
 
 import { businessErrorResponse, corsHeaders, preflight, jsonResponse, readJsonBody } from '../../../lib/http';
 
@@ -13,15 +13,14 @@ export const dynamic = 'force-dynamic';
 /**
  * Register or revoke this device's push token.
  *
- * On this account because both operations verify that the caller owns the
- * device, and that check reads the users repository — a capability
- * `asol-notifications` must never hold. This account holds the users database
- * and the notifications database, which is what the check needs.
+ * Both operations verify that the caller owns the device, and that check reads
+ * the users repository; this account holds it alongside its own notifications
+ * database because it owns the whole notification surface.
  */
 export async function POST(request: Request): Promise<Response> {
   try {
-    const { devices } = createSubmainRuntime();
-    assertSubmainEnv();
+    const { devices } = createNotificationsRuntime();
+    assertNotificationsEnv();
 
     const body = await readJsonBody<RegisterNotificationTokenInput>(request);
     const token = await devices.registerDeviceToken(body);
@@ -33,8 +32,8 @@ export async function POST(request: Request): Promise<Response> {
 
 export async function DELETE(request: Request): Promise<Response> {
   try {
-    const { devices } = createSubmainRuntime();
-    assertSubmainEnv();
+    const { devices } = createNotificationsRuntime();
+    assertNotificationsEnv();
 
     const q = new URL(request.url).searchParams;
     const input: DeleteNotificationTokenInput = {

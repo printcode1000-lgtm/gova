@@ -13,6 +13,7 @@ import {
   notificationPermissionLabel,
   notificationPermissionTone,
 } from "./notification-device-settings-card-model";
+import { confirmedLocalDeviceIds } from "./notification-registration-confirmation";
 import type { ShowSettingsStatus } from "./use-settings-status-banner";
 
 export type NotificationNoticeTone = "info" | "error";
@@ -185,10 +186,8 @@ export function useNotificationDeviceToggle(showStatus: ShowSettingsStatus) {
 
     const account = await notifications.listAccountDevices({ sessionToken });
     const local = await notifications.listDevices({ uid: sessionUid });
-    const serverIds = new Set(account.devices.map((device) => device.deviceId));
-    const registrationConfirmed = local.some(
-      (token) => token.enabled && serverIds.has(token.deviceId),
-    );
+    const registrationConfirmed =
+      confirmedLocalDeviceIds(account.devices, local).length > 0;
     if (!registrationConfirmed) {
       showNotice(t("notifications.deviceCard.updateError"), "error");
       return false;

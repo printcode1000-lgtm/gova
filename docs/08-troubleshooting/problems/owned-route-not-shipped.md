@@ -143,6 +143,26 @@ Operational requirement: `ASOL_MOBILE_PUSH_UNLOCK_KEY` (and the optional
 `ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` guard) must be set on `asol-submain`;
 otherwise unlock answers `503 mobilePushUnlockNotConfigured`.
 
+## Consolidation: every notification route on `asol-notifications`
+
+The session-bound notification routes above — `device-token`, `devices`,
+`preferences`, `test/self`, `test/send`, `broadcast/**`, `recipient-tokens` and
+`mobile-push/unlock` — later moved from `submain` to `notifications` by an
+explicit decision that one account should own the whole `/api/notifications/**`
+surface. The registry now has a single `notifications` entry for that prefix,
+`services/notifications` ships all eleven routes, and
+`@asol/notifications-composition` gained `account` and `devices` tasks through
+the exact `notification-service.bootstrap.server` seam.
+
+This widened the account's credentials on purpose: it now requires
+`TURSO_DATABASE_URL`/`TURSO_AUTH_TOKEN` (users) and `ASOL_SESSION_SIGNING_SECRET`,
+and optionally holds `ASOL_MOBILE_PUSH_UNLOCK_KEY` and
+`ASOL_MOBILE_PUSH_CREDENTIAL_BLOB`. The recorded key count in
+`packages/account-declarations/src/tests/index.test.ts` moved from 11 to 16 with
+that justification. Those values must be set on the `asol-notifications` Vercel
+project before it serves the moved routes; `assertNotificationsEnv` refuses every
+request otherwise.
+
 ## What now sweeps the whole surface
 
 `npm run smoke:owned-reads` (`scripts/check-owned-route-reads.ts`, and part of

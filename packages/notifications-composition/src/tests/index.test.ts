@@ -90,12 +90,45 @@ function runTests(): void {
   assertNotificationsEnv(complete);
   console.log('  ✔ D5: missing required keys throw and name themselves; complete env passes.');
 
+  // The account owns the whole notification surface: every session-bound task is bound.
+  const deviceTasks = [
+    'registerDeviceToken', 'listAccountDevices', 'removeDeviceToken', 'getPushPreference',
+    'setPushPreference', 'sendSelfTest', 'sendBroadcastTest', 'listBroadcastRecipients',
+    'sendBroadcast', 'assertSuperAdmin', 'resolveRecipientTokens', 'unlockMobilePush',
+  ] as const;
+  for (const task of deviceTasks) {
+    assert(typeof runtime.devices[task] === 'function', `devices.${task} bound`);
+  }
+  assert(typeof runtime.account.assertSignedIn === 'function', 'account.assertSignedIn bound');
+  console.log('  ✔ account and devices tasks cover every session-bound notification route.');
+
   console.log('✅ @asol/notifications-composition tests passed!\n');
 }
 
-try {
+/**
+ * Broadcast fails closed until a root names the administrator. Importing this
+ * composition must name them, or every `broadcast/*` request is `forbidden`.
+ */
+async function checkBroadcastAuthorization(): Promise<void> {
+  const { assertNotificationAdmin } = await import(
+    '@/features/notifications/server/notification-admin-authorization'
+  );
+  const { SUPER_ADMIN_PHONE, SUPER_ADMIN_UID } = await import('@asol/auth-core');
+  assertNotificationAdmin({ uid: SUPER_ADMIN_UID, phone: SUPER_ADMIN_PHONE });
+  let refused = false;
+  try {
+    assertNotificationAdmin({ uid: 'usr_someone', phone: '+201000000009' });
+  } catch (error) {
+    refused = error instanceof Error && error.message === 'forbidden';
+  }
+  assert(refused, 'a non-administrator must be refused');
+  console.log('  ✔ broadcast authorisation is configured by the composition root.');
+}
+
+void (async () => {
   runTests();
-} catch (err) {
+  await checkBroadcastAuthorization();
+})().catch((err) => {
   console.error('❌ notifications-composition test failed:', err);
   process.exit(1);
-}
+});

@@ -1,5 +1,5 @@
-import { assertSubmainEnv, createSubmainRuntime } from '@asol/submain-composition';
-import type { BroadcastNotificationInput } from '@asol/notifications-core';
+import { assertNotificationsEnv, createNotificationsRuntime } from '@asol/notifications-composition';
+import type { BroadcastNotificationInput } from '@asol/notifications-composition';
 import { businessErrorResponse, preflight, jsonResponse, readJsonBody } from '../../../../lib/http';
 
 export const runtime = 'nodejs';
@@ -7,8 +7,8 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request): Promise<Response> {
   try {
-    const { devices } = createSubmainRuntime();
-    assertSubmainEnv();
+    const { devices } = createNotificationsRuntime();
+    assertNotificationsEnv();
     const claims = devices.assertSuperAdmin(request);
     const body = await readJsonBody<BroadcastNotificationInput>(request);
     const result = await devices.sendBroadcast({

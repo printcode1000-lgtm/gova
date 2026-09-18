@@ -59,6 +59,8 @@ const EXPLICIT_STATUSES: Readonly<Record<string, BusinessApiErrorStatus>> = {
   productionDeployNotConfigured: { code: 'productionDeployNotConfigured', status: 503, skipPersistence: true },
   passwordRecoveryNotConfigured: { code: 'passwordRecoveryNotConfigured', status: 503, skipPersistence: true },
   sessionSigningSecretNotConfigured: { code: 'sessionSigningSecretNotConfigured', status: 503, skipPersistence: true },
+  // The grant secret is missing on this runtime: nothing the caller can fix.
+  notificationGrantNotIssued: { code: 'notificationGrantNotIssued', status: 503, skipPersistence: false },
   mobilePushUnlockNotConfigured: { code: 'mobilePushUnlockNotConfigured', status: 503, skipPersistence: true },
   mobilePushCredentialBlobMissing: { code: 'mobilePushCredentialBlobMissing', status: 503, skipPersistence: true },
   mobilePushCredentialBlobInvalid: { code: 'mobilePushCredentialBlobInvalid', status: 400, skipPersistence: false },
@@ -81,9 +83,11 @@ const KNOWN_400 = new Set<string>(
 );
 
 export function businessApiErrorStatus(message: string): BusinessApiErrorStatus {
-  if (KNOWN_400.has(message)) return { code: message, status: 400, skipPersistence: false };
+  // Explicit first. Most explicit codes are also known codes, and checking the
+  // 400 set first silently turned every 429, 403 and 503 below into a 400.
   const explicit = EXPLICIT_STATUSES[message];
   if (explicit) return explicit;
+  if (KNOWN_400.has(message)) return { code: message, status: 400, skipPersistence: false };
   return {
     code: sanitizeApiErrorCodeForClient('internalServerError', 500),
     status: 500,

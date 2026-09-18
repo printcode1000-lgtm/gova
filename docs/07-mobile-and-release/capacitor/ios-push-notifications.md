@@ -58,7 +58,7 @@ the script exits immediately because `GoogleService-Info.plist` is gitignored;
 APNs. `APNS_*` is **not** required for that normal web path.
 
 **Native outbound send** (same TypeScript as Android) does **not** use that
-service. The installed shell unlocks the encrypted Admin blob on `asol-submain` with its signed session,
+service. The installed shell unlocks the encrypted Admin blob on `asol-notifications` with its signed session,
 then POSTs FCM HTTP v1 from the device. `recipient-tokens` returns only
 `provider === "fcm"` tokens, so a raw APNs registration is not reachable from
 native send. Details:

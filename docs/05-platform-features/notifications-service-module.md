@@ -1,8 +1,11 @@
 # Notifications Service Module
 
-An independent deployment that does one thing: fan out push notifications.
-It lives in `services/notifications/`, runs on its own Vercel account, and reads
-its own Turso database.
+An independent deployment that owns the whole `/api/notifications/**` surface:
+push fan-out, device registration, the account's device list, the push mute
+switch, the self and broadcast tests, broadcast recipients and sends, and the
+native sender's recipient tokens and credential unlock. It lives in
+`services/notifications/`, runs on its own Vercel account, and reads its own
+Turso database plus the users database.
 
 The rest of the notification system — the local-first center, templates, badges,
 device-token registration — is documented in
@@ -38,7 +41,9 @@ services/notifications/
 │   ├── layout.tsx
 │   └── api/
 │       ├── notifications/send/route.ts   # the only fan-out route in the system
+│       ├── notifications/**/route.ts     # the session-bound account surface
 │       └── health/route.ts
+├── src/app/lib/http.ts   # CORS + status mapping for the session-bound routes
 └── generated/            # mirrored from src/, git-ignored, rebuilt per deploy
 ```
 
@@ -49,10 +54,22 @@ services/notifications/
 | `POST /api/notifications/send` | Fan-out. Body is `{ grants: [...] }`; each grant is signature-verified and expiry-checked. No bearer token, no cookies. |
 | `GET /api/health` | Reports whether each credential is *present*, never its value. Safe to call publicly, and makes a misconfigured deployment visible without sending a real push. |
 
-Everything else stays on the main app. Device-token registration and broadcast
-recipient listing both need the users database for identity checks and masked
-contact details, so moving them would have forced the notifications account to
-hold users credentials — the opposite of the point.
+| `POST`/`DELETE /api/notifications/device-token` | Register or revoke this device's token; the caller must own it. |
+| `GET`/`DELETE /api/notifications/devices` | The signed account's registrations; revoke one. |
+| `GET`/`POST /api/notifications/preferences` | The account-wide push mute switch. |
+| `POST /api/notifications/test/self` | The signed account's own delivery test (grant issued here). |
+| `POST /api/notifications/test/send` | The Super Admin broadcast test. |
+| `GET /api/notifications/broadcast/recipients`, `POST /api/notifications/broadcast/send` | Super Admin broadcast. |
+| `POST /api/notifications/recipient-tokens` | Native sender: verify the session and grants, return `fcm` tokens. |
+| `POST /api/notifications/mobile-push/unlock` | Native sender: decrypt the embedded Admin blob for a signed session. |
+
+The session-bound routes reach the application's services through
+`@asol/notifications-composition` (`account`, `devices`), whose only application
+notification import is the exact seam
+`notification-service.bootstrap.server`. They used to live on `asol-submain`
+because they need the users database and the session signing secret; they were
+consolidated here by an explicit decision to widen this account's credentials
+so that one account owns the whole notification surface.
 
 ## How the main app reaches it
 
@@ -72,8 +89,8 @@ The main app has no URL for this service, no client for it, and no code path to
 it. It signs a decision; the user's browser carries it. See
 [Notification Bridge Module](notification-bridge-module.md).
 
-**Native installed shells** bypass this service entirely. Capacitor devices call
-`asol-submain` with their signed session for grant verification (`POST /api/notifications/recipient-tokens`
+**Native installed shells** do not use fan-out. Capacitor devices call this
+service's session-bound routes with their signed session for grant verification (`POST /api/notifications/recipient-tokens`
 on every send) and, when Preferences are empty,
 `POST /api/notifications/mobile-push/unlock`, then send FCM HTTP v1 from the
 device to Google. The service remains the only **web** fan-out path.
@@ -97,8 +114,8 @@ Rather than maintain a second copy of the send logic by hand,
 one entry point and mirrors exactly the files it reaches.
 
 **That entry point is `packages/notifications-core/src/service-runtime.ts`, and it is
-the only notification path this deployment may import.** The route reaches it and
-nothing else; `architecture:check` and the module boundary test both reject any
+the only notification path the fan-out route may import.** That route reaches it
+and nothing else; `architecture:check` and the module boundary test both reject any
 other notification import in `services/notifications`.
 
 The restriction is not stylistic. Because the mirror is built by walking imports,
@@ -179,7 +196,10 @@ the main app and changes nothing here.
 | `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | ✅ client-safe, tells the browser where to deliver | ✖ it *is* the service |
 | `FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64`, `APNS_*` | ✖ | ✅ |
 | `WEB_PUSH_VAPID_PRIVATE_KEY` | ✖ | ✅ required — the public half is a constant in the bundle |
-| Users, product, advertisements, shard credentials | ✅ | ✖ |
+| `TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN` (users) | ✅ | ✅ identity checks, broadcast recipients |
+| `ASOL_SESSION_SIGNING_SECRET` | ✅ | ✅ verifies the signed session |
+| `ASOL_MOBILE_PUSH_UNLOCK_KEY`, `ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` | ✅ | ✅ native unlock (optional; unset → `503 mobilePushUnlockNotConfigured`) |
+| Product, advertisements, shard credentials | ✅ | ✖ |
 
 The grant secret must be byte-identical on both sides — the main app signs with
 it and the service verifies. `npm run db:push:vercel-env` and
@@ -208,10 +228,31 @@ without delivering anything. An unsigned or tampered body is rejected with
 `notificationGrantInvalid`, which is the security property worth re-checking
 after any change to the grant format.
 
+The whole surface is probed by a manual, outward-facing smoke that is **not**
+part of `npm test`:
+
+```bash
+npm run smoke:notifications
+npm run smoke:notifications -- --origin https://asol-notifications.vercel.app --api-base https://gova-swart.vercel.app
+```
+
+It sends only unauthenticated, side-effect-free requests. It fails when health
+reports a required credential missing (`notificationsDatabase`, `grantSecret`,
+`webPush`, `usersDatabase`, `sessionSecret`), when any route answers a `404`
+without a JSON error (a missing route file), a `5xx`, or a `2xx` to an
+unauthenticated call, when a preflight does not allow `x-asol-session-token`,
+and when the compatibility boundary redirects a notification call anywhere but
+this origin. `firebase`, `apns` and `mobilePushUnlock` are reported as warnings.
+
+Broadcast and the Super Admin test fail closed until a composition root names
+the administrator. `@asol/notifications-composition` does so at startup
+(`configureNotificationAdminAuthorization`); without it every `broadcast/*`
+request answers `forbidden` whatever the session.
+
 ## Boundaries that are not accidents
 
 | Rule | Why |
 |---|---|
-| The service never receives users, product, or shard credentials | It resolves no identities; the main app sends it a uid list that is already authorised. |
+| The service never receives product or shard credentials | Fan-out resolves no identities from them. The users database and session secret are held only for the session-bound account surface. |
 | The service holds the Firebase and APNs credentials, the main app does not | Fan-out is the only thing that needs them. |
 | `architecture:check` does not scan `services/` | It enforces the main app's layering. The service's boundary is enforced by its own contract test instead. |

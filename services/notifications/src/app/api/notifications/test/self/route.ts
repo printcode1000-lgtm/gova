@@ -1,4 +1,4 @@
-import { assertSubmainEnv, createSubmainRuntime } from '@asol/submain-composition';
+import { assertNotificationsEnv, createNotificationsRuntime } from '@asol/notifications-composition';
 
 import { businessErrorResponse, corsHeaders, preflight, jsonResponse, readJsonBody } from '../../../../lib/http';
 
@@ -14,8 +14,8 @@ export const dynamic = 'force-dynamic';
  */
 export async function POST(request: Request): Promise<Response> {
   try {
-    const { account, devices } = createSubmainRuntime();
-    assertSubmainEnv();
+    const { account, devices } = createNotificationsRuntime();
+    assertNotificationsEnv();
 
     const claims = account.assertSignedIn(request);
     const rawBody = await readJsonBody<unknown>(request).catch(() => ({}));

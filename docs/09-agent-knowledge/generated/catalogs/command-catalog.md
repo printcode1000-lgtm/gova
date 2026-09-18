@@ -176,6 +176,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run services:sync` | `Tooling` | 1 |  | 0 |
 | `npm run services:verify` | `Tooling` | 1 |  | 0 |
 | `npm run smoke:deployed` | `Tooling` | 2 |  | 0 |
+| `npm run smoke:notifications` | `Tooling` | 1 |  | 0 |
 | `npm run smoke:owned-reads` | `Tooling` | 1 |  | 0 |
 | `npm run smoke:production` | `Tooling` | 1 |  | 0 |
 | `npm run smoke:services` | `Tooling` | 1 |  | 0 |
@@ -185,7 +186,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run submain:deploy` | `Independent services`, `Tooling` | 1 |  | 0 |
 | `npm run submain:recreate-vercel-project` | `Tooling`, `Web` | 1 |  | 0 |
 | `npm run test` | `Tooling` | 1 |  | 0 |
-| `npm run test:account-bridge` | `Tooling` | 3 |  | 0 |
+| `npm run test:account-bridge` | `Tooling` | 4 |  | 0 |
 | `npm run test:account-declarations` | `Tooling` | 1 |  | 0 |
 | `npm run test:account-deletion-registry` | `Tooling` | 1 |  | 0 |
 | `npm run test:account-deletion-schema` | `Tooling` | 1 |  | 1 |
@@ -231,7 +232,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:marketplace-orders` | `Tooling` | 11 |  | 1 |
 | `npm run test:mirror-status-parity` | `Tooling` | 1 |  | 0 |
 | `npm run test:native-core` | `Tooling` | 1 |  | 0 |
-| `npm run test:notifications` | `Tooling` | 28 |  | 5 |
+| `npm run test:notifications` | `Tooling` | 36 |  | 5 |
 | `npm run test:notifications-composition` | `Tooling` | 1 |  | 1 |
 | `npm run test:notifications-core` | `Tooling` | 1 |  | 1 |
 | `npm run test:observability-core` | `Tooling` | 1 |  | 0 |
@@ -267,7 +268,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:service-cors` | `Tooling` | 1 |  | 0 |
 | `npm run test:service-mirror-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:service-runtime-core` | `Tooling` | 1 |  | 0 |
-| `npm run test:settings-notifications` | `Tooling` | 2 |  | 0 |
+| `npm run test:settings-notifications` | `Tooling` | 3 |  | 0 |
 | `npm run test:shard-routing` | `Tooling` | 1 |  | 0 |
 | `npm run test:sharing` | `Tooling` | 2 |  | 0 |
 | `npm run test:shipping-pricing` | `Tooling` | 1 |  | 0 |

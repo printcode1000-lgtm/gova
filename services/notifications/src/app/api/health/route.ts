@@ -24,6 +24,12 @@ export function GET(): Response {
       // Only the private half is configuration; the public key and subject are constants in the
       // bundle, so there is nothing else here to be missing.
       webPush: process.env.WEB_PUSH_VAPID_PRIVATE_KEY,
+      // The session-bound account surface this deployment owns: identity checks
+      // read the users database, and every signed route verifies the session.
+      usersDatabase: process.env.TURSO_DATABASE_URL,
+      sessionSecret: process.env.ASOL_SESSION_SIGNING_SECRET,
+      // Native senders unlock their Firebase credentials here.
+      mobilePushUnlock: process.env.ASOL_MOBILE_PUSH_UNLOCK_KEY,
     },
   });
 }

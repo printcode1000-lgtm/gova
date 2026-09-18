@@ -107,8 +107,11 @@ async function runTests(): Promise<void> {
 
   // Test 2: Declarations purity & exact env key counts (C2 / 1.3)
   assert(GOVA_DECLARATION.project === 'gova', 'Gova project declaration');
-  assert(NOTIFICATIONS_DECLARATION.requiredEnv.length === 4, 'Notifications required env = 4');
-  assert(NOTIFICATIONS_DECLARATION.optionalEnv.length === 7, 'Notifications optional env = 7');
+  // 4 → 7 required, 7 → 9 optional: the account owns every `/api/notifications/**`
+  // route, so it holds the users database pair and the session signing secret,
+  // and optionally the mobile push unlock key and its server blob.
+  assert(NOTIFICATIONS_DECLARATION.requiredEnv.length === 7, 'Notifications required env = 7');
+  assert(NOTIFICATIONS_DECLARATION.optionalEnv.length === 9, 'Notifications optional env = 9');
   assert(PRODUCTS_DECLARATION.requiredEnv.length === 2, 'Products required env = 2');
   assert(PRODUCTS_DECLARATION.optionalEnv.length === 11, 'Products optional env = 11');
   assert(ORDERS_DECLARATION.requiredEnv.length === 18, 'Orders required env = 18');

@@ -15,6 +15,25 @@ import {
   readGrantsFromRequestBody,
   MAX_GRANTS_PER_REQUEST,
 } from '@asol/notifications-core/server';
+import {
+  configureNotificationAdminAuthorization,
+  mobilePushUnlockService,
+  notificationBroadcastService,
+  notificationRecipientTokensService,
+  notificationSelfTestService,
+  notificationTokenService,
+} from '@/features/notifications/server/services/notification-service.bootstrap.server';
+import { assertSignedInRequest } from '@/features/auth/server/session-request.server';
+import { assertSuperAdminRequest } from '@/features/super-admin/server/services/super-admin-auth.server';
+import { isSuperAdminIdentity } from '@/features/auth/domain/super-admin';
+
+/** Route input shapes, re-exported so a route needs one door. */
+export type {
+  BroadcastNotificationInput,
+  DeleteNotificationTokenInput,
+  NotificationTestInput,
+  RegisterNotificationTokenInput,
+} from '@asol/notifications-core';
 
 export interface NotificationsRuntimeConfig {
   /** Overrides the environment. Used by tests; production reads the declaration's keys. */
@@ -48,6 +67,37 @@ export interface NotificationsDeliveryTask {
   deliverGrants: typeof deliverNotificationGrants;
 }
 
+/** The verified signed session behind every account-facing notification route. */
+export interface NotificationsAccountTask {
+  assertSignedIn: typeof assertSignedInRequest;
+}
+
+/**
+ * Every account-facing notification surface: device registration, the account's
+ * device list, the push mute switch, the self and broadcast tests, broadcast
+ * recipients and sends, and the native sender's recipient tokens and unlock.
+ *
+ * They moved here so that this account owns the whole `/api/notifications/**`
+ * surface. That widened its credentials by decision: each surface resolves the
+ * caller against the users repository or a signed session, and unlock needs the
+ * server-only unlock key, so the account now holds the users database, the
+ * session signing secret, and that key alongside its own.
+ */
+export interface NotificationsDeviceTask {
+  registerDeviceToken: typeof notificationTokenService.register;
+  listAccountDevices: typeof notificationTokenService.listForAccount;
+  removeDeviceToken: typeof notificationTokenService.remove;
+  getPushPreference: typeof notificationTokenService.getPushPreference;
+  setPushPreference: typeof notificationTokenService.setPushPreference;
+  sendSelfTest: typeof notificationSelfTestService.send;
+  sendBroadcastTest: typeof notificationBroadcastService.sendTest;
+  listBroadcastRecipients: typeof notificationBroadcastService.listRecipients;
+  sendBroadcast: typeof notificationBroadcastService.send;
+  assertSuperAdmin: typeof assertSuperAdminRequest;
+  resolveRecipientTokens: typeof notificationRecipientTokensService.resolve;
+  unlockMobilePush: typeof mobilePushUnlockService.unlock;
+}
+
 export interface NotificationsConfigTask {
   serverEnv: typeof serverEnv;
 }
@@ -64,6 +114,8 @@ export interface NotificationsRuntime {
   accountName: string;
   crypto: NotificationsCryptoTask;
   delivery: NotificationsDeliveryTask;
+  account: NotificationsAccountTask;
+  devices: NotificationsDeviceTask;
   config: NotificationsConfigTask;
 }
 
@@ -110,6 +162,13 @@ function wireNotificationsCoreServerConfig(): void {
 wireNotificationsCoreServerConfig();
 
 /**
+ * Broadcast authorisation. The broadcast services fail closed until a root names
+ * the administrator; without this every `broadcast/*` and Super Admin test
+ * request answered `forbidden` on an isolated account, whatever the session.
+ */
+configureNotificationAdminAuthorization(({ uid, phone }) => isSuperAdminIdentity(uid, phone));
+
+/**
  * Register `@asol/data-core`'s runtime-config port.
  *
  * The main application does this from `src/instrumentation.ts`. An isolated
@@ -134,6 +193,22 @@ export function createNotificationsRuntime(
       maxGrantsPerRequest: MAX_GRANTS_PER_REQUEST,
     },
     delivery: { deliverGrants: deliverNotificationGrants },
+    account: { assertSignedIn: assertSignedInRequest },
+    devices: {
+      registerDeviceToken: (input) => notificationTokenService.register(input),
+      listAccountDevices: (identity) => notificationTokenService.listForAccount(identity),
+      removeDeviceToken: (input) => notificationTokenService.remove(input),
+      getPushPreference: (uid, phone) => notificationTokenService.getPushPreference(uid, phone),
+      setPushPreference: (uid, phone, pushEnabled) =>
+        notificationTokenService.setPushPreference(uid, phone, pushEnabled),
+      sendSelfTest: (input) => notificationSelfTestService.send(input),
+      sendBroadcastTest: (input) => notificationBroadcastService.sendTest(input),
+      listBroadcastRecipients: (identity) => notificationBroadcastService.listRecipients(identity),
+      sendBroadcast: (input) => notificationBroadcastService.send(input),
+      assertSuperAdmin: assertSuperAdminRequest,
+      resolveRecipientTokens: (input) => notificationRecipientTokensService.resolve(input),
+      unlockMobilePush: (input) => mobilePushUnlockService.unlock(input),
+    },
     config: { serverEnv },
   };
 }

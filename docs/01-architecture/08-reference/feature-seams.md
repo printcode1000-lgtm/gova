@@ -9,12 +9,16 @@ The only exact application paths listed here belong to composition/service-mirro
 
 - `packages/architecture-core/src/registry/composition-feature-seams-registry.ts`
 
-Current inventory: **52** exact composition seam path(s).
+Current inventory: **54** exact composition seam path(s).
 
 | Composition package | Exact application module |
 | --- | --- |
 | `control-composition` | `@/features/data/ports/data-core-runtime-config-ports` |
 | `notifications-composition` | `@/features/data/ports/data-core-runtime-config-ports` |
+| `notifications-composition` | `@/features/notifications/server/services/notification-service.bootstrap.server` |
+| `notifications-composition` | `@/features/auth/server/session-request.server` |
+| `notifications-composition` | `@/features/super-admin/server/services/super-admin-auth.server` |
+| `notifications-composition` | `@/features/auth/domain/super-admin` |
 | `orders-composition` | `@/features/auth/domain/super-admin` |
 | `orders-composition` | `@/features/data/ports/data-core-runtime-config-ports` |
 | `products-composition` | `@/features/product/server/services/product-service.server` |
@@ -43,10 +47,8 @@ Current inventory: **52** exact composition seam path(s).
 | `submain-composition` | `@/features/advertisements/server/services/featured-marquee-service.server` |
 | `submain-composition` | `@/features/advertisements/server/services/trending-ribbon-service.server` |
 | `submain-composition` | `@/features/specialty-chat/server/services/specialty-chat-service.server` |
-| `submain-composition` | `@/features/notifications/server/services/notification-service.bootstrap.server` |
 | `submain-composition` | `@/features/notifications/ports/notifications-core-ports` |
 | `submain-composition` | `@/features/storage/ports/storage-core-ports` |
-| `submain-composition` | `@/features/super-admin/server/services/super-admin-auth.server` |
 | `submain-composition` | `@/features/orders/application/order-detail-loader.server` |
 | `submain-composition` | `@/features/orders/application/order-actions.server` |
 | `submain-composition` | `@/features/orders/application/order-action-grants.server` |

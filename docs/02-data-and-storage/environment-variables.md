@@ -193,15 +193,18 @@ Which deployment gets what:
 | `TURSO_NOTIFICATIONS_DATABASE_URL` / `_AUTH_TOKEN` | yes — token CRUD, recipients | yes — resolves tokens to send |
 | `ASOL_NOTIFICATION_GRANT_SECRET` | yes — signs grants | yes — verifies them |
 | `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | yes — client-safe | **no** — it is the service |
-| `ASOL_MOBILE_PUSH_UNLOCK_KEY` | yes — server only, unlock route | **no** |
-| `ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` | yes — server mismatch guard | **no** |
+| `ASOL_MOBILE_PUSH_UNLOCK_KEY` | yes — server only, unlock route (Development) | **yes** — serves unlock in production |
+| `ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` | yes — server mismatch guard | optional — mismatch guard |
 | `NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` | yes — baked into static/Capacitor bundles | **no** |
 | `FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64`, `APNS_*`, `WEB_PUSH_VAPID_PRIVATE_KEY` | not needed for web bridge; source for `provision:mobile-push` | yes — web fan-out |
-| `TURSO_DATABASE_URL`, product, advertisements, shards | yes | **no** |
+| `TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN` (users), `ASOL_SESSION_SIGNING_SECRET` | yes | **yes** — session-bound notification routes |
+| Product, advertisements, shards | yes | **no** |
 
-The notifications account never receives users, product, or shard credentials.
-`sendToUsersLocally` needs only the notifications database, so identity checks
-and recipient enrichment stay on the main app.
+The notifications account never receives product or shard credentials.
+`sendToUsersLocally` needs only the notifications database; the users database
+and session secret are there for the session-bound routes the account owns
+(device registration, device list, preferences, tests, broadcast, and the native
+sender's recipient tokens and unlock).
 
 **Native mobile push credentials** are provisioned on the main app only. Run
 `npm run provision:mobile-push` locally (requires `FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64`

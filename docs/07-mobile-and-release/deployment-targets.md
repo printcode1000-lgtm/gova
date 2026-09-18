@@ -648,6 +648,8 @@ vercel deploy --prod                                    # upload services/notifi
 ```
 
 No schema sync and no page prerendering, so this build touches no database at
-all — which is why the notifications account holds no users, product, or shard
-credentials. See
+all. At runtime the account reads its notifications database and, for the
+session-bound `/api/notifications/**` routes it owns, the users database and the
+session signing secret — a deliberate widening so one account owns the whole
+notification surface. It still holds no product or shard credentials. See
 [Notifications Service Module](../05-platform-features/notifications-service-module.md).

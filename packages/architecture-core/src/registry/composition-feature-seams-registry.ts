@@ -15,6 +15,13 @@ export const COMPOSITION_FEATURE_SEAMS = {
   ],
   'notifications-composition': [
     '@/features/data/ports/data-core-runtime-config-ports',
+    // The account owns every `/api/notifications/**` route, including the
+    // session-bound ones, so it reaches the exact service, session and super
+    // admin doors those routes need — never the feature barrels.
+    '@/features/notifications/server/services/notification-service.bootstrap.server',
+    '@/features/auth/server/session-request.server',
+    '@/features/super-admin/server/services/super-admin-auth.server',
+    '@/features/auth/domain/super-admin',
   ],
   'orders-composition': [
     '@/features/auth/domain/super-admin',
@@ -59,12 +66,10 @@ export const COMPOSITION_FEATURE_SEAMS = {
     '@/features/advertisements/server/services/featured-marquee-service.server',
     '@/features/advertisements/server/services/trending-ribbon-service.server',
     '@/features/specialty-chat/server/services/specialty-chat-service.server',
-    '@/features/notifications/server/services/notification-service.bootstrap.server',
-    // submain owns session-bound notification routes; this exact registrar wires
-    // notifications-core without importing the broad feature barrel into the mirror.
+    // Orders and specialty chat issue notification grants; this exact registrar
+    // wires notifications-core without importing the broad feature barrel.
     '@/features/notifications/ports/notifications-core-ports',
     '@/features/storage/ports/storage-core-ports',
-    '@/features/super-admin/server/services/super-admin-auth.server',
     '@/features/orders/application/order-detail-loader.server',
     '@/features/orders/application/order-actions.server',
     '@/features/orders/application/order-action-grants.server',

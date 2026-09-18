@@ -50,7 +50,11 @@ function allSourceFiles(dir: string): string[] {
  * privilege leak, not a refactor.
  */
 const EXPECTED_KEY_COUNTS: Record<string, number> = {
-  notifications: 11,
+  // 11 → 16, justified: the account took ownership of every
+  // `/api/notifications/**` route, and the session-bound ones need the users
+  // database pair, the session signing secret, and the mobile push unlock key
+  // with its optional server blob. Authorised as a deliberate widening.
+  notifications: 16,
   products: 13,
   orders: 18,
   profiles: 21,
