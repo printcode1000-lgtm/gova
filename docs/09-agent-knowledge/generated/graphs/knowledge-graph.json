@@ -10893,6 +10893,7 @@
         "scripts/probe-notifications-service.ts",
         "scripts/provision-mobile-push-credentials",
         "scripts/provision-mobile-push-credentials.ts",
+        "services/submain",
         "ships",
         "src/features/notification-bridge/",
         "test",
@@ -13237,6 +13238,7 @@
         "packages/notifications-core/src/domain/notification-sound.ts",
         "plugin",
         "push",
+        "services/submain",
         "states",
         "terminated",
         "the",
@@ -15517,6 +15519,7 @@
         "scripts/route-ownership-coverage.ts",
         "scripts/tests/route-ownership-coverage",
         "scripts/tests/route-ownership-coverage.test.ts",
+        "services/submain",
         "services/submain/src/app/api/notifications/preferences/route",
         "services/submain/src/app/api/notifications/preferences/route.ts",
         "ship",
@@ -29045,6 +29048,17 @@
       ]
     },
     {
+      "id": "source:packages/account-bridge/src/mobile-push/session-route.ts",
+      "kind": "source",
+      "name": "session-route.ts",
+      "path": "packages/account-bridge/src/mobile-push/session-route.ts",
+      "tags": [
+        "packages/account-bridge/src/mobile-push/session-route",
+        "packages/account-bridge/src/mobile-push/session-route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/account-bridge/src/mobile-push/types.ts",
       "kind": "source",
       "name": "types.ts",
@@ -40343,6 +40357,17 @@
       ]
     },
     {
+      "id": "source:services/submain/src/app/api/notifications/mobile-push/unlock/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/notifications/mobile-push/unlock/route.ts",
+      "tags": [
+        "services/submain/src/app/api/notifications/mobile-push/unlock/route",
+        "services/submain/src/app/api/notifications/mobile-push/unlock/route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:services/submain/src/app/api/notifications/preferences/route.ts",
       "kind": "source",
       "name": "route.ts",
@@ -40350,6 +40375,17 @@
       "tags": [
         "services/submain/src/app/api/notifications/preferences/route",
         "services/submain/src/app/api/notifications/preferences/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/notifications/recipient-tokens/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/notifications/recipient-tokens/route.ts",
+      "tags": [
+        "services/submain/src/app/api/notifications/recipient-tokens/route",
+        "services/submain/src/app/api/notifications/recipient-tokens/route.ts",
         "ts"
       ]
     },
@@ -71280,6 +71316,12 @@
     },
     {
       "from": "document:docs/05-platform-features/notification-bridge-module.md",
+      "to": "service:submain",
+      "kind": "references",
+      "detail": "services/submain"
+    },
+    {
+      "from": "document:docs/05-platform-features/notification-bridge-module.md",
       "to": "source:packages/account-bridge/src/mobile-push/deliver.ts",
       "kind": "references",
       "detail": "packages/account-bridge/src/mobile-push/deliver.ts"
@@ -73999,6 +74041,12 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/android-push-notifications.md",
+      "to": "service:submain",
+      "kind": "references",
+      "detail": "services/submain"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/capacitor/android-push-notifications.md",
       "to": "source:android/app/build.gradle",
       "kind": "references",
       "detail": "android/app"
@@ -76126,6 +76174,12 @@
       "to": "script:scripts/route-ownership-coverage.ts",
       "kind": "references",
       "detail": "scripts/route-ownership-coverage.ts"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/owned-route-not-shipped.md",
+      "to": "service:submain",
+      "kind": "references",
+      "detail": "services/submain"
     },
     {
       "from": "document:docs/08-troubleshooting/problems/owned-route-not-shipped.md",
@@ -78637,6 +78691,12 @@
     {
       "from": "domain:architecture",
       "to": "source:packages/account-bridge/src/mobile-push/provider-payload.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "source:packages/account-bridge/src/mobile-push/session-route.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -90654,7 +90714,19 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/notifications/mobile-push/unlock/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "source:services/submain/src/app/api/notifications/preferences/route.ts",
+      "kind": "documents",
+      "detail": "services/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "source:services/submain/src/app/api/notifications/recipient-tokens/route.ts",
       "kind": "documents",
       "detail": "services/"
     },
@@ -115634,13 +115706,31 @@
     },
     {
       "from": "route:/api/notifications/mobile-push/unlock:handler",
+      "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/notifications/mobile-push/unlock:handler",
       "to": "feature:notifications",
       "kind": "related-to",
       "detail": "route source dependency"
     },
     {
       "from": "route:/api/notifications/mobile-push/unlock:handler",
+      "to": "feature:storage",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/notifications/mobile-push/unlock:handler",
       "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/notifications/mobile-push/unlock:handler",
+      "to": "feature:verification",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -115940,13 +116030,31 @@
     },
     {
       "from": "route:/api/notifications/recipient-tokens:handler",
+      "to": "feature:auth",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/notifications/recipient-tokens:handler",
       "to": "feature:notifications",
       "kind": "related-to",
       "detail": "route source dependency"
     },
     {
       "from": "route:/api/notifications/recipient-tokens:handler",
+      "to": "feature:storage",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/notifications/recipient-tokens:handler",
       "to": "feature:system-logs",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/notifications/recipient-tokens:handler",
+      "to": "feature:verification",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -138178,6 +138286,12 @@
     },
     {
       "from": "source:packages/account-bridge/src/mobile-push/deliver.ts",
+      "to": "source:packages/account-bridge/src/mobile-push/session-route.ts",
+      "kind": "imports",
+      "detail": "./session-route"
+    },
+    {
+      "from": "source:packages/account-bridge/src/mobile-push/deliver.ts",
       "to": "source:packages/account-bridge/src/mobile-push/types.ts",
       "kind": "imports",
       "detail": "./types"
@@ -138274,9 +138388,21 @@
     },
     {
       "from": "source:packages/account-bridge/src/mobile-push/enrollment.ts",
+      "to": "source:packages/account-bridge/src/mobile-push/session-route.ts",
+      "kind": "imports",
+      "detail": "./session-route"
+    },
+    {
+      "from": "source:packages/account-bridge/src/mobile-push/enrollment.ts",
       "to": "source:packages/account-bridge/src/mobile-push/types.ts",
       "kind": "imports",
       "detail": "./types"
+    },
+    {
+      "from": "source:packages/account-bridge/src/mobile-push/enrollment.ts",
+      "to": "source:packages/account-bridge/src/ports/app-bridge.ts",
+      "kind": "imports",
+      "detail": "../ports/app-bridge"
     },
     {
       "from": "source:packages/account-bridge/src/mobile-push/fcm-auth.ts",
@@ -138415,6 +138541,54 @@
       "to": "source:packages/account-bridge/src/mobile-push/types.ts",
       "kind": "imports",
       "detail": "./types"
+    },
+    {
+      "from": "source:packages/account-bridge/src/mobile-push/session-route.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/account-bridge/src/mobile-push/session-route.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/account-bridge/src/mobile-push/session-route.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/account-bridge/src/mobile-push/session-route.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/account-bridge/src/mobile-push/session-route.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:packages/account-bridge/src/mobile-push/session-route.ts",
+      "to": "package:@asol/account-bridge",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:packages/account-bridge/src/mobile-push/session-route.ts",
+      "to": "source:packages/account-bridge/src/index.ts",
+      "kind": "imports",
+      "detail": "../index"
+    },
+    {
+      "from": "source:packages/account-bridge/src/mobile-push/session-route.ts",
+      "to": "source:packages/account-bridge/src/mobile-push/types.ts",
+      "kind": "imports",
+      "detail": "./types"
+    },
+    {
+      "from": "source:packages/account-bridge/src/mobile-push/session-route.ts",
+      "to": "source:packages/account-bridge/src/ports/app-bridge.ts",
+      "kind": "imports",
+      "detail": "../ports/app-bridge"
     },
     {
       "from": "source:packages/account-bridge/src/mobile-push/types.ts",
@@ -179471,6 +179645,28 @@
       "detail": "../../../lib/http"
     },
     {
+      "from": "source:services/submain/src/app/api/notifications/mobile-push/unlock/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/notifications/mobile-push/unlock/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/notifications/mobile-push/unlock/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/notifications/mobile-push/unlock/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../../lib/http"
+    },
+    {
       "from": "source:services/submain/src/app/api/notifications/preferences/route.ts",
       "to": "runtime:services",
       "kind": "affects-runtime"
@@ -179488,6 +179684,28 @@
     },
     {
       "from": "source:services/submain/src/app/api/notifications/preferences/route.ts",
+      "to": "source:services/submain/src/app/lib/http.ts",
+      "kind": "imports",
+      "detail": "../../../lib/http"
+    },
+    {
+      "from": "source:services/submain/src/app/api/notifications/recipient-tokens/route.ts",
+      "to": "runtime:services",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:services/submain/src/app/api/notifications/recipient-tokens/route.ts",
+      "to": "service:submain",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:services/submain/src/app/api/notifications/recipient-tokens/route.ts",
+      "to": "package:@asol/submain-composition",
+      "kind": "imports",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "source:services/submain/src/app/api/notifications/recipient-tokens/route.ts",
       "to": "source:services/submain/src/app/lib/http.ts",
       "kind": "imports",
       "detail": "../../../lib/http"
@@ -181121,6 +181339,12 @@
     },
     {
       "from": "source:src/app/api/notifications/mobile-push/unlock/route.ts",
+      "to": "source:src/features/auth/server.ts",
+      "kind": "imports",
+      "detail": "@/features/auth/server"
+    },
+    {
+      "from": "source:src/app/api/notifications/mobile-push/unlock/route.ts",
       "to": "source:src/features/notifications/server.ts",
       "kind": "imports",
       "detail": "@/features/notifications/server"
@@ -181174,6 +181398,12 @@
       "to": "source:src/core/api/traced-route.ts",
       "kind": "imports",
       "detail": "@/core/api/traced-route"
+    },
+    {
+      "from": "source:src/app/api/notifications/recipient-tokens/route.ts",
+      "to": "source:src/features/auth/server.ts",
+      "kind": "imports",
+      "detail": "@/features/auth/server"
     },
     {
       "from": "source:src/app/api/notifications/recipient-tokens/route.ts",
@@ -202253,6 +202483,12 @@
     },
     {
       "from": "source:src/features/notifications/application/device-token-service.ts",
+      "to": "source:src/features/notifications/domain/notification-grant-delivery-context.ts",
+      "kind": "imports",
+      "detail": "../domain/notification-grant-delivery-context"
+    },
+    {
+      "from": "source:src/features/notifications/application/device-token-service.ts",
       "to": "source:src/features/notifications/domain/notification-redaction.ts",
       "kind": "imports",
       "detail": "../domain/notification-redaction"
@@ -205673,9 +205909,21 @@
     },
     {
       "from": "source:src/features/notifications/server/services/notification-service.bootstrap.server.ts",
+      "to": "source:src/features/notifications/server/services/mobile-push-unlock.service.server.ts",
+      "kind": "imports",
+      "detail": "./mobile-push-unlock.service.server"
+    },
+    {
+      "from": "source:src/features/notifications/server/services/notification-service.bootstrap.server.ts",
       "to": "source:src/features/notifications/server/services/notification-broadcast-service.server.ts",
       "kind": "imports",
       "detail": "./notification-broadcast-service.server"
+    },
+    {
+      "from": "source:src/features/notifications/server/services/notification-service.bootstrap.server.ts",
+      "to": "source:src/features/notifications/server/services/notification-recipient-tokens.service.server.ts",
+      "kind": "imports",
+      "detail": "./notification-recipient-tokens.service.server"
     },
     {
       "from": "source:src/features/notifications/server/services/notification-service.bootstrap.server.ts",

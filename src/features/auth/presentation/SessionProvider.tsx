@@ -81,7 +81,11 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (session !== null && isLoggedIn(session)) {
-      setNotificationGrantDeliveryIdentity({ uid: session.uid, phone: session.phone });
+      setNotificationGrantDeliveryIdentity({
+        uid: session.uid,
+        phone: session.phone,
+        sessionToken: session.sessionToken ?? '',
+      });
       return;
     }
     setNotificationGrantDeliveryIdentity(null);

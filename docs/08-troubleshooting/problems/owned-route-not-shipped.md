@@ -116,6 +116,33 @@ runtime, so the per-database guards that refused a remote read during developmen
 no longer exist and the registrar takes no options. There is nothing left to pin,
 and nothing left to forget to pin.
 
+## Working the backlog down: the native sender's two routes
+
+Android and iOS send FCM from the device, and before each send they call
+`POST /api/notifications/recipient-tokens` (and, with an empty credential cache,
+`POST /api/notifications/mobile-push/unlock`). The `/api/notifications/**`
+catch-all gave both to `notifications`, which ships only `/send`, so on the
+installed shell the self-test and every product push were silently
+`unavailable`: the business API succeeded, and delivery never started.
+
+Neither could be shipped on `asol-notifications`: both resolve the caller
+against the users repository, and unlock needs `ASOL_MOBILE_PUSH_UNLOCK_KEY`.
+Ownership moved to `submain` beside `device-token` and `preferences`;
+`@asol/submain-composition` gained `devices.resolveRecipientTokens` and
+`devices.unlockMobilePush`; `services/submain` ships both routes.
+
+The move also closed a weakness the `404` had been hiding. Both routes used to
+take `uid`/`phone` from the JSON body, and unlock answers with a Firebase Admin
+private key — so anyone who knew a user's uid and phone could obtain it. Both
+now authorise with the signed session (`x-asol-session-token`) and read the
+identity from the verified claims only. The device sends the header through
+`postSessionRoute` and calls the owner origin directly rather than relying on a
+cross-origin `307`.
+
+Operational requirement: `ASOL_MOBILE_PUSH_UNLOCK_KEY` (and the optional
+`ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` guard) must be set on `asol-submain`;
+otherwise unlock answers `503 mobilePushUnlockNotConfigured`.
+
 ## What now sweeps the whole surface
 
 `npm run smoke:owned-reads` (`scripts/check-owned-route-reads.ts`, and part of

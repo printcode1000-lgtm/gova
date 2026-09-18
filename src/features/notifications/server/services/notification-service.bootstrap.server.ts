@@ -15,3 +15,10 @@ import { NotificationSelfTestService } from './notification-self-test.service.se
 export const notificationTokenService = new NotificationTokenService();
 export const notificationBroadcastService = new NotificationBroadcastService();
 export const notificationSelfTestService = new NotificationSelfTestService();
+
+/**
+ * The native sender's two session-bound services. Re-exported, not rebuilt, so
+ * the application and an isolated composition root share one instance each.
+ */
+export { notificationRecipientTokensService } from './notification-recipient-tokens.service.server';
+export { mobilePushUnlockService } from './mobile-push-unlock.service.server';

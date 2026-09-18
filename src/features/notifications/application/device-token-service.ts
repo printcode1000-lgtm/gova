@@ -12,6 +12,7 @@ import { webPushBrowserService } from "../infrastructure/web-push/web-push-brows
 import { notificationApiService } from "../infrastructure/http/notification-api-service";
 import { ensureMobilePushCredentials } from '@asol/account-bridge/notifications';
 import { SingleFlight } from "../infrastructure/concurrency/keyed-mutex";
+import { getNotificationGrantDeliveryIdentity } from "../domain/notification-grant-delivery-context";
 
 /**
  * This device's push registration.
@@ -67,9 +68,13 @@ export class DeviceTokenService {
       deviceLabel: token.deviceLabel,
     });
     await asolNotificationRepository.saveDeviceToken(token);
-    if (nativePushService.isNativePush()) {
+    // Unlock authorises with the signed session, so it runs only once the
+    // session that owns this token is the one carrying grants on this device;
+    // otherwise the first native send unlocks instead.
+    const identity = getNotificationGrantDeliveryIdentity();
+    if (nativePushService.isNativePush() && identity?.uid === token.uid) {
       try {
-        await ensureMobilePushCredentials({ uid: token.uid, phone });
+        await ensureMobilePushCredentials(identity);
       } catch (error) {
         notificationLog.warn(
           "Mobile push credentials could not be unlocked for this device.",
@@ -219,25 +224,47 @@ export class DeviceTokenService {
       }
       return;
     }
-    await webPushBrowserService.subscribe(safeUid, safePhone);
+    await this.subscribeBrowser(safeUid, safePhone);
   }
 
   /**
-   * Repair a native registration whose local state and server row diverged
+   * Subscribe this browser and record the server-accepted row locally, so the
+   * settings surface can prove this browser is the account device it lists —
+   * the same local record a native registration keeps.
+   */
+  private async subscribeBrowser(
+    uid: string,
+    phone: string,
+  ): Promise<DeviceToken> {
+    const { registered } = await webPushBrowserService.subscribe(uid, phone);
+    await asolNotificationRepository.saveDeviceToken(registered);
+    return registered;
+  }
+
+  /**
+   * Repair a registration whose local state and server row diverged
    * (deployment rollback, token rotation, or a failed prior POST). Permission
    * alone is not proof of addressability, so this deliberately re-registers
-   * with FCM/APNs and upserts the server row.
+   * with FCM/APNs — or re-sends the existing Web Push subscription, including
+   * one made before browsers kept a local record — and upserts the server row.
    */
   async reconcile(uid: string, phone: string): Promise<DeviceToken | null> {
     const safeUid = assertUid(uid);
     const safePhone = assertPhone(phone);
-    if (!nativePushService.isNativePush()) return null;
-    if ((await nativePushService.permissionState()) !== "granted") return null;
+    if (!nativePushService.isNativePush()) {
+      // Only an existing subscription is repaired: reconciliation never
+      // subscribes a browser the user did not opt in.
+      if (!(await webPushBrowserService.hasSubscription())) return null;
+    } else if ((await nativePushService.permissionState()) !== "granted") {
+      return null;
+    }
     try {
       // Reconciliation is explicit repair, so it must also recover the legacy
       // state where a failed registration already rolled the native opt-in flag
       // off but Android permission is still granted.
-      return await this.register(safeUid, safePhone);
+      return nativePushService.isNativePush()
+        ? await this.register(safeUid, safePhone)
+        : await this.subscribeBrowser(safeUid, safePhone);
     } catch (error) {
       // Repair must fail closed too. A stale local token from an older build
       // cannot survive a failed reconciliation and masquerade as server-backed.

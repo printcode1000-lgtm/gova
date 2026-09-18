@@ -5,11 +5,9 @@ import { ensureMobilePushCredentials } from './enrollment';
 import { getFcmAccessToken } from './fcm-auth';
 import { sendProviderPayloadToTokens } from './fcm-message';
 import { buildMobileProviderPayload } from './provider-payload';
-import {
-  resolveMainApiBaseUrl,
-  type RecipientTokensApiResponse,
-  type RecipientTokenRecord,
-} from './types';
+import type { NotificationGrantDeliveryIdentity } from '../ports/app-bridge';
+import { postSessionRoute } from './session-route';
+import type { RecipientTokensApiResponse, RecipientTokenRecord } from './types';
 
 const RECIPIENT_TOKENS_PATH = '/api/notifications/recipient-tokens';
 const MAX_PARALLEL_GRANTS = 100;
@@ -26,18 +24,12 @@ function recipientStatus(
 }
 
 async function fetchRecipientTokens(
-  identity: { uid: string; phone: string },
+  identity: NotificationGrantDeliveryIdentity,
   grants: string[],
 ): Promise<RecipientTokensApiResponse | null> {
-  const baseUrl = resolveMainApiBaseUrl();
-  if (!baseUrl) return null;
-  const response = await fetch(`${baseUrl}${RECIPIENT_TOKENS_PATH}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-    body: JSON.stringify({ ...identity, grants }),
-    credentials: 'omit',
-    cache: 'no-store',
-  });
+  const request = postSessionRoute(RECIPIENT_TOKENS_PATH, identity, { grants });
+  if (!request) return null;
+  const response = await request;
   if (!response.ok) return null;
   const body = (await response.json()) as RecipientTokensApiResponse;
   return body;

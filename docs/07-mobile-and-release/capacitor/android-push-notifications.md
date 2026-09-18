@@ -103,16 +103,19 @@ only. The WebView never ships `ASOL_MOBILE_PUSH_UNLOCK_KEY`.
 
 1. Loads Capacitor Preferences `asol.mobilePush.credentials.v1`. If decrypt
    succeeds, it returns that bundle and **does not** call the server.
-2. Otherwise POSTs `{ uid, phone, credentialBlob }` to the **main app**
-   `POST /api/notifications/mobile-push/unlock` (`credentials: 'omit'`).
+2. Otherwise POSTs `{ credentialBlob }` with the signed session header
+   `x-asol-session-token` to `POST /api/notifications/mobile-push/unlock` on
+   its owner, `asol-submain` (`credentials: 'omit'`). With no session on this
+   device, unlock is skipped.
 3. On HTTP success, keeps `{ projectId, clientEmail, privateKey }`, re-encrypts
    with a device-local AES-GCM key (`asol.mobilePush.deviceKey.v1`), and stores
    the ciphertext in Preferences.
 
 Callers in current code:
 
-- `DeviceTokenService.persist` after a native FCM token is registered (unlock
-  failure is logged; registration still succeeds).
+- `DeviceTokenService.persist` after a native FCM token is registered, once the
+  session owning that token is the delivery identity (unlock failure is logged;
+  registration still succeeds).
 - `deliverNotificationGrantsFromNative` before every grant fan-out if the cache
   is empty.
 
@@ -121,13 +124,20 @@ Preference keys. The next native send or register must unlock again.
 
 Server unlock (`MobilePushUnlockService`): requires the unlock key; rejects a
 blob shorter than 40 characters; if the optional server blob is set, requires
-byte-identical ciphertext; requires `uid`/`phone` to match
-`GetNotificationUserIdentityQuery`. Ciphertext layout:
+byte-identical ciphertext; requires the **verified session's** `uid`/`phone`
+to match `GetNotificationUserIdentityQuery`. The route never reads an identity
+from the body: uid and phone are guessable, and the answer is an Admin key. Ciphertext layout:
 `base64(iv[12] + authTag[16] + ciphertext)`.
 
 The unlock HTTP handlers are App Router routes. They are **not** inside `out/`.
-Production Android uses the configured remote main-app API origin
-(`resolveMainApiBaseUrl`).
+Both native-sender routes are owned by `submain` in the route registry and
+served from `services/submain`, which holds the users database, the
+notifications database, the session signing secret, and — for unlock —
+`ASOL_MOBILE_PUSH_UNLOCK_KEY` (and optionally `ASOL_MOBILE_PUSH_CREDENTIAL_BLOB`)
+on the `asol-submain` Vercel project. The device calls the owner origin directly
+(`postSessionRoute`); `resolveMainApiBaseUrl` is only the fallback for an
+unconfigured owner. They were previously owned by the `notifications` catch-all
+and answered `404` there.
 
 ### What still hits the main app on every send
 
@@ -145,8 +155,8 @@ Knowing an FCM registration token is **not** enough for the product path.
    `POST https://oauth2.googleapis.com/token`. Access tokens are cached **in
    the WebView process memory** until `expires_in` minus 60 seconds; they are
    not stored in Preferences.
-5. `POST /api/notifications/recipient-tokens` with `{ uid, phone, grants }`
-   (`credentials: 'omit'`), at most 100 grants (`MAX_GRANTS_PER_REQUEST` /
+5. `POST /api/notifications/recipient-tokens` with `{ grants }` and the
+   `x-asol-session-token` header (`credentials: 'omit'`), at most 100 grants (`MAX_GRANTS_PER_REQUEST` /
    `MAX_PARALLEL_GRANTS`).
 
 `NotificationRecipientTokensService.resolve` verifies each grant HMAC, requires
@@ -470,10 +480,11 @@ See [Unified Verification System](../../05-platform-features/unified-verificatio
   users database and validate platform/provider pairs and input sizes.
 - **Web send:** the notifications service holds `FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64`.
   The browser never receives that JSON. Grants are the send authority.
-- **Android outbound send:** the main app decrypts the embedded blob only after
-  the same `uid`/`phone` identity check. After unlock, the WebView stores the
-  Admin key material re-encrypted in Preferences. Unlock and recipient-tokens
-  use `credentials: 'omit'`; identity is the JSON body, not a session cookie.
+- **Android outbound send:** `asol-submain` decrypts the embedded blob only
+  for a verified signed session whose `uid`/`phone` match the users repository.
+  After unlock, the WebView stores the Admin key material re-encrypted in
+  Preferences. Unlock and recipient-tokens use `credentials: 'omit'`; identity
+  is the `x-asol-session-token` header, never the JSON body.
 - Super-admin broadcast remains a server identity check and server delivery.
 - **Verification SMS dispatch:** the signal carries no OTP, number, or SMS body —
   only opaque ids and a short-lived ticket that is useless without the redeem

@@ -121,4 +121,19 @@ assert.equal(selfTestNotificationContent(undefined).title, selfTestNotificationC
 assert.equal(SELF_TEST_NOTIFICATION_DELIVERY.routeHref, "/settings/notifications");
 assert.equal(SELF_TEST_NOTIFICATION_SOURCE, "account_notification_self_test");
 
+// The settings page confirms this device by a local deviceId that the server
+// also lists. A browser must keep that local record too, and reconciliation must
+// repair an existing subscription without ever creating one.
+const deviceTokenService = source(
+  "src/features/notifications/application/device-token-service.ts",
+);
+assert.match(
+  deviceTokenService,
+  /webPushBrowserService\.subscribe\(uid, phone\);\s*await asolNotificationRepository\.saveDeviceToken\(registered\)/,
+);
+assert.match(
+  deviceTokenService,
+  /if \(!\(await webPushBrowserService\.hasSubscription\(\)\)\) return null;/,
+);
+
 console.log("Notification account surface tests passed.");

@@ -174,7 +174,9 @@ export class WebPushBrowserService {
     }
     const deviceId = await getDeviceId();
     const token = JSON.stringify(subscription.toJSON());
-    await notificationApiService.registerToken({
+    // The server's accepted row is returned so the caller can record this
+    // browser locally, exactly as a native registration is recorded.
+    const registered = await notificationApiService.registerToken({
       uid,
       phone,
       platform: NotificationPlatforms.Web,
@@ -184,7 +186,7 @@ export class WebPushBrowserService {
       locale: await readNotificationLocale(),
       deviceLabel: "Browser",
     });
-    return { deviceId, subscription };
+    return { deviceId, subscription, registered };
   }
 
   /**

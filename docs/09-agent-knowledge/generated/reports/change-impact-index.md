@@ -12,7 +12,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `account-bridge` | feature | 1 | 0 | 2 | 0 | 0 | 2 |
 | `advertisements` | feature | 2 | 2 | 18 | 0 | 4 | 13 |
 | `app-reset` | feature | 1 | 0 | 5 | 0 | 2 | 2 |
-| `auth` | feature | 2 | 5 | 99 | 0 | 20 | 18 |
+| `auth` | feature | 2 | 5 | 101 | 0 | 20 | 18 |
 | `cart` | feature | 1 | 4 | 10 | 0 | 5 | 11 |
 | `catalog-studio` | feature | 2 | 1 | 3 | 0 | 0 | 7 |
 | `categories` | feature | 4 | 0 | 44 | 0 | 13 | 7 |
@@ -47,11 +47,11 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `sharing` | feature | 1 | 1 | 6 | 0 | 2 | 11 |
 | `specialty-chat` | feature | 3 | 1 | 14 | 0 | 5 | 14 |
 | `splash` | feature | 1 | 0 | 1 | 0 | 0 | 6 |
-| `storage` | feature | 1 | 1 | 41 | 0 | 11 | 6 |
+| `storage` | feature | 1 | 1 | 43 | 0 | 11 | 6 |
 | `super-admin` | feature | 2 | 6 | 42 | 0 | 3 | 23 |
 | `system-logs` | feature | 1 | 2 | 121 | 0 | 10 | 11 |
 | `vehicle-catalog` | feature | 2 | 0 | 2 | 0 | 1 | 1 |
-| `verification` | feature | 2 | 1 | 34 | 0 | 3 | 5 |
+| `verification` | feature | 2 | 1 | 36 | 0 | 3 | 5 |
 | `voice-input` | feature | 1 | 0 | 0 | 0 | 0 | 2 |
 | `@asol/account-bridge` | package | 18 | 8 | 26 | 0 | 26 | 4 |
 | `@asol/account-declarations` | package | 14 | 9 | 16 | 0 | 39 | 0 |
@@ -97,7 +97,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/storage-core` | package | 34 | 22 | 126 | 0 | 53 | 5 |
 | `@asol/storage-image-manager-core` | package | 10 | 2 | 20 | 0 | 18 | 8 |
 | `@asol/sub2main-composition` | package | 7 | 1 | 0 | 0 | 9 | 7 |
-| `@asol/submain-composition` | package | 9 | 3 | 0 | 0 | 40 | 18 |
+| `@asol/submain-composition` | package | 9 | 3 | 0 | 0 | 42 | 18 |
 | `@asol/system-logs-core` | package | 9 | 5 | 127 | 0 | 61 | 0 |
 | `@asol/trending-ribbon-core` | package | 6 | 1 | 126 | 0 | 13 | 1 |
 | `@asol/vercel-deploy-core` | package | 12 | 8 | 130 | 0 | 35 | 2 |
@@ -108,4 +108,4 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `products` | service | 4 | 0 | 0 | 0 | 0 | 4 |
 | `profiles` | service | 4 | 0 | 0 | 0 | 0 | 5 |
 | `sub2main` | service | 2 | 0 | 0 | 0 | 0 | 6 |
-| `submain` | service | 2 | 2 | 0 | 0 | 0 | 15 |
+| `submain` | service | 5 | 2 | 0 | 0 | 0 | 15 |

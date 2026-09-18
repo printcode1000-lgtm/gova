@@ -47,19 +47,21 @@ On Android and iOS (`isNativePlatform()`) the bridge **does not** call the
 notifications service. `deliverNotificationGrantsFromNative` order matches
 `packages/account-bridge/src/mobile-push/deliver.ts`:
 
-1. Require `uid`/`phone` from `notification-grant-delivery-context.ts`. Missing
+1. Require `uid`/`phone`/`sessionToken` from
+   `notification-grant-delivery-context.ts` (set by `SessionProvider`). Missing
    identity → every grant `unavailable`; no FCM.
 2. **Android only:** `NativeCore.ensureNotificationChannels()`. Failure → every
    grant `unavailable`.
 3. `ensureMobilePushCredentials`: Capacitor Preferences cache, or
-   `POST /api/notifications/mobile-push/unlock` on the **main app** with
-   `{ uid, phone, credentialBlob }` (`credentials: "omit"`). Empty blob, failed
+   `POST /api/notifications/mobile-push/unlock` on `asol-submain` with
+   `{ credentialBlob }` and the `x-asol-session-token` header
+   (`credentials: "omit"`). Empty blob, failed
    HTTP, or incomplete JSON → `null` credentials → every grant `unavailable`.
 4. `getFcmAccessToken`: device JWT to `https://oauth2.googleapis.com/token`
    (in-memory cache until ~60s before expiry). Failure → every grant
    `unavailable`.
-5. **Every send:** `POST /api/notifications/recipient-tokens` on the main app
-   with the grant strings (max 100). The server verifies HMAC, checks
+5. **Every send:** `POST /api/notifications/recipient-tokens` on `asol-submain`
+   with the grant strings (max 100) and the `x-asol-session-token` header. The server verifies HMAC, checks
    `actorUid` against the caller when present, returns only `provider === "fcm"`
    tokens, and applies mute / `no_tokens`. It does **not** call FCM.
 6. `NotificationBuilder` + `resolveAndroidChannelId`, then sequential
@@ -69,7 +71,8 @@ notifications service. `deliverNotificationGrantsFromNative` order matches
 Unlock is **not** on every send: Preferences `asol.mobilePush.credentials.v1`
 skip the unlock route until `clearMobilePushCredentials` (unregister / sign-out).
 `DeviceTokenService.persist` also calls `ensureMobilePushCredentials` after a
-native token register; unlock failure is logged and does not fail registration.
+native token register when that token's session is the delivery identity;
+unlock failure is logged and does not fail registration.
 
 `removeInvalidTokens` on the recipient-tokens service has **no caller**. Native
 send reports `invalidTokenIds` on the bridge result only.
@@ -82,7 +85,7 @@ Credential handling:
 | Stage | What is stored | Where |
 |---|---|---|
 | App bundle | AES-256-GCM blob of `{ projectId, clientEmail, privateKey }` | `NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` |
-| Unlock | Server decrypts after `uid`/`phone` identity check | `ASOL_MOBILE_PUSH_UNLOCK_KEY` (never in bundles) |
+| Unlock | Server decrypts for a verified signed session whose `uid`/`phone` match the users repository | `ASOL_MOBILE_PUSH_UNLOCK_KEY` (never in bundles) |
 | After unlock | Same fields, re-encrypted AES-GCM | Preferences `asol.mobilePush.credentials.v1` + `asol.mobilePush.deviceKey.v1` |
 
 The web path is unchanged. Native delivery is an additional branch inside
@@ -91,8 +94,8 @@ The web path is unchanged. Native delivery is an additional branch inside
 ```text
 Web:     main app ──grant──► browser ──grant──► notifications service ──► FCM/APNs/WebPush
 Native:  main app ──grant──► device
-           ├── unlock (if Preferences empty) ──► main app
-           ├── recipient-tokens (every send) ──► main app
+           ├── unlock (if Preferences empty) ──► asol-submain (signed session)
+           ├── recipient-tokens (every send) ──► asol-submain (signed session)
            └── FCM HTTP v1 ──► Google (not ASOL)
 Deploy:  terminal callback ──signed grant──► notifications service ──► super admin
 ```
@@ -100,14 +103,19 @@ Deploy:  terminal callback ──signed grant──► notifications service ─
 Hooking the transport rather than each caller means no route or component has to
 remember to forward anything. Adding a grant to a response is enough.
 
-## Main-app APIs (native only)
+## Session-bound native APIs (`asol-submain`)
 
 | Route | Purpose |
 |---|---|
 | `POST /api/notifications/recipient-tokens` | Verify grants; return `fcm` tokens plus the verified send payload. Every native send. |
 | `POST /api/notifications/mobile-push/unlock` | Verify identity; decrypt the embedded blob; return `{ projectId, clientEmail, privateKey }` when Preferences are empty |
 
-The notifications service does **not** expose these routes.
+Both authorise with the signed session (`x-asol-session-token`); the uid and
+phone come from the verified claims, never the body. The route registry assigns
+them to `submain` ahead of the `/api/notifications/**` catch-all, and
+`services/submain` ships them; the application's own copies remain for
+Development. The notifications service does **not** expose these routes — it
+holds neither the users database nor the unlock key.
 
 ## Provisioning credentials
 
@@ -125,7 +133,11 @@ This script (`scripts/provision-mobile-push-credentials.ts`):
 4. Writes `ASOL_MOBILE_PUSH_UNLOCK_KEY`, `ASOL_MOBILE_PUSH_CREDENTIAL_BLOB`, and
    `NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` into `.env.local`.
 
-Set the same three values on the **main app** Vercel project. The unlock key must
+Set the same three values on the **main app** Vercel project, and the two
+server values (`ASOL_MOBILE_PUSH_UNLOCK_KEY`, optionally
+`ASOL_MOBILE_PUSH_CREDENTIAL_BLOB`) on **`asol-submain`**, which serves unlock
+in production. Without the key there, unlock answers
+`503 mobilePushUnlockNotConfigured`. The unlock key must
 never appear in `NEXT_PUBLIC_*` or in static/Capacitor bundles.
 
 For a one-off blob from a JSON file:
@@ -144,7 +156,7 @@ itself may opt into manual delivery and inspect the recipient results.
 
 **No session cookie on grant hops.** Web send, native unlock, and native
 `recipient-tokens` all use `credentials: "omit"`. Web authority is the grant.
-Native identity is the JSON `uid`/`phone` body plus grant HMAC.
+Native identity is the signed session header plus grant HMAC.
 
 **Browser only for scheduling.** Every entry point returns early when `window`
 is undefined, so importing it during SSR or a static export is harmless.
@@ -207,8 +219,8 @@ when connectivity is the question.
 | Variable | Where | Notes |
 |---|---|---|
 | `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | main app, client-safe | Origin of the notifications service, in every runtime. When unset, it resolves to the canonical deployment declared in `@asol/native-core` — the same address the static and native bundles are built with. It used to fall back to `window.location.origin` in `next dev` so fan-out would read the local `notifications.db` that device registration wrote; with no local database, that fallback would only reach a gova runtime owning no notifications route. Set it explicitly to point Development at a different origin. |
-| `ASOL_MOBILE_PUSH_UNLOCK_KEY` | main app server only | 32-byte AES key (hex or base64). Decrypts the embedded blob at unlock. **Never** baked into client bundles. |
-| `ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` | main app server | Same ciphertext as the public blob; optional mismatch guard on unlock. |
+| `ASOL_MOBILE_PUSH_UNLOCK_KEY` | main app and `asol-submain` servers only | 32-byte AES key (hex or base64). Decrypts the embedded blob at unlock. **Never** baked into client bundles. |
+| `ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` | main app and `asol-submain` servers | Same ciphertext as the public blob; optional mismatch guard on unlock. |
 | `NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` | main app, client-safe | AES-256-GCM blob baked into static/Capacitor bundles. Useless without the unlock key. |
 
 A static export or native shell has no same-origin fallback. `packages/ota-core`

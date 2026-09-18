@@ -20,7 +20,9 @@ import { specialtyChatService } from '@/features/specialty-chat/server/services/
 import { loadOrderDetailForActor } from '@/features/orders/application/order-detail-loader.server';
 import { executeOrderAction } from '@/features/orders/application/order-actions.server';
 import {
+  mobilePushUnlockService,
   notificationBroadcastService,
+  notificationRecipientTokensService,
   notificationSelfTestService,
   notificationTokenService,
 } from '@/features/notifications/server/services/notification-service.bootstrap.server';
@@ -132,6 +134,13 @@ export interface SubmainDeviceTask {
   listBroadcastRecipients: typeof notificationBroadcastService.listRecipients;
   sendBroadcast: typeof notificationBroadcastService.send;
   assertSuperAdmin: typeof assertSuperAdminRequest;
+  /**
+   * The native sender's two calls. Both resolve the verified caller against the
+   * users repository and read the notifications database; unlock also needs the
+   * server-only unlock key. `asol-notifications` holds neither users nor that key.
+   */
+  resolveRecipientTokens: typeof notificationRecipientTokensService.resolve;
+  unlockMobilePush: typeof mobilePushUnlockService.unlock;
 }
 
 /**
@@ -257,6 +266,8 @@ export function createSubmainRuntime(_config?: SubmainRuntimeConfig): SubmainRun
       listBroadcastRecipients: (identity) => notificationBroadcastService.listRecipients(identity),
       sendBroadcast: (input) => notificationBroadcastService.send(input),
       assertSuperAdmin: assertSuperAdminRequest,
+      resolveRecipientTokens: (input) => notificationRecipientTokensService.resolve(input),
+      unlockMobilePush: (input) => mobilePushUnlockService.unlock(input),
     },
     orders: {
       loadDetail: (orderId, searchParams) => loadOrderDetailForActor(orderId, searchParams),

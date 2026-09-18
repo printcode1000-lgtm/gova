@@ -37,6 +37,41 @@ function testApiRoutesWired(): void {
   );
   assert.match(recipientRoute, /resolveRecipientTokensForGrants/);
   assert.match(unlockRoute, /credentialBlob/);
+
+  // Both routes hand a native sender delivery material — a Firebase Admin key
+  // and push tokens — so the caller is the verified session on every origin
+  // that serves them, never a guessable uid/phone pair read from the body.
+  const submainRecipientRoute = readFileSync(
+    path.join(repoRoot, "services/submain/src/app/api/notifications/recipient-tokens/route.ts"),
+    "utf8",
+  );
+  const submainUnlockRoute = readFileSync(
+    path.join(repoRoot, "services/submain/src/app/api/notifications/mobile-push/unlock/route.ts"),
+    "utf8",
+  );
+  for (const route of [recipientRoute, unlockRoute]) {
+    assert.match(route, /assertSignedInRequest\(request\)/);
+    assert.match(route, /uid: claims\.uid,\s*phone: claims\.phone/);
+  }
+  for (const route of [submainRecipientRoute, submainUnlockRoute]) {
+    assert.match(route, /account\.assertSignedIn\(request\)/);
+    assert.match(route, /uid: claims\.uid,\s*phone: claims\.phone/);
+  }
+
+  // The native sender carries the session and no identity in the body.
+  const sessionRoute = readFileSync(
+    path.join(repoRoot, "packages/account-bridge/src/mobile-push/session-route.ts"),
+    "utf8",
+  );
+  assert.match(sessionRoute, /'x-asol-session-token': sessionToken/);
+  for (const file of ["enrollment.ts", "deliver.ts"]) {
+    const source = readFileSync(
+      path.join(repoRoot, "packages/account-bridge/src/mobile-push", file),
+      "utf8",
+    );
+    assert.match(source, /postSessionRoute\(/);
+    assert.doesNotMatch(source, /\.\.\.(identity|input),/);
+  }
 }
 
 function testNativeBranchInBridge(): void {

@@ -43,6 +43,11 @@ export const ROUTE_OWNERSHIP: readonly RouteOwnership[] = [
   // `device-token` for the same reason: `asol-notifications` must never hold
   // the users database.
   { owner: 'submain', pattern: '/api/notifications/preferences', methods: ALL },
+  // The native sender's two calls resolve the verified session against the
+  // users repository; unlock also needs the server-only unlock key. Neither may
+  // live on `asol-notifications`, so they join the other session-bound routes.
+  { owner: 'submain', pattern: '/api/notifications/recipient-tokens', methods: ALL },
+  { owner: 'submain', pattern: '/api/notifications/mobile-push/unlock', methods: ALL },
   { owner: 'notifications', pattern: '/api/notifications/**', methods: ALL },
   { owner: 'submain', pattern: '/api/ota/access', methods: ['POST'] },
   { owner: 'submain', pattern: '/api/account/**', methods: ALL },

@@ -1086,17 +1086,24 @@ POST   /api/notifications/device-token
 DELETE /api/notifications/device-token?uid=&phone=&deviceId=&tokenId=
 ```
 
+Both paths also record the server-accepted row in this device's AsolDB store
+after the `POST` succeeds, so `listDevices` describes a subscribed browser as
+well as a native handset. The settings surface depends on it: it confirms this
+device by matching a local `deviceId` against the server listing. A browser that
+subscribed before it kept a local record is repaired by `reconcileDevice`, which
+re-sends the existing subscription (never creating a new one) and records it.
+
 The account-facing pair — `GET`/`DELETE /api/notifications/devices` — is
 described under [The account's other devices](#the-accounts-other-devices); it
 authorises with the signed session instead, because it can reach a registration
 the calling device does not own.
 
-Native outbound push (Capacitor only) uses two additional **main-app** routes
-(not bundled in `out/`; Android uses the remote API origin):
+Native outbound push (Capacitor only) uses two additional session-bound routes,
+owned by `submain` and served by `asol-submain` (not bundled in `out/`):
 
 ```text
-POST /api/notifications/recipient-tokens   # every native send: verify grants; return provider=fcm tokens + send payload
-POST /api/notifications/mobile-push/unlock # only when Preferences cache is empty; decrypt embedded blob
+POST /api/notifications/recipient-tokens   # every native send: signed session + grants; return provider=fcm tokens + send payload
+POST /api/notifications/mobile-push/unlock # only when Preferences cache is empty; signed session; decrypt embedded blob
 ```
 
 After a native token persist, `DeviceTokenService` also calls
@@ -1272,11 +1279,11 @@ The [notification bridge](notification-bridge-module.md) native branch
 
 1. Requires signed-in identity; on Android, `NativeCore.ensureNotificationChannels`.
 2. Loads cached Admin credentials or unlocks via
-   `POST /api/notifications/mobile-push/unlock` (main app; skipped when
+   `POST /api/notifications/mobile-push/unlock` (`asol-submain`, signed session; skipped when
    Preferences already hold the re-encrypted bundle).
 3. Exchanges a Google OAuth token on the device.
-4. **Every send:** `POST /api/notifications/recipient-tokens` (main app verifies
-   grants, returns `fcm` tokens only).
+4. **Every send:** `POST /api/notifications/recipient-tokens` (`asol-submain`
+   verifies the signed session and the grants, returns `fcm` tokens only).
 5. Sequential FCM HTTP v1 from the device to Google. Native send does not
    soft-delete invalid tokens on the server.
 
@@ -1288,8 +1295,8 @@ with `npm run provision:mobile-push`. Full Android contract:
 
 ```text
 1. device  ──► main app          business action + grant in response
-2. device  ──► main app          recipient-tokens (every send)
-3. device  ──► main app          unlock (only if Preferences empty)
+2. device  ──► asol-submain      recipient-tokens (every send, signed session)
+3. device  ──► asol-submain      unlock (only if Preferences empty, signed session)
 4. device  ──► Google FCM HTTP v1
 ```
 

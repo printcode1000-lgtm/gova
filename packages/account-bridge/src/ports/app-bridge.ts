@@ -27,6 +27,8 @@ export interface AccountBridgePublicEnv {
 export interface NotificationGrantDeliveryIdentity {
   uid: string;
   phone: string;
+  /** The signed session; both native-sender routes authorise with it. */
+  sessionToken: string;
 }
 
 export interface AccountBridgePorts {

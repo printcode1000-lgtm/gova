@@ -10893,6 +10893,7 @@
         "scripts/probe-notifications-service.ts",
         "scripts/provision-mobile-push-credentials",
         "scripts/provision-mobile-push-credentials.ts",
+        "services/submain",
         "ships",
         "src/features/notification-bridge/",
         "test",
@@ -13237,6 +13238,7 @@
         "packages/notifications-core/src/domain/notification-sound.ts",
         "plugin",
         "push",
+        "services/submain",
         "states",
         "terminated",
         "the",
@@ -15517,6 +15519,7 @@
         "scripts/route-ownership-coverage.ts",
         "scripts/tests/route-ownership-coverage",
         "scripts/tests/route-ownership-coverage.test.ts",
+        "services/submain",
         "services/submain/src/app/api/notifications/preferences/route",
         "services/submain/src/app/api/notifications/preferences/route.ts",
         "ship",
@@ -29045,6 +29048,17 @@
       ]
     },
     {
+      "id": "source:packages/account-bridge/src/mobile-push/session-route.ts",
+      "kind": "source",
+      "name": "session-route.ts",
+      "path": "packages/account-bridge/src/mobile-push/session-route.ts",
+      "tags": [
+        "packages/account-bridge/src/mobile-push/session-route",
+        "packages/account-bridge/src/mobile-push/session-route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:packages/account-bridge/src/mobile-push/types.ts",
       "kind": "source",
       "name": "types.ts",
@@ -40343,6 +40357,17 @@
       ]
     },
     {
+      "id": "source:services/submain/src/app/api/notifications/mobile-push/unlock/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/notifications/mobile-push/unlock/route.ts",
+      "tags": [
+        "services/submain/src/app/api/notifications/mobile-push/unlock/route",
+        "services/submain/src/app/api/notifications/mobile-push/unlock/route.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:services/submain/src/app/api/notifications/preferences/route.ts",
       "kind": "source",
       "name": "route.ts",
@@ -40350,6 +40375,17 @@
       "tags": [
         "services/submain/src/app/api/notifications/preferences/route",
         "services/submain/src/app/api/notifications/preferences/route.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:services/submain/src/app/api/notifications/recipient-tokens/route.ts",
+      "kind": "source",
+      "name": "route.ts",
+      "path": "services/submain/src/app/api/notifications/recipient-tokens/route.ts",
+      "tags": [
+        "services/submain/src/app/api/notifications/recipient-tokens/route",
+        "services/submain/src/app/api/notifications/recipient-tokens/route.ts",
         "ts"
       ]
     },
