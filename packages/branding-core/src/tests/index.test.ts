@@ -68,6 +68,99 @@ async function assertPng(
   assert.equal(metadata.height, height, `${relativePath} height`);
 }
 
+async function assertOpaquePng(
+  relativePath: string,
+  width: number,
+  height = width,
+): Promise<void> {
+  await assertPng(relativePath, width, height);
+  const metadata = await sharp(path.join(root, relativePath)).metadata();
+  assert.equal(metadata.hasAlpha, false, `${relativePath} must not contain alpha`);
+}
+
+async function sourceBackgroundRgb(): Promise<{
+  red: number;
+  green: number;
+  blue: number;
+}> {
+  const metadata = await sharp(BRANDING_SOURCE_FILE).metadata();
+  const width = Math.max(1, metadata.width ?? 1);
+  const height = Math.max(1, metadata.height ?? 1);
+  const pixel = await sharp(BRANDING_SOURCE_FILE)
+    .extract({
+      left: Math.min(width - 1, Math.floor(width * 0.1)),
+      top: Math.min(height - 1, Math.floor(height * 0.1)),
+      width: 1,
+      height: 1,
+    })
+    .ensureAlpha()
+    .raw()
+    .toBuffer();
+  if ((pixel[3] ?? 0) < 128) return { red: 255, green: 255, blue: 255 };
+  return {
+    red: pixel[0] ?? 255,
+    green: pixel[1] ?? 255,
+    blue: pixel[2] ?? 255,
+  };
+}
+
+async function assertNativeLaunchImage(
+  relativePath: string,
+  size: number,
+): Promise<void> {
+  await assertOpaquePng(relativePath, size);
+  const expectedBackground = await sourceBackgroundRgb();
+  const { data, info } = await sharp(path.join(root, relativePath))
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  const pixelCount = info.width * info.height;
+  let backgroundPixels = 0;
+  let whitePixels = 0;
+  for (let index = 0; index < data.length; index += 4) {
+    const red = data[index] ?? 0;
+    const green = data[index + 1] ?? 0;
+    const blue = data[index + 2] ?? 0;
+    const alpha = data[index + 3] ?? 0;
+    if (
+      red === expectedBackground.red &&
+      green === expectedBackground.green &&
+      blue === expectedBackground.blue &&
+      alpha === 255
+    ) {
+      backgroundPixels += 1;
+    }
+    if (red > 245 && green > 245 && blue > 245 && alpha === 255) {
+      whitePixels += 1;
+    }
+  }
+  const center = (Math.floor(info.height / 2) * info.width + Math.floor(info.width / 2)) * 4;
+  assert.deepEqual(
+    [data[0], data[1], data[2], data[3]],
+    [
+      expectedBackground.red,
+      expectedBackground.green,
+      expectedBackground.blue,
+      255,
+    ],
+    `${relativePath} corner must match the SSOT background`,
+  );
+  assert.ok(
+    backgroundPixels / pixelCount > 0.9,
+    `${relativePath} must be the SSOT background with only the white mark visible`,
+  );
+  assert.ok(
+    whitePixels / pixelCount > 0.005 && whitePixels / pixelCount < 0.05,
+    `${relativePath} must contain a centered white launch mark without the full icon tile`,
+  );
+  assert.ok(
+    (data[center] ?? 0) > 245 &&
+      (data[center + 1] ?? 0) > 245 &&
+      (data[center + 2] ?? 0) > 245,
+    `${relativePath} launch mark must remain centered`,
+  );
+}
+
 async function assertTransparentSilhouette(relativePath: string): Promise<void> {
   const imagePath = path.join(root, relativePath);
   const image = sharp(imagePath);
@@ -220,6 +313,42 @@ async function main(): Promise<void> {
     "packages/native-core/android/src/main/res/drawable-nodpi/asol_notification_large_icon.png",
     256,
   );
+
+  const launchBackground = await sourceBackgroundRgb();
+  const launchBackgroundHex = `#${[
+    launchBackground.red,
+    launchBackground.green,
+    launchBackground.blue,
+  ]
+    .map((channel) => channel.toString(16).padStart(2, "0"))
+    .join("")
+    .toUpperCase()}`;
+
+  if (nativeShellPresent("android/app/src/main/res/values/styles.xml")) {
+    const launchStyles = read("android/app/src/main/res/values/styles.xml");
+    assert.match(
+      launchStyles,
+      /windowSplashScreenBackground">\s*@color\/ic_launcher_background/,
+      "Android native launch must use the SSOT-derived background",
+    );
+    assert.match(
+      launchStyles,
+      /windowSplashScreenAnimatedIcon">\s*@drawable\/ic_launcher_monochrome/,
+      "Android native launch must show only the transparent white SSOT mark",
+    );
+    assert.doesNotMatch(
+      launchStyles,
+      /windowSplashScreenAnimatedIcon">\s*@mipmap\/ic_launcher_foreground/,
+      "Android native launch must not show the full adaptive icon tile",
+    );
+  }
+  if (nativeShellPresent("android/app/src/main/res/values/ic_launcher_background.xml")) {
+    assert.match(
+      read("android/app/src/main/res/values/ic_launcher_background.xml"),
+      new RegExp(`<color name="ic_launcher_background">${launchBackgroundHex}</color>`),
+      "Android native launch background must match the icon background",
+    );
+  }
   if (nativeShellPresent("android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml")) {
     assert.match(
       read("android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml"),
@@ -227,8 +356,14 @@ async function main(): Promise<void> {
     );
   }
   if (nativeShellPresent("android/app/src/main/AndroidManifest.xml")) {
+    const androidManifest = read("android/app/src/main/AndroidManifest.xml");
     assert.match(
-      read("android/app/src/main/AndroidManifest.xml"),
+      androidManifest,
+      /<activity[\s\S]*?android:name="\.MainActivity"[\s\S]*?android:theme="@style\/AppTheme\.NoActionBarLaunch"/,
+      "Android MainActivity must enter through the native launch theme before the WebView",
+    );
+    assert.match(
+      androidManifest,
       /default_notification_icon"[\s\S]*?@drawable\/ic_stat_asol_notification/,
     );
   }
@@ -264,9 +399,51 @@ async function main(): Promise<void> {
   }
 
   if (nativeShellPresent("ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png")) {
-    await assertPng(
+    await assertOpaquePng(
       "ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png",
       1024,
+    );
+  }
+  if (nativeShellPresent("ios/App/App/Assets.xcassets/Splash.imageset/splash-2732x2732.png")) {
+    for (const fileName of [
+      "splash-2732x2732.png",
+      "splash-2732x2732-1.png",
+      "splash-2732x2732-2.png",
+    ]) {
+      await assertNativeLaunchImage(
+        `ios/App/App/Assets.xcassets/Splash.imageset/${fileName}`,
+        2732,
+      );
+    }
+  }
+  if (nativeShellPresent("ios/App/App/Base.lproj/LaunchScreen.storyboard")) {
+    const launchStoryboard = read("ios/App/App/Base.lproj/LaunchScreen.storyboard");
+    assert.match(
+      launchStoryboard,
+      /<imageView[^>]*contentMode="scaleAspectFill"[^>]*image="Splash"/,
+      "iOS must use the generated full-frame native launch artwork before WebView startup",
+    );
+    assert.doesNotMatch(
+      launchStoryboard,
+      /systemBackgroundColor/,
+      "iOS native launch must not fall back to a white system background",
+    );
+    const color = /<color key="backgroundColor" red="([^"]+)" green="([^"]+)" blue="([^"]+)" alpha="1"/.exec(
+      launchStoryboard,
+    );
+    assert.ok(color, "iOS LaunchScreen must pin the SSOT-derived background colour");
+    assert.ok(
+      Math.abs(Number(color[1]) - launchBackground.red / 255) < 0.000001 &&
+        Math.abs(Number(color[2]) - launchBackground.green / 255) < 0.000001 &&
+        Math.abs(Number(color[3]) - launchBackground.blue / 255) < 0.000001,
+      "iOS LaunchScreen background must match the icon background",
+    );
+  }
+  if (nativeShellPresent("ios/App/App/Info.plist")) {
+    assert.match(
+      read("ios/App/App/Info.plist"),
+      /<key>UILaunchStoryboardName<\/key>\s*<string>LaunchScreen<\/string>/,
+      "iOS must launch through the native LaunchScreen storyboard before the WebView",
     );
   }
   if (nativeShellPresent("ios/App/App.xcodeproj/project.pbxproj")) {

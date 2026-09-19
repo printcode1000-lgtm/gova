@@ -5,6 +5,7 @@ import * as React from 'react';
 import { useTranslation } from '@/shared/i18n';
 import { cn } from '@/shared/utils';
 import { asciiDigitsOnly } from '@asol/auth-core';
+import { VERIFICATION_CODE_LENGTH } from '@asol/verification-core';
 
 interface OtpInputProps {
   value: string;
@@ -20,7 +21,7 @@ export function OtpInput({ id,
   onChange,
   onComplete,
   disabled = false,
-  length = 4,
+  length = VERIFICATION_CODE_LENGTH,
   hasError = false,
 }: OtpInputProps & { id?: string }) {
   const { t } = useTranslation();

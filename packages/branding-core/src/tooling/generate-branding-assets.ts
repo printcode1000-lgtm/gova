@@ -24,6 +24,7 @@ export const BRANDING_SOURCE_FILE = path.join(
 
 const ANDROID_ADAPTIVE_CONTENT_SCALE = 0.72;
 const ANDROID_NOTIFICATION_CONTENT_SCALE = 0.8;
+const IOS_NATIVE_LAUNCH_MARK_SCALE = 0.2;
 const androidLegacySizes = {
   mdpi: 48,
   hdpi: 72,
@@ -130,16 +131,50 @@ async function resizedSource(size: number): Promise<Buffer> {
     .toBuffer();
 }
 
-async function sourceBackgroundHex(): Promise<string> {
+async function sourceBackgroundRgba(): Promise<{
+  red: number;
+  green: number;
+  blue: number;
+  alpha: number;
+}> {
+  const metadata = await sharp(BRANDING_SOURCE_FILE).metadata();
+  const width = Math.max(1, metadata.width ?? 1);
+  const height = Math.max(1, metadata.height ?? 1);
   const pixel = await sharp(BRANDING_SOURCE_FILE)
-    .extract({ left: 0, top: 0, width: 1, height: 1 })
-    .removeAlpha()
+    .extract({
+      left: Math.min(width - 1, Math.floor(width * 0.1)),
+      top: Math.min(height - 1, Math.floor(height * 0.1)),
+      width: 1,
+      height: 1,
+    })
+    .ensureAlpha()
     .raw()
     .toBuffer();
-  return `#${[pixel[0] ?? 255, pixel[1] ?? 255, pixel[2] ?? 255]
+
+  return {
+    red: pixel[0] ?? 255,
+    green: pixel[1] ?? 255,
+    blue: pixel[2] ?? 255,
+    alpha: pixel[3] ?? 255,
+  };
+}
+
+async function sourceBackgroundHex(): Promise<string> {
+  const { red, green, blue, alpha } = await sourceBackgroundRgba();
+  const channels = alpha < 128 ? [255, 255, 255] : [red, green, blue];
+  return `#${channels
     .map((channel) => channel.toString(16).padStart(2, "0"))
     .join("")
     .toUpperCase()}`;
+}
+
+async function resizedOpaqueSource(size: number): Promise<Buffer> {
+  const background = await sourceBackgroundHex();
+  return sharp(BRANDING_SOURCE_FILE)
+    .resize(size, size, { fit: "fill" })
+    .flatten({ background })
+    .png()
+    .toBuffer();
 }
 
 async function androidAdaptiveForeground(size: number): Promise<Buffer> {
@@ -163,8 +198,9 @@ async function androidAdaptiveForeground(size: number): Promise<Buffer> {
 
 /**
  * Android status icons and Web Push badges must be a white silhouette on
- * transparency. The SSOT has an opaque pale background, so alpha cannot be
- * reused; chroma separates the coloured ASOL mark from that neutral field.
+ * transparency. Branding art can use either a neutral field with a coloured
+ * mark or a chromatic field with a neutral/white mark, so the generator picks
+ * the silhouette polarity from the sampled source background.
  */
 async function monochromeMark(
   size: number,
@@ -177,17 +213,34 @@ async function monochromeMark(
     .raw()
     .toBuffer({ resolveWithObject: true });
   const silhouette = Buffer.alloc(info.width * info.height * 4);
+  const background = await sourceBackgroundRgba();
+  const backgroundChroma =
+    Math.max(background.red, background.green, background.blue) -
+    Math.min(background.red, background.green, background.blue);
+  const neutralMarkOnChromaticField =
+    background.alpha >= 128 && backgroundChroma >= 64;
 
   for (let index = 0; index < data.length; index += 4) {
     const red = data[index] ?? 0;
     const green = data[index + 1] ?? 0;
     const blue = data[index + 2] ?? 0;
+    const sourceAlpha = data[index + 3] ?? 0;
     const chroma = Math.max(red, green, blue) - Math.min(red, green, blue);
-    const alpha = Math.max(0, Math.min(255, (chroma - 28) * 7));
+    const luminance = 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+    const markAlpha = neutralMarkOnChromaticField
+      ? Math.min(
+          sourceAlpha,
+          Math.max(0, Math.min(255, (64 - chroma) * 4)),
+          Math.max(0, Math.min(255, (luminance - 180) * 4)),
+        )
+      : Math.min(
+          sourceAlpha,
+          Math.max(0, Math.min(255, (chroma - 28) * 7)),
+        );
     silhouette[index] = 255;
     silhouette[index + 1] = 255;
     silhouette[index + 2] = 255;
-    silhouette[index + 3] = alpha;
+    silhouette[index + 3] = markAlpha;
   }
 
   const leadingPadding = Math.floor((size - contentSize) / 2);
@@ -204,6 +257,61 @@ async function monochromeMark(
     })
     .png()
     .toBuffer();
+}
+
+async function nativeLaunchImage(size: number): Promise<Buffer> {
+  const background = await sourceBackgroundHex();
+  const mark = await monochromeMark(size, IOS_NATIVE_LAUNCH_MARK_SCALE);
+
+  return sharp({
+    create: {
+      width: size,
+      height: size,
+      channels: 4,
+      background,
+    },
+  })
+    .composite([{ input: mark }])
+    .flatten({ background })
+    .removeAlpha()
+    .png()
+    .toBuffer();
+}
+
+function colorComponent(channel: number): string {
+  return (channel / 255).toFixed(8).replace(/0+$/, "").replace(/\.$/, "");
+}
+
+async function syncIosLaunchStoryboardBackground(
+  workspaceRoot: string,
+  state: GenerationState,
+): Promise<void> {
+  const storyboardPath = path.join(
+    workspaceRoot,
+    "ios",
+    "App",
+    "App",
+    "Base.lproj",
+    "LaunchScreen.storyboard",
+  );
+  if (!existsSync(storyboardPath)) return;
+
+  const { red, green, blue, alpha } = await sourceBackgroundRgba();
+  const channels =
+    alpha < 128
+      ? { red: 255, green: 255, blue: 255 }
+      : { red, green, blue };
+  const backgroundColor =
+    `                        <color key="backgroundColor" red="${colorComponent(channels.red)}" green="${colorComponent(channels.green)}" blue="${colorComponent(channels.blue)}" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>`;
+  const source = readFileSync(storyboardPath, "utf8");
+  const pattern = /^\s*<color key="backgroundColor"[^>]*\/>$/m;
+  if (!pattern.test(source)) {
+    throw new Error(
+      "iOS LaunchScreen storyboard is missing the generated background color slot",
+    );
+  }
+  const next = source.replace(pattern, backgroundColor);
+  writeIfChanged(state, storyboardPath, next);
 }
 
 async function generateWebAssets(
@@ -354,7 +462,7 @@ async function generateIosAssets(
   writeIfChanged(
     state,
     path.join(appIconRoot, "AppIcon-512@2x.png"),
-    await resizedSource(1024),
+    await resizedOpaqueSource(1024),
   );
   writeIfChanged(
     state,
@@ -362,7 +470,7 @@ async function generateIosAssets(
     iosAppIconContents,
   );
 
-  const launch = await resizedSource(2732);
+  const launch = await nativeLaunchImage(2732);
   for (const fileName of [
     "splash-2732x2732.png",
     "splash-2732x2732-1.png",
@@ -375,6 +483,7 @@ async function generateIosAssets(
     path.join(splashRoot, "Contents.json"),
     iosSplashContents,
   );
+  await syncIosLaunchStoryboardBackground(workspaceRoot, state);
 }
 
 export async function generateBrandingAssets(

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { VERIFICATION_CODE_LENGTH } from '@asol/verification-core';
 import { passwordRecoveryApiService } from '../../application/services/password-recovery-api-service';
 
 export type RecoveryStep = 'phone' | 'code' | 'password' | 'success' | 'contactAdmin';
@@ -41,6 +42,7 @@ export function usePasswordRecovery() {
   });
 
   const verifyCode = (code: string) => run(async () => {
+    if (!new RegExp(`^\\d{${VERIFICATION_CODE_LENGTH}}$`).test(code)) throw new Error('passwordRecoveryInvalidCode');
     const result = await passwordRecoveryApiService.verifyCode({ challengeId, phone, code });
     setResetToken(result.resetToken);
     setStep('password');

@@ -10,8 +10,8 @@ Phone validation and normalization are not owned by password recovery. `normaliz
 
 1. The user navigates to `/forgot-password` and enters their registered phone number.
 2. The server creates a `password_recovery` challenge in `verification_challenges`.
-3. International numbers receive the 6-digit code by the verified email channel and return a masked email address like `h********@gmail.com`.
-4. Egyptian numbers use the admin SMS dispatch path owned by the unified verification system.
+3. International numbers receive the 4-digit code by the verified email channel and return a masked email address like `h********@gmail.com`.
+4. Egyptian numbers receive the same 4-digit code through the admin SMS dispatch path owned by the unified verification system.
 5. If the account does not exist, the app displays a generic message without confirming whether the phone number is registered.
 6. After code verification, the server issues a short-lived signed `verificationProof`, exposed to the UI as `resetToken`.
 7. The user submits the new password along with the proof; the challenge is consumed and cannot be reused.
@@ -53,7 +53,7 @@ Response status: `sent` with masked email, `contactAdmin`, or `accepted` for gen
 
 ### `POST /api/auth/password-recovery/verify`
 
-Payload: `{ "challengeId": "vch_...", "phone": "01012345678", "code": "123456" }`.
+Payload: `{ "challengeId": "vch_...", "phone": "01012345678", "code": "1234" }`.
 
 Returns a temporary `resetToken` upon successful verification.
 

@@ -12418,9 +12418,10 @@
       "kind": "document",
       "name": "Unified Verification System",
       "path": "docs/05-platform-features/unified-verification-system.md",
-      "summary": "The unified verification system owns one server-side challenge and proof model for registration, primary-phone changes, and password recovery. Clients may store transient UI state, but account-changing server operations only trust a short-lived signed `verificationProof` that is ",
+      "summary": "The unified verification system owns one server-side challenge and proof model for registration, primary-phone changes, and password recovery. Every purpose uses the same 4-digit code length. Clients may store transient UI state, but account-changing server operations only trust ",
       "tags": [
         "/asolverificationsmsdispatch",
+        "4-digit",
         "@asol/auth-core",
         "@asol/submain-composition",
         "@asol/verification-core",
@@ -12431,11 +12432,13 @@
         "challenge",
         "changes",
         "clients",
+        "code",
         "docs/05-platform-features/unified-verification-system",
         "docs/05-platform-features/unified-verification-system.md",
+        "every",
         "for",
-        "is",
         "java",
+        "length",
         "may",
         "md",
         "model",
@@ -12451,13 +12454,13 @@
         "password",
         "primary-phone",
         "proof",
+        "purpose",
         "recovery",
         "registration",
+        "same",
         "server",
         "server-side",
         "service",
-        "short-lived",
-        "signed",
         "src/features/auth/presentation/phoneverification",
         "src/features/auth/presentation/phoneverification.tsx",
         "src/features/notifications/server/services/verification-sms-dispatch",
@@ -12466,9 +12469,8 @@
         "state",
         "store",
         "system",
-        "that",
         "the",
-        "the unified verification system owns one server-side challenge and proof model for registration, primary-phone changes, and password recovery. clients may store transient ui state, but account-changing server operations only trust a short-lived signed `verificationproof` that is ",
+        "the unified verification system owns one server-side challenge and proof model for registration, primary-phone changes, and password recovery. every purpose uses the same 4-digit code length. clients may store transient ui state, but account-changing server operations only trust ",
         "transient",
         "trust",
         "ts",
@@ -12476,8 +12478,8 @@
         "ui",
         "unified",
         "unified verification system",
-        "verification",
-        "verificationproof"
+        "uses",
+        "verification"
       ]
     },
     {
@@ -133849,6 +133851,12 @@
       "detail": "route source dependency"
     },
     {
+      "from": "route:/forgot-password:page",
+      "to": "package:@asol/verification-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
       "from": "route:/home:page",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -195764,6 +195772,12 @@
     },
     {
       "from": "source:src/features/auth/presentation/OtpInput.tsx",
+      "to": "package:@asol/verification-core",
+      "kind": "imports",
+      "detail": "@asol/verification-core"
+    },
+    {
+      "from": "source:src/features/auth/presentation/OtpInput.tsx",
       "to": "source:src/shared/i18n/index.ts",
       "kind": "imports",
       "detail": "@/shared/i18n"
@@ -195977,6 +195991,12 @@
       "to": "package:@asol/auth-core",
       "kind": "imports",
       "detail": "@asol/auth-core"
+    },
+    {
+      "from": "source:src/features/auth/presentation/PhoneVerification.tsx",
+      "to": "package:@asol/verification-core",
+      "kind": "imports",
+      "detail": "@asol/verification-core"
     },
     {
       "from": "source:src/features/auth/presentation/PhoneVerification.tsx",
@@ -216411,6 +216431,12 @@
     },
     {
       "from": "source:src/features/password-recovery/presentation/hooks/use-password-recovery.ts",
+      "to": "package:@asol/verification-core",
+      "kind": "imports",
+      "detail": "@asol/verification-core"
+    },
+    {
+      "from": "source:src/features/password-recovery/presentation/hooks/use-password-recovery.ts",
       "to": "source:src/features/password-recovery/application/services/password-recovery-api-service.ts",
       "kind": "imports",
       "detail": "../../application/services/password-recovery-api-service"
@@ -216468,6 +216494,12 @@
       "to": "package:@asol/auth-core",
       "kind": "imports",
       "detail": "@asol/auth-core"
+    },
+    {
+      "from": "source:src/features/password-recovery/presentation/PasswordRecoveryPageContent.tsx",
+      "to": "package:@asol/verification-core",
+      "kind": "imports",
+      "detail": "@asol/verification-core"
     },
     {
       "from": "source:src/features/password-recovery/presentation/PasswordRecoveryPageContent.tsx",
@@ -251444,12 +251476,23 @@
     },
     {
       "from": "test:src/features/notifications/tests/notification-error-status.test.ts",
+      "to": "source:src/core/api/expected-business-error-codes.ts",
+      "kind": "imports",
+      "detail": "@/core/api/expected-business-error-codes"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-error-status.test.ts",
       "to": "feature:notifications",
       "kind": "tests"
     },
     {
       "from": "test:src/features/notifications/tests/notification-error-status.test.ts",
       "to": "source:src/core/api/business-api-error-status.ts",
+      "kind": "tests"
+    },
+    {
+      "from": "test:src/features/notifications/tests/notification-error-status.test.ts",
+      "to": "source:src/core/api/expected-business-error-codes.ts",
       "kind": "tests"
     },
     {

@@ -8,6 +8,7 @@ import { AuthMobileBrand } from '@/features/auth/ui';
 import { useTranslation } from '@/shared/i18n';
 import { usePasswordRecovery } from './hooks/use-password-recovery';
 import { asciiDigitsOnly, foldPasswordDigits } from '@asol/auth-core';
+import { VERIFICATION_CODE_LENGTH } from '@asol/verification-core';
 import { PhoneField } from '@/shared/ui/phone-field';
 import { phoneFieldLabels } from '@/shared/phone/phone-field-labels';
 
@@ -84,9 +85,9 @@ export function PasswordRecoveryPageContent() {
                 <div id='features-password-recovery-presentation-passwordrecoverypagecontent-div-19-unx29t' className="rounded bg-primary/10 p-3 text-sm text-on-surface-variant flex gap-2"><Mail id='features-password-recovery-presentation-passwordrecoverypagecontent-mail-20-jbgiyy' className="h-5 w-5 text-primary shrink-0" /><span id='features-password-recovery-presentation-passwordrecoverypagecontent-text-21-diyyzt'>{recovery.maskedEmail ? t('auth.passwordRecovery.sentTo', { email: recovery.maskedEmail }) : t('auth.passwordRecovery.genericSent')}</span></div>
                 <label id='features-password-recovery-presentation-passwordrecoverypagecontent-label-22-clhqxk' className="space-y-2 block">
                   <span id='features-password-recovery-presentation-passwordrecoverypagecontent-text-23-5xgniy' className="text-sm font-semibold">{t('auth.passwordRecovery.code')}</span>
-                  <input id='features-password-recovery-presentation-passwordrecoverypagecontent-input-24-c7pn79' className="auth-input w-full text-center text-2xl tracking-[0.5em]" value={code} onChange={(e) => setCode(asciiDigitsOnly(e.target.value).slice(0, 6))} inputMode="numeric" autoComplete="one-time-code" maxLength={6} />
+                  <input id='features-password-recovery-presentation-passwordrecoverypagecontent-input-24-c7pn79' className="auth-input w-full text-center text-2xl tracking-[0.5em]" value={code} onChange={(e) => setCode(asciiDigitsOnly(e.target.value).slice(0, VERIFICATION_CODE_LENGTH))} inputMode="numeric" autoComplete="one-time-code" maxLength={VERIFICATION_CODE_LENGTH} />
                 </label>
-                <SubmitButton id='features-password-recovery-presentation-passwordrecoverypagecontent-submitbutton-25-syaft5' loading={recovery.isLoading} label={t('auth.passwordRecovery.verifyCode')} />
+                <SubmitButton id='features-password-recovery-presentation-passwordrecoverypagecontent-submitbutton-25-syaft5' loading={recovery.isLoading} disabled={code.length !== VERIFICATION_CODE_LENGTH} label={t('auth.passwordRecovery.verifyCode')} />
                 <button id='features-password-recovery-presentation-passwordrecoverypagecontent-button-26-cuvrwx' type="button" onClick={recovery.startOver} className="w-full text-sm text-primary">{t('auth.passwordRecovery.changePhone')}</button>
               </form>
             )}
@@ -123,8 +124,8 @@ export function PasswordRecoveryPageContent() {
   );
 }
 
-function SubmitButton({ id, loading, label }: { loading: boolean; label: string } & { id?: string }) {
-  return <button id={id} type="submit" disabled={loading} className="auth-cta h-12 w-full disabled:opacity-60">{loading ? <Loader2 className="h-5 w-5 animate-spin mx-auto" /> : label}</button>;
+function SubmitButton({ id, loading, disabled = false, label }: { loading: boolean; disabled?: boolean; label: string } & { id?: string }) {
+  return <button id={id} type="submit" disabled={loading || disabled} className="auth-cta h-12 w-full disabled:opacity-60">{loading ? <Loader2 className="h-5 w-5 animate-spin mx-auto" /> : label}</button>;
 }
 
 function PasswordField({ id, label, value, onChange, visible, toggle }: { label: string; value: string; onChange: (value: string) => void; visible: boolean; toggle?: () => void } & { id?: string }) {

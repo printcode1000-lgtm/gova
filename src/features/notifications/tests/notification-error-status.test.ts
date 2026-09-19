@@ -17,6 +17,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 
 import { businessApiErrorStatus } from "@/core/api/business-api-error-status";
+import { isQuietMappedServiceError } from "@/core/api/expected-business-error-codes";
 
 const root = process.cwd();
 
@@ -80,9 +81,27 @@ const expected: Record<string, number> = {
   mobilePushCredentialBlobMismatch: 403,
   mobilePushUnlockNotConfigured: 503,
   notificationGrantNotIssued: 503,
+  verificationDispatchTicketInvalid: 400,
+  verificationDispatchTicketExpired: 400,
+  verificationDispatchUnavailable: 400,
 };
 for (const [code, status] of Object.entries(expected)) {
   assert.equal(businessApiErrorStatus(code).status, status, `${code} must answer ${status}`);
 }
+assert.equal(
+  isQuietMappedServiceError("verificationDispatchTicketInvalid"),
+  true,
+  "invalid verification dispatch tickets are caller/input rejections, not server.error events",
+);
+assert.equal(
+  isQuietMappedServiceError("verificationDispatchTicketExpired"),
+  true,
+  "expired verification dispatch tickets are caller/input rejections, not server.error events",
+);
+assert.equal(
+  isQuietMappedServiceError("verificationDispatchUnavailable"),
+  true,
+  "duplicate or obsolete verification dispatch redemption is expected state, not a server.error event",
+);
 
 console.log("Notification error status contract passed.");

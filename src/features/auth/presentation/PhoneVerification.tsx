@@ -12,6 +12,7 @@ import type { RegistrationFormData } from '@asol/auth-core';
 import { PhoneField } from '@/shared/ui/phone-field';
 import { phoneFieldLabels } from '@/shared/phone/phone-field-labels';
 import { OtpInput } from './OtpInput';
+import { VERIFICATION_CODE_LENGTH } from '@asol/verification-core';
 import { usePhoneVerification } from '@/features/auth/application/hooks/use-phone-verification';
 import { canSendPhoneOtp, formatPhoneDisplay } from './phone-verification-model';
 
@@ -245,7 +246,7 @@ export function PhoneVerification({ id,
               <button id='features-auth-presentation-phoneverification-button-21-da01ho'
                 type="button"
                 onClick={() => void handleVerifyOtpWrapper()}
-                disabled={otp.length !== 6 || isVerifying}
+                disabled={otp.length !== VERIFICATION_CODE_LENGTH || isVerifying}
                 className="flex-1 auth-cta h-10 text-sm"
               >
                 {isVerifying ? t('auth.phone.verifying') : t('auth.phone.verifyOtp')}
@@ -375,7 +376,7 @@ export function PhoneVerification({ id,
             <button id='features-auth-presentation-phoneverification-button-43-fs1i65'
               type="button"
               onClick={() => void handleVerifyOtpWrapper()}
-              disabled={otp.length !== 6 || isVerifying}
+              disabled={otp.length !== VERIFICATION_CODE_LENGTH || isVerifying}
               className="auth-cta h-9 sm:h-10 flex-1 text-xs sm:text-sm"
             >
               {isVerifying

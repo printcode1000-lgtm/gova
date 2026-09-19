@@ -2,17 +2,17 @@
 
 ## Objective
 
-The unified verification system owns one server-side challenge and proof model for registration, primary-phone changes, and password recovery. Clients may store transient UI state, but account-changing server operations only trust a short-lived signed `verificationProof` that is bound to purpose, phone, uid, email, and channel.
+The unified verification system owns one server-side challenge and proof model for registration, primary-phone changes, and password recovery. Every purpose uses the same 4-digit code length. Clients may store transient UI state, but account-changing server operations only trust a short-lived signed `verificationProof` that is bound to purpose, phone, uid, email, and channel.
 
 ## Channels
 
 - Egyptian phone numbers route to `egypt_admin_sms`. The server creates a dispatch challenge, notifies the Super Admin's Android phone, and that device redeems the dispatch and invokes SMS Sender locally. The SMS Sender application is an external executor; it is not part of this repository.
-- Non-Egyptian phone numbers route to `international_email`. The server sends a 6-digit code to the verified email address for the account or form.
+- Non-Egyptian phone numbers route to `international_email`. The server sends a 4-digit code to the verified email address for the account or form.
 
 ## Server Flow
 
 1. `/api/verification/request` normalizes the phone, selects the channel, applies rate limits, and creates a row in `verification_challenges`. The response carries challenge state only — no code, no dispatch ticket, no notification grant.
-2. `/api/verification/verify` compares the submitted 6-digit code with the stored digest, marks the challenge verified, and returns a signed proof.
+2. `/api/verification/verify` compares the submitted 4-digit code with the stored digest, marks the challenge verified, and returns a signed proof.
 3. Protected operations call `verificationProofConsumer.consume()` before registration, primary-phone changes, or password reset. Consumption marks the challenge used, so the proof cannot be replayed.
 4. `/api/verification/resend` rotates an existing challenge in place. The challenge row, its purpose and target bindings, and its rate-limit lineage are preserved; only the secret material changes — a new code for `international_email`, a new dispatch id, nonce digest, and ticket for `egypt_admin_sms`. The previous code and dispatch ticket stop being usable, `resend_count` increments, `attempts` resets, and the request is refused while the cooldown window is open or once the resend ceiling is reached.
 5. `/api/verification/admin-sms/redeem` returns the SMS number, message, and signed authorization for an admin SMS dispatch request. `/api/verification/admin-sms/status` records non-sensitive dispatch status.
@@ -79,6 +79,7 @@ Two things remain open on the SMS Sender side, tracked in that repository: local
 ## Client Rules
 
 - Registration and profile forms keep `verificationProof` in transient form state only.
+- The profile registration card uses the same `PhoneVerification` component with `purpose="primary_phone_change"`, so changing the phone number in `/profile?mode=edit` requires the same 4-digit verification code as registration and password recovery.
 - A local `phoneVerified` boolean can only drive presentation and disabled states.
 - No client code may generate, compare, or transport OTPs through WhatsApp.
 - Email is required by the registration and profile schemas as soon as the entered number is valid and non-Egyptian, because such a number can only be verified by email. The rule is injected into `createRegistrationSchema` / `createProfileSchema` as a `requiresEmail` predicate: the channel rule belongs to `@asol/verification-core`, which imports `@asol/auth-core` and therefore cannot be imported by it. The server enforces the same requirement independently, so a form built without the predicate can only discover the problem later, never bypass it.
@@ -98,7 +99,10 @@ Every verification failure travels as a stable Business API code with a localize
 | `verificationResendCooldown` | 429 | Resend attempted inside the cooldown window. |
 | `verificationSmsGatewayUnavailable` | 503 | No enabled Super Admin Android registration. Retriable; never a downgrade to email. |
 | `verificationDispatchFailed` | 503 | The dispatch notification could not be delivered. Retriable. |
+| `verificationDispatchTicketInvalid` / `verificationDispatchTicketExpired` | 400 | The native SMS gateway presented a malformed, mismatched, or expired one-time dispatch ticket. These are expected request rejections and are not persisted as `server.error` system faults. |
+| `verificationDispatchUnavailable` | 400 | A duplicate, obsolete, already-redeemed, or otherwise unavailable SMS dispatch was presented. This is expected duplicate-suppression state and is not persisted as `server.error`. |
 | `verificationProofRequired` / `verificationProofInvalid` / `verificationProofExpired` | 400 | A protected operation was called without a usable proof. |
+| `verificationProofPurposeMismatch` / `verificationProofPhoneMismatch` / `verificationProofUidMismatch` / `verificationProofEmailMismatch` / `verificationProofChannelMismatch` | 400 | A valid proof was presented for a different protected target or action. |
 
 
 

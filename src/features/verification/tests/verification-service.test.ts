@@ -122,6 +122,7 @@ async function main() {
     assert.equal(requested.channel, VerificationChannels.InternationalEmail);
     assert.equal(requested.dispatchId, undefined, "international requests must create no SMS dispatch");
     assert.equal(dispatcher.sent.length, 0, "international requests must issue no SMS dispatch");
+    assert.match(mailer.sent[0]!.code, /^\d{4}$/);
     assert.equal(JSON.stringify(requested).includes(mailer.sent[0]!.code), false, "the OTP must never leave the server");
 
     const row = operations.rows.get(requested.challengeId)!;
@@ -135,7 +136,7 @@ async function main() {
         purpose: "registration",
         phone: INTERNATIONAL,
         email: "u@example.com",
-        code: "000000",
+        code: "0000",
       }),
       /verificationCodeInvalid/,
     );
@@ -178,6 +179,12 @@ async function main() {
     );
     assert.equal(dispatcher.sent.length, 1, "the server dispatches the wake-up signal itself");
     assert.equal(operations.rows.get(web.challengeId)!.dispatchStatus, "pending");
+    const recoverySignal = dispatcher.sent[0]!;
+    const recoveryRedeemed = await service.redeemAdminSms({
+      dispatchId: web.dispatchId!,
+      dispatchTicket: recoverySignal.dispatchTicket,
+    });
+    assert.match(recoveryRedeemed.message, /\d{4}/, "password recovery SMS must carry exactly four digits");
 
     const native = await service.request(
       { purpose: "registration", phone: EGYPT, runtime: "android" },
@@ -203,7 +210,7 @@ async function main() {
     });
     assert.equal(redeemed.number, EGYPT);
     assert.equal(redeemed.replyPackage, "hgh.asol.app");
-    assert.match(redeemed.message, /\d{6}/);
+    assert.match(redeemed.message, /\d{4}/);
 
     // a replayed redemption must not produce a second SMS
     await assert.rejects(
@@ -211,7 +218,7 @@ async function main() {
       /verificationDispatchUnavailable/,
     );
 
-    const code = redeemed.message.match(/\d{6}/)![0];
+    const code = redeemed.message.match(/\d{4}/)![0];
     const proof = await service.verify({
       challengeId: native.challengeId,
       purpose: "registration",
@@ -279,6 +286,11 @@ async function main() {
       }),
       /verificationDispatch/,
     );
+    const profileChangeRedeemed = await service.redeemAdminSms({
+      dispatchId: resent.dispatchId!,
+      dispatchTicket: dispatcher.sent[1]!.dispatchTicket,
+    });
+    assert.match(profileChangeRedeemed.message, /\d{4}/, "primary phone change SMS must carry exactly four digits");
     assert.equal(mailer.sent.length, 0, "an Egyptian challenge never falls back to email");
   }
 }

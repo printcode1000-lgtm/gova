@@ -47,9 +47,10 @@ previously verified outputs.
 
 Android and iOS expose different capabilities:
 
-- Android requires a white monochrome small/status icon. The generator removes
-  the opaque SSOT background and emits an ASOL tree silhouette for every
-  density as `ic_stat_asol_notification`.
+- Android requires a white monochrome small/status icon. The generator derives
+  the visible SSOT mark for either supported polarity (coloured mark on neutral
+  field or neutral/white mark on chromatic field) and emits it for every density
+  as `ic_stat_asol_notification`.
 - Android expanded notifications additionally use the full-colour
   `asol_notification_large_icon`.
 - Android adaptive launchers receive a separate monochrome layer for themed
@@ -63,6 +64,16 @@ Android and iOS expose different capabilities:
 The Android manifest, native receiver, FCM transports, and Capacitor local
 notification configuration all use the runtime constants or generated resource
 names pinned by `test:branding-core`.
+
+## Native launch contract
+
+The operating-system launch frame is also branding-owned and appears before the
+Capacitor WebView can render anything. Android uses the generated monochrome
+white mark over `ic_launcher_background`; iOS uses a generated full-frame image
+with the sampled SSOT background and only the centered white mark. The iOS
+storyboard fallback colour is synchronized from the same SSOT sample. The
+branding test pins these relationships so a future icon change cannot silently
+reintroduce the full icon tile or a white launch background.
 
 ## Boundary with Google Play
 

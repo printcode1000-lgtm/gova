@@ -4,6 +4,7 @@ import { randomBytes, timingSafeEqual } from "node:crypto";
 import { VerificationOperations } from "@asol/data-core/verification";
 import {
   VERIFICATION_CODE_TTL_MS,
+  VERIFICATION_CODE_LENGTH,
   VERIFICATION_DISPATCH_TICKET_TTL_MS,
   VERIFICATION_MAX_CODE_ATTEMPTS,
   VERIFICATION_MAX_IP_REQUESTS,
@@ -286,7 +287,10 @@ export class VerificationService {
     const purpose = assertVerificationPurpose(input.purpose);
     const phone = normalizeVerificationPhone(input.phone);
     const email = normalizeVerificationEmail(input.email);
-    if (typeof input.code !== "string" || !/^\d{6}$/.test(input.code)) {
+    if (
+      typeof input.code !== "string" ||
+      !new RegExp(`^\\d{${VERIFICATION_CODE_LENGTH}}$`).test(input.code)
+    ) {
       throw new Error("verificationCodeInvalid");
     }
     const challenge = await this.operations.findById(input.challengeId);

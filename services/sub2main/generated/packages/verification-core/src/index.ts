@@ -78,7 +78,7 @@ export interface VerificationSmsAuthorizationClaims {
   nonce: string;
 }
 
-export const VERIFICATION_CODE_LENGTH = 6;
+export const VERIFICATION_CODE_LENGTH = 4;
 export const VERIFICATION_CODE_TTL_MS = 10 * 60 * 1000;
 export const VERIFICATION_PROOF_TTL_MS = 10 * 60 * 1000;
 export const VERIFICATION_DISPATCH_TICKET_TTL_MS = 5 * 60 * 1000;

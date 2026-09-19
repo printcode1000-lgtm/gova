@@ -7,7 +7,11 @@ import { isValidPhone } from '@asol/auth-core';
 import { authService } from '../services/auth-service';
 import { getPlatformName } from '@asol/native-core';
 import { verificationApiService } from '@/features/verification';
-import type { VerificationChannel, VerificationPurpose } from '@asol/verification-core';
+import {
+  VERIFICATION_CODE_LENGTH,
+  type VerificationChannel,
+  type VerificationPurpose,
+} from '@asol/verification-core';
 
 const RESEND_COUNTDOWN = 60;
 
@@ -106,7 +110,7 @@ export function usePhoneVerification(purpose: VerificationPurpose = 'registratio
   };
 
   const handleVerifyOtp = async (inputOtp: string, phone: string, onVerified: (verificationProof: string) => void) => {
-    if (inputOtp.length !== 6 || !challengeId) {
+    if (inputOtp.length !== VERIFICATION_CODE_LENGTH || !challengeId) {
       setOtpError(t('auth.phone.otpLength'));
       return;
     }

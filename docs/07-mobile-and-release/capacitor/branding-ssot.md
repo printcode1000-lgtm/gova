@@ -14,7 +14,7 @@ Do not edit generated Android, iOS, or web icons directly. Replace the SSOT imag
 npm run branding:generate
 ```
 
-The source must be a square PNG at least 500x500. Its original background is preserved; opaque images are supported. The generator rejects known legacy branding paths if they reappear.
+The source must be a square PNG at least 500x500. Opaque and transparent source images are supported. Web and legacy Android outputs preserve source transparency; iOS AppIcon output is flattened onto the sampled icon background because App Store icons must not contain alpha. The generator rejects known legacy branding paths if they reappear.
 
 ## Generated Assets
 
@@ -38,7 +38,7 @@ The source must be a square PNG at least 500x500. Its original background is pre
 - iOS `AppIcon-512@2x.png`.
 - All iOS Launch Screen image scales.
 
-The generator preserves the complete source frame and its original background. Web, iOS, and legacy Android icons are not trimmed, cropped, padded, or flattened onto another color. Android adaptive foreground icons use a 72% content scale with opaque padding sampled from the source image's top-left background pixel so Android's launcher mask does not make the artwork appear oversized; no transparency or unrelated replacement color is introduced. Platform-specific files are resized only to the exact pixel dimensions required by Android and iOS.
+The generator preserves the complete source frame for Web and legacy Android icons. iOS AppIcon output keeps the same artwork but removes alpha by flattening onto a background sampled from inside the source frame. Android adaptive foreground icons use a 72% content scale with padding sampled from the source near its upper-left interior so transparent rounded corners do not accidentally become black; Android's launcher mask therefore keeps the artwork at the intended optical size. Platform-specific files are resized only to the exact pixel dimensions required by Android and iOS.
 
 ## Automatic Generation
 
@@ -60,8 +60,9 @@ replacing the SSOT.
 ## Notification identity
 
 - **Android status bar:** Android requires a white monochrome small icon. The
-  package derives the ASOL tree silhouette from the SSOT and generates
-  `ic_stat_asol_notification` for every density. FCM, the application manifest,
+  package derives the visible application mark from the SSOT and generates
+  `ic_stat_asol_notification` for every density. It supports both a coloured
+  mark on a neutral field and a neutral/white mark on a chromatic field. FCM, the application manifest,
   Capacitor local notifications, and the application-owned native receiver all
   use that resource name.
 - **Android expanded notification:** the native receiver also displays
@@ -82,11 +83,12 @@ The first frame shown after tapping an application is controlled by the operatin
 
 ASOL makes this phase visually continuous instead of showing a separate Capacitor page:
 
-- Android uses `@mipmap/ic_launcher_foreground` on the shared white launch background.
+- The launch background is sampled from the authoritative icon itself. For the current SSOT it resolves to the icon blue (`#0866FF`).
+- Android uses `@drawable/ic_launcher_monochrome` as the system splash artwork, so only the white SSOT mark is visible over the sampled blue background; the full launcher tile is never drawn on the launch frame.
 - Android splash animation duration is zero.
 - Android immediately applies `AppTheme.NoActionBar` after the system frame.
 - Legacy Capacitor `drawable*/splash.png` files are deleted by the generator.
-- iOS Launch Screen images use the same ASOL SSOT icon on white.
+- iOS Launch Screen images are generated as the same sampled blue full frame with only a centered white SSOT mark. The storyboard fallback background is generated from the same sampled colour, so no white system-background flash is permitted before WebView startup.
 - React Splash continues immediately after native WebView startup.
 
 There is no application route or HTML page before `/`. The only pre-React frame is the mandatory native operating-system launch frame.
@@ -119,11 +121,11 @@ npm run cap:build
 After generation:
 
 - no Android `drawable*/splash.png` should exist;
-- Android launch theme must reference `ic_launcher_foreground`;
+- Android launch theme must use the SSOT-derived `ic_launcher_background` plus the transparent white `ic_launcher_monochrome` mark, and must not use the full adaptive foreground as splash artwork;
 - Android adaptive XML must reference `ic_launcher_monochrome`;
 - Android status icons must be transparent monochrome ASOL silhouettes and the
   native receiver must use the full-colour large icon;
-- iOS AppIcon and Splash must show ASOL, not the Capacitor placeholder;
+- iOS AppIcon must show ASOL, and every native Splash image must be an opaque SSOT-blue frame with only the centered white mark; the LaunchScreen storyboard fallback background must match the same sampled SSOT colour;
 - `public/logo.png` must be derived from the same SSOT;
 - `cap:build` must synchronize Android and iOS without creating an APK or IPA.
 

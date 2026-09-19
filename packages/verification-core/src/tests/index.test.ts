@@ -4,6 +4,7 @@ import path from "node:path";
 
 import {
   VerificationChannels,
+  VERIFICATION_CODE_LENGTH,
   VerificationPurposes,
   VerificationStates,
   assertInternationalEmail,
@@ -30,6 +31,7 @@ const manifest = JSON.parse(
 ) as { exports: Record<string, unknown> };
 assert.deepEqual(Object.keys(manifest.exports).sort(), [".", "./server"].sort());
 
+assert.equal(VERIFICATION_CODE_LENGTH, 4);
 assert.equal(normalizeVerificationPhone("01026546550"), "+201026546550");
 assert.equal(verificationChannelForPhone("+201026546550"), VerificationChannels.EgyptAdminSms);
 assert.equal(verificationChannelForPhone("+966501234567"), VerificationChannels.InternationalEmail);
@@ -67,7 +69,7 @@ const ticket = signVerificationDispatchTicket(
   { secret },
 );
 assert.equal(verifyVerificationDispatchTicket(ticket, { secret }).dispatchId, "vdp_1");
-assert.match(createVerificationCode(), /^\d{6}$/);
+assert.match(createVerificationCode(), /^\d{4}$/);
 
 assert.ok(canTransitionVerificationState(VerificationStates.DispatchPending, VerificationStates.CodeSent));
 assert.ok(canTransitionVerificationState(VerificationStates.CodeSent, VerificationStates.Verified));
@@ -96,7 +98,7 @@ assert.throws(
   const privateKeyPem = privateKey.export({ type: "pkcs8", format: "pem" }).toString();
   const publicKeyPem = publicKey.export({ type: "spki", format: "pem" }).toString();
   const number = "+201026546550";
-  const message = "code 123456";
+  const message = "code 1234";
   const claims = createSmsAuthorizationClaims({ requestId: "vdp_1", number, message });
   const authorization = signSmsAuthorization(claims, { secret, privateKeyPem });
 
@@ -107,7 +109,7 @@ assert.throws(
   // A tampered body, a swapped destination, or a replayed request id all fail
   // before anything reaches the radio.
   assert.throws(
-    () => verifySmsAuthorization(authorization, { requestId: "vdp_1", number, message: "code 000000" }, { publicKeyPem }),
+    () => verifySmsAuthorization(authorization, { requestId: "vdp_1", number, message: "code 0000" }, { publicKeyPem }),
     /verificationSmsAuthorizationInvalid/,
   );
   assert.throws(

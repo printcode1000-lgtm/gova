@@ -15,6 +15,9 @@ export const QUIET_MAPPED_SERVICE_ERROR_CODES = new Set([
   'devCloudBackupFileRequired',
   'sessionTokenInvalid',
   'sessionTokenExpired',
+  'verificationDispatchTicketInvalid',
+  'verificationDispatchTicketExpired',
+  'verificationDispatchUnavailable',
 ]);
 
 const PROFILE_SAVE_REJECTION_CODES = new Set([
