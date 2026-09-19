@@ -21,7 +21,7 @@ function buildPayload(input: NotificationProviderSendInput, token: RegisteredNot
     notificationId: input.payload.notificationId,
     templateId: input.payload.templateId,
     dedupeKey: input.payload.dedupeKey,
-    title: input.payload.title ?? input.payload.templateId ?? 'ASOL',
+    title: input.payload.title ?? input.payload.templateId ?? 'Pbook',
     body: input.payload.body ?? String(input.payload.variables?.message ?? ''),
     category: input.payload.category,
     priority: input.payload.priority,

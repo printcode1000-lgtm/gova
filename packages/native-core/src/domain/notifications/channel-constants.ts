@@ -33,15 +33,15 @@ export type FrozenChannelId = (typeof FROZEN_CHANNEL_IDS)[number];
 export const DEFAULT_CHANNELS: readonly NotificationChannel[] = [
   {
     id: "asol_general_v4",
-    name: "أصول - الإشعارات العامة (نغمة مخصصة)",
-    description: "الإشعارات العامة من أصول",
+    name: "بيبوك - الإشعارات العامة (نغمة مخصصة)",
+    description: "الإشعارات العامة من بيبوك",
     importance: 4,
     vibration: true,
     sound: DEFAULT_CHANNEL_SOUND,
   },
   {
     id: "asol_orders_v4",
-    name: "أصول - الطلبات (نغمة مخصصة)",
+    name: "بيبوك - الطلبات (نغمة مخصصة)",
     description: "تحديثات الطلبات والشحن والإرجاع",
     importance: 4,
     vibration: true,
@@ -49,7 +49,7 @@ export const DEFAULT_CHANNELS: readonly NotificationChannel[] = [
   },
   {
     id: "asol_chat_v4",
-    name: "أصول - المحادثات (نغمة مخصصة)",
+    name: "بيبوك - المحادثات (نغمة مخصصة)",
     description: "الرسائل والمحادثات الجديدة",
     importance: 4,
     vibration: true,
@@ -57,7 +57,7 @@ export const DEFAULT_CHANNELS: readonly NotificationChannel[] = [
   },
   {
     id: "asol_urgent_v4",
-    name: "أصول - التنبيهات العاجلة (نغمة مخصصة)",
+    name: "بيبوك - التنبيهات العاجلة (نغمة مخصصة)",
     description: "التنبيهات العاجلة والمهمة",
     importance: 5,
     vibration: true,
@@ -65,15 +65,15 @@ export const DEFAULT_CHANNELS: readonly NotificationChannel[] = [
   },
   {
     id: "asol_updates_v4",
-    name: "أصول - التحديثات (نغمة مخصصة)",
-    description: "إشعارات التحديثات العامة من أصول",
+    name: "بيبوك - التحديثات (نغمة مخصصة)",
+    description: "إشعارات التحديثات العامة من بيبوك",
     importance: 4,
     vibration: true,
     sound: DEFAULT_CHANNEL_SOUND,
   },
   {
     id: "asol_silent_v4",
-    name: "أصول - إشعارات صامتة",
+    name: "بيبوك - إشعارات صامتة",
     description: "الإشعارات التي تصل بدون صوت أو اهتزاز",
     importance: 2,
     vibration: false,

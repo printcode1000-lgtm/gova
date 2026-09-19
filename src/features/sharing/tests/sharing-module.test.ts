@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 
+import { buildShareQrCodeFileName } from "../application/share-artifact-file-name";
 import {
   buildFacebookShareUrl,
   buildProductShareUrl,
@@ -30,6 +31,9 @@ const content = {
   text: "حالة ممتازة",
   url: productUrl,
 };
+assert.equal(buildShareQrCodeFileName(content), "pbook-product-هاتف S25 — 32,000 جنيه");
+assert.equal(buildShareQrCodeFileName(content).startsWith("asol-"), false);
+
 assert.equal(
   buildShareMessage(content),
   `هاتف S25 — 32,000 جنيه\nحالة ممتازة\n${productUrl}`,

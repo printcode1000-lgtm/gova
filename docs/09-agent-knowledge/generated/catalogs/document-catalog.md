@@ -10,6 +10,7 @@ Searchable inventory of hand-written and generated-entry Markdown documents.
 | Document | Path | Summary |
 |---|---|---|
 | Contact Us and Account Deletion | `docs/00-overview/contact-and-account-deletion.md` | The row button stages the deletion; it does not delete. `@asol/page-save-core` is the only place ASOL performs a user-triggered delete, so the page registers the `super-admin-users` scope through `usePageSaveOperationScope` and carries no delete button, confirmation, or result me |
+| Public Product Name | `docs/00-overview/public-product-name.md` | Defines the name ordinary end users see and separates it from the historical technical identity of the repository. |
 | Overview Domain | `docs/00-overview/README.md` | Repository/product-level orientation that does not belong to one implementation capability. |
 | ASOL technology and environment baseline | `docs/00-overview/technologies.md` | This is the human-readable dependency and toolchain baseline. The immutable, machine-checked reference is `config/runtime-compatibility-reference.json`; `package-lock.json` remains the complete transitive npm record. The tables below list every direct production and development p |
 | Architecture Glossary | `docs/01-architecture/00-glossary.md` | Stable vocabulary for agent retrieval. Use these terms consistently across all architecture documents. |

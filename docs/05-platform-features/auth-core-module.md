@@ -94,7 +94,8 @@ This migration was done without backward compatibility: legacy SHA-256 password 
 
 ### Account deletion
 
-- Confirmation phrases (either is valid): `DELETE ASOL ACCOUNT` or `احذف حساب أصول نهائيا`.
+- Displayed confirmation phrases (either is valid): `DELETE Pbook ACCOUNT` or `احذف حساب بيبوك نهائيا`.
+- The pre-rename phrases `DELETE ASOL ACCOUNT` and `احذف حساب أصول نهائيا` are still accepted by `isAccountDeletionPhraseValid()` so installed clients that lag the rename keep working; they are never displayed.
 - Requires current password + matching `sessionToken` + final UI warning.
 - Super Admin identity cannot be deleted from the public deletion page.
 - On success, client runs `clearAllClientStorage()` (session, cart, favorites, IndexedDB, cookies). Normal logout does **not** clear all client storage.

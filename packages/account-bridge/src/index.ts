@@ -79,7 +79,7 @@ export function resolveServiceOrigin(
 export function resolveRequiredServiceOrigin(method: string, route: string): string | null {
   const origin = resolveServiceOrigin(method, route);
   if (!origin && isBusinessApiPath(route)) {
-    throw new Error(`ASOL API route has no configured owner origin: ${method.toUpperCase()} ${pathOf(route)}`);
+    throw new Error(`Business API route has no configured owner origin: ${method.toUpperCase()} ${pathOf(route)}`);
   }
   return origin;
 }

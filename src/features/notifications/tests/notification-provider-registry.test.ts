@@ -86,7 +86,7 @@ async function main() {
   // Title and body live in the data map, which is what the native service and
   // the live JavaScript listener both read — so a background delivery and a
   // foreground one produce the same stored notification.
-  assert.equal(sentMessage?.message.data.title, "ASOL");
+  assert.equal(sentMessage?.message.data.title, "Pbook");
   assert.equal(sentMessage?.message.data.dedupeKey, "system.info:test");
   assert.equal(sentMessage?.message.data.uid, "usr_1");
 
@@ -193,7 +193,7 @@ async function main() {
   assert.ok(sentMessage, "No FCM message was captured.");
   const apple = (sentMessage as FcmHttpV1Message).message.apns;
   assert.ok(apple, "The FCM message carried no apns block.");
-  assert.equal(apple?.payload.aps.alert?.title, "ASOL");
+  assert.equal(apple?.payload.aps.alert?.title, "Pbook");
   assert.equal(apple?.payload.aps.sound, "custom_notification.caf");
   assert.equal(apple?.headers?.["apns-push-type"], "alert");
   // A normal-priority alert must not claim immediate delivery.

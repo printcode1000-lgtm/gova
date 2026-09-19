@@ -68,6 +68,8 @@ function oneOf<T extends string>(value: string, allowed: readonly T[]): T | unde
  * collapses to one notification.
  */
 function derivedIdentity(payload: InboundPushPayload, data: Record<string, unknown>): string {
+  // The legacy token stays in this dedupe key so identities of already-stored
+  // untitled pushes remain stable; it is never displayed.
   const title = payload.title || text(data, "title") || "ASOL";
   const body = payload.body || text(data, "body");
   const route = text(data, "routeHref");
@@ -75,11 +77,14 @@ function derivedIdentity(payload: InboundPushPayload, data: Record<string, unkno
 }
 
 /**
- * An `ASOL` shell with no data and no body.
+ * An app-name shell (current `Pbook`/`بيبوك` or the legacy `ASOL`) with no data
+ * and no body.
  *
  * Some Android delivery paths surface one for a data-only message. It carries
  * nothing to show and nothing to act on, so it is never imported.
  */
+const PLACEHOLDER_TITLES = new Set(["ASOL", "PBOOK", "بيبوك"]);
+
 export function isEmptySystemPlaceholderPayload(payload: InboundPushPayload): boolean {
   const data = payload.data ?? {};
   const hasData = Object.values(data).some(
@@ -87,7 +92,7 @@ export function isEmptySystemPlaceholderPayload(payload: InboundPushPayload): bo
   );
   const title = payload.title || text(data, "title") || "";
   const body = payload.body || text(data, "body");
-  return !hasData && title.toUpperCase() === "ASOL" && !body;
+  return !hasData && PLACEHOLDER_TITLES.has(title.trim().toUpperCase()) && !body;
 }
 
 /**
@@ -132,7 +137,7 @@ export function mapInboundPushToNotification(
     type: templateId ? NotificationTypes.Template : NotificationTypes.Custom,
     source: NotificationContentSources.Custom,
     templateId: templateId || undefined,
-    title: payload.title || text(data, "title") || "ASOL",
+    title: payload.title || text(data, "title") || "Pbook",
     body: payload.body || text(data, "body"),
     category:
       oneOf<NotificationCategory>(text(data, "category"), Object.values(NotificationCategories)) ??

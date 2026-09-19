@@ -244,7 +244,7 @@ export abstract class MarketplaceOrderPart1 {
       "INSERT INTO orders (id,order_number,buyer_id,order_type,delivery_address_snapshot_json,currency,notes,source,order_discount_total,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
       [
         oid,
-        input.orderNumber ?? `ASOL-${Date.now()}-${oid.slice(0, 6)}`,
+        input.orderNumber ?? `Pbook-${Date.now()}-${oid.slice(0, 6)}`,
         buyerId,
         type,
         JSON.stringify(input.deliveryAddress ?? {}),

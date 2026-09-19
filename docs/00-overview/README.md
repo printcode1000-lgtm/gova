@@ -8,6 +8,7 @@ Repository/product-level orientation that does not belong to one implementation 
 
 - [Technologies](./technologies.md) — primary technology/runtime overview.
 - [Contact and Account Deletion](./contact-and-account-deletion.md) — public support and account-deletion behavior.
+- [Public Product Name](./public-product-name.md) — the user-visible name (`Pbook` / `بيبوك`) versus historical internal identifiers.
 - [Project Knowledge Base](../README.md) — agent navigation and change workflow.
 
 ## Sources of Truth

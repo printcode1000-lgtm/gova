@@ -330,7 +330,7 @@
     "sound": "default"
   },
   "system.info": {
-    "title": "ASOL notice",
+    "title": "Pbook notice",
     "body": "{{message}}",
     "category": "system",
     "priority": "low",

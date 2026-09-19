@@ -251,8 +251,8 @@ See `.env.example` for templates. Capacitor-specific vars do not belong in `src/
 
 | Setting                     | Value                       | Notes                                                                 |
 | --------------------------- | --------------------------- | --------------------------------------------------------------------- |
-| `appId`                     | `hgh.asol.app`              | Android/iOS bundle identifier                                         |
-| `appName`                   | `ASOL`                      | Display name                                                          |
+| `appId`                     | `hgh.asol.app`              | Android/iOS bundle identifier (internal; intentionally unchanged)     |
+| `appName`                   | `Pbook`                     | Display name; see [Public Product Name](../../00-overview/public-product-name.md) |
 | `webDir`                    | `out`                       | **Always** the static export folder — never `.next` or `public` alone |
 | `android.allowMixedContent` | `true`                      | Allows mixed HTTP/HTTPS during dev reload                             |
 | `server.url`                | from `CAPACITOR_SERVER_URL` | Omitted in production (bundled `out/`)                                |

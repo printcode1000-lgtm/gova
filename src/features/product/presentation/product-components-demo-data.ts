@@ -40,7 +40,7 @@ export const PRODUCT_DEMO_DETAILS: ProductDetails = createEmptyProductDetails({
   },
   mainData: {
     name: "منتج تجريبي",
-    brand: "أصول",
+    brand: "بيبوك",
     manufacturer: "الشركة المصنعة",
     available: true,
     description: "وصف تجريبي للمنتج أو الخدمة المعروضة.",

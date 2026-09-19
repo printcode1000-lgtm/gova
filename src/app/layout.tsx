@@ -57,8 +57,8 @@ const SimulationRuntimeController = isDevelopment
 
 export const metadata: Metadata = {
   metadataBase: new URL(PUBLIC_SHARE_ORIGIN),
-  title: "Asol",
-  description: "Asol — تطبيق Next.js",
+  title: "Pbook",
+  description: "Pbook — بيبوك",
   icons: {
     icon: withBasePath(BRANDING_WEB_BROWSER_ICON_PATH),
     apple: withBasePath(BRANDING_WEB_BROWSER_ICON_PATH),

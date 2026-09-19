@@ -38,8 +38,8 @@ const SOCIALS = [
 
 const COPY = {
   ar: {
-    title: "تواصل مع أصول",
-    intro: "نحن هنا لمساعدتك. أرسل رسالتك وسيرد عليك فريق أصول في أقرب وقت.",
+    title: "تواصل مع بيبوك",
+    intro: "نحن هنا لمساعدتك. أرسل رسالتك وسيرد عليك فريق بيبوك في أقرب وقت.",
     name: "الاسم",
     email: "البريد الإلكتروني",
     phone: "رقم الهاتف (اختياري)",
@@ -58,18 +58,18 @@ const COPY = {
     faq: "الأسئلة الشائعة",
     faqs: [
       ["لماذا نثق في خدماتنا؟", "نثق في خدماتنا لأنها تعمل على بنية تحتية سحابية عالمية توفر استقرارًا عاليًا وسرعة في الاستجابة ووقت تشغيل مرتفع. هذا التطبيق يعتمد على خدمات وتقنيات متقدمة من Google لدعم الأداء، وحماية البيانات، واستمرارية الخدمة بأعلى قدر ممكن من الأمان والاعتمادية."],
-      ["كيف تعمل أصول في التسجيل أو شراء أو بيع منتج؟", "التسجيل في أصول مجاني تمامًا وسيظل مجانيًا دون رسوم أو اشتراكات. يمكنك شراء أي منتج بسهولة وإتمام الطلب ومتابعة حالته حتى الاستلام."],
-      ["كيف يمكنني عمل إعلان أو حملة تسويقية مجانية أو مخصصة؟", "بمجرد إنشاء صفحتك الخاصة على أصول، فإنها تصبح واجهة إعلانية مميزة لك، حيث يمكنك إضافة خدماتك، وإبراز المميز منها، وعرض معلوماتك للتواصل، كما يمكنك مشاركة صفحتك مع أي شخص في أي مكان. ويمكنك أيضًا إنشاء حملة دائمة داخل أصول عبر إضافة منتج خدمي ليظهر للمستخدمين كإعلان مستمر، أو التواصل معنا لطلب حملات عامة أو مخصصة تناسب نشاطك."],
+      ["كيف تعمل بيبوك في التسجيل أو شراء أو بيع منتج؟", "التسجيل في بيبوك مجاني تمامًا وسيظل مجانيًا دون رسوم أو اشتراكات. يمكنك شراء أي منتج بسهولة وإتمام الطلب ومتابعة حالته حتى الاستلام."],
+      ["كيف يمكنني عمل إعلان أو حملة تسويقية مجانية أو مخصصة؟", "بمجرد إنشاء صفحتك الخاصة على بيبوك، فإنها تصبح واجهة إعلانية مميزة لك، حيث يمكنك إضافة خدماتك، وإبراز المميز منها، وعرض معلوماتك للتواصل، كما يمكنك مشاركة صفحتك مع أي شخص في أي مكان. ويمكنك أيضًا إنشاء حملة دائمة داخل بيبوك عبر إضافة منتج خدمي ليظهر للمستخدمين كإعلان مستمر، أو التواصل معنا لطلب حملات عامة أو مخصصة تناسب نشاطك."],
       ["هل تقدمون خدمات تسويقية للشركات الصغيرة؟", "نعم، نقدم حلولًا تسويقية تناسب الشركات الناشئة والصغيرة والمتوسطة وحتى المؤسسات الكبيرة، مع خيارات مرنة حسب الميزانية والهدف."],
-      ["ما حدود مسؤولية أصول تجاه مقدمي الخدمة والمشترين وجودة المعروض؟", "تعمل أصول كمنصة لعرض المنتجات والخدمات والتواصل بين المستخدمين، وهي لا تضمن جدية مقدم الخدمة أو المشتري ولا جودة المنتج أو الخدمة. لذلك يجب على المستخدم التأكد بنفسه من الطرف الآخر، وعدم دفع أي مبلغ إلا بعد استلام المنتج أو الحصول على الخدمة والتأكد منها. كما تلتزم أصول بحذف أي صاحب منتج أو خدمة يثبت من خلال البلاغات أو المراجعة أنه يعرض منتجًا أو خدمة غير حقيقية أو يمارس أي نوع من أنواع الغش أو التضليل."],
+      ["ما حدود مسؤولية بيبوك تجاه مقدمي الخدمة والمشترين وجودة المعروض؟", "تعمل بيبوك كمنصة لعرض المنتجات والخدمات والتواصل بين المستخدمين، وهي لا تضمن جدية مقدم الخدمة أو المشتري ولا جودة المنتج أو الخدمة. لذلك يجب على المستخدم التأكد بنفسه من الطرف الآخر، وعدم دفع أي مبلغ إلا بعد استلام المنتج أو الحصول على الخدمة والتأكد منها. كما تلتزم بيبوك بحذف أي صاحب منتج أو خدمة يثبت من خلال البلاغات أو المراجعة أنه يعرض منتجًا أو خدمة غير حقيقية أو يمارس أي نوع من أنواع الغش أو التضليل."],
     ],
     privacy: "سياسة الخصوصية",
     delete: "حذف الحساب",
     options: ["استشارة", "تسويق رقمي", "إعلانات وهوية", "أخرى"],
   },
   en: {
-    title: "Contact ASOL",
-    intro: "We are here to help. Send your message and the ASOL team will reply as soon as possible.",
+    title: "Contact Pbook",
+    intro: "We are here to help. Send your message and the Pbook team will reply as soon as possible.",
     name: "Name",
     email: "Email",
     phone: "Phone (optional)",
@@ -88,10 +88,10 @@ const COPY = {
     faq: "Frequently Asked Questions",
     faqs: [
       ["Why do we trust our services?", "We trust our services because they run on a global cloud infrastructure that provides strong stability, fast response times, and high uptime. This app relies on advanced Google cloud services and technologies to support performance, data protection, and reliable service continuity."],
-      ["How does ASOL work for registration, buying, or selling a product?", "Registration on ASOL is completely free and stays free. You can buy products easily, complete the order, and track it until delivery."],
-      ["How can I create a free or customized advertisement or marketing campaign?", "Once you create your own page on ASOL, it becomes a distinctive promotional storefront for you, where you can add your products, highlight featured ones, show your contact information, and share your page with anyone anywhere. You can also create an ongoing campaign inside ASOL by adding a service product that appears to users as a continuous ad, or contact us for general or customized campaigns that suit your business."],
+      ["How does Pbook work for registration, buying, or selling a product?", "Registration on Pbook is completely free and stays free. You can buy products easily, complete the order, and track it until delivery."],
+      ["How can I create a free or customized advertisement or marketing campaign?", "Once you create your own page on Pbook, it becomes a distinctive promotional storefront for you, where you can add your products, highlight featured ones, show your contact information, and share your page with anyone anywhere. You can also create an ongoing campaign inside Pbook by adding a service product that appears to users as a continuous ad, or contact us for general or customized campaigns that suit your business."],
       ["Do you provide marketing services for small businesses?", "Yes. We provide marketing solutions for startups, small and medium businesses, and larger companies, with flexible options based on budget and goals."],
-      ["What are ASOL's responsibility limits regarding sellers, buyers, and the quality of listed products or services?","ASOL operates as a platform for listing products and services and enabling communication between users. It does not guarantee the seriousness of sellers or buyers, nor the quality of any product or service. Users should verify the other party themselves and should not make any payment until they receive the product or obtain the service and confirm it. ASOL also commits to removing any product or service provider proven through reports or review to be offering fake products or services or engaging in any form of fraud or deception."],
+      ["What are Pbook's responsibility limits regarding sellers, buyers, and the quality of listed products or services?","Pbook operates as a platform for listing products and services and enabling communication between users. It does not guarantee the seriousness of sellers or buyers, nor the quality of any product or service. Users should verify the other party themselves and should not make any payment until they receive the product or obtain the service and confirm it. Pbook also commits to removing any product or service provider proven through reports or review to be offering fake products or services or engaging in any form of fraud or deception."],
     ],
     privacy: "Privacy policy",
     delete: "Delete account",
@@ -126,7 +126,7 @@ export function ContactPageContent() {
     <main id='features-contact-presentation-contactpagecontent-main-1-i9hkfk' className="mx-auto w-full max-w-6xl space-y-8 px-4 py-8" dir={isRTL ? "rtl" : "ltr"}>
       <section id='features-contact-presentation-contactpagecontent-section-2-us1loa' className="overflow-hidden rounded-3xl bg-gradient-to-br from-primary to-secondary p-7 text-white shadow-xl md:p-12">
         <div id='features-contact-presentation-contactpagecontent-div-3-4wuxhc' className="max-w-2xl">
-          <div id='features-contact-presentation-contactpagecontent-div-4-drs26b' className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-sm"><FontAwesomeIcon id='features-contact-presentation-contactpagecontent-fontawesomeicon-5-nerzcj' icon={faHeadset} /> ASOL · أصول</div>
+          <div id='features-contact-presentation-contactpagecontent-div-4-drs26b' className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-sm"><FontAwesomeIcon id='features-contact-presentation-contactpagecontent-fontawesomeicon-5-nerzcj' icon={faHeadset} /> {isRTL ? "بيبوك" : "Pbook"}</div>
           <h1 id='features-contact-presentation-contactpagecontent-heading-6-yxkq8b' className="flex items-center gap-3 text-3xl font-bold md:text-5xl"><FontAwesomeIcon id='features-contact-presentation-contactpagecontent-fontawesomeicon-7-yw4x0h' icon={faMessage} className="text-3xl md:text-4xl" />{c.title}</h1>
           <p id='features-contact-presentation-contactpagecontent-text-8-6tr9xs' className="mt-4 text-lg text-white/90">{c.intro}</p>
         </div>

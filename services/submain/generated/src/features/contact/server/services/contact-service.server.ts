@@ -24,10 +24,10 @@ export class ContactService {
     const config = getPasswordRecoveryConfig();
     const transporter = nodemailer.createTransport({ service: "gmail", auth: { user: config.gmailUser, pass: config.gmailAppPassword } });
     await transporter.sendMail({
-      from: `ASOL <${config.gmailUser}>`, to: "suezbazaar@gmail.com", replyTo: `${input.name} <${input.email}>`,
-      subject: `رسالة تواصل جديدة من ${input.name} - أصول`,
+      from: `Pbook <${config.gmailUser}>`, to: "suezbazaar@gmail.com", replyTo: `${input.name} <${input.email}>`,
+      subject: `رسالة تواصل جديدة من ${input.name} - بيبوك`,
       text: `الاسم: ${input.name}\nالبريد: ${input.email}\nالهاتف: ${input.phone || "غير مذكور"}\nالخدمة: ${input.service}\n\n${input.message}`,
-      html: `<div dir="rtl" style="font-family:Arial,sans-serif;line-height:1.8"><h2>رسالة تواصل جديدة - أصول</h2><p><b>الاسم:</b> ${escapeHtml(input.name)}</p><p><b>البريد:</b> ${escapeHtml(input.email)}</p><p><b>الهاتف:</b> ${escapeHtml(input.phone || "غير مذكور")}</p><p><b>الخدمة:</b> ${escapeHtml(input.service)}</p><hr><p>${escapeHtml(input.message).replace(/\n/g, "<br>")}</p></div>`,
+      html: `<div dir="rtl" style="font-family:Arial,sans-serif;line-height:1.8"><h2>رسالة تواصل جديدة - بيبوك</h2><p><b>الاسم:</b> ${escapeHtml(input.name)}</p><p><b>البريد:</b> ${escapeHtml(input.email)}</p><p><b>الهاتف:</b> ${escapeHtml(input.phone || "غير مذكور")}</p><p><b>الخدمة:</b> ${escapeHtml(input.service)}</p><hr><p>${escapeHtml(input.message).replace(/\n/g, "<br>")}</p></div>`,
     });
     return { sent: true };
   }

@@ -36,7 +36,7 @@ const includePlugins = [...CAPACITOR_INCLUDE_PLUGINS];
 
 const config: CapacitorConfig = {
   appId: "hgh.asol.app",
-  appName: "ASOL",
+  appName: "Pbook",
   webDir: "out",
   includePlugins,
   android: {

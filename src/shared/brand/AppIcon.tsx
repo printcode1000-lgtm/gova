@@ -22,7 +22,7 @@ export default function AppIcon({ id, size = 'lg', className = '' }: AppIconProp
     <div id={id} className={`relative ${className}`}>
       <Image
         src={withBasePath(BRANDING_WEB_APP_ICON_PATH)}
-        alt="Asol App Icon"
+        alt="Pbook App Icon"
         width={sizes.imageWidth}
         height={sizes.imageHeight}
         loading="eager"

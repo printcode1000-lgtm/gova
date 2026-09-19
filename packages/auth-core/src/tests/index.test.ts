@@ -39,6 +39,12 @@ export function runConstantsTest() {
   assert.equal(isAccountDeletionPhraseValid(ACCOUNT_DELETION_PHRASE_EN), true);
   assert.equal(isAccountDeletionPhraseValid(ACCOUNT_DELETION_PHRASE_AR), true);
   assert.equal(isAccountDeletionPhraseValid('wrong phrase'), false);
+  // The displayed phrases carry the public product name.
+  assert.equal(ACCOUNT_DELETION_PHRASE_EN, 'DELETE Pbook ACCOUNT');
+  assert.equal(ACCOUNT_DELETION_PHRASE_AR, 'احذف حساب بيبوك نهائيا');
+  // Pre-rename phrases stay accepted for installed clients that lag the rename.
+  assert.equal(isAccountDeletionPhraseValid('DELETE ASOL ACCOUNT'), true);
+  assert.equal(isAccountDeletionPhraseValid('احذف حساب أصول نهائيا'), true);
   console.log('✅ auth-core constants test passed');
 }
 

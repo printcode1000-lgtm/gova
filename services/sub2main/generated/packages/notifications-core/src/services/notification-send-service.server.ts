@@ -194,7 +194,7 @@ export class NotificationSendService {
     return {
       notificationId: createNotificationId(),
       locale,
-      title: input.title?.trim() || "ASOL",
+      title: input.title?.trim() || "Pbook",
       body: input.body?.trim() || "",
       category: input.category ?? NotificationCategories.System,
       priority: input.priority ?? NotificationPriorities.Normal,

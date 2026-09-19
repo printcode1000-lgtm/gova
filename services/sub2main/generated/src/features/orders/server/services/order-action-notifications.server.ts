@@ -5,6 +5,7 @@ import { moneyVariablesByLocale } from "@/features/notifications/server";
 import { getMarketplaceOrderQueries } from "@asol/data-core/marketplace-orders";
 import { collectOrderPartyUids, excludeActorFromPartyUids } from "./order-party-helpers.server";
 import { issueOrderPartyGrant } from "./order-action-grants.server";
+import { formatPublicOrderNumber } from "../../application/public-order-number";
 
 type MarketplaceOrderQueries = ReturnType<typeof getMarketplaceOrderQueries>;
 type OrderDetails = NonNullable<
@@ -30,7 +31,7 @@ function uniqueUids(values: unknown[], actorUid: string) {
 }
 
 function orderNumber(details: OrderDetails) {
-  return String(details.order.orderNumber ?? details.order.id ?? "");
+  return formatPublicOrderNumber(details.order.orderNumber, details.order.id);
 }
 
 function partiesForSellerOrder(details: OrderDetails, sellerOrderId?: string) {

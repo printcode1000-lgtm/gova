@@ -83,7 +83,7 @@ The first frame shown after tapping an application is controlled by the operatin
 
 ASOL makes this phase visually continuous instead of showing a separate Capacitor page:
 
-- The launch background is sampled from the authoritative icon itself. For the current SSOT it resolves to the icon blue (`#0866FF`).
+- The launch background is sampled from the authoritative icon itself. For the current SSOT it resolves to the icon blue (`#086FFD`).
 - Android uses `@drawable/ic_launcher_monochrome` as the system splash artwork, so only the white SSOT mark is visible over the sampled blue background; the full launcher tile is never drawn on the launch frame.
 - Android splash animation duration is zero.
 - Android immediately applies `AppTheme.NoActionBar` after the system frame.

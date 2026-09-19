@@ -330,7 +330,7 @@
     "sound": "default"
   },
   "system.info": {
-    "title": "تنبيه من ASOL",
+    "title": "تنبيه من بيبوك",
     "body": "{{message}}",
     "category": "system",
     "priority": "low",

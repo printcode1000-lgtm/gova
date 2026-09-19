@@ -11,6 +11,7 @@ import { isSuperAdmin } from "@/features/auth";
 import { usePageSaveOperationScope } from "@/features/page-save/ui";
 import { useTranslation } from "@/shared/i18n";
 import { useOrdersListAutoRefresh } from "./OrderNotificationsController";
+import { formatPublicOrderNumber } from "../application/public-order-number";
 import {
   formatMoney,
   formatOrderDate,
@@ -179,7 +180,7 @@ export function OrdersPageContent() {
                     <div>
                       <p className="text-xs text-muted-foreground">{copy.orderNumber}</p>
                       <h2 className="font-bold">
-                        {String(order.orderNumber ?? id)}
+                        {formatPublicOrderNumber(order.orderNumber, id)}
                       </h2>
                       <p className="mt-1 text-xs text-muted-foreground">
                         {copy.orderDate}: {formatOrderDate(order.createdAt, locale)}

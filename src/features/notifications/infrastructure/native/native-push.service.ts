@@ -21,6 +21,7 @@ import { readNotificationLocale } from "../preferences/read-notification-locale"
 import { SingleFlight } from "../concurrency/keyed-mutex";
 import { asolNotificationRepository } from "../asol-notification-repository";
 import { pushDeviceStore } from "../push-device-store";
+import { nativeDeviceLabel } from "./native-device-label";
 import { nativeLocalNotificationService } from "./native-local-notification.service";
 import { nativePlatformService } from "./native-platform.service";
 
@@ -331,7 +332,7 @@ export class NativePushService {
       deviceId,
       token: tokenValue,
       locale: await readNotificationLocale(),
-      deviceLabel: platform === "android" ? "ASOL Android" : "ASOL iOS",
+      deviceLabel: nativeDeviceLabel(platform),
       enabled: true,
       lastSeenAt: now,
       createdAt: now,

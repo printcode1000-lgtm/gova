@@ -206,7 +206,7 @@ public class AsolPushMessagingService extends FirebaseMessagingService {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, record.channelId)
             .setSmallIcon(R.drawable.ic_stat_asol_notification)
             .setColor(context.getResources().getColor(R.color.notification_accent))
-            .setContentTitle(record.title.isEmpty() ? "ASOL" : record.title)
+            .setContentTitle(record.title.isEmpty() ? "Pbook" : record.title)
             .setContentText(record.body)
             .setStyle(new NotificationCompat.BigTextStyle().bigText(record.body))
             .setPriority(toCompatPriority(record.priority))

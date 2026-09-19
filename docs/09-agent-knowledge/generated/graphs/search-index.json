@@ -4483,6 +4483,71 @@
       ]
     },
     {
+      "id": "document:docs/00-overview/public-product-name.md",
+      "kind": "document",
+      "name": "Public Product Name",
+      "path": "docs/00-overview/public-product-name.md",
+      "summary": "Defines the name ordinary end users see and separates it from the historical technical identity of the repository.",
+      "tags": [
+        "@asol/auth-core",
+        "@asol/data-core",
+        "and",
+        "android/app/src/main/res/values/strings",
+        "android/app/src/main/res/values/strings.xml",
+        "defines",
+        "defines the name ordinary end users see and separates it from the historical technical identity of the repository.",
+        "docs/00-overview/public-product-name",
+        "docs/00-overview/public-product-name.md",
+        "end",
+        "fastlane/metadata",
+        "from",
+        "historical",
+        "identity",
+        "ios/app/app",
+        "ios/app/app.xcodeproj/project.pbxproj",
+        "ios/app/app/ar",
+        "ios/app/app/ar.lproj/infoplist.strings",
+        "ios/app/app/info",
+        "ios/app/app/info.plist",
+        "ios/shareextension/",
+        "it",
+        "json",
+        "lproj/infoplist",
+        "md",
+        "name",
+        "of",
+        "ordinary",
+        "packages/native-core",
+        "pbxproj",
+        "plist",
+        "product",
+        "public",
+        "public product name",
+        "repository",
+        "see",
+        "separates",
+        "server",
+        "src/app/layout",
+        "src/app/layout.tsx",
+        "src/features/notifications/infrastructure/native/native-device-label",
+        "src/features/notifications/infrastructure/native/native-device-label.ts",
+        "src/features/sharing/server/share-metadata",
+        "src/features/sharing/server/share-metadata.server.ts",
+        "src/shared/locales/ar",
+        "src/shared/locales/ar.json",
+        "src/shared/locales/en",
+        "src/shared/locales/en.json",
+        "strings",
+        "technical",
+        "the",
+        "ts",
+        "tsx",
+        "users",
+        "xcodeproj/project",
+        "xml"
+      ]
+    },
+    {
       "id": "document:docs/00-overview/README.md",
       "kind": "document",
       "name": "Overview Domain",
@@ -29058,6 +29123,17 @@
       ]
     },
     {
+      "id": "source:android/app/src/main/res/values-ar/strings.xml",
+      "kind": "source",
+      "name": "strings.xml",
+      "path": "android/app/src/main/res/values-ar/strings.xml",
+      "tags": [
+        "android/app/src/main/res/values-ar/strings",
+        "android/app/src/main/res/values-ar/strings.xml",
+        "xml"
+      ]
+    },
+    {
       "id": "source:android/app/src/main/res/values/ic_launcher_background.xml",
       "kind": "source",
       "name": "ic_launcher_background.xml",
@@ -47056,6 +47132,17 @@
       ]
     },
     {
+      "id": "source:src/features/notifications/infrastructure/native/native-device-label.ts",
+      "kind": "source",
+      "name": "native-device-label.ts",
+      "path": "src/features/notifications/infrastructure/native/native-device-label.ts",
+      "tags": [
+        "src/features/notifications/infrastructure/native/native-device-label",
+        "src/features/notifications/infrastructure/native/native-device-label.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/notifications/infrastructure/native/native-inbox.service.ts",
       "kind": "source",
       "name": "native-inbox.service.ts",
@@ -47878,6 +47965,17 @@
         "server",
         "src/features/orders/application/order-detail-loader",
         "src/features/orders/application/order-detail-loader.server.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/orders/application/public-order-number.ts",
+      "kind": "source",
+      "name": "public-order-number.ts",
+      "path": "src/features/orders/application/public-order-number.ts",
+      "tags": [
+        "src/features/orders/application/public-order-number",
+        "src/features/orders/application/public-order-number.ts",
         "ts"
       ]
     },
@@ -51294,6 +51392,17 @@
       ]
     },
     {
+      "id": "source:src/features/sharing/application/share-artifact-file-name.ts",
+      "kind": "source",
+      "name": "share-artifact-file-name.ts",
+      "path": "src/features/sharing/application/share-artifact-file-name.ts",
+      "tags": [
+        "src/features/sharing/application/share-artifact-file-name",
+        "src/features/sharing/application/share-artifact-file-name.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/sharing/application/share-content.ts",
       "kind": "source",
       "name": "share-content.ts",
@@ -54609,6 +54718,18 @@
       ]
     },
     {
+      "id": "test:packages/native-core/src/tests/contract/public-app-name.test.ts",
+      "kind": "test",
+      "name": "public-app-name.test.ts",
+      "path": "packages/native-core/src/tests/contract/public-app-name.test.ts",
+      "tags": [
+        "packages/native-core/src/tests/contract/public-app-name",
+        "packages/native-core/src/tests/contract/public-app-name.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/native-core/src/tests/index.test.ts",
       "kind": "test",
       "name": "index.test.ts",
@@ -56465,6 +56586,18 @@
       ]
     },
     {
+      "id": "test:src/features/notifications/tests/native-device-label.test.ts",
+      "kind": "test",
+      "name": "native-device-label.test.ts",
+      "path": "src/features/notifications/tests/native-device-label.test.ts",
+      "tags": [
+        "src/features/notifications/tests/native-device-label",
+        "src/features/notifications/tests/native-device-label.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:src/features/notifications/tests/notification-account-surface.test.ts",
       "kind": "test",
       "name": "notification-account-surface.test.ts",
@@ -56749,6 +56882,18 @@
       "tags": [
         "src/features/orders/tests/order-party-helpers",
         "src/features/orders/tests/order-party-helpers.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/features/orders/tests/public-order-number.test.ts",
+      "kind": "test",
+      "name": "public-order-number.test.ts",
+      "path": "src/features/orders/tests/public-order-number.test.ts",
+      "tags": [
+        "src/features/orders/tests/public-order-number",
+        "src/features/orders/tests/public-order-number.test.ts",
         "test",
         "ts"
       ]

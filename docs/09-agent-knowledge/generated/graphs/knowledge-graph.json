@@ -4483,6 +4483,71 @@
       ]
     },
     {
+      "id": "document:docs/00-overview/public-product-name.md",
+      "kind": "document",
+      "name": "Public Product Name",
+      "path": "docs/00-overview/public-product-name.md",
+      "summary": "Defines the name ordinary end users see and separates it from the historical technical identity of the repository.",
+      "tags": [
+        "@asol/auth-core",
+        "@asol/data-core",
+        "and",
+        "android/app/src/main/res/values/strings",
+        "android/app/src/main/res/values/strings.xml",
+        "defines",
+        "defines the name ordinary end users see and separates it from the historical technical identity of the repository.",
+        "docs/00-overview/public-product-name",
+        "docs/00-overview/public-product-name.md",
+        "end",
+        "fastlane/metadata",
+        "from",
+        "historical",
+        "identity",
+        "ios/app/app",
+        "ios/app/app.xcodeproj/project.pbxproj",
+        "ios/app/app/ar",
+        "ios/app/app/ar.lproj/infoplist.strings",
+        "ios/app/app/info",
+        "ios/app/app/info.plist",
+        "ios/shareextension/",
+        "it",
+        "json",
+        "lproj/infoplist",
+        "md",
+        "name",
+        "of",
+        "ordinary",
+        "packages/native-core",
+        "pbxproj",
+        "plist",
+        "product",
+        "public",
+        "public product name",
+        "repository",
+        "see",
+        "separates",
+        "server",
+        "src/app/layout",
+        "src/app/layout.tsx",
+        "src/features/notifications/infrastructure/native/native-device-label",
+        "src/features/notifications/infrastructure/native/native-device-label.ts",
+        "src/features/sharing/server/share-metadata",
+        "src/features/sharing/server/share-metadata.server.ts",
+        "src/shared/locales/ar",
+        "src/shared/locales/ar.json",
+        "src/shared/locales/en",
+        "src/shared/locales/en.json",
+        "strings",
+        "technical",
+        "the",
+        "ts",
+        "tsx",
+        "users",
+        "xcodeproj/project",
+        "xml"
+      ]
+    },
+    {
       "id": "document:docs/00-overview/README.md",
       "kind": "document",
       "name": "Overview Domain",
@@ -29058,6 +29123,17 @@
       ]
     },
     {
+      "id": "source:android/app/src/main/res/values-ar/strings.xml",
+      "kind": "source",
+      "name": "strings.xml",
+      "path": "android/app/src/main/res/values-ar/strings.xml",
+      "tags": [
+        "android/app/src/main/res/values-ar/strings",
+        "android/app/src/main/res/values-ar/strings.xml",
+        "xml"
+      ]
+    },
+    {
       "id": "source:android/app/src/main/res/values/ic_launcher_background.xml",
       "kind": "source",
       "name": "ic_launcher_background.xml",
@@ -47056,6 +47132,17 @@
       ]
     },
     {
+      "id": "source:src/features/notifications/infrastructure/native/native-device-label.ts",
+      "kind": "source",
+      "name": "native-device-label.ts",
+      "path": "src/features/notifications/infrastructure/native/native-device-label.ts",
+      "tags": [
+        "src/features/notifications/infrastructure/native/native-device-label",
+        "src/features/notifications/infrastructure/native/native-device-label.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/notifications/infrastructure/native/native-inbox.service.ts",
       "kind": "source",
       "name": "native-inbox.service.ts",
@@ -47878,6 +47965,17 @@
         "server",
         "src/features/orders/application/order-detail-loader",
         "src/features/orders/application/order-detail-loader.server.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/orders/application/public-order-number.ts",
+      "kind": "source",
+      "name": "public-order-number.ts",
+      "path": "src/features/orders/application/public-order-number.ts",
+      "tags": [
+        "src/features/orders/application/public-order-number",
+        "src/features/orders/application/public-order-number.ts",
         "ts"
       ]
     },
@@ -51294,6 +51392,17 @@
       ]
     },
     {
+      "id": "source:src/features/sharing/application/share-artifact-file-name.ts",
+      "kind": "source",
+      "name": "share-artifact-file-name.ts",
+      "path": "src/features/sharing/application/share-artifact-file-name.ts",
+      "tags": [
+        "src/features/sharing/application/share-artifact-file-name",
+        "src/features/sharing/application/share-artifact-file-name.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/sharing/application/share-content.ts",
       "kind": "source",
       "name": "share-content.ts",
@@ -54609,6 +54718,18 @@
       ]
     },
     {
+      "id": "test:packages/native-core/src/tests/contract/public-app-name.test.ts",
+      "kind": "test",
+      "name": "public-app-name.test.ts",
+      "path": "packages/native-core/src/tests/contract/public-app-name.test.ts",
+      "tags": [
+        "packages/native-core/src/tests/contract/public-app-name",
+        "packages/native-core/src/tests/contract/public-app-name.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/native-core/src/tests/index.test.ts",
       "kind": "test",
       "name": "index.test.ts",
@@ -56465,6 +56586,18 @@
       ]
     },
     {
+      "id": "test:src/features/notifications/tests/native-device-label.test.ts",
+      "kind": "test",
+      "name": "native-device-label.test.ts",
+      "path": "src/features/notifications/tests/native-device-label.test.ts",
+      "tags": [
+        "src/features/notifications/tests/native-device-label",
+        "src/features/notifications/tests/native-device-label.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:src/features/notifications/tests/notification-account-surface.test.ts",
       "kind": "test",
       "name": "notification-account-surface.test.ts",
@@ -56749,6 +56882,18 @@
       "tags": [
         "src/features/orders/tests/order-party-helpers",
         "src/features/orders/tests/order-party-helpers.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
+      "id": "test:src/features/orders/tests/public-order-number.test.ts",
+      "kind": "test",
+      "name": "public-order-number.test.ts",
+      "path": "src/features/orders/tests/public-order-number.test.ts",
+      "tags": [
+        "src/features/orders/tests/public-order-number",
+        "src/features/orders/tests/public-order-number.test.ts",
         "test",
         "ts"
       ]
@@ -60564,6 +60709,11 @@
     },
     {
       "from": "command:test:notifications",
+      "to": "test:src/features/notifications/tests/native-device-label.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:notifications",
       "to": "test:src/features/notifications/tests/notification-account-surface.test.ts",
       "kind": "invokes"
     },
@@ -60760,6 +60910,11 @@
     {
       "from": "command:test:orders-module",
       "to": "test:src/features/orders/tests/order-party-helpers.test.ts",
+      "kind": "invokes"
+    },
+    {
+      "from": "command:test:orders-module",
+      "to": "test:src/features/orders/tests/public-order-number.test.ts",
       "kind": "invokes"
     },
     {
@@ -62794,6 +62949,71 @@
       "detail": "src/features/super-admin/presentation/SuperAdminUsersPage.tsx"
     },
     {
+      "from": "document:docs/00-overview/public-product-name.md",
+      "to": "domain:overview",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/00-overview/public-product-name.md",
+      "to": "package:@asol/auth-core",
+      "kind": "references",
+      "detail": "@asol/auth-core"
+    },
+    {
+      "from": "document:docs/00-overview/public-product-name.md",
+      "to": "package:@asol/data-core",
+      "kind": "references",
+      "detail": "@asol/data-core"
+    },
+    {
+      "from": "document:docs/00-overview/public-product-name.md",
+      "to": "package:@asol/native-core",
+      "kind": "references",
+      "detail": "packages/native-core"
+    },
+    {
+      "from": "document:docs/00-overview/public-product-name.md",
+      "to": "source:android/app/src/main/res/values/strings.xml",
+      "kind": "references",
+      "detail": "android/app/src/main/res/values/strings.xml"
+    },
+    {
+      "from": "document:docs/00-overview/public-product-name.md",
+      "to": "source:ios/App/App.xcodeproj/project.pbxproj",
+      "kind": "references",
+      "detail": "ios/App/App.xcodeproj/project.pbxproj"
+    },
+    {
+      "from": "document:docs/00-overview/public-product-name.md",
+      "to": "source:ios/App/App/Info.plist",
+      "kind": "references",
+      "detail": "ios/App/App/Info.plist"
+    },
+    {
+      "from": "document:docs/00-overview/public-product-name.md",
+      "to": "source:ios/ShareExtension/Info.plist",
+      "kind": "references",
+      "detail": "ios/ShareExtension/"
+    },
+    {
+      "from": "document:docs/00-overview/public-product-name.md",
+      "to": "source:src/app/layout.tsx",
+      "kind": "references",
+      "detail": "src/app/layout.tsx"
+    },
+    {
+      "from": "document:docs/00-overview/public-product-name.md",
+      "to": "source:src/features/notifications/infrastructure/native/native-device-label.ts",
+      "kind": "references",
+      "detail": "src/features/notifications/infrastructure/native/native-device-label.ts"
+    },
+    {
+      "from": "document:docs/00-overview/public-product-name.md",
+      "to": "source:src/features/sharing/server/share-metadata.server.ts",
+      "kind": "references",
+      "detail": "src/features/sharing/server/share-metadata.server.ts"
+    },
+    {
       "from": "document:docs/00-overview/README.md",
       "to": "domain:overview",
       "kind": "belongs-to"
@@ -62803,6 +63023,12 @@
       "to": "document:docs/00-overview/contact-and-account-deletion.md",
       "kind": "references",
       "detail": "./contact-and-account-deletion.md"
+    },
+    {
+      "from": "document:docs/00-overview/README.md",
+      "to": "document:docs/00-overview/public-product-name.md",
+      "kind": "references",
+      "detail": "./public-product-name.md"
     },
     {
       "from": "document:docs/00-overview/README.md",
@@ -75427,6 +75653,12 @@
     },
     {
       "from": "document:docs/07-mobile-and-release/capacitor/capacitor.md",
+      "to": "document:docs/00-overview/public-product-name.md",
+      "kind": "references",
+      "detail": "../../00-overview/public-product-name.md"
+    },
+    {
+      "from": "document:docs/07-mobile-and-release/capacitor/capacitor.md",
       "to": "document:docs/01-architecture/10-application-layers/README.md",
       "kind": "references",
       "detail": "../../01-architecture/10-application-layers/README.md"
@@ -86018,6 +86250,12 @@
     },
     {
       "from": "domain:architecture",
+      "to": "test:packages/native-core/src/tests/contract/public-app-name.test.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
       "to": "test:packages/native-core/src/tests/index.test.ts",
       "kind": "documents",
       "detail": "packages/"
@@ -89744,6 +89982,12 @@
     },
     {
       "from": "domain:mobile-and-release",
+      "to": "source:android/app/src/main/res/values-ar/strings.xml",
+      "kind": "documents",
+      "detail": "android/"
+    },
+    {
+      "from": "domain:mobile-and-release",
       "to": "source:android/app/src/main/res/values/ic_launcher_background.xml",
       "kind": "documents",
       "detail": "android/"
@@ -92391,6 +92635,12 @@
     {
       "from": "domain:mobile-and-release",
       "to": "test:packages/native-core/src/tests/contract/plugin-matrix.test.ts",
+      "kind": "documents",
+      "detail": "packages/native-core/"
+    },
+    {
+      "from": "domain:mobile-and-release",
+      "to": "test:packages/native-core/src/tests/contract/public-app-name.test.ts",
       "kind": "documents",
       "detail": "packages/native-core/"
     },
@@ -96530,6 +96780,12 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "source:src/features/notifications/infrastructure/native/native-device-label.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "source:src/features/notifications/infrastructure/native/native-inbox.service.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -96963,6 +97219,12 @@
     {
       "from": "domain:platform-features",
       "to": "source:src/features/orders/application/order-detail-loader.server.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
+      "to": "source:src/features/orders/application/public-order-number.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -98780,6 +99042,12 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "source:src/features/sharing/application/share-artifact-file-name.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "source:src/features/sharing/application/share-content.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -99686,6 +99954,12 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "test:packages/native-core/src/tests/contract/public-app-name.test.ts",
+      "kind": "documents",
+      "detail": "packages/native-core/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "test:packages/native-core/src/tests/index.test.ts",
       "kind": "documents",
       "detail": "packages/native-core/"
@@ -99908,6 +100182,12 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "test:src/features/notifications/tests/native-device-label.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "test:src/features/notifications/tests/notification-account-surface.test.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -100047,6 +100327,12 @@
     {
       "from": "domain:platform-features",
       "to": "test:src/features/orders/tests/order-party-helpers.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
+      "to": "test:src/features/orders/tests/public-order-number.test.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -100653,6 +100939,12 @@
     {
       "from": "domain:products-and-commerce",
       "to": "source:src/features/orders/application/order-detail-loader.server.ts",
+      "kind": "documents",
+      "detail": "src/features/orders/"
+    },
+    {
+      "from": "domain:products-and-commerce",
+      "to": "source:src/features/orders/application/public-order-number.ts",
       "kind": "documents",
       "detail": "src/features/orders/"
     },
@@ -101391,6 +101683,12 @@
     {
       "from": "domain:products-and-commerce",
       "to": "test:src/features/orders/tests/order-party-helpers.test.ts",
+      "kind": "documents",
+      "detail": "src/features/orders/"
+    },
+    {
+      "from": "domain:products-and-commerce",
+      "to": "test:src/features/orders/tests/public-order-number.test.ts",
       "kind": "documents",
       "detail": "src/features/orders/"
     },
@@ -106454,6 +106752,12 @@
     },
     {
       "from": "domain:ui-components",
+      "to": "source:src/features/notifications/infrastructure/native/native-device-label.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
       "to": "source:src/features/notifications/infrastructure/native/native-inbox.service.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -106887,6 +107191,12 @@
     {
       "from": "domain:ui-components",
       "to": "source:src/features/orders/application/order-detail-loader.server.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "source:src/features/orders/application/public-order-number.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -108704,6 +109014,12 @@
     },
     {
       "from": "domain:ui-components",
+      "to": "source:src/features/sharing/application/share-artifact-file-name.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
       "to": "source:src/features/sharing/application/share-content.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -109718,6 +110034,12 @@
     },
     {
       "from": "domain:ui-components",
+      "to": "test:src/features/notifications/tests/native-device-label.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
       "to": "test:src/features/notifications/tests/notification-account-surface.test.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -109857,6 +110179,12 @@
     {
       "from": "domain:ui-components",
       "to": "test:src/features/orders/tests/order-party-helpers.test.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
+      "to": "test:src/features/orders/tests/public-order-number.test.ts",
       "kind": "documents",
       "detail": "src/features/"
     },
@@ -141437,6 +141765,11 @@
     },
     {
       "from": "source:android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:android/app/src/main/res/values-ar/strings.xml",
       "to": "runtime:android",
       "kind": "affects-runtime"
     },
@@ -208165,6 +208498,36 @@
       "kind": "belongs-to"
     },
     {
+      "from": "source:src/features/notifications/infrastructure/native/native-device-label.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/notifications/infrastructure/native/native-device-label.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/notifications/infrastructure/native/native-device-label.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/notifications/infrastructure/native/native-device-label.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/notifications/infrastructure/native/native-device-label.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/notifications/infrastructure/native/native-device-label.ts",
+      "to": "feature:notifications",
+      "kind": "belongs-to"
+    },
+    {
       "from": "source:src/features/notifications/infrastructure/native/native-inbox.service.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -208445,6 +208808,12 @@
       "to": "source:src/features/notifications/infrastructure/concurrency/keyed-mutex.ts",
       "kind": "imports",
       "detail": "../concurrency/keyed-mutex"
+    },
+    {
+      "from": "source:src/features/notifications/infrastructure/native/native-push.service.ts",
+      "to": "source:src/features/notifications/infrastructure/native/native-device-label.ts",
+      "kind": "imports",
+      "detail": "./native-device-label"
     },
     {
       "from": "source:src/features/notifications/infrastructure/native/native-push.service.ts",
@@ -212590,6 +212959,36 @@
       "detail": "@/features/system-logs/server"
     },
     {
+      "from": "source:src/features/orders/application/public-order-number.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/orders/application/public-order-number.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/orders/application/public-order-number.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/orders/application/public-order-number.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/orders/application/public-order-number.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/orders/application/public-order-number.ts",
+      "to": "feature:orders",
+      "kind": "belongs-to"
+    },
+    {
       "from": "source:src/features/orders/application/services/order-party-helpers.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -214331,6 +214730,12 @@
     },
     {
       "from": "source:src/features/orders/presentation/OrderDetailsPageContent.tsx",
+      "to": "source:src/features/orders/application/public-order-number.ts",
+      "kind": "imports",
+      "detail": "../application/public-order-number"
+    },
+    {
+      "from": "source:src/features/orders/presentation/OrderDetailsPageContent.tsx",
       "to": "source:src/features/orders/presentation/order-details/OrderDetailsPageContent.buyer-delivery.tsx",
       "kind": "imports",
       "detail": "./order-details/OrderDetailsPageContent.buyer-delivery"
@@ -214583,6 +214988,12 @@
     },
     {
       "from": "source:src/features/orders/presentation/OrdersPageContent.tsx",
+      "to": "source:src/features/orders/application/public-order-number.ts",
+      "kind": "imports",
+      "detail": "../application/public-order-number"
+    },
+    {
+      "from": "source:src/features/orders/presentation/OrdersPageContent.tsx",
       "to": "source:src/features/orders/presentation/order-labels.ts",
       "kind": "imports",
       "detail": "./order-labels"
@@ -214733,6 +215144,12 @@
       "to": "source:src/features/notifications/server.ts",
       "kind": "imports",
       "detail": "@/features/notifications/server"
+    },
+    {
+      "from": "source:src/features/orders/server/services/order-action-notifications.server.ts",
+      "to": "source:src/features/orders/application/public-order-number.ts",
+      "kind": "imports",
+      "detail": "../../application/public-order-number"
     },
     {
       "from": "source:src/features/orders/server/services/order-action-notifications.server.ts",
@@ -230035,6 +230452,42 @@
       "detail": "./share-links"
     },
     {
+      "from": "source:src/features/sharing/application/share-artifact-file-name.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/sharing/application/share-artifact-file-name.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/sharing/application/share-artifact-file-name.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/sharing/application/share-artifact-file-name.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/sharing/application/share-artifact-file-name.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/sharing/application/share-artifact-file-name.ts",
+      "to": "feature:sharing",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:src/features/sharing/application/share-artifact-file-name.ts",
+      "to": "source:src/features/sharing/application/share-content.ts",
+      "kind": "imports",
+      "detail": "./share-content"
+    },
+    {
       "from": "source:src/features/sharing/application/share-content.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -230267,6 +230720,12 @@
       "to": "source:src/features/sharing/application/share-actions.client.ts",
       "kind": "imports",
       "detail": "./share-actions.client"
+    },
+    {
+      "from": "source:src/features/sharing/application/ShareMenu.tsx",
+      "to": "source:src/features/sharing/application/share-artifact-file-name.ts",
+      "kind": "imports",
+      "detail": "./share-artifact-file-name"
     },
     {
       "from": "source:src/features/sharing/application/ShareMenu.tsx",
@@ -244258,6 +244717,41 @@
       "kind": "tests"
     },
     {
+      "from": "test:packages/native-core/src/tests/contract/public-app-name.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/native-core/src/tests/contract/public-app-name.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/native-core/src/tests/contract/public-app-name.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/native-core/src/tests/contract/public-app-name.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/native-core/src/tests/contract/public-app-name.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/native-core/src/tests/contract/public-app-name.test.ts",
+      "to": "package:@asol/native-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:packages/native-core/src/tests/contract/public-app-name.test.ts",
+      "to": "package:@asol/native-core",
+      "kind": "tests"
+    },
+    {
       "from": "test:packages/native-core/src/tests/index.test.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -244322,6 +244816,12 @@
       "to": "test:packages/native-core/src/tests/contract/plugin-matrix.test.ts",
       "kind": "imports",
       "detail": "./contract/plugin-matrix.test"
+    },
+    {
+      "from": "test:packages/native-core/src/tests/index.test.ts",
+      "to": "test:packages/native-core/src/tests/contract/public-app-name.test.ts",
+      "kind": "imports",
+      "detail": "./contract/public-app-name.test"
     },
     {
       "from": "test:packages/native-core/src/tests/index.test.ts",
@@ -251179,6 +251679,47 @@
       "kind": "uses-environment"
     },
     {
+      "from": "test:src/features/notifications/tests/native-device-label.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/native-device-label.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/native-device-label.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/native-device-label.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/native-device-label.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/notifications/tests/native-device-label.test.ts",
+      "to": "feature:notifications",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:src/features/notifications/tests/native-device-label.test.ts",
+      "to": "source:src/features/notifications/infrastructure/native/native-device-label.ts",
+      "kind": "imports",
+      "detail": "../infrastructure/native/native-device-label"
+    },
+    {
+      "from": "test:src/features/notifications/tests/native-device-label.test.ts",
+      "to": "feature:notifications",
+      "kind": "tests"
+    },
+    {
       "from": "test:src/features/notifications/tests/notification-account-surface.test.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -252388,6 +252929,47 @@
       "kind": "tests"
     },
     {
+      "from": "test:src/features/orders/tests/public-order-number.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/orders/tests/public-order-number.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/orders/tests/public-order-number.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/orders/tests/public-order-number.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/orders/tests/public-order-number.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:src/features/orders/tests/public-order-number.test.ts",
+      "to": "feature:orders",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:src/features/orders/tests/public-order-number.test.ts",
+      "to": "source:src/features/orders/application/public-order-number.ts",
+      "kind": "imports",
+      "detail": "../application/public-order-number"
+    },
+    {
+      "from": "test:src/features/orders/tests/public-order-number.test.ts",
+      "to": "feature:orders",
+      "kind": "tests"
+    },
+    {
       "from": "test:src/features/orders/tests/super-admin-clear-all-orders.test.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -253226,6 +253808,12 @@
       "from": "test:src/features/sharing/tests/sharing-module.test.ts",
       "to": "feature:sharing",
       "kind": "belongs-to"
+    },
+    {
+      "from": "test:src/features/sharing/tests/sharing-module.test.ts",
+      "to": "source:src/features/sharing/application/share-artifact-file-name.ts",
+      "kind": "imports",
+      "detail": "../application/share-artifact-file-name"
     },
     {
       "from": "test:src/features/sharing/tests/sharing-module.test.ts",

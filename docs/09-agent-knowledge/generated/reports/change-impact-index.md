@@ -27,9 +27,9 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `location` | feature | 1 | 0 | 3 | 0 | 2 | 0 |
 | `navigation` | feature | 1 | 0 | 0 | 0 | 0 | 4 |
 | `network` | feature | 1 | 1 | 0 | 0 | 0 | 3 |
-| `notifications` | feature | 3 | 40 | 49 | 0 | 12 | 18 |
+| `notifications` | feature | 3 | 41 | 49 | 0 | 12 | 18 |
 | `onboarding` | feature | 1 | 0 | 0 | 0 | 1 | 9 |
-| `orders` | feature | 1 | 2 | 9 | 0 | 1 | 14 |
+| `orders` | feature | 1 | 3 | 9 | 0 | 1 | 14 |
 | `ota` | feature | 9 | 0 | 5 | 0 | 0 | 7 |
 | `page-save` | feature | 3 | 2 | 25 | 0 | 11 | 7 |
 | `page-snapshot` | feature | 1 | 0 | 5 | 0 | 2 | 5 |
@@ -57,12 +57,12 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/account-declarations` | package | 14 | 11 | 46 | 0 | 43 | 0 |
 | `@asol/api-contract-core` | package | 4 | 1 | 132 | 0 | 26 | 0 |
 | `@asol/architecture-core` | package | 17 | 7 | 0 | 0 | 9 | 8 |
-| `@asol/auth-core` | package | 12 | 6 | 134 | 0 | 105 | 3 |
+| `@asol/auth-core` | package | 13 | 6 | 134 | 0 | 105 | 3 |
 | `@asol/branding-core` | package | 12 | 1 | 43 | 0 | 8 | 1 |
 | `@asol/catalog-core` | package | 8 | 1 | 13 | 0 | 17 | 1 |
 | `@asol/control-composition` | package | 6 | 1 | 0 | 0 | 2 | 1 |
 | `@asol/cors` | package | 13 | 4 | 77 | 0 | 35 | 0 |
-| `@asol/data-core` | package | 60 | 30 | 138 | 0 | 196 | 20 |
+| `@asol/data-core` | package | 61 | 30 | 138 | 0 | 196 | 20 |
 | `@asol/dev-core` | package | 7 | 1 | 22 | 0 | 1 | 0 |
 | `@asol/env-core` | package | 8 | 3 | 136 | 0 | 33 | 1 |
 | `@asol/favorites-core` | package | 7 | 3 | 3 | 0 | 12 | 7 |
@@ -72,7 +72,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/gova-deployment-core` | package | 5 | 3 | 0 | 0 | 9 | 4 |
 | `@asol/hero-slider-core` | package | 7 | 2 | 131 | 0 | 23 | 1 |
 | `@asol/map-core` | package | 10 | 1 | 2 | 0 | 9 | 7 |
-| `@asol/native-core` | package | 39 | 24 | 68 | 0 | 92 | 27 |
+| `@asol/native-core` | package | 40 | 25 | 68 | 0 | 92 | 27 |
 | `@asol/notifications-composition` | package | 12 | 3 | 0 | 0 | 11 | 8 |
 | `@asol/notifications-core` | package | 21 | 18 | 138 | 0 | 99 | 5 |
 | `@asol/observability-core` | package | 8 | 1 | 128 | 0 | 23 | 4 |

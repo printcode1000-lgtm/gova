@@ -492,20 +492,22 @@ scenario("an implausible timestamp is replaced, not stored", async () => {
   );
 });
 
-scenario("an empty ASOL placeholder never reaches the centre", async () => {
-  resetHarnessCompletely();
-  const { notifications } = await startAndroidSession();
+for (const appName of ["ASOL", "Pbook", "بيبوك"]) {
+  scenario(`an empty ${appName} app-name placeholder never reaches the centre`, async () => {
+    resetHarnessCompletely();
+    const { notifications } = await startAndroidSession();
 
-  await emitForegroundPush({
-    id: "placeholder",
-    title: "ASOL",
-    body: "",
-    data: {},
+    await emitForegroundPush({
+      id: `placeholder-${appName}`,
+      title: appName,
+      body: "",
+      data: {},
+    });
+
+    assert.equal((await notifications.list({ uid: UID })).length, 0);
+    assert.equal(harnessState.localDisplays.length, 0);
   });
-
-  assert.equal((await notifications.list({ uid: UID })).length, 0);
-  assert.equal(harnessState.localDisplays.length, 0);
-});
+}
 
 // ---------------------------------------------------------------------------
 // Commands

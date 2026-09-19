@@ -120,13 +120,13 @@ export function ProductPageContent({ id,
     (locale === "ar"
       ? details.pharmacySpecs.nameAr || details.pharmacySpecs.nameEn
       : details.pharmacySpecs.nameEn || details.pharmacySpecs.nameAr) ||
-    (locale === "ar" ? "منتج على ASOL" : "Product on ASOL");
+    (locale === "ar" ? "منتج على بيبوك" : "Product on Pbook");
   const productShareText =
     details.mainData.description ||
     details.price.label ||
     (locale === "ar"
-      ? "شاهد تفاصيل المنتج على ASOL"
-      : "View product details on ASOL");
+      ? "شاهد تفاصيل المنتج على بيبوك"
+      : "View product details on Pbook");
 
   const shareAction =
     mode === "view" && productShareUrl ? (

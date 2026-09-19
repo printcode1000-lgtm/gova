@@ -3,7 +3,7 @@
 ## Contact Us Page
 
 - Public Route: `/contact-us`.
-- Rebuilt within React and Next.js to align with Asol design, supporting both Arabic and English languages as well as RTL and LTR layouts.
+- Rebuilt within React and Next.js to align with the application design, supporting both Arabic and English languages as well as RTL and LTR layouts.
 - Retains phone numbers, email, Facebook, Instagram, and TikTok links, working hours, and the approved QR code from the legacy page.
 - Sends the contact form submission to `suezbazaar@gmail.com` using the configured Gmail account from password recovery environment variables, setting the sender's email in `Reply-To`.
 - Server validates name, email, service type, and message content, allowing up to 3 attempts per IP address per 15-minute window for each server instance.
@@ -14,7 +14,7 @@
 - Public Route: `/delete-account`, accessible from the Contact Us page.
 - UI lives in `src/features/auth/presentation/AccountDeletionPageContent.tsx`.
 - Core deletion logic lives in `@asol/auth-core/server` (`AccountDeletionService`).
-- Requires authentication, a signed `sessionToken` header, current password, exact confirmation text matching either `DELETE ASOL ACCOUNT` or `احذف حساب أصول نهائيا`, and approval of the final warning.
+- Requires authentication, a signed `sessionToken` header, current password, exact confirmation text matching either `DELETE Pbook ACCOUNT` or `احذف حساب بيبوك نهائيا` (the pre-rename ASOL phrases remain accepted, never displayed), and approval of the final warning.
 - Super Admin account cannot be deleted from this page.
 - The page has no delete button. It registers the `account-deletion` scope in `@asol/page-save-core`; the password, confirmation phrase, and final-warning checkbox gate `canSave`, and the header save icon runs the deletion. See `docs/05-platform-features/page-save-system.md`.
 - Endpoint: `POST /api/account/delete`.

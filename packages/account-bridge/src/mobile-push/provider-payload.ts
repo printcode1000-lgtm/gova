@@ -63,7 +63,7 @@ export function buildMobileProviderPayload(
   return {
     notificationId: createNotificationId(),
     locale,
-    title: send.title?.trim() || 'ASOL',
+    title: send.title?.trim() || 'Pbook',
     body: send.body?.trim() || '',
     category: send.category ?? NotificationCategories.System,
     priority: send.priority ?? NotificationPriorities.Normal,

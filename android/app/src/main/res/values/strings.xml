@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">ASOL</string>
-    <string name="title_activity_main">ASOL</string>
+    <string name="app_name">Pbook</string>
+    <string name="title_activity_main">Pbook</string>
     <string name="package_name">hgh.asol.app</string>
     <string name="custom_url_scheme">hgh.asol.app</string>
     <string name="default_notification_channel_id">asol_general_v4</string>

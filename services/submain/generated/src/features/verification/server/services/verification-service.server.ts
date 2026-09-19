@@ -381,7 +381,7 @@ export class VerificationService {
     // A duplicate redeem must never produce a second SMS carrying a code the
     // challenge no longer stores.
     if (!claimed) throw new Error("verificationDispatchUnavailable");
-    const message = `رمز التحقق من ASOL هو: ${code}`;
+    const message = `رمز التحقق من بيبوك هو: ${code}`;
     const authorization = signSmsAuthorization(
       createSmsAuthorizationClaims({
         requestId: challenge.dispatchId!,

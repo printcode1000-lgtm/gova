@@ -33,7 +33,7 @@ function normalizedOptions(options: QrCodePngOptions) {
 
   return {
     value,
-    fileName: `${baseName || "asol-qr-code"}.png`,
+    fileName: `${baseName || "pbook-qr-code"}.png`,
     width,
     margin,
     foreground: options.foreground ?? "#111827",

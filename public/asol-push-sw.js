@@ -100,7 +100,7 @@ function toNotificationEntity(payload) {
     type: payload.templateId ? 'template' : 'custom',
     source: payload.templateId ? 'template' : 'custom',
     templateId: payload.templateId || undefined,
-    title: payload.title || 'ASOL',
+    title: payload.title || 'Pbook',
     body: payload.body || '',
     category: normalizeCategory(payload.category),
     priority: normalizePriority(payload.priority),
@@ -241,7 +241,7 @@ self.addEventListener('push', (event) => {
   try {
     payload = event.data ? event.data.json() : {};
   } catch {
-    payload = { title: 'ASOL', body: event.data ? event.data.text() : '' };
+    payload = { title: 'Pbook', body: event.data ? event.data.text() : '' };
   }
 
   if (!isValidPushPayload(payload)) return;
@@ -251,7 +251,7 @@ self.addEventListener('push', (event) => {
     return;
   }
 
-  const title = payload.title || 'ASOL';
+  const title = payload.title || 'Pbook';
   const notificationIcon = new URL(
     'icons/asol-app-icon-192.png',
     self.registration.scope,

@@ -51,7 +51,7 @@ function customData(input: NotificationProviderSendInput, token: RegisteredNotif
     uid: token.uid,
     notificationId: input.payload.notificationId,
     dedupeKey: input.payload.dedupeKey,
-    title: input.payload.title ?? "ASOL",
+    title: input.payload.title ?? "Pbook",
     body: input.payload.body ?? "",
     category: input.payload.category,
     priority: input.payload.priority,
@@ -120,7 +120,7 @@ async function sendOne(
     const aps = dataOnly
       ? { "content-available": 1 }
       : {
-          alert: { title: input.payload.title ?? "ASOL", body: input.payload.body ?? "" },
+          alert: { title: input.payload.title ?? "Pbook", body: input.payload.body ?? "" },
           ...(sound ? { sound } : {}),
           badge: 1,
           "thread-id": input.payload.groupKey ?? input.payload.category,

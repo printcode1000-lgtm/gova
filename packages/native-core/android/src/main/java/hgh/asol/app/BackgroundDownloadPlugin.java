@@ -99,7 +99,7 @@ public class BackgroundDownloadPlugin extends Plugin {
                 ? DownloadManager.Request.VISIBILITY_HIDDEN
                 : DownloadManager.Request.VISIBILITY_VISIBLE);
         request.setDestinationUri(Uri.fromFile(destination));
-        request.setTitle("ASOL update");
+        request.setTitle("Pbook update");
 
         try {
             DownloadManager manager = manager();

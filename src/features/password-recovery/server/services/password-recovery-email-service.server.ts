@@ -12,9 +12,9 @@ export class PasswordRecoveryEmailService {
     });
 
     await transporter.sendMail({
-      from: `ASOL <${config.gmailUser}>`,
+      from: `Pbook <${config.gmailUser}>`,
       to: email,
-      subject: 'رمز استعادة كلمة المرور - ASOL',
+      subject: 'رمز استعادة كلمة المرور - بيبوك',
       text: `رمز استعادة كلمة المرور هو: ${code}\nينتهي الرمز خلال 10 دقائق.\nإذا لم تطلب هذا الرمز فتجاهل الرسالة.`,
       html: `<div dir="rtl" style="font-family:Arial,sans-serif;line-height:1.8">
         <h2>استعادة كلمة المرور</h2>

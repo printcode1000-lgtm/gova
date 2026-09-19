@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-19T09:38:25.464Z",
+  "generatedAt": "2026-09-19T14:41:42.786Z",
   "entryPoints": [
     "features/product-search/server/services/product-search-service.server.ts",
     "features/product-search/server/services/product-search-products.server.ts",
@@ -15,7 +15,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 495,
+  "fileCount": 496,
   "files": [
     "packages/account-declarations/src/accounts/gova-runtime-env-keys.ts",
     "packages/account-declarations/src/accounts/submain-runtime-env-keys.ts",
@@ -451,6 +451,7 @@
     "src/features/orders/application/order-actions.server.ts",
     "src/features/orders/application/order-data-refresh.ts",
     "src/features/orders/application/order-detail-loader.server.ts",
+    "src/features/orders/application/public-order-number.ts",
     "src/features/orders/application/services/order-party-helpers.ts",
     "src/features/orders/index.ts",
     "src/features/orders/ports/orders-core-ports.ts",

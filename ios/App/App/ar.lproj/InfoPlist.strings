@@ -1,0 +1,10 @@
+/* Arabic user-visible app name and permission explanations. Internal bundle identity is unchanged. */
+"CFBundleDisplayName" = "بيبوك";
+"CFBundleName" = "بيبوك";
+"NSMicrophoneUsageDescription" = "يستخدم بيبوك الميكروفون لإدخال النص في الحقول بالصوت.";
+"NSCameraUsageDescription" = "يستخدم بيبوك الكاميرا فقط عندما تختار التقاط صورة لمنتج أو متجر.";
+"NSPhotoLibraryUsageDescription" = "يتيح لك بيبوك اختيار صورة واحدة لمنتج أو متجر من مكتبة الصور.";
+"NSPhotoLibraryAddUsageDescription" = "يحفظ بيبوك صورة فقط عندما تطلب ذلك صراحةً.";
+"NSSpeechRecognitionUsageDescription" = "يحوّل بيبوك كلامك إلى نص فقط عندما تضغط زر الميكروفون.";
+"NSLocationWhenInUseUsageDescription" = "يستخدم بيبوك موقعك فقط أثناء فتح التطبيق، لعرض مقدّمي الخدمة القريبين وتعبئة عناوين التوصيل.";
+"NSDocumentsFolderUsageDescription" = "يصل بيبوك إلى المستندات فقط عندما تختار ملفًا لإرفاقه.";

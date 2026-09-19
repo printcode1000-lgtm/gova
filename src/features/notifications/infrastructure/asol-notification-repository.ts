@@ -58,15 +58,18 @@ const queueLock = (uid: string) => `queue:${uid}`;
 const analyticsLock = (uid: string) => `analytics:${uid}`;
 
 /**
- * An `ASOL` card with no body, route, template, or event.
+ * A card titled only with the app name (current `Pbook`/`بيبوك` or the legacy
+ * `ASOL`) with no body, route, template, or event.
  *
  * Some Android system paths deliver one when a data-only push has no
  * displayable content. It carries nothing, so it is never stored, and its
  * identity is remembered so a later re-delivery is not stored either.
  */
+const PLACEHOLDER_TITLES = new Set(["ASOL", "PBOOK", "بيبوك"]);
+
 function isEmptyPlaceholder(notification: NotificationEntity): boolean {
   return (
-    notification.title.trim().toUpperCase() === "ASOL" &&
+    PLACEHOLDER_TITLES.has(notification.title.trim().toUpperCase()) &&
     !notification.body.trim() &&
     !notification.route?.href &&
     !notification.templateId &&

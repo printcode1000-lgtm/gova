@@ -1,0 +1,3 @@
+/* Arabic user-visible app name. Internal bundle identity is unchanged. */
+"CFBundleDisplayName" = "بيبوك";
+"CFBundleName" = "بيبوك";

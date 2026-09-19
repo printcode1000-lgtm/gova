@@ -20,6 +20,8 @@
 		55F453B195B93562C878E136 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FEAE426BEAFAC36887BE5CA /* ShareViewController.swift */; };
 		A4CB1D68BCA3642800983DAD /* ShareExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 4CD0BCF048D9FE343D030C71 /* ShareExtension.appex */; };
 		A50100032E30000100000001 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A50100022E30000100000001 /* GoogleService-Info.plist */; };
+		A50200022E30000100000001 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A50200012E30000100000001 /* InfoPlist.strings */; };
+		A50200052E30000100000001 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A50200042E30000100000001 /* InfoPlist.strings */; };
 		A50100052E30000100000001 /* custom_notification.caf in Resources */ = {isa = PBXBuildFile; fileRef = A50100042E30000100000001 /* custom_notification.caf */; };
 		A50100122E30000100000001 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = A50100112E30000100000001 /* FirebaseMessaging */; };
 /* End PBXBuildFile section */
@@ -67,6 +69,8 @@
 		A50100042E30000100000001 /* custom_notification.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; path = custom_notification.caf; sourceTree = "<group>"; };
 		B32391D6ACA3E34D16509501 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 
+		A50200032E30000100000001 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		A50200062E30000100000001 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F050F765D7E4B224A8FD916F /* ShareExtension.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = ShareExtension.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -139,6 +143,7 @@
 				504EC30E1FED79650016851F /* Assets.xcassets */,
 				504EC3101FED79650016851F /* LaunchScreen.storyboard */,
 				504EC3131FED79650016851F /* Info.plist */,
+				A50200012E30000100000001 /* InfoPlist.strings */,
 				2FAD9762203C412B000D30F8 /* config.xml */,
 				50B271D01FEDC1A000F3C39B /* public */,
 			);
@@ -150,6 +155,7 @@
 			children = (
 				7FEAE426BEAFAC36887BE5CA /* ShareViewController.swift */,
 				B32391D6ACA3E34D16509501 /* Info.plist */,
+				A50200042E30000100000001 /* InfoPlist.strings */,
 				F050F765D7E4B224A8FD916F /* ShareExtension.entitlements */,
 			);
 			name = ShareExtension;
@@ -227,6 +233,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ar,
 			);
 			mainGroup = 504EC2FB1FED79650016851F;
 			packageReferences = (
@@ -249,6 +256,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				504EC3121FED79650016851F /* LaunchScreen.storyboard in Resources */,
+				A50200022E30000100000001 /* InfoPlist.strings in Resources */,
 				A50100032E30000100000001 /* GoogleService-Info.plist in Resources */,
 				A50100052E30000100000001 /* custom_notification.caf in Resources */,
 				50B271D11FEDC1A000F3C39B /* public in Resources */,
@@ -263,6 +271,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A50200052E30000100000001 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -311,6 +320,22 @@
 				504EC3111FED79650016851F /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		A50200012E30000100000001 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A50200032E30000100000001 /* ar */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		A50200042E30000100000001 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A50200062E30000100000001 /* ar */,
+			);
+			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

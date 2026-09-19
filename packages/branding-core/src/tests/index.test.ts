@@ -117,6 +117,10 @@ async function assertNativeLaunchImage(
   const pixelCount = info.width * info.height;
   let backgroundPixels = 0;
   let whitePixels = 0;
+  let markMinX = info.width;
+  let markMinY = info.height;
+  let markMaxX = -1;
+  let markMaxY = -1;
   for (let index = 0; index < data.length; index += 4) {
     const red = data[index] ?? 0;
     const green = data[index + 1] ?? 0;
@@ -132,9 +136,15 @@ async function assertNativeLaunchImage(
     }
     if (red > 245 && green > 245 && blue > 245 && alpha === 255) {
       whitePixels += 1;
+      const pixel = index / 4;
+      const x = pixel % info.width;
+      const y = Math.floor(pixel / info.width);
+      markMinX = Math.min(markMinX, x);
+      markMinY = Math.min(markMinY, y);
+      markMaxX = Math.max(markMaxX, x);
+      markMaxY = Math.max(markMaxY, y);
     }
   }
-  const center = (Math.floor(info.height / 2) * info.width + Math.floor(info.width / 2)) * 4;
   assert.deepEqual(
     [data[0], data[1], data[2], data[3]],
     [
@@ -153,11 +163,15 @@ async function assertNativeLaunchImage(
     whitePixels / pixelCount > 0.005 && whitePixels / pixelCount < 0.05,
     `${relativePath} must contain a centered white launch mark without the full icon tile`,
   );
+  const markCenterX = (markMinX + markMaxX) / 2;
+  const markCenterY = (markMinY + markMaxY) / 2;
+  const canvasCenterX = (info.width - 1) / 2;
+  const canvasCenterY = (info.height - 1) / 2;
+  const centeringTolerance = size * 0.01;
   assert.ok(
-    (data[center] ?? 0) > 245 &&
-      (data[center + 1] ?? 0) > 245 &&
-      (data[center + 2] ?? 0) > 245,
-    `${relativePath} launch mark must remain centered`,
+    Math.abs(markCenterX - canvasCenterX) <= centeringTolerance &&
+      Math.abs(markCenterY - canvasCenterY) <= centeringTolerance,
+    `${relativePath} launch mark bounding box must remain centered`,
   );
 }
 
@@ -175,10 +189,11 @@ async function assertTransparentSilhouette(relativePath: string): Promise<void> 
     .raw()
     .toBuffer({ resolveWithObject: true });
   let transparent = 0;
-  let opaque = 0;
+  let alphaWeight = 0;
   for (let index = 3; index < data.length; index += 4) {
-    if (data[index] === 0) transparent += 1;
-    if (data[index] === 255) opaque += 1;
+    const alpha = data[index] ?? 0;
+    if (alpha === 0) transparent += 1;
+    alphaWeight += alpha / 255;
   }
   const pixelCount = info.width * info.height;
   assert.ok(
@@ -186,8 +201,8 @@ async function assertTransparentSilhouette(relativePath: string): Promise<void> 
     `${relativePath} must not become an opaque status-bar square`,
   );
   assert.ok(
-    opaque / pixelCount > 0.05,
-    `${relativePath} must retain a visible ASOL silhouette`,
+    alphaWeight / pixelCount > 0.05,
+    `${relativePath} must retain a visibly weighted branding silhouette`,
   );
 }
 

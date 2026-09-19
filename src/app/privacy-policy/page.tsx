@@ -5,10 +5,10 @@ export default function PrivacyPolicyPage() {
     <div id='app-privacy-policy-page-div-1-klflir' className="mx-auto w-full max-w-4xl px-4 py-12 sm:px-6">
       <div id='app-privacy-policy-page-div-2-jvqcrw' className="rounded-2xl border border-outline-variant bg-surface p-8 shadow-sm">
         <h1 id='app-privacy-policy-page-heading-3-89vk1w' className="mb-6 text-center text-3xl font-bold text-primary">
-          سياسة الخصوصية - ASOL
+          سياسة الخصوصية - بيبوك
         </h1>
         <p id='app-privacy-policy-page-text-4-keqzxy' className="mb-8 text-on-surface-variant">
-          في <strong id="app-privacy-policy-page-strong-5-wh8qce">ASOL</strong> نحترم خصوصية المستخدمين ونسعى لحماية بياناتهم الشخصية وفقًا
+          في <strong id="app-privacy-policy-page-strong-5-wh8qce">بيبوك</strong> نحترم خصوصية المستخدمين ونسعى لحماية بياناتهم الشخصية وفقًا
           لأفضل الممارسات.
         </p>
 
@@ -39,7 +39,7 @@ export default function PrivacyPolicyPage() {
             </h2>
             <p id='app-privacy-policy-page-text-15-maqoyz' className="text-on-surface-variant">
               قد يظهر لمقدم الخدمة بعض بيانات التواصل مثل رقم الهاتف عند شراء منتج أو خدمة منه، وذلك لتنسيق
-              التواصل وتسليم الطلب. وبإتمام الشراء، يقر المستخدم بعلمه بذلك، ولا تتحمل ASOL مسؤولية أي استخدام لهذه البيانات خارج
+              التواصل وتسليم الطلب. وبإتمام الشراء، يقر المستخدم بعلمه بذلك، ولا تتحمل بيبوك مسؤولية أي استخدام لهذه البيانات خارج
               نطاق تنفيذ الطلب.
             </p>
           </section>
@@ -49,9 +49,9 @@ export default function PrivacyPolicyPage() {
               طبيعة المنصة وحدود المسؤولية
             </h2>
             <p id='app-privacy-policy-page-text-18-ltyiiz' className="text-on-surface-variant">
-              تعمل ASOL كمنصة لعرض الخدمات والتواصل بين المستخدمين، ولا تضمن جدية مقدم الخدمة
+              تعمل بيبوك كمنصة لعرض الخدمات والتواصل بين المستخدمين، ولا تضمن جدية مقدم الخدمة
               أو المشترين ولا جودة المنتج أو الخدمة. ويلتزم المستخدم بعدم الدفع إلا بعد استلام المنتج أو الحصول على الخدمة والتأكد
-              منها بنفسه. كما تلتزم ASOL بحذف أي صاحب منتج أو خدمة يثبت من خلال البلاغات أو المراجعة أنه يعرض منتجًا أو
+              منها بنفسه. كما تلتزم بيبوك بحذف أي صاحب منتج أو خدمة يثبت من خلال البلاغات أو المراجعة أنه يعرض منتجًا أو
               خدمة غير حقيقية أو يمارس أي نوع من أنواع الغش أو التضليل.
             </p>
           </section>

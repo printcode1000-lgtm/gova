@@ -26,7 +26,7 @@ import { foldPasswordDigits } from "@asol/auth-core";
 
 const COPY = {
   ar: {
-    title: "حذف حساب أصول",
+    title: "حذف حساب بيبوك",
     intro: "هذا الإجراء نهائي ولا يمكن التراجع عنه.",
     login: "يجب تسجيل الدخول أولًا حتى يمكن التحقق من مالك الحساب.",
     loginButton: "تسجيل الدخول",
@@ -52,7 +52,7 @@ const COPY = {
     contact: "هل تحتاج إلى مساعدة؟ تواصل معنا قبل الحذف",
   },
   en: {
-    title: "Delete ASOL account",
+    title: "Delete Pbook account",
     intro: "This action is permanent and cannot be undone.",
     login: "You must sign in first so account ownership can be verified.",
     loginButton: "Sign in",

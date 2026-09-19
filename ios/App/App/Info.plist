@@ -18,7 +18,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-        <string>ASOL</string>
+        <string>Pbook</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -36,19 +36,19 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>ASOL uses the microphone to enter text into form fields by voice.</string>
+	<string>Pbook uses the microphone to enter text into form fields by voice.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>ASOL uses the camera only when you choose to take a product or store image.</string>
+	<string>Pbook uses the camera only when you choose to take a product or store image.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>ASOL lets you select one product or store image from your photo library.</string>
+	<string>Pbook lets you select one product or store image from your photo library.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>ASOL can save a photo only when you explicitly request it.</string>
+	<string>Pbook can save a photo only when you explicitly request it.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>ASOL converts your speech into text only when you press a microphone button.</string>
+	<string>Pbook converts your speech into text only when you press a microphone button.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>ASOL uses your location only while the app is open, to show nearby providers and fill delivery addresses.</string>
+	<string>Pbook uses your location only while the app is open, to show nearby providers and fill delivery addresses.</string>
 	<key>NSDocumentsFolderUsageDescription</key>
-	<string>ASOL accesses documents only when you choose a file to attach.</string>
+	<string>Pbook accesses documents only when you choose a file to attach.</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>app-settings</string>

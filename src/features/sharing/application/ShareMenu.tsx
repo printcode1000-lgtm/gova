@@ -21,6 +21,7 @@ import {
 import { cn } from "@/shared/utils";
 import { saveQrCodePng } from "@/features/qr-code";
 import type { ShareContent, ShareDestination } from "./share-content";
+import { buildShareQrCodeFileName } from "./share-artifact-file-name";
 import {
   copyShareLink,
   shareThroughSystem,
@@ -105,7 +106,7 @@ export function ShareMenu({ id, content, locale, trigger }: ShareMenuProps & { i
     try {
       await saveQrCodePng({
         value: content.url,
-        fileName: `asol-${content.kind}-${content.title}`,
+        fileName: buildShareQrCodeFileName(content),
       });
       finish(ar ? "تم إنشاء رمز QR وحفظه" : "QR code created and saved");
     } catch (error) {

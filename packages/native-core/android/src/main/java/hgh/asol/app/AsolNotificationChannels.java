@@ -96,15 +96,15 @@ public final class AsolNotificationChannels {
             .build();
 
         List<NotificationChannel> channels = new ArrayList<>();
-        channels.add(audible(GENERAL, "أصول - الإشعارات العامة (نغمة مخصصة)", "الإشعارات العامة من أصول بالنغمة المخصصة", NotificationManager.IMPORTANCE_HIGH, sound, attributes));
-        channels.add(audible(ORDERS, "أصول - الطلبات (نغمة مخصصة)", "تحديثات الطلبات والشحن والإرجاع بالنغمة المخصصة", NotificationManager.IMPORTANCE_HIGH, sound, attributes));
-        channels.add(audible(CHAT, "أصول - المحادثات (نغمة مخصصة)", "الرسائل والمحادثات الجديدة بالنغمة المخصصة", NotificationManager.IMPORTANCE_HIGH, sound, attributes));
-        channels.add(audible(URGENT, "أصول - التنبيهات العاجلة (نغمة مخصصة)", "التنبيهات العاجلة والمهمة بالنغمة المخصصة", NotificationManager.IMPORTANCE_MAX, sound, attributes));
-        channels.add(audible(UPDATES, "أصول - التحديثات (نغمة مخصصة)", "إشعارات التحديثات العامة من أصول بالنغمة المخصصة", NotificationManager.IMPORTANCE_HIGH, sound, attributes));
+        channels.add(audible(GENERAL, "بيبوك - الإشعارات العامة (نغمة مخصصة)", "الإشعارات العامة من بيبوك بالنغمة المخصصة", NotificationManager.IMPORTANCE_HIGH, sound, attributes));
+        channels.add(audible(ORDERS, "بيبوك - الطلبات (نغمة مخصصة)", "تحديثات الطلبات والشحن والإرجاع بالنغمة المخصصة", NotificationManager.IMPORTANCE_HIGH, sound, attributes));
+        channels.add(audible(CHAT, "بيبوك - المحادثات (نغمة مخصصة)", "الرسائل والمحادثات الجديدة بالنغمة المخصصة", NotificationManager.IMPORTANCE_HIGH, sound, attributes));
+        channels.add(audible(URGENT, "بيبوك - التنبيهات العاجلة (نغمة مخصصة)", "التنبيهات العاجلة والمهمة بالنغمة المخصصة", NotificationManager.IMPORTANCE_MAX, sound, attributes));
+        channels.add(audible(UPDATES, "بيبوك - التحديثات (نغمة مخصصة)", "إشعارات التحديثات العامة من بيبوك بالنغمة المخصصة", NotificationManager.IMPORTANCE_HIGH, sound, attributes));
 
         NotificationChannel silent = new NotificationChannel(
             SILENT,
-            "أصول - إشعارات صامتة",
+            "بيبوك - إشعارات صامتة",
             NotificationManager.IMPORTANCE_LOW
         );
         silent.setDescription("الإشعارات الداخلية غير المرئية التي تصل بدون صوت أو اهتزاز");

@@ -34,7 +34,7 @@ function cleanData(input: NotificationProviderSendInput): Record<string, string>
   const data: Record<string, string> = {
     notificationId: input.payload.notificationId,
     dedupeKey: input.payload.dedupeKey,
-    title: input.payload.title ?? "ASOL",
+    title: input.payload.title ?? "Pbook",
     body: input.payload.body ?? "",
     category: input.payload.category,
     priority: input.payload.priority,
@@ -104,7 +104,7 @@ function buildApnsConfig(
     payload: {
       aps: {
         alert: {
-          title: input.payload.title ?? "ASOL",
+          title: input.payload.title ?? "Pbook",
           body: input.payload.body ?? "",
         },
         // iOS expects the file name with its extension. Omitted for a silent
@@ -163,7 +163,7 @@ function buildMessage(
       // Apple keeps its alert payload exactly as before. Android gets none, so
       // the application's own service is always the one that receives it.
       notification: dataOnly || android ? undefined : {
-        title: input.payload.title ?? "ASOL",
+        title: input.payload.title ?? "Pbook",
         body: input.payload.body ?? "",
       },
       data: { ...cleanData(input), uid: token.uid },

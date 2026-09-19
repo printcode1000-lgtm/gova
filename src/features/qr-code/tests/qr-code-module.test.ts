@@ -11,6 +11,14 @@ async function main() {
   assert.equal(artifact.mimeType, "image/png");
   assert.equal(artifact.fileName.endsWith(".png"), true);
   assert.equal(artifact.fileName.includes("/"), false);
+  const fallbackArtifact = await createQrCodePng({
+    value: "https://example.com/s/profile?uid=test",
+    fileName: "   ",
+    width: 320,
+  });
+  assert.equal(fallbackArtifact.fileName, "pbook-qr-code.png");
+  assert.equal(fallbackArtifact.fileName.startsWith("asol-"), false);
+
   const signature = new Uint8Array(await artifact.blob.arrayBuffer()).slice(0, 8);
   assert.deepEqual([...signature], [137, 80, 78, 71, 13, 10, 26, 10]);
   console.log("QR code module tests passed.");

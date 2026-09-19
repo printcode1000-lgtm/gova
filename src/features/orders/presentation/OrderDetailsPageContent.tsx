@@ -49,6 +49,7 @@ import { OrderLevelActions, ShipmentsPanel } from "./order-details/OrderDetailsP
 import { ReturnsPanel } from "./order-details/OrderDetailsPageContent.returns";
 import { BuyerDeliveryAddressPanel } from "./order-details/OrderDetailsPageContent.buyer-delivery";
 import { useOrderDetailsAutoRefresh } from "./OrderNotificationsController";
+import { formatPublicOrderNumber } from "../application/public-order-number";
 
 export function OrderDetailsPageContent({ id, orderId }: { orderId: string } & { id?: string }) {
   const { formatApiError } = useTranslation();
@@ -157,7 +158,7 @@ export function OrderDetailsPageContent({ id, orderId }: { orderId: string } & {
       <header id="features-orders-presentation-orderdetailspagecontent-header-8-rxzz11" className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
         <div id="features-orders-presentation-orderdetailspagecontent-div-9-hufad4">
             <h1 id="features-orders-presentation-orderdetailspagecontent-heading-10-giiyco" className="mt-3 text-2xl font-bold">
-            {text.order} {String(order.orderNumber ?? order.id)}
+            {text.order} {formatPublicOrderNumber(order.orderNumber, order.id)}
           </h1>
           <p id="features-orders-presentation-orderdetailspagecontent-text-11-0emeve" className="mt-1 text-sm text-muted-foreground">
             {text.status}: {statusLabel(order.calculatedStatus)} - {text.cod}

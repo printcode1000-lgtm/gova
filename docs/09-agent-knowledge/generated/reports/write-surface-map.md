@@ -30,7 +30,7 @@ Unproven gateway paths: **146**
 | `packages/auth-core/src/ports/auth-repository.port.ts` | `@asol/auth-core` | patch, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/auth-core/src/server/account-deletion-service.ts` | `@asol/auth-core` | delete | `unproven` | NO | `` | development, web | high |
 | `packages/auth-core/src/server/auth-operations-service.ts` | `@asol/auth-core` | update | `unproven` | NO | `` | development, web | high |
-| `packages/auth-core/src/tests/index.test.ts` | `@asol/auth-core` | patch, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
+| `packages/auth-core/src/tests/index.test.ts` | `@asol/auth-core` | delete, patch, update | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/control-composition/src/index.ts` | `@asol/control-composition` | write-like | `@asol/data-core` | yes | `` | android, development, ios, static-out, web | medium |
 | `packages/data-core/src/browser/asol-db/index.ts` | `@asol/data-core` | delete | `unproven` | NO | `` | android, development, ios, static-out, web | high |
 | `packages/data-core/src/control-ota.ts` | `@asol/data-core` | delete, insert, update | `unproven` | NO | `` | development, web | high |

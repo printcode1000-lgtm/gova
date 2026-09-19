@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-19T09:42:08.727Z",
+  "generatedAt": "2026-09-19T14:41:43.805Z",
   "entryPoints": [
     "features/product/server/services/product-service.server.ts",
     "features/profile/server/services/profile-service.bootstrap.server.ts",
@@ -19,7 +19,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 456,
+  "fileCount": 457,
   "files": [
     "packages/account-declarations/src/accounts/products.ts",
     "packages/account-declarations/src/accounts/profiles.ts",
@@ -418,6 +418,7 @@
     "src/features/orders/application/order-action-grants.server.ts",
     "src/features/orders/application/order-actions.server.ts",
     "src/features/orders/application/order-detail-loader.server.ts",
+    "src/features/orders/application/public-order-number.ts",
     "src/features/orders/application/services/order-party-helpers.ts",
     "src/features/orders/server.ts",
     "src/features/orders/server/services/order-action-grants.server.ts",

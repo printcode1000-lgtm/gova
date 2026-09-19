@@ -13,7 +13,7 @@ import {
 } from "../application/share-links";
 import type { PublicProfileShareRecord } from "../application/share-content";
 
-const DEFAULT_DESCRIPTION = "اكتشف المنتجات والمتاجر والخدمات على تطبيق ASOL.";
+const DEFAULT_DESCRIPTION = "اكتشف المنتجات والمتاجر والخدمات على تطبيق بيبوك.";
 const DEFAULT_IMAGE = `${PUBLIC_SHARE_ORIGIN}${BRANDING_WEB_APP_ICON_PATH}`;
 
 /**
@@ -69,7 +69,7 @@ function productName(product: ProductRecord): string {
     product.mainData.name.trim() ||
     product.pharmacySpecs.nameAr.trim() ||
     product.pharmacySpecs.nameEn.trim() ||
-    "منتج على ASOL"
+    "منتج على بيبوك"
   );
 }
 
@@ -100,7 +100,7 @@ function shareMetadata(input: {
     openGraph: {
       type: "website",
       locale: "ar_EG",
-      siteName: "ASOL",
+      siteName: "Pbook",
       title: input.title,
       description,
       url: input.url,
@@ -122,7 +122,7 @@ export async function productShareMetadata(
   const product = await loadPublicProductShareRecord(productId);
   if (!product) {
     return shareMetadata({
-      title: "المنتج غير متاح — ASOL",
+      title: "المنتج غير متاح — بيبوك",
       description: DEFAULT_DESCRIPTION,
       url: buildProductShareUrl(productId),
       index: false,
@@ -145,7 +145,7 @@ export async function profileShareMetadata(uid: string): Promise<Metadata> {
   const record = await loadPublicProfileShareRecord(uid);
   if (!record) {
     return shareMetadata({
-      title: "صفحة على ASOL",
+      title: "صفحة على بيبوك",
       description: DEFAULT_DESCRIPTION,
       url: buildProfileShareUrl(uid),
       index: false,
@@ -153,7 +153,7 @@ export async function profileShareMetadata(uid: string): Promise<Metadata> {
   }
   const { storeDetails, storeImages } = record;
   return shareMetadata({
-    title: compact(storeDetails.storeName || "صفحة على ASOL", 100),
+    title: compact(storeDetails.storeName || "صفحة على بيبوك", 100),
     description: storeDetails.storeDescription || DEFAULT_DESCRIPTION,
     url: buildProfileShareUrl(uid),
     imageUrl: storeImages.coverUrl || storeImages.avatarUrl,
