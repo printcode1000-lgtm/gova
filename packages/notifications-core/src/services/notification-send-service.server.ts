@@ -60,7 +60,11 @@ export class NotificationSendService {
     );
     if (uids.length === 0) throw new Error("notificationRecipientsRequired");
     if (!input.dedupeKey) throw new Error("notificationDedupeKeyRequired");
-    if (!input.templateId && (!input.title || !input.body)) {
+    // A data-only send is a machine signal (the verification SMS dispatch is
+    // one): it never reaches a tray, so it has no text to require. Refusing it
+    // here dropped every Egyptian verification before FCM was ever called.
+    const dataOnly = input.metadata?.dataOnly === true;
+    if (!dataOnly && !input.templateId && (!input.title || !input.body)) {
       throw new Error("notificationContentRequired");
     }
 

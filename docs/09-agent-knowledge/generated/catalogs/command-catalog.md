@@ -238,7 +238,7 @@ Root npm scripts as graph nodes. Raw environment assignment values are intention
 | `npm run test:native-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:notifications` | `Tooling` | 36 |  | 5 |
 | `npm run test:notifications-composition` | `Tooling` | 1 |  | 1 |
-| `npm run test:notifications-core` | `Tooling` | 1 |  | 1 |
+| `npm run test:notifications-core` | `Tooling` | 2 |  | 1 |
 | `npm run test:observability-core` | `Tooling` | 1 |  | 0 |
 | `npm run test:orders-composition` | `Tooling` | 1 |  | 1 |
 | `npm run test:orders-core` | `Tooling` | 1 |  | 0 |

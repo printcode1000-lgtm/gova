@@ -16189,6 +16189,74 @@
       ]
     },
     {
+      "id": "document:docs/08-troubleshooting/problems/verification-dispatch-refused-as-contentless.md",
+      "kind": "document",
+      "name": "Egyptian verification sends nothing: the data-only dispatch was refused as contentless, and the 200 hid it",
+      "path": "docs/08-troubleshooting/problems/verification-dispatch-refused-as-contentless.md",
+      "summary": "On `/registration`, requesting a code for an Egyptian `+20` number succeeds in the UI, but the Super Admin's Android phone receives no push and SMS Sender sends nothing. The challenge row stays in `dispatch_pending` with `dispatch_status = 'pending'` and no `dispatch_failure_code",
+      "tags": [
+        "/registration",
+        "20",
+        "200",
+        "@asol/notifications-core",
+        "admin",
+        "an",
+        "and",
+        "android",
+        "as",
+        "but",
+        "challenge",
+        "code",
+        "contentless",
+        "data-only",
+        "dispatch",
+        "dispatch_failure_code",
+        "dispatch_pending",
+        "dispatch_status",
+        "docs/08-troubleshooting/problems/verification-dispatch-refused-as-contentless",
+        "docs/08-troubleshooting/problems/verification-dispatch-refused-as-contentless.md",
+        "egyptian",
+        "egyptian verification sends nothing: the data-only dispatch was refused as contentless, and the 200 hid it",
+        "for",
+        "hid",
+        "in",
+        "it",
+        "md",
+        "no",
+        "nothing",
+        "number",
+        "on",
+        "on `/registration`, requesting a code for an egyptian `+20` number succeeds in the ui, but the super admin's android phone receives no push and sms sender sends nothing. the challenge row stays in `dispatch_pending` with `dispatch_status = 'pending'` and no `dispatch_failure_code",
+        "packages/notifications-core/src/services/notification-grant-courier",
+        "packages/notifications-core/src/services/notification-grant-courier.server.ts",
+        "packages/notifications-core/src/services/notification-send-service",
+        "packages/notifications-core/src/services/notification-send-service.server.ts",
+        "pending",
+        "phone",
+        "push",
+        "receives",
+        "refused",
+        "requesting",
+        "row",
+        "sender",
+        "sends",
+        "server",
+        "service",
+        "sms",
+        "src/features/notifications/server/services/verification-sms-dispatch",
+        "src/features/notifications/server/services/verification-sms-dispatch.service.server.ts",
+        "stays",
+        "succeeds",
+        "super",
+        "the",
+        "ts",
+        "ui",
+        "verification",
+        "was",
+        "with"
+      ]
+    },
+    {
       "id": "document:docs/08-troubleshooting/README.md",
       "kind": "document",
       "name": "Troubleshooting Domain",
@@ -54637,6 +54705,18 @@
       ]
     },
     {
+      "id": "test:packages/notifications-core/src/tests/data-only-grant-delivery.test.ts",
+      "kind": "test",
+      "name": "data-only-grant-delivery.test.ts",
+      "path": "packages/notifications-core/src/tests/data-only-grant-delivery.test.ts",
+      "tags": [
+        "packages/notifications-core/src/tests/data-only-grant-delivery",
+        "packages/notifications-core/src/tests/data-only-grant-delivery.test.ts",
+        "test",
+        "ts"
+      ]
+    },
+    {
       "id": "test:packages/notifications-core/src/tests/index.test.ts",
       "kind": "test",
       "name": "index.test.ts",
@@ -60394,6 +60474,11 @@
       "from": "command:test:notifications-composition",
       "to": "environment-key:NODE_OPTIONS",
       "kind": "uses-environment"
+    },
+    {
+      "from": "command:test:notifications-core",
+      "to": "test:packages/notifications-core/src/tests/data-only-grant-delivery.test.ts",
+      "kind": "invokes"
     },
     {
       "from": "command:test:notifications-core",
@@ -74285,6 +74370,12 @@
     },
     {
       "from": "document:docs/05-platform-features/unified-verification-system.md",
+      "to": "document:docs/08-troubleshooting/problems/verification-dispatch-refused-as-contentless.md",
+      "kind": "references",
+      "detail": "../08-troubleshooting/problems/verification-dispatch-refused-as-contentless.md"
+    },
+    {
+      "from": "document:docs/05-platform-features/unified-verification-system.md",
       "to": "feature:verification",
       "kind": "references",
       "detail": "src/features/verification"
@@ -77684,6 +77775,12 @@
       "detail": "./verification-dispatch-port-unregistered-on-owner.md"
     },
     {
+      "from": "document:docs/08-troubleshooting/problems/README.md",
+      "to": "document:docs/08-troubleshooting/problems/verification-dispatch-refused-as-contentless.md",
+      "kind": "references",
+      "detail": "./verification-dispatch-refused-as-contentless.md"
+    },
+    {
       "from": "document:docs/08-troubleshooting/problems/service-smoke-release-environment.md",
       "to": "domain:troubleshooting",
       "kind": "belongs-to"
@@ -77808,6 +77905,41 @@
       "to": "source:src/features/notifications/ports/verification-dispatch-transport-port.ts",
       "kind": "references",
       "detail": "src/features/notifications/ports/verification-dispatch-transport-port.ts"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/verification-dispatch-refused-as-contentless.md",
+      "to": "domain:troubleshooting",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/verification-dispatch-refused-as-contentless.md",
+      "to": "document:docs/05-platform-features/unified-verification-system.md",
+      "kind": "references",
+      "detail": "../../05-platform-features/unified-verification-system.md"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/verification-dispatch-refused-as-contentless.md",
+      "to": "package:@asol/notifications-core",
+      "kind": "references",
+      "detail": "@asol/notifications-core"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/verification-dispatch-refused-as-contentless.md",
+      "to": "source:packages/notifications-core/src/services/notification-grant-courier.server.ts",
+      "kind": "references",
+      "detail": "packages/notifications-core/src/services/notification-grant-courier.server.ts"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/verification-dispatch-refused-as-contentless.md",
+      "to": "source:packages/notifications-core/src/services/notification-send-service.server.ts",
+      "kind": "references",
+      "detail": "packages/notifications-core/src/services/notification-send-service.server.ts"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/verification-dispatch-refused-as-contentless.md",
+      "to": "source:src/features/notifications/server/services/verification-sms-dispatch.service.server.ts",
+      "kind": "references",
+      "detail": "src/features/notifications/server/services/verification-sms-dispatch.service.server.ts"
     },
     {
       "from": "document:docs/08-troubleshooting/README.md",
@@ -85929,6 +86061,12 @@
     {
       "from": "domain:architecture",
       "to": "test:packages/notifications-composition/src/tests/index.test.ts",
+      "kind": "documents",
+      "detail": "packages/"
+    },
+    {
+      "from": "domain:architecture",
+      "to": "test:packages/notifications-core/src/tests/data-only-grant-delivery.test.ts",
       "kind": "documents",
       "detail": "packages/"
     },
@@ -99581,6 +99719,12 @@
       "to": "test:packages/native-core/src/tests/unit/share-validator.test.ts",
       "kind": "documents",
       "detail": "packages/native-core/"
+    },
+    {
+      "from": "domain:platform-features",
+      "to": "test:packages/notifications-core/src/tests/data-only-grant-delivery.test.ts",
+      "kind": "documents",
+      "detail": "packages/notifications-core/"
     },
     {
       "from": "domain:platform-features",
@@ -244527,6 +244671,71 @@
     {
       "from": "test:packages/notifications-composition/src/tests/index.test.ts",
       "to": "package:@asol/notifications-composition",
+      "kind": "tests"
+    },
+    {
+      "from": "test:packages/notifications-core/src/tests/data-only-grant-delivery.test.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/notifications-core/src/tests/data-only-grant-delivery.test.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/notifications-core/src/tests/data-only-grant-delivery.test.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/notifications-core/src/tests/data-only-grant-delivery.test.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/notifications-core/src/tests/data-only-grant-delivery.test.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "test:packages/notifications-core/src/tests/data-only-grant-delivery.test.ts",
+      "to": "package:@asol/notifications-core",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "test:packages/notifications-core/src/tests/data-only-grant-delivery.test.ts",
+      "to": "source:packages/notifications-core/src/domain/entities.ts",
+      "kind": "imports",
+      "detail": "../domain/entities"
+    },
+    {
+      "from": "test:packages/notifications-core/src/tests/data-only-grant-delivery.test.ts",
+      "to": "source:packages/notifications-core/src/services/notification-grant-courier.server.ts",
+      "kind": "imports",
+      "detail": "../services/notification-grant-courier.server"
+    },
+    {
+      "from": "test:packages/notifications-core/src/tests/data-only-grant-delivery.test.ts",
+      "to": "source:packages/notifications-core/src/services/notification-send-service.server.ts",
+      "kind": "imports",
+      "detail": "../services/notification-send-service.server"
+    },
+    {
+      "from": "test:packages/notifications-core/src/tests/data-only-grant-delivery.test.ts",
+      "to": "source:packages/notifications-core/src/services/providers/notification-provider-registry.server.ts",
+      "kind": "imports",
+      "detail": "../services/providers/notification-provider-registry.server"
+    },
+    {
+      "from": "test:packages/notifications-core/src/tests/data-only-grant-delivery.test.ts",
+      "to": "source:packages/notifications-core/src/services/providers/notification-provider.interface.ts",
+      "kind": "imports",
+      "detail": "../services/providers/notification-provider.interface"
+    },
+    {
+      "from": "test:packages/notifications-core/src/tests/data-only-grant-delivery.test.ts",
+      "to": "package:@asol/notifications-core",
       "kind": "tests"
     },
     {

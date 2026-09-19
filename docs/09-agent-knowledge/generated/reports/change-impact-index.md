@@ -74,7 +74,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/map-core` | package | 10 | 1 | 2 | 0 | 9 | 7 |
 | `@asol/native-core` | package | 39 | 24 | 68 | 0 | 92 | 27 |
 | `@asol/notifications-composition` | package | 12 | 3 | 0 | 0 | 11 | 8 |
-| `@asol/notifications-core` | package | 20 | 17 | 138 | 0 | 99 | 5 |
+| `@asol/notifications-core` | package | 21 | 18 | 138 | 0 | 99 | 5 |
 | `@asol/observability-core` | package | 8 | 1 | 128 | 0 | 23 | 4 |
 | `@asol/orders-composition` | package | 12 | 1 | 0 | 0 | 2 | 5 |
 | `@asol/orders-core` | package | 17 | 6 | 134 | 0 | 54 | 1 |
