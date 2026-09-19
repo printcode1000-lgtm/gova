@@ -73,6 +73,16 @@ for (const file of routeModules(canonicalApi)) {
 }
 assert.deepEqual(missing, [], `control-owned routes missing from services/control: ${missing.join(', ')}`);
 
+assert.equal(
+  resolveRouteOwner('POST', '/api/ota/access'),
+  'control',
+  'Android OTA manual checks must resolve to control, where the release approval repository lives',
+);
+assert.ok(
+  existsSync(path.join(API, 'ota', 'access', 'route.ts')),
+  'control must ship /api/ota/access so the client bridge cannot redirect OTA checks to a 404 owner',
+);
+
 // ── The release barrier answers a status and nothing else ────────────────────
 const barrier = readFileSync(
   path.join(API, 'release-readiness', '[revision]', 'route.ts'),

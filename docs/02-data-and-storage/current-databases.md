@@ -91,7 +91,7 @@ Notification tables are **not** here. They moved to their own database — see
 | Operations | Auth queries and commands |
 | Repository | User repository through `usersDataSource` |
 
-OTA approval also uses this database through `/api/ota/access` and `/api/ota/admin/releases`. `ota_releases` stores the exact `releaseId + version`, signed-manifest snapshot, and approval/revocation metadata. `ota_release_audit` records discovery and every super-admin approval decision.
+OTA approval also uses this database through the control-owned `/api/ota/access` and `/api/ota/admin/releases` endpoints. `ota_releases` stores the exact `releaseId + version`, signed-manifest snapshot, and approval/revocation metadata. `ota_release_audit` records discovery and every super-admin approval decision.
 
 ### Client
 

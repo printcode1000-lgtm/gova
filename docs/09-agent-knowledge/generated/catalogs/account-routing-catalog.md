@@ -20,19 +20,20 @@ is listed as `gova/dev` and answered wherever the request lands.
 
 | Account | Vercel project | Origin variable | Owned pairs | Shipped | Unshipped |
 | --- | --- | --- | ---: | ---: | ---: |
-| `control` | `asol-control` | `NEXT_PUBLIC_ASOL_CONTROL_URL` | 34 | 34 | 0 |
+| `control` | `asol-control` | `NEXT_PUBLIC_ASOL_CONTROL_URL` | 35 | 35 | 0 |
 | `gova/dev` | — | — | 16 | 16 | 0 |
 | `notifications` | `asol-notifications` | `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | 13 | 13 | 0 |
 | `orders` | `asol-orders` | `NEXT_PUBLIC_ASOL_ORDERS_URL` | 1 | 1 | 0 |
 | `products` | `asol-products` | `NEXT_PUBLIC_ASOL_PRODUCTS_URL` | 3 | 3 | 0 |
 | `profiles` | `asol-profiles` | `NEXT_PUBLIC_ASOL_PROFILES_URL` | 7 | 7 | 0 |
 | `sub2main` | `asol-sub2main` | `NEXT_PUBLIC_ASOL_SUB2MAIN_URL` | 28 | 28 | 0 |
-| `submain` | `asol-submain` | `NEXT_PUBLIC_ASOL_SUBMAIN_URL` | 44 | 43 | 1 |
+| `submain` | `asol-submain` | `NEXT_PUBLIC_ASOL_SUBMAIN_URL` | 43 | 43 | 0 |
 
 ## `control`
 
 | Method | Route | Status |
 | --- | --- | --- |
+| `POST` | `/api/ota/access` | shipped |
 | `GET` | `/api/ota/admin/releases` | shipped |
 | `PUT` | `/api/ota/admin/releases` | shipped |
 | `GET` | `/api/ota/admin/releases/diff` | shipped |
@@ -202,7 +203,6 @@ routes, which are omitted from the production artifact entirely.
 | `POST` | `/api/orders/[orderId]/actions` | shipped |
 | `POST` | `/api/orders/custom-request-from-profile` | shipped |
 | `POST` | `/api/orders/from-cart` | shipped |
-| `POST` | `/api/ota/access` | **unshipped (tracked)** |
 | `GET` | `/api/search/fields` | shipped |
 | `GET` | `/api/search/products` | shipped |
 | `GET` | `/api/search/sellers` | shipped |

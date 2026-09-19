@@ -55,7 +55,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `voice-input` | feature | 1 | 0 | 0 | 0 | 0 | 2 |
 | `@asol/account-bridge` | package | 19 | 14 | 26 | 0 | 32 | 4 |
 | `@asol/account-declarations` | package | 14 | 11 | 46 | 0 | 43 | 0 |
-| `@asol/api-contract-core` | package | 4 | 1 | 132 | 0 | 25 | 0 |
+| `@asol/api-contract-core` | package | 4 | 1 | 132 | 0 | 26 | 0 |
 | `@asol/architecture-core` | package | 17 | 7 | 0 | 0 | 9 | 8 |
 | `@asol/auth-core` | package | 12 | 6 | 134 | 0 | 105 | 3 |
 | `@asol/branding-core` | package | 12 | 1 | 43 | 0 | 8 | 1 |
@@ -78,7 +78,7 @@ Owner-level dependency edges are aggregated from live source imports. Use `npx t
 | `@asol/observability-core` | package | 8 | 1 | 128 | 0 | 23 | 4 |
 | `@asol/orders-composition` | package | 12 | 1 | 0 | 0 | 2 | 5 |
 | `@asol/orders-core` | package | 17 | 6 | 134 | 0 | 54 | 1 |
-| `@asol/ota-core` | package | 37 | 28 | 28 | 0 | 51 | 14 |
+| `@asol/ota-core` | package | 36 | 28 | 28 | 0 | 51 | 14 |
 | `@asol/page-save-core` | package | 27 | 4 | 1 | 0 | 10 | 0 |
 | `@asol/page-snapshot-core` | package | 8 | 1 | 0 | 0 | 3 | 0 |
 | `@asol/product-card-core` | package | 5 | 1 | 3 | 0 | 16 | 5 |

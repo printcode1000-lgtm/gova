@@ -42,8 +42,8 @@ export interface OwnedRoute {
 /**
  * Route+method pairs whose owner does not ship a handler.
  *
- * What remains, and why. Both are package-level separations, not missing
- * handlers, and each is its own change:
+ * What remains, and why. Remaining entries are package-level separations, not
+ * missing handlers, and each is its own change:
  *
  * **The remaining notification surfaces.** `notifications-service-module-contract`
  * forbids `@asol/notifications-composition` from reaching
@@ -60,24 +60,14 @@ export interface OwnedRoute {
  * hold, so they moved to `submain` — the account that already holds the users
  * database and the notifications database.
  *
- * **`POST /api/ota/access`.** The access check needs `configureOtaCore` and
- * `otaReleaseService`, and every door that reaches them also reaches
- * `@asol/ota-core`'s client half — the OTA adapter, the query persister, six
- * Capacitor packages. `services:sync` refuses the account, correctly: a server
- * deployment must not carry native adapters. Narrowing one door at a time did
- * not converge, because the client and server halves of that package are not
- * separated.
- *
- * Both are live 404s, and both are tracked here rather than hidden.
+ * Live 404s are tracked here rather than hidden.
  *
  * Each line is a live production 404. Delete a line when the owner ships it —
  * never add one: a new unshipped route is a new outage, and the gate exists to
  * refuse it. `docs/08-troubleshooting/problems/owned-route-not-shipped.md`
  * records what the backlog is and how to work it down.
  */
-export const KNOWN_UNSHIPPED: readonly string[] = [
-  "POST /api/ota/access",
-];
+export const KNOWN_UNSHIPPED: readonly string[] = [];
 
 /** Every route.ts a service ships, mapped to the methods it exports. */
 export function shippedRoutes(serviceDir: string): Map<string, Set<string>> {

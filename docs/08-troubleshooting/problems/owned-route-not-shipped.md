@@ -241,16 +241,15 @@ from `asol-notifications` means moving those services into the sealed package.
 Reimplementing them against `@asol/data-core/notifications` would be worse: two
 copies of one contract, drifting from the first edit onwards.
 
-**`POST /api/ota/access`.** Every door that reaches `configureOtaCore` and
-`otaReleaseService` also reaches `@asol/ota-core`'s client half — the OTA
-adapter, the query persister, six Capacitor packages — and `services:sync`
-refuses the account. It is right to: a server deployment must not carry native
-adapters. Narrowing one door at a time did not converge, because the package's
-client and server halves are not separated.
+`POST /api/ota/access` left this backlog by moving to `control`, the service
+that already carries the server-only OTA administration door and release
+approval repository. It still answers only the access decision; admin operations
+remain protected by the configured super-admin identity.
 
-Both refusals came from gates that already existed, and both are correct. The
+The refusals came from gates that already existed, and they were correct. The
 lesson is the one this whole document is about, in the other direction: when a
-guard refuses a move, the answer is to separate the capability, never to widen
+guard refuses a move, the answer is to separate the capability or choose the
+deployment that already owns the needed server-only capability, never to widen
 the account until the guard goes quiet.
 
 ## The local gates do not cover the service trees

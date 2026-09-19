@@ -46,6 +46,15 @@ assert.ok(owned.length > 100, "the inventory must produce the owned route table"
 const missing = unshippedOwnedRoutes(owned);
 const known = new Set(KNOWN_UNSHIPPED);
 
+const otaAccess = owned.find(
+  (entry) => entry.method === "POST" && entry.route === "/api/ota/access",
+);
+assert.deepEqual(
+  otaAccess,
+  { method: "POST", route: "/api/ota/access", owner: "control" },
+  "Native OTA manual checks must resolve POST /api/ota/access to control, not to an unshipped service owner.",
+);
+
 const newlyMissing = missing.filter((pair) => !known.has(pair));
 assert.deepEqual(
   newlyMissing,
@@ -74,6 +83,10 @@ assert.ok(controlRoutes.size > 25, "control ships its migrated route tree");
 assert.ok(
   controlRoutes.get("/api/system-logs")?.has("GET"),
   "the shipped-route reader must see a real exported handler",
+);
+assert.ok(
+  controlRoutes.get("/api/ota/access")?.has("POST"),
+  "control must ship POST /api/ota/access so Android OTA manual checks do not redirect to a 404 owner",
 );
 assert.ok(
   shippedRoutes("services/submain").get("/api/auth/login")?.has("POST"),

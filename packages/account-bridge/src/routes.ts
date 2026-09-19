@@ -26,7 +26,7 @@ export const ROUTE_OWNERSHIP: readonly RouteOwnership[] = [
   // the session-bound routes: it holds the users database, the session signing
   // secret, and the mobile push unlock key beside its own database for them.
   { owner: 'notifications', pattern: '/api/notifications/**', methods: ALL, description: 'كل مسارات الإشعارات: التسليم وتسجيل الأجهزة والتفضيلات والاختبارات والبث ومرسل الموبايل.' },
-  { owner: 'submain', pattern: '/api/ota/access', methods: ['POST'], description: 'إصدار وصول OTA للمستخدم بعد التحقق من الجلسة.' },
+  { owner: 'control', pattern: '/api/ota/access', methods: ['POST'], description: 'إصدار قرار وصول OTA من مستودع موافقات التحديثات.' },
   { owner: 'submain', pattern: '/api/account/**', methods: ALL, description: 'إدارة حساب المستخدم وعمليات الحذف المرتبطة به.' },
   { owner: 'submain', pattern: '/api/auth/**', methods: ALL, description: 'تسجيل الدخول والتسجيل والجلسة واسترجاع كلمة المرور.' },
   { owner: 'submain', pattern: '/api/verification/**', methods: ALL, description: 'طلبات تحقق الهاتف ونتائج بوابة الرسائل.' },

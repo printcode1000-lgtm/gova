@@ -63,6 +63,13 @@ for (const forbidden of [/Log\.[a-z]+\([^)]*\bmessage\b/, /Log\.[a-z]+\([^)]*\bn
   assert.doesNotMatch(worker, forbidden, `the gateway worker must never log ${forbidden}`);
 }
 
+// The worker redeems against the owner account directly. `HttpURLConnection`
+// is not the account bridge, so it must not depend on the main app's redirect
+// layer while carrying a one-time POST body.
+const gatewayApi = source("packages/native-core/src/api/verification-sms-gateway.api.ts");
+assert.match(gatewayApi, /SUBMAIN_BASE_URL/);
+assert.doesNotMatch(gatewayApi, /API_BASE_URL/);
+
 // The manifest must declare SMS Sender, or Android 11+ silently drops the
 // explicit broadcast and the gateway fails with no diagnostic at all.
 const manifest = source("android/app/src/main/AndroidManifest.xml");

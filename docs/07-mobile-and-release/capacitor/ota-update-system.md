@@ -252,7 +252,8 @@ Every R2 manifest is identified by the exact pair `releaseId + version`. Approva
 
 ### "Not allowed" is not "never allowed"
 
-`POST /api/ota/access` answers with one of four reasons:
+`POST /api/ota/access` is owned by the control service and answers with one of
+four reasons:
 
 | Reason | Meaning | What the client does |
 |---|---|---|
@@ -293,7 +294,9 @@ PUT  /api/ota/admin/releases
 GET  /api/ota/admin/releases/diff
 ```
 
-The access endpoint returns only the decision for a release. Admin endpoints require the configured super-admin identity.
+The access endpoint returns only the decision for a release and is served by the
+control deployment so native/static clients do not hit an unshipped route owner.
+Admin endpoints require the configured super-admin identity.
 
 The Business API server resolves the manifest from `NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL`, or derives it from `ASOL_OTA_R2_PUBLIC_URL` plus `ASOL_OTA_R2_PREFIX`. It no longer falls back to `PRODUCT_R2_PUBLIC_URL` or `R2_PUBLIC_URL` — see [Dedicated OTA Storage & Architecture](#dedicated-ota-storage--architecture). Signature verification uses `ASOL_OTA_PUBLIC_KEY` (preferred for the deployed API), `NEXT_PUBLIC_ASOL_OTA_PUBLIC_KEY`, or a local `.ota/public-key.pem`. Development may derive the public key from the existing local `.ota/private-key.pem`; production should configure the public key directly and does not need the signing private key.
 
