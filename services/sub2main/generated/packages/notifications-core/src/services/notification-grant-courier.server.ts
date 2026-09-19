@@ -23,7 +23,28 @@ const TIMEOUT_MS = 10_000;
 export interface NotificationGrantCourierResult {
   delivered: boolean;
   /** Non-sensitive reason, for dispatch diagnostics. Never a payload. */
-  failureCode?: "notConfigured" | "transport" | "rejected";
+  failureCode?: "notConfigured" | "transport" | "rejected" | "undelivered";
+}
+
+const DELIVERED_STATUSES = new Set(["sent", "partial", "queued"]);
+
+/**
+ * The service answers 200 for any well-formed request and reports per-grant
+ * rejections in the body, so the status line alone cannot say a push left.
+ * Trusting it is how a refused verification dispatch was recorded as sent.
+ */
+function reachedAnyDevice(body: unknown): boolean {
+  const results = (body as { results?: unknown } | null)?.results;
+  if (!Array.isArray(results)) return false;
+  return results.some((entry) => {
+    const recipients = (entry as { results?: unknown } | null)?.results;
+    return (
+      Array.isArray(recipients) &&
+      recipients.some((recipient) =>
+        DELIVERED_STATUSES.has(String((recipient as { status?: unknown } | null)?.status)),
+      )
+    );
+  });
 }
 
 export async function postNotificationGrantToService(
@@ -45,7 +66,10 @@ export async function postNotificationGrantToService(
       credentials: "omit",
     });
     if (!response.ok) return { delivered: false, failureCode: "rejected" };
-    return { delivered: true };
+    const body: unknown = await response.json().catch(() => null);
+    return reachedAnyDevice(body)
+      ? { delivered: true }
+      : { delivered: false, failureCode: "undelivered" };
   } catch {
     // The grant is short-lived and the challenge owns its own expiry, so a
     // transport failure is reported as retriable rather than retried blindly

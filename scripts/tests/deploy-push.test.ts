@@ -299,6 +299,15 @@ assert.ok(
   "The mirrors must be synced before they are built.",
 );
 
+// `--fast` skips the mirror builds but not the sync: the deploy builds rewrite
+// the tracked mirrors, so an unsynced commit leaves the tree dirty afterwards.
+const fastBranch = readiness.slice(readiness.indexOf("if (flags.fast)"));
+assert.ok(
+  fastBranch.indexOf('runDeploymentNpmScript("services:sync"') !== -1 &&
+    fastBranch.indexOf('runDeploymentNpmScript("services:sync"') < fastBranch.indexOf("return;"),
+  "--fast must sync the service mirrors before the deployment commit.",
+);
+
 // A partial selection must be refused before anything is restored, backed up or
 // written, so a publish can never begin against an incomplete target set.
 const mainFn = deployPushSource.slice(deployPushSource.indexOf("async function main("));

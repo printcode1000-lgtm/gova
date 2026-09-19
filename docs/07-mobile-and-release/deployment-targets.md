@@ -561,8 +561,10 @@ Neither has an account-selection, revision, or partial-target form.
 They differ only in `--fast`. `deploy:push` runs the publish gates first —
 Vercel account access, the scratch-file / manifest-downgrade / non-empty
 refusals, `secrets:backup`, and the mirror builds (`services:sync`,
-`services:build`, `control:build`). `deploy:push:fast` skips all of those and
-keeps only the branch check, secret restore and release credentials.
+`services:build`, `control:build`). `deploy:push:fast` skips all of those except
+`services:sync`, and keeps the branch check, secret restore and release
+credentials. The sync stays because the mirrors are tracked: without it the
+deploy builds regenerate them after the commit and leave the tree dirty.
 
 Service deploy scripts emit `[ASOL_DEPLOY_REPORT]` on stdout. `deploy:push:fast`
 and `deploy:all` capture that line from the child npm process (stdout and stderr,

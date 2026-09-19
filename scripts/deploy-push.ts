@@ -463,6 +463,10 @@ async function assertFastPublishReadiness(
   // --fast mode so a drifted API origin or R2 bucket can never be published over.
   await runDeploymentNpmScript("cors:verify:live", { logPrefix: "deploy:push" });
   if (flags.fast) {
+    // Sync, not build: the tracked mirrors must match the sources before
+    // `git add -A`, or the service builds regenerate them after the commit and
+    // leave the tree dirty with changes the pushed commit does not contain.
+    await runDeploymentNpmScript("services:sync", { logPrefix: "deploy:push" });
     console.log(
       "[deploy:push] --fast: skipping Vercel account access, publish refusals, and mirror builds.",
     );

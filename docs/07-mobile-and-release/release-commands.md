@@ -9,7 +9,7 @@ means: **every public path runs the same ordered transaction**, defined once in
 | --- | --- | --- | --- |
 | `deploy:all` | lint, typecheck, `architecture:check`, tests, live CORS, DB sync, builds, mirror sync/verify/build, service smoke | all | nothing has been proven yet |
 | `deploy:push` | none | all — live CORS, account access, scratch/manifest/empty refusals, `secrets:backup`, mirror builds | the correctness gates already passed and you want the publish gates anyway |
-| `deploy:push:fast` | none | branch, secret restore, credentials, **live CORS** | you just ran the gates yourself and want the shortest publish |
+| `deploy:push:fast` | none | branch, secret restore, credentials, **live CORS**, mirror sync | you just ran the gates yourself and want the shortest publish |
 
 None of them is a substitute for the other two on correctness: only `deploy:all`
 runs lint, typecheck and the test suite.
@@ -173,7 +173,10 @@ npm run deploy:push:fast
 
 The fast path, unchanged. It runs `--fast --vercel-target=all`.
 It skips account-access checks, publish refusals, `secrets:backup`, and local
-mirror builds. The branch check, secret restore, release credentials, **live CORS verification**, exact-SHA
+mirror builds. It still runs `services:sync` before the deployment commit: the
+service mirrors under `services/*/generated` are tracked, and the deploy builds
+regenerate them, so an unsynced commit would leave the tree dirty after a
+successful publish with changes the pushed commit does not contain. The branch check, secret restore, release credentials, **live CORS verification**, exact-SHA
 deployment reports, and `VERCEL_TOKEN` remain mandatory. Live CORS is remote production state, so a
 fast release may not skip it even when every local correctness gate just passed.
 
