@@ -26,6 +26,7 @@ import { registerDataCoreRuntimeConfigPorts } from '@/features/data/ports/data-c
 import { registerDataCoreSpecialtyCatalogPort } from '@/features/data/ports/data-core-specialty-catalog-port';
 import { registerStorageCorePorts } from '@/features/storage/ports/storage-core-ports';
 import { registerNotificationsCorePorts } from '@/features/notifications/ports/notifications-core-ports';
+import { registerVerificationDispatchTransportPort } from '@/features/notifications/ports/verification-dispatch-transport-port';
 
 export type {
   ProductSearchFilters,
@@ -177,6 +178,10 @@ registerStorageCorePorts();
 // @asol/notifications-core. The application owns the concrete env/data adapters,
 // so this isolated composition root must register that seam too.
 registerNotificationsCorePorts();
+// `/api/verification/**` is owned by this account. Without the dispatch transport
+// every Egyptian verification request answered `verificationDispatchFailed`: the
+// grant was built and then had nowhere to go.
+registerVerificationDispatchTransportPort();
 
 export function createSubmainRuntime(_config?: SubmainRuntimeConfig): SubmainRuntime {
   configureOrdersCore({ identity: { isSuperAdminIdentity } });

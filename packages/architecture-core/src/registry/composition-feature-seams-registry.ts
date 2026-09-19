@@ -69,6 +69,10 @@ export const COMPOSITION_FEATURE_SEAMS = {
     // Orders and specialty chat issue notification grants; this exact registrar
     // wires notifications-core without importing the broad feature barrel.
     '@/features/notifications/ports/notifications-core-ports',
+    // This account owns `/api/verification/**`, so it must wire how the SMS
+    // gateway dispatch grant leaves the runtime. Without it every Egyptian
+    // request failed closed with `verificationDispatchFailed`.
+    '@/features/notifications/ports/verification-dispatch-transport-port',
     '@/features/storage/ports/storage-core-ports',
     '@/features/orders/application/order-detail-loader.server',
     '@/features/orders/application/order-actions.server',

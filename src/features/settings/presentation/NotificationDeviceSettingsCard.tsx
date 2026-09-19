@@ -35,17 +35,6 @@ export function NotificationDeviceSettingsCard({ children }: { children?: React.
                 ? state.t("notifications.deviceCard.titleIos")
                 : state.t("notifications.deviceCard.titleWeb")}
           </h2>
-          <span id='features-settings-presentation-notificationdevicesettingscard-text-7-s8pu2v'
-            className={cn(
-              "mt-1 inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold",
-              state.permissionTone,
-            )}
-          >
-            {state.permissionLabel}
-            {state.isNativeNotifications && state.deviceEnabled
-              ? ` — ${state.isIosNotifications ? "APNs" : "FCM"}`
-              : ""}
-          </span>
         </div>
       </div>
 

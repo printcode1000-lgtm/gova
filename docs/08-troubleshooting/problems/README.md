@@ -29,3 +29,4 @@ A log of project problems and their solutions for recurrence and environment set
 | 25 | `Unable to reach the server` while the server is up: a preflight answered `204` with no CORS headers | [preflight-answered-without-cors-headers.md](./preflight-answered-without-cors-headers.md) |
 | 26 | Service smoke fails after successful builds: release env missing or static mode leaked | [service-smoke-release-environment.md](./service-smoke-release-environment.md) |
 | 27 | Public R2 object returns 200 but browser image fetch is blocked by bucket CORS | [public-r2-object-fetch-blocked-by-cors.md](./public-r2-object-fetch-blocked-by-cors.md) |
+| 28 | Egyptian verification fails with `verificationDispatchFailed`: the owner account never registered the dispatch transport | [verification-dispatch-port-unregistered-on-owner.md](./verification-dispatch-port-unregistered-on-owner.md) |

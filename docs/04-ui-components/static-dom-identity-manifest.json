@@ -733,7 +733,7 @@
     {
       "id": "${id}",
       "source": "src/features/super-admin/presentation/CloudAccountRoutesSection.tsx",
-      "line": 32,
+      "line": 59,
       "element": "div",
       "semanticName": "explicit-prop-root",
       "kind": "explicit-prop"
@@ -4965,7 +4965,7 @@
     {
       "id": "features-auth-presentation-loginpagecontent-button-30-jf4rwp",
       "source": "src/features/auth/presentation/LoginPageContent.tsx",
-      "line": 81,
+      "line": 84,
       "element": "button",
       "semanticName": "auth-presentation-loginpagecontent-button-30",
       "kind": "literal"
@@ -4973,7 +4973,7 @@
     {
       "id": "features-auth-presentation-loginpagecontent-button-38-rppxnk",
       "source": "src/features/auth/presentation/LoginPageContent.tsx",
-      "line": 86,
+      "line": 85,
       "element": "button",
       "semanticName": "auth-presentation-loginpagecontent-button-38",
       "kind": "literal"
@@ -5037,33 +5037,9 @@
     {
       "id": "features-auth-presentation-loginpagecontent-div-32-6pwq9f",
       "source": "src/features/auth/presentation/LoginPageContent.tsx",
-      "line": 84,
+      "line": 83,
       "element": "div",
       "semanticName": "auth-presentation-loginpagecontent-div-32",
-      "kind": "literal"
-    },
-    {
-      "id": "features-auth-presentation-loginpagecontent-div-33-gl1i4b",
-      "source": "src/features/auth/presentation/LoginPageContent.tsx",
-      "line": 85,
-      "element": "div",
-      "semanticName": "auth-presentation-loginpagecontent-div-33",
-      "kind": "literal"
-    },
-    {
-      "id": "features-auth-presentation-loginpagecontent-div-34-8qljx4",
-      "source": "src/features/auth/presentation/LoginPageContent.tsx",
-      "line": 85,
-      "element": "div",
-      "semanticName": "auth-presentation-loginpagecontent-div-34",
-      "kind": "literal"
-    },
-    {
-      "id": "features-auth-presentation-loginpagecontent-div-36-pfvthc",
-      "source": "src/features/auth/presentation/LoginPageContent.tsx",
-      "line": 85,
-      "element": "div",
-      "semanticName": "auth-presentation-loginpagecontent-div-36",
       "kind": "literal"
     },
     {
@@ -5144,22 +5120,6 @@
       "line": 75,
       "element": "p",
       "semanticName": "auth-presentation-loginpagecontent-text-26",
-      "kind": "literal"
-    },
-    {
-      "id": "features-auth-presentation-loginpagecontent-text-35-6b4pue",
-      "source": "src/features/auth/presentation/LoginPageContent.tsx",
-      "line": 85,
-      "element": "span",
-      "semanticName": "auth-presentation-loginpagecontent-text-35",
-      "kind": "literal"
-    },
-    {
-      "id": "features-auth-presentation-loginpagecontent-text-37-xrq3ia",
-      "source": "src/features/auth/presentation/LoginPageContent.tsx",
-      "line": 85,
-      "element": "span",
-      "semanticName": "auth-presentation-loginpagecontent-text-37",
       "kind": "literal"
     },
     {
@@ -12437,7 +12397,7 @@
     {
       "id": "features-settings-presentation-notificationdevicesettingscard-div-9-qxx7hx",
       "source": "src/features/settings/presentation/NotificationDeviceSettingsCard.tsx",
-      "line": 66,
+      "line": 55,
       "element": "div",
       "semanticName": "settings-presentation-notificationdevicesettingscard-div-9",
       "kind": "literal"
@@ -12459,17 +12419,9 @@
       "kind": "literal"
     },
     {
-      "id": "features-settings-presentation-notificationdevicesettingscard-text-7-s8pu2v",
-      "source": "src/features/settings/presentation/NotificationDeviceSettingsCard.tsx",
-      "line": 38,
-      "element": "span",
-      "semanticName": "settings-presentation-notificationdevicesettingscard-text-7",
-      "kind": "literal"
-    },
-    {
       "id": "features-settings-presentation-notificationdevicesettingscard-text-8-nb3oee",
       "source": "src/features/settings/presentation/NotificationDeviceSettingsCard.tsx",
-      "line": 53,
+      "line": 42,
       "element": "p",
       "semanticName": "settings-presentation-notificationdevicesettingscard-text-8",
       "kind": "literal"
@@ -13509,7 +13461,7 @@
     {
       "id": "features-super-admin-presentation-cloudaccountsverceltab-pre-diagram-9eqvs9",
       "source": "src/features/super-admin/presentation/CloudAccountsVercelTab.tsx",
-      "line": 128,
+      "line": 139,
       "element": "pre",
       "semanticName": "super-admin-presentation-cloudaccountsverceltab-pre-diagram",
       "kind": "literal"

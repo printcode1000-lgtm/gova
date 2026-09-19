@@ -1,4 +1,5 @@
 import { readEnv, requireEnv } from "@asol/env-core";
+import { NOTIFICATIONS_BASE_URL } from "@asol/native-core/platform-defaults";
 
 /**
  * Reading rules come from `@asol/env-core`; the keys and what they mean stay here.
@@ -23,4 +24,18 @@ export function isMobilePushUnlockConfigured(): boolean {
 
 export function getOptionalMobilePushServerCredentialBlob(): string {
   return readEnv("ASOL_MOBILE_PUSH_CREDENTIAL_BLOB");
+}
+
+/**
+ * Origin of the notifications deployment, for a server that must deliver a signed
+ * grant itself instead of handing it to a browser (the verification SMS gateway).
+ *
+ * Deliberately not `businessApiOrigins()`: that resolver imports the inter-account
+ * route table, and this getter is mirrored into isolated service accounts, which
+ * must never carry that table. An explicit `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL`
+ * still wins; otherwise the canonical deployment every runtime already addresses.
+ */
+export function getNotificationsServiceOrigin(): string {
+  const configured = readEnv("NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL").replace(/\/$/, "");
+  return configured || NOTIFICATIONS_BASE_URL.replace(/\/$/, "");
 }

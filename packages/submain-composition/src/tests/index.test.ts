@@ -29,6 +29,21 @@ function runTests(): void {
   );
   console.log('  ✔ notification-core ports are registered by the isolated submain root.');
 
+  // `/api/verification/**` is owned by this account. The dispatch transport was
+  // once registered only in the main app, so every Egyptian request here answered
+  // `verificationDispatchFailed`. Behavioral, not textual: importing the
+  // composition above must have left a transport on the shared global key.
+  const transportKey = Symbol.for('@/features/notifications/verification-dispatch-transport');
+  assert(
+    typeof (globalThis as Record<symbol, { deliverGrant?: unknown } | undefined>)[transportKey]?.deliverGrant === 'function',
+    'submain composition registers the verification SMS dispatch transport at module load',
+  );
+  assert(
+    compositionSource.includes('registerVerificationDispatchTransportPort();'),
+    'submain composition invokes the shared verification dispatch registrar',
+  );
+  console.log('  ✔ verification SMS dispatch transport is registered by the isolated submain root.');
+
   assert(
     compositionSource.includes('registerDataCoreProductSearchFieldsPort') && compositionSource.includes("@/features/product-search/server/services/product-search-fields.server"),
     'submain composition imports the product-search field registrar',

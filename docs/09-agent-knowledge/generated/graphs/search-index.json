@@ -12422,6 +12422,7 @@
       "tags": [
         "/asolverificationsmsdispatch",
         "@asol/auth-core",
+        "@asol/submain-composition",
         "@asol/verification-core",
         "@asol/verification-core/server",
         "account-changing",
@@ -16136,6 +16137,54 @@
         "ts",
         "vercelignore",
         "wildcarded",
+        "with"
+      ]
+    },
+    {
+      "id": "document:docs/08-troubleshooting/problems/verification-dispatch-port-unregistered-on-owner.md",
+      "kind": "document",
+      "name": "Egyptian verification fails with `verificationDispatchFailed`: the owner account never registered the dispatch transport",
+      "path": "docs/08-troubleshooting/problems/verification-dispatch-port-unregistered-on-owner.md",
+      "summary": "On `/registration` (and any other verification purpose), requesting a code for an Egyptian `+20` number fails immediately:",
+      "tags": [
+        "/registration",
+        "20",
+        "@asol/submain-composition",
+        "account",
+        "an",
+        "and",
+        "any",
+        "code",
+        "dispatch",
+        "docs/08-troubleshooting/problems/verification-dispatch-port-unregistered-on-owner",
+        "docs/08-troubleshooting/problems/verification-dispatch-port-unregistered-on-owner.md",
+        "egyptian",
+        "egyptian verification fails with `verificationdispatchfailed`: the owner account never registered the dispatch transport",
+        "fails",
+        "for",
+        "immediately",
+        "md",
+        "never",
+        "number",
+        "on",
+        "on `/registration` (and any other verification purpose), requesting a code for an egyptian `+20` number fails immediately:",
+        "other",
+        "owner",
+        "packages/account-bridge/src/routes",
+        "packages/account-bridge/src/routes.ts",
+        "purpose",
+        "registered",
+        "requesting",
+        "src/core/composition/",
+        "src/core/composition/server-application-ports",
+        "src/core/composition/server-application-ports.ts",
+        "src/features/notifications/ports/verification-dispatch-transport-port",
+        "src/features/notifications/ports/verification-dispatch-transport-port.ts",
+        "the",
+        "transport",
+        "ts",
+        "verification",
+        "verificationdispatchfailed",
         "with"
       ]
     },
@@ -47039,6 +47088,17 @@
       "tags": [
         "src/features/notifications/ports/notifications-core-ports",
         "src/features/notifications/ports/notifications-core-ports.ts",
+        "ts"
+      ]
+    },
+    {
+      "id": "source:src/features/notifications/ports/verification-dispatch-transport-port.ts",
+      "kind": "source",
+      "name": "verification-dispatch-transport-port.ts",
+      "path": "src/features/notifications/ports/verification-dispatch-transport-port.ts",
+      "tags": [
+        "src/features/notifications/ports/verification-dispatch-transport-port",
+        "src/features/notifications/ports/verification-dispatch-transport-port.ts",
         "ts"
       ]
     },

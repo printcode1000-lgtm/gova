@@ -40,6 +40,8 @@ No part of this requires the WebView, a notification tap, or the app being open.
 
 Web, Android, and iOS requesters all take the same path: the server dispatches the notification, and no client ever receives the dispatch ticket. `runtime` is recorded for diagnostics and changes nothing about authorization.
 
+The transport is a port, registered by `registerVerificationDispatchTransportPort()`. `/api/verification/**` is owned by the `submain` account, so the registrar must run in **every** composition root that can serve that route — `@asol/submain-composition` as well as the main application's `registerServerApplicationPorts()`. An unregistered transport fails closed with `verificationDispatchFailed`; see [the troubleshooting record](../08-troubleshooting/problems/verification-dispatch-port-unregistered-on-owner.md).
+
 This deliberately differs from the original plan, which had a native requester carry the signal itself. That cannot work here: native grant delivery resolves recipient tokens and provider credentials through the requester's own authenticated session, and registration and password recovery have no session — the requester is not yet, or not currently, a signed-in user. Handing a pre-authentication client a signed dispatch ticket would also give it something it has no reason to hold. The server therefore couriers the grant to the notifications deployment itself (`postNotificationGrantToService`), or fans out locally under the development runtime.
 
 ### Recipient targeting

@@ -143,6 +143,10 @@ src/app/api/auth/profile/route.ts
 src/app/api/account/delete/route.ts
 ```
 
+### Login UI
+
+The login form keeps the primary sign-in action full width. The secondary guest action and the registration action render together in one equal two-column row below the form; there is no separate "new here" divider or label between them.
+
 ### Registration UI
 
 The optional email and alias (store name) fields sit inside a native collapsible

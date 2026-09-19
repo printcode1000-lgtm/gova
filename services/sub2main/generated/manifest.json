@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-18T12:12:11.150Z",
+  "generatedAt": "2026-09-19T09:42:08.727Z",
   "entryPoints": [
     "features/product/server/services/product-service.server.ts",
     "features/profile/server/services/profile-service.bootstrap.server.ts",
@@ -19,7 +19,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 454,
+  "fileCount": 456,
   "files": [
     "packages/account-declarations/src/accounts/products.ts",
     "packages/account-declarations/src/accounts/profiles.ts",
@@ -208,6 +208,7 @@
     "packages/format-core/src/domain/money.ts",
     "packages/format-core/src/domain/numbers.ts",
     "packages/format-core/src/index.ts",
+    "packages/native-core/src/domain/defaults/platform-defaults.ts",
     "packages/notifications-core/src/config/templates/notifications.ar.json",
     "packages/notifications-core/src/config/templates/notifications.en.json",
     "packages/notifications-core/src/contracts.ts",
@@ -401,6 +402,7 @@
     "src/features/notifications/application/shared/notification-money.ts",
     "src/features/notifications/domain/notification-error.ts",
     "src/features/notifications/ports/notifications-core-ports.ts",
+    "src/features/notifications/ports/verification-dispatch-transport-port.ts",
     "src/features/notifications/server.ts",
     "src/features/notifications/server/dev-notification-send-handler.server.ts",
     "src/features/notifications/server/notification-admin-authorization.ts",

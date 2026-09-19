@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-18T12:12:09.176Z",
+  "generatedAt": "2026-09-19T09:38:25.464Z",
   "entryPoints": [
     "features/product-search/server/services/product-search-service.server.ts",
     "features/product-search/server/services/product-search-products.server.ts",
@@ -15,7 +15,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 493,
+  "fileCount": 495,
   "files": [
     "packages/account-declarations/src/accounts/gova-runtime-env-keys.ts",
     "packages/account-declarations/src/accounts/submain-runtime-env-keys.ts",
@@ -227,6 +227,7 @@
     "packages/hero-slider-core/src/server.ts",
     "packages/hero-slider-core/src/server/home-hero-slider-service.ts",
     "packages/native-core/src/domain/capabilities/capability-keys.ts",
+    "packages/native-core/src/domain/defaults/platform-defaults.ts",
     "packages/notifications-core/src/config/templates/notifications.ar.json",
     "packages/notifications-core/src/config/templates/notifications.en.json",
     "packages/notifications-core/src/contracts.ts",
@@ -433,6 +434,7 @@
     "src/features/notifications/application/shared/notification-money.ts",
     "src/features/notifications/domain/notification-error.ts",
     "src/features/notifications/ports/notifications-core-ports.ts",
+    "src/features/notifications/ports/verification-dispatch-transport-port.ts",
     "src/features/notifications/server.ts",
     "src/features/notifications/server/dev-notification-send-handler.server.ts",
     "src/features/notifications/server/notification-admin-authorization.ts",

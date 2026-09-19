@@ -179,6 +179,7 @@ export {
 } from "@asol/notifications-core";
 
 export { registerNotificationsCorePorts } from './ports/notifications-core-ports';
+export { registerVerificationDispatchTransportPort } from './ports/verification-dispatch-transport-port';
 export {
   configureNotificationAdminAuthorization,
   type NotificationAdminIdentity,

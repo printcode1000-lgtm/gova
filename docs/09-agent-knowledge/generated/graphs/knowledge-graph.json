@@ -12422,6 +12422,7 @@
       "tags": [
         "/asolverificationsmsdispatch",
         "@asol/auth-core",
+        "@asol/submain-composition",
         "@asol/verification-core",
         "@asol/verification-core/server",
         "account-changing",
@@ -16136,6 +16137,54 @@
         "ts",
         "vercelignore",
         "wildcarded",
+        "with"
+      ]
+    },
+    {
+      "id": "document:docs/08-troubleshooting/problems/verification-dispatch-port-unregistered-on-owner.md",
+      "kind": "document",
+      "name": "Egyptian verification fails with `verificationDispatchFailed`: the owner account never registered the dispatch transport",
+      "path": "docs/08-troubleshooting/problems/verification-dispatch-port-unregistered-on-owner.md",
+      "summary": "On `/registration` (and any other verification purpose), requesting a code for an Egyptian `+20` number fails immediately:",
+      "tags": [
+        "/registration",
+        "20",
+        "@asol/submain-composition",
+        "account",
+        "an",
+        "and",
+        "any",
+        "code",
+        "dispatch",
+        "docs/08-troubleshooting/problems/verification-dispatch-port-unregistered-on-owner",
+        "docs/08-troubleshooting/problems/verification-dispatch-port-unregistered-on-owner.md",
+        "egyptian",
+        "egyptian verification fails with `verificationdispatchfailed`: the owner account never registered the dispatch transport",
+        "fails",
+        "for",
+        "immediately",
+        "md",
+        "never",
+        "number",
+        "on",
+        "on `/registration` (and any other verification purpose), requesting a code for an egyptian `+20` number fails immediately:",
+        "other",
+        "owner",
+        "packages/account-bridge/src/routes",
+        "packages/account-bridge/src/routes.ts",
+        "purpose",
+        "registered",
+        "requesting",
+        "src/core/composition/",
+        "src/core/composition/server-application-ports",
+        "src/core/composition/server-application-ports.ts",
+        "src/features/notifications/ports/verification-dispatch-transport-port",
+        "src/features/notifications/ports/verification-dispatch-transport-port.ts",
+        "the",
+        "transport",
+        "ts",
+        "verification",
+        "verificationdispatchfailed",
         "with"
       ]
     },
@@ -47043,6 +47092,17 @@
       ]
     },
     {
+      "id": "source:src/features/notifications/ports/verification-dispatch-transport-port.ts",
+      "kind": "source",
+      "name": "verification-dispatch-transport-port.ts",
+      "path": "src/features/notifications/ports/verification-dispatch-transport-port.ts",
+      "tags": [
+        "src/features/notifications/ports/verification-dispatch-transport-port",
+        "src/features/notifications/ports/verification-dispatch-transport-port.ts",
+        "ts"
+      ]
+    },
+    {
       "id": "source:src/features/notifications/presentation/hooks/use-notifications-filter.ts",
       "kind": "source",
       "name": "use-notifications-filter.ts",
@@ -74219,6 +74279,12 @@
     },
     {
       "from": "document:docs/05-platform-features/unified-verification-system.md",
+      "to": "document:docs/08-troubleshooting/problems/verification-dispatch-port-unregistered-on-owner.md",
+      "kind": "references",
+      "detail": "../08-troubleshooting/problems/verification-dispatch-port-unregistered-on-owner.md"
+    },
+    {
+      "from": "document:docs/05-platform-features/unified-verification-system.md",
       "to": "feature:verification",
       "kind": "references",
       "detail": "src/features/verification"
@@ -74240,6 +74306,12 @@
       "to": "package:@asol/signed-token-core",
       "kind": "references",
       "detail": "packages/signed-token-core"
+    },
+    {
+      "from": "document:docs/05-platform-features/unified-verification-system.md",
+      "to": "package:@asol/submain-composition",
+      "kind": "references",
+      "detail": "@asol/submain-composition"
     },
     {
       "from": "document:docs/05-platform-features/unified-verification-system.md",
@@ -77606,6 +77678,12 @@
       "detail": "./vercelignore-contract-wildcard-directory-descendants.md"
     },
     {
+      "from": "document:docs/08-troubleshooting/problems/README.md",
+      "to": "document:docs/08-troubleshooting/problems/verification-dispatch-port-unregistered-on-owner.md",
+      "kind": "references",
+      "detail": "./verification-dispatch-port-unregistered-on-owner.md"
+    },
+    {
       "from": "document:docs/08-troubleshooting/problems/service-smoke-release-environment.md",
       "to": "domain:troubleshooting",
       "kind": "belongs-to"
@@ -77689,6 +77767,47 @@
       "to": "test:scripts/tests/vercelignore-contract.test.ts",
       "kind": "references",
       "detail": "scripts/tests/vercelignore-contract.test.ts"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/verification-dispatch-port-unregistered-on-owner.md",
+      "to": "domain:troubleshooting",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/verification-dispatch-port-unregistered-on-owner.md",
+      "to": "document:docs/08-troubleshooting/problems/owned-route-not-shipped.md",
+      "kind": "references",
+      "detail": "./owned-route-not-shipped.md"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/verification-dispatch-port-unregistered-on-owner.md",
+      "to": "package:@asol/submain-composition",
+      "kind": "references",
+      "detail": "@asol/submain-composition"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/verification-dispatch-port-unregistered-on-owner.md",
+      "to": "source:packages/account-bridge/src/routes.ts",
+      "kind": "references",
+      "detail": "packages/account-bridge/src/routes.ts"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/verification-dispatch-port-unregistered-on-owner.md",
+      "to": "source:src/core/composition/server-application-ports.ts",
+      "kind": "references",
+      "detail": "src/core/composition/server-application-ports.ts"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/verification-dispatch-port-unregistered-on-owner.md",
+      "to": "source:src/core/composition/server-ports.ts",
+      "kind": "references",
+      "detail": "src/core/composition/"
+    },
+    {
+      "from": "document:docs/08-troubleshooting/problems/verification-dispatch-port-unregistered-on-owner.md",
+      "to": "source:src/features/notifications/ports/verification-dispatch-transport-port.ts",
+      "kind": "references",
+      "detail": "src/features/notifications/ports/verification-dispatch-transport-port.ts"
     },
     {
       "from": "document:docs/08-troubleshooting/README.md",
@@ -96321,6 +96440,12 @@
     },
     {
       "from": "domain:platform-features",
+      "to": "source:src/features/notifications/ports/verification-dispatch-transport-port.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:platform-features",
       "to": "source:src/features/notifications/presentation/hooks/use-notifications-filter.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -106233,6 +106358,12 @@
     },
     {
       "from": "domain:ui-components",
+      "to": "source:src/features/notifications/ports/verification-dispatch-transport-port.ts",
+      "kind": "documents",
+      "detail": "src/features/"
+    },
+    {
+      "from": "domain:ui-components",
       "to": "source:src/features/notifications/presentation/hooks/use-notifications-filter.ts",
       "kind": "documents",
       "detail": "src/features/"
@@ -113104,6 +113235,12 @@
       "detail": "route source dependency"
     },
     {
+      "from": "route:/.well-known/apple-app-site-association:handler",
+      "to": "package:@asol/native-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
       "from": "route:/.well-known/assetlinks.json:handler",
       "to": "runtime:development",
       "kind": "affects-runtime"
@@ -113121,6 +113258,12 @@
     {
       "from": "route:/.well-known/assetlinks.json:handler",
       "to": "package:@asol/env-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/.well-known/assetlinks.json:handler",
+      "to": "package:@asol/native-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -117812,6 +117955,12 @@
     },
     {
       "from": "route:/api/notifications/broadcast/recipients:handler",
+      "to": "package:@asol/native-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/notifications/broadcast/recipients:handler",
       "to": "package:@asol/notifications-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -117965,6 +118114,12 @@
     },
     {
       "from": "route:/api/notifications/broadcast/send:handler",
+      "to": "package:@asol/native-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/notifications/broadcast/send:handler",
       "to": "package:@asol/notifications-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -118113,6 +118268,12 @@
     {
       "from": "route:/api/notifications/device-token:handler",
       "to": "package:@asol/hero-slider-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/notifications/device-token:handler",
+      "to": "package:@asol/native-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -118289,6 +118450,12 @@
     },
     {
       "from": "route:/api/notifications/devices:handler",
+      "to": "package:@asol/native-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/notifications/devices:handler",
       "to": "package:@asol/notifications-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -118460,6 +118627,12 @@
     },
     {
       "from": "route:/api/notifications/mobile-push/unlock:handler",
+      "to": "package:@asol/native-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/notifications/mobile-push/unlock:handler",
       "to": "package:@asol/notifications-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -118608,6 +118781,12 @@
     {
       "from": "route:/api/notifications/preferences:handler",
       "to": "package:@asol/hero-slider-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/notifications/preferences:handler",
+      "to": "package:@asol/native-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -118784,6 +118963,12 @@
     },
     {
       "from": "route:/api/notifications/recipient-tokens:handler",
+      "to": "package:@asol/native-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/notifications/recipient-tokens:handler",
       "to": "package:@asol/notifications-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -118932,6 +119117,12 @@
     {
       "from": "route:/api/notifications/send:handler",
       "to": "package:@asol/hero-slider-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/notifications/send:handler",
+      "to": "package:@asol/native-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -119103,6 +119294,12 @@
     {
       "from": "route:/api/notifications/test/self:handler",
       "to": "package:@asol/hero-slider-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/notifications/test/self:handler",
+      "to": "package:@asol/native-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -119280,6 +119477,12 @@
     {
       "from": "route:/api/notifications/test/send:handler",
       "to": "package:@asol/hero-slider-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/notifications/test/send:handler",
+      "to": "package:@asol/native-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -119951,6 +120154,12 @@
     },
     {
       "from": "route:/api/orders/custom-request-from-profile:handler",
+      "to": "package:@asol/native-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/orders/custom-request-from-profile:handler",
       "to": "package:@asol/notifications-core",
       "kind": "related-to",
       "detail": "route source dependency"
@@ -120159,6 +120368,12 @@
     {
       "from": "route:/api/orders/from-cart:handler",
       "to": "package:@asol/hero-slider-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/orders/from-cart:handler",
+      "to": "package:@asol/native-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -122328,6 +122543,12 @@
     {
       "from": "route:/api/profile/fulfillment-settings:handler",
       "to": "package:@asol/hero-slider-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/api/profile/fulfillment-settings:handler",
+      "to": "package:@asol/native-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -132546,6 +132767,12 @@
     {
       "from": "route:/dev/cloud-accounts:page",
       "to": "package:@asol/hero-slider-core",
+      "kind": "related-to",
+      "detail": "route source dependency"
+    },
+    {
+      "from": "route:/dev/cloud-accounts:page",
+      "to": "package:@asol/native-core",
       "kind": "related-to",
       "detail": "route source dependency"
     },
@@ -178570,6 +178797,12 @@
     },
     {
       "from": "source:packages/submain-composition/src/index.ts",
+      "to": "source:src/features/notifications/ports/verification-dispatch-transport-port.ts",
+      "kind": "imports",
+      "detail": "@/features/notifications/ports/verification-dispatch-transport-port"
+    },
+    {
+      "from": "source:packages/submain-composition/src/index.ts",
       "to": "source:src/features/orders/application/order-action-grants.server.ts",
       "kind": "imports",
       "detail": "@/features/orders/application/order-action-grants.server"
@@ -190557,18 +190790,6 @@
     },
     {
       "from": "source:src/core/composition/server-application-ports.ts",
-      "to": "source:src/core/config/business-api-origins.ts",
-      "kind": "imports",
-      "detail": "@/core/config/business-api-origins"
-    },
-    {
-      "from": "source:src/core/composition/server-application-ports.ts",
-      "to": "source:src/core/config/runtime-context.server.ts",
-      "kind": "imports",
-      "detail": "@/core/config/runtime-context.server"
-    },
-    {
-      "from": "source:src/core/composition/server-application-ports.ts",
       "to": "source:src/features/notifications/server.ts",
       "kind": "imports",
       "detail": "@/features/notifications/server"
@@ -191278,6 +191499,12 @@
       "to": "package:@asol/env-core",
       "kind": "imports",
       "detail": "@asol/env-core"
+    },
+    {
+      "from": "source:src/core/config/server-env/server-env.values.auth-notifications.ts",
+      "to": "package:@asol/native-core",
+      "kind": "imports",
+      "detail": "@asol/native-core/platform-defaults"
     },
     {
       "from": "source:src/core/config/server-env/server-env.values.control-operations.ts",
@@ -208288,6 +208515,60 @@
       "detail": "@/core/config/server-env/server-env.values.turso-env"
     },
     {
+      "from": "source:src/features/notifications/ports/verification-dispatch-transport-port.ts",
+      "to": "runtime:android",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/notifications/ports/verification-dispatch-transport-port.ts",
+      "to": "runtime:development",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/notifications/ports/verification-dispatch-transport-port.ts",
+      "to": "runtime:ios",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/notifications/ports/verification-dispatch-transport-port.ts",
+      "to": "runtime:static-out",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/notifications/ports/verification-dispatch-transport-port.ts",
+      "to": "runtime:web",
+      "kind": "affects-runtime"
+    },
+    {
+      "from": "source:src/features/notifications/ports/verification-dispatch-transport-port.ts",
+      "to": "feature:notifications",
+      "kind": "belongs-to"
+    },
+    {
+      "from": "source:src/features/notifications/ports/verification-dispatch-transport-port.ts",
+      "to": "package:@asol/notifications-core",
+      "kind": "imports",
+      "detail": "@asol/notifications-core/server"
+    },
+    {
+      "from": "source:src/features/notifications/ports/verification-dispatch-transport-port.ts",
+      "to": "source:src/core/config/runtime-context.server.ts",
+      "kind": "imports",
+      "detail": "@/core/config/runtime-context.server"
+    },
+    {
+      "from": "source:src/features/notifications/ports/verification-dispatch-transport-port.ts",
+      "to": "source:src/core/config/server-env/server-env.values.auth-notifications.ts",
+      "kind": "imports",
+      "detail": "@/core/config/server-env/server-env.values.auth-notifications"
+    },
+    {
+      "from": "source:src/features/notifications/ports/verification-dispatch-transport-port.ts",
+      "to": "source:src/features/notifications/server/ports/verification-dispatch-transport.ts",
+      "kind": "imports",
+      "detail": "../server/ports/verification-dispatch-transport"
+    },
+    {
       "from": "source:src/features/notifications/presentation/hooks/use-notifications-filter.ts",
       "to": "runtime:android",
       "kind": "affects-runtime"
@@ -209003,6 +209284,12 @@
       "to": "source:src/features/notifications/ports/notifications-core-ports.ts",
       "kind": "imports",
       "detail": "./ports/notifications-core-ports"
+    },
+    {
+      "from": "source:src/features/notifications/server.ts",
+      "to": "source:src/features/notifications/ports/verification-dispatch-transport-port.ts",
+      "kind": "imports",
+      "detail": "./ports/verification-dispatch-transport-port"
     },
     {
       "from": "source:src/features/notifications/server.ts",

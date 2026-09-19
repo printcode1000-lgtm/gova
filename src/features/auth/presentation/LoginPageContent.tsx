@@ -78,12 +78,11 @@ export function LoginPageContent() {
                 <button id='features-auth-presentation-loginpagecontent-button-27-40e52j' type="submit" disabled={isSubmitting || !form.formState.isValid} className="w-full auth-cta h-12 text-sm font-semibold">
                   {isSubmitting ? <><Loader2 id='features-auth-presentation-loginpagecontent-loader2-28-ezhoz2' className="h-4 w-4 animate-spin me-2" />{t('auth.login.submitting')}</> : <><LogIn id='features-auth-presentation-loginpagecontent-login-29-ppzwyr' className="h-4 w-4 me-2" />{t('auth.login.submit')}</>}
                 </button>
-                <button id="features-auth-presentation-loginpagecontent-button-30-jf4rwp" type="button" className="asol-auth-secondary-btn asol-control h-12 text-sm" onClick={() => { startGuestSession(); router.push('/home'); }}><User id='features-auth-presentation-loginpagecontent-user-31-o23lp4' className="h-4 w-4 inline me-2" />{t('auth.login.continueAsGuest')}</button>
               </form>
             </FormProvider>
-            <div id='features-auth-presentation-loginpagecontent-div-32-6pwq9f' className="text-center space-y-3">
-              <div id='features-auth-presentation-loginpagecontent-div-33-gl1i4b' className="relative"><div id='features-auth-presentation-loginpagecontent-div-34-8qljx4' className="absolute inset-0 flex items-center"><span id='features-auth-presentation-loginpagecontent-text-35-6b4pue' className="w-full border-t border-outline-variant" /></div><div id='features-auth-presentation-loginpagecontent-div-36-pfvthc' className="relative flex justify-center"><span id='features-auth-presentation-loginpagecontent-text-37-xrq3ia' className="asol-field-surface px-2 text-xs text-on-surface-variant uppercase">{t('auth.login.newHere')}</span></div></div>
-              <Link href="/registration" className="block"><button id='features-auth-presentation-loginpagecontent-button-38-rppxnk' type="button" className="asol-auth-outline-btn asol-control h-12 text-sm group">{t('auth.login.createAccount')}<ArrowRight id='features-auth-presentation-loginpagecontent-arrowright-39-cg87mr' className="h-4 w-4 inline ms-2 transition-transform" /></button></Link>
+            <div id='features-auth-presentation-loginpagecontent-div-32-6pwq9f' className="grid grid-cols-2 gap-3 text-center">
+              <button id="features-auth-presentation-loginpagecontent-button-30-jf4rwp" type="button" className="asol-auth-secondary-btn asol-control h-12 text-sm" onClick={() => { startGuestSession(); router.push('/home'); }}><User id='features-auth-presentation-loginpagecontent-user-31-o23lp4' className="h-4 w-4 inline me-2" />{t('auth.login.continueAsGuest')}</button>
+              <Link href="/registration" className="block"><button id='features-auth-presentation-loginpagecontent-button-38-rppxnk' type="button" className="asol-auth-outline-btn asol-control h-12 text-sm">{t('auth.login.createAccount')}<ArrowRight id='features-auth-presentation-loginpagecontent-arrowright-39-cg87mr' className="h-4 w-4 inline ms-2 transition-transform" /></button></Link>
             </div>
           </div>
         </div>
